@@ -47,28 +47,15 @@ ImageGridSampler<TInputImage>::SetSampleGridSpacing(const SampleGridSpacingType 
 
 
 /**
- * ******************* GenerateData *******************
+ * ******************* DetermineGridIndexAndSize *******************
  */
 
 template <class TInputImage>
-void
-ImageGridSampler<TInputImage>::GenerateData()
+auto
+ImageGridSampler<TInputImage>::DetermineGridIndexAndSize() const -> std::pair<SampleGridIndexType, SampleGridSizeType>
 {
-  /** Get handles to the input image, output sample container, and the mask. */
-  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
-  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
+  const auto croppedInputImageRegion = this->Superclass::GetCroppedInputImageRegion();
 
-  // Take capacity from the output container, and clear it.
-  std::vector<ImageSampleType> sampleVector;
-  sampleContainer.swap(sampleVector);
-  sampleVector.clear();
-
-  /** Take into account the possibility of a smaller bounding box around the mask */
-  this->SetNumberOfSamples(m_RequestedNumberOfSamples);
-
-  const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
-
-  /** Determine the grid. */
   SampleGridSizeType         gridSize;
   SampleGridIndexType        gridIndex = croppedInputImageRegion.GetIndex();
   const InputImageSizeType & inputImageSize = croppedInputImageRegion.GetSize();
@@ -82,6 +69,38 @@ ImageGridSampler<TInputImage>::GenerateData()
      */
     gridIndex[dim] += (inputImageSize[dim] - ((gridSize[dim] - 1) * m_SampleGridSpacing[dim] + 1)) / 2;
   }
+  return { gridIndex, gridSize };
+}
+
+
+/**
+ * ******************* GenerateData *******************
+ */
+
+template <class TInputImage>
+void
+ImageGridSampler<TInputImage>::GenerateData()
+{
+  /** If desired we exercise a multi-threaded version. */
+  if (Superclass::m_UseMultiThread)
+  {
+    /** Calls ThreadedGenerateData(). */
+    return Superclass::GenerateData();
+  }
+
+  /** Get handles to the input image, output sample container, and the mask. */
+  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
+
+  // Take capacity from the output container, and clear it.
+  std::vector<ImageSampleType> sampleVector;
+  sampleContainer.swap(sampleVector);
+  sampleVector.clear();
+
+  /** Take into account the possibility of a smaller bounding box around the mask */
+  this->SetNumberOfSamples(m_RequestedNumberOfSamples);
+
+  const auto [gridIndex, gridSize] = DetermineGridIndexAndSize();
 
   /** Prepare for looping over the grid. */
   SampleGridIndexType index = gridIndex;
@@ -123,6 +142,7 @@ ImageGridSampler<TInputImage>::GenerateData()
       }
       JumpToNextGridPosition<3>(index, gridIndex);
     }
+
   } // end (if mask exists)
   else
   {
@@ -170,6 +190,146 @@ ImageGridSampler<TInputImage>::GenerateData()
   sampleContainer.swap(sampleVector);
 
 } // end GenerateData()
+
+
+/**
+ * ******************* ThreadedGenerateData *******************
+ */
+
+template <class TInputImage>
+void
+ImageGridSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType & inputRegionForThread,
+                                                    ThreadIdType                 threadId)
+{
+  const InputImageType & inputImage = elastix::Deref(this->GetInput());
+
+  auto & sampleVector = Superclass::m_ThreaderSampleVectors[threadId];
+  sampleVector.clear();
+
+  const auto [gridIndexForAll, gridSizeForAll] = DetermineGridIndexAndSize();
+  const auto         inputIndexForThread = inputRegionForThread.GetIndex();
+  const auto         inputSizeForThread = inputRegionForThread.GetSize();
+  SampleGridSizeType gridSizeForThread;
+
+  auto gridIndexForThread = gridIndexForAll;
+
+  for (unsigned int i{}; i < InputImageDimension; ++i)
+  {
+    const auto inputSizeValueForThreadAsOffset = static_cast<OffsetValueType>(inputSizeForThread[i]);
+
+    if (inputSizeValueForThreadAsOffset <= 0)
+    {
+      assert(!"The splitted input region size for any thread should always be greater than zero!");
+      return;
+    }
+
+    const OffsetValueType gridSpacingValue{ m_SampleGridSpacing[i] };
+    assert(gridSpacingValue > 0);
+
+    const IndexValueType inputIndexValueForThread{ inputIndexForThread[i] };
+    const IndexValueType gridIndexValueForAll{ gridIndexForAll[i] };
+
+    IndexValueType & gridIndexValueForThread = gridIndexForThread[i];
+
+    if (inputIndexValueForThread > gridIndexValueForAll)
+    {
+      const auto difference = inputIndexValueForThread - gridIndexValueForAll;
+
+      gridIndexValueForThread = (difference % gridSpacingValue == 0)
+                                  ? inputIndexValueForThread
+                                  : (gridIndexValueForAll + ((1 + (difference / gridSpacingValue)) * gridSpacingValue));
+    }
+    const IndexValueType endPositionForThread{ inputIndexValueForThread + inputSizeValueForThreadAsOffset };
+
+    if (gridIndexValueForThread >= endPositionForThread)
+    {
+      return;
+    }
+    gridSizeForThread[i] =
+      1 + static_cast<SizeValueType>((endPositionForThread - gridIndexValueForThread - 1) / gridSpacingValue);
+  }
+
+  /** Prepare for looping over the grid. */
+  SampleGridIndexType index = gridIndexForThread;
+
+  if (const MaskType * const mask = this->Superclass::GetMask())
+  {
+    mask->UpdateSource();
+
+    /* Ugly loop over the grid; checks also if a sample falls within the mask. */
+    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSizeForThread); ++t)
+    {
+      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSizeForThread); ++z)
+      {
+        for (unsigned int y = 0; y < gridSizeForThread[1]; ++y)
+        {
+          for (unsigned int x = 0; x < gridSizeForThread[0]; ++x)
+          {
+            ImageSampleType tempSample;
+
+            // Translate index to point.
+            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+
+            if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
+            {
+              // Get sampled fixed image value.
+              tempSample.m_ImageValue = inputImage.GetPixel(index);
+
+              // Store sample in container.
+              sampleVector.push_back(tempSample);
+
+            } // end if in mask
+
+            // Jump to next position on grid
+            index[0] += m_SampleGridSpacing[0];
+          }
+          JumpToNextGridPosition<1>(index, gridIndexForThread);
+        }
+        JumpToNextGridPosition<2>(index, gridIndexForThread);
+      }
+      JumpToNextGridPosition<3>(index, gridIndexForThread);
+    }
+  }
+  else
+  {
+    /** Calculate the number of samples on the grid. */
+    const std::size_t numberOfSamplesOnGrid =
+      std::accumulate(gridSizeForThread.cbegin(), gridSizeForThread.cend(), std::size_t{ 1 }, std::multiplies<>{});
+
+    sampleVector.reserve(numberOfSamplesOnGrid);
+
+    /** Ugly loop over the grid. */
+    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSizeForThread); ++t)
+    {
+      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSizeForThread); ++z)
+      {
+        for (unsigned int y = 0; y < gridSizeForThread[1]; ++y)
+        {
+          for (unsigned int x = 0; x < gridSizeForThread[0]; ++x)
+          {
+            ImageSampleType tempSample;
+
+            // Get sampled fixed image value.
+            tempSample.m_ImageValue = inputImage.GetPixel(index);
+
+            // Translate index to point.
+            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
+
+            // Store sample in container.
+            sampleVector.push_back(tempSample);
+
+            // Jump to next position on grid.
+            index[0] += m_SampleGridSpacing[0];
+          }
+          JumpToNextGridPosition<1>(index, gridIndexForThread);
+        }
+        JumpToNextGridPosition<2>(index, gridIndexForThread);
+      }
+      JumpToNextGridPosition<3>(index, gridIndexForThread);
+    }
+    assert(sampleVector.size() == numberOfSamplesOnGrid);
+  }
+}
 
 
 /**

@@ -149,6 +149,10 @@ protected:
   void
   GenerateData() override;
 
+  /** Multi-threaded function that does the work. */
+  void
+  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
+
 private:
   /** Retrieves the sample grid size along the axis, specified by VIndex */
   template <unsigned int VIndex>
@@ -179,6 +183,9 @@ private:
     }
   }
 
+  /** Determine the grid. */
+  std::pair<SampleGridIndexType, SampleGridSizeType>
+  DetermineGridIndexAndSize() const;
 
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing{ itk::MakeFilled<SampleGridSpacingType>(1) };
