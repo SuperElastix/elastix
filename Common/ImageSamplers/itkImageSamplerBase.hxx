@@ -470,7 +470,7 @@ DataObject::Pointer
 ImageSamplerBase<TInputImage>::MakeOutput(unsigned int itkNotUsed(idx))
 {
   OutputVectorContainerPointer outputVectorContainer = OutputVectorContainerType::New();
-  return dynamic_cast<DataObject *>(outputVectorContainer.GetPointer());
+  return outputVectorContainer.GetPointer();
 } // end MakeOutput()
 
 
