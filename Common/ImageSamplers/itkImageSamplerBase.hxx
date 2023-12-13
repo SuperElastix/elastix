@@ -541,8 +541,8 @@ ImageSamplerBase<TInputImage>::GetOutput() -> OutputVectorContainerType *
 template <class TInputImage>
 unsigned int
 ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputRegion,
-                                           const ThreadIdType &         threadId,
-                                           const ThreadIdType &         numberOfSplits,
+                                           const ThreadIdType           threadId,
+                                           const ThreadIdType           numberOfSplits,
                                            InputImageRegionType &       splitRegion)
 {
   const typename TInputImage::SizeType & inputRegionSize = inputRegion.GetSize();

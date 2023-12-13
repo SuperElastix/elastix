@@ -319,8 +319,8 @@ private:
    * i.e. return value is less than or equal to "numberOfSplits". */
   static unsigned int
   SplitRegion(const InputImageRegionType & inputRegion,
-              const ThreadIdType &         threadId,
-              const ThreadIdType &         numberOfSplits,
+              const ThreadIdType           threadId,
+              const ThreadIdType           numberOfSplits,
               InputImageRegionType &       splitRegion);
 
   /** Member variables. */
