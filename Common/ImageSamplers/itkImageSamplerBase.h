@@ -249,7 +249,7 @@ public:
   itkSetClampMacro(NumberOfSamples, unsigned long, 1, NumericTraits<unsigned long>::max());
   itkGetConstMacro(NumberOfSamples, unsigned long);
 
-  /** \todo: Temporary, should think about interface. */
+  /** Allows disabling the use of multi-threading, by `SetUseMultiThread(false)`. */
   itkSetMacro(UseMultiThread, bool);
 
   /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
@@ -308,7 +308,8 @@ protected:
   unsigned long                             m_NumberOfSamples{ 0 };
   std::vector<std::vector<ImageSampleType>> m_ThreaderSampleVectors{};
 
-  // tmp?
+  /** `UseMultiThread == true` indicated that the sampler _may_ use multi-threading (if implemented), while
+   * `UseMultiThread == false` indicates that the sampler should _not_ use multi-threading */
   bool m_UseMultiThread{ true };
 
 private:
