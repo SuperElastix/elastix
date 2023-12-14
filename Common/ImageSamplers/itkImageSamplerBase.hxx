@@ -550,15 +550,17 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
   typename TInputImage::IndexType splitIndex = inputRegion.GetIndex();
   typename TInputImage::SizeType  splitSize = inputRegionSize;
 
+  static_assert(TInputImage::ImageDimension > 0);
+
   // split on the outermost dimension available
-  int splitAxis = TInputImage::ImageDimension - 1;
+  unsigned int splitAxis{ TInputImage::ImageDimension - 1 };
   while (inputRegionSize[splitAxis] == 1)
   {
-    --splitAxis;
-    if (splitAxis < 0)
+    if (splitAxis == 0)
     { // cannot split
       return 1;
     }
+    --splitAxis;
   }
 
   // determine the actual number of pieces that will be generated
