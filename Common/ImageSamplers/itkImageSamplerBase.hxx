@@ -554,7 +554,7 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
 
   // split on the outermost dimension available
   unsigned int splitAxis{ TInputImage::ImageDimension - 1 };
-  while (inputRegionSize[splitAxis] == 1)
+  while (inputRegionSize[splitAxis] <= 1)
   {
     if (splitAxis == 0)
     { // cannot split
@@ -564,9 +564,9 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
   }
 
   // determine the actual number of pieces that will be generated
-  const typename TInputImage::SizeType::SizeValueType range = inputRegionSize[splitAxis];
-  const unsigned int valuesPerThread = Math::Ceil<unsigned int>(range / static_cast<double>(numberOfSplits));
-  const unsigned int maxThreadIdUsed = Math::Ceil<unsigned int>(range / static_cast<double>(valuesPerThread)) - 1;
+  const SizeValueType range = inputRegionSize[splitAxis];
+  const auto          valuesPerThread = static_cast<unsigned int>(((range - 1) / numberOfSplits) + 1);
+  const auto          maxThreadIdUsed = static_cast<unsigned int>((range - 1) / valuesPerThread);
 
   // Split the region
   if (threadId < maxThreadIdUsed)
