@@ -558,6 +558,7 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
   {
     if (splitAxis == 0)
     { // cannot split
+      splitRegion = inputRegion;
       return 1;
     }
     --splitAxis;
