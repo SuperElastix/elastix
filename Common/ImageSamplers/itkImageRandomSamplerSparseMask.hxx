@@ -100,10 +100,10 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
     auto & samples = sampleContainer.CastToSTLContainer();
     samples.resize(m_RandomIndices.size());
 
-    m_OptionalUserData.emplace(allValidSamples.CastToSTLConstContainer(), m_RandomIndices, samples);
+    UserData userData(allValidSamples.CastToSTLConstContainer(), m_RandomIndices, samples);
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
-    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &*m_OptionalUserData);
+    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &userData);
     multiThreader.SingleMethodExecute();
     return;
   }

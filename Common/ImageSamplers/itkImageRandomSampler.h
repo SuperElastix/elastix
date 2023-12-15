@@ -19,7 +19,6 @@
 #define itkImageRandomSampler_h
 
 #include "itkImageRandomSamplerBase.h"
-#include <optional>
 
 namespace itk
 {
@@ -109,8 +108,6 @@ private:
     InputImageSizeType             m_RegionSize{};
     std::vector<ImageSampleType> & m_Samples;
   };
-
-  std::optional<UserData> m_OptionalUserData{};
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);

@@ -23,8 +23,6 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
-#include <optional>
-
 namespace itk
 {
 
@@ -169,7 +167,6 @@ private:
   };
 
   std::vector<InputImageContinuousIndexType> m_RandomCoordinates{};
-  std::optional<UserData>                    m_OptionalUserData{};
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);
