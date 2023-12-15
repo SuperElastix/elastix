@@ -150,6 +150,32 @@ protected:
   GenerateData() override;
 
 private:
+  struct WorkUnit
+  {
+    const SampleGridIndexType GridIndex{};
+    const SampleGridSizeType  GridSize{};
+
+    // Should point to the first sample for this specific work unit.
+    ImageSampleType * const Samples{};
+
+    // The number of samples retrieved by this work unit. Only used when a mask is specified.
+    size_t NumberOfSamples{};
+  };
+
+  struct UserData
+  {
+    ITK_DISALLOW_COPY_AND_MOVE(UserData);
+
+    const InputImageType &      InputImage;
+    const MaskType * const      Mask{};
+    const SampleGridSpacingType GridSpacing{};
+    std::vector<WorkUnit>       WorkUnits{};
+  };
+
+  template <bool VUseMask>
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ThreaderCallback(void * arg);
+
   /** Retrieves the sample grid size along the axis, specified by VIndex */
   template <unsigned int VIndex>
   static unsigned int
@@ -181,6 +207,38 @@ private:
     }
   }
 
+
+  /** Determine the grid. */
+  static std::pair<SampleGridIndexType, SampleGridSizeType>
+  DetermineGridIndexAndSize(const InputImageRegionType &  croppedInputImageRegion,
+                            const SampleGridSpacingType & gridSpacing);
+
+  /** Splits the input region into subregions, for multi-threading. */
+  static std::vector<InputImageRegionType>
+  SplitRegion(const InputImageRegionType & inputRegion, const size_t requestedNumberOfSubregions);
+
+  /** Generates the work units, to be processed when doing multi-threading. */
+  static std::vector<WorkUnit>
+  GenerateWorkUnits(const ThreadIdType             numberOfWorkUnits,
+                    const InputImageRegionType &   croppedInputImageRegion,
+                    const SampleGridIndexType      gridIndex,
+                    const SampleGridSpacingType    gridSpacing,
+                    std::vector<ImageSampleType> & samples);
+
+  static void
+  SingleThreadedGenerateData(const TInputImage &            inputImage,
+                             const MaskType * const         mask,
+                             const InputImageRegionType &   croppedInputImageRegion,
+                             const SampleGridSpacingType &  gridSpacing,
+                             std::vector<ImageSampleType> & samples);
+  static void
+  MultiThreadedGenerateData(MultiThreaderBase &            multiThreader,
+                            const ThreadIdType             numberOfWorkUnits,
+                            const TInputImage &            inputImage,
+                            const MaskType * const         mask,
+                            const InputImageRegionType &   croppedInputImageRegion,
+                            const SampleGridSpacingType &  gridSpacing,
+                            std::vector<ImageSampleType> & samples);
 
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing{ itk::MakeFilled<SampleGridSpacingType>(1) };

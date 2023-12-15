@@ -30,6 +30,7 @@
 // The class to be tested.
 using itk::ImageGridSampler;
 
+using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
 using elx::CoreMainGTestUtilities::DerefRawPointer;
@@ -105,6 +106,7 @@ GTEST_TEST(ImageGridSampler, MaxSampleGridSpacing)
   sampler.SetSampleGridSpacing(itk::MakeFilled<SamplerType::SampleGridSpacingType>(
     std::numeric_limits<SamplerType::SampleGridSpacingValueType>::max()));
   sampler.SetInput(image);
+  sampler.SetUseMultiThread(false);
   sampler.Update();
   const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLContainer();
 
@@ -211,4 +213,32 @@ GTEST_TEST(ImageGridSampler, SampleGridSpacingTwo)
 
   EXPECT_EQ(samples.size(), expectedNumberOfSamples);
   EXPECT_EQ(samples.front().m_ImageValue, *(imageBufferRange.cbegin()));
+}
+
+
+GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingMultiThread)
+{
+  using PixelType = int;
+  constexpr auto Dimension = 2U;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using SamplerType = itk::ImageGridSampler<ImageType>;
+
+  std::mt19937 randomNumberEngine{};
+  const auto   imageDomain = CreateRandomImageDomain<Dimension>(randomNumberEngine);
+  const auto   image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  const auto generateSamples = [image](const bool useMultiThread) {
+    elx::DefaultConstruct<SamplerType> sampler{};
+    sampler.SetUseMultiThread(useMultiThread);
+    sampler.SetInput(image);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+  const auto samplesGeneratedUsingMultiThreading = generateSamples(true);
+
+  // The test would be trivial (uninteresting) if there were no samples. Note that itk::ImageSamplerBase does
+  // zero-initialize m_NumberOfSamples, but itk::ImageGridSampler does "full sampling" by default anyway.
+  EXPECT_FALSE(samplesGeneratedUsingMultiThreading.empty());
+
+  EXPECT_EQ(samplesGeneratedUsingMultiThreading, generateSamples(false));
 }
