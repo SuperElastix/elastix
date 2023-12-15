@@ -21,7 +21,6 @@
 #include "itkImageRandomSamplerBase.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageFullSampler.h"
-#include <optional>
 
 namespace itk
 {
@@ -117,7 +116,6 @@ private:
   };
 
   std::vector<size_t>     m_RandomIndices{};
-  std::optional<UserData> m_OptionalUserData{};
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);
