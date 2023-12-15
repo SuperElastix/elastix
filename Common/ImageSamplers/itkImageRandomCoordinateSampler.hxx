@@ -73,7 +73,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
       m_RandomCoordinates.push_back(randomCIndex);
     }
 
-    UserData userData(m_RandomCoordinates, inputImage, *interpolator, samples);
+    UserData userData{ m_RandomCoordinates, inputImage, *interpolator, samples };
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
     multiThreader.SetSingleMethod(&Self::ThreaderCallback, &userData);

@@ -91,17 +91,6 @@ private:
   {
     ITK_DISALLOW_COPY_AND_MOVE(UserData);
 
-    UserData(const std::vector<double> &    randomNumberList,
-             const InputImageType &         inputImage,
-             const InputImageRegionType &   region,
-             std::vector<ImageSampleType> & samples)
-      : m_RandomNumberList(randomNumberList)
-      , m_InputImage(inputImage)
-      , m_RegionIndex(region.GetIndex())
-      , m_RegionSize(region.GetSize())
-      , m_Samples(samples)
-    {}
-
     const std::vector<double> &    m_RandomNumberList;
     const InputImageType &         m_InputImage;
     InputImageIndexType            m_RegionIndex{};
