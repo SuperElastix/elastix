@@ -252,18 +252,6 @@ public:
   /** Allows disabling the use of multi-threading, by `SetUseMultiThread(false)`. */
   itkSetMacro(UseMultiThread, bool);
 
-  /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
-   * library will call this routine for each thread, which will delegate the
-   * control to ThreadedGenerateData(). */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
-  ThreaderCallback(void * arg);
-
-  /** Internal structure used for passing image data into the threading library */
-  struct ThreadStruct //?
-  {
-    Pointer Sampler;
-  };
-
 protected:
   /** The constructor. */
   ImageSamplerBase();
@@ -313,6 +301,18 @@ protected:
   bool m_UseMultiThread{ true };
 
 private:
+  /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
+   * library will call this routine for each thread, which will delegate the
+   * control to ThreadedGenerateData(). */
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ThreaderCallback(void * arg);
+
+  /** Internal structure used for passing image data into the threading library */
+  struct ThreadStruct //?
+  {
+    Pointer Sampler;
+  };
+
   /** Split the input region into "numberOfSplits" pieces, returning
    * region "i" as "splitRegion". This method is called "numberOfSplits" times. The
    * regions must not overlap. The method returns the number of pieces that
