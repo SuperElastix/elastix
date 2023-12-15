@@ -612,11 +612,12 @@ ImageSamplerBase<TInputImage>::GenerateData()
   ThreadStruct str;
   str.Sampler = this;
 
-  this->GetMultiThreader()->SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
-  this->GetMultiThreader()->SetSingleMethod(this->ThreaderCallback, &str);
+  MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
+  multiThreader.SetNumberOfWorkUnits(this->GetNumberOfWorkUnits());
+  multiThreader.SetSingleMethod(this->ThreaderCallback, &str);
 
   // multithread the execution
-  this->GetMultiThreader()->SingleMethodExecute();
+  multiThreader.SingleMethodExecute();
 
   // Call a method that can be overridden by a subclass to perform
   // some calculations after all the threads have completed
