@@ -565,6 +565,7 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
   }
 
   // determine the actual number of pieces that will be generated
+  assert(numberOfSplits > 0);
   const SizeValueType range = inputRegionSize[splitAxis];
   const auto          valuesPerThread = static_cast<unsigned int>(((range - 1) / numberOfSplits) + 1);
   const auto          maxThreadIdUsed = static_cast<unsigned int>((range - 1) / valuesPerThread);
@@ -579,7 +580,7 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
   {
     splitIndex[splitAxis] += threadId * valuesPerThread;
     // last thread needs to process the "rest" dimension being split
-    splitSize[splitAxis] = splitSize[splitAxis] - threadId * valuesPerThread;
+    splitSize[splitAxis] -= threadId * valuesPerThread;
   }
 
   // set the split region ivars
