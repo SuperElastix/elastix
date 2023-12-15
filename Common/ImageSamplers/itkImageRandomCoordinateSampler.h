@@ -150,16 +150,6 @@ private:
   {
     ITK_DISALLOW_COPY_AND_MOVE(UserData);
 
-    UserData(const std::vector<InputImageContinuousIndexType> & randomCoordinates,
-             const InputImageType &                             inputImage,
-             const InterpolatorType &                           interpolator,
-             std::vector<ImageSampleType> &                     samples)
-      : m_RandomCoordinates(randomCoordinates)
-      , m_InputImage(inputImage)
-      , m_Interpolator(interpolator)
-      , m_Samples(samples)
-    {}
-
     const std::vector<InputImageContinuousIndexType> & m_RandomCoordinates;
     const InputImageType &                             m_InputImage;
     const InterpolatorType &                           m_Interpolator;

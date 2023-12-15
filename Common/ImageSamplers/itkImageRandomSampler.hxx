@@ -49,7 +49,10 @@ ImageRandomSampler<TInputImage>::GenerateData()
     auto &       samples = sampleContainer.CastToSTLContainer();
     samples.resize(randomNumberList.size());
 
-    UserData userData(randomNumberList, inputImage, this->GetCroppedInputImageRegion(), samples);
+    const auto & croppedInputImageRegion = this->GetCroppedInputImageRegion();
+    UserData     userData{
+      randomNumberList, inputImage, croppedInputImageRegion.GetIndex(), croppedInputImageRegion.GetSize(), samples
+    };
 
     MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
     multiThreader.SetSingleMethod(&Self::ThreaderCallback, &userData);

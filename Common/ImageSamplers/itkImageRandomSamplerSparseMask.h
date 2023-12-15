@@ -102,20 +102,12 @@ private:
   {
     ITK_DISALLOW_COPY_AND_MOVE(UserData);
 
-    UserData(const std::vector<ImageSampleType> & allValidSamples,
-             const std::vector<size_t> &          randomIndices,
-             std::vector<ImageSampleType> &       samples)
-      : m_AllValidSamples(allValidSamples)
-      , m_RandomIndices(randomIndices)
-      , m_Samples(samples)
-    {}
-
     const std::vector<ImageSampleType> & m_AllValidSamples;
     const std::vector<size_t> &          m_RandomIndices;
     std::vector<ImageSampleType> &       m_Samples;
   };
 
-  std::vector<size_t>     m_RandomIndices{};
+  std::vector<size_t> m_RandomIndices{};
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);
