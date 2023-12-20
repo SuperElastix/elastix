@@ -167,15 +167,17 @@ private:
 
   /** Jumps to the next grid position along the axis, specified by VIndex */
   template <unsigned int VIndex>
-  void
-  JumpToNextGridPosition(SampleGridIndexType & index, const SampleGridIndexType & gridIndex) const
+  static void
+  JumpToNextGridPosition(SampleGridIndexType &         index,
+                         const SampleGridIndexType &   gridIndex,
+                         const SampleGridSpacingType & gridSpacing)
   {
     static_assert(VIndex > 0);
 
     if constexpr (VIndex < InputImageDimension)
     {
       index[VIndex - 1] = gridIndex[VIndex - 1];
-      index[VIndex] += m_SampleGridSpacing[VIndex];
+      index[VIndex] += gridSpacing[VIndex];
     }
   }
 

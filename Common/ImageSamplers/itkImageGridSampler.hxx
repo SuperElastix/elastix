@@ -117,11 +117,11 @@ ImageGridSampler<TInputImage>::GenerateData()
             // Jump to next position on grid.
             index[0] += m_SampleGridSpacing[0];
           }
-          JumpToNextGridPosition<1>(index, gridIndex);
+          JumpToNextGridPosition<1>(index, gridIndex, m_SampleGridSpacing);
         }
-        JumpToNextGridPosition<2>(index, gridIndex);
+        JumpToNextGridPosition<2>(index, gridIndex, m_SampleGridSpacing);
       }
-      JumpToNextGridPosition<3>(index, gridIndex);
+      JumpToNextGridPosition<3>(index, gridIndex, m_SampleGridSpacing);
     }
   } // end (if mask exists)
   else
@@ -155,11 +155,11 @@ ImageGridSampler<TInputImage>::GenerateData()
             // Jump to next position on grid.
             index[0] += m_SampleGridSpacing[0];
           }
-          JumpToNextGridPosition<1>(index, gridIndex);
+          JumpToNextGridPosition<1>(index, gridIndex, m_SampleGridSpacing);
         }
-        JumpToNextGridPosition<2>(index, gridIndex);
+        JumpToNextGridPosition<2>(index, gridIndex, m_SampleGridSpacing);
       }
-      JumpToNextGridPosition<3>(index, gridIndex);
+      JumpToNextGridPosition<3>(index, gridIndex, m_SampleGridSpacing);
     }
 
     assert(sampleVector.size() == numberOfSamplesOnGrid);
