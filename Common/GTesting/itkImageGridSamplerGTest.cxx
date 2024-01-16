@@ -21,6 +21,7 @@
 #include "itkImageFullSampler.h"
 #include "elxDefaultConstruct.h"
 #include <itkImage.h>
+#include <itkImageMaskSpatialObject.h>
 
 #include <gtest/gtest.h>
 
@@ -31,6 +32,7 @@
 using itk::ImageGridSampler;
 
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
+using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
 using elx::CoreMainGTestUtilities::DerefRawPointer;
@@ -241,4 +243,51 @@ GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingMultiThread)
   EXPECT_FALSE(samplesGeneratedUsingMultiThreading.empty());
 
   EXPECT_EQ(samplesGeneratedUsingMultiThreading, generateSamples(false));
+}
+
+
+// Tests that the sampler produces the same output when using a mask that is fully filled with ones as when using no
+// mask at all.
+GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingFullyFilledMask)
+{
+  using PixelType = int;
+  enum
+  {
+    Dimension = 2U
+  };
+  using SamplerType = itk::ImageGridSampler<itk::Image<PixelType, Dimension>>;
+
+  const ImageDomain<Dimension> imageDomain(itk::Size<Dimension>::Filled(4));
+  const auto                   image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  const auto generateSamples = [image](const bool useMask) {
+    elx::DefaultConstruct<SamplerType> sampler{};
+
+    sampler.SetInput(image);
+
+    if (useMask)
+    {
+      using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
+      const auto maskImage = CreateImage<MaskSpatialObjectType::PixelType>(ImageDomain(*image));
+      maskImage->FillBuffer(1);
+
+      const auto maskSpatialObject = MaskSpatialObjectType::New();
+      maskSpatialObject->SetImage(maskImage);
+      maskSpatialObject->Update();
+
+      sampler.SetMask(maskSpatialObject);
+    }
+
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  const auto samplesGeneratedUsingFullyFilledMask = generateSamples(true);
+  const auto samplesGeneratedWithoutMask = generateSamples(false);
+
+  // The test would be trivial (uninteresting) if there were no samples.
+  EXPECT_FALSE(samplesGeneratedUsingFullyFilledMask.empty());
+
+  EXPECT_EQ(samplesGeneratedUsingFullyFilledMask.size(), samplesGeneratedWithoutMask.size());
+  EXPECT_EQ(samplesGeneratedUsingFullyFilledMask, samplesGeneratedWithoutMask);
 }
