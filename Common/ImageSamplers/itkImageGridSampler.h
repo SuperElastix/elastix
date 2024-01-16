@@ -150,6 +150,8 @@ protected:
   GenerateData() override;
 
 private:
+  using WorldToObjectTransformType = AffineTransform<double, InputImageDimension>;
+
   struct WorkUnit
   {
     const SampleGridIndexType GridIndex{};
@@ -166,10 +168,11 @@ private:
   {
     ITK_DISALLOW_COPY_AND_MOVE(UserData);
 
-    const InputImageType &      InputImage;
-    const MaskType * const      Mask{};
-    const SampleGridSpacingType GridSpacing{};
-    std::vector<WorkUnit>       WorkUnits{};
+    const InputImageType &                   InputImage;
+    const MaskType * const                   Mask{};
+    const WorldToObjectTransformType * const WorldToObjectTransform{};
+    const SampleGridSpacingType              GridSpacing{};
+    std::vector<WorkUnit>                    WorkUnits{};
   };
 
   template <bool VUseMask>
