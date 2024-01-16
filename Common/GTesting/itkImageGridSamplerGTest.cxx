@@ -291,3 +291,53 @@ GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingFullyFilledMask)
   EXPECT_EQ(samplesGeneratedUsingFullyFilledMask.size(), samplesGeneratedWithoutMask.size());
   EXPECT_EQ(samplesGeneratedUsingFullyFilledMask, samplesGeneratedWithoutMask);
 }
+
+
+// Tests using a mask that selects one out of each three consecutive pixels.
+GTEST_TEST(ImageGridSampler, OneOutOfThreeMask)
+{
+  using PixelType = int;
+  enum
+  {
+    Dimension = 3U
+  };
+  using SamplerType = itk::ImageGridSampler<itk::Image<PixelType, Dimension>>;
+
+  const ImageDomain<Dimension> imageDomain(itk::Size<Dimension>::Filled(8));
+  const auto                   image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+
+  using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
+  const auto maskImage = CreateImage<MaskSpatialObjectType::PixelType>(ImageDomain(*image));
+
+  unsigned int i{};
+
+  for (std::uint8_t & maskValue : itk::ImageBufferRange(*maskImage))
+  {
+    maskValue = (i % 3U == 0) ? std::uint8_t{ 1 } : std::uint8_t{ 0 };
+    ++i;
+  }
+
+  const auto maskSpatialObject = MaskSpatialObjectType::New();
+  maskSpatialObject->SetImage(maskImage);
+  maskSpatialObject->Update();
+
+  const auto generateSamples = [image, maskSpatialObject](const bool useMultiThread) {
+    elx::DefaultConstruct<SamplerType> sampler{};
+
+    sampler.SetInput(image);
+    sampler.SetMask(maskSpatialObject);
+    sampler.SetSampleGridSpacing(itk::MakeFilled<SamplerType::SampleGridSpacingType>(2));
+    sampler.SetUseMultiThread(useMultiThread);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  const auto samplesGeneratedUsingMultiThreading = generateSamples(true);
+  const auto samplesGeneratedWithoutMultiThreading = generateSamples(false);
+
+  // The test would be trivial (uninteresting) if there were no samples.
+  EXPECT_FALSE(samplesGeneratedUsingMultiThreading.empty());
+
+  EXPECT_EQ(samplesGeneratedUsingMultiThreading.size(), samplesGeneratedWithoutMultiThreading.size());
+  EXPECT_EQ(samplesGeneratedUsingMultiThreading, samplesGeneratedWithoutMultiThreading);
+}
