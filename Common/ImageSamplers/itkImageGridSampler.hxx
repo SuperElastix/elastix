@@ -241,6 +241,8 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
 
   if (mask)
   {
+    const auto & worldToObjectTransform = elastix::Deref(mask->GetObjectToWorldTransformInverse());
+
     /* Ugly loop over the grid; checks also if a sample falls within the mask. */
     for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSize); ++t)
     {
@@ -255,7 +257,9 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
             // Translate index to point.
             inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
-            if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
+            // Equivalent to `mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates)`, but much faster.
+            if (mask->IsInsideInObjectSpace(
+                  worldToObjectTransform.WorldToObjectTransformType::TransformPoint(tempSample.m_ImageCoordinates)))
             {
               // Get sampled fixed image value.
               tempSample.m_ImageValue = inputImage.GetPixel(index);
@@ -343,6 +347,7 @@ ImageGridSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
 
   UserData userData{ inputImage,
                      mask,
+                     mask ? mask->GetObjectToWorldTransformInverse() : nullptr,
                      gridSpacing,
                      GenerateWorkUnits(numberOfWorkUnits, croppedInputImageRegion, gridIndex, gridSpacing, samples) };
 
@@ -440,6 +445,9 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
   const auto * const mask = userData.Mask;
   assert((mask == nullptr) == (!VUseMask));
 
+  const auto * const worldToObjectTransform = userData.WorldToObjectTransform;
+  assert((worldToObjectTransform == nullptr) == (!VUseMask));
+
   const auto                gridSpacing = userData.GridSpacing;
   const SampleGridSizeType  gridSizeForThread = workUnit.GridSize;
   const SampleGridIndexType gridIndexForThread = workUnit.GridIndex;
@@ -461,7 +469,8 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
 
           if constexpr (VUseMask)
           {
-            if (mask->IsInsideInWorldSpace(point))
+            // Equivalent to `mask->IsInsideInWorldSpace(point)`, but much faster.
+            if (mask->IsInsideInObjectSpace(worldToObjectTransform->WorldToObjectTransformType::TransformPoint(point)))
             {
               // Get sampled fixed image value.
               const auto pixel = inputImage.GetPixel(index);
