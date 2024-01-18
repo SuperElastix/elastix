@@ -22,6 +22,7 @@
 #include "itkTransformixInputPointFileReader.h"
 #include <vnl/vnl_math.h>
 #include "itkTimeProbe.h"
+#include <cstdint> // For int64_t.
 
 namespace elastix
 {
@@ -338,7 +339,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
       landmarkPointSet->GetPoint(j, &landmarkPoint);
       for (unsigned int d = 0; d < SpaceDimension; ++d)
       {
-        landmarkIndex[d] = static_cast<IndexValueType>(itk::Math::Round<double>(landmarkPoint[d]));
+        landmarkIndex[d] = static_cast<IndexValueType>(itk::Math::Round<std::int64_t>(landmarkPoint[d]));
       }
 
       /** Compute the input point in physical coordinates and replace the point. */

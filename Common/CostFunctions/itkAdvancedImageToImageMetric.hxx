@@ -550,7 +550,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
         MovingImageIndexType index;
         for (unsigned int j = 0; j < MovingImageDimension; ++j)
         {
-          index[j] = static_cast<long>(Math::Round<double>(cindex[j]));
+          index[j] = static_cast<long>(Math::Round<int64_t>(cindex[j]));
         }
         (*gradient) = this->m_GradientImage->GetPixel(index);
       }

@@ -543,7 +543,7 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
   /** Compute the grid spacing. */
   const double indimd = static_cast<double>(InputImageDimension);
   int          gridSpacing = static_cast<int>( // no unsigned int version of rnd, max
-    Math::Round<double>(std::pow(fraction, 1.0 / indimd)));
+    Math::Round<int64_t>(std::pow(fraction, 1.0 / indimd)));
   gridSpacing = std::max(1, gridSpacing);
 
   /** Set gridSpacings for all dimensions
