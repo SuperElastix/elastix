@@ -167,7 +167,7 @@ void
 ProgressCommand::PrintProgress(const float progress) const
 {
   /** Print the progress to the screen. */
-  const int progressInt = itk::Math::Round<float>(100 * progress);
+  const int progressInt = itk::Math::Round<int>(100 * progress);
 
   // Pass the entire message at once, rather than having multiple `<<` insertions.
   const std::string message = '\r' + m_StartString + std::to_string(progressInt) + m_EndString;
