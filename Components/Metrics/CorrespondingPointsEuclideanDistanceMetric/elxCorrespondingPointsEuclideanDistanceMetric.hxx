@@ -21,6 +21,7 @@
 #include "elxCorrespondingPointsEuclideanDistanceMetric.h"
 #include "itkTransformixInputPointFileReader.h"
 #include "itkTimeProbe.h"
+#include <cstdint> // For int64_t.
 
 namespace elastix
 {
@@ -196,7 +197,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
       pointSet->GetPoint(j, &point);
       for (unsigned int d = 0; d < FixedImageDimension; ++d)
       {
-        index[d] = static_cast<IndexValueType>(itk::Math::Round<double>(point[d]));
+        index[d] = static_cast<IndexValueType>(itk::Math::Round<std::int64_t>(point[d]));
       }
 
       /** Compute the input point in physical coordinates. */

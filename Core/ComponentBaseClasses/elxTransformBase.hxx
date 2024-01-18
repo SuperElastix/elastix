@@ -803,7 +803,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
       inputPointSet->GetPoint(j, &point);
       for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
-        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(point[i]));
+        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<int64_t>(point[i]));
       }
       /** Compute the input point in physical coordinates. */
       dummyImage->TransformIndexToPhysicalPoint(inputindexvec[j], inputpointvec[j]);
@@ -820,7 +820,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
       const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(point);
       for (unsigned int i = 0; i < FixedImageDimension; ++i)
       {
-        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
+        inputindexvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<int64_t>(fixedcindex[i]));
       }
     }
   }
@@ -836,7 +836,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     const auto fixedcindex = dummyImage->template TransformPhysicalPointToContinuousIndex<double>(outputpointvec[j]);
     for (unsigned int i = 0; i < FixedImageDimension; ++i)
     {
-      outputindexfixedvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<double>(fixedcindex[i]));
+      outputindexfixedvec[j][i] = static_cast<FixedImageIndexValueType>(itk::Math::Round<int64_t>(fixedcindex[i]));
     }
 
     if (alsoMovingIndices)
@@ -846,7 +846,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
         movingImage->template TransformPhysicalPointToContinuousIndex<double>(outputpointvec[j]);
       for (unsigned int i = 0; i < MovingImageDimension; ++i)
       {
-        outputindexmovingvec[j][i] = static_cast<MovingImageIndexValueType>(itk::Math::Round<double>(movingcindex[i]));
+        outputindexmovingvec[j][i] = static_cast<MovingImageIndexValueType>(itk::Math::Round<int64_t>(movingcindex[i]));
       }
     }
 
