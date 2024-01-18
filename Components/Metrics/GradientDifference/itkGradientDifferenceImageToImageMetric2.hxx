@@ -240,7 +240,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance
     typename FixedImageType::PointType point;
     bool                               sampleOK = false;
 
-    if (this->m_FixedImageMask.IsNull())
+    if (!this->GetFixedImageMask())
     {
       sampleOK = true;
     }
@@ -252,9 +252,9 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance
       this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
       /** if fixedMask is given */
-      if (!this->m_FixedImageMask.IsNull())
+      if (const auto * const mask = this->GetFixedImageMask())
       {
-        if (this->m_FixedImageMask->IsInsideInWorldSpace(point))
+        if (mask->IsInsideInWorldSpace(point))
         {
           sampleOK = true;
         }
@@ -301,9 +301,9 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance
       this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
       /** if fixedMask is given */
-      if (!this->m_FixedImageMask.IsNull())
+      if (const auto * const mask = this->GetFixedImageMask())
       {
-        if (this->m_FixedImageMask->IsInsideInWorldSpace(point))
+        if (mask->IsInsideInWorldSpace(point))
         {
           sampleOK = true;
         }
@@ -393,7 +393,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
 
     bool sampleOK = false;
 
-    if (this->m_FixedImageMask.IsNull())
+    if (!this->GetFixedImageMask())
     {
       sampleOK = true;
     }
@@ -405,10 +405,10 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
       this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
       /** if fixedMask is given */
-      if (!this->m_FixedImageMask.IsNull())
+      if (const auto * const mask = this->GetFixedImageMask())
       {
 
-        if (this->m_FixedImageMask->IsInsideInWorldSpace(point)) // sample is good
+        if (mask->IsInsideInWorldSpace(point)) // sample is good
         {
           sampleOK = true;
         }

@@ -35,7 +35,7 @@
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
-#include "itkSpatialObject.h"
+#include "itkImageMaskSpatialObject.h"
 #include "itkAdvancedImageMomentsCalculator.h"
 
 #include <iostream>

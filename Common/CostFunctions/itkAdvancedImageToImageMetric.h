@@ -38,7 +38,9 @@
 
 #include "itkPlatformMultiThreader.h"
 
+#include <cassert>
 #include <memory> // For unique_ptr.
+#include <typeinfo>
 
 namespace itk
 {
@@ -122,17 +124,17 @@ public:
   using typename Superclass::GradientImagePointer;
   using typename Superclass::GradientImageFilterType;
   using typename Superclass::GradientImageFilterPointer;
-  using typename Superclass::FixedImageMaskType;
-  using typename Superclass::FixedImageMaskPointer;
-  using typename Superclass::MovingImageMaskType;
-  using typename Superclass::MovingImageMaskPointer;
+
+  // Overrule the mask type from its base class, ITK ImageToImageMetric.
+  using FixedImageMaskType = ImageMaskSpatialObject<Self::FixedImageDimension>;
+  using FixedImageMaskPointer = SmartPointer<FixedImageMaskType>;
+  using MovingImageMaskType = ImageMaskSpatialObject<Self::MovingImageDimension>;
+  using MovingImageMaskPointer = SmartPointer<MovingImageMaskType>;
+
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
   using DerivativeValueType = typename DerivativeType::ValueType;
   using typename Superclass::ParametersType;
-
-  using FixedImageMaskSpatialObject2Type = ImageMaskSpatialObject<Self::FixedImageDimension>;
-  using MovingImageMaskSpatialObject2Type = ImageMaskSpatialObject<Self::MovingImageDimension>;
 
   /** Some useful extra typedefs. */
   using FixedImagePixelType = typename FixedImageType::PixelType;
@@ -176,6 +178,36 @@ public:
   using ThreadInfoType = typename ThreaderType::WorkUnitInfo;
 
   /** Public methods ********************/
+
+  virtual void
+  SetFixedImageMask(FixedImageMaskType * const arg)
+  {
+    assert(arg == nullptr || typeid(*arg) == typeid(FixedImageMaskType));
+    Superclass::SetFixedImageMask(arg);
+  }
+
+  virtual void
+  SetMovingImageMask(MovingImageMaskType * const arg)
+  {
+    assert(arg == nullptr || typeid(*arg) == typeid(MovingImageMaskType));
+    Superclass::SetMovingImageMask(arg);
+  }
+
+  const FixedImageMaskType *
+  GetFixedImageMask() const override
+  {
+    const auto * const mask = Superclass::GetFixedImageMask();
+    assert(mask == nullptr || typeid(*mask) == typeid(FixedImageMaskType));
+    return static_cast<const FixedImageMaskType *>(mask);
+  }
+
+  const MovingImageMaskType *
+  GetMovingImageMask() const override
+  {
+    const auto * const mask = Superclass::GetMovingImageMask();
+    assert(mask == nullptr || typeid(*mask) == typeid(MovingImageMaskType));
+    return static_cast<const MovingImageMaskType *>(mask);
+  }
 
   /** Set the transform, of advanced type. */
   virtual void
@@ -596,6 +628,39 @@ private:
   bool   m_ScaleGradientWithRespectToMovingImageOrientation{ false };
 
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales{ MovingImageDerivativeScalesType::Filled(1.0) };
+
+  // Prevent accidentally calling SetFixedImageMask or SetMovingImageMask through the ITK ImageToImageMetric interface.
+  void
+  SetFixedImageMask(typename Superclass::FixedImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
+  void
+  SetFixedImageMask(const typename Superclass::FixedImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
+  void
+  SetMovingImageMask(typename Superclass::MovingImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
+  void
+  SetMovingImageMask(const typename Superclass::MovingImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
+
+  struct DummyMask
+  {};
+
+  // Prevent accidentally accessing m_FixedImageMask or m_MovingImageMask directly from the ITK's ImageToImageMetric.
+  constexpr static DummyMask m_FixedImageMask{};
+  constexpr static DummyMask m_MovingImageMask{};
 };
 
 } // end namespace itk

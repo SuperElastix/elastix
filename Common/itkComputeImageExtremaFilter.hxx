@@ -110,10 +110,6 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedStreamedGenerateData(const Regio
     {
       this->ThreadedGenerateDataImageSpatialMask(regionForThread);
     }
-    if (this->GetImageMask())
-    {
-      this->ThreadedGenerateDataImageMask(regionForThread);
-    }
   }
 } // end ThreadedGenerateData()
 
@@ -184,57 +180,6 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(con
   m_ThreadMax = std::max(max, m_ThreadMax);
 
 } // end ThreadedGenerateDataImageSpatialMask()
-
-
-template <typename TInputImage>
-void
-ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageMask(const RegionType & regionForThread)
-{
-  const SizeValueType size0 = regionForThread.GetSize(0);
-  if (size0 == 0)
-  {
-    return;
-  }
-  RealType  realValue;
-  PixelType value;
-
-  RealType      sum = NumericTraits<RealType>::ZeroValue();
-  RealType      sumOfSquares = NumericTraits<RealType>::ZeroValue();
-  SizeValueType count = NumericTraits<SizeValueType>::ZeroValue();
-  PixelType     min = NumericTraits<PixelType>::max();
-  PixelType     max = NumericTraits<PixelType>::NonpositiveMin();
-
-  ImageRegionConstIterator<TInputImage> it(this->GetInput(), regionForThread);
-  it.GoToBegin();
-
-  // do the work
-  while (!it.IsAtEnd())
-  {
-    PointType point;
-    this->GetInput()->TransformIndexToPhysicalPoint(it.GetIndex(), point);
-    if (this->m_ImageMask->IsInsideInWorldSpace(point))
-    {
-      value = it.Get();
-      realValue = static_cast<RealType>(value);
-
-      min = std::min(min, value);
-      max = std::max(max, value);
-
-      sum += realValue;
-      sumOfSquares += (realValue * realValue);
-      ++count;
-    }
-    ++it;
-  } // end while
-
-  std::lock_guard<std::mutex> mutexHolder(m_Mutex);
-  m_ThreadSum += sum;
-  m_SumOfSquares += sumOfSquares;
-  m_Count += count;
-  m_ThreadMin = std::min(min, m_ThreadMin);
-  m_ThreadMax = std::max(max, m_ThreadMax);
-
-} // end ThreadedGenerateDataImageMask()
 
 } // end namespace itk
 #endif

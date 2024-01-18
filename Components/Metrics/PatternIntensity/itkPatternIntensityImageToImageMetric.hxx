@@ -160,7 +160,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() 
 
   bool sampleOK = false;
 
-  if (this->m_FixedImageMask.IsNull())
+  if (!this->GetFixedImageMask())
   {
     sampleOK = true;
   }
@@ -172,9 +172,9 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() 
     this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
     /** if fixedMask is given */
-    if (!this->m_FixedImageMask.IsNull())
+    if (const auto * const mask = this->GetFixedImageMask())
     {
-      if (this->m_FixedImageMask->IsInsideInWorldSpace(point))
+      if (mask->IsInsideInWorldSpace(point))
       {
         sampleOK = true;
       }
@@ -271,7 +271,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(con
   neighboriterationRegion.SetSize(neighborIterationSize);
 
   bool sampleOK = false;
-  if (this->m_FixedImageMask.IsNull())
+  if (!this->GetFixedImageMask())
   {
     sampleOK = true;
   }
@@ -283,9 +283,9 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(con
     this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
     /** if fixedMask is given */
-    if (!this->m_FixedImageMask.IsNull())
+    if (const auto * const mask = this->GetFixedImageMask())
     {
-      if (this->m_FixedImageMask->IsInsideInWorldSpace(point))
+      if (mask->IsInsideInWorldSpace(point))
       {
         sampleOK = true;
       }

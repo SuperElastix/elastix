@@ -22,7 +22,7 @@
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkAffineTransform.h"
 #include "itkImage.h"
-#include "itkSpatialObject.h"
+#include "itkImageMaskSpatialObject.h"
 #include "itkImageGridSampler.h"
 #include "itkImageFullSampler.h"
 
@@ -90,7 +90,7 @@ public:
   using VectorType = Vector<ScalarType, Self::ImageDimension>;
 
   /** Spatial Object type within this class. */
-  using SpatialObjectType = SpatialObject<Self::ImageDimension>;
+  using SpatialObjectType = ImageMaskSpatialObject<Self::ImageDimension>;
 
   /** Spatial Object member types used within this class. */
   using SpatialObjectPointer = typename SpatialObjectType::Pointer;
@@ -124,7 +124,7 @@ public:
 
   /** Set the spatial object mask. */
   virtual void
-  SetSpatialObjectMask(const SpatialObject<Self::ImageDimension> * so)
+  SetSpatialObjectMask(const ImageMaskSpatialObject<Self::ImageDimension> * so)
   {
     if (m_SpatialObjectMask != so)
     {

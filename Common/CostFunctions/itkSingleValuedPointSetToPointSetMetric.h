@@ -37,7 +37,7 @@
 #include "itkAdvancedTransform.h"
 #include "itkSingleValuedCostFunction.h"
 #include "itkMacro.h"
-#include "itkSpatialObject.h"
+#include "itkImageMaskSpatialObject.h"
 #include "itkPointSet.h"
 
 namespace itk
@@ -98,10 +98,10 @@ public:
   using TransformParametersType = typename TransformType::ParametersType;
   using TransformJacobianType = typename TransformType::JacobianType;
 
-  using FixedImageMaskType = SpatialObject<Self::FixedPointSetDimension>;
+  using FixedImageMaskType = ImageMaskSpatialObject<Self::FixedPointSetDimension>;
   using FixedImageMaskPointer = typename FixedImageMaskType::Pointer;
   using FixedImageMaskConstPointer = typename FixedImageMaskType::ConstPointer;
-  using MovingImageMaskType = SpatialObject<Self::MovingPointSetDimension>;
+  using MovingImageMaskType = ImageMaskSpatialObject<Self::MovingPointSetDimension>;
   using MovingImageMaskPointer = typename MovingImageMaskType::Pointer;
   using MovingImageMaskConstPointer = typename MovingImageMaskType::ConstPointer;
 

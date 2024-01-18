@@ -166,7 +166,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
   unsigned long nPixels = 0;
 
-  if (this->m_FixedImageMask.IsNull())
+  if (!this->GetFixedImageMask())
   {
     sampleOK = true;
   }
@@ -178,9 +178,9 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
     /** if fixedMask is given */
-    if (!this->m_FixedImageMask.IsNull())
+    if (const auto * const mask = this->GetFixedImageMask())
     {
-      if (this->m_FixedImageMask->IsInsideInWorldSpace(point))
+      if (mask->IsInsideInWorldSpace(point))
       {
         sampleOK = true;
       }
@@ -233,7 +233,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
   bool sampleOK = false;
 
-  if (this->m_FixedImageMask.IsNull())
+  if (!this->GetFixedImageMask())
   {
     sampleOK = true;
   }
@@ -254,9 +254,9 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
     /** if fixedMask is given */
-    if (!this->m_FixedImageMask.IsNull())
+    if (const auto * const mask = this->GetFixedImageMask())
     {
-      if (this->m_FixedImageMask->IsInsideInWorldSpace(point))
+      if (mask->IsInsideInWorldSpace(point))
       {
         sampleOK = true;
       }
@@ -334,7 +334,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   this->m_NumberOfPixelsCounted = 0;
   bool sampleOK = false;
 
-  if (this->m_FixedImageMask.IsNull())
+  if (!this->GetFixedImageMask())
   {
     sampleOK = true;
   }
@@ -345,9 +345,9 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     this->m_FixedImage->TransformIndexToPhysicalPoint(currentIndex, point);
 
     /** if fixedMask is given */
-    if (!this->m_FixedImageMask.IsNull())
+    if (const auto * const mask = this->GetFixedImageMask())
     {
-      if (this->m_FixedImageMask->IsInsideInWorldSpace(point))
+      if (mask->IsInsideInWorldSpace(point))
       {
         sampleOK = true;
       }
