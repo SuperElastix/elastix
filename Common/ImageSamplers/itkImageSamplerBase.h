@@ -21,7 +21,7 @@
 #include "itkVectorContainerSource.h"
 #include "itkImageSample.h"
 #include "itkVectorDataContainer.h"
-#include "itkSpatialObject.h"
+#include "itkImageMaskSpatialObject.h"
 
 namespace itk
 {
@@ -81,7 +81,7 @@ public:
   using InputImagePointType = typename InputImageType::PointType;
   using InputImagePointValueType = typename InputImagePointType::ValueType;
   using ImageSampleValueType = typename ImageSampleType::RealType;
-  using MaskType = SpatialObject<Self::InputImageDimension>;
+  using MaskType = ImageMaskSpatialObject<Self::InputImageDimension>;
   using MaskPointer = typename MaskType::Pointer;
   using MaskConstPointer = typename MaskType::ConstPointer;
   using MaskVectorType = std::vector<MaskConstPointer>;

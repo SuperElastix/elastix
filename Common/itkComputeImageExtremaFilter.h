@@ -19,7 +19,6 @@
 #define itkComputeImageExtremaFilter_h
 
 #include "itkStatisticsImageFilter.h"
-#include "itkSpatialObject.h"
 #include "itkImageMaskSpatialObject.h"
 
 namespace itk
@@ -78,12 +77,6 @@ public:
   itkSetMacro(ImageRegion, RegionType);
   itkSetMacro(UseMask, bool);
 
-  using ImageMaskType = SpatialObject<Self::ImageDimension>;
-  using ImageMaskPointer = typename ImageMaskType::Pointer;
-  using ImageMaskConstPointer = typename ImageMaskType::ConstPointer;
-  itkSetConstObjectMacro(ImageMask, ImageMaskType);
-  itkGetConstObjectMacro(ImageMask, ImageMaskType);
-
   using ImageSpatialMaskType = ImageMaskSpatialObject<Self::ImageDimension>;
   using ImageSpatialMaskPointer = typename ImageSpatialMaskType::Pointer;
   using ImageSpatialMaskConstPointer = typename ImageSpatialMaskType::ConstPointer;
@@ -109,11 +102,8 @@ protected:
   virtual void
   ThreadedGenerateDataImageSpatialMask(const RegionType &);
   virtual void
-  ThreadedGenerateDataImageMask(const RegionType &);
-  virtual void
                                SameGeometry();
   RegionType                   m_ImageRegion{};
-  ImageMaskConstPointer        m_ImageMask{};
   ImageSpatialMaskConstPointer m_ImageSpatialMask{};
   bool                         m_UseMask{ false };
   bool                         m_SameGeometry{ false };

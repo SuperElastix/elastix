@@ -196,20 +196,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
       ComputeFixedImageExtremaFilterType::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
     computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
-    if (this->m_FixedImageMask.IsNotNull())
+    if (const auto * const fMask = this->GetFixedImageMask())
     {
       computeFixedImageExtrema->SetUseMask(true);
-
-      const FixedImageMaskSpatialObject2Type * fMask =
-        dynamic_cast<const FixedImageMaskSpatialObject2Type *>(this->m_FixedImageMask.GetPointer());
-      if (fMask)
-      {
-        computeFixedImageExtrema->SetImageSpatialMask(fMask);
-      }
-      else
-      {
-        computeFixedImageExtrema->SetImageMask(this->GetFixedImageMask());
-      }
+      computeFixedImageExtrema->SetImageSpatialMask(fMask);
     }
 
     computeFixedImageExtrema->Update();
@@ -245,19 +235,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
       ComputeMovingImageExtremaFilterType::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
     computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
-    if (this->m_MovingImageMask.IsNotNull())
+    if (const auto * const mask = this->GetMovingImageMask())
     {
       computeMovingImageExtrema->SetUseMask(true);
-      const MovingImageMaskSpatialObject2Type * mMask =
-        dynamic_cast<const MovingImageMaskSpatialObject2Type *>(this->m_MovingImageMask.GetPointer());
-      if (mMask)
-      {
-        computeMovingImageExtrema->SetImageSpatialMask(mMask);
-      }
-      else
-      {
-        computeMovingImageExtrema->SetImageMask(this->GetMovingImageMask());
-      }
+      computeMovingImageExtrema->SetImageSpatialMask(mask);
     }
     computeMovingImageExtrema->Update();
 
@@ -300,7 +281,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
 
     /** Initialize the Image Sampler. */
     this->m_ImageSampler->SetInput(this->m_FixedImage);
-    this->m_ImageSampler->SetMask(this->m_FixedImageMask);
+    this->m_ImageSampler->SetMask(this->GetFixedImageMask());
     this->m_ImageSampler->SetInputImageRegion(this->GetFixedImageRegion());
   }
 
@@ -707,9 +688,9 @@ bool
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::IsInsideMovingMask(const MovingImagePointType & point) const
 {
   /** If a mask has been set: */
-  if (this->m_MovingImageMask.IsNotNull())
+  if (const auto * const mask = this->GetMovingImageMask())
   {
-    return this->m_MovingImageMask->IsInsideInWorldSpace(point);
+    return mask->IsInsideInWorldSpace(point);
   }
 
   /** If no mask has been set, just return true. */

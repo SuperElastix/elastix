@@ -118,9 +118,6 @@ public:
   using typename Superclass::ThreaderType;
   using typename Superclass::ThreadInfoType;
 
-  using typename Superclass::FixedImageMaskSpatialObject2Type;
-  using typename Superclass::MovingImageMaskSpatialObject2Type;
-
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
 

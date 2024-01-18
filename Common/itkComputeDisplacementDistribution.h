@@ -76,7 +76,7 @@ public:
    * this mask will be considered for the computation of the Jacobian terms.
    */
   itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
-  using FixedImageMaskType = SpatialObject<Self::FixedImageDimension>;
+  using FixedImageMaskType = ImageMaskSpatialObject<Self::FixedImageDimension>;
   using FixedImageMaskPointer = typename FixedImageMaskType::Pointer;
   using FixedImageMaskConstPointer = typename FixedImageMaskType::ConstPointer;
   using NonZeroJacobianIndicesType = typename TransformType::NonZeroJacobianIndicesType;

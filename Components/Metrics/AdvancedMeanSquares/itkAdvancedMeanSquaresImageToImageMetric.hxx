@@ -73,19 +73,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
       ComputeFixedImageExtremaFilterType::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
     computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
-    if (this->m_FixedImageMask.IsNotNull())
+    if (const auto * const mask = this->GetFixedImageMask())
     {
       computeFixedImageExtrema->SetUseMask(true);
-      const FixedImageMaskSpatialObject2Type * fmask =
-        dynamic_cast<const FixedImageMaskSpatialObject2Type *>(this->m_FixedImageMask.GetPointer());
-      if (fmask)
-      {
-        computeFixedImageExtrema->SetImageSpatialMask(fmask);
-      }
-      else
-      {
-        computeFixedImageExtrema->SetImageMask(this->GetFixedImageMask());
-      }
+      computeFixedImageExtrema->SetImageSpatialMask(mask);
     }
 
     computeFixedImageExtrema->Update();
@@ -105,19 +96,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
       ComputeMovingImageExtremaFilterType::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
     computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
-    if (this->m_MovingImageMask.IsNotNull())
+    if (const auto * const mask = this->GetMovingImageMask())
     {
       computeMovingImageExtrema->SetUseMask(true);
-      const MovingImageMaskSpatialObject2Type * mMask =
-        dynamic_cast<const MovingImageMaskSpatialObject2Type *>(this->m_MovingImageMask.GetPointer());
-      if (mMask)
-      {
-        computeMovingImageExtrema->SetImageSpatialMask(mMask);
-      }
-      else
-      {
-        computeMovingImageExtrema->SetImageMask(this->GetMovingImageMask());
-      }
+      computeMovingImageExtrema->SetImageSpatialMask(mask);
     }
 
     computeMovingImageExtrema->Update();
