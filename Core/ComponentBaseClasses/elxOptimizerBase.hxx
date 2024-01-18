@@ -23,6 +23,7 @@
 
 #include "itkSingleValuedNonLinearOptimizer.h"
 #include "itk_zlib.h"
+#include <cmath> // For round.
 
 namespace elastix
 {
@@ -83,7 +84,7 @@ OptimizerBase<TElastix>::AfterRegistrationBase()
   ParametersType      roundedTP(N);
   for (unsigned int i = 0; i < N; ++i)
   {
-    roundedTP[i] = itk::Math::Round<ParametersValueType>(finalTP[i] * 1.0e6);
+    roundedTP[i] = std::round(finalTP[i] * 1.0e6);
   }
 
   /** Compute the crc checksum using zlib crc32 function. */
