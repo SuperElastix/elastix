@@ -258,7 +258,7 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
             inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
             // Equivalent to `mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates)`, but much faster.
-            if (mask->IsInsideInObjectSpace(
+            if (mask->MaskType::IsInsideInObjectSpace(
                   worldToObjectTransform.WorldToObjectTransformType::TransformPoint(tempSample.m_ImageCoordinates)))
             {
               // Get sampled fixed image value.
@@ -470,7 +470,8 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
           if constexpr (VUseMask)
           {
             // Equivalent to `mask->IsInsideInWorldSpace(point)`, but much faster.
-            if (mask->IsInsideInObjectSpace(worldToObjectTransform->WorldToObjectTransformType::TransformPoint(point)))
+            if (mask->MaskType::IsInsideInObjectSpace(
+                  worldToObjectTransform->WorldToObjectTransformType::TransformPoint(point)))
             {
               // Get sampled fixed image value.
               const auto pixel = inputImage.GetPixel(index);
