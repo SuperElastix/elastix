@@ -70,7 +70,10 @@ public:
   using typename Superclass::ImageSampleType;
   using typename Superclass::ImageSampleContainerType;
   using typename Superclass::ImageSampleContainerPointer;
-  using typename Superclass::MaskType;
+
+  // Clang/macos-12/Xcode_14.2 does not like `using typename Superclass::MaskType`, saying "error: 'MaskType' is not a
+  // class, namespace, or enumeration"
+  using MaskType = typename Superclass::MaskType;
 
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
