@@ -20,6 +20,7 @@
 #include "itkComputeImageExtremaFilter.h"
 
 #include <itkImageRegionConstIterator.h>
+#include "elxImageDomain.h"
 
 namespace itk
 {
@@ -56,9 +57,7 @@ template <typename TInputImage>
 void
 ComputeImageExtremaFilter<TInputImage>::SameGeometry()
 {
-  if (this->GetInput()->GetLargestPossibleRegion().GetSize() ==
-        this->m_ImageSpatialMask->GetImage()->GetLargestPossibleRegion().GetSize() &&
-      this->GetInput()->GetOrigin() == this->m_ImageSpatialMask->GetImage()->GetOrigin())
+  if (elastix::HaveSameImageDomain(*(this->GetInput()), *(this->m_ImageSpatialMask->GetImage())))
   {
     this->m_SameGeometry = true;
   }

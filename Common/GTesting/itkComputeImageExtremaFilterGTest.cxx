@@ -20,8 +20,10 @@
 // First include the header file to be tested:
 #include "itkComputeImageExtremaFilter.h"
 #include "../Core/Main/GTesting/elxCoreMainGTestUtilities.h"
+#include "elxDefaultConstruct.h"
 
 #include <itkImage.h>
+#include <itkImageBufferRange.h>
 
 #include <gtest/gtest.h>
 
@@ -35,6 +37,7 @@ using itk::ComputeImageExtremaFilter;
 
 // Using-declaration:
 using elx::CoreMainGTestUtilities::CheckNew;
+using elx::CoreMainGTestUtilities::CreateImage;
 
 namespace
 {
@@ -295,4 +298,72 @@ GTEST_TEST(ComputeImageExtremaFilter, OneNonZeroPixelValueMaskedIn)
   Expect_one_non_zero_pixel_value_masked_in<itk::Image<float, 2>>({ { 2, 3 } });
   Expect_one_non_zero_pixel_value_masked_in<itk::Image<short, 3>>({ { 2, 3, 4 } });
   Expect_one_non_zero_pixel_value_masked_in<itk::Image<unsigned char, 4>>({ { 2, 3, 4, 5 } });
+}
+
+
+// Changes of the mask Spacing and Direction with respect to the input image may affect the results.
+GTEST_TEST(ComputeImageExtremaFilter, MaskSpacingAndDirectionAffectResults)
+{
+  using PixelType = int;
+  enum
+  {
+    Dimension = 2U
+  };
+  enum class MaskChange
+  {
+    None,
+    Spacing,
+    Direction
+  };
+
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using FilterType = ComputeImageExtremaFilter<ImageType>;
+  using ImageSpatialMaskType = FilterType::ImageSpatialMaskType;
+  using MaskImageType = ImageSpatialMaskType::ImageType;
+
+  const auto computeMaximum = [](const MaskChange maskChange) {
+    const auto imageSize = itk::Size<Dimension>::Filled(4);
+
+    const auto image = CreateImage<PixelType>(imageSize);
+    const auto maskImage = CreateImage<MaskPixelType>(imageSize);
+
+    // Set specific non-zero values at the first and the last pixel. All other pixels have value zero.
+    *(itk::ImageBufferRange{ *image }.begin()) = PixelType{ 1 };
+    *(itk::ImageBufferRange{ *image }.rbegin()) = PixelType{ 2 };
+
+    // Include only the first and the last pixel under the mask. All other mask entries are zero (false).
+    *(itk::ImageBufferRange{ *maskImage }.begin()) = MaskPixelType{ 1 };
+    *(itk::ImageBufferRange{ *maskImage }.rbegin()) = MaskPixelType{ 1 };
+
+    if (maskChange == MaskChange::Spacing)
+    {
+      // Change the spacing of the mask, so that the last pixel is no longer "under the mask".
+      maskImage->SetSpacing(itk::MakeFilled<MaskImageType::SpacingType>(0.5));
+    }
+    else
+    {
+      if (maskChange == MaskChange::Direction)
+      {
+        // Reverse the direction of the mask, so that the last pixel is no longer "under the mask".
+        maskImage->SetDirection(image->GetDirection() * -1.0);
+      }
+    }
+
+    const auto maskSpatialObject = ImageSpatialMaskType::New();
+    maskSpatialObject->SetImage(maskImage);
+    maskSpatialObject->Update();
+
+    elastix::DefaultConstruct<FilterType> filter{};
+    filter.SetInput(image);
+    filter.SetImageSpatialMask(maskSpatialObject);
+    filter.SetUseMask(true);
+
+    filter.Update();
+    return filter.GetMaximum();
+  };
+
+  const auto maximumWithoutMaskChanges = computeMaximum(MaskChange::None);
+
+  EXPECT_NE(computeMaximum(MaskChange::Spacing), maximumWithoutMaskChanges);
+  EXPECT_NE(computeMaximum(MaskChange::Direction), maximumWithoutMaskChanges);
 }
