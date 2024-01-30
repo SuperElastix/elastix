@@ -92,7 +92,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetComponents()
   else
   {
     itkExceptionMacro(
-      << "ERROR: MultiResolutionRegistrationWithFeatures expects the metric to be of type AdvancedImageToImageMetric!");
+      "ERROR: MultiResolutionRegistrationWithFeatures expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Set the fixed images. */

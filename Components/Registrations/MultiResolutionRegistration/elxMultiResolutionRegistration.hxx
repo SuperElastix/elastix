@@ -132,7 +132,7 @@ MultiResolutionRegistration<TElastix>::SetComponents()
   else
   {
     itkExceptionMacro(
-      << "ERROR: MultiResolutionRegistration expects the metric to be of type AdvancedImageToImageMetric!");
+      "ERROR: MultiResolutionRegistration expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   this->SetOptimizer(dynamic_cast<OptimizerType *>(this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType()));

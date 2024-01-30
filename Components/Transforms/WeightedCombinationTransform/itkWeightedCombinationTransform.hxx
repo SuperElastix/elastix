@@ -51,8 +51,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
 {
   if (param.GetSize() != this->m_TransformContainer.size())
   {
-    itkExceptionMacro(
-      << "Number of parameters does not match the number of transforms set in the transform container.");
+    itkExceptionMacro("Number of parameters does not match the number of transforms set in the transform container.");
   }
 
   // this->m_Jacobian.SetSize( OutputSpaceDimension, param.GetSize() );

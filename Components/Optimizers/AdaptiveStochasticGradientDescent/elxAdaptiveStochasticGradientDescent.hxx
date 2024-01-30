@@ -528,7 +528,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationOrigina
   if (!testPtr)
   {
     itkExceptionMacro(
-      << "ERROR: AdaptiveStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
+      "ERROR: AdaptiveStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
@@ -668,7 +668,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDi
   if (!testPtr)
   {
     itkExceptionMacro(
-      << "ERROR: AdaptiveStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
+      "ERROR: AdaptiveStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */

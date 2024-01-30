@@ -94,8 +94,7 @@ public:
   OutputVectorType
   TransformVector(const InputVectorType &) const override
   {
-    itkExceptionMacro(
-      << "TransformVector(const InputVectorType &) is not implemented for WeightedCombinationTransform");
+    itkExceptionMacro("TransformVector(const InputVectorType &) is not implemented for WeightedCombinationTransform");
   }
 
 
@@ -103,7 +102,7 @@ public:
   TransformVector(const InputVnlVectorType &) const override
   {
     itkExceptionMacro(
-      << "TransformVector(const InputVnlVectorType &) is not implemented for WeightedCombinationTransform");
+      "TransformVector(const InputVnlVectorType &) is not implemented for WeightedCombinationTransform");
   }
 
 

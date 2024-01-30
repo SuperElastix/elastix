@@ -137,7 +137,7 @@ public:
   TransformVector(const InputVectorType &) const override
   {
     itkExceptionMacro(
-      << "TransformVector(const InputVectorType &) is not implemented for DeformationFieldInterpolatingTransform");
+      "TransformVector(const InputVectorType &) is not implemented for DeformationFieldInterpolatingTransform");
   }
 
 
@@ -145,7 +145,7 @@ public:
   TransformVector(const InputVnlVectorType &) const override
   {
     itkExceptionMacro(
-      << "TransformVector(const InputVnlVectorType &) is not implemented for DeformationFieldInterpolatingTransform");
+      "TransformVector(const InputVnlVectorType &) is not implemented for DeformationFieldInterpolatingTransform");
   }
 
 

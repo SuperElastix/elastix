@@ -536,7 +536,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   if (!testPtr)
   {
     itkExceptionMacro(
-      << "ERROR: PreconditionedStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
+      "ERROR: PreconditionedStochasticGradientDescent expects the metric to be of type AdvancedImageToImageMetric!");
   }
 
   /** Getting pointers to the samplers. */
