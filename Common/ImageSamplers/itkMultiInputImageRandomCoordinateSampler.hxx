@@ -109,10 +109,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
         if (numberOfSamplesTried > maximumNumberOfSamplesToTry)
         {
           /** Squeeze the sample container to the size that is still valid. */
-          typename ImageSampleContainerType::iterator stlnow = sampleContainer.begin();
-          typename ImageSampleContainerType::iterator stlend = sampleContainer.end();
-          stlnow += iter.Index();
-          sampleContainer.erase(stlnow, stlend);
+          sampleContainer.resize(iter.Index());
           itkExceptionMacro(
             "Could not find enough image samples within reasonable time. Probably the mask is too small");
         }
