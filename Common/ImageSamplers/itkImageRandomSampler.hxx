@@ -122,7 +122,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
           stlnow += iter.Index();
           sampleContainer.erase(stlnow, stlend);
           itkExceptionMacro(
-            << "Could not find enough image samples within reasonable time. Probably the mask is too small");
+            "Could not find enough image samples within reasonable time. Probably the mask is too small");
         }
         /** Get the index, and transform it to the physical coordinates. */
         InputImageIndexType index = randIter.GetIndex();

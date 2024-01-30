@@ -37,8 +37,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
   /** Check. */
   if (!this->CheckInputImageRegions())
   {
-    itkExceptionMacro(
-      << "ERROR: at least one of the InputImageRegions is not a subregion of the LargestPossibleRegion");
+    itkExceptionMacro("ERROR: at least one of the InputImageRegions is not a subregion of the LargestPossibleRegion");
   }
 
   /** Get handles to the input image, output sample container, and mask. */
@@ -115,7 +114,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
           stlnow += iter.Index();
           sampleContainer.erase(stlnow, stlend);
           itkExceptionMacro(
-            << "Could not find enough image samples within reasonable time. Probably the mask is too small");
+            "Could not find enough image samples within reasonable time. Probably the mask is too small");
         }
 
         /** Generate a point in the input image region. */

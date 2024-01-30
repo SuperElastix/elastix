@@ -211,7 +211,7 @@ public:
   TransformCovariantVector(const InputCovariantVectorType &) const override
   {
     itkExceptionMacro(
-      << "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for KernelTransform");
+      "TransformCovariantVector(const InputCovariantVectorType &) is not implemented for KernelTransform");
   }
 
 

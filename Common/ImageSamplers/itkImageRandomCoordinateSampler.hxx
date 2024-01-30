@@ -140,7 +140,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
           stlnow += iter.Index();
           sampleContainer.erase(stlnow, stlend);
           itkExceptionMacro(
-            << "Could not find enough image samples within reasonable time. Probably the mask is too small");
+            "Could not find enough image samples within reasonable time. Probably the mask is too small");
         }
 
         /** Generate a point in the input image region. */

@@ -362,7 +362,7 @@ AdvancedImageMomentsCalculator<TImage>::DoPostProcessing()
   if (this->m_M0 == 0.0)
   {
     itkExceptionMacro(
-      << "Compute(): Total Mass of the image was zero. Aborting here to prevent division by zero later on.");
+      "Compute(): Total Mass of the image was zero. Aborting here to prevent division by zero later on.");
   }
 
   // Normalize using the total mass
@@ -489,8 +489,7 @@ AdvancedImageMomentsCalculator<TImage>::GetPrincipalMoments() const -> VectorTyp
 {
   if (!m_Valid)
   {
-    itkExceptionMacro(
-      << "GetPrincipalMoments() invoked, but the moments have not been computed. Call Compute() first.");
+    itkExceptionMacro("GetPrincipalMoments() invoked, but the moments have not been computed. Call Compute() first.");
   }
   return m_Pm;
 }

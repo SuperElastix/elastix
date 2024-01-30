@@ -62,8 +62,7 @@ ANNPriorityTreeSearch<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
       }
       else
       {
-        itkExceptionMacro(
-          << "ERROR: The internal tree is not of ANNkd_tree type, which is required for priority search.");
+        itkExceptionMacro("ERROR: The internal tree is not of ANNkd_tree type, which is required for priority search.");
       }
     }
     else

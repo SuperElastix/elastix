@@ -1724,7 +1724,7 @@ OpenCLContext::SetUpProfiling()
   if (!queue.IsProfilingEnabled())
   {
     itkOpenCLWarningMacro(
-      << "OpenCLContext attempted to create OpenCL command queue with CL_QUEUE_PROFILING_ENABLE, but failed.");
+      "OpenCLContext attempted to create OpenCL command queue with CL_QUEUE_PROFILING_ENABLE, but failed.");
   }
   else
   {
