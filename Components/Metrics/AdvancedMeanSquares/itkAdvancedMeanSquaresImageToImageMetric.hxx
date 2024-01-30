@@ -68,9 +68,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   if (this->GetUseNormalization())
   {
     /** Try to guess a normalization factor. */
-    using ComputeFixedImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<FixedImageType>;
-    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema =
-      ComputeFixedImageExtremaFilterType::New();
+    const auto computeFixedImageExtrema = ComputeImageExtremaFilter<FixedImageType>::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
     computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
     if (const auto * const mask = this->GetFixedImageMask())
@@ -91,9 +89,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
       this->m_FixedImageTrueMax +
       this->m_FixedLimitRangeRatio * (this->m_FixedImageTrueMax - this->m_FixedImageTrueMin));
 
-    using ComputeMovingImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<MovingImageType>;
-    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema =
-      ComputeMovingImageExtremaFilterType::New();
+    const auto computeMovingImageExtrema = ComputeImageExtremaFilter<MovingImageType>::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
     computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
     if (const auto * const mask = this->GetMovingImageMask())
