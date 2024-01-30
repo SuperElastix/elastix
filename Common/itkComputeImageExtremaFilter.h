@@ -74,7 +74,6 @@ public:
   /** Type to use for computations. */
   using typename Superclass::RealType;
 
-  itkSetMacro(ImageRegion, RegionType);
   itkSetMacro(UseMask, bool);
 
   using ImageSpatialMaskType = ImageMaskSpatialObject<Self::ImageDimension>;
@@ -102,7 +101,6 @@ protected:
   virtual void
   ThreadedGenerateDataImageSpatialMask(const RegionType &);
 
-  RegionType                   m_ImageRegion{};
   ImageSpatialMaskConstPointer m_ImageSpatialMask{};
   bool                         m_UseMask{ false };
   bool                         m_SameGeometry{ false };

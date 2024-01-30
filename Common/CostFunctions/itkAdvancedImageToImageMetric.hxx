@@ -193,7 +193,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
 
     const auto computeFixedImageExtrema = ComputeImageExtremaFilter<FixedImageType>::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
-    computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
     if (const auto * const fMask = this->GetFixedImageMask())
     {
       computeFixedImageExtrema->SetUseMask(true);
@@ -230,7 +229,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
 
     const auto computeMovingImageExtrema = ComputeImageExtremaFilter<MovingImageType>::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
-    computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
     if (const auto * const mask = this->GetMovingImageMask())
     {
       computeMovingImageExtrema->SetUseMask(true);

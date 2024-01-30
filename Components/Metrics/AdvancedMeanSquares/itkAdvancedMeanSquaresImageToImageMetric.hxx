@@ -70,7 +70,6 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     /** Try to guess a normalization factor. */
     const auto computeFixedImageExtrema = ComputeImageExtremaFilter<FixedImageType>::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
-    computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
     if (const auto * const mask = this->GetFixedImageMask())
     {
       computeFixedImageExtrema->SetUseMask(true);
@@ -91,7 +90,6 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
     const auto computeMovingImageExtrema = ComputeImageExtremaFilter<MovingImageType>::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
-    computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
     if (const auto * const mask = this->GetMovingImageMask())
     {
       computeMovingImageExtrema->SetUseMask(true);
