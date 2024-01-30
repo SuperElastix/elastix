@@ -101,8 +101,7 @@ protected:
   ThreadedStreamedGenerateData(const RegionType &) override;
   virtual void
   ThreadedGenerateDataImageSpatialMask(const RegionType &);
-  virtual void
-                               SameGeometry();
+
   RegionType                   m_ImageRegion{};
   ImageSpatialMaskConstPointer m_ImageSpatialMask{};
   bool                         m_UseMask{ false };

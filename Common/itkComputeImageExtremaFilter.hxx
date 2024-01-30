@@ -44,22 +44,12 @@ ComputeImageExtremaFilter<TInputImage>::BeforeStreamedGenerateData()
 
     if (this->GetImageSpatialMask())
     {
-      this->SameGeometry();
+      this->m_SameGeometry = elastix::HaveSameImageDomain(*(this->GetInput()), *(this->m_ImageSpatialMask->GetImage()));
     }
     else
     {
       this->m_SameGeometry = false;
     }
-  }
-}
-
-template <typename TInputImage>
-void
-ComputeImageExtremaFilter<TInputImage>::SameGeometry()
-{
-  if (elastix::HaveSameImageDomain(*(this->GetInput()), *(this->m_ImageSpatialMask->GetImage())))
-  {
-    this->m_SameGeometry = true;
   }
 }
 
