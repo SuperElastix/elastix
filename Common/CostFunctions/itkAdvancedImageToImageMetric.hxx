@@ -191,9 +191,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
       itkExceptionMacro("No fixed image limiter has been set!");
     }
 
-    using ComputeFixedImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<FixedImageType>;
-    typename ComputeFixedImageExtremaFilterType::Pointer computeFixedImageExtrema =
-      ComputeFixedImageExtremaFilterType::New();
+    const auto computeFixedImageExtrema = ComputeImageExtremaFilter<FixedImageType>::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
     computeFixedImageExtrema->SetImageRegion(this->GetFixedImageRegion());
     if (const auto * const fMask = this->GetFixedImageMask())
@@ -230,9 +228,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
       itkExceptionMacro("No moving image limiter has been set!");
     }
 
-    using ComputeMovingImageExtremaFilterType = typename itk::ComputeImageExtremaFilter<MovingImageType>;
-    typename ComputeMovingImageExtremaFilterType::Pointer computeMovingImageExtrema =
-      ComputeMovingImageExtremaFilterType::New();
+    const auto computeMovingImageExtrema = ComputeImageExtremaFilter<MovingImageType>::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
     computeMovingImageExtrema->SetImageRegion(this->GetMovingImage()->GetBufferedRegion());
     if (const auto * const mask = this->GetMovingImageMask())
