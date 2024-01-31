@@ -34,6 +34,13 @@ template <class TInputImage>
 void
 ImageFullSampler<TInputImage>::GenerateData()
 {
+  typename MaskType::ConstPointer mask = this->GetMask();
+
+  if (mask)
+  {
+    mask->UpdateSource();
+  }
+
   /** If desired we exercise a multi-threaded version. */
   if (Superclass::m_UseMultiThread)
   {
@@ -42,9 +49,8 @@ ImageFullSampler<TInputImage>::GenerateData()
   }
 
   /** Get handles to the input image, output sample container, and the mask. */
-  const InputImageType &          inputImage = elastix::Deref(this->GetInput());
-  ImageSampleContainerType &      sampleContainer = elastix::Deref(this->GetOutput());
-  typename MaskType::ConstPointer mask = this->GetMask();
+  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
 
   // Take capacity from the output container, and clear it.
   std::vector<ImageSampleType> sampleVector;
@@ -99,8 +105,6 @@ ImageFullSampler<TInputImage>::GenerateData()
   }   // end if no mask
   else
   {
-    mask->UpdateSource();
-
     /** Loop over the image and check if the points falls within the mask. */
     for (InputImageIterator iter(&inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
     {
@@ -197,8 +201,6 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
   }   // end if no mask
   else
   {
-    mask->UpdateSource();
-
     /** Loop over the image and check if the points falls within the mask. */
     for (InputImageIterator iter(&inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
     {
