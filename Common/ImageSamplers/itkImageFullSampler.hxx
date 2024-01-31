@@ -65,23 +65,14 @@ ImageFullSampler<TInputImage>::GenerateData()
   /** Fill the sample container. */
   if (mask.IsNull())
   {
-    /** Try to reserve memory. If no mask is used this can raise std
-     * exceptions when the input image is large.
-     */
+    /** Try to reserve memory. If no mask is used this can raise std exceptions when the input image is large. */
     try
     {
       sampleVector.reserve(croppedInputImageRegion.GetNumberOfPixels());
     }
     catch (const std::exception & excp)
     {
-      std::string message = "std: ";
-      message += excp.what();
-      message += "\nERROR: failed to allocate memory for the sample container.";
-      itkExceptionMacro(<< message);
-    }
-    catch (...)
-    {
-      itkExceptionMacro("ERROR: failed to allocate memory for the sample container.");
+      itkExceptionMacro("std: " << excp.what() << "\nERROR: failed to allocate memory for the sample container.");
     }
 
     /** Simply loop over the image and store all samples in the container. */
@@ -161,23 +152,14 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
   const unsigned long chunkSize = inputRegionForThread.GetNumberOfPixels();
   if (mask.IsNull())
   {
-    /** Try to reserve memory. If no mask is used this can raise std
-     * exceptions when the input image is large.
-     */
+    /** Try to reserve memory. If no mask is used this can raise std exceptions when the input image is large. */
     try
     {
       sampleVector.reserve(chunkSize);
     }
     catch (const std::exception & excp)
     {
-      std::string message = "std: ";
-      message += excp.what();
-      message += "\nERROR: failed to allocate memory for the sample container.";
-      itkExceptionMacro(<< message);
-    }
-    catch (...)
-    {
-      itkExceptionMacro("ERROR: failed to allocate memory for the sample container.");
+      itkExceptionMacro("std: " << excp.what() << "\nERROR: failed to allocate memory for the sample container.");
     }
 
     /** Simply loop over the image and store all samples in the container. */
