@@ -54,8 +54,8 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
   this->GenerateSampleRegion(smallestImageContIndex, largestImageContIndex, smallestContIndex, largestContIndex);
 
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
-  typename MaskType::ConstPointer mask = this->GetMask();
-  if (mask.IsNull() && Superclass::m_UseMultiThread)
+  const MaskType * const mask = this->Superclass::GetMask();
+  if (mask == nullptr && Superclass::m_UseMultiThread)
   {
     auto & samples = sampleContainer.CastToSTLContainer();
     samples.resize(this->Superclass::m_NumberOfSamples);
@@ -90,7 +90,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 
   InputImageContinuousIndexType sampleContIndex;
   /** Fill the sample container. */
-  if (mask.IsNull())
+  if (mask == nullptr)
   {
     /** Start looping over the sample container. */
     for (iter = sampleContainer.Begin(); iter != end; ++iter)

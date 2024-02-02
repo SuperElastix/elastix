@@ -33,10 +33,10 @@ void
 ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 {
   /** Get a handle to the mask. */
-  typename MaskType::ConstPointer mask = this->GetMask();
+  const MaskType * const mask = this->Superclass::GetMask();
 
   /** Sanity check. */
-  if (mask.IsNull())
+  if (mask == nullptr)
   {
     itkExceptionMacro("ERROR: do not call this function when no mask is supplied.");
   }
@@ -71,7 +71,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
     std::string            fullSamplerMessage = err.GetDescription();
     std::string::size_type loc =
       fullSamplerMessage.find("ERROR: failed to allocate memory for the sample container", 0);
-    if (loc != std::string::npos && this->GetMask() == nullptr)
+    if (loc != std::string::npos && mask == nullptr)
     {
       message += "\nYou are using the ImageRandomSamplerSparseMask sampler, "
                  "but you did not set a mask. The internal ImageFullSampler therefore "

@@ -41,8 +41,8 @@ ImageRandomSampler<TInputImage>::GenerateData()
   ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
 
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
-  typename MaskType::ConstPointer mask = this->GetMask();
-  if (mask.IsNull() && Superclass::m_UseMultiThread)
+  const MaskType * const mask = this->Superclass::GetMask();
+  if (mask == nullptr && Superclass::m_UseMultiThread)
   {
     Superclass::GenerateRandomNumberList();
     const auto & randomNumberList = Superclass::m_RandomNumberList;
@@ -77,7 +77,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
   typename ImageSampleContainerType::Iterator      iter;
   typename ImageSampleContainerType::ConstIterator end = sampleContainer.End();
 
-  if (mask.IsNull())
+  if (mask == nullptr)
   {
     /** number of samples + 1, because of the initial ++randIter. */
     randIter.SetNumberOfSamples(this->GetNumberOfSamples() + 1);

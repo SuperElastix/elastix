@@ -34,7 +34,7 @@ template <class TInputImage>
 void
 ImageFullSampler<TInputImage>::GenerateData()
 {
-  typename MaskType::ConstPointer mask = this->GetMask();
+  const MaskType * const mask = this->Superclass::GetMask();
 
   if (mask)
   {
@@ -63,7 +63,7 @@ ImageFullSampler<TInputImage>::GenerateData()
   using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
 
   /** Fill the sample container. */
-  if (mask.IsNull())
+  if (mask == nullptr)
   {
     /** Try to reserve memory. If no mask is used this can raise std exceptions when the input image is large. */
     try
@@ -135,9 +135,9 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
                                                     ThreadIdType                 threadId)
 {
   /** Get handles to the input image, mask and the output. */
-  const InputImageType &          inputImage = elastix::Deref(this->GetInput());
-  typename MaskType::ConstPointer mask = this->GetMask();
-  std::vector<ImageSampleType> &  sampleVectorOfThisThread = Superclass::m_ThreaderSampleVectors[threadId];
+  const InputImageType &         inputImage = elastix::Deref(this->GetInput());
+  const MaskType * const         mask = this->Superclass::GetMask();
+  std::vector<ImageSampleType> & sampleVectorOfThisThread = Superclass::m_ThreaderSampleVectors[threadId];
 
   // Take capacity from the vector of this thread, and clear both.
   std::vector<ImageSampleType> sampleVector = std::move(sampleVectorOfThisThread);
@@ -150,7 +150,7 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
 
   /** Fill the sample container. */
   const unsigned long chunkSize = inputRegionForThread.GetNumberOfPixels();
-  if (mask.IsNull())
+  if (mask == nullptr)
   {
     /** Try to reserve memory. If no mask is used this can raise std exceptions when the input image is large. */
     try
