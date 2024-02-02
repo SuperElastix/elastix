@@ -592,6 +592,71 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
 } // end SplitRegion()
 
 
+template <class TInputImage>
+auto
+ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputRegion,
+                                           const size_t                 requestedNumberOfSubregions)
+  -> std::vector<InputImageRegionType>
+{
+  if (requestedNumberOfSubregions == 0)
+  {
+    assert(!"The requested number of subregions must be greater than zero!");
+    return {};
+  }
+
+  constexpr unsigned int ImageDimension{ TInputImage::ImageDimension };
+
+  const Index<ImageDimension> & inputRegionIndex = inputRegion.GetIndex();
+  const Size<ImageDimension> &  inputRegionSize = inputRegion.GetSize();
+
+  static_assert(TInputImage::ImageDimension > 0);
+
+  // split on the outermost dimension available
+  unsigned int splitAxis{ ImageDimension - 1 };
+  while (inputRegionSize[splitAxis] <= 1)
+  {
+    if (splitAxis == 0)
+    {
+      // cannot split
+      assert(!"The region size must be greater than 1!");
+      return { inputRegion };
+    }
+    --splitAxis;
+  }
+
+  // determine the actual number of pieces that will be generated
+  const SizeValueType inputSizeValue = inputRegionSize[splitAxis];
+  const auto numberOfValues = static_cast<unsigned int>(((inputSizeValue - 1) / requestedNumberOfSubregions) + 1);
+  const auto n = static_cast<unsigned int>((inputSizeValue - 1) / numberOfValues);
+
+  std::vector<InputImageRegionType> subregions{};
+  subregions.reserve(n + 1);
+
+  for (size_t i{}; i < n; ++i)
+  {
+    auto index = inputRegionIndex;
+    auto size = inputRegionSize;
+
+    index[splitAxis] += i * numberOfValues;
+    size[splitAxis] = numberOfValues;
+
+    subregions.push_back({ index, size });
+  }
+
+  auto index = inputRegionIndex;
+  auto size = inputRegionSize;
+
+  index[splitAxis] += n * numberOfValues;
+  // last thread needs to process the "rest" dimension being split
+  size[splitAxis] -= n * numberOfValues;
+
+  subregions.push_back(InputImageRegionType{ index, size });
+
+  assert(subregions.size() == n + 1);
+  return subregions;
+}
+
+
 /**
  * ******************* GenerateData *******************
  */
