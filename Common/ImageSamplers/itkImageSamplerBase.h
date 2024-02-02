@@ -114,49 +114,6 @@ public:
   /** Prepare the output. */
   // virtual void GenerateOutputInformation();
 
-  /** A version of GenerateData() specific for image processing
-   * filters.  This implementation will split the processing across
-   * multiple threads. The buffer is allocated by this method. Then
-   * the BeforeThreadedGenerateData() method is called (if
-   * provided). Then, a series of threads are spawned each calling
-   * ThreadedGenerateData(). After all the threads have completed
-   * processing, the AfterThreadedGenerateData() method is called (if
-   * provided). If an image processing filter cannot be threaded, the
-   * filter should provide an implementation of GenerateData(). That
-   * implementation is responsible for allocating the output buffer.
-   * If a filter an be threaded, it should NOT provide a
-   * GenerateData() method but should provide a ThreadedGenerateData()
-   * instead.
-   *
-   * \sa ThreadedGenerateData() */
-  void
-  GenerateData() override;
-
-  /** If an imaging filter can be implemented as a multithreaded
-   * algorithm, the filter will provide an implementation of
-   * ThreadedGenerateData().  This superclass will automatically split
-   * the output image into a number of pieces, spawn multiple threads,
-   * and call ThreadedGenerateData() in each thread. Prior to spawning
-   * threads, the BeforeThreadedGenerateData() method is called. After
-   * all the threads have completed, the AfterThreadedGenerateData()
-   * method is called. If an image processing filter cannot support
-   * threading, that filter should provide an implementation of the
-   * GenerateData() method instead of providing an implementation of
-   * ThreadedGenerateData().  If a filter provides a GenerateData()
-   * method as its implementation, then the filter is responsible for
-   * allocating the output data.  If a filter provides a
-   * ThreadedGenerateData() method as its implementation, then the
-   * output memory will allocated automatically by this superclass.
-   * The ThreadedGenerateData() method should only produce the output
-   * specified by "outputThreadRegion"
-   * parameter. ThreadedGenerateData() cannot write to any other
-   * portion of the output image (as this is responsibility of a
-   * different thread).
-   *
-   * \sa GenerateData(), SplitRequestedRegion() */
-  virtual void
-  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId);
-
   /** ******************** Masks ******************** */
 
   /** Set the masks. */
@@ -285,49 +242,18 @@ protected:
   void
   CropInputImageRegion();
 
-  /** Multi-threaded function that does the work. */
-  virtual void
-  BeforeThreadedGenerateData();
-
-  virtual void
-  AfterThreadedGenerateData();
-
   /** Splits the input region into subregions, and returns them all. */
   static std::vector<InputImageRegionType>
   SplitRegion(const InputImageRegionType & inputRegion, const size_t requestedNumberOfSubregions);
 
   /***/
-  unsigned long                             m_NumberOfSamples{ 0 };
-  std::vector<std::vector<ImageSampleType>> m_ThreaderSampleVectors{};
+  unsigned long m_NumberOfSamples{ 0 };
 
   /** `UseMultiThread == true` indicated that the sampler _may_ use multi-threading (if implemented), while
    * `UseMultiThread == false` indicates that the sampler should _not_ use multi-threading */
   bool m_UseMultiThread{ true };
 
 private:
-  /** Static function used as a "callback" by the PlatformMultiThreader.  The threading
-   * library will call this routine for each thread, which will delegate the
-   * control to ThreadedGenerateData(). */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
-  ThreaderCallback(void * arg);
-
-  /** Internal structure used for passing image data into the threading library */
-  struct ThreadStruct //?
-  {
-    Pointer Sampler;
-  };
-
-  /** Split the input region into "numberOfSplits" pieces, returning
-   * region "i" as "splitRegion". This method is called "numberOfSplits" times. The
-   * regions must not overlap. The method returns the number of pieces that
-   * the routine is capable of splitting the input region,
-   * i.e. return value is less than or equal to "numberOfSplits". */
-  static unsigned int
-  SplitRegion(const InputImageRegionType & inputRegion,
-              const ThreadIdType           threadId,
-              const ThreadIdType           numberOfSplits,
-              InputImageRegionType &       splitRegion);
-
   /** Member variables. */
   MaskConstPointer           m_Mask{ nullptr };
   MaskVectorType             m_MaskVector{};
