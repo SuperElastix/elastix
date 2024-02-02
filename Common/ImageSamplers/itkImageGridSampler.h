@@ -119,9 +119,7 @@ public:
   void
   SetNumberOfSamples(unsigned long nrofsamples) override;
 
-  /** Selecting new samples makes no sense if nothing changed. The same
-   * samples would be selected anyway.
-   */
+  /** Selecting new samples makes no sense if nothing changed. The same samples would be selected anyway. */
   bool
   SelectNewSamplesOnUpdate() override
   {
@@ -129,7 +127,7 @@ public:
   }
 
 
-  /** Returns whether the sampler supports SelectNewSamplesOnUpdate() */
+  /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
   bool
   SelectingNewSamplesOnUpdateSupported() const override
   {
