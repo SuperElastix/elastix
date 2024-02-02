@@ -236,89 +236,25 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
   /** Determine the grid. */
   const auto [gridIndex, gridSize] = DetermineGridIndexAndSize(croppedInputImageRegion, gridSpacing);
 
-  /** Prepare for looping over the grid. */
-  SampleGridIndexType index = gridIndex;
+  // TODO Use ITK 5.4: numberOfSamplesOnGrid = gridSize.CalculateProductOfElements()
+  const std::size_t numberOfSamplesOnGrid =
+    std::accumulate(gridSize.cbegin(), gridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
+
+  samples.clear();
+  samples.resize(numberOfSamplesOnGrid);
+  WorkUnit workUnit{ gridIndex, gridSize, samples.data(), size_t{} };
 
   if (mask)
   {
-    const auto & worldToObjectTransform = elastix::Deref(mask->GetObjectToWorldTransformInverse());
+    GenerateDataForWorkUnit<true>(workUnit, inputImage, mask, mask->GetObjectToWorldTransformInverse(), gridSpacing);
 
-    /* Ugly loop over the grid; checks also if a sample falls within the mask. */
-    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSize); ++t)
-    {
-      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSize); ++z)
-      {
-        for (unsigned int y = 0; y < gridSize[1]; ++y)
-        {
-          for (unsigned int x = 0; x < gridSize[0]; ++x)
-          {
-            ImageSampleType tempSample;
-
-            // Translate index to point.
-            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
-
-            // Equivalent to `mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates)`, but much faster.
-            if (mask->MaskType::IsInsideInObjectSpace(
-                  worldToObjectTransform.WorldToObjectTransformType::TransformPoint(tempSample.m_ImageCoordinates)))
-            {
-              // Get sampled fixed image value.
-              tempSample.m_ImageValue = inputImage.GetPixel(index);
-
-              // Store sample in container.
-              samples.push_back(tempSample);
-
-            } // end if in mask
-
-            // Jump to next position on grid.
-            index[0] += gridSpacing[0];
-          }
-          JumpToNextGridPosition<1>(index, gridIndex, gridSpacing);
-        }
-        JumpToNextGridPosition<2>(index, gridIndex, gridSpacing);
-      }
-      JumpToNextGridPosition<3>(index, gridIndex, gridSpacing);
-    }
-  } // end (if mask exists)
+    assert(workUnit.NumberOfSamples <= numberOfSamplesOnGrid);
+    samples.resize(workUnit.NumberOfSamples);
+  }
   else
   {
-    const std::size_t numberOfSamplesOnGrid =
-      std::accumulate(gridSize.cbegin(), gridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
-
-    samples.reserve(numberOfSamplesOnGrid);
-
-    /** Ugly loop over the grid. */
-    for (unsigned int t = 0; t < GetGridSizeValue<3>(gridSize); ++t)
-    {
-      for (unsigned int z = 0; z < GetGridSizeValue<2>(gridSize); ++z)
-      {
-        for (unsigned int y = 0; y < gridSize[1]; ++y)
-        {
-          for (unsigned int x = 0; x < gridSize[0]; ++x)
-          {
-            ImageSampleType tempSample;
-
-            // Get sampled fixed image value.
-            tempSample.m_ImageValue = inputImage.GetPixel(index);
-
-            // Translate index to point.
-            inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
-
-            // Store sample in container.
-            samples.push_back(tempSample);
-
-            // Jump to next position on grid.
-            index[0] += gridSpacing[0];
-          }
-          JumpToNextGridPosition<1>(index, gridIndex, gridSpacing);
-        }
-        JumpToNextGridPosition<2>(index, gridIndex, gridSpacing);
-      }
-      JumpToNextGridPosition<3>(index, gridIndex, gridSpacing);
-    }
-
-    assert(samples.size() == numberOfSamplesOnGrid);
-
-  } // end (else)
+    GenerateDataForWorkUnit<false>(workUnit, inputImage, nullptr, nullptr, gridSpacing);
+  }
 }
 
 /**
