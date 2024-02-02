@@ -146,16 +146,14 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
 
   /** Set up a region iterator within the user specified image region. */
   using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
-  // InputImageIterator iter( inputImage, this->GetCroppedInputImageRegion() );
 
   /** Fill the sample container. */
-  const unsigned long chunkSize = inputRegionForThread.GetNumberOfPixels();
   if (mask == nullptr)
   {
     /** Try to reserve memory. If no mask is used this can raise std exceptions when the input image is large. */
     try
     {
-      sampleVector.reserve(chunkSize);
+      sampleVector.reserve(inputRegionForThread.GetNumberOfPixels());
     }
     catch (const std::exception & excp)
     {
