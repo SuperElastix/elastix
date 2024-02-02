@@ -63,18 +63,23 @@ public:
   using typename Superclass::ImageSampleType;
   using typename Superclass::ImageSampleContainerType;
   using typename Superclass::ImageSampleContainerPointer;
-  using typename Superclass::MaskType;
+
+  // Clang/macos-12/Xcode_14.2 does not like `using typename Superclass::MaskType`, saying "error: 'MaskType' is not a
+  // class, namespace, or enumeration"
+  using MaskType = typename Superclass::MaskType;
 
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
   /** Other typdefs. */
-  using InputImageIndexType = typename InputImageType::IndexType;
-  using InputImagePointType = typename InputImageType::PointType;
+  using typename Superclass::InputImageIndexType;
+  // using typename Superclass::InputImageSpacingType;
+  using typename Superclass::InputImagePointType;
 
-  /** Selecting new samples makes no sense if nothing changed.
-   * The same samples would be selected anyway.
-   */
+  /** Typedefs for support of user defined grid spacing for the spatial samples. */
+  using InputImageSizeType = typename InputImageType::SizeType;
+
+  /** Selecting new samples makes no sense if nothing changed. The same samples would be selected anyway. */
   bool
   SelectNewSamplesOnUpdate() override
   {
@@ -93,6 +98,7 @@ public:
 protected:
   /** The constructor. */
   ImageFullSampler() = default;
+
   /** The destructor. */
   ~ImageFullSampler() override = default;
 
@@ -102,9 +108,57 @@ protected:
   void
   GenerateData() override;
 
-  /** Multi-threaded function that does the work. */
-  void
-  ThreadedGenerateData(const InputImageRegionType & inputRegionForThread, ThreadIdType threadId) override;
+private:
+  using WorldToObjectTransformType = AffineTransform<double, InputImageDimension>;
+
+  struct WorkUnit
+  {
+    const InputImageRegionType imageRegion{};
+
+    // Should point to the first sample for this specific work unit.
+    ImageSampleType * const Samples{};
+
+    // The number of samples retrieved by this work unit. Only used when a mask is specified.
+    size_t NumberOfSamples{};
+  };
+
+  struct UserData
+  {
+    ITK_DISALLOW_COPY_AND_MOVE(UserData);
+
+    const InputImageType &                   InputImage;
+    const MaskType * const                   Mask{};
+    const WorldToObjectTransformType * const WorldToObjectTransform{};
+    std::vector<WorkUnit>                    WorkUnits{};
+  };
+
+  template <bool VUseMask>
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ThreaderCallback(void * arg);
+
+  /** Generates the work units, to be processed when doing multi-threading. */
+  static std::vector<WorkUnit>
+  GenerateWorkUnits(const ThreadIdType             numberOfWorkUnits,
+                    const InputImageRegionType &   croppedInputImageRegion,
+                    std::vector<ImageSampleType> & samples);
+
+  static void
+  SingleThreadedGenerateData(const TInputImage &            inputImage,
+                             const MaskType * const         mask,
+                             const InputImageRegionType &   croppedInputImageRegion,
+                             std::vector<ImageSampleType> & samples);
+  static void
+  MultiThreadedGenerateData(MultiThreaderBase &            multiThreader,
+                            const ThreadIdType             numberOfWorkUnits,
+                            const TInputImage &            inputImage,
+                            const MaskType * const         mask,
+                            const InputImageRegionType &   croppedInputImageRegion,
+                            std::vector<ImageSampleType> & samples);
+
+  /** Generates the data for one specific work unit. */
+  template <bool VUseMask>
+  static void
+  GenerateDataForWorkUnit(WorkUnit &, const InputImageType &, const MaskType *, const WorldToObjectTransformType *);
 };
 
 } // end namespace itk

@@ -23,9 +23,109 @@
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include "elxDeref.h"
 
+#include <algorithm> // For copy_n and min.
+#include <cassert>
+
 namespace itk
 {
 
+/**
+ * ******************* GenerateWorkUnits *******************
+ */
+
+template <class TInputImage>
+auto
+ImageFullSampler<TInputImage>::GenerateWorkUnits(const ThreadIdType             numberOfWorkUnits,
+                                                 const InputImageRegionType &   croppedInputImageRegion,
+                                                 std::vector<ImageSampleType> & samples) -> std::vector<WorkUnit>
+{
+  auto * sampleData = samples.data();
+
+  const auto subregions = Superclass::SplitRegion(
+    croppedInputImageRegion, std::min(numberOfWorkUnits, MultiThreaderBase::GetGlobalMaximumNumberOfThreads()));
+
+  const auto            numberOfSubregions = subregions.size();
+  std::vector<WorkUnit> workUnits{};
+  workUnits.reserve(numberOfSubregions);
+
+  // Add a work unit for each subregion.
+  for (const auto & subregion : subregions)
+  {
+    workUnits.push_back({ subregion, sampleData, size_t{} });
+    sampleData += subregion.GetNumberOfPixels();
+  }
+  assert(workUnits.size() <= numberOfSubregions);
+  return workUnits;
+}
+
+
+/**
+ * ******************* SingleThreadedGenerateData *******************
+ */
+
+template <class TInputImage>
+void
+ImageFullSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &            inputImage,
+                                                          const MaskType * const         mask,
+                                                          const InputImageRegionType &   croppedInputImageRegion,
+                                                          std::vector<ImageSampleType> & samples)
+{
+  samples.resize(croppedInputImageRegion.GetNumberOfPixels());
+  WorkUnit workUnit{ croppedInputImageRegion, samples.data(), size_t{} };
+
+  if (mask)
+  {
+    GenerateDataForWorkUnit<true>(workUnit, inputImage, mask, mask->GetObjectToWorldTransformInverse());
+
+    assert(workUnit.NumberOfSamples <= samples.size());
+    samples.resize(workUnit.NumberOfSamples);
+  }
+  else
+  {
+    GenerateDataForWorkUnit<false>(workUnit, inputImage, nullptr, nullptr);
+  }
+}
+
+/**
+ * ******************* MultiThreadedGenerateData *******************
+ */
+
+template <class TInputImage>
+void
+ImageFullSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &            multiThreader,
+                                                         const ThreadIdType             numberOfWorkUnits,
+                                                         const TInputImage &            inputImage,
+                                                         const MaskType * const         mask,
+                                                         const InputImageRegionType &   croppedInputImageRegion,
+                                                         std::vector<ImageSampleType> & samples)
+{
+  samples.resize(croppedInputImageRegion.GetNumberOfPixels());
+
+  UserData userData{ inputImage,
+                     mask,
+                     mask ? mask->GetObjectToWorldTransformInverse() : nullptr,
+                     GenerateWorkUnits(numberOfWorkUnits, croppedInputImageRegion, samples) };
+
+  multiThreader.SetSingleMethod(mask ? &Self::ThreaderCallback<true> : &Self::ThreaderCallback<false>, &userData);
+  multiThreader.SingleMethodExecute();
+
+  if (mask)
+  {
+    if (auto & workUnits = userData.WorkUnits; !workUnits.empty())
+    {
+      auto * sampleData = samples.data() + workUnits.front().NumberOfSamples;
+
+      for (size_t i{ 1 }; i < workUnits.size(); ++i)
+      {
+        const WorkUnit & workUnit = workUnits[i];
+
+        sampleData = std::copy_n(workUnit.Samples, workUnit.NumberOfSamples, sampleData);
+      }
+
+      samples.resize(sampleData - samples.data());
+    }
+  }
+}
 /**
  * ******************* GenerateData *******************
  */
@@ -34,23 +134,15 @@ template <class TInputImage>
 void
 ImageFullSampler<TInputImage>::GenerateData()
 {
-  const MaskType * const mask = this->Superclass::GetMask();
+  /** Get handles to the input image, output sample container, and the mask. */
+  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
+  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
+  const MaskType * const     mask = this->Superclass::GetMask();
 
   if (mask)
   {
     mask->UpdateSource();
   }
-
-  /** If desired we exercise a multi-threaded version. */
-  if (Superclass::m_UseMultiThread)
-  {
-    /** Calls ThreadedGenerateData(). */
-    return Superclass::GenerateData();
-  }
-
-  /** Get handles to the input image, output sample container, and the mask. */
-  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
-  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
 
   // Take capacity from the output container, and clear it.
   std::vector<ImageSampleType> sampleVector;
@@ -59,155 +151,100 @@ ImageFullSampler<TInputImage>::GenerateData()
 
   const auto croppedInputImageRegion = this->GetCroppedInputImageRegion();
 
-  /** Set up a region iterator within the user specified image region. */
-  using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
-
-  /** Fill the sample container. */
-  if (mask == nullptr)
+  if (Superclass::m_UseMultiThread)
   {
-    /** Try to reserve memory. If no mask is used this can raise std exceptions when the input image is large. */
-    try
-    {
-      sampleVector.reserve(croppedInputImageRegion.GetNumberOfPixels());
-    }
-    catch (const std::exception & excp)
-    {
-      itkExceptionMacro("std: " << excp.what() << "\nERROR: failed to allocate memory for the sample container.");
-    }
-
-    /** Simply loop over the image and store all samples in the container. */
-    for (InputImageIterator iter(&inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
-    {
-      ImageSampleType tempSample;
-
-      /** Get sampled index */
-      InputImageIndexType index = iter.GetIndex();
-
-      /** Translate index to point */
-      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
-
-      /** Get sampled image value */
-      tempSample.m_ImageValue = iter.Get();
-
-      /** Store in container */
-      sampleVector.push_back(tempSample);
-
-    } // end for
-  }   // end if no mask
+    MultiThreadedGenerateData(elastix::Deref(this->ProcessObject::GetMultiThreader()),
+                              ProcessObject::GetNumberOfWorkUnits(),
+                              inputImage,
+                              mask,
+                              croppedInputImageRegion,
+                              sampleVector);
+  }
   else
   {
-    /** Loop over the image and check if the points falls within the mask. */
-    for (InputImageIterator iter(&inputImage, croppedInputImageRegion); !iter.IsAtEnd(); ++iter)
-    {
-      ImageSampleType tempSample;
-
-      /** Get sampled index. */
-      InputImageIndexType index = iter.GetIndex();
-
-      /** Translate index to point. */
-      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
-
-      if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
-      {
-        /** Get sampled image value. */
-        tempSample.m_ImageValue = iter.Get();
-
-        /** Store in container. */
-        sampleVector.push_back(tempSample);
-
-      } // end if
-    }   // end for
-  }     // end else (if mask exists)
-
+    SingleThreadedGenerateData(inputImage, mask, croppedInputImageRegion, sampleVector);
+  }
   // Move the samples from the vector into the output container.
   sampleContainer.swap(sampleVector);
+
 
 } // end GenerateData()
 
 
-/**
- * ******************* ThreadedGenerateData *******************
- */
+template <class TInputImage>
+template <bool VUseMask>
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+ImageFullSampler<TInputImage>::ThreaderCallback(void * const arg)
+{
+  assert(arg);
+  const auto & info = *static_cast<const MultiThreaderBase::WorkUnitInfo *>(arg);
+
+  assert(info.UserData);
+  auto & userData = *static_cast<UserData *>(info.UserData);
+
+  const auto workUnitID = info.WorkUnitID;
+
+  if (workUnitID >= userData.WorkUnits.size())
+  {
+    return ITK_THREAD_RETURN_DEFAULT_VALUE;
+  }
+
+  GenerateDataForWorkUnit<VUseMask>(
+    userData.WorkUnits[workUnitID], userData.InputImage, userData.Mask, userData.WorldToObjectTransform);
+
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
+}
+
 
 template <class TInputImage>
+template <bool VUseMask>
 void
-ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType & inputRegionForThread,
-                                                    ThreadIdType                 threadId)
+ImageFullSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &                               workUnit,
+                                                       const InputImageType &                   inputImage,
+                                                       const MaskType * const                   mask,
+                                                       const WorldToObjectTransformType * const worldToObjectTransform)
 {
-  /** Get handles to the input image, mask and the output. */
-  const InputImageType &         inputImage = elastix::Deref(this->GetInput());
-  const MaskType * const         mask = this->Superclass::GetMask();
-  std::vector<ImageSampleType> & sampleVectorOfThisThread = Superclass::m_ThreaderSampleVectors[threadId];
+  assert((mask == nullptr) == (!VUseMask));
+  assert((worldToObjectTransform == nullptr) == (!VUseMask));
 
-  // Take capacity from the vector of this thread, and clear both.
-  std::vector<ImageSampleType> sampleVector = std::move(sampleVectorOfThisThread);
-  sampleVectorOfThisThread.clear();
-  sampleVector.clear();
+  auto * samples = workUnit.Samples;
 
-  /** Set up a region iterator within the user specified image region. */
-  using InputImageIterator = ImageRegionConstIteratorWithIndex<InputImageType>;
-
-  /** Fill the sample container. */
-  if (mask == nullptr)
+  /** Simply loop over the image and store all samples in the container. */
+  for (ImageRegionConstIteratorWithIndex<InputImageType> iter(&inputImage, workUnit.imageRegion); !iter.IsAtEnd();
+       ++iter)
   {
-    /** Try to reserve memory. If no mask is used this can raise std exceptions when the input image is large. */
-    try
+    /** Get sampled index */
+    InputImageIndexType index = iter.GetIndex();
+
+    // Translate index to point.
+    const auto point = inputImage.template TransformIndexToPhysicalPoint<SpacePrecisionType>(index);
+
+    using RealType = typename ImageSampleType::RealType;
+
+    if constexpr (VUseMask)
     {
-      sampleVector.reserve(inputRegionForThread.GetNumberOfPixels());
-    }
-    catch (const std::exception & excp)
-    {
-      itkExceptionMacro("std: " << excp.what() << "\nERROR: failed to allocate memory for the sample container.");
-    }
-
-    /** Simply loop over the image and store all samples in the container. */
-    for (InputImageIterator iter(&inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
-    {
-      ImageSampleType tempSample;
-
-      /** Get sampled index */
-      InputImageIndexType index = iter.GetIndex();
-
-      /** Translate index to point */
-      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
-
-      /** Get sampled image value */
-      tempSample.m_ImageValue = iter.Get();
-
-      /** Store in container. */
-      sampleVector.push_back(tempSample);
-
-    } // end for
-  }   // end if no mask
-  else
-  {
-    /** Loop over the image and check if the points falls within the mask. */
-    for (InputImageIterator iter(&inputImage, inputRegionForThread); !iter.IsAtEnd(); ++iter)
-    {
-      ImageSampleType tempSample;
-
-      /** Get sampled index. */
-      InputImageIndexType index = iter.GetIndex();
-
-      /** Translate index to point. */
-      inputImage.TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
-
-      if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
+      // Equivalent to `mask->IsInsideInWorldSpace(point)`, but much faster.
+      if (mask->MaskType::IsInsideInObjectSpace(
+            worldToObjectTransform->WorldToObjectTransformType::TransformPoint(point)))
       {
-        /** Get sampled image value. */
-        tempSample.m_ImageValue = iter.Get();
+        // Store sample in container.
+        *samples = { point, static_cast<RealType>(inputImage.GetPixel(index)) };
+        ++samples;
+      }
+    }
+    else
+    {
+      // Store sample in container.
+      *samples = { point, static_cast<RealType>(inputImage.GetPixel(index)) };
+      ++samples;
+    }
+  }
 
-        /**  Store in container. */
-        sampleVector.push_back(tempSample);
-
-      } // end if
-    }   // end for
-  }     // end else (if mask exists)
-
-  // Move the samples from the local vector into the vector for this thread.
-  sampleVectorOfThisThread = std::move(sampleVector);
-
-} // end ThreadedGenerateData()
+  if constexpr (VUseMask)
+  {
+    workUnit.NumberOfSamples = samples - workUnit.Samples;
+  }
+}
 
 } // end namespace itk
 
