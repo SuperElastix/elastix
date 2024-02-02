@@ -144,11 +144,7 @@ protected:
   AdvancedRigid3DTransform();
   ~AdvancedRigid3DTransform() override = default;
 
-  /**
-   * Print contents of an AdvancedRigid3DTransform
-   **/
-  void
-  PrintSelf(std::ostream & os, Indent indent) const override;
+  using Superclass::PrintSelf;
 };
 
 } // namespace itk

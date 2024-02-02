@@ -50,14 +50,6 @@ AdvancedRigid3DTransform<TScalarType>::AdvancedRigid3DTransform(unsigned int par
   : Superclass(paramDim)
 {}
 
-// Print self
-template <class TScalarType>
-void
-AdvancedRigid3DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
-{
-  Superclass::PrintSelf(os, indent);
-}
-
 
 // Check if input matrix is orthogonal to within tolerance
 template <class TScalarType>

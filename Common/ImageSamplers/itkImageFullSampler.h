@@ -96,9 +96,7 @@ protected:
   /** The destructor. */
   ~ImageFullSampler() override = default;
 
-  /** PrintSelf. */
-  void
-  PrintSelf(std::ostream & os, Indent indent) const override;
+  using Superclass::PrintSelf;
 
   /** Function that does the work. */
   void

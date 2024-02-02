@@ -196,18 +196,6 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
 
 
 /*
- * PrintSelf method
- */
-template <class TInputImage, class TOutputImage>
-void
-MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::PrintSelf(std::ostream & os,
-                                                                                         Indent         indent) const
-{
-  Superclass::PrintSelf(os, indent);
-}
-
-
-/*
  * GenerateOutputInformation
  */
 template <class TInputImage, class TOutputImage>

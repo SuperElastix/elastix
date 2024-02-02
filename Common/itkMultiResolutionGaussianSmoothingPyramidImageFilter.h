@@ -189,8 +189,8 @@ public:
 protected:
   MultiResolutionGaussianSmoothingPyramidImageFilter() = default;
   ~MultiResolutionGaussianSmoothingPyramidImageFilter() override = default;
-  void
-  PrintSelf(std::ostream & os, Indent indent) const override;
+
+  using Superclass::PrintSelf;
 
   /** Generate the output data. */
   void
