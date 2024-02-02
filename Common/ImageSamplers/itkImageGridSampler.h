@@ -218,10 +218,6 @@ private:
   DetermineGridIndexAndSize(const InputImageRegionType &  croppedInputImageRegion,
                             const SampleGridSpacingType & gridSpacing);
 
-  /** Splits the input region into subregions, for multi-threading. */
-  static std::vector<InputImageRegionType>
-  SplitRegion(const InputImageRegionType & inputRegion, const size_t requestedNumberOfSubregions);
-
   /** Generates the work units, to be processed when doing multi-threading. */
   static std::vector<WorkUnit>
   GenerateWorkUnits(const ThreadIdType             numberOfWorkUnits,

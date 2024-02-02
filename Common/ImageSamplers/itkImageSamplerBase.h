@@ -292,6 +292,10 @@ protected:
   virtual void
   AfterThreadedGenerateData();
 
+  /** Splits the input region into subregions, and returns them all. */
+  static std::vector<InputImageRegionType>
+  SplitRegion(const InputImageRegionType & inputRegion, const size_t requestedNumberOfSubregions);
+
   /***/
   unsigned long                             m_NumberOfSamples{ 0 };
   std::vector<std::vector<ImageSampleType>> m_ThreaderSampleVectors{};
