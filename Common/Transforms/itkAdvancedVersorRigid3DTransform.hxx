@@ -198,16 +198,6 @@ AdvancedVersorRigid3DTransform<TScalarType>::GetJacobian(const InputPointType & 
   nzji = this->m_NonZeroJacobianIndices;
 }
 
-
-// Print self
-template <class TScalarType>
-void
-AdvancedVersorRigid3DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
-{
-  Superclass::PrintSelf(os, indent);
-}
-
-
 } // namespace itk
 
 #endif

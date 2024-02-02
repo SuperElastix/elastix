@@ -209,19 +209,6 @@ ImageFullSampler<TInputImage>::ThreadedGenerateData(const InputImageRegionType &
 
 } // end ThreadedGenerateData()
 
-
-/**
- * ******************* PrintSelf *******************
- */
-
-template <class TInputImage>
-void
-ImageFullSampler<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
-{
-  Superclass::PrintSelf(os, indent);
-} // end PrintSelf()
-
-
 } // end namespace itk
 
 #endif // end #ifndef itkImageFullSampler_hxx

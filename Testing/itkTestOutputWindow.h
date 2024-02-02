@@ -68,8 +68,7 @@ public:
 protected:
   TestOutputWindow() {}
   ~TestOutputWindow() override {}
-  void
-  PrintSelf(std::ostream & os, Indent indent) const override;
+  using Superclass::PrintSelf;
 };
 
 } // end namespace itk
