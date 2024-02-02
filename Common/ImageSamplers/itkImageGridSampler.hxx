@@ -416,27 +416,23 @@ ImageGridSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &               
           // Translate index to point.
           const auto point = inputImage.template TransformIndexToPhysicalPoint<SpacePrecisionType>(index);
 
+          using RealType = typename ImageSampleType::RealType;
+
           if constexpr (VUseMask)
           {
             // Equivalent to `mask->IsInsideInWorldSpace(point)`, but much faster.
             if (mask->MaskType::IsInsideInObjectSpace(
                   worldToObjectTransform->WorldToObjectTransformType::TransformPoint(point)))
             {
-              // Get sampled fixed image value.
-              const auto pixel = inputImage.GetPixel(index);
-
               // Store sample in container.
-              *samples = { point, static_cast<typename ImageSampleType::RealType>(pixel) };
+              *samples = { point, static_cast<RealType>(inputImage.GetPixel(index)) };
               ++samples;
             }
           }
           else
           {
-            // Get sampled fixed image value.
-            const auto pixel = inputImage.GetPixel(index);
-
             // Store sample in container.
-            *samples = { point, static_cast<typename ImageSampleType::RealType>(pixel) };
+            *samples = { point, static_cast<RealType>(inputImage.GetPixel(index)) };
             ++samples;
           }
 
