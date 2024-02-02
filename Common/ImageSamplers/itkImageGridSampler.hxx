@@ -438,17 +438,30 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
     return ITK_THREAD_RETURN_DEFAULT_VALUE;
   }
 
-  auto & workUnit = userData.WorkUnits[workUnitID];
+  GenerateDataForWorkUnit<VUseMask>(userData.WorkUnits[workUnitID],
+                                    userData.InputImage,
+                                    userData.Mask,
+                                    userData.WorldToObjectTransform,
+                                    userData.GridSpacing);
 
-  auto *             samples = workUnit.Samples;
-  const auto &       inputImage = userData.InputImage;
-  const auto * const mask = userData.Mask;
+  return ITK_THREAD_RETURN_DEFAULT_VALUE;
+}
+
+
+template <class TInputImage>
+template <bool VUseMask>
+void
+ImageGridSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &                               workUnit,
+                                                       const InputImageType &                   inputImage,
+                                                       const MaskType * const                   mask,
+                                                       const WorldToObjectTransformType * const worldToObjectTransform,
+                                                       const SampleGridSpacingType &            gridSpacing)
+{
   assert((mask == nullptr) == (!VUseMask));
-
-  const auto * const worldToObjectTransform = userData.WorldToObjectTransform;
   assert((worldToObjectTransform == nullptr) == (!VUseMask));
 
-  const auto                gridSpacing = userData.GridSpacing;
+  auto * samples = workUnit.Samples;
+
   const SampleGridSizeType  gridSizeForThread = workUnit.GridSize;
   const SampleGridIndexType gridIndexForThread = workUnit.GridIndex;
 
@@ -505,10 +518,7 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
   {
     workUnit.NumberOfSamples = samples - workUnit.Samples;
   }
-
-  return ITK_THREAD_RETURN_DEFAULT_VALUE;
 }
-
 
 /**
  * ******************* SetNumberOfSamples *******************
