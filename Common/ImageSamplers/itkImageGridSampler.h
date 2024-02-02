@@ -246,6 +246,15 @@ private:
                             const SampleGridSpacingType &  gridSpacing,
                             std::vector<ImageSampleType> & samples);
 
+  /** Generates the data for one specific work unit. */
+  template <bool VUseMask>
+  static void
+  GenerateDataForWorkUnit(WorkUnit &,
+                          const InputImageType &,
+                          const MaskType *,
+                          const WorldToObjectTransformType *,
+                          const SampleGridSpacingType &);
+
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing{ itk::MakeFilled<SampleGridSpacingType>(1) };
 
