@@ -23,13 +23,15 @@
 #include <itkImage.h>
 #include <itkImageMaskSpatialObject.h>
 #include <gtest/gtest.h>
-
+#include <cmath> // For nextafter.
 
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
 using elx::CoreMainGTestUtilities::DerefRawPointer;
+using elx::CoreMainGTestUtilities::GenerateRandomSign;
 using elx::CoreMainGTestUtilities::ImageDomain;
+using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 
 
 GTEST_TEST(ImageFullSampler, OutputHasSameSequenceOfPixelValuesAsInput)
@@ -119,4 +121,74 @@ GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingFullyFilledMask)
   };
 
   EXPECT_EQ(generateSamples(true), generateSamples(false));
+}
+
+
+// Tests that the sampler produces the same output when using a mask whose domain is exactly equal to the image domain
+// as when the domains are only slightly different.
+GTEST_TEST(ImageFullSampler, ExactlyEqualVersusSlightlyDifferentMaskImageDomain)
+{
+  using PixelType = int;
+  enum
+  {
+    Dimension = 2U
+  };
+  using SamplerType = itk::ImageFullSampler<itk::Image<PixelType, Dimension>>;
+
+  std::mt19937 randomNumberEngine{};
+  const auto   image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(CreateRandomImageDomain<Dimension>(randomNumberEngine));
+
+  const auto generateSamples = [image](const bool exactlyEqualImageDomain) {
+    elx::DefaultConstruct<SamplerType> sampler{};
+    sampler.SetUseMultiThread(false);
+    sampler.SetInput(image);
+
+    using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
+    const auto maskImage = CreateImage<MaskSpatialObjectType::PixelType>(ImageDomain(*image));
+
+    std::mt19937 randomNumberEngine{};
+
+    for (MaskSpatialObjectType::PixelType & maskPixel : itk::ImageBufferRange(*maskImage))
+    {
+      maskPixel = static_cast<MaskSpatialObjectType::PixelType>(randomNumberEngine() % 2);
+    }
+
+    if (!exactlyEqualImageDomain)
+    {
+      // Make the domain of the mask image slightly different by making very small changes to the origin and the
+      // spacing.
+      auto origin = image->GetOrigin();
+
+      for (double & value : origin)
+      {
+        value = std::nextafter(value, GenerateRandomSign(randomNumberEngine) * std::numeric_limits<double>::max());
+      }
+      maskImage->SetOrigin(origin);
+
+      auto spacing = image->GetSpacing();
+
+      for (double & value : spacing)
+      {
+        value = std::nextafter(value, GenerateRandomSign(randomNumberEngine) * std::numeric_limits<double>::max());
+      }
+      maskImage->SetSpacing(spacing);
+    }
+
+    const auto maskSpatialObject = MaskSpatialObjectType::New();
+    maskSpatialObject->SetImage(maskImage);
+    maskSpatialObject->Update();
+
+    sampler.SetMask(maskSpatialObject);
+    sampler.Update();
+    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+  };
+
+  const auto samplesOnExactlyEqualImageDomains = generateSamples(true);
+  const auto samplesOnSlightlyDifferentImageDomains = generateSamples(false);
+
+  // The test would be trivial (uninteresting) if there were no samples.
+  EXPECT_FALSE(samplesOnExactlyEqualImageDomains.empty());
+
+  EXPECT_EQ(samplesOnExactlyEqualImageDomains, samplesOnSlightlyDifferentImageDomains);
 }
