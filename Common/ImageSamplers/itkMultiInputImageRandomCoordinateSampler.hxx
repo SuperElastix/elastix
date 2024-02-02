@@ -43,7 +43,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
   /** Get handles to the input image, output sample container, and mask. */
   const InputImageType &             inputImage = elastix::Deref(this->GetInput());
   ImageSampleContainerType &         sampleContainer = elastix::Deref(this->GetOutput());
-  typename MaskType::ConstPointer    mask = this->GetMask();
+  const MaskType * const             mask = this->Superclass::GetMask();
   typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();
 
   /** Set up the interpolator. */
@@ -63,7 +63,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
 
   InputImageContinuousIndexType sampleContIndex;
   /** Fill the sample container. */
-  if (mask.IsNull())
+  if (mask == nullptr)
   {
     /** Start looping over the sample container. */
     for (iter = sampleContainer.Begin(); iter != end; ++iter)
