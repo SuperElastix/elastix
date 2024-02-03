@@ -239,8 +239,6 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
   // TODO Use ITK 5.4: numberOfSamplesOnGrid = gridSize.CalculateProductOfElements()
   const std::size_t numberOfSamplesOnGrid =
     std::accumulate(gridSize.cbegin(), gridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
-
-  samples.clear();
   samples.resize(numberOfSamplesOnGrid);
   WorkUnit workUnit{ gridIndex, gridSize, samples.data(), size_t{} };
 
@@ -277,8 +275,6 @@ ImageGridSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
   // TODO Use ITK 5.4: numberOfSamplesOnGrid = gridSize.CalculateProductOfElements()
   const std::size_t numberOfSamplesOnGrid =
     std::accumulate(gridSize.cbegin(), gridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
-
-  samples.clear();
   samples.resize(numberOfSamplesOnGrid);
 
   UserData userData{ inputImage,
@@ -369,17 +365,14 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
 
   const auto workUnitID = info.WorkUnitID;
 
-  if (workUnitID >= userData.WorkUnits.size())
+  if (workUnitID < userData.WorkUnits.size())
   {
-    return ITK_THREAD_RETURN_DEFAULT_VALUE;
+    GenerateDataForWorkUnit<VUseMask>(userData.WorkUnits[workUnitID],
+                                      userData.InputImage,
+                                      userData.Mask,
+                                      userData.WorldToObjectTransform,
+                                      userData.GridSpacing);
   }
-
-  GenerateDataForWorkUnit<VUseMask>(userData.WorkUnits[workUnitID],
-                                    userData.InputImage,
-                                    userData.Mask,
-                                    userData.WorldToObjectTransform,
-                                    userData.GridSpacing);
-
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 }
 
