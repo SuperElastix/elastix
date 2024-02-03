@@ -20,16 +20,22 @@
 #define itkImageDomain_h
 
 #include <itkImageBase.h>
+#include <itkImageMaskSpatialObject.h>
+#include "elxDeref.h"
 
 namespace elastix
 {
+/** Returns true, if and only if the mask has exactly the same image domain (image region, origin, spacing, direction)
+ * as the specified input image. */
 template <unsigned int VImageDimension>
 bool
-HaveSameImageDomain(const itk::ImageBase<VImageDimension> & image1, const itk::ImageBase<VImageDimension> & image2)
+MaskHasSameImageDomain(const itk::ImageMaskSpatialObject<VImageDimension> & mask,
+                       const itk::ImageBase<VImageDimension> &              inputImage)
 {
-  return image1.GetLargestPossibleRegion() == image2.GetLargestPossibleRegion() &&
-         image1.GetOrigin() == image2.GetOrigin() && image1.GetSpacing() == image2.GetSpacing() &&
-         image1.GetDirection() == image2.GetDirection();
+  const auto & maskImage = Deref(mask.GetImage());
+  return maskImage.GetLargestPossibleRegion() == inputImage.GetLargestPossibleRegion() &&
+         maskImage.GetOrigin() == inputImage.GetOrigin() && maskImage.GetSpacing() == inputImage.GetSpacing() &&
+         maskImage.GetDirection() == inputImage.GetDirection();
 }
 } // namespace elastix
 
