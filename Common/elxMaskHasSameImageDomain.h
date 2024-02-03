@@ -25,6 +25,14 @@
 
 namespace elastix
 {
+/** Enum to indicate that a mask is null, has the same domain as the input image, or has a different image domain. */
+enum class MaskCondition
+{
+  IsNull,
+  HasSameImageDomain,
+  HasDifferentImageDomain
+};
+
 /** Returns true, if and only if the mask has exactly the same image domain (image region, origin, spacing, direction)
  * as the specified input image. */
 template <unsigned int VImageDimension>
