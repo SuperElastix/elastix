@@ -19,6 +19,7 @@
 #define itkImageGridSampler_h
 
 #include "itkImageSamplerBase.h"
+#include "elxMaskHasSameImageDomain.h"
 
 namespace itk
 {
@@ -176,7 +177,7 @@ private:
     std::vector<WorkUnit>                    WorkUnits{};
   };
 
-  template <bool VUseMask>
+  template <elastix::MaskCondition VMaskCondition>
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);
 
@@ -245,7 +246,7 @@ private:
                             std::vector<ImageSampleType> & samples);
 
   /** Generates the data for one specific work unit. */
-  template <bool VUseMask>
+  template <elastix::MaskCondition VMaskCondition>
   static void
   GenerateDataForWorkUnit(WorkUnit &,
                           const InputImageType &,
