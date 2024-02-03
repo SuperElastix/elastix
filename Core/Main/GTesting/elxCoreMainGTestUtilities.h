@@ -417,10 +417,12 @@ CreateRandomImageDomain(std::mt19937 & randomNumberEngine)
   };
   const auto createRandomIndex = [&randomNumberEngine] {
     typename ImageDomainType::IndexType randomIndex{};
+    // Originally tried `std::uniform_int_distribution<itk::IndexValueType>` with
+    // `std::numeric_limits<itk::IndexValueType>`, but that caused errors from ImageSamplerBase::CropInputImageRegion(),
+    // saying "ERROR: the bounding box of the mask lies entirely out of the InputImageRegion!"
     std::generate(randomIndex.begin(), randomIndex.end(), [&randomNumberEngine] {
-      return std::uniform_int_distribution<itk::IndexValueType>{
-        std::numeric_limits<itk::IndexValueType>::min() / 2, std::numeric_limits<itk::IndexValueType>::max() / 2
-      }(randomNumberEngine);
+      return std::uniform_int_distribution{ std::numeric_limits<int>::min() / 2,
+                                            std::numeric_limits<int>::max() / 2 }(randomNumberEngine);
     });
     return randomIndex;
   };
@@ -444,8 +446,11 @@ CreateRandomImageDomain(std::mt19937 & randomNumberEngine)
   const auto createRandomPoint = [&randomNumberEngine] {
     typename ImageDomainType::PointType randomPoint{};
     std::generate(randomPoint.begin(), randomPoint.end(), [&randomNumberEngine] {
-      return GenerateRandomSign(randomNumberEngine) * std::uniform_real_distribution<itk::SpacePrecisionType>{
-        itk::SpacePrecisionType{}, std::numeric_limits<itk::SpacePrecisionType>::max() / 2.0
+      // Originally tried an interval up to `std::numeric_limits<itk::SpacePrecisionType>::max() / 2.0`, but that caused
+      // errors from ImageSamplerBase::CropInputImageRegion(), saying "ERROR: the bounding box of the mask lies entirely
+      // out of the InputImageRegion!"
+      return std::uniform_real_distribution<itk::SpacePrecisionType>{
+        std::numeric_limits<int>::min(), std::numeric_limits<int>::max()
       }(randomNumberEngine);
     });
     return randomPoint;
