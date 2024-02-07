@@ -38,7 +38,9 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   /** Sanity check. */
   if (mask == nullptr)
   {
-    itkExceptionMacro("ERROR: do not call this function when no mask is supplied.");
+    itkExceptionMacro("ERROR: do not call this function when no mask is supplied. When using the "
+                      "ImageRandomSamplerSparseMask sampler, a mask is required. Otherwise you may consider using a "
+                      "sampler that does not require a mask, for example, ImageRandomSampler.");
   }
 
   /** Get handles to the input image and output sample container. */
