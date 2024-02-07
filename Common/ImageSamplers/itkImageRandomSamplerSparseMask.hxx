@@ -61,24 +61,11 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   {
     this->m_InternalFullSampler->Update();
   }
-  catch (ExceptionObject & err)
+  catch (const ExceptionObject & err)
   {
-    std::string message = "ERROR: This ImageSampler internally uses the "
-                          "ImageFullSampler. Updating of this internal sampler raised the "
-                          "exception:\n";
-    message += err.GetDescription();
-
-    std::string            fullSamplerMessage = err.GetDescription();
-    std::string::size_type loc =
-      fullSamplerMessage.find("ERROR: failed to allocate memory for the sample container", 0);
-    if (loc != std::string::npos && mask == nullptr)
-    {
-      message += "\nYou are using the ImageRandomSamplerSparseMask sampler, "
-                 "but you did not set a mask. The internal ImageFullSampler therefore "
-                 "requires a lot of memory. Consider using the ImageRandomSampler "
-                 "instead.";
-    }
-    itkExceptionMacro(<< message);
+    itkExceptionMacro("ERROR: This ImageSampler internally uses the ImageFullSampler. Updating of this internal "
+                      "sampler raised the exception:\n"
+                      << err.GetDescription());
   }
 
   /** Get a handle to the full sampler output. */
