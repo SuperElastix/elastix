@@ -6,6 +6,7 @@ add_executable(CommonGTest
   elxResampleInterpolatorGTest.cxx
   elxResamplerGTest.cxx
   elxTransformIOGTest.cxx
+  itkAdvancedImageToImageMetricGTest.cxx
   itkComputeImageExtremaFilterGTest.cxx
   itkImageFullSamplerGTest.cxx
   itkImageGridSamplerGTest.cxx
