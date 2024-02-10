@@ -122,8 +122,8 @@ namespace itk
 
 itkImplementationSetObjectMacro2(Transform, , TransformType);
 itkImplementationSetObjectMacro1(Interpolator, , InterpolatorType);
-itkImplementationSetObjectMacro2(FixedImageMask, , FixedImageMaskType);
-itkImplementationSetObjectMacro2(MovingImageMask, , MovingImageMaskType);
+itkImplementationSetObjectMacro2(FixedImageMask, const, FixedImageMaskType);
+itkImplementationSetObjectMacro2(MovingImageMask, const, MovingImageMaskType);
 itkImplementationSetObjectMacro1(FixedImage, const, FixedImageType);
 itkImplementationSetObjectMacro1(MovingImage, const, MovingImageType);
 

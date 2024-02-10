@@ -94,17 +94,17 @@ namespace itk
 
 /** Set components. */
 itkImplementationSetObjectMacro(FixedImage, const FixedImageType);
-itkImplementationSetObjectMacro(FixedImageMask, FixedImageMaskType);
+itkImplementationSetObjectMacro(FixedImageMask, const FixedImageMaskType);
 itkImplementationSetObjectMacro(MovingImage, const MovingImageType);
-itkImplementationSetObjectMacro(MovingImageMask, MovingImageMaskType);
+itkImplementationSetObjectMacro(MovingImageMask, const MovingImageMaskType);
 itkImplementationSetObjectMacro(Interpolator, InterpolatorType);
 itkImplementationSetObjectMacro2(FixedImageInterpolator, FixedImageInterpolatorType);
 
 /** Get components. */
 itkImplementationGetConstObjectMacro(FixedImage, FixedImageType);
-itkImplementationGetObjectMacro(FixedImageMask, FixedImageMaskType);
+itkImplementationGetConstObjectMacro(FixedImageMask, FixedImageMaskType);
 itkImplementationGetConstObjectMacro(MovingImage, MovingImageType);
-itkImplementationGetObjectMacro(MovingImageMask, MovingImageMaskType);
+itkImplementationGetConstObjectMacro(MovingImageMask, MovingImageMaskType);
 itkImplementationGetObjectMacro(Interpolator, InterpolatorType);
 itkImplementationGetObjectMacro(FixedImageInterpolator, FixedImageInterpolatorType);
 
@@ -305,8 +305,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::IsInsideMovingMask(
   bool inside = true;
   for (unsigned int i = 0; i < this->GetNumberOfMovingImageMasks(); ++i)
   {
-    MovingImageMaskPointer movingImageMask = this->GetMovingImageMask(i);
-    if (movingImageMask.IsNotNull())
+    if (const auto * const movingImageMask = this->GetMovingImageMask(i))
     {
       inside &= movingImageMask->IsInsideInWorldSpace(mappedPoint);
     }

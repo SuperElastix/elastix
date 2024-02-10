@@ -124,6 +124,8 @@ public:
   using MovingImageMaskType = Image<unsigned char, OutputSpaceDimension>;
   using FixedImageMaskPointer = typename FixedImageMaskType::ConstPointer;
   using MovingImageMaskPointer = typename MovingImageMaskType::ConstPointer;
+  using FixedImageMaskConstPointer = typename FixedImageMaskType::ConstPointer;
+  using MovingImageMaskConstPointer = typename MovingImageMaskType::ConstPointer;
 
   /** Moment calculators */
   using FixedImageCalculatorType = AdvancedImageMomentsCalculator<FixedImageType>;
