@@ -128,8 +128,10 @@ public:
   // Overrule the mask type from its base class, ITK ImageToImageMetric.
   using FixedImageMaskType = ImageMaskSpatialObject<Self::FixedImageDimension>;
   using FixedImageMaskPointer = SmartPointer<FixedImageMaskType>;
+  using FixedImageMaskConstPointer = SmartPointer<const FixedImageMaskType>;
   using MovingImageMaskType = ImageMaskSpatialObject<Self::MovingImageDimension>;
   using MovingImageMaskPointer = SmartPointer<MovingImageMaskType>;
+  using MovingImageMaskConstPointer = SmartPointer<const MovingImageMaskType>;
 
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
@@ -180,14 +182,14 @@ public:
   /** Public methods ********************/
 
   virtual void
-  SetFixedImageMask(FixedImageMaskType * const arg)
+  SetFixedImageMask(const FixedImageMaskType * const arg)
   {
     assert(arg == nullptr || typeid(*arg) == typeid(FixedImageMaskType));
     Superclass::SetFixedImageMask(arg);
   }
 
   virtual void
-  SetMovingImageMask(MovingImageMaskType * const arg)
+  SetMovingImageMask(const MovingImageMaskType * const arg)
   {
     assert(arg == nullptr || typeid(*arg) == typeid(MovingImageMaskType));
     Superclass::SetMovingImageMask(arg);

@@ -91,8 +91,10 @@ public:
   using typename Superclass::GradientImageFilterPointer;
   using typename Superclass::FixedImageMaskType;
   using typename Superclass::FixedImageMaskPointer;
+  using typename Superclass::FixedImageMaskConstPointer;
   using typename Superclass::MovingImageMaskType;
   using typename Superclass::MovingImageMaskPointer;
+  using typename Superclass::MovingImageMaskConstPointer;
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
   using typename Superclass::ParametersType;
@@ -102,10 +104,10 @@ public:
 
   /** Typedef's for storing multiple inputs. */
   using FixedImageVectorType = std::vector<FixedImageConstPointer>;
-  using FixedImageMaskVectorType = std::vector<FixedImageMaskPointer>;
+  using FixedImageMaskVectorType = std::vector<FixedImageMaskConstPointer>;
   using FixedImageRegionVectorType = std::vector<FixedImageRegionType>;
   using MovingImageVectorType = std::vector<MovingImageConstPointer>;
-  using MovingImageMaskVectorType = std::vector<MovingImageMaskPointer>;
+  using MovingImageMaskVectorType = std::vector<MovingImageMaskConstPointer>;
   using InterpolatorVectorType = std::vector<InterpolatorPointer>;
   using FixedImageInterpolatorVectorType = std::vector<FixedImageInterpolatorPointer>;
 
@@ -145,22 +147,22 @@ public:
 
   /** Set the fixed image masks. */
   virtual void
-  SetFixedImageMask(FixedImageMaskType * _arg, unsigned int pos);
+  SetFixedImageMask(const FixedImageMaskType * _arg, unsigned int pos);
 
   /** Set the first fixed image mask. */
   void
-  SetFixedImageMask(FixedImageMaskType * _arg) override
+  SetFixedImageMask(const FixedImageMaskType * _arg) override
   {
     this->SetFixedImageMask(_arg, 0);
   }
 
 
   /** Get the fixed image masks. */
-  virtual FixedImageMaskType *
+  virtual const FixedImageMaskType *
   GetFixedImageMask(unsigned int pos) const;
 
   /** Get the first fixed image mask. */
-  FixedImageMaskType *
+  const FixedImageMaskType *
   GetFixedImageMask() const override
   {
     return this->GetFixedImageMask(0);
@@ -241,22 +243,22 @@ public:
 
   /** Set the moving image masks. */
   virtual void
-  SetMovingImageMask(MovingImageMaskType * _arg, unsigned int pos);
+  SetMovingImageMask(const MovingImageMaskType * _arg, unsigned int pos);
 
   /** Set the first moving image mask. */
   void
-  SetMovingImageMask(MovingImageMaskType * _arg) override
+  SetMovingImageMask(const MovingImageMaskType * _arg) override
   {
     this->SetMovingImageMask(_arg, 0);
   }
 
 
   /** Get the moving image masks. */
-  virtual MovingImageMaskType *
+  virtual const MovingImageMaskType *
   GetMovingImageMask(unsigned int pos) const;
 
   /** Get the first moving image mask. */
-  MovingImageMaskType *
+  const MovingImageMaskType *
   GetMovingImageMask() const override
   {
     return this->GetMovingImageMask(0);

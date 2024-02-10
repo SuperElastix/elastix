@@ -315,11 +315,11 @@ public:
 
   /** Pass the fixed image mask to all sub metrics. */
   void
-  SetFixedImageMask(FixedImageMaskType * _arg) override;
+  SetFixedImageMask(const FixedImageMaskType * _arg) override;
 
   /** Pass a fixed image mask to a specific metric */
   virtual void
-  SetFixedImageMask(FixedImageMaskType * _arg, unsigned int pos);
+  SetFixedImageMask(const FixedImageMaskType * _arg, unsigned int pos);
 
   /** Returns the fixedImageMask set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
@@ -381,11 +381,11 @@ public:
 
   /** Pass the moving image mask to all sub metrics. */
   void
-  SetMovingImageMask(MovingImageMaskType * _arg) override;
+  SetMovingImageMask(const MovingImageMaskType * _arg) override;
 
   /** Pass a moving image mask to a specific metric */
   virtual void
-  SetMovingImageMask(MovingImageMaskType * _arg, unsigned int pos);
+  SetMovingImageMask(const MovingImageMaskType * _arg, unsigned int pos);
 
   /** Returns the movingImageMask set in a specific metric. If the
    * submetric is a singlevalued costfunction a zero pointer will
