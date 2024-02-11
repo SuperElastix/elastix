@@ -37,22 +37,8 @@ namespace itk
 template <class TFixedImage, class TMovingImage>
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AdvancedMeanSquaresImageToImageMetric()
 {
-  this->SetUseImageSampler(true);
-  this->SetUseFixedImageLimiter(false);
-  this->SetUseMovingImageLimiter(false);
-
-  this->m_UseNormalization = false;
-  this->m_NormalizationFactor = 1.0;
-
-  /** SelfHessian related variables, experimental feature. */
-  this->m_SelfHessianSmoothingSigma = 1.0;
-  this->m_SelfHessianNoiseRange = 1.0;
-  this->m_NumberOfSamplesForSelfHessian = 100000;
-
-  this->m_SelfHessianNoiseRange = 1.0;
-
-} // end Constructor
-
+  this->Superclass::SetUseImageSampler(true);
+}
 
 /**
  * ********************* Initialize ****************************
