@@ -40,12 +40,12 @@ HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input, Deriv
 {
   if (input > this->m_UpperBound)
   {
-    derivative.Fill(itk::NumericTraits<OutputType>::ZeroValue());
+    derivative.Fill(OutputType{});
     return (this->m_UpperBound);
   }
   if (input < this->m_LowerBound)
   {
-    derivative.Fill(itk::NumericTraits<OutputType>::ZeroValue());
+    derivative.Fill(OutputType{});
     return (this->m_LowerBound);
   }
   return (static_cast<OutputType>(input));

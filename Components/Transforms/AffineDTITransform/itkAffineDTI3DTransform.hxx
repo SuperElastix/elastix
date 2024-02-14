@@ -44,8 +44,8 @@ template <class TScalarType>
 AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform()
   : Superclass(ParametersDimension)
 {
-  this->m_Angle.Fill(itk::NumericTraits<ScalarType>::ZeroValue());
-  this->m_Shear.Fill(itk::NumericTraits<ScalarType>::ZeroValue());
+  this->m_Angle.Fill(ScalarType{});
+  this->m_Shear.Fill(ScalarType{});
   this->m_Scale.Fill(itk::NumericTraits<ScalarType>::OneValue());
 
   this->PrecomputeJacobianOfSpatialJacobian();
@@ -74,8 +74,8 @@ template <class TScalarType>
 AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform(unsigned int spaceDimension, unsigned int parametersDimension)
   : Superclass(spaceDimension, parametersDimension)
 {
-  this->m_Angle.Fill(itk::NumericTraits<ScalarType>::ZeroValue());
-  this->m_Shear.Fill(itk::NumericTraits<ScalarType>::ZeroValue());
+  this->m_Angle.Fill(ScalarType{});
+  this->m_Shear.Fill(ScalarType{});
   this->m_Scale.Fill(itk::NumericTraits<ScalarType>::OneValue());
   this->PrecomputeJacobianOfSpatialJacobian();
 }
@@ -155,8 +155,8 @@ void
 AffineDTI3DTransform<TScalarType>::SetIdentity()
 {
   Superclass::SetIdentity();
-  this->m_Angle.Fill(itk::NumericTraits<ScalarType>::ZeroValue());
-  this->m_Shear.Fill(itk::NumericTraits<ScalarType>::ZeroValue());
+  this->m_Angle.Fill(ScalarType{});
+  this->m_Shear.Fill(ScalarType{});
   this->m_Scale.Fill(itk::NumericTraits<ScalarType>::OneValue());
   this->PrecomputeJacobianOfSpatialJacobian();
 }

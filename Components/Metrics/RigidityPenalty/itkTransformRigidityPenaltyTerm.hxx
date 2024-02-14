@@ -902,7 +902,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
   /** Set output values to zero. */
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<MeasureType>::ZeroValue());
+  derivative.Fill(MeasureType{});
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );

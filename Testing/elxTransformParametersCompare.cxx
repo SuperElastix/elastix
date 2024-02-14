@@ -139,7 +139,7 @@ main(int argc, char ** argv)
 
   unsigned int numberOfParametersTest = 0;
   config->ReadParameter(numberOfParametersTest, "NumberOfParameters", 0, dummyErrorMessage);
-  std::vector<ScalarType> parametersTest(numberOfParametersTest, itk::NumericTraits<ScalarType>::ZeroValue());
+  std::vector<ScalarType> parametersTest(numberOfParametersTest, ScalarType{});
   config->ReadParameter(parametersTest, "TransformParameters", 0, numberOfParametersTest - 1, true, dummyErrorMessage);
 
   /** Read baseline parameters. */
@@ -158,7 +158,7 @@ main(int argc, char ** argv)
   unsigned int numberOfParametersBaseline = 0;
   config->ReadParameter(numberOfParametersBaseline, "NumberOfParameters", 0, dummyErrorMessage);
 
-  std::vector<ScalarType> parametersBaseline(numberOfParametersBaseline, itk::NumericTraits<ScalarType>::ZeroValue());
+  std::vector<ScalarType> parametersBaseline(numberOfParametersBaseline, ScalarType{});
   config->ReadParameter(
     parametersBaseline, "TransformParameters", 0, numberOfParametersBaseline - 1, true, dummyErrorMessage);
 

@@ -158,7 +158,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   this->m_NumberOfPointsCounted = 0;
   MeasureType measure = NumericTraits<MeasureType>::Zero;
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  derivative.Fill(DerivativeValueType{});
   NonZeroJacobianIndicesType nzji(this->m_Transform->GetNumberOfNonZeroJacobianIndices());
   TransformJacobianType      jacobian;
 

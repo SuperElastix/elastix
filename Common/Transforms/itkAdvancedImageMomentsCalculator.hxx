@@ -35,13 +35,13 @@ AdvancedImageMomentsCalculator<TImage>::AdvancedImageMomentsCalculator()
   m_Valid = false;
   m_Image = nullptr;
   m_SpatialObjectMask = nullptr;
-  m_M0 = NumericTraits<ScalarType>::ZeroValue();
-  m_M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  m_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
-  m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
-  m_Pm.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  m_Pa.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  m_M0 = ScalarType{};
+  m_M1.Fill(typename VectorType::ValueType{});
+  m_M2.Fill(typename MatrixType::ValueType{});
+  m_Cg.Fill(typename VectorType::ValueType{});
+  m_Cm.Fill(typename MatrixType::ValueType{});
+  m_Pm.Fill(typename VectorType::ValueType{});
+  m_Pa.Fill(typename MatrixType::ValueType{});
 
   /** Threading related variables. */
   this->m_UseMultiThread = true;
@@ -97,11 +97,11 @@ AdvancedImageMomentsCalculator<TImage>::ComputeSingleThreaded()
     this->SetImage(thresholdFilter->GetOutput());
   }
 
-  m_M0 = NumericTraits<ScalarType>::ZeroValue();
-  m_M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  m_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
-  m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  m_M0 = ScalarType{};
+  m_M1.Fill(typename VectorType::ValueType{});
+  m_M2.Fill(typename MatrixType::ValueType{});
+  m_Cg.Fill(typename VectorType::ValueType{});
+  m_Cm.Fill(typename MatrixType::ValueType{});
 
   using IndexType = typename ImageType::IndexType;
 
@@ -184,11 +184,11 @@ template <typename TImage>
 void
 AdvancedImageMomentsCalculator<TImage>::BeforeThreadedCompute()
 {
-  m_M0 = NumericTraits<ScalarType>::ZeroValue();
-  m_M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  m_M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
-  m_Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  m_Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  m_M0 = ScalarType{};
+  m_M1.Fill(typename VectorType::ValueType{});
+  m_M2.Fill(typename MatrixType::ValueType{});
+  m_Cg.Fill(typename VectorType::ValueType{});
+  m_Cm.Fill(typename MatrixType::ValueType{});
 
   if (!m_Image)
   {
@@ -260,11 +260,11 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
 
   ScalarType M0 = 0;
   VectorType M1, Cg;
-  M1.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
-  Cg.Fill(NumericTraits<typename VectorType::ValueType>::ZeroValue());
+  M1.Fill(typename VectorType::ValueType{});
+  Cg.Fill(typename VectorType::ValueType{});
   MatrixType M2, Cm;
-  M2.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
-  Cm.Fill(NumericTraits<typename MatrixType::ValueType>::ZeroValue());
+  M2.Fill(typename MatrixType::ValueType{});
+  Cm.Fill(typename MatrixType::ValueType{});
   unsigned long numberOfPixelsCounted = 0;
 
   /** Get sample container size, number of threads, and output space dimension. */

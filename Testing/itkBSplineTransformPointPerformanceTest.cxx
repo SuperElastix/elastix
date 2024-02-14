@@ -115,7 +115,7 @@ public:
     supportRegion.SetSize(this->m_SupportSize);
     supportRegion.SetIndex(supportIndex);
 
-    outputPoint.Fill(NumericTraits<ScalarType>::ZeroValue());
+    outputPoint.Fill(ScalarType{});
 
     /** Create iterators over the coefficient images. */
     using IteratorType = ImageRegionConstIterator<ImageType>;

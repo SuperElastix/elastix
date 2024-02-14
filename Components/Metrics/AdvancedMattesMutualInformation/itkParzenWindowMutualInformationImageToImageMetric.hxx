@@ -672,7 +672,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
 
   /** Initialize */
-  this->m_PRatioArray.Fill(itk::NumericTraits<PRatioType>::ZeroValue());
+  this->m_PRatioArray.Fill(PRatioType{});
 
   /** Loop over the joint histogram. */
   PDFValueType sum = 0.0;

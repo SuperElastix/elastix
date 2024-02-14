@@ -37,7 +37,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   this->m_CurrentLevel = 0;
   this->m_ComputeOnlyForCurrentLevel = false;
   SmoothingScheduleType temp(this->GetNumberOfLevels(), ImageDimension);
-  temp.Fill(NumericTraits<ScalarRealType>::ZeroValue());
+  temp.Fill(ScalarRealType{});
   this->m_SmoothingSchedule = temp;
   this->m_SmoothingScheduleDefined = false;
 } // end Constructor
@@ -59,7 +59,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 
   /** Resize the smoothing schedule too. */
   SmoothingScheduleType temp(this->m_NumberOfLevels, ImageDimension);
-  temp.Fill(NumericTraits<ScalarRealType>::ZeroValue());
+  temp.Fill(ScalarRealType{});
   this->m_SmoothingSchedule = temp;
   this->m_SmoothingScheduleDefined = false;
 
@@ -224,7 +224,7 @@ void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetSmoothingScheduleToZero()
 {
   SmoothingScheduleType schedule;
-  schedule.Fill(NumericTraits<ScalarRealType>::ZeroValue());
+  schedule.Fill(ScalarRealType{});
   this->SetSmoothingSchedule(schedule);
 } // end SetSmoothingScheduleToZero()
 

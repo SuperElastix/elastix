@@ -334,7 +334,7 @@ public:
     /** The default is filled with zero's.
     parameterValues.clear();
     parameterValues.resize( entry_nr_end - entry_nr_start + 1,
-      itk::NumericTraits<T>::ZeroValue() );
+      T{} );
     */
 
     /** Get all parameters at once. */

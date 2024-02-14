@@ -409,7 +409,7 @@ SplineKernelTransform<TElastix>::ReadFromFile()
   this->GetConfiguration()->ReadParameter(numberOfParameters, "NumberOfParameters", 0);
 
   /** Read source landmarks. */
-  std::vector<CoordRepType> fixedImageLandmarks(numberOfParameters, itk::NumericTraits<CoordRepType>::ZeroValue());
+  std::vector<CoordRepType> fixedImageLandmarks(numberOfParameters, CoordRepType{});
   bool                      retfil = this->GetConfiguration()->ReadParameter(
     fixedImageLandmarks, "FixedImageLandmarks", 0, numberOfParameters - 1, true);
   if (!retfil)

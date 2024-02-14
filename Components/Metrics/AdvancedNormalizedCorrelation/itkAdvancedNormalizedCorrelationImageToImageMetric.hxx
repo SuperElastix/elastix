@@ -311,13 +311,13 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  derivative.Fill(DerivativeValueType{});
   DerivativeType derivativeF = DerivativeType(this->GetNumberOfParameters());
-  derivativeF.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  derivativeF.Fill(DerivativeValueType{});
   DerivativeType derivativeM = DerivativeType(this->GetNumberOfParameters());
-  derivativeM.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  derivativeM.Fill(DerivativeValueType{});
   DerivativeType differential = DerivativeType(this->GetNumberOfParameters());
-  differential.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  differential.Fill(DerivativeValueType{});
 
   /** Array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
@@ -442,7 +442,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   else
   {
     value = NumericTraits<MeasureType>::Zero;
-    derivative.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+    derivative.Fill(DerivativeValueType{});
   }
 
 } // end GetValueAndDerivativeSingleThreaded()
@@ -677,7 +677,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   if (denom > -1e-14)
   {
     value = NumericTraits<MeasureType>::Zero;
-    derivative.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+    derivative.Fill(DerivativeValueType{});
     return;
   }
 

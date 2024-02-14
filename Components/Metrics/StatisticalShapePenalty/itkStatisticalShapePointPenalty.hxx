@@ -457,7 +457,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
   // this->m_NumberOfPointsCounted = 0;
   value = NumericTraits<MeasureType>::Zero;
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  derivative.Fill(DerivativeValueType{});
 
   // InputPointType movingPoint;
   OutputPointType fixedPoint;
