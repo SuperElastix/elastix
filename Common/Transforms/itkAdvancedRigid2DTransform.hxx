@@ -44,7 +44,7 @@ template <class TScalarType>
 AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform()
   : Superclass(ParametersDimension)
 {
-  m_Angle = NumericTraits<TScalarType>::Zero;
+  m_Angle = TScalarType{};
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -55,7 +55,7 @@ AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform(unsigned int spa
                                                                 unsigned int parametersDimension)
   : Superclass(parametersDimension)
 {
-  m_Angle = NumericTraits<TScalarType>::Zero;
+  m_Angle = TScalarType{};
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -128,7 +128,7 @@ void
 AdvancedRigid2DTransform<TScalarType>::SetIdentity()
 {
   this->Superclass::SetIdentity();
-  m_Angle = NumericTraits<TScalarType>::Zero;
+  m_Angle = TScalarType{};
   // make sure to also precompute Jacobian:
   this->PrecomputeJacobianOfSpatialJacobian();
 }

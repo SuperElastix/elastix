@@ -110,7 +110,7 @@ PCAMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
   /** Some initialization. */
   for (auto & perThreadVariable : m_PCAMetricGetSamplesPerThreadVariables)
   {
-    perThreadVariable.st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
+    perThreadVariable.st_NumberOfPixelsCounted = SizeValueType{};
     perThreadVariable.st_Derivative.SetSize(this->GetNumberOfParameters());
   }
 
@@ -174,7 +174,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Update the imageSampler and get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -192,7 +192,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   unsigned int pixelIndex = 0;
 
   /** Initialize image sample matrix . */
-  datablock.fill(itk::NumericTraits<RealType>::Zero);
+  datablock.fill(RealType{});
 
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
@@ -250,7 +250,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(this->m_G);
-  mean.fill(NumericTraits<RealType>::Zero);
+  mean.fill(RealType{});
   for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
     for (unsigned int j = 0; j < this->m_G; ++j)
@@ -261,7 +261,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   mean /= RealType(this->m_NumberOfPixelsCounted);
 
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
-  Amm.fill(NumericTraits<RealType>::Zero);
+  Amm.fill(RealType{});
 
   for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
@@ -276,7 +276,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
 
   vnl_diag_matrix<RealType> S(this->m_G);
-  S.fill(NumericTraits<RealType>::Zero);
+  S.fill(RealType{});
   for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -288,7 +288,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Compute first eigenvalue and eigenvector of K */
   vnl_symmetric_eigensystem<RealType> eig(K);
 
-  RealType sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
+  RealType sumEigenValuesUsed = RealType{};
   for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
@@ -315,7 +315,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTyp
    * the metric value is available. It does not cost anything to calculate
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable. */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
 
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
@@ -336,9 +336,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<DerivativeValueType>::Zero);
+  derivative.Fill(DerivativeValueType{});
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -372,7 +372,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   unsigned int pixelIndex = 0;
 
   /** Initialize image sample matrix . */
-  datablock.fill(itk::NumericTraits<RealType>::Zero);
+  datablock.fill(RealType{});
 
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
@@ -432,7 +432,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(this->m_G);
-  mean.fill(NumericTraits<RealType>::Zero);
+  mean.fill(RealType{});
   for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
     for (unsigned int j = 0; j < this->m_G; ++j)
@@ -444,7 +444,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   /** Calculate standard deviation from columns */
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
-  Amm.fill(NumericTraits<RealType>::Zero);
+  Amm.fill(RealType{});
   for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
     for (unsigned int j = 0; j < this->m_G; ++j)
@@ -459,7 +459,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
 
   vnl_diag_matrix<RealType> S(this->m_G);
-  S.fill(NumericTraits<RealType>::Zero);
+  S.fill(RealType{});
   for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -470,7 +470,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** Compute first eigenvalue and eigenvector of K */
   vnl_symmetric_eigensystem<RealType> eig(K);
 
-  RealType sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
+  RealType sumEigenValuesUsed = RealType{};
   for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
@@ -494,7 +494,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   vnl_diag_matrix<DerivativeValueType> dSdmu_part1(this->m_G);
 
   /** initialize */
-  dSdmu_part1.fill(itk::NumericTraits<DerivativeValueType>::Zero);
+  dSdmu_part1.fill(DerivativeValueType{});
 
   for (unsigned int d = 0; d < this->m_G; ++d)
   {
@@ -803,7 +803,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(this->m_G);
-  mean.fill(NumericTraits<RealType>::Zero);
+  mean.fill(RealType{});
   for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
     for (unsigned int j = 0; j < this->m_G; ++j)
@@ -815,7 +815,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
 
   /** Calculate standard deviation from columns */
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
-  Amm.fill(NumericTraits<RealType>::Zero);
+  Amm.fill(RealType{});
   for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
     for (unsigned int j = 0; j < this->m_G; ++j)
@@ -830,7 +830,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
 
   vnl_diag_matrix<RealType> S(this->m_G);
-  S.fill(NumericTraits<RealType>::Zero);
+  S.fill(RealType{});
   for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -841,7 +841,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   /** Compute first eigenvalue and eigenvector of K */
   vnl_symmetric_eigensystem<RealType> eig(K);
 
-  RealType   sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
+  RealType   sumEigenValuesUsed = RealType{};
   MatrixType eigenVectorMatrix(this->m_G, this->m_NumEigenValues);
   for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {

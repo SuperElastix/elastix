@@ -56,7 +56,7 @@ GenericConjugateGradientOptimizer::StartOptimization()
   this->m_StopCondition = Unknown;
   this->m_CurrentIteration = 0;
   this->m_CurrentStepLength = 0.0;
-  this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
+  this->m_CurrentValue = MeasureType{};
   this->m_PreviousGradientAndSearchDirValid = false;
 
   /** Get the number of parameters; checks also if a cost function has been set at all.

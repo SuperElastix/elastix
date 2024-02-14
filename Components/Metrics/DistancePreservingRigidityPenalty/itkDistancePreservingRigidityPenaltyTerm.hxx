@@ -34,7 +34,7 @@ template <class TFixedImage, class TScalarType>
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::DistancePreservingRigidityPenaltyTerm()
 {
   /** Values. */
-  this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+  this->m_RigidityPenaltyTermValue = MeasureType{};
 
   /** Images required for penalty calculation */
   this->m_BSplineKnotImage = nullptr;
@@ -166,7 +166,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
   -> MeasureType
 {
   /** Set output values to zero. */
-  this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+  this->m_RigidityPenaltyTermValue = MeasureType{};
 
   // this->SetTransformParameters( parameters );
   this->m_BSplineTransform->SetParameters(parameters);
@@ -285,7 +285,7 @@ void
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const ParametersType & parameters,
                                                                                DerivativeType &       derivative) const
 {
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 } // end GetDerivative()
 
@@ -302,8 +302,8 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
   DerivativeType &       derivative) const
 {
   /** Set output values to zero. */
-  value = NumericTraits<MeasureType>::Zero;
-  this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
+  this->m_RigidityPenaltyTermValue = MeasureType{};
 
   /** Set output values to zero. */
   derivative = DerivativeType(this->GetNumberOfParameters());

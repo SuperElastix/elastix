@@ -324,8 +324,8 @@ public:
     if (entry_nr_end >= numberOfEntries)
     {
       itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
-                                                    << entry_nr_end << ".\nThe default value \""
-                                                    << itk::NumericTraits<T>::Zero << "\" is used instead.");
+                                                    << entry_nr_end << ".\nThe default value \"" << T{}
+                                                    << "\" is used instead.");
     }
 
     /** Get the vector of parameters. */

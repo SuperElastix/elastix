@@ -51,7 +51,7 @@ ScaledSingleValuedCostFunction::GetValue(const ParametersType & parameters) cons
     itkExceptionMacro("Number of parameters is not like the unscaled cost function expects.");
   }
 
-  MeasureType returnvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType returnvalue = MeasureType{};
 
   if (this->m_UseScales)
   {

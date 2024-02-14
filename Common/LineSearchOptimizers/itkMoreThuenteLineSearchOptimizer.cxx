@@ -29,7 +29,7 @@ namespace itk
 
 MoreThuenteLineSearchOptimizer::MoreThuenteLineSearchOptimizer()
 {
-  this->m_f = NumericTraits<MeasureType>::Zero;
+  this->m_f = MeasureType{};
   this->m_dg = 0.0;
   this->m_InitialDerivativeProvided = false;
   this->m_InitialValueProvided = false;

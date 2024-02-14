@@ -448,7 +448,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeTh
   /** Some initialization. */
   for (auto & perThreadVariable : m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables)
   {
-    perThreadVariable.st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
+    perThreadVariable.st_NumberOfPixelsCounted = SizeValueType{};
 
     // Initialize the joint pdf
     JointPDFPointer & jointPDF = perThreadVariable.st_JointPDF;
@@ -1229,7 +1229,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreade
   {
     while (!it.IsAtEndOfLine())
     {
-      sum = NumericTraits<PDFValueType>::Zero;
+      sum = PDFValueType{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
         sum += itT[i].Value();
@@ -1468,7 +1468,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       /** Compute the moving image value M(T(x)) and check if
        * the point is inside the moving image buffer.
        */
-      RealType movingImageValue = itk::NumericTraits<RealType>::Zero;
+      RealType movingImageValue = RealType{};
       if (sampleOk)
       {
         sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);

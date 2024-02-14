@@ -65,8 +65,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeT
   m_KappaGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  const SizeValueType       zero1 = NumericTraits<SizeValueType>::Zero;
-  const DerivativeValueType zero2 = NumericTraits<DerivativeValueType>::Zero;
+  const SizeValueType       zero1 = SizeValueType{};
+  const DerivativeValueType zero2 = DerivativeValueType{};
   for (auto & perThreadVariable : m_KappaGetValueAndDerivativePerThreadVariables)
   {
     perThreadVariable.st_NumberOfPixelsCounted = zero1;
@@ -112,7 +112,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -216,7 +216,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   std::size_t areaSum = fixedForegroundArea + movingForegroundArea;
   if (areaSum == 0)
   {
-    measure = NumericTraits<MeasureType>::Zero;
+    measure = MeasureType{};
   }
   else
   {
@@ -248,7 +248,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivati
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -269,7 +269,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
@@ -585,7 +585,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  const MeasureType zero = NumericTraits<MeasureType>::Zero;
+  const MeasureType zero = MeasureType{};
   MeasureType       areaSum = zero;
   MeasureType       intersection = zero;
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
@@ -670,7 +670,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
   unsigned int jmax = (threadId + 1) * subSize;
   jmax = (jmax > numPar) ? numPar : jmax;
 
-  const DerivativeValueType zero = NumericTraits<DerivativeValueType>::Zero;
+  const DerivativeValueType zero = DerivativeValueType{};
   DerivativeValueType       sum1, sum2;
   for (unsigned int j = jmin; j < jmax; ++j)
   {

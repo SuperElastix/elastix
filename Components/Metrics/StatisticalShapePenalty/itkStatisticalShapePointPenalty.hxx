@@ -355,7 +355,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
 
   /** Initialize some variables */
   // this->m_NumberOfPointsCounted = 0;
-  MeasureType value = NumericTraits<MeasureType>::Zero;
+  MeasureType value = MeasureType{};
 
   // InputPointType movingPoint;
   OutputPointType fixedPoint;
@@ -429,7 +429,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(con
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -455,7 +455,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
 
   /** Initialize some variables */
   // this->m_NumberOfPointsCounted = 0;
-  value = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 

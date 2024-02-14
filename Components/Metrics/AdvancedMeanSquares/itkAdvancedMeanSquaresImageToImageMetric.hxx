@@ -146,7 +146,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
 {
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -257,7 +257,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   this->LaunchGetValueThreaderCallback();
 
   /** Gather the metric values from all threads. */
-  MeasureType value = NumericTraits<MeasureType>::Zero;
+  MeasureType value = MeasureType{};
   this->AfterThreadedGetValue(value);
 
   return value;
@@ -296,7 +296,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType   measure = NumericTraits<MeasureType>::Zero;
+  MeasureType   measure = MeasureType{};
 
   /** Loop over the fixed image to calculate the mean squares. */
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
@@ -370,13 +370,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
     this->m_NormalizationFactor / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = NumericTraits<MeasureType>::Zero;
+    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
   value *= normal_sum;
 
@@ -398,7 +398,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -419,7 +419,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
@@ -603,7 +603,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType   measure = NumericTraits<MeasureType>::Zero;
+  MeasureType   measure = MeasureType{};
 
   /** Loop over the fixed image to calculate the mean squares. */
   for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
@@ -693,13 +693,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
     this->m_NormalizationFactor / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = NumericTraits<MeasureType>::Zero;
+    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
   value *= normal_sum;
 
@@ -732,7 +732,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
 #  pragma omp parallel for
     for (int j = 0; j < spaceDimension; ++j)
     {
-      DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+      DerivativeValueType tmp = DerivativeValueType{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];

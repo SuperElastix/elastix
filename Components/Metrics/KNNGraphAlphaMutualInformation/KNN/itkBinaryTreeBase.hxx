@@ -46,7 +46,7 @@ BinaryTreeBase<TListSample>::GetNumberOfDataPoints() const -> TotalAbsoluteFrequ
   {
     return this->m_Sample->GetTotalFrequency();
   }
-  return NumericTraits<TotalAbsoluteFrequencyType>::Zero;
+  return TotalAbsoluteFrequencyType{};
 
 } // end GetNumberOfDataPoints()
 
@@ -63,7 +63,7 @@ BinaryTreeBase<TListSample>::GetActualNumberOfDataPoints() const -> TotalAbsolut
   {
     return this->m_Sample->GetActualSize();
   }
-  return NumericTraits<TotalAbsoluteFrequencyType>::Zero;
+  return TotalAbsoluteFrequencyType{};
 
 } // end GetActualNumberOfDataPoints()
 
@@ -80,7 +80,7 @@ BinaryTreeBase<TListSample>::GetDataDimension() const -> MeasurementVectorSizeTy
   {
     return this->m_Sample->GetMeasurementVectorSize();
   }
-  return NumericTraits<MeasurementVectorSizeType>::Zero;
+  return MeasurementVectorSizeType{};
 
 } // end GetDataDimension()
 

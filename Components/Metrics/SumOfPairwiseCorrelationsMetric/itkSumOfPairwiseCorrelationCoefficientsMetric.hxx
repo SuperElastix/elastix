@@ -146,7 +146,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
@@ -171,7 +171,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   unsigned int pixelIndex = 0;
 
   /** Initialize image sample matrix . */
-  datablock.fill(itk::NumericTraits<RealType>::Zero);
+  datablock.fill(RealType{});
 
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
@@ -231,7 +231,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
-  mean.fill(NumericTraits<RealType>::Zero);
+  mean.fill(RealType{});
   for (unsigned int i = 0; i < N; ++i)
   {
     for (unsigned int j = 0; j < G; ++j)
@@ -242,7 +242,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   mean /= RealType(N);
 
   MatrixType Amm(N, G);
-  Amm.fill(NumericTraits<RealType>::Zero);
+  Amm.fill(RealType{});
   for (unsigned int i = 0; i < N; ++i)
   {
     for (unsigned int j = 0; j < G; ++j)
@@ -257,7 +257,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
   vnl_diag_matrix<RealType> S(G);
-  S.fill(NumericTraits<RealType>::Zero);
+  S.fill(RealType{});
   for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -288,7 +288,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetDeriva
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
 
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
@@ -315,9 +315,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   /** Initialize some variables */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
   derivative = DerivativeType(numberOfParameters);
-  derivative.Fill(NumericTraits<DerivativeValueType>::Zero);
+  derivative.Fill(DerivativeValueType{});
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
@@ -410,7 +410,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
-  mean.fill(NumericTraits<RealType>::Zero);
+  mean.fill(RealType{});
   for (unsigned int i = 0; i < N; ++i)
   {
     for (unsigned int j = 0; j < G; ++j)
@@ -421,7 +421,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   mean /= RealType(N);
 
   MatrixType Amm(N, G);
-  Amm.fill(NumericTraits<RealType>::Zero);
+  Amm.fill(RealType{});
   for (unsigned int i = 0; i < N; ++i)
   {
     for (unsigned int j = 0; j < G; ++j)
@@ -436,7 +436,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
   vnl_diag_matrix<RealType> S(G);
-  S.fill(NumericTraits<RealType>::Zero);
+  S.fill(RealType{});
   for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -455,7 +455,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   vnl_diag_matrix<DerivativeValueType> dSdmu_part1(G);
 
   /** initialize */
-  dSdmu_part1.fill(itk::NumericTraits<DerivativeValueType>::Zero);
+  dSdmu_part1.fill(DerivativeValueType{});
 
   for (unsigned int d = 0; d < G; ++d)
   {

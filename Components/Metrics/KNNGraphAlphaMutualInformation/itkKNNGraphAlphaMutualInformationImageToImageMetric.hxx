@@ -289,7 +289,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   const TransformParametersType & parameters) const -> MeasureType
 {
   /** Initialize some variables. */
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
@@ -382,7 +382,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   DistanceArrayType     distances_F, distances_M, distances_J;
 
   MeasureType    H, G;
-  AccumulateType sumG = NumericTraits<AccumulateType>::Zero;
+  AccumulateType sumG = AccumulateType{};
 
   /** Get the size of the feature vectors. */
   unsigned int fixedSize = this->GetNumberOfFixedImages();
@@ -425,9 +425,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
      */
 
     /** Variables to compute the measure. */
-    AccumulateType Gamma_F = NumericTraits<AccumulateType>::Zero;
-    AccumulateType Gamma_M = NumericTraits<AccumulateType>::Zero;
-    AccumulateType Gamma_J = NumericTraits<AccumulateType>::Zero;
+    AccumulateType Gamma_F = AccumulateType{};
+    AccumulateType Gamma_M = AccumulateType{};
+    AccumulateType Gamma_J = AccumulateType{};
 
     /** Loop over the neighbours. */
     for (unsigned int p = 0; p < k; ++p)
@@ -481,7 +481,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -499,7 +499,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   DerivativeType &                derivative) const
 {
   /** Initialize some variables. */
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
@@ -607,7 +607,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   MeasureType           distance_F, distance_M, distance_J;
 
   MeasureType    H, G, Gpow;
-  AccumulateType sumG = NumericTraits<AccumulateType>::Zero;
+  AccumulateType sumG = AccumulateType{};
 
   DerivativeType contribution(this->GetNumberOfParameters());
   contribution.Fill(DerivativeValueType{});
@@ -637,9 +637,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
     this->m_BinaryKNNTreeSearcherJoint->Search(z_J, indices_J, distances_J);
 
     /** Variables to compute the measure and its derivative. */
-    AccumulateType Gamma_F = NumericTraits<AccumulateType>::Zero;
-    AccumulateType Gamma_M = NumericTraits<AccumulateType>::Zero;
-    AccumulateType Gamma_J = NumericTraits<AccumulateType>::Zero;
+    AccumulateType Gamma_F = AccumulateType{};
+    AccumulateType Gamma_M = AccumulateType{};
+    AccumulateType Gamma_J = AccumulateType{};
 
     SpatialDerivativeType D1sparse, D2sparse_M, D2sparse_J;
     D1sparse = spatialDerivativesContainer[i] * jacobianContainer[i];

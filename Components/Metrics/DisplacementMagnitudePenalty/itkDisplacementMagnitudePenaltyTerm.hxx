@@ -67,7 +67,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const Param
 {
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  RealType measure = NumericTraits<RealType>::Zero;
+  RealType measure = RealType{};
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
@@ -130,7 +130,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const 
                                                                           DerivativeType &       derivative) const
 {
   /** Slower, but works. */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -150,7 +150,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
 
   /** Create and initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  RealType measure = NumericTraits<RealType>::Zero;
+  RealType measure = RealType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
