@@ -30,7 +30,7 @@ template <class TScalarType, unsigned int Dimension>
 AffineLogTransform<TScalarType, Dimension>::AffineLogTransform()
   : Superclass(ParametersDimension)
 {
-  this->m_MatrixLogDomain.Fill(itk::NumericTraits<ScalarType>::Zero);
+  this->m_MatrixLogDomain.Fill(ScalarType{});
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -59,7 +59,7 @@ AffineLogTransform<TScalarType, Dimension>::AffineLogTransform(unsigned int spac
                                                                unsigned int parametersDimension)
   : Superclass(spaceDimension, parametersDimension)
 {
-  this->m_MatrixLogDomain.Fill(itk::NumericTraits<ScalarType>::Zero);
+  this->m_MatrixLogDomain.Fill(ScalarType{});
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -139,7 +139,7 @@ void
 AffineLogTransform<TScalarType, Dimension>::SetIdentity()
 {
   Superclass::SetIdentity();
-  this->m_MatrixLogDomain.Fill(itk::NumericTraits<ScalarType>::Zero);
+  this->m_MatrixLogDomain.Fill(ScalarType{});
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -154,7 +154,7 @@ AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &  
   unsigned int d = Dimension;
 
   j.SetSize(d, ParametersDimension);
-  j.Fill(itk::NumericTraits<ScalarType>::Zero);
+  j.Fill(ScalarType{});
 
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   const InputVectorType                 pp = p - this->GetCenter();
@@ -198,9 +198,9 @@ AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(
 
   vnl_matrix<ScalarType> B_bar(2 * d, 2 * d);
 
-  dA.fill(itk::NumericTraits<ScalarType>::Zero);
-  dummymatrix.fill(itk::NumericTraits<ScalarType>::Zero);
-  A_bar.fill(itk::NumericTraits<ScalarType>::Zero);
+  dA.fill(ScalarType{});
+  dummymatrix.fill(ScalarType{});
+  A_bar.fill(ScalarType{});
 
   // Fill A_bar top left and bottom right with A
   for (unsigned int k = 0; k < d; ++k)
@@ -242,7 +242,7 @@ AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(
         }
       }
       jsj[m] = dummymatrix;
-      dA.fill(itk::NumericTraits<ScalarType>::Zero);
+      dA.fill(ScalarType{});
       m += 1;
     }
   }
@@ -250,7 +250,7 @@ AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(
   /** Translation parameters: */
   for (unsigned int par = d * d; par < ParametersDimension; ++par)
   {
-    jsj[par].Fill(itk::NumericTraits<ScalarType>::Zero);
+    jsj[par].Fill(ScalarType{});
   }
 }
 

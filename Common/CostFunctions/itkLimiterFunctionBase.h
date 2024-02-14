@@ -107,7 +107,7 @@ protected:
   LimiterFunctionBase()
   {
     this->m_UpperBound = itk::NumericTraits<OutputType>::One + itk::NumericTraits<OutputType>::One;
-    this->m_LowerBound = itk::NumericTraits<OutputType>::Zero;
+    this->m_LowerBound = OutputType{};
     this->m_UpperThreshold = itk::NumericTraits<InputType>::One;
     this->m_LowerThreshold = itk::NumericTraits<InputType>::One;
   }

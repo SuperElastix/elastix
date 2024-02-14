@@ -38,15 +38,15 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::TransformRigidityPenalty
   this->m_PropernessConditionWeight = NumericTraits<ScalarType>::One;
 
   /** Values. */
-  this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
-  this->m_LinearityConditionValue = NumericTraits<MeasureType>::Zero;
-  this->m_OrthonormalityConditionValue = NumericTraits<MeasureType>::Zero;
-  this->m_PropernessConditionValue = NumericTraits<MeasureType>::Zero;
+  this->m_RigidityPenaltyTermValue = MeasureType{};
+  this->m_LinearityConditionValue = MeasureType{};
+  this->m_OrthonormalityConditionValue = MeasureType{};
+  this->m_PropernessConditionValue = MeasureType{};
 
   /** Gradient magnitudes. */
-  this->m_LinearityConditionGradientMagnitude = NumericTraits<MeasureType>::Zero;
-  this->m_OrthonormalityConditionGradientMagnitude = NumericTraits<MeasureType>::Zero;
-  this->m_PropernessConditionGradientMagnitude = NumericTraits<MeasureType>::Zero;
+  this->m_LinearityConditionGradientMagnitude = MeasureType{};
+  this->m_OrthonormalityConditionGradientMagnitude = MeasureType{};
+  this->m_PropernessConditionGradientMagnitude = MeasureType{};
 
   /** Usage. */
   this->m_UseLinearityCondition = true;
@@ -349,9 +349,9 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FillRigidityCoefficientI
   RigidityImageIndexType index1, index2;
   index1.Fill(0);
   index2.Fill(0);
-  fixedValue = NumericTraits<RigidityPixelType>::Zero;
-  movingValue = NumericTraits<RigidityPixelType>::Zero;
-  in = NumericTraits<RigidityPixelType>::Zero;
+  fixedValue = RigidityPixelType{};
+  movingValue = RigidityPixelType{};
+  in = RigidityPixelType{};
   bool isInFixedImage = false;
   bool isInMovingImage = false;
   while (!it.IsAtEnd())
@@ -466,10 +466,10 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   this->FillRigidityCoefficientImage(parameters);
 
   /** Set output values to zero. */
-  this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
-  this->m_LinearityConditionValue = NumericTraits<MeasureType>::Zero;
-  this->m_OrthonormalityConditionValue = NumericTraits<MeasureType>::Zero;
-  this->m_PropernessConditionValue = NumericTraits<MeasureType>::Zero;
+  this->m_RigidityPenaltyTermValue = MeasureType{};
+  this->m_LinearityConditionValue = MeasureType{};
+  this->m_OrthonormalityConditionValue = MeasureType{};
+  this->m_PropernessConditionValue = MeasureType{};
 
   /** Set the parameters in the transform.
    * In this function, also the coefficient images are created.
@@ -501,7 +501,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   CoefficientImageIteratorType it_RCI(this->m_RigidityCoefficientImage,
                                       this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
   it_RCI.GoToBegin();
-  ScalarType rigidityCoefficientSum = NumericTraits<ScalarType>::Zero;
+  ScalarType rigidityCoefficientSum = ScalarType{};
 
   /** Add the rigidity coefficients together. */
   while (!it_RCI.IsAtEnd())
@@ -513,7 +513,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   /** Check for early termination. */
   if (rigidityCoefficientSum < 1e-14)
   {
-    this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+    this->m_RigidityPenaltyTermValue = MeasureType{};
     return this->m_RigidityPenaltyTermValue;
   }
 
@@ -854,7 +854,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const Para
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -894,11 +894,11 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   this->FillRigidityCoefficientImage(parameters);
 
   /** Set output values to zero. */
-  value = NumericTraits<MeasureType>::Zero;
-  this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
-  this->m_LinearityConditionValue = NumericTraits<MeasureType>::Zero;
-  this->m_OrthonormalityConditionValue = NumericTraits<MeasureType>::Zero;
-  this->m_PropernessConditionValue = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
+  this->m_RigidityPenaltyTermValue = MeasureType{};
+  this->m_LinearityConditionValue = MeasureType{};
+  this->m_OrthonormalityConditionValue = MeasureType{};
+  this->m_PropernessConditionValue = MeasureType{};
 
   /** Set output values to zero. */
   derivative = DerivativeType(this->GetNumberOfParameters());
@@ -944,7 +944,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   CoefficientImageIteratorType it_RCI(this->m_RigidityCoefficientImage,
                                       this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
   it_RCI.GoToBegin();
-  ScalarType rigidityCoefficientSum = NumericTraits<ScalarType>::Zero;
+  ScalarType rigidityCoefficientSum = ScalarType{};
 
   /** Add the rigidity coefficients together. */
   while (!it_RCI.IsAtEnd())
@@ -956,7 +956,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   /** Check for early termination. */
   if (rigidityCoefficientSum < 1e-14)
   {
-    this->m_RigidityPenaltyTermValue = NumericTraits<MeasureType>::Zero;
+    this->m_RigidityPenaltyTermValue = MeasureType{};
     return;
   }
 
@@ -1843,15 +1843,15 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
   /** Do the addition. */
   // NOTE: unlike the values, for the derivatives weight * derivative is returned.
-  MeasureType gradMagLC = NumericTraits<MeasureType>::Zero;
-  MeasureType gradMagOC = NumericTraits<MeasureType>::Zero;
-  MeasureType gradMagPC = NumericTraits<MeasureType>::Zero;
+  MeasureType gradMagLC = MeasureType{};
+  MeasureType gradMagOC = MeasureType{};
+  MeasureType gradMagPC = MeasureType{};
   double      rigidityCoefficientSumSqr = rigidityCoefficientSum * rigidityCoefficientSum;
   while (!itDIs[0].IsAtEnd())
   {
     for (unsigned int i = 0; i < ImageDimension; ++i)
     {
-      ScalarType tmpDIs = NumericTraits<ScalarType>::Zero;
+      ScalarType tmpDIs = ScalarType{};
 
       /** Compute gradient magnitude of LC. */
       ScalarType tmpLC = this->m_LinearityConditionWeight * itLCpf[i].Get();

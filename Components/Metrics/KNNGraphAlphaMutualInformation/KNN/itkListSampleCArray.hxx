@@ -246,7 +246,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetFrequency(InstanceIdent
   }
   else
   {
-    return itk::NumericTraits<AbsoluteFrequencyType>::Zero;
+    return AbsoluteFrequencyType{};
   }
 } // end GetFrequency()
 

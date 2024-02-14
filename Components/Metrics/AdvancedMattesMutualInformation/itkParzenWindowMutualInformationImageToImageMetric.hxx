@@ -152,7 +152,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   }
 
   /** Initialize some variables. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(0.0);
 
@@ -835,7 +835,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   DerivativeType &       derivative) const
 {
   /** Initialize some variables. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(0.0);
 

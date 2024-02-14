@@ -224,7 +224,7 @@ MetricBase<TElastix>::GetExactValue(const ParametersType & parameters) -> Measur
    */
   if (currentSampler.IsNull())
   {
-    return itk::NumericTraits<MeasureType>::Zero;
+    return MeasureType{};
   }
 
   /** Try to cast the current Sampler to a FullSampler. */

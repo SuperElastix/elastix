@@ -51,7 +51,7 @@ ElasticBodyReciprocalSplineKernelTransform2<TScalarType, NDimensions>::ComputeG(
                                                                                 GMatrixType &           GMatrix) const
 {
   const TScalarType r = x.GetNorm();
-  const TScalarType factor = (r > 1e-8) ? (-1.0 / r) : NumericTraits<TScalarType>::Zero;
+  const TScalarType factor = (r > 1e-8) ? (-1.0 / r) : TScalarType{};
   const TScalarType radial = this->m_Alpha * r;
   for (unsigned int i = 0; i < NDimensions; ++i)
   {

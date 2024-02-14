@@ -106,7 +106,7 @@ CMAEvolutionStrategyOptimizer::StartOptimization()
   itkDebugMacro("StartOptimization");
 
   /** Reset some variables */
-  this->m_CurrentValue = NumericTraits<MeasureType>::Zero;
+  this->m_CurrentValue = MeasureType{};
   this->m_CurrentIteration = 0;
   this->m_Stop = false;
   this->m_StopCondition = Unknown;

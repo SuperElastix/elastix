@@ -129,8 +129,8 @@ template <class TFixedImage, class TMovingImage>
 auto
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() const -> MeasureType
 {
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
-  MeasureType diff = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
+  MeasureType diff = MeasureType{};
 
   typename FixedImageType::SizeType  iterationSize = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
   typename FixedImageType::IndexType iterationStartIndex, currentIndex, neighborIndex;
@@ -242,8 +242,8 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(con
   this->m_TransformMovingImageFilter->Modified();
   this->m_MultiplyImageFilter->SetConstant(scalingfactor);
   this->m_DifferenceImageFilter->UpdateLargestPossibleRegion();
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
-  MeasureType diff = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
+  MeasureType diff = MeasureType{};
 
   typename FixedImageType::SizeType  iterationSize = this->m_FixedImage->GetLargestPossibleRegion().GetSize();
   typename FixedImageType::IndexType iterationStartIndex, currentIndex, neighborIndex;

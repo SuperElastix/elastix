@@ -44,7 +44,7 @@ AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform()
   : Superclass(ParametersDimension)
 {
   m_ComputeZYX = false;
-  m_AngleX = m_AngleY = m_AngleZ = NumericTraits<ScalarType>::Zero;
+  m_AngleX = m_AngleY = m_AngleZ = ScalarType{};
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 

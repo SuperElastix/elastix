@@ -175,9 +175,9 @@ main(int argc, char ** argv)
   }
 
   /** Initialize variables. */
-  ScalarType diffNorm = itk::NumericTraits<ScalarType>::Zero;
-  ScalarType baselineNorm = itk::NumericTraits<ScalarType>::Zero;
-  ScalarType diffNormNormalized = itk::NumericTraits<ScalarType>::Zero;
+  ScalarType diffNorm = ScalarType{};
+  ScalarType baselineNorm = ScalarType{};
+  ScalarType diffNormNormalized = ScalarType{};
 
   /** Check if this is a B-spline transform.
    * If it is we write a sort of coefficient difference image.
@@ -263,7 +263,7 @@ main(int argc, char ** argv)
     while (!it.IsAtEnd())
     {
       /** Voxel content. */
-      ScalarType diffNormTmp = itk::NumericTraits<ScalarType>::Zero;
+      ScalarType diffNormTmp = ScalarType{};
       for (unsigned int i = 0; i < dimension; ++i)
       {
         unsigned int j = index + i * numberParPerDim;

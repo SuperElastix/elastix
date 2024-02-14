@@ -162,11 +162,11 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
   /** Some initialization. */
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    this->m_GetValuePerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
-    this->m_GetValuePerThreadVariables[i].st_Value = NumericTraits<MeasureType>::Zero;
+    this->m_GetValuePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
+    this->m_GetValuePerThreadVariables[i].st_Value = MeasureType{};
 
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = NumericTraits<MeasureType>::Zero;
+    this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
+    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
     this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.SetSize(this->GetNumberOfParameters());
     this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.Fill(DerivativeValueType{});
   }
@@ -840,7 +840,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   /** This thread accumulates all sub-derivatives into a single one, for the
    * range [ jmin, jmax [. Additionally, the sub-derivatives are reset.
    */
-  const DerivativeValueType zero = NumericTraits<DerivativeValueType>::Zero;
+  const DerivativeValueType zero = DerivativeValueType{};
   const DerivativeValueType normalization = 1.0 / temp->st_NormalizationFactor;
   for (unsigned int j = jmin; j < jmax; ++j)
   {

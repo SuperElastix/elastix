@@ -74,7 +74,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Matrix to store the spatial Jacobian, dT/dx. */
   SpatialJacobianType spatialJac;
@@ -185,7 +185,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   this->LaunchGetValueThreaderCallback();
 
   /** Gather the metric values from all threads. */
-  MeasureType value = NumericTraits<MeasureType>::Zero;
+  MeasureType value = MeasureType{};
   this->AfterThreadedGetValue(value);
 
   return value;
@@ -203,7 +203,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
 {
   /*Create variables to store intermediate results. Circumvent false sharing*/
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType   measure = NumericTraits<MeasureType>::Zero;
+  MeasureType   measure = MeasureType{};
 
   /** Matrix to store the spatial Jacobian, dT/dx. */
   SpatialJacobianType spatialJac;
@@ -305,13 +305,13 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = NumericTraits<MeasureType>::Zero;
+    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
   value /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
@@ -333,7 +333,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -351,9 +351,9 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<DerivativeValueType>::Zero);
+  derivative.Fill(DerivativeValueType{});
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
@@ -508,7 +508,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
 {
   /*Create variables to store intermediate results. Circumvent false sharing*/
   unsigned long    numberOfPixelsCounted = 0;
-  MeasureType      measure = NumericTraits<MeasureType>::Zero;
+  MeasureType      measure = MeasureType{};
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
@@ -647,13 +647,13 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  value = NumericTraits<MeasureType>::Zero;
+  value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = NumericTraits<MeasureType>::Zero;
+    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
 
   value /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
@@ -691,7 +691,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
 #  pragma omp parallel for
     for (int j = 0; j < spaceDimension; ++j)
     {
-      DerivativeValueType tmp = NumericTraits<DerivativeValueType>::Zero;
+      DerivativeValueType tmp = DerivativeValueType{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];

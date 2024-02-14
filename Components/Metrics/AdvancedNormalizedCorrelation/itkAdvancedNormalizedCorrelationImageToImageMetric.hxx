@@ -65,12 +65,12 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   m_CorrelationGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  const AccumulateType      zero1 = NumericTraits<AccumulateType>::Zero;
-  const DerivativeValueType zero2 = NumericTraits<DerivativeValueType>::Zero;
+  const AccumulateType      zero1 = AccumulateType{};
+  const DerivativeValueType zero2 = DerivativeValueType{};
   const auto                numberOfParameters = this->GetNumberOfParameters();
   for (auto & perThreadVariable : m_CorrelationGetValueAndDerivativePerThreadVariables)
   {
-    perThreadVariable.st_NumberOfPixelsCounted = NumericTraits<SizeValueType>::Zero;
+    perThreadVariable.st_NumberOfPixelsCounted = SizeValueType{};
     perThreadVariable.st_Sff = zero1;
     perThreadVariable.st_Smm = zero1;
     perThreadVariable.st_Sfm = zero1;
@@ -168,7 +168,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -194,11 +194,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
   /** Create variables to store intermediate results. */
-  AccumulateType sff = NumericTraits<AccumulateType>::Zero;
-  AccumulateType smm = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sfm = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sf = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sm = NumericTraits<AccumulateType>::Zero;
+  AccumulateType sff = AccumulateType{};
+  AccumulateType smm = AccumulateType{};
+  AccumulateType sfm = AccumulateType{};
+  AccumulateType sf = AccumulateType{};
+  AccumulateType sm = AccumulateType{};
 
   /** Loop over the fixed image samples to calculate the mean squares. */
   for (fiter = fbegin; fiter != fend; ++fiter)
@@ -263,7 +263,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   }
   else
   {
-    measure = NumericTraits<MeasureType>::Zero;
+    measure = MeasureType{};
   }
 
   /** Return the NC measure value. */
@@ -287,7 +287,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetD
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -325,11 +325,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   TransformJacobianType      jacobian;
 
   /** Initialize some variables for intermediate results. */
-  AccumulateType sff = NumericTraits<AccumulateType>::Zero;
-  AccumulateType smm = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sfm = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sf = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sm = NumericTraits<AccumulateType>::Zero;
+  AccumulateType sff = AccumulateType{};
+  AccumulateType smm = AccumulateType{};
+  AccumulateType sfm = AccumulateType{};
+  AccumulateType sf = AccumulateType{};
+  AccumulateType sm = AccumulateType{};
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -441,7 +441,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   }
   else
   {
-    value = NumericTraits<MeasureType>::Zero;
+    value = MeasureType{};
     derivative.Fill(DerivativeValueType{});
   }
 
@@ -534,11 +534,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   threader_fend += (int)pos_end;
 
   /** Create variables to store intermediate results. */
-  AccumulateType sff = NumericTraits<AccumulateType>::Zero;
-  AccumulateType smm = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sfm = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sf = NumericTraits<AccumulateType>::Zero;
-  AccumulateType sm = NumericTraits<AccumulateType>::Zero;
+  AccumulateType sff = AccumulateType{};
+  AccumulateType smm = AccumulateType{};
+  AccumulateType sfm = AccumulateType{};
+  AccumulateType sf = AccumulateType{};
+  AccumulateType sm = AccumulateType{};
   unsigned long  numberOfPixelsCounted = 0;
 
   /** Loop over the fixed image to calculate the mean squares. */
@@ -639,7 +639,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  const AccumulateType zero = NumericTraits<AccumulateType>::Zero;
+  const AccumulateType zero = AccumulateType{};
   AccumulateType       sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sff;
   AccumulateType       smm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Smm;
   AccumulateType       sfm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sfm;
@@ -676,7 +676,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   /** Check for sufficiently large denominator. */
   if (denom > -1e-14)
   {
-    value = NumericTraits<MeasureType>::Zero;
+    value = MeasureType{};
     derivative.Fill(DerivativeValueType{});
     return;
   }
@@ -802,7 +802,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   unsigned int jmax = (threadId + 1) * subSize;
   jmax = (jmax > numPar) ? numPar : jmax;
 
-  const DerivativeValueType zero = NumericTraits<DerivativeValueType>::Zero;
+  const DerivativeValueType zero = DerivativeValueType{};
   DerivativeValueType       derivativeF, derivativeM, differential;
   for (unsigned int j = jmin; j < jmax; ++j)
   {

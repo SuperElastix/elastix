@@ -168,9 +168,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   {
     using DerivativeValueType = typename DerivativeType::ValueType;
     const unsigned int P = this->GetNumberOfParameters();
-    MeasureType        dummymeasure = NumericTraits<MeasureType>::Zero;
+    MeasureType        dummymeasure = MeasureType{};
     DerivativeType     dummyderivative = DerivativeType(P);
-    dummyderivative.Fill(NumericTraits<DerivativeValueType>::Zero);
+    dummyderivative.Fill(DerivativeValueType{});
 
     this->GetValueAndDerivative(parameters, dummymeasure, dummyderivative);
     return dummymeasure;
@@ -181,7 +181,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
@@ -229,7 +229,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   unsigned int pixelIndex = 0;
 
   /** Initialize image sample matrix . */
-  datablock.fill(itk::NumericTraits<RealType>::Zero);
+  datablock.fill(RealType{});
 
   for (fiter = fbegin; fiter != fend; ++fiter)
   {
@@ -290,7 +290,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
-  mean.fill(NumericTraits<RealType>::Zero);
+  mean.fill(RealType{});
   for (int i = 0; i < N; ++i)
   {
     for (int j = 0; j < G; ++j)
@@ -301,7 +301,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   mean /= RealType(N);
 
   MatrixType Amm(N, G);
-  Amm.fill(NumericTraits<RealType>::Zero);
+  Amm.fill(RealType{});
 
   for (int i = 0; i < N; ++i)
   {
@@ -330,7 +330,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Calculate variance of columns */
   vnl_vector<RealType> var(G);
-  var.fill(NumericTraits<RealType>::Zero);
+  var.fill(RealType{});
   for (int j = 0; j < G; ++j)
   {
     var(j) = C(j, j);
@@ -338,7 +338,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   var -= varNoise;
 
   MatrixType S(G, G);
-  S.fill(NumericTraits<RealType>::Zero);
+  S.fill(RealType{});
   for (int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(var(j));
@@ -365,7 +365,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   //    RealType trace = vnl_trace( K );
   const unsigned int L = this->m_NumEigenValues;
 
-  RealType sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
+  RealType sumEigenValuesUsed = RealType{};
   for (unsigned int i = 1; i < L + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(G - i);
@@ -393,7 +393,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTyp
    * the metric value is available. It does not cost anything to calculate
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable. */
-  MeasureType dummyvalue = NumericTraits<MeasureType>::Zero;
+  MeasureType dummyvalue = MeasureType{};
 
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
@@ -418,9 +418,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   /** Initialize some variables */
   const unsigned int P = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = NumericTraits<MeasureType>::Zero;
+  MeasureType measure = MeasureType{};
   derivative = DerivativeType(P);
-  derivative.Fill(NumericTraits<DerivativeValueType>::Zero);
+  derivative.Fill(DerivativeValueType{});
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
@@ -458,7 +458,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   unsigned int pixelIndex = 0;
 
   /** Initialize image sample matrix . */
-  datablock.fill(itk::NumericTraits<RealType>::Zero);
+  datablock.fill(RealType{});
 
   /** Determine random last dimension positions if needed. */
   /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
@@ -536,7 +536,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
-  mean.fill(NumericTraits<RealType>::Zero);
+  mean.fill(RealType{});
   for (int i = 0; i < N; ++i)
   {
     for (int j = 0; j < G; ++j)
@@ -548,7 +548,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   /** Calculate standard deviation from columns */
   MatrixType Amm(N, G);
-  Amm.fill(NumericTraits<RealType>::Zero);
+  Amm.fill(RealType{});
   for (int i = 0; i < N; ++i)
   {
     for (int j = 0; j < G; ++j)
@@ -573,7 +573,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   /** Calculate standard deviation from columns */
   vnl_vector<RealType> var(G);
-  var.fill(NumericTraits<RealType>::Zero);
+  var.fill(RealType{});
   for (int j = 0; j < G; ++j)
   {
     var(j) = C(j, j);
@@ -581,7 +581,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   var -= varNoise;
 
   vnl_diag_matrix<RealType> S(G);
-  S.fill(NumericTraits<RealType>::Zero);
+  S.fill(RealType{});
   for (int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(var(j));
@@ -607,7 +607,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   const unsigned int L = this->m_NumEigenValues;
 
-  RealType sumEigenValuesUsed = itk::NumericTraits<RealType>::Zero;
+  RealType sumEigenValuesUsed = RealType{};
   for (unsigned int i = 1; i < L + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(G - i);
@@ -641,16 +641,16 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   DerivativeMatrixType v_GAtmmdAdmu(G, P);
 
   /** initialize */
-  vSAtmmdAdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  tracevKvdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  v_GAtmmdAdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  tracevdSdmuCSv.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  tracevSdCdmuSv.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  tracevSdvarNoisedmuSv.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  dvarNoisedmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  vAtmmdAdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  dSdmu_part1.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  dSdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
+  vSAtmmdAdmu.fill(DerivativeValueType{});
+  tracevKvdmu.fill(DerivativeValueType{});
+  v_GAtmmdAdmu.fill(DerivativeValueType{});
+  tracevdSdmuCSv.fill(DerivativeValueType{});
+  tracevSdCdmuSv.fill(DerivativeValueType{});
+  tracevSdvarNoisedmuSv.fill(DerivativeValueType{});
+  dvarNoisedmu.fill(DerivativeValueType{});
+  vAtmmdAdmu.fill(DerivativeValueType{});
+  dSdmu_part1.fill(DerivativeValueType{});
+  dSdmu.fill(DerivativeValueType{});
 
   /** Components for derivative of mean */
   vnl_vector<DerivativeValueType> meandAdmu(P);
@@ -658,11 +658,11 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   DerivativeMatrixType            v_GAtmmmeandAdmu(G, P);
   DerivativeMatrixType            vAtmmmeandAdmu(L, G * P);
   DerivativeMatrixType            vSAtmmmeandAdmu(L, G * P);
-  meandAdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  v_GAtmmmeandAdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  vSAtmmmeandAdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  vAtmmmeandAdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
-  meandSdmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
+  meandAdmu.fill(DerivativeValueType{});
+  v_GAtmmmeandAdmu.fill(DerivativeValueType{});
+  vSAtmmmeandAdmu.fill(DerivativeValueType{});
+  vAtmmmeandAdmu.fill(DerivativeValueType{});
+  meandSdmu.fill(DerivativeValueType{});
 
   unsigned int startSamplesOK;
   startSamplesOK = 0;
@@ -754,7 +754,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   if (!this->m_DeNoise)
   {
-    dvarNoisedmu.fill(itk::NumericTraits<DerivativeValueType>::Zero);
+    dvarNoisedmu.fill(DerivativeValueType{});
   }
 
   for (unsigned int p = 0; p < P; ++p)
