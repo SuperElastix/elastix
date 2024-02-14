@@ -36,9 +36,9 @@ ComputeImageExtremaFilter<TInputImage>::BeforeStreamedGenerateData()
   else
   {
     // Resize the thread temporaries
-    m_Count = NumericTraits<SizeValueType>::ZeroValue();
-    m_SumOfSquares = NumericTraits<RealType>::ZeroValue();
-    m_ThreadSum = NumericTraits<RealType>::ZeroValue();
+    m_Count = SizeValueType{};
+    m_SumOfSquares = RealType{};
+    m_ThreadSum = RealType{};
     m_ThreadMin = NumericTraits<PixelType>::max();
     m_ThreadMax = NumericTraits<PixelType>::NonpositiveMin();
 
@@ -114,9 +114,9 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(con
   RealType  realValue;
   PixelType value;
 
-  RealType      sum = NumericTraits<RealType>::ZeroValue();
-  RealType      sumOfSquares = NumericTraits<RealType>::ZeroValue();
-  SizeValueType count = NumericTraits<SizeValueType>::ZeroValue();
+  RealType      sum = RealType{};
+  RealType      sumOfSquares = RealType{};
+  SizeValueType count = SizeValueType{};
   PixelType     min = NumericTraits<PixelType>::max();
   PixelType     max = NumericTraits<PixelType>::NonpositiveMin();
 
@@ -125,7 +125,7 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(con
     ImageRegionConstIterator<TInputImage> it(this->GetInput(), regionForThread);
     for (it.GoToBegin(); !it.IsAtEnd(); ++it)
     {
-      if (this->m_ImageSpatialMask->GetImage()->GetPixel(it.GetIndex()) != NumericTraits<PixelType>::ZeroValue())
+      if (this->m_ImageSpatialMask->GetImage()->GetPixel(it.GetIndex()) != PixelType{})
       {
         value = it.Get();
         realValue = static_cast<RealType>(value);

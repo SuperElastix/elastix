@@ -420,7 +420,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     auto maskFilter = MaskVectorImageType::New();
     maskFilter->SetInput(castFilter->GetOutput());
     maskFilter->SetMaskImage(labelExtractor->GetOutput());
-    maskFilter->SetOutsideValue(itk::NumericTraits<VectorType>::ZeroValue());
+    maskFilter->SetOutsideValue(VectorType{});
     maskFilter->Update();
 
     if (l == 0)

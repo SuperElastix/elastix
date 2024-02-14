@@ -161,7 +161,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
   this->m_NumberOfPixelsCounted = 0;
   RealType measure = NumericTraits<RealType>::Zero;
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  derivative.Fill(DerivativeValueType{});
 
   SpatialHessianType           spatialHessian;
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;

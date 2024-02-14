@@ -303,8 +303,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
 
   DerivativeType vecSum1(this->GetNumberOfParameters());
   DerivativeType vecSum2(this->GetNumberOfParameters());
-  vecSum1.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
-  vecSum2.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  vecSum1.Fill(DerivativeValueType{});
+  vecSum2.Fill(DerivativeValueType{});
 
   /** Create iterator over the sample container. */
   typename ImageSampleContainerType::ConstIterator fiter;

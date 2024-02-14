@@ -43,7 +43,7 @@ void
 VolumeSplineKernelTransform2<TScalarType, NDimensions>::ComputeG(const InputVectorType & x, GMatrixType & GMatrix) const
 {
   const TScalarType r = x.GetNorm();
-  GMatrix.fill(NumericTraits<TScalarType>::ZeroValue());
+  GMatrix.fill(TScalarType{});
   const TScalarType r3 = r * r * r;
   GMatrix.fill_diagonal(r3);
   //   for ( unsigned int i = 0; i < NDimensions; i++ )

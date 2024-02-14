@@ -158,7 +158,7 @@ main(int argc, char * argv[])
   config->ReadParameter(numberOfParameters, "NumberOfParameters", 0, dummyErrorMessage);
 
   /** Read the TransformParameters as a vector. */
-  std::vector<ScalarType> vecPar(numberOfParameters, itk::NumericTraits<ScalarType>::ZeroValue());
+  std::vector<ScalarType> vecPar(numberOfParameters, ScalarType{});
   config->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true, dummyErrorMessage);
 
   /** Convert to ParametersType. */

@@ -178,7 +178,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(const Transf
   this->SetTransformParameters(parameters);
 
   derivative = DerivativeType(this->GetNumberOfParameters());
-  derivative.Fill(NumericTraits<DerivativeValueType>::ZeroValue());
+  derivative.Fill(DerivativeValueType{});
 
   // NonZeroJacobianIndicesType nzji( this->m_Transform->GetNumberOfNonZeroJacobianIndices() );
   // TransformJacobianType      jacobian;
