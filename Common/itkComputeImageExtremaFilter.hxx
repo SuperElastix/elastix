@@ -106,29 +106,28 @@ template <typename TInputImage>
 void
 ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(const RegionType & regionForThread)
 {
-  const SizeValueType size0 = regionForThread.GetSize(0);
-  if (size0 == 0)
+  if (regionForThread.GetSize(0) == 0)
   {
     return;
   }
-  RealType  realValue;
-  PixelType value;
-
   RealType      sum{};
   RealType      sumOfSquares{};
   SizeValueType count{};
   PixelType     min = NumericTraits<PixelType>::max();
   PixelType     max = NumericTraits<PixelType>::NonpositiveMin();
 
+  const auto & inputImage = *(this->GetInput());
+
   if (this->m_SameGeometry)
   {
-    ImageRegionConstIterator<TInputImage> it(this->GetInput(), regionForThread);
-    for (it.GoToBegin(); !it.IsAtEnd(); ++it)
+    const auto & maskImage = *(this->m_ImageSpatialMask->GetImage());
+
+    for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
     {
-      if (this->m_ImageSpatialMask->GetImage()->GetPixel(it.GetIndex()) != PixelType{})
+      if (maskImage.GetPixel(it.GetIndex()) != PixelType{})
       {
-        value = it.Get();
-        realValue = static_cast<RealType>(value);
+        const PixelType value = it.Get();
+        const auto      realValue = static_cast<RealType>(value);
 
         min = std::min(min, value);
         max = std::max(max, value);
@@ -141,15 +140,14 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(con
   }
   else
   {
-    ImageRegionConstIterator<TInputImage> it(this->GetInput(), regionForThread);
-    for (it.GoToBegin(); !it.IsAtEnd(); ++it)
+    for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
     {
       PointType point;
-      this->GetInput()->TransformIndexToPhysicalPoint(it.GetIndex(), point);
+      inputImage.TransformIndexToPhysicalPoint(it.GetIndex(), point);
       if (this->m_ImageSpatialMask->IsInsideInWorldSpace(point))
       {
-        value = it.Get();
-        realValue = static_cast<RealType>(value);
+        const PixelType value = it.Get();
+        const auto      realValue = static_cast<RealType>(value);
 
         min = std::min(min, value);
         max = std::max(max, value);
@@ -161,7 +159,7 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(con
     } // end for
   }   // end if
 
-  std::lock_guard<std::mutex> mutexHolder(m_Mutex);
+  const std::lock_guard<std::mutex> lockGuard(m_Mutex);
   m_ThreadSum += sum;
   m_SumOfSquares += sumOfSquares;
   m_Count += count;
