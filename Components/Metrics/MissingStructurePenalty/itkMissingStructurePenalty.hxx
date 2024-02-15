@@ -101,7 +101,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const Transf
   }
 
   /** Initialize some variables */
-  MeasureType value = MeasureType{};
+  MeasureType value{};
 
   // OutputPointType fixedPoint;
   /** Get the current corresponding points. */
@@ -131,7 +131,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const T
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()

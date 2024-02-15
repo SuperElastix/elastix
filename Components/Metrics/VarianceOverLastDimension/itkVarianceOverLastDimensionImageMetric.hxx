@@ -194,7 +194,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -331,7 +331,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetDerivative(
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -355,7 +355,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 

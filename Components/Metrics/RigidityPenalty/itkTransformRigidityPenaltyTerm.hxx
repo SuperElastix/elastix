@@ -501,7 +501,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   CoefficientImageIteratorType it_RCI(this->m_RigidityCoefficientImage,
                                       this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
   it_RCI.GoToBegin();
-  ScalarType rigidityCoefficientSum = ScalarType{};
+  ScalarType rigidityCoefficientSum{};
 
   /** Add the rigidity coefficients together. */
   while (!it_RCI.IsAtEnd())
@@ -854,7 +854,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const Para
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -944,7 +944,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   CoefficientImageIteratorType it_RCI(this->m_RigidityCoefficientImage,
                                       this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
   it_RCI.GoToBegin();
-  ScalarType rigidityCoefficientSum = ScalarType{};
+  ScalarType rigidityCoefficientSum{};
 
   /** Add the rigidity coefficients together. */
   while (!it_RCI.IsAtEnd())
@@ -1843,15 +1843,15 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
 
   /** Do the addition. */
   // NOTE: unlike the values, for the derivatives weight * derivative is returned.
-  MeasureType gradMagLC = MeasureType{};
-  MeasureType gradMagOC = MeasureType{};
-  MeasureType gradMagPC = MeasureType{};
+  MeasureType gradMagLC{};
+  MeasureType gradMagOC{};
+  MeasureType gradMagPC{};
   double      rigidityCoefficientSumSqr = rigidityCoefficientSum * rigidityCoefficientSum;
   while (!itDIs[0].IsAtEnd())
   {
     for (unsigned int i = 0; i < ImageDimension; ++i)
     {
-      ScalarType tmpDIs = ScalarType{};
+      ScalarType tmpDIs{};
 
       /** Compute gradient magnitude of LC. */
       ScalarType tmpLC = this->m_LinearityConditionWeight * itLCpf[i].Get();

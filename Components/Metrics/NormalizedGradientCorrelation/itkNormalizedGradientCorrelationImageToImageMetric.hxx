@@ -299,14 +299,14 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   typename FixedImageType::IndexType currentIndex;
   typename FixedImageType::PointType point;
 
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   MovedGradientPixelType NmovedGradient[FixedImageDimension];
   FixedGradientPixelType NfixedGradient[FixedImageDimension];
 
-  MeasureType NGcrosscorrelation = MeasureType{};
-  MeasureType NGautocorrelationfixed = MeasureType{};
-  MeasureType NGautocorrelationmoving = MeasureType{};
+  MeasureType NGcrosscorrelation{};
+  MeasureType NGautocorrelationfixed{};
+  MeasureType NGautocorrelationmoving{};
 
   /** Make sure all is updated */
   for (int iDimension = 0; iDimension < FixedImageDimension; ++iDimension)

@@ -168,7 +168,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   {
     using DerivativeValueType = typename DerivativeType::ValueType;
     const unsigned int P = this->GetNumberOfParameters();
-    MeasureType        dummymeasure = MeasureType{};
+    MeasureType        dummymeasure{};
     DerivativeType     dummyderivative = DerivativeType(P);
     dummyderivative.Fill(DerivativeValueType{});
 
@@ -181,7 +181,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
@@ -365,7 +365,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   //    RealType trace = vnl_trace( K );
   const unsigned int L = this->m_NumEigenValues;
 
-  RealType sumEigenValuesUsed = RealType{};
+  RealType sumEigenValuesUsed{};
   for (unsigned int i = 1; i < L + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(G - i);
@@ -393,7 +393,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTyp
    * the metric value is available. It does not cost anything to calculate
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable. */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
 
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
@@ -418,7 +418,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   /** Initialize some variables */
   const unsigned int P = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
   derivative = DerivativeType(P);
   derivative.Fill(DerivativeValueType{});
 
@@ -607,7 +607,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   const unsigned int L = this->m_NumEigenValues;
 
-  RealType sumEigenValuesUsed = RealType{};
+  RealType sumEigenValuesUsed{};
   for (unsigned int i = 1; i < L + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(G - i);

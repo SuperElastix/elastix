@@ -56,7 +56,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
   /** Initialize some variables. */
   this->m_NumberOfPointsCounted = 0;
-  MeasureType     measure = MeasureType{};
+  MeasureType     measure{};
   InputPointType  movingPoint;
   OutputPointType fixedPoint, mappedPoint;
 
@@ -124,7 +124,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -156,7 +156,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
   /** Initialize some variables */
   this->m_NumberOfPointsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
   NonZeroJacobianIndicesType nzji(this->m_Transform->GetNumberOfNonZeroJacobianIndices());

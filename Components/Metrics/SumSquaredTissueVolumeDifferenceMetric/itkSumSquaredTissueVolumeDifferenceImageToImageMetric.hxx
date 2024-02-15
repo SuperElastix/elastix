@@ -74,7 +74,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Matrix to store the spatial Jacobian, dT/dx. */
   SpatialJacobianType spatialJac;
@@ -185,7 +185,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   this->LaunchGetValueThreaderCallback();
 
   /** Gather the metric values from all threads. */
-  MeasureType value = MeasureType{};
+  MeasureType value{};
   this->AfterThreadedGetValue(value);
 
   return value;
@@ -203,7 +203,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
 {
   /*Create variables to store intermediate results. Circumvent false sharing*/
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType   measure = MeasureType{};
+  MeasureType   measure{};
 
   /** Matrix to store the spatial Jacobian, dT/dx. */
   SpatialJacobianType spatialJac;
@@ -333,7 +333,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -351,7 +351,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
@@ -508,7 +508,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
 {
   /*Create variables to store intermediate results. Circumvent false sharing*/
   unsigned long    numberOfPixelsCounted = 0;
-  MeasureType      measure = MeasureType{};
+  MeasureType      measure{};
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
@@ -691,7 +691,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
 #  pragma omp parallel for
     for (int j = 0; j < spaceDimension; ++j)
     {
-      DerivativeValueType tmp = DerivativeValueType{};
+      DerivativeValueType tmp{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];

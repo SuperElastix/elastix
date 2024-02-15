@@ -1468,7 +1468,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       /** Compute the moving image value M(T(x)) and check if
        * the point is inside the moving image buffer.
        */
-      RealType movingImageValue = RealType{};
+      RealType movingImageValue{};
       if (sampleOk)
       {
         sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);

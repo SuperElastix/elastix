@@ -150,7 +150,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   {
     using DerivativeValueType = typename DerivativeType::ValueType;
     const unsigned int numberOfParameters = this->GetNumberOfParameters();
-    MeasureType        dummymeasure = MeasureType{};
+    MeasureType        dummymeasure{};
     DerivativeType     dummyderivative = DerivativeType(numberOfParameters);
     dummyderivative.Fill(DerivativeValueType{});
 
@@ -163,7 +163,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
@@ -307,7 +307,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   // the lowest weight, i.e. for K of size 30x30:
   // eigenvalue 29 has a weight of 1 and eigenvalue 0 has a weight of 30
 
-  RealType sumWeightedEigenValues = RealType{};
+  RealType sumWeightedEigenValues{};
   for (unsigned int i = 0; i < G; ++i)
   {
     sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(G - i - 1);
@@ -334,7 +334,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTy
    * the metric value is available. It does not cost anything to calculate
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable. */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
 
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
@@ -359,7 +359,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   /** Initialize some variables */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
   derivative = DerivativeType(numberOfParameters);
   derivative.Fill(DerivativeValueType{});
 
@@ -500,7 +500,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   /** Compute first eigenvalue and eigenvector of K */
   vnl_symmetric_eigensystem<RealType> eig(K);
 
-  RealType sumWeightedEigenValues = RealType{};
+  RealType sumWeightedEigenValues{};
   for (unsigned int i = 0; i < G; ++i)
   {
     sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(G - i - 1);
