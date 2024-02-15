@@ -115,7 +115,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParameters
 
   /** Initialize some variables */
   // this->m_NumberOfPointsCounted = 0;
-  MeasureType value = MeasureType{};
+  MeasureType value{};
 
   // InputPointType movingPoint;
   // OutputPointType fixedPoint;
@@ -147,7 +147,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const TransformParam
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()

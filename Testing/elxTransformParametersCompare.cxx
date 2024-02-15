@@ -175,9 +175,9 @@ main(int argc, char ** argv)
   }
 
   /** Initialize variables. */
-  ScalarType diffNorm = ScalarType{};
-  ScalarType baselineNorm = ScalarType{};
-  ScalarType diffNormNormalized = ScalarType{};
+  ScalarType diffNorm{};
+  ScalarType baselineNorm{};
+  ScalarType diffNormNormalized{};
 
   /** Check if this is a B-spline transform.
    * If it is we write a sort of coefficient difference image.
@@ -263,7 +263,7 @@ main(int argc, char ** argv)
     while (!it.IsAtEnd())
     {
       /** Voxel content. */
-      ScalarType diffNormTmp = ScalarType{};
+      ScalarType diffNormTmp{};
       for (unsigned int i = 0; i < dimension; ++i)
       {
         unsigned int j = index + i * numberParPerDim;

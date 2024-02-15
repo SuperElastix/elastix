@@ -174,7 +174,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -288,7 +288,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Compute first eigenvalue and eigenvector of K */
   vnl_symmetric_eigensystem<RealType> eig(K);
 
-  RealType sumEigenValuesUsed = RealType{};
+  RealType sumEigenValuesUsed{};
   for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
@@ -315,7 +315,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTyp
    * the metric value is available. It does not cost anything to calculate
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable. */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
 
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
@@ -336,7 +336,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
@@ -470,7 +470,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** Compute first eigenvalue and eigenvector of K */
   vnl_symmetric_eigensystem<RealType> eig(K);
 
-  RealType sumEigenValuesUsed = RealType{};
+  RealType sumEigenValuesUsed{};
   for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {
     sumEigenValuesUsed += eig.get_eigenvalue(this->m_G - i);
@@ -841,7 +841,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   /** Compute first eigenvalue and eigenvector of K */
   vnl_symmetric_eigensystem<RealType> eig(K);
 
-  RealType   sumEigenValuesUsed = RealType{};
+  RealType   sumEigenValuesUsed{};
   MatrixType eigenVectorMatrix(this->m_G, this->m_NumEigenValues);
   for (unsigned int i = 1; i < this->m_NumEigenValues + 1; ++i)
   {

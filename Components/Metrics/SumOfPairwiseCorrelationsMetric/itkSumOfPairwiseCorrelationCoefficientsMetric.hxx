@@ -146,7 +146,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
   this->GetImageSampler()->Update();
@@ -288,7 +288,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetDeriva
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
 
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
@@ -315,7 +315,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   /** Initialize some variables */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
   derivative = DerivativeType(numberOfParameters);
   derivative.Fill(DerivativeValueType{});
 

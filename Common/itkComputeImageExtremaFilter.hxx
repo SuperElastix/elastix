@@ -114,9 +114,9 @@ ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(con
   RealType  realValue;
   PixelType value;
 
-  RealType      sum = RealType{};
-  RealType      sumOfSquares = RealType{};
-  SizeValueType count = SizeValueType{};
+  RealType      sum{};
+  RealType      sumOfSquares{};
+  SizeValueType count{};
   PixelType     min = NumericTraits<PixelType>::max();
   PixelType     max = NumericTraits<PixelType>::NonpositiveMin();
 

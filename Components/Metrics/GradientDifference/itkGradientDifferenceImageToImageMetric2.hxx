@@ -359,7 +359,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
   unsigned int iDimension;
   this->m_TransformMovingImageFilter->Modified();
   this->m_TransformMovingImageFilter->UpdateLargestPossibleRegion();
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   typename FixedImageType::IndexType currentIndex;
   typename FixedImageType::PointType point;

@@ -131,7 +131,7 @@ public:
 #  pragma omp parallel for
       for (int j = 0; j < spaceDimension; ++j)
       {
-        DerivativeValueType tmp = DerivativeValueType{};
+        DerivativeValueType tmp{};
         for (ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i)
         {
           tmp += this->m_ThreaderDerivatives[i][j];
@@ -165,7 +165,7 @@ public:
 
     for (unsigned int j = jmin; j < jmax; ++j)
     {
-      DerivativeValueType tmp = DerivativeValueType{};
+      DerivativeValueType tmp{};
       for (ThreadIdType i = 0; i < nrOfThreads; ++i)
       {
         tmp += temp->st_Metric->m_ThreaderDerivatives[i][j];

@@ -285,7 +285,7 @@ void
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const ParametersType & parameters,
                                                                                DerivativeType &       derivative) const
 {
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 } // end GetDerivative()
 

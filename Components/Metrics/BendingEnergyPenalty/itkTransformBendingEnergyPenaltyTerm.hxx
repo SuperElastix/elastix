@@ -55,7 +55,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
 {
   /** Initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  RealType           measure = RealType{};
+  RealType           measure{};
   SpatialHessianType spatialHessian;
 
   /** Check if the SpatialHessian is nonzero. */
@@ -140,7 +140,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const
                                                                            DerivativeType &       derivative) const
 {
   /** Slower, but works. */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -159,7 +159,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
 {
   /** Create and initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
-  RealType measure = RealType{};
+  RealType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
@@ -435,7 +435,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
-  MeasureType   measure = MeasureType{};
+  MeasureType   measure{};
 
   /** Loop over the fixed image to calculate the penalty term and its derivative. */
   for (fiter = fbegin; fiter != fend; ++fiter)
@@ -621,7 +621,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
 #  pragma omp parallel for
     for (int j = 0; j < spaceDimension; ++j)
     {
-      DerivativeValueType tmp = DerivativeValueType{};
+      DerivativeValueType tmp{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
         tmp += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];

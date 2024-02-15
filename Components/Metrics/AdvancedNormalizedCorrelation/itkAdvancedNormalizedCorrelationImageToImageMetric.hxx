@@ -65,8 +65,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   m_CorrelationGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  const AccumulateType      zero1 = AccumulateType{};
-  const DerivativeValueType zero2 = DerivativeValueType{};
+  const AccumulateType      zero1{};
+  const DerivativeValueType zero2{};
   const auto                numberOfParameters = this->GetNumberOfParameters();
   for (auto & perThreadVariable : m_CorrelationGetValueAndDerivativePerThreadVariables)
   {
@@ -168,7 +168,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 
   /** Initialize some variables */
   this->m_NumberOfPixelsCounted = 0;
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -194,11 +194,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
 
   /** Create variables to store intermediate results. */
-  AccumulateType sff = AccumulateType{};
-  AccumulateType smm = AccumulateType{};
-  AccumulateType sfm = AccumulateType{};
-  AccumulateType sf = AccumulateType{};
-  AccumulateType sm = AccumulateType{};
+  AccumulateType sff{};
+  AccumulateType smm{};
+  AccumulateType sfm{};
+  AccumulateType sf{};
+  AccumulateType sm{};
 
   /** Loop over the fixed image samples to calculate the mean squares. */
   for (fiter = fbegin; fiter != fend; ++fiter)
@@ -287,7 +287,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetD
    * the metric value now. Therefore, we have chosen to only implement the
    * GetValueAndDerivative(), supplying it with a dummy value variable.
    */
-  MeasureType dummyvalue = MeasureType{};
+  MeasureType dummyvalue{};
   this->GetValueAndDerivative(parameters, dummyvalue, derivative);
 
 } // end GetDerivative()
@@ -325,11 +325,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   TransformJacobianType      jacobian;
 
   /** Initialize some variables for intermediate results. */
-  AccumulateType sff = AccumulateType{};
-  AccumulateType smm = AccumulateType{};
-  AccumulateType sfm = AccumulateType{};
-  AccumulateType sf = AccumulateType{};
-  AccumulateType sm = AccumulateType{};
+  AccumulateType sff{};
+  AccumulateType smm{};
+  AccumulateType sfm{};
+  AccumulateType sf{};
+  AccumulateType sm{};
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -534,11 +534,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   threader_fend += (int)pos_end;
 
   /** Create variables to store intermediate results. */
-  AccumulateType sff = AccumulateType{};
-  AccumulateType smm = AccumulateType{};
-  AccumulateType sfm = AccumulateType{};
-  AccumulateType sf = AccumulateType{};
-  AccumulateType sm = AccumulateType{};
+  AccumulateType sff{};
+  AccumulateType smm{};
+  AccumulateType sfm{};
+  AccumulateType sf{};
+  AccumulateType sm{};
   unsigned long  numberOfPixelsCounted = 0;
 
   /** Loop over the fixed image to calculate the mean squares. */
@@ -639,7 +639,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  const AccumulateType zero = AccumulateType{};
+  const AccumulateType zero{};
   AccumulateType       sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sff;
   AccumulateType       smm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Smm;
   AccumulateType       sfm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sfm;
@@ -802,7 +802,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   unsigned int jmax = (threadId + 1) * subSize;
   jmax = (jmax > numPar) ? numPar : jmax;
 
-  const DerivativeValueType zero = DerivativeValueType{};
+  const DerivativeValueType zero{};
   DerivativeValueType       derivativeF, derivativeM, differential;
   for (unsigned int j = jmin; j < jmax; ++j)
   {

@@ -664,7 +664,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const Paramet
   -> MeasureType
 {
   /** Initialise. */
-  MeasureType measure = MeasureType{};
+  MeasureType measure{};
 
   /** Compute, store and combine all metric values. */
   for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
