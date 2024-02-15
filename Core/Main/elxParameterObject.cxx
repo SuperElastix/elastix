@@ -401,7 +401,7 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
                                         const double        finalGridSpacingInPhysicalUnits)
 {
   // Parameters that depend on size and number of resolutions
-  ParameterMapType parameterMap = ParameterMapType();
+  ParameterMapType parameterMap{};
 
   // Common Components
   parameterMap["FixedImagePyramid"] = ParameterValueVectorType(1, "FixedSmoothingImagePyramid");
@@ -490,7 +490,7 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
   if (transformName == "bspline" || transformName == "nonrigid" ||
       transformName == "groupwise") // <-- nonrigid for backwards compatibility
   {
-    ParameterValueVectorType gridSpacingSchedule = ParameterValueVectorType();
+    ParameterValueVectorType gridSpacingSchedule{};
     for (double resolution = 0; resolution < numberOfResolutions; ++resolution)
     {
       gridSpacingSchedule.insert(gridSpacingSchedule.begin(), std::to_string(std::pow(1.41, resolution)));
