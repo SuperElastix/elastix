@@ -211,10 +211,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   const unsigned long nSamplesPerThread = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
-  unsigned long pos_begin = nSamplesPerThread * threadId;
-  unsigned long pos_end = nSamplesPerThread * (threadId + 1);
-  pos_begin = (pos_begin > sampleContainerSize) ? sampleContainerSize : pos_begin;
-  pos_end = (pos_end > sampleContainerSize) ? sampleContainerSize : pos_end;
+  const auto pos_begin = std::min<size_t>(nSamplesPerThread * threadId, sampleContainerSize);
+  const auto pos_end = std::min<size_t>(nSamplesPerThread * (threadId + 1), sampleContainerSize);
 
   /** Create iterator over the sample container. */
   const auto beginOfSampleContainer = sampleContainer->cbegin();
@@ -522,10 +520,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   const unsigned long nSamplesPerThread = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
-  unsigned long pos_begin = nSamplesPerThread * threadId;
-  unsigned long pos_end = nSamplesPerThread * (threadId + 1);
-  pos_begin = (pos_begin > sampleContainerSize) ? sampleContainerSize : pos_begin;
-  pos_end = (pos_end > sampleContainerSize) ? sampleContainerSize : pos_end;
+  const auto pos_begin = std::min<size_t>(nSamplesPerThread * threadId, sampleContainerSize);
+  const auto pos_end = std::min<size_t>(nSamplesPerThread * (threadId + 1), sampleContainerSize);
 
   /** Create iterator over the sample container. */
   const auto beginOfSampleContainer = sampleContainer->cbegin();
