@@ -18,40 +18,26 @@
 #ifndef itkComputeImageExtremaFilter_h
 #define itkComputeImageExtremaFilter_h
 
-#include "itkStatisticsImageFilter.h"
+#include "itkImageSink.h"
 #include "itkImageMaskSpatialObject.h"
 
 namespace itk
 {
 /** \class ComputeImageExtremaFilter
- * \brief Compute min. max, variance and mean of an Image.
- *
- * StatisticsImageFilter computes the minimum, maximum, sum, mean, variance
- * sigma of an image.  The filter needs all of its input image.  It
- * behaves as a filter with an input and output. Thus it can be inserted
- * in a pipline with other filters and the statistics will only be
- * recomputed if a downstream filter changes.
- *
- * The filter passes its input through unmodified.  The filter is
- * threaded. It computes statistics in each thread then combines them in
- * its AfterThreadedGenerate method.
+ * \brief Compute minimum and maximum pixel value of an Image.
  *
  * \ingroup MathematicalStatisticsImageFilters
  * \ingroup ITKImageStatistics
- *
- * \wiki
- * \wikiexample{Statistics/StatisticsImageFilter,Compute min\, max\, variance and mean of an Image.}
- * \endwiki
  */
 template <typename TInputImage>
-class ITK_TEMPLATE_EXPORT ComputeImageExtremaFilter : public StatisticsImageFilter<TInputImage>
+class ITK_TEMPLATE_EXPORT ComputeImageExtremaFilter : public ImageSink<TInputImage>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ComputeImageExtremaFilter);
 
   /** Standard Self typedef */
   using Self = ComputeImageExtremaFilter;
-  using Superclass = StatisticsImageFilter<TInputImage>;
+  using Superclass = ImageSink<TInputImage>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -64,17 +50,12 @@ public:
   /** Image related typedefs. */
   using InputImagePointer = typename TInputImage::Pointer;
 
-  using typename Superclass::RegionType;
-  using typename Superclass::SizeType;
-  using typename Superclass::IndexType;
-  using typename Superclass::PixelType;
-  using PointType = typename TInputImage::PointType;
+  using Superclass::InputImageDimension;
+  using typename Superclass::InputImageRegionType;
+  using PixelType = typename Superclass::InputImagePixelType;
 
   /** Image related typedefs. */
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);
-
-  /** Type to use for computations. */
-  using typename Superclass::RealType;
 
   using ImageSpatialMaskType = ImageMaskSpatialObject<Self::ImageDimension>;
   using ImageSpatialMaskPointer = typename ImageSpatialMaskType::Pointer;
@@ -82,34 +63,45 @@ public:
   itkSetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
   itkGetConstObjectMacro(ImageSpatialMask, ImageSpatialMaskType);
 
+  PixelType
+  GetMinimum() const
+  {
+    return m_ThreadMin;
+  }
+
+  PixelType
+  GetMaximum() const
+  {
+    return m_ThreadMax;
+  }
+
 protected:
   ComputeImageExtremaFilter() = default;
   ~ComputeImageExtremaFilter() override = default;
 
-  /** Initialize some accumulators before the threads run. */
+  /** Initialize minimum and maximum before the threads run. */
   void
   BeforeStreamedGenerateData() override;
 
-  /** Do final mean and variance computation from data accumulated in threads.
-   */
-  void
-  AfterStreamedGenerateData() override;
-
   /** Multi-thread version GenerateData. */
   void
-  ThreadedStreamedGenerateData(const RegionType &) override;
-  virtual void
-  ThreadedGenerateDataImageSpatialMask(const RegionType &);
+  ThreadedStreamedGenerateData(const InputImageRegionType &) override;
 
 private:
+  struct MinMaxResult
+  {
+    PixelType Min;
+    PixelType Max;
+  };
+
+  static MinMaxResult
+  RetrieveMinMax(const TInputImage &, const InputImageRegionType &, const ImageSpatialMaskType *, bool);
+
   ImageSpatialMaskConstPointer m_ImageSpatialMask{};
   bool                         m_SameGeometry{ false };
 
-  CompensatedSummation<RealType> m_ThreadSum{ 1 };
-  CompensatedSummation<RealType> m_SumOfSquares{ 1 };
-  SizeValueType                  m_Count{ 1 };
-  PixelType                      m_ThreadMin{ 1 };
-  PixelType                      m_ThreadMax{ 1 };
+  PixelType m_ThreadMin{ 1 };
+  PixelType m_ThreadMax{ 1 };
 
   std::mutex m_Mutex{};
 }; // end of class
