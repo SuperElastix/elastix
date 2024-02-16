@@ -29,7 +29,7 @@ template <typename TInputImage>
 void
 ComputeImageExtremaFilter<TInputImage>::BeforeStreamedGenerateData()
 {
-  if (!this->m_UseMask)
+  if (m_ImageSpatialMask == nullptr)
   {
     Superclass::BeforeStreamedGenerateData();
   }
@@ -57,7 +57,7 @@ template <typename TInputImage>
 void
 ComputeImageExtremaFilter<TInputImage>::AfterStreamedGenerateData()
 {
-  if (!this->m_UseMask)
+  if (m_ImageSpatialMask == nullptr)
   {
     Superclass::AfterStreamedGenerateData();
   }
@@ -89,16 +89,13 @@ template <typename TInputImage>
 void
 ComputeImageExtremaFilter<TInputImage>::ThreadedStreamedGenerateData(const RegionType & regionForThread)
 {
-  if (!this->m_UseMask)
+  if (m_ImageSpatialMask == nullptr)
   {
     Superclass::ThreadedStreamedGenerateData(regionForThread);
   }
   else
   {
-    if (this->GetImageSpatialMask())
-    {
-      this->ThreadedGenerateDataImageSpatialMask(regionForThread);
-    }
+    this->ThreadedGenerateDataImageSpatialMask(regionForThread);
   }
 } // end ThreadedGenerateData()
 
