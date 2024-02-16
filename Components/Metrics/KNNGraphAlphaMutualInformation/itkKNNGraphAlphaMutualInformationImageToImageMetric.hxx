@@ -749,11 +749,6 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
   const unsigned long         nrOfRequestedSamples = sampleContainer->Size();
 
-  /** Create an iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Get the size of the feature vectors. */
   const unsigned int fixedSize = this->GetNumberOfFixedImages();
   const unsigned int movingSize = this->GetNumberOfMovingImages();
@@ -783,10 +778,10 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
 
   /** Loop over the fixed image samples to calculate the list samples. */
   unsigned int ii = 0;
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -818,7 +813,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Add the samples to the ListSampleCarrays. */
       listSampleFixed->SetMeasurement(this->m_NumberOfPixelsCounted, 0, fixedImageValue);

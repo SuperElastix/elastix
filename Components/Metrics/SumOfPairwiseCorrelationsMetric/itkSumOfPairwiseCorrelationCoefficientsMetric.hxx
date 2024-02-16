@@ -152,11 +152,6 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   this->GetImageSampler()->Update();
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
@@ -173,10 +168,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   /** Initialize image sample matrix . */
   datablock.fill(RealType{});
 
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
@@ -326,11 +321,6 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   this->GetImageSampler()->Update();
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
@@ -350,10 +340,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   /** Initialize image sample matrix . */
   datablock.fill(0.0);
 
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
