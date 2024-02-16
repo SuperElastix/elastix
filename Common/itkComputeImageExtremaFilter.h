@@ -47,6 +47,8 @@ template <typename TInputImage>
 class ITK_TEMPLATE_EXPORT ComputeImageExtremaFilter : public StatisticsImageFilter<TInputImage>
 {
 public:
+  ITK_DISALLOW_COPY_AND_MOVE(ComputeImageExtremaFilter);
+
   /** Standard Self typedef */
   using Self = ComputeImageExtremaFilter;
   using Superclass = StatisticsImageFilter<TInputImage>;
@@ -106,10 +108,6 @@ protected:
   bool                         m_SameGeometry{ false };
 
 private:
-  ComputeImageExtremaFilter(const Self &);
-  void
-  operator=(const Self &);
-
   CompensatedSummation<RealType> m_ThreadSum{ 1 };
   CompensatedSummation<RealType> m_SumOfSquares{ 1 };
   SizeValueType                  m_Count{ 1 };
