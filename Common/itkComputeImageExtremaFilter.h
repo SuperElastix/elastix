@@ -76,8 +76,6 @@ public:
   /** Type to use for computations. */
   using typename Superclass::RealType;
 
-  itkSetMacro(UseMask, bool);
-
   using ImageSpatialMaskType = ImageMaskSpatialObject<Self::ImageDimension>;
   using ImageSpatialMaskPointer = typename ImageSpatialMaskType::Pointer;
   using ImageSpatialMaskConstPointer = typename ImageSpatialMaskType::ConstPointer;
@@ -105,7 +103,6 @@ protected:
 
 private:
   ImageSpatialMaskConstPointer m_ImageSpatialMask{};
-  bool                         m_UseMask{ false };
   bool                         m_SameGeometry{ false };
 
   CompensatedSummation<RealType> m_ThreadSum{ 1 };

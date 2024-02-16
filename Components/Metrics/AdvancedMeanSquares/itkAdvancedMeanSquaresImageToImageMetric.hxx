@@ -56,12 +56,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     /** Try to guess a normalization factor. */
     const auto computeFixedImageExtrema = ComputeImageExtremaFilter<FixedImageType>::New();
     computeFixedImageExtrema->SetInput(this->GetFixedImage());
-    if (const auto * const mask = this->GetFixedImageMask())
-    {
-      computeFixedImageExtrema->SetUseMask(true);
-      computeFixedImageExtrema->SetImageSpatialMask(mask);
-    }
-
+    computeFixedImageExtrema->SetImageSpatialMask(this->GetFixedImageMask());
     computeFixedImageExtrema->Update();
 
     this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
@@ -76,12 +71,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
     const auto computeMovingImageExtrema = ComputeImageExtremaFilter<MovingImageType>::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
-    if (const auto * const mask = this->GetMovingImageMask())
-    {
-      computeMovingImageExtrema->SetUseMask(true);
-      computeMovingImageExtrema->SetImageSpatialMask(mask);
-    }
-
+    computeMovingImageExtrema->SetImageSpatialMask(this->GetMovingImageMask());
     computeMovingImageExtrema->Update();
 
     this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();

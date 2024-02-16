@@ -196,7 +196,6 @@ Expect_one_non_zero_pixel_value_masked_in(const typename TImage::SizeType & imag
     const auto filter = CheckNew<FilterType>();
     filter->SetInput(image);
     filter->SetImageSpatialMask(maskSpatialObject);
-    filter->SetUseMask(true);
     filter->Update();
 
     EXPECT_EQ(filter->GetMinimum(), pixelValue);
@@ -247,7 +246,6 @@ Expect_one_positive_pixel_value_all_pixels_masked_in(const typename TImage::Size
     const auto filter = CheckNew<FilterType>();
     filter->SetInput(image);
     filter->SetImageSpatialMask(maskSpatialObject);
-    filter->SetUseMask(true);
     filter->Update();
 
     EXPECT_EQ(filter->GetMinimum(), 0);
@@ -356,8 +354,6 @@ GTEST_TEST(ComputeImageExtremaFilter, MaskSpacingAndDirectionAffectResults)
     elastix::DefaultConstruct<FilterType> filter{};
     filter.SetInput(image);
     filter.SetImageSpatialMask(maskSpatialObject);
-    filter.SetUseMask(true);
-
     filter.Update();
     return filter.GetMaximum();
   };
