@@ -453,17 +453,15 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   pos_end = (pos_end > sampleContainerSize) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->Begin();
-  fbegin += (int)pos_begin;
-  fend += (int)pos_end;
+  const auto beginOfSampleContainer = sampleContainer->cbegin();
+  const auto fbegin = beginOfSampleContainer + pos_begin;
+  const auto fend = beginOfSampleContainer + pos_end;
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (auto fiter = fbegin; fiter != fend; ++fiter)
   {
     /** Read fixed coordinates and create some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fiter->m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -485,7 +483,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      RealType fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);

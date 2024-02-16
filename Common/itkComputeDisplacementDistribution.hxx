@@ -367,18 +367,15 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   unsigned long numberOfPixelsCounted = 0;
 
   /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator threader_fiter;
-  typename ImageSampleContainerType::ConstIterator threader_fbegin = this->m_SampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend = this->m_SampleContainer->Begin();
-
-  threader_fbegin += (int)pos_begin;
-  threader_fend += (int)pos_end;
+  const auto beginOfSampleContainer = this->m_SampleContainer->cbegin();
+  const auto threader_fbegin = beginOfSampleContainer + pos_begin;
+  const auto threader_fend = beginOfSampleContainer + pos_end;
 
   /** Loop over the fixed image to calculate the mean squares. */
-  for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for (auto threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = threader_fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & point = threader_fiter->m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Apply scales, if necessary. */

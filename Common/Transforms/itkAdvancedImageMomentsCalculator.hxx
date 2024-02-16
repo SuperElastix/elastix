@@ -281,18 +281,15 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
   pos_end = (pos_end > sampleContainerSize) ? sampleContainerSize : pos_end;
 
   /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator threader_fiter;
-  typename ImageSampleContainerType::ConstIterator threader_fbegin = this->m_SampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator threader_fend = this->m_SampleContainer->Begin();
+  const auto beginOfSampleContainer = this->m_SampleContainer->cbegin();
+  const auto threader_fbegin = beginOfSampleContainer + pos_begin;
+  const auto threader_fend = beginOfSampleContainer + pos_end;
 
-  threader_fbegin += (int)pos_begin;
-  threader_fend += (int)pos_end;
-
-  for (threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for (auto threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
   {
-    double value = threader_fiter->Value().m_ImageValue;
+    double value = threader_fiter->m_ImageValue;
     // IndexType indexPosition = threader_fiter->GetIndex();
-    Point<double, ImageDimension> physicalPosition = threader_fiter->Value().m_ImageCoordinates;
+    Point<double, ImageDimension> physicalPosition = threader_fiter->m_ImageCoordinates;
 
     if (m_SpatialObjectMask.IsNull() || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition))
     {
