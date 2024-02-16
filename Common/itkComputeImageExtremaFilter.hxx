@@ -17,9 +17,12 @@
  *=========================================================================*/
 #ifndef itkComputeImageExtremaFilter_hxx
 #define itkComputeImageExtremaFilter_hxx
+
 #include "itkComputeImageExtremaFilter.h"
 
 #include <itkImageRegionConstIterator.h>
+#include <itkImageScanlineIterator.h>
+
 #include "elxMaskHasSameImageDomain.h"
 
 namespace itk
@@ -29,141 +32,86 @@ template <typename TInputImage>
 void
 ComputeImageExtremaFilter<TInputImage>::BeforeStreamedGenerateData()
 {
-  if (m_ImageSpatialMask == nullptr)
-  {
-    Superclass::BeforeStreamedGenerateData();
-  }
-  else
-  {
-    // Resize the thread temporaries
-    m_Count = SizeValueType{};
-    m_SumOfSquares = RealType{};
-    m_ThreadSum = RealType{};
-    m_ThreadMin = NumericTraits<PixelType>::max();
-    m_ThreadMax = NumericTraits<PixelType>::NonpositiveMin();
+  m_ThreadMin = NumericTraits<PixelType>::max();
+  m_ThreadMax = NumericTraits<PixelType>::NonpositiveMin();
+  m_SameGeometry =
+    (m_ImageSpatialMask != nullptr) && elastix::MaskHasSameImageDomain(*m_ImageSpatialMask, *(this->GetInput()));
+}
 
-    if (this->GetImageSpatialMask())
+
+template <typename TInputImage>
+auto
+ComputeImageExtremaFilter<TInputImage>::RetrieveMinMax(const TInputImage &                inputImage,
+                                                       const InputImageRegionType &       regionForThread,
+                                                       const ImageSpatialMaskType * const imageSpatialMask,
+                                                       const bool                         sameGeometry) -> MinMaxResult
+{
+  PixelType min = NumericTraits<PixelType>::max();
+  PixelType max = NumericTraits<PixelType>::NonpositiveMin();
+
+  if (imageSpatialMask)
+  {
+    if (sameGeometry)
     {
-      this->m_SameGeometry = elastix::MaskHasSameImageDomain(*m_ImageSpatialMask, *(this->GetInput()));
+      const auto & maskImage = *(imageSpatialMask->GetImage());
+
+      for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
+      {
+        if (maskImage.GetPixel(it.GetIndex()) != PixelType{})
+        {
+          const PixelType value = it.Get();
+          min = std::min(min, value);
+          max = std::max(max, value);
+        }
+      }
     }
     else
     {
-      this->m_SameGeometry = false;
+      for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
+      {
+        typename ImageSpatialMaskType::PointType point;
+        inputImage.TransformIndexToPhysicalPoint(it.GetIndex(), point);
+        if (imageSpatialMask->IsInsideInWorldSpace(point))
+        {
+          const PixelType value = it.Get();
+          min = std::min(min, value);
+          max = std::max(max, value);
+        }
+      }
     }
   }
-}
-
-template <typename TInputImage>
-void
-ComputeImageExtremaFilter<TInputImage>::AfterStreamedGenerateData()
-{
-  if (m_ImageSpatialMask == nullptr)
-  {
-    Superclass::AfterStreamedGenerateData();
-  }
   else
   {
-    const SizeValueType count = m_Count;
-    const RealType      sumOfSquares(m_SumOfSquares);
-    const PixelType     minimum = m_ThreadMin;
-    const PixelType     maximum = m_ThreadMax;
-    const RealType      sum(m_ThreadSum);
-
-    const RealType mean = sum / static_cast<RealType>(count);
-    const RealType variance =
-      (sumOfSquares - (sum * sum / static_cast<RealType>(count))) / (static_cast<RealType>(count) - 1);
-    const RealType sigma = std::sqrt(variance);
-
-    // Set the outputs
-    this->SetMinimum(minimum);
-    this->SetMaximum(maximum);
-    this->SetMean(mean);
-    this->SetSigma(sigma);
-    this->SetVariance(variance);
-    this->SetSum(sum);
-    this->SetSumOfSquares(sumOfSquares);
-  }
-}
-
-template <typename TInputImage>
-void
-ComputeImageExtremaFilter<TInputImage>::ThreadedStreamedGenerateData(const RegionType & regionForThread)
-{
-  if (m_ImageSpatialMask == nullptr)
-  {
-    Superclass::ThreadedStreamedGenerateData(regionForThread);
-  }
-  else
-  {
-    this->ThreadedGenerateDataImageSpatialMask(regionForThread);
-  }
-} // end ThreadedGenerateData()
-
-template <typename TInputImage>
-void
-ComputeImageExtremaFilter<TInputImage>::ThreadedGenerateDataImageSpatialMask(const RegionType & regionForThread)
-{
-  if (regionForThread.GetSize(0) == 0)
-  {
-    return;
-  }
-  RealType      sum{};
-  RealType      sumOfSquares{};
-  SizeValueType count{};
-  PixelType     min = NumericTraits<PixelType>::max();
-  PixelType     max = NumericTraits<PixelType>::NonpositiveMin();
-
-  const auto & inputImage = *(this->GetInput());
-
-  if (this->m_SameGeometry)
-  {
-    const auto & maskImage = *(this->m_ImageSpatialMask->GetImage());
-
-    for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
+    for (ImageScanlineConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); it.NextLine())
     {
-      if (maskImage.GetPixel(it.GetIndex()) != PixelType{})
+      while (!it.IsAtEndOfLine())
       {
         const PixelType value = it.Get();
-        const auto      realValue = static_cast<RealType>(value);
-
         min = std::min(min, value);
         max = std::max(max, value);
-
-        sum += realValue;
-        sumOfSquares += (realValue * realValue);
-        ++count;
+        ++it;
       }
-    } // end for
+    }
   }
-  else
+  return { min, max };
+}
+
+
+template <typename TInputImage>
+void
+ComputeImageExtremaFilter<TInputImage>::ThreadedStreamedGenerateData(const InputImageRegionType & regionForThread)
+{
+  if (regionForThread.GetSize(0) > 0)
   {
-    for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
-    {
-      PointType point;
-      inputImage.TransformIndexToPhysicalPoint(it.GetIndex(), point);
-      if (this->m_ImageSpatialMask->IsInsideInWorldSpace(point))
-      {
-        const PixelType value = it.Get();
-        const auto      realValue = static_cast<RealType>(value);
+    const MinMaxResult minMaxResult =
+      RetrieveMinMax(*(this->GetInput()), regionForThread, m_ImageSpatialMask, m_SameGeometry);
 
-        min = std::min(min, value);
-        max = std::max(max, value);
-
-        sum += realValue;
-        sumOfSquares += (realValue * realValue);
-        ++count;
-      }
-    } // end for
-  }   // end if
-
-  const std::lock_guard<std::mutex> lockGuard(m_Mutex);
-  m_ThreadSum += sum;
-  m_SumOfSquares += sumOfSquares;
-  m_Count += count;
-  m_ThreadMin = std::min(min, m_ThreadMin);
-  m_ThreadMax = std::max(max, m_ThreadMax);
-
-} // end ThreadedGenerateDataImageSpatialMask()
+    // Lock after calling RetrieveMinMax.
+    const std::lock_guard<std::mutex> lockGuard(m_Mutex);
+    m_ThreadMin = std::min(minMaxResult.Min, m_ThreadMin);
+    m_ThreadMax = std::max(minMaxResult.Max, m_ThreadMax);
+  }
+}
 
 } // end namespace itk
 #endif
