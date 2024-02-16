@@ -166,16 +166,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over the fixed image samples to calculate the mean squares. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
     RealType                    movingImageValue;
 
     /** Transform point. */
@@ -197,7 +192,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<double>(fiter->Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
 
       /** The difference squared. */
       const RealType diff = movingImageValue - fixedImageValue;
@@ -446,16 +441,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over the fixed image to calculate the mean squares. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -479,7 +469,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */
@@ -859,16 +849,11 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian
   sampler->Update();
   ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over the fixed image to calculate the mean squares. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
     MovingImageDerivativeType   movingImageDerivative;
 
     /** Transform point. */

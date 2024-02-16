@@ -187,11 +187,6 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   this->GetImageSampler()->Update();
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
@@ -231,10 +226,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Initialize image sample matrix . */
   datablock.fill(RealType{});
 
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     FixedImageContinuousIndexType voxelCoord;
@@ -429,11 +424,6 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   this->GetImageSampler()->Update();
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
@@ -475,10 +465,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
     }
   }
 
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     FixedImageContinuousIndexType voxelCoord;

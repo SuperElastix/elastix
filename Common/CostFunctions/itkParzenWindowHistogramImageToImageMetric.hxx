@@ -1010,16 +1010,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
     RealType                    movingImageValue;
 
     /** Transform point. */
@@ -1041,7 +1036,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
@@ -1326,16 +1321,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -1359,7 +1349,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
@@ -1440,16 +1430,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform point and check if it is inside the B-spline support region.
      * if not, skip this sample.
@@ -1458,7 +1443,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
 
     {
       /** Get the fixed image value and make sure the value falls within the histogram range. */
-      RealType fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
 
       /** Check if the point is inside the moving mask. */

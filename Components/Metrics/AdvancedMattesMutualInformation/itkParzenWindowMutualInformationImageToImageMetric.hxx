@@ -303,16 +303,11 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and create some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -334,7 +329,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);

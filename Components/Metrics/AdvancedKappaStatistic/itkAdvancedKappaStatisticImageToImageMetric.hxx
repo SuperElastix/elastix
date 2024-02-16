@@ -132,11 +132,6 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Some variables. */
   RealType    movingImageValue;
   std::size_t fixedForegroundArea = 0; // or unsigned long
@@ -144,10 +139,10 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   std::size_t intersection = 0;
 
   /** Loop over the fixed image samples to calculate the kappa statistic. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -169,7 +164,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Update the intermediate values. */
       if (this->m_UseForegroundValue)
@@ -306,16 +301,11 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
   vecSum1.Fill(DerivativeValueType{});
   vecSum2.Fill(DerivativeValueType{});
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** Loop over the fixed image to calculate the kappa statistic. */
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = fiter->Value().m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -339,7 +329,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fiter->Value().m_ImageValue);
+      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);

@@ -179,11 +179,6 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Update the imageSampler and get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   const unsigned int numberOfSamples = sampleContainer->Size();
   MatrixType         datablock(numberOfSamples, this->m_G);
@@ -194,10 +189,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Initialize image sample matrix . */
   datablock.fill(RealType{});
 
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
@@ -357,11 +352,6 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator fiter;
-  typename ImageSampleContainerType::ConstIterator fbegin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator fend = sampleContainer->End();
-
   std::vector<FixedImagePointType> SamplesOK;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
@@ -374,10 +364,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** Initialize image sample matrix . */
   datablock.fill(RealType{});
 
-  for (fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = fiter->Value().m_ImageCoordinates;
+    FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
