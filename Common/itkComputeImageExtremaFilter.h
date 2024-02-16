@@ -103,11 +103,11 @@ protected:
   virtual void
   ThreadedGenerateDataImageSpatialMask(const RegionType &);
 
+private:
   ImageSpatialMaskConstPointer m_ImageSpatialMask{};
   bool                         m_UseMask{ false };
   bool                         m_SameGeometry{ false };
 
-private:
   CompensatedSummation<RealType> m_ThreadSum{ 1 };
   CompensatedSummation<RealType> m_SumOfSquares{ 1 };
   SizeValueType                  m_Count{ 1 };
