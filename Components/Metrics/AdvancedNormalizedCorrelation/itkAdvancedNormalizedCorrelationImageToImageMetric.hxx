@@ -500,7 +500,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
-  NonZeroJacobianIndicesType   nzji = NonZeroJacobianIndicesType(nnzji);
+  NonZeroJacobianIndicesType   nzji(nnzji);
   DerivativeType               imageJacobian(nzji.size());
 
   /** Get handles to the pre-allocated derivatives for the current thread.
