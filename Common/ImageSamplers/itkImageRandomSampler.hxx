@@ -37,8 +37,8 @@ void
 ImageRandomSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container. */
-  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
-  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
+  const InputImageType & inputImage = elastix::Deref(this->GetInput());
+  auto &                 samples = elastix::Deref(this->GetOutput()).CastToSTLContainer();
 
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   const MaskType * const mask = this->Superclass::GetMask();
@@ -46,7 +46,6 @@ ImageRandomSampler<TInputImage>::GenerateData()
   {
     Superclass::GenerateRandomNumberList();
     const auto & randomNumberList = Superclass::m_RandomNumberList;
-    auto &       samples = sampleContainer.CastToSTLContainer();
     samples.resize(randomNumberList.size());
 
     const auto & croppedInputImageRegion = this->GetCroppedInputImageRegion();
@@ -61,7 +60,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
   }
 
   /** Reserve memory for the output. */
-  sampleContainer.Reserve(this->GetNumberOfSamples());
+  samples.resize(this->GetNumberOfSamples());
 
   /** Setup a random iterator over the input image. */
   using RandomIteratorType = ImageRandomConstIteratorWithIndex<InputImageType>;
@@ -73,23 +72,19 @@ ImageRandomSampler<TInputImage>::GenerateData()
   }
   randIter.GoToBegin();
 
-  /** Setup an iterator over the output, which is of ImageSampleContainerType. */
-  typename ImageSampleContainerType::Iterator      iter;
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer.End();
-
   if (mask == nullptr)
   {
     /** number of samples + 1, because of the initial ++randIter. */
     randIter.SetNumberOfSamples(this->GetNumberOfSamples() + 1);
     /** Advance one, in order to generate the same sequence as when using a mask */
     ++randIter;
-    for (iter = sampleContainer.Begin(); iter != end; ++iter)
+    for (auto & sample : samples)
     {
       /** Get the index, transform it to the physical coordinates and put it in the sample. */
       InputImageIndexType index = randIter.GetIndex();
-      inputImage.TransformIndexToPhysicalPoint(index, iter->Value().m_ImageCoordinates);
+      inputImage.TransformIndexToPhysicalPoint(index, sample.m_ImageCoordinates);
       /** Get the value and put it in the sample. */
-      iter->Value().m_ImageValue = randIter.Get();
+      sample.m_ImageValue = randIter.Get();
       /** Jump to a random position. */
       ++randIter;
 
@@ -106,7 +101,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
     /** Loop over the sample container. */
     InputImagePointType inputPoint;
     bool                insideMask = false;
-    for (iter = sampleContainer.Begin(); iter != end; ++iter)
+    for (auto & sample : samples)
     {
       /** Loop until a valid sample is found. */
       do
@@ -117,7 +112,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
         if (randIter.IsAtEnd())
         {
           /** Squeeze the sample container to the size that is still valid. */
-          sampleContainer.resize(iter.Index());
+          samples.resize(&sample - samples.data());
           itkExceptionMacro(
             "Could not find enough image samples within reasonable time. Probably the mask is too small");
         }
@@ -129,8 +124,8 @@ ImageRandomSampler<TInputImage>::GenerateData()
       } while (!insideMask);
 
       /** Put the coordinates and the value in the sample. */
-      iter->Value().m_ImageCoordinates = inputPoint;
-      iter->Value().m_ImageValue = randIter.Get();
+      sample.m_ImageCoordinates = inputPoint;
+      sample.m_ImageValue = randIter.Get();
 
     } // end for loop
 
