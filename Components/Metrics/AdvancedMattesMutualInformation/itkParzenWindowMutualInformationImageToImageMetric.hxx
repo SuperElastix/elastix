@@ -329,7 +329,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);

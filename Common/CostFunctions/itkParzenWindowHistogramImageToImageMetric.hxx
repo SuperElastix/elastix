@@ -1036,7 +1036,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
@@ -1345,7 +1345,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
@@ -1439,7 +1439,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
 
     {
       /** Get the fixed image value and make sure the value falls within the histogram range. */
-      RealType fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
 
       /** Check if the point is inside the moving mask. */

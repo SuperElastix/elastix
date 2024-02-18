@@ -813,7 +813,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Add the samples to the ListSampleCarrays. */
       listSampleFixed->SetMeasurement(this->m_NumberOfPixelsCounted, 0, fixedImageValue);
