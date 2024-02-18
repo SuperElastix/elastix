@@ -118,7 +118,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** The difference squared. */
       const RealType diff = ((fixedImageValue - this->m_AirValue) - detjac * (movingImageValue - this->m_AirValue)) /
@@ -396,7 +396,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);

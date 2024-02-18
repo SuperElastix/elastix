@@ -192,7 +192,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** The difference squared. */
       const RealType diff = movingImageValue - fixedImageValue;
@@ -464,7 +464,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

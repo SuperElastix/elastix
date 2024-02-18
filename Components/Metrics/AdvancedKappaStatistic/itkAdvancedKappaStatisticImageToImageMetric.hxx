@@ -164,7 +164,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Update the intermediate values. */
       if (this->m_UseForegroundValue)
@@ -329,7 +329,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);

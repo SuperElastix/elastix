@@ -372,7 +372,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
