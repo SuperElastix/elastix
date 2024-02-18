@@ -741,8 +741,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::UpdateValueAnd
 {
   /** The difference squared. */
   const RealType diff = movingImageValue - fixedImageValue;
-  const RealType diffdiff = diff * diff;
-  measure += diffdiff;
+  measure += diff * diff;
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
   const RealType diff_2 = diff * 2.0;

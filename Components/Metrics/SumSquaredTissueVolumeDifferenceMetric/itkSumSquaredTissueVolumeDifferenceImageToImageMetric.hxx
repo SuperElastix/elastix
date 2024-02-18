@@ -734,8 +734,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::U
   const RealType diff =
     ((fixedImageValue - this->m_AirValue) - spatialJacobianDeterminant * (movingImageValue - this->m_AirValue)) /
     (this->m_TissueValue - this->m_AirValue);
-  const RealType diffdiff = diff * diff;
-  measure += diffdiff;
+  measure += diff * diff;
 
   /** Calculate the contributions to the derivatives with respect to each parameter. */
   const RealType diff_2 = diff * -2.0;
