@@ -195,8 +195,8 @@ protected:
    * Called by GetValueAndDerivative().
    */
   void
-  UpdateValueAndDerivativeTerms(const RealType &                   fixedImageValue,
-                                const RealType &                   movingImageValue,
+  UpdateValueAndDerivativeTerms(const RealType                     fixedImageValue,
+                                const RealType                     movingImageValue,
                                 std::size_t &                      fixedForegroundArea,
                                 std::size_t &                      movingForegroundArea,
                                 std::size_t &                      intersection,

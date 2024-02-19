@@ -724,8 +724,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 template <class TFixedImage, class TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::UpdateDerivativeLowMemory(
-  const RealType &                   fixedImageValue,
-  const RealType &                   movingImageValue,
+  const RealType                     fixedImageValue,
+  const RealType                     movingImageValue,
   const DerivativeType &             imageJacobian,
   const NonZeroJacobianIndicesType & nzji,
   DerivativeType &                   derivative) const

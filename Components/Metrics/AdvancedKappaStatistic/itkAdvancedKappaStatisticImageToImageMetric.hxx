@@ -505,7 +505,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
+      const RealType fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */
@@ -685,8 +685,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::UpdateValueAndDerivativeTerms(
-  const RealType &                   fixedImageValue,
-  const RealType &                   movingImageValue,
+  const RealType                     fixedImageValue,
+  const RealType                     movingImageValue,
   std::size_t &                      fixedForegroundArea,
   std::size_t &                      movingForegroundArea,
   std::size_t &                      intersection,

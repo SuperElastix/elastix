@@ -109,8 +109,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Prin
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::UpdateDerivativeTerms(
-  const RealType &                   fixedImageValue,
-  const RealType &                   movingImageValue,
+  const RealType                     fixedImageValue,
+  const RealType                     movingImageValue,
   const DerivativeType &             imageJacobian,
   const NonZeroJacobianIndicesType & nzji,
   DerivativeType &                   derivativeF,
@@ -220,7 +220,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
       this->m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
+      const RealType fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
 
       /** Update some sums needed to calculate NC. */
       sff += fixedImageValue * fixedImageValue;
@@ -554,7 +554,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

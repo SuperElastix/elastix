@@ -210,8 +210,8 @@ protected:
    * Called by GetValueAndDerivative().
    */
   void
-  UpdateDerivativeTerms(const RealType &                   fixedImageValue,
-                        const RealType &                   movingImageValue,
+  UpdateDerivativeTerms(const RealType                     fixedImageValue,
+                        const RealType                     movingImageValue,
                         const DerivativeType &             imageJacobian,
                         const NonZeroJacobianIndicesType & nzji,
                         DerivativeType &                   derivativeF,
