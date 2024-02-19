@@ -245,7 +245,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
       /** Get the SpatialJacobian dT/dx. */
       this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
@@ -556,7 +556,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType & fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);

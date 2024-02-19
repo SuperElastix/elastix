@@ -272,8 +272,8 @@ private:
 
   /** Helper function to update the derivative for the low memory variant. */
   void
-  UpdateDerivativeLowMemory(const RealType &                   fixedImageValue,
-                            const RealType &                   movingImageValue,
+  UpdateDerivativeLowMemory(const RealType                     fixedImageValue,
+                            const RealType                     movingImageValue,
                             const DerivativeType &             imageJacobian,
                             const NonZeroJacobianIndicesType & nzji,
                             DerivativeType &                   derivative) const;

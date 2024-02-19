@@ -332,8 +332,8 @@ protected:
    * pdf derivatives (if the Jacobian pointers are nonzero).
    */
   virtual void
-  UpdateJointPDFAndDerivatives(const RealType &                   fixedImageValue,
-                               const RealType &                   movingImageValue,
+  UpdateJointPDFAndDerivatives(const RealType                     fixedImageValue,
+                               const RealType                     movingImageValue,
                                const DerivativeType *             imageJacobian,
                                const NonZeroJacobianIndicesType * nzji,
                                JointPDFType *                     jointPDF) const;

@@ -529,8 +529,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::EvaluateParz
 template <class TFixedImage, class TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointPDFAndDerivatives(
-  const RealType &                   fixedImageValue,
-  const RealType &                   movingImageValue,
+  const RealType                     fixedImageValue,
+  const RealType                     movingImageValue,
   const DerivativeType *             imageJacobian,
   const NonZeroJacobianIndicesType * nzji,
   JointPDFType *                     jointPDF) const
