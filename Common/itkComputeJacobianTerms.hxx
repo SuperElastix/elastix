@@ -71,11 +71,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   /** Get scales vector */
   const ScalesType & scales = this->m_Scales;
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-  unsigned int                                     samplenr = 0;
+  unsigned int samplenr = 0;
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const NumberOfParametersType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
@@ -243,14 +239,14 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   {
     jacind[1] = 0;
   }
-  for (iter = begin; iter != end; ++iter)
+  for (const auto & sample : *sampleContainer)
   {
     /** Print progress 0-50%.
      *progressObserver->UpdateAndPrintProgress( samplenr );*/
     ++samplenr;
 
     /** Read fixed coordinates and get Jacobian J_j. */
-    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
+    const FixedImagePointType & point = sample.m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Skip invalid Jacobians in the beginning, if any. */
@@ -270,7 +266,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
     else
     {
       /** The following should only be done after the first sample. */
-      if (iter != begin)
+      if (&sample != &(sampleContainer->front()))
       {
         /** Update covariance matrix. */
         for (unsigned int pi = 0; pi < sizejacind; ++pi)
@@ -420,10 +416,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   itk::Array<SizeValueType> jacindExpanded(numberOfParameters);
 
   samplenr = 0;
-  for (iter = begin; iter != end; ++iter)
+  for (const auto & sample : *sampleContainer)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
+    const FixedImagePointType & point = sample.m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Apply scales, if necessary. */

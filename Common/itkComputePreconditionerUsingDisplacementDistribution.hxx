@@ -120,11 +120,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   typename TransformType::Pointer transform = this->m_Transform;
   const unsigned int              outdim = this->m_Transform->GetOutputSpaceDimension();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType        jacj(outdim, sizejacind);
@@ -202,10 +197,10 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   ParametersType binCount(numberOfParameters, 0.0);
   unsigned int   samplenr = 0; // needed for global value only
 
-  for (iter = begin; iter != end; ++iter)
+  for (const auto & sample : *sampleContainer)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
+    const FixedImagePointType & point = sample.m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Compute the product jac_j * gradient. */
@@ -363,11 +358,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   typename TransformType::Pointer transform = this->m_Transform;
   const unsigned int              outdim = this->m_Transform->GetOutputSpaceDimension();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType        jacj(outdim, sizejacind);
@@ -384,10 +374,10 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   binCount.Fill(0.0);
 
   /** Loop over all voxels in the sample container. */
-  for (iter = begin; iter != end; ++iter)
+  for (const auto & sample : *sampleContainer)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
+    const FixedImagePointType & point = sample.m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
@@ -596,11 +586,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   typename TransformType::Pointer transform = this->m_Transform;
   const unsigned int              outdim = this->m_Transform->GetOutputSpaceDimension();
 
-  /** Create iterator over the sample container. */
-  typename ImageSampleContainerType::ConstIterator iter;
-  typename ImageSampleContainerType::ConstIterator begin = sampleContainer->Begin();
-  typename ImageSampleContainerType::ConstIterator end = sampleContainer->End();
-
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType        jacj(outdim, sizejacind);
@@ -611,10 +596,10 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   ParametersType             binCount(numberOfParameters, 0.0);
 
   /** Loop over all voxels in the sample container. */
-  for (iter = begin; iter != end; ++iter)
+  for (const auto & sample : *sampleContainer)
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = iter->Value().m_ImageCoordinates;
+    const FixedImagePointType & point = sample.m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Compute 1st part of JJ: ||J_j||_F^2. */
