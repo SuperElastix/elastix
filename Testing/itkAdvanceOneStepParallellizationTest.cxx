@@ -155,12 +155,12 @@ public:
     else
     {
       /** Fill the threader parameter struct with information. */
-      MultiThreaderParameterType temp;
-      temp.t_NewPosition = &newPosition;
-      temp.t_Optimizer = this;
+      MultiThreaderParameterType userData;
+      userData.t_NewPosition = &newPosition;
+      userData.t_Optimizer = this;
 
       /** Call multi-threaded AdvanceOneStep(). */
-      this->m_Threader->SetSingleMethod(AdvanceOneStepThreaderCallback, &temp);
+      this->m_Threader->SetSingleMethod(AdvanceOneStepThreaderCallback, &userData);
       this->m_Threader->SingleMethodExecute();
     }
   } // end
