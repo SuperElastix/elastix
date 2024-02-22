@@ -65,9 +65,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   m_CorrelationGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  const AccumulateType      zero1{};
-  const DerivativeValueType zero2{};
-  const auto                numberOfParameters = this->GetNumberOfParameters();
+  const AccumulateType zero1{};
+  const auto           numberOfParameters = this->GetNumberOfParameters();
   for (auto & perThreadVariable : m_CorrelationGetValueAndDerivativePerThreadVariables)
   {
     perThreadVariable.st_NumberOfPixelsCounted = SizeValueType{};
@@ -79,9 +78,9 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
     perThreadVariable.st_DerivativeF.SetSize(numberOfParameters);
     perThreadVariable.st_DerivativeM.SetSize(numberOfParameters);
     perThreadVariable.st_Differential.SetSize(this->GetNumberOfParameters());
-    perThreadVariable.st_DerivativeF.Fill(zero2);
-    perThreadVariable.st_DerivativeM.Fill(zero2);
-    perThreadVariable.st_Differential.Fill(zero2);
+    perThreadVariable.st_DerivativeF.Fill(0.0);
+    perThreadVariable.st_DerivativeM.Fill(0.0);
+    perThreadVariable.st_Differential.Fill(0.0);
   }
 
 } // end InitializeThreadingParameters()
@@ -788,11 +787,12 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   unsigned int jmax = (threadId + 1) * subSize;
   jmax = (jmax > numPar) ? numPar : jmax;
 
-  const DerivativeValueType zero{};
-  DerivativeValueType       derivativeF, derivativeM, differential;
   for (unsigned int j = jmin; j < jmax; ++j)
   {
-    derivativeF = derivativeM = differential = zero;
+    DerivativeValueType derivativeF{};
+    DerivativeValueType derivativeM{};
+    DerivativeValueType differential{};
+
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
     {
       derivativeF += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j];
@@ -800,9 +800,9 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
       differential += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j];
 
       /** Reset these variables for the next iteration. */
-      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j] = zero;
-      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j] = zero;
-      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j] = zero;
+      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j] = 0.0;
+      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j] = 0.0;
+      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j] = 0.0;
     }
 
     if (subtractMean)
