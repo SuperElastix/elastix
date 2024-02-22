@@ -871,9 +871,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetSamplesThreaderCallback(void * arg)
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
 
-  temp->m_Metric->ThreadedGetSamples(threadId);
+  userData.m_Metric->ThreadedGetSamples(threadId);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -1075,9 +1075,9 @@ PCAMetric<TFixedImage, TMovingImage>::ComputeDerivativeThreaderCallback(void * a
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
 
-  temp->m_Metric->ThreadedComputeDerivative(threadId);
+  userData.m_Metric->ThreadedComputeDerivative(threadId);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 

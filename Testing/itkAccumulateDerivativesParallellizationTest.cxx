@@ -156,9 +156,9 @@ public:
     ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
     assert(infoStruct.UserData);
-    auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+    const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-    const unsigned int numPar = temp->st_Metric->m_NumberOfParameters;
+    const unsigned int numPar = userData.st_Metric->m_NumberOfParameters;
     const unsigned int subSize =
       static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
     const unsigned int jmin = threadID * subSize;
@@ -170,9 +170,9 @@ public:
       DerivativeValueType tmp{};
       for (ThreadIdType i = 0; i < nrOfThreads; ++i)
       {
-        tmp += temp->st_Metric->m_ThreaderDerivatives[i][j];
+        tmp += userData.st_Metric->m_ThreaderDerivatives[i][j];
       }
-      temp->st_DerivativePointer[j] = tmp / temp->st_NormalizationFactor;
+      userData.st_DerivativePointer[j] = tmp / userData.st_NormalizationFactor;
     }
 
     return ITK_THREAD_RETURN_DEFAULT_VALUE;

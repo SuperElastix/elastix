@@ -614,9 +614,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<ParzenWindowMutualInformationMultiThreaderParameterType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<ParzenWindowMutualInformationMultiThreaderParameterType *>(infoStruct.UserData);
 
-  temp->m_Metric->ThreadedComputeDerivativeLowMemory(threadId);
+  userData.m_Metric->ThreadedComputeDerivativeLowMemory(threadId);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 

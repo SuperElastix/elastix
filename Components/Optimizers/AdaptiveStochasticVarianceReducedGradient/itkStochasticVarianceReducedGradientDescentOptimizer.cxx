@@ -310,10 +310,10 @@ StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStepThreaderCallbac
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   /** Call the real implementation. */
-  temp->t_Optimizer->ThreadedAdvanceOneStep(threadID, *(temp->t_NewPosition));
+  userData.t_Optimizer->ThreadedAdvanceOneStep(threadID, *(userData.t_NewPosition));
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
