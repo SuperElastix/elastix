@@ -569,17 +569,16 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  const MeasureType zero{};
-  MeasureType       areaSum = zero;
-  MeasureType       intersection = zero;
+  MeasureType areaSum{};
+  MeasureType intersection{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     areaSum += this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_AreaSum;
     intersection += this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_AreaIntersection;
 
     /** Reset these variables for the next iteration. */
-    this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_AreaSum = zero;
-    this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_AreaIntersection = zero;
+    this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_AreaSum = 0.0;
+    this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_AreaIntersection = 0.0;
   }
 
   if (areaSum == 0)
