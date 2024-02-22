@@ -702,12 +702,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
 #  pragma omp parallel for
     for (int j = 0; j < spaceDimension; ++j)
     {
-      DerivativeValueType tmp{};
+      DerivativeValueType sum{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
-        tmp += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+        sum += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
       }
-      derivative[j] = tmp * normal_sum;
+      derivative[j] = sum * normal_sum;
     }
   }
 #endif

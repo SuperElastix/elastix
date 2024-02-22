@@ -131,12 +131,12 @@ public:
 #  pragma omp parallel for
       for (int j = 0; j < spaceDimension; ++j)
       {
-        DerivativeValueType tmp{};
+        DerivativeValueType sum{};
         for (ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i)
         {
-          tmp += this->m_ThreaderDerivatives[i][j];
+          sum += this->m_ThreaderDerivatives[i][j];
         }
-        derivative[j] = tmp * normal_sum;
+        derivative[j] = sum * normal_sum;
       }
     }
 #endif
@@ -167,12 +167,12 @@ public:
 
     for (unsigned int j = jmin; j < jmax; ++j)
     {
-      DerivativeValueType tmp{};
+      DerivativeValueType sum{};
       for (ThreadIdType i = 0; i < nrOfThreads; ++i)
       {
-        tmp += userData.st_Metric->m_ThreaderDerivatives[i][j];
+        sum += userData.st_Metric->m_ThreaderDerivatives[i][j];
       }
-      userData.st_DerivativePointer[j] = tmp / userData.st_NormalizationFactor;
+      userData.st_DerivativePointer[j] = sum / userData.st_NormalizationFactor;
     }
 
     return ITK_THREAD_RETURN_DEFAULT_VALUE;

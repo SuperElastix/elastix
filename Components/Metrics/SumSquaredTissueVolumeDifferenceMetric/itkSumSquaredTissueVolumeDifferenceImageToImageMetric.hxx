@@ -672,12 +672,12 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
 #  pragma omp parallel for
     for (int j = 0; j < spaceDimension; ++j)
     {
-      DerivativeValueType tmp{};
+      DerivativeValueType sum{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
-        tmp += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+        sum += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
       }
-      derivative[j] = tmp / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+      derivative[j] = sum / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
     }
   }
 #endif
