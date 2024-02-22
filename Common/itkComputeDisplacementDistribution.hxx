@@ -303,8 +303,10 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeThreaderCallbac
 {
   /** Get the current thread id and user data. */
   assert(arg);
-  const auto &                 infoStruct = *static_cast<ThreadInfoType *>(arg);
-  ThreadIdType                 threadID = infoStruct.WorkUnitID;
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadID = infoStruct.WorkUnitID;
+
+  assert(infoStruct.UserData);
   MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   /** Call the real implementation. */
