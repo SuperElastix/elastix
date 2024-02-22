@@ -620,14 +620,14 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
   }
   else // multi-threaded
   {
-    MultiThreaderAccumulateDerivativeType temp;
+    MultiThreaderAccumulateDerivativeType userData;
 
-    temp.st_Metric = const_cast<Self *>(this);
-    temp.st_Coefficient1 = tmp1;
-    temp.st_Coefficient2 = tmp2;
-    temp.st_DerivativePointer = derivative.begin();
+    userData.st_Metric = const_cast<Self *>(this);
+    userData.st_Coefficient1 = tmp1;
+    userData.st_Coefficient2 = tmp2;
+    userData.st_DerivativePointer = derivative.begin();
 
-    this->m_Threader->SetSingleMethod(AccumulateDerivativesThreaderCallback, &temp);
+    this->m_Threader->SetSingleMethod(AccumulateDerivativesThreaderCallback, &userData);
     this->m_Threader->SingleMethodExecute();
   }
 
