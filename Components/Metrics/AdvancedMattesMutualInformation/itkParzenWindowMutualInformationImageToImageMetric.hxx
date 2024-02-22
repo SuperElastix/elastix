@@ -609,11 +609,12 @@ ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeDerivativeLowMemoryThreaderCallback(
   void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadId = infoStruct->WorkUnitID;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadId = infoStruct.WorkUnitID;
 
   ParzenWindowMutualInformationMultiThreaderParameterType * temp =
-    static_cast<ParzenWindowMutualInformationMultiThreaderParameterType *>(infoStruct->UserData);
+    static_cast<ParzenWindowMutualInformationMultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->m_Metric->ThreadedComputeDerivativeLowMemory(threadId);
 

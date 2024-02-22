@@ -302,9 +302,10 @@ ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeThreaderCallback(void * arg)
 {
   /** Get the current thread id and user data. */
-  ThreadInfoType *             infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType                 threadID = infoStruct->WorkUnitID;
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
+  assert(arg);
+  const auto &                 infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType                 threadID = infoStruct.WorkUnitID;
+  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   /** Call the real implementation. */
   temp->st_Self->ThreadedCompute(threadID);

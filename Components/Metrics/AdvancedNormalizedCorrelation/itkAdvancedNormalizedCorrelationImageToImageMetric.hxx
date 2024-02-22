@@ -767,12 +767,13 @@ ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThreaderCallback(
   void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadId = infoStruct->WorkUnitID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadId = infoStruct.WorkUnitID;
+  ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
   MultiThreaderAccumulateDerivativeType * temp =
-    static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct->UserData);
+    static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
 
   const AccumulateType sf_N = temp->st_sf_N;
   const AccumulateType sm_N = temp->st_sm_N;

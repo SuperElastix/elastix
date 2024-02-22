@@ -150,11 +150,12 @@ public:
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   AccumulateDerivativesThreaderCallback(void * arg)
   {
-    ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-    ThreadIdType     threadID = infoStruct->WorkUnitID;
-    ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
+    assert(arg);
+    const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+    ThreadIdType threadID = infoStruct.WorkUnitID;
+    ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
-    MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
+    MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
     const unsigned int numPar = temp->st_Metric->m_NumberOfParameters;
     const unsigned int subSize =

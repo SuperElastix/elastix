@@ -642,12 +642,13 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThreaderCallback(void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadId = infoStruct->WorkUnitID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadId = infoStruct.WorkUnitID;
+  ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
   MultiThreaderAccumulateDerivativeType * temp =
-    static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct->UserData);
+    static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
 
   const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize =
