@@ -649,7 +649,10 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
   assert(infoStruct.UserData);
   const auto & userData = *static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
 
-  const unsigned int numPar = userData.st_Metric->GetNumberOfParameters();
+  assert(userData.st_Metric);
+  Self & metric = *(userData.st_Metric);
+
+  const unsigned int numPar = metric.GetNumberOfParameters();
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadId * subSize;
@@ -660,7 +663,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
     DerivativeValueType sum1{};
     DerivativeValueType sum2{};
 
-    for (auto & perThreadVariable : userData.st_Metric->m_KappaGetValueAndDerivativePerThreadVariables)
+    for (auto & perThreadVariable : metric.m_KappaGetValueAndDerivativePerThreadVariables)
     {
       sum1 += perThreadVariable.st_DerivativeSum1[j];
       sum2 += perThreadVariable.st_DerivativeSum2[j];
