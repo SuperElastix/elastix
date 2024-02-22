@@ -65,12 +65,11 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeT
   m_KappaGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  const SizeValueType zero1{};
   for (auto & perThreadVariable : m_KappaGetValueAndDerivativePerThreadVariables)
   {
-    perThreadVariable.st_NumberOfPixelsCounted = zero1;
-    perThreadVariable.st_AreaSum = zero1;
-    perThreadVariable.st_AreaIntersection = zero1;
+    perThreadVariable.st_NumberOfPixelsCounted = 0;
+    perThreadVariable.st_AreaSum = 0;
+    perThreadVariable.st_AreaIntersection = 0;
     perThreadVariable.st_DerivativeSum1.SetSize(this->GetNumberOfParameters());
     perThreadVariable.st_DerivativeSum2.SetSize(this->GetNumberOfParameters());
     perThreadVariable.st_DerivativeSum1.Fill(0.0);
