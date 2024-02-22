@@ -30,6 +30,8 @@
 #  include <Eigen/Core>
 #endif
 
+#include <algorithm> // For min.
+
 namespace itk
 {
 
@@ -331,8 +333,7 @@ StochasticGradientDescentOptimizer::ThreadedAdvanceOneStep(ThreadIdType threadId
   const unsigned int subSize = static_cast<unsigned int>(
     std::ceil(static_cast<double>(spaceDimension) / static_cast<double>(this->m_Threader->GetNumberOfWorkUnits())));
   const unsigned int jmin = threadId * subSize;
-  unsigned int       jmax = (threadId + 1) * subSize;
-  jmax = (jmax > spaceDimension) ? spaceDimension : jmax;
+  const unsigned int jmax = std::min((threadId + 1) * subSize, spaceDimension);
 
   /** Get a reference to the current position. */
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();

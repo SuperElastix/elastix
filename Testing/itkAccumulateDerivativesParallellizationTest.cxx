@@ -162,8 +162,7 @@ public:
     const unsigned int subSize =
       static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
     const unsigned int jmin = threadID * subSize;
-    unsigned int       jmax = (threadID + 1) * subSize;
-    jmax = (jmax > numPar) ? numPar : jmax;
+    const unsigned int jmax = std::min((threadID + 1) * subSize, numPar);
 
     for (unsigned int j = jmin; j < jmax; ++j)
     {

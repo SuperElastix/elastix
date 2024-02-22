@@ -24,6 +24,8 @@
 #  include <omp.h>
 #endif
 
+#include <algorithm> // For min.
+
 namespace itk
 {
 
@@ -782,8 +784,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadId * subSize;
-  unsigned int       jmax = (threadId + 1) * subSize;
-  jmax = (jmax > numPar) ? numPar : jmax;
+  const unsigned int jmax = std::min((threadId + 1) * subSize, numPar);
 
   for (unsigned int j = jmin; j < jmax; ++j)
   {
