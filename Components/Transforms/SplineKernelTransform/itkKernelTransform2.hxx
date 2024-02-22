@@ -848,13 +848,13 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
 
       for (unsigned long lidx = 0; lidx < numberOfLandmarks * NDimensions; ++lidx)
       {
-        ScalarType tmp = 0.0;
+        ScalarType sum = 0.0;
         for (unsigned int dim = 0; dim < NDimensions; ++dim)
         {
           unsigned int indtmp = (numberOfLandmarks + dim) * NDimensions + odim;
-          tmp += p[dim] * this->m_LMatrixInverse[indtmp][lidx];
+          sum += p[dim] * this->m_LMatrixInverse[indtmp][lidx];
         }
-        jac[odim][lidx] += tmp + this->m_LMatrixInverse[index][lidx];
+        jac[odim][lidx] += sum + this->m_LMatrixInverse[index][lidx];
       }
     }
   } // end if this->m_FastComputationPossible

@@ -840,15 +840,15 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   const DerivativeValueType normalization = 1.0 / userData.st_NormalizationFactor;
   for (unsigned int j = jmin; j < jmax; ++j)
   {
-    DerivativeValueType tmp{};
+    DerivativeValueType sum{};
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
     {
-      tmp += userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+      sum += userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
 
       /** Reset this variable for the next iteration. */
       userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j] = 0.0;
     }
-    userData.st_DerivativePointer[j] = tmp * normalization;
+    userData.st_DerivativePointer[j] = sum * normalization;
   }
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;

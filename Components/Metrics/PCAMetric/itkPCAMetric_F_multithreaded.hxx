@@ -956,13 +956,13 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivative(ThreadIdType thr
       /** build metric derivative components */
       for (unsigned int p = 0; p < nzjis.size(); ++p)
       {
-        DerivativeValueType tmp = 0.0;
+        DerivativeValueType sum = 0.0;
         for (unsigned int z = 0; z < this->m_NumEigenValues; ++z)
         {
-          tmp += this->m_vSAtmm[z][pixelIndex] * imageJacobian[p] * this->m_Sv[d][z] +
+          sum += this->m_vSAtmm[z][pixelIndex] * imageJacobian[p] * this->m_Sv[d][z] +
                  this->m_vdSdmu_part1[z][d] * this->m_Atmm[d][pixelIndex] * imageJacobian[p] * this->m_CSv[d][z];
         } // end loop over eigenvalues
-        derivative[nzjis[p]] += tmp;
+        derivative[nzjis[p]] += sum;
       } // end loop over non-zero jacobian indices
 
     } // end loop over last dimension
