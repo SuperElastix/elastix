@@ -309,7 +309,7 @@ StochasticGradientDescentOptimizer::AdvanceOneStepThreaderCallback(void * arg)
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   /** Call the real implementation. */
   temp->t_Optimizer->ThreadedAdvanceOneStep(threadID, *(temp->t_NewPosition));

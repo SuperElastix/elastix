@@ -240,7 +240,7 @@ AdvancedImageMomentsCalculator<TImage>::ComputeThreaderCallback(void * arg)
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   /** Call the real implementation. */
   temp->st_Self->ThreadedCompute(threadID);
