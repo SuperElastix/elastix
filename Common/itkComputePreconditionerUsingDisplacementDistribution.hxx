@@ -29,7 +29,8 @@
 #include "itkZeroFluxNeumannPadImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 
-#include <cmath> // For abs.
+#include <algorithm> // For min and max.
+#include <cmath>     // For abs.
 
 
 namespace itk
@@ -545,10 +546,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
     minEigenvalue = maxEigenvalue / this->m_ConditionNumber;
     for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
-      if (preconditioner[i] > this->m_MaximumStepLength / minEigenvalue)
-      {
-        preconditioner[i] = this->m_MaximumStepLength / minEigenvalue;
-      }
+      preconditioner[i] = std::min(preconditioner[i], this->m_MaximumStepLength / minEigenvalue);
     }
   } // end condition number check.
 
@@ -645,10 +643,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
     minEigenvalue = maxEigenvalue / this->m_ConditionNumber;
     for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
-      if (preconditioner[i] > 1.0 / minEigenvalue)
-      {
-        preconditioner[i] = 1.0 / minEigenvalue;
-      }
+      preconditioner[i] = std::min(preconditioner[i], 1.0 / minEigenvalue);
     }
   }
 
