@@ -866,10 +866,11 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_TYPE
 PCAMetric<TFixedImage, TMovingImage>::GetSamplesThreaderCallback(void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadId = infoStruct->WorkUnitID;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadId = infoStruct.WorkUnitID;
 
-  PCAMetricMultiThreaderParameterType * temp = static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct->UserData);
+  PCAMetricMultiThreaderParameterType * temp = static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->m_Metric->ThreadedGetSamples(threadId);
 
@@ -1068,10 +1069,11 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_TYPE
 PCAMetric<TFixedImage, TMovingImage>::ComputeDerivativeThreaderCallback(void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadId = infoStruct->WorkUnitID;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadId = infoStruct.WorkUnitID;
 
-  PCAMetricMultiThreaderParameterType * temp = static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct->UserData);
+  PCAMetricMultiThreaderParameterType * temp = static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->m_Metric->ThreadedComputeDerivative(threadId);
 

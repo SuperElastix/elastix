@@ -305,9 +305,10 @@ ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 StochasticVarianceReducedGradientDescentOptimizer::AdvanceOneStepThreaderCallback(void * arg)
 {
   /** Get the current thread id and user data. */
-  ThreadInfoType *             infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType                 threadID = infoStruct->WorkUnitID;
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
+  assert(arg);
+  const auto &                 infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType                 threadID = infoStruct.WorkUnitID;
+  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   /** Call the real implementation. */
   temp->t_Optimizer->ThreadedAdvanceOneStep(threadID, *(temp->t_NewPosition));

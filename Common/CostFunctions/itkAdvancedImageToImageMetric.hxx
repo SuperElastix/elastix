@@ -739,10 +739,11 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_TYPE
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadID = infoStruct->WorkUnitID;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadID = infoStruct.WorkUnitID;
 
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
+  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->st_Metric->ThreadedGetValue(threadID);
 
@@ -777,10 +778,11 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThreaderCallback(void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadID = infoStruct->WorkUnitID;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadID = infoStruct.WorkUnitID;
 
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
+  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->st_Metric->ThreadedGetValueAndDerivative(threadID);
 
@@ -815,11 +817,12 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThreaderCallback(void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadID = infoStruct->WorkUnitID;
-  ThreadIdType     nrOfThreads = infoStruct->NumberOfWorkUnits;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadID = infoStruct.WorkUnitID;
+  ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct->UserData);
+  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize =

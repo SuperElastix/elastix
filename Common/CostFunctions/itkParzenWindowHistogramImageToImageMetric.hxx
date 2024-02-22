@@ -1247,11 +1247,12 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsThreaderCallback(void * arg)
 {
-  ThreadInfoType * infoStruct = static_cast<ThreadInfoType *>(arg);
-  ThreadIdType     threadId = infoStruct->WorkUnitID;
+  assert(arg);
+  const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
+  ThreadIdType threadId = infoStruct.WorkUnitID;
 
   ParzenWindowHistogramMultiThreaderParameterType * temp =
-    static_cast<ParzenWindowHistogramMultiThreaderParameterType *>(infoStruct->UserData);
+    static_cast<ParzenWindowHistogramMultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->m_Metric->ThreadedComputePDFs(threadId);
 
