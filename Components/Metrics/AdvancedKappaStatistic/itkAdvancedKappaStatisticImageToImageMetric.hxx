@@ -65,8 +65,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeT
   m_KappaGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  const SizeValueType       zero1{};
-  const DerivativeValueType zero2{};
+  const SizeValueType zero1{};
   for (auto & perThreadVariable : m_KappaGetValueAndDerivativePerThreadVariables)
   {
     perThreadVariable.st_NumberOfPixelsCounted = zero1;
@@ -74,8 +73,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeT
     perThreadVariable.st_AreaIntersection = zero1;
     perThreadVariable.st_DerivativeSum1.SetSize(this->GetNumberOfParameters());
     perThreadVariable.st_DerivativeSum2.SetSize(this->GetNumberOfParameters());
-    perThreadVariable.st_DerivativeSum1.Fill(zero2);
-    perThreadVariable.st_DerivativeSum2.Fill(zero2);
+    perThreadVariable.st_DerivativeSum1.Fill(0.0);
+    perThreadVariable.st_DerivativeSum2.Fill(0.0);
   }
 
 } // end InitializeThreadingParameters()
@@ -657,19 +656,19 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
   unsigned int jmax = (threadId + 1) * subSize;
   jmax = (jmax > numPar) ? numPar : jmax;
 
-  const DerivativeValueType zero{};
-  DerivativeValueType       sum1, sum2;
   for (unsigned int j = jmin; j < jmax; ++j)
   {
-    sum1 = sum2 = zero;
+    DerivativeValueType sum1{};
+    DerivativeValueType sum2{};
+
     for (auto & perThreadVariable : userData.st_Metric->m_KappaGetValueAndDerivativePerThreadVariables)
     {
       sum1 += perThreadVariable.st_DerivativeSum1[j];
       sum2 += perThreadVariable.st_DerivativeSum2[j];
 
       /** Reset these variables for the next iteration. */
-      perThreadVariable.st_DerivativeSum1[j] = zero;
-      perThreadVariable.st_DerivativeSum2[j] = zero;
+      perThreadVariable.st_DerivativeSum1[j] = 0.0;
+      perThreadVariable.st_DerivativeSum2[j] = 0.0;
     }
     userData.st_DerivativePointer[j] = userData.st_Coefficient1 * sum1 - userData.st_Coefficient2 * sum2;
   }

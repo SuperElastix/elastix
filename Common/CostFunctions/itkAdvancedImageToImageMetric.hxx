@@ -837,17 +837,16 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   /** This thread accumulates all sub-derivatives into a single one, for the
    * range [ jmin, jmax [. Additionally, the sub-derivatives are reset.
    */
-  const DerivativeValueType zero{};
   const DerivativeValueType normalization = 1.0 / userData.st_NormalizationFactor;
   for (unsigned int j = jmin; j < jmax; ++j)
   {
-    DerivativeValueType tmp = zero;
+    DerivativeValueType tmp{};
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
     {
       tmp += userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
 
       /** Reset this variable for the next iteration. */
-      userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j] = zero;
+      userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j] = 0.0;
     }
     userData.st_DerivativePointer[j] = tmp * normalization;
   }
