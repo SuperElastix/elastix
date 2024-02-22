@@ -158,7 +158,10 @@ public:
     assert(infoStruct.UserData);
     const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-    const unsigned int numPar = userData.st_Metric->m_NumberOfParameters;
+    assert(userData.st_Metric);
+    Self & metric = *(userData.st_Metric);
+
+    const unsigned int numPar = metric.m_NumberOfParameters;
     const unsigned int subSize =
       static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
     const unsigned int jmin = threadID * subSize;
@@ -169,7 +172,7 @@ public:
       DerivativeValueType sum{};
       for (ThreadIdType i = 0; i < nrOfThreads; ++i)
       {
-        sum += userData.st_Metric->m_ThreaderDerivatives[i][j];
+        sum += metric.m_ThreaderDerivatives[i][j];
       }
       userData.st_DerivativePointer[j] = sum / userData.st_NormalizationFactor;
     }

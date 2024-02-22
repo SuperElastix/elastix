@@ -774,13 +774,16 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   assert(infoStruct.UserData);
   const auto & userData = *static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
 
+  assert(userData.st_Metric);
+  Self & metric = *(userData.st_Metric);
+
   const AccumulateType sf_N = userData.st_sf_N;
   const AccumulateType sm_N = userData.st_sm_N;
   const AccumulateType sfm_smm = userData.st_sfm_smm;
   const RealType       invertedDenominator = userData.st_InvertedDenominator;
-  const bool           subtractMean = userData.st_Metric->m_SubtractMean;
+  const bool           subtractMean = metric.m_SubtractMean;
 
-  const unsigned int numPar = userData.st_Metric->GetNumberOfParameters();
+  const unsigned int numPar = metric.GetNumberOfParameters();
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadId * subSize;
@@ -794,14 +797,14 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
 
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
     {
-      derivativeF += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j];
-      derivativeM += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j];
-      differential += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j];
+      derivativeF += metric.m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j];
+      derivativeM += metric.m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j];
+      differential += metric.m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j];
 
       /** Reset these variables for the next iteration. */
-      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j] = 0.0;
-      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j] = 0.0;
-      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j] = 0.0;
+      metric.m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j] = 0.0;
+      metric.m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j] = 0.0;
+      metric.m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j] = 0.0;
     }
 
     if (subtractMean)

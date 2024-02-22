@@ -748,7 +748,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(
   assert(infoStruct.UserData);
   const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-  userData.st_Metric->ThreadedGetValue(threadID);
+  assert(userData.st_Metric);
+  Self & metric = *(userData.st_Metric);
+
+  metric.ThreadedGetValue(threadID);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -788,7 +791,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThre
   assert(infoStruct.UserData);
   const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-  userData.st_Metric->ThreadedGetValueAndDerivative(threadID);
+  assert(userData.st_Metric);
+  Self & metric = *(userData.st_Metric);
+
+  metric.ThreadedGetValueAndDerivative(threadID);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -829,7 +835,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   assert(infoStruct.UserData);
   const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-  const unsigned int numPar = userData.st_Metric->GetNumberOfParameters();
+  assert(userData.st_Metric);
+  Self & metric = *(userData.st_Metric);
+
+  const unsigned int numPar = metric.GetNumberOfParameters();
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadID * subSize;
@@ -844,10 +853,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
     DerivativeValueType sum{};
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
     {
-      sum += userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+      sum += metric.m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
 
       /** Reset this variable for the next iteration. */
-      userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j] = 0.0;
+      metric.m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j] = 0.0;
     }
     userData.st_DerivativePointer[j] = sum * normalization;
   }
