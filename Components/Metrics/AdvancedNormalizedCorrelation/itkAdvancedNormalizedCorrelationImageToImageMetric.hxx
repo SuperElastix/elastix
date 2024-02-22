@@ -65,16 +65,15 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   m_CorrelationGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
 
   /** Some initialization. */
-  const AccumulateType zero1{};
-  const auto           numberOfParameters = this->GetNumberOfParameters();
+  const auto numberOfParameters = this->GetNumberOfParameters();
   for (auto & perThreadVariable : m_CorrelationGetValueAndDerivativePerThreadVariables)
   {
     perThreadVariable.st_NumberOfPixelsCounted = SizeValueType{};
-    perThreadVariable.st_Sff = zero1;
-    perThreadVariable.st_Smm = zero1;
-    perThreadVariable.st_Sfm = zero1;
-    perThreadVariable.st_Sf = zero1;
-    perThreadVariable.st_Sm = zero1;
+    perThreadVariable.st_Sff = 0.0;
+    perThreadVariable.st_Smm = 0.0;
+    perThreadVariable.st_Sfm = 0.0;
+    perThreadVariable.st_Sf = 0.0;
+    perThreadVariable.st_Sm = 0.0;
     perThreadVariable.st_DerivativeF.SetSize(numberOfParameters);
     perThreadVariable.st_DerivativeM.SetSize(numberOfParameters);
     perThreadVariable.st_Differential.SetSize(this->GetNumberOfParameters());
@@ -623,12 +622,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
-  const AccumulateType zero{};
-  AccumulateType       sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sff;
-  AccumulateType       smm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Smm;
-  AccumulateType       sfm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sfm;
-  AccumulateType       sf = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sf;
-  AccumulateType       sm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sm;
+  AccumulateType sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sff;
+  AccumulateType smm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Smm;
+  AccumulateType sfm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sfm;
+  AccumulateType sf = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sf;
+  AccumulateType sm = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sm;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
     sff += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sff;
@@ -638,11 +636,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
     sm += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sm;
 
     /** Reset these variables for the next iteration. */
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sff = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Smm = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sfm = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sf = zero;
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sm = zero;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sff = 0.0;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Smm = 0.0;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sfm = 0.0;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sf = 0.0;
+    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sm = 0.0;
   }
 
   /** If SubtractMean, then subtract things from sff, smm and sfm. */
