@@ -773,15 +773,15 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
 
-  const AccumulateType sf_N = temp->st_sf_N;
-  const AccumulateType sm_N = temp->st_sm_N;
-  const AccumulateType sfm_smm = temp->st_sfm_smm;
-  const RealType       invertedDenominator = temp->st_InvertedDenominator;
-  const bool           subtractMean = temp->st_Metric->m_SubtractMean;
+  const AccumulateType sf_N = userData.st_sf_N;
+  const AccumulateType sm_N = userData.st_sm_N;
+  const AccumulateType sfm_smm = userData.st_sfm_smm;
+  const RealType       invertedDenominator = userData.st_InvertedDenominator;
+  const bool           subtractMean = userData.st_Metric->m_SubtractMean;
 
-  const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
+  const unsigned int numPar = userData.st_Metric->GetNumberOfParameters();
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   unsigned int jmin = threadId * subSize;
@@ -795,14 +795,14 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
     derivativeF = derivativeM = differential = zero;
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
     {
-      derivativeF += temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j];
-      derivativeM += temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j];
-      differential += temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j];
+      derivativeF += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j];
+      derivativeM += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j];
+      differential += userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j];
 
       /** Reset these variables for the next iteration. */
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j] = zero;
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j] = zero;
-      temp->st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j] = zero;
+      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j] = zero;
+      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j] = zero;
+      userData.st_Metric->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j] = zero;
     }
 
     if (subtractMean)
@@ -811,7 +811,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
       derivativeM -= sm_N * differential;
     }
 
-    temp->st_DerivativePointer[j] = (derivativeF - sfm_smm * derivativeM) * invertedDenominator;
+    userData.st_DerivativePointer[j] = (derivativeF - sfm_smm * derivativeM) * invertedDenominator;
   }
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;

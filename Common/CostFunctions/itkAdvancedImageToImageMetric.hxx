@@ -744,9 +744,9 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-  temp->st_Metric->ThreadedGetValue(threadID);
+  userData.st_Metric->ThreadedGetValue(threadID);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -784,9 +784,9 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThre
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-  temp->st_Metric->ThreadedGetValueAndDerivative(threadID);
+  userData.st_Metric->ThreadedGetValueAndDerivative(threadID);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -825,9 +825,9 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
   assert(infoStruct.UserData);
-  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
-  const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
+  const unsigned int numPar = userData.st_Metric->GetNumberOfParameters();
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadID * subSize;
@@ -838,18 +838,18 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
    * range [ jmin, jmax [. Additionally, the sub-derivatives are reset.
    */
   const DerivativeValueType zero{};
-  const DerivativeValueType normalization = 1.0 / temp->st_NormalizationFactor;
+  const DerivativeValueType normalization = 1.0 / userData.st_NormalizationFactor;
   for (unsigned int j = jmin; j < jmax; ++j)
   {
     DerivativeValueType tmp = zero;
     for (ThreadIdType i = 0; i < nrOfThreads; ++i)
     {
-      tmp += temp->st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+      tmp += userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
 
       /** Reset this variable for the next iteration. */
-      temp->st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j] = zero;
+      userData.st_Metric->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j] = zero;
     }
-    temp->st_DerivativePointer[j] = tmp * normalization;
+    userData.st_DerivativePointer[j] = tmp * normalization;
   }
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
