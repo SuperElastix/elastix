@@ -773,8 +773,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
   assert(infoStruct.UserData);
-  MultiThreaderAccumulateDerivativeType * temp =
-    static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
+  auto temp = static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
 
   const AccumulateType sf_N = temp->st_sf_N;
   const AccumulateType sm_N = temp->st_sm_N;

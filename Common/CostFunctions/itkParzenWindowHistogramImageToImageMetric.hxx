@@ -1252,8 +1252,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsT
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  ParzenWindowHistogramMultiThreaderParameterType * temp =
-    static_cast<ParzenWindowHistogramMultiThreaderParameterType *>(infoStruct.UserData);
+  auto temp = static_cast<ParzenWindowHistogramMultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->m_Metric->ThreadedComputePDFs(threadId);
 

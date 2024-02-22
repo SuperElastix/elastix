@@ -744,7 +744,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->st_Metric->ThreadedGetValue(threadID);
 
@@ -784,7 +784,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThre
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   temp->st_Metric->ThreadedGetValueAndDerivative(threadID);
 
@@ -825,7 +825,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
   assert(infoStruct.UserData);
-  MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  auto temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize =

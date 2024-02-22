@@ -648,8 +648,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
   ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
   assert(infoStruct.UserData);
-  MultiThreaderAccumulateDerivativeType * temp =
-    static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
+  auto temp = static_cast<MultiThreaderAccumulateDerivativeType *>(infoStruct.UserData);
 
   const unsigned int numPar = temp->st_Metric->GetNumberOfParameters();
   const unsigned int subSize =
