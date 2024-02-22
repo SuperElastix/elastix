@@ -18,6 +18,9 @@
 
 // First include the header file to be tested:
 #include "AdvancedMeanSquares/itkAdvancedMeanSquaresImageToImageMetric.h"
+#include <itkNearestNeighborInterpolateImageFunction.h>
+#include "itkAdvancedTranslationTransform.h"
+#include "itkImageFullSampler.h"
 #include "GTesting/elxCoreMainGTestUtilities.h"
 #include "elxDefaultConstruct.h"
 #include <itkImage.h>
@@ -26,6 +29,25 @@
 // The template to be tested.
 using itk::AdvancedMeanSquaresImageToImageMetric;
 
+using elx::CoreMainGTestUtilities::CreateImage;
+using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
+using elx::CoreMainGTestUtilities::DerefSmartPointer;
+using elx::CoreMainGTestUtilities::minimumImageSizeValue;
+
+namespace
+{
+template <typename TImage, typename TRandomNumberEngine>
+void
+RandomizePixelValues(TImage & image, TRandomNumberEngine && randomNumberEngine)
+{
+  using PixelType = typename TImage::PixelType;
+  const itk::ImageBufferRange imageBufferRange(image);
+  const auto                  maxValue = imageBufferRange.size();
+  std::generate(imageBufferRange.begin(), imageBufferRange.end(), [&randomNumberEngine, maxValue] {
+    return static_cast<PixelType>(std::uniform_int_distribution<std::size_t>{ 0, maxValue }(randomNumberEngine));
+  });
+};
+} // namespace
 
 // Checks if a default-constructed AdvancedMeanSquaresImageToImageMetric has the expected properties.
 GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, DefaultConstruct)
@@ -100,4 +122,110 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, DefaultConstruct)
     // - GetNumberOfParameters(), as it crashes while m_Transform is null.
     // - GetThreaderTransform(), as it is non-const.
   }
+}
+
+
+// Tests that the metric yields a zero-filled result (value and derivative) when fixed and moving image are equal, and
+// an identity transform is used.
+GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, YieldsZeroWhenFixedAndMovingImageAreEqual)
+{
+  constexpr auto imageDimension = 3U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, imageDimension>;
+
+  const auto imageSize = itk::Size<imageDimension>::Filled(minimumImageSizeValue);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  RandomizePixelValues(*fixedImage, std::mt19937{});
+  RandomizePixelValues(*movingImage, std::mt19937{});
+
+  // Sanity check: after randomizing, the two images are still equal.
+  EXPECT_EQ(*fixedImage, *movingImage);
+
+  using MetricType = AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>;
+
+  elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, imageDimension>> transform{};
+  elx::DefaultConstruct<itk::NearestNeighborInterpolateImageFunction<ImageType>>   interpolator{};
+  elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                          imageSampler{};
+
+  elx::DefaultConstruct<MetricType> metric{};
+
+  metric.SetImageSampler(&imageSampler);
+  metric.SetMovingImage(movingImage);
+  metric.SetFixedImage(fixedImage);
+  metric.SetTransform(&transform);
+  metric.SetInterpolator(&interpolator);
+  metric.SetFixedImageRegion(fixedImage->GetBufferedRegion());
+  metric.Initialize();
+
+  double             value{ 1.0 };
+  itk::Array<double> derivative(transform.GetNumberOfParameters(), 1.0);
+
+  metric.GetValueAndDerivative(transform.GetParameters(), value, derivative);
+
+  // Both value and derivative are zero-filled by GetValueAndDerivative, even when they are initialized by 1.
+  EXPECT_EQ(value, 0.0);
+  EXPECT_EQ(derivative, itk::Array<double>(itk::SizeValueType{ imageDimension }, 0.0));
+}
+
+
+// Tests that metric.SetUseMultiThread(false) and metric.SetUseMultiThread(true) both yield the same result (value and
+// derivative).
+GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, MultiThreadResultEqualsSingleThreadResult)
+{
+  std::mt19937 randomNumberEngine{};
+
+  constexpr auto imageDimension = 3U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, imageDimension>;
+
+  const auto imageSize = itk::Size<imageDimension>::Filled(minimumImageSizeValue);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  // Sanity check 1: before randomizing, the two images are equal.
+  EXPECT_EQ(*fixedImage, *movingImage);
+
+  RandomizePixelValues(*fixedImage, randomNumberEngine);
+  RandomizePixelValues(*movingImage, randomNumberEngine);
+
+  // Sanity check 2: after randomizing, the two images are no longer equal (hopefully).
+  EXPECT_NE(*fixedImage, *movingImage);
+
+  elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, imageDimension>> transform{};
+  elx::DefaultConstruct<itk::NearestNeighborInterpolateImageFunction<ImageType>>   interpolator{};
+  elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                          imageSampler{};
+
+  struct Result
+  {
+    double             value;
+    itk::Array<double> derivative;
+  };
+
+  const auto getValueAndDerivative =
+    [&fixedImage, &movingImage, &transform, &interpolator, &imageSampler](const bool useMultiThread) {
+      using MetricType = AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>;
+
+      elx::DefaultConstruct<MetricType> metric{};
+
+      metric.SetUseMultiThread(useMultiThread);
+      metric.SetImageSampler(&imageSampler);
+      metric.SetMovingImage(movingImage);
+      metric.SetFixedImage(fixedImage);
+      metric.SetTransform(&transform);
+      metric.SetInterpolator(&interpolator);
+      metric.SetFixedImageRegion(fixedImage->GetBufferedRegion());
+      metric.Initialize();
+
+      Result result = { 0.0, itk::Array<double>(transform.GetNumberOfParameters(), 0.0) };
+      metric.GetValueAndDerivative(transform.GetParameters(), result.value, result.derivative);
+      return result;
+    };
+
+  const auto singleThreadResult = getValueAndDerivative(false);
+  const auto multiThreadResult = getValueAndDerivative(true);
+
+  EXPECT_EQ(multiThreadResult.value, singleThreadResult.value);
+  EXPECT_EQ(multiThreadResult.derivative, singleThreadResult.derivative);
 }
