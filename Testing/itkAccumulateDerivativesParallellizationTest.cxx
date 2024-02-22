@@ -155,6 +155,7 @@ public:
     ThreadIdType threadID = infoStruct.WorkUnitID;
     ThreadIdType nrOfThreads = infoStruct.NumberOfWorkUnits;
 
+    assert(infoStruct.UserData);
     MultiThreaderParameterType * temp = static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
     const unsigned int numPar = temp->st_Metric->m_NumberOfParameters;

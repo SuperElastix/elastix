@@ -613,6 +613,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
+  assert(infoStruct.UserData);
   ParzenWindowMutualInformationMultiThreaderParameterType * temp =
     static_cast<ParzenWindowMutualInformationMultiThreaderParameterType *>(infoStruct.UserData);
 
