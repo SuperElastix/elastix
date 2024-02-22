@@ -801,10 +801,9 @@ bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::AreSigmasAllZeros(
   const SigmaArrayType & sigmaArray) const
 {
-  const ScalarRealType zero{};
   for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
-    if (sigmaArray[dim] != zero)
+    if (sigmaArray[dim] != 0.0)
     {
       return false;
     }
