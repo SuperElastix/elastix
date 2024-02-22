@@ -781,8 +781,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   const unsigned int numPar = userData.st_Metric->GetNumberOfParameters();
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
-  unsigned int jmin = threadId * subSize;
-  unsigned int jmax = (threadId + 1) * subSize;
+  const unsigned int jmin = threadId * subSize;
+  unsigned int       jmax = (threadId + 1) * subSize;
   jmax = (jmax > numPar) ? numPar : jmax;
 
   for (unsigned int j = jmin; j < jmax; ++j)
