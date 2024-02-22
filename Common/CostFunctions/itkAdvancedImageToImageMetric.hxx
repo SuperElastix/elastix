@@ -27,6 +27,8 @@
 #  include <omp.h>
 #endif
 
+#include <algorithm> // For min.
+
 namespace itk
 {
 
@@ -831,8 +833,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   const unsigned int subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadID * subSize;
-  unsigned int       jmax = (threadID + 1) * subSize;
-  jmax = (jmax > numPar) ? numPar : jmax;
+  const unsigned int jmax = std::min((threadID + 1) * subSize, numPar);
 
   /** This thread accumulates all sub-derivatives into a single one, for the
    * range [ jmin, jmax [. Additionally, the sub-derivatives are reset.
