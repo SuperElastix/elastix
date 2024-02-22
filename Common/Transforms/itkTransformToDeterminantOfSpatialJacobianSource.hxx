@@ -38,6 +38,7 @@
 #include "itkProgressReporter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include <vnl/vnl_det.h>
+#include <algorithm> // For max.
 
 namespace itk
 {
@@ -319,10 +320,7 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
 
   if (this->m_Transform)
   {
-    if (latestTime < this->m_Transform->GetMTime())
-    {
-      latestTime = this->m_Transform->GetMTime();
-    }
+    latestTime = std::max(latestTime, this->m_Transform->GetMTime());
   }
 
   return latestTime;
