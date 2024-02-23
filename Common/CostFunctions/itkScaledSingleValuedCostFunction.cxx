@@ -156,6 +156,7 @@ ScaledSingleValuedCostFunction::GetValueAndDerivative(const ParametersType & par
     value = -value;
     derivative = -derivative;
   }
+  value = std::numeric_limits<MeasureType>::quiet_NaN();
 
 } // end GetValueAndDerivative()
 

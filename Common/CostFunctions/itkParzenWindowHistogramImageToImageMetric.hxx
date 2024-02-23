@@ -503,6 +503,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndD
   {
     this->GetValueAndAnalyticDerivative(parameters, value, derivative);
   }
+  value = std::numeric_limits<MeasureType>::quiet_NaN();
+
 } // end GetValueAndDerivative()
 
 

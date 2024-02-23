@@ -508,7 +508,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   /** Option for now to still use the single threaded code. */
   if (!this->m_UseMultiThread)
   {
-    return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
+    this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
+    value = std::numeric_limits<MeasureType>::quiet_NaN();
+    return;
   }
 
   /** Call non-thread-safe stuff, such as:
@@ -531,6 +533,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
 
   /** Gather the metric values and derivatives from all threads. */
   this->AfterThreadedGetValueAndDerivative(value, derivative);
+  value = std::numeric_limits<MeasureType>::quiet_NaN();
 
 } // end GetValueAndDerivative()
 
