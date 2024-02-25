@@ -234,7 +234,7 @@ protected:
 
   /** Get value and derivatives for each thread. */
   void
-  ThreadedGetValueAndDerivative(ThreadIdType threadId) override;
+  ThreadedGetValueAndDerivative(ThreadIdType threadId) const override;
 
   /** Gather the values and derivatives from all threads */
   void

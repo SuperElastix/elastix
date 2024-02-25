@@ -486,7 +486,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 template <class TFixedImage, class TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValueAndDerivative(
-  ThreadIdType threadId)
+  ThreadIdType threadId) const
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
