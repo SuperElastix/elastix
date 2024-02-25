@@ -428,7 +428,7 @@ protected:
 
   /** Multi-threaded version of GetValueAndDerivative(). */
   virtual void
-  ThreadedGetValueAndDerivative(ThreadIdType threadID)
+  ThreadedGetValueAndDerivative(ThreadIdType threadID) const
   {}
 
   /** Finalize multi-threaded metric computation. */

@@ -792,7 +792,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThre
   const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
 
   assert(userData.st_Metric);
-  Self & metric = *(userData.st_Metric);
+  const Self & metric = *(userData.st_Metric);
 
   metric.ThreadedGetValueAndDerivative(threadID);
 

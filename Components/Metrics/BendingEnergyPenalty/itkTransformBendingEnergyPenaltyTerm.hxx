@@ -373,7 +373,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
 
 template <class TFixedImage, class TScalarType>
 void
-TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAndDerivative(ThreadIdType threadId)
+TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAndDerivative(ThreadIdType threadId) const
 {
   /** Create and initialize some variables. */
   SpatialHessianType           spatialHessian;

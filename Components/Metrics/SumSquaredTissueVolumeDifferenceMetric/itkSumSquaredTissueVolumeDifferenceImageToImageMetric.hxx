@@ -489,7 +489,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 template <class TFixedImage, class TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValueAndDerivative(
-  ThreadIdType threadId)
+  ThreadIdType threadId) const
 {
   /*Create variables to store intermediate results. Circumvent false sharing*/
   unsigned long    numberOfPixelsCounted = 0;

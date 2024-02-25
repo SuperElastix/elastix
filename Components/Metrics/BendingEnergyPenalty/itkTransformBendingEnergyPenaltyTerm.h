@@ -146,7 +146,7 @@ public:
 
   /** Get value and derivatives for each thread. */
   void
-  ThreadedGetValueAndDerivative(ThreadIdType threadID) override;
+  ThreadedGetValueAndDerivative(ThreadIdType threadID) const override;
 
   /** Gather the values and derivatives from all threads */
   void
