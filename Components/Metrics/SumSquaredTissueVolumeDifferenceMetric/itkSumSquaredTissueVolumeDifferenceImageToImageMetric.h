@@ -226,7 +226,7 @@ protected:
 
   /** Get value for each thread. */
   void
-  ThreadedGetValue(ThreadIdType threadID) override;
+  ThreadedGetValue(ThreadIdType threadID) const override;
 
   /** Gather the values from all threads. */
   void
