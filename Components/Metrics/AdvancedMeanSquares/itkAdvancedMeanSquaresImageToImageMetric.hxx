@@ -456,13 +456,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
       /** Get the fixed image value. */
       const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
-#if 0
+#if 1 // TODO Niels #if 0
       /** Get the TransformJacobian dT/dmu. */
-      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+      Superclass::m_AdvancedTransform->GetJacobian(fixedPoint, jacobian, nzji);
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
-      this->EvaluateTransformJacobianInnerProduct(
-        jacobian, movingImageDerivative, imageJacobian );
+      this->Superclass::EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 #else
       /** Compute the inner product of the transform Jacobian and the moving image gradient. */
       this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
@@ -549,6 +548,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
   NonZeroJacobianIndicesType   nzji(nnzji);
   DerivativeType               imageJacobian(nnzji);
 
+  TransformJacobianType jacobian;
+
   /** Get a handle to the pre-allocated derivative for the current thread.
    * The initialization is performed at the beginning of each resolution in
    * InitializeThreadingParameters(), and at the end of each iteration in
@@ -606,13 +607,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
       /** Get the fixed image value. */
       const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
-#if 0
+#if 1 // TODO Niels #if 0
       /** Get the TransformJacobian dT/dmu. */
-      this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
+      Superclass::m_AdvancedTransform->GetJacobian(fixedPoint, jacobian, nzji);
 
       /** Compute the inner products (dM/dx)^T (dT/dmu). */
-      this->EvaluateTransformJacobianInnerProduct(
-        jacobian, movingImageDerivative, imageJacobian );
+      this->Superclass::EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 #else
       /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
       this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
