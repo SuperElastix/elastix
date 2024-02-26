@@ -410,7 +410,7 @@ protected:
 
   /** Multi-threaded version of GetValue(). */
   virtual void
-  ThreadedGetValue(ThreadIdType threadID)
+  ThreadedGetValue(ThreadIdType threadID) const
   {}
 
   /** Finalize multi-threaded metric computation. */
