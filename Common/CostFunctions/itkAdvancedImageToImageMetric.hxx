@@ -584,8 +584,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  using JacobianIteratorType = typename TransformJacobianType::const_iterator;
-
   /** Multiple the 1-by-dim vector movingImageDerivative with the
    * dim-by-length matrix jacobian, to get a 1-by-length vector imageJacobian.
    * An optimized route can be taken for B-spline transforms.
@@ -612,7 +610,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
   else
   {
     /** Otherwise perform a full multiplication. */
-    JacobianIteratorType jac = jacobian.begin();
+    typename TransformJacobianType::const_iterator jac = jacobian.begin();
     imageJacobian.Fill(0.0);
 
     for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)

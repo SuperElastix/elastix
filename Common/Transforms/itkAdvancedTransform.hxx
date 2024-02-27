@@ -56,8 +56,7 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
   this->GetJacobian(inputPoint, jacobian, nonZeroJacobianIndices);
 
   /** Perform a full multiplication. */
-  using JacobianIteratorType = typename JacobianType::const_iterator;
-  JacobianIteratorType jac = jacobian.begin();
+  typename JacobianType::const_iterator jac = jacobian.begin();
   imageJacobian.Fill(0.0);
 
   for (unsigned int dim = 0; dim < InputSpaceDimension; ++dim)
