@@ -411,7 +411,9 @@ protected:
   /** Multi-threaded version of GetValue(). */
   virtual void
   ThreadedGetValue(ThreadIdType threadID)
-  {}
+  {
+    itkExceptionMacro("Untested?");
+  }
 
   /** Finalize multi-threaded metric computation. */
   virtual void

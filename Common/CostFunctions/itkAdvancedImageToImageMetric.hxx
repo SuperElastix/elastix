@@ -741,6 +741,8 @@ template <class TFixedImage, class TMovingImage>
 ITK_THREAD_RETURN_TYPE
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(void * arg)
 {
+  itkGenericExceptionMacro("Untested?");
+
   assert(arg);
   const auto & infoStruct = *static_cast<ThreadInfoType *>(arg);
   ThreadIdType threadID = infoStruct.WorkUnitID;

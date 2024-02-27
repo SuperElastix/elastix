@@ -196,6 +196,8 @@ template <class TFixedImage, class TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValue(ThreadIdType threadId)
 {
+  itkExceptionMacro("Untested?");
+
   /*Create variables to store intermediate results. Circumvent false sharing*/
   unsigned long numberOfPixelsCounted = 0;
   MeasureType   measure{};

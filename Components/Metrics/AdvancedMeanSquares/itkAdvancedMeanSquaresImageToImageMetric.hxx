@@ -258,6 +258,7 @@ template <class TFixedImage, class TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValue(ThreadIdType threadId)
 {
+  itkExceptionMacro("Untested?");
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
   const unsigned long         sampleContainerSize = sampleContainer->Size();
