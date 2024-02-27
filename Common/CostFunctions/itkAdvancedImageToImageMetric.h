@@ -234,7 +234,7 @@ public:
 
   /** Set/Get the image sampler. */
   itkSetObjectMacro(ImageSampler, ImageSamplerType);
-  virtual ImageSamplerType *
+  ImageSamplerType *
   GetImageSampler() const
   {
     return this->m_ImageSampler.GetPointer();
@@ -308,7 +308,7 @@ public:
   GetSelfHessian(const TransformParametersType & parameters, HessianType & H) const;
 
   /** Set number of threads to use for computations. */
-  virtual void
+  void
   SetNumberOfWorkUnits(ThreadIdType numberOfThreads);
 
   /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
@@ -522,14 +522,14 @@ protected:
 
   /** Check if enough samples have been found to compute a reliable
    * estimate of the value/derivative; throws an exception if not. */
-  virtual void
+  void
   CheckNumberOfSamples(unsigned long wanted, unsigned long found) const;
 
   /** Methods for image derivative evaluation support **********/
 
   /** Initialize variables for image derivative computation; this
    * method is called by Initialize. */
-  virtual void
+  void
   CheckForBSplineInterpolator();
 
   /** Compute the image value (and possibly derivative) at a transformed point.
@@ -574,11 +574,11 @@ protected:
    * If so, we can speed up derivative calculations by only inspecting
    * the parameters in the support region of a point.
    */
-  virtual void
+  void
   CheckForAdvancedTransform();
 
   /** Check if the transform is a B-spline. Called by Initialize. */
-  virtual void
+  void
   CheckForBSplineTransform() const;
 
   /** Transform a point from FixedImage domain to MovingImage domain. */
@@ -591,7 +591,7 @@ protected:
    * The m_NonZeroJacobianIndices contains the indices that are nonzero.
    * The length of NonZeroJacobianIndices is set in the CheckForAdvancedTransform
    * function. */
-  virtual bool
+  bool
   EvaluateTransformJacobian(const FixedImagePointType &  fixedImagePoint,
                             TransformJacobianType &      jacobian,
                             NonZeroJacobianIndicesType & nzji) const;
@@ -602,7 +602,7 @@ protected:
 
   /** Initialize the {Fixed,Moving}[True]{Max,Min}[Limit] and the {Fixed,Moving}ImageLimiter
    * Only does something when Use{Fixed,Moving}Limiter is set to true; */
-  virtual void
+  void
   InitializeLimiters();
 
   /** Inheriting classes can specify whether they use the image limiter functionality
