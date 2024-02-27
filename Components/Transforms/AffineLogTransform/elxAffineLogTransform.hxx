@@ -65,8 +65,7 @@ AffineLogTransformElastix<TElastix>::ReadFromFile()
 {
   log::info("ReadFromFile");
   /** Variables. */
-  InputPointType centerOfRotationPoint;
-  centerOfRotationPoint.Fill(0.0);
+  InputPointType centerOfRotationPoint{};
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
@@ -229,8 +228,7 @@ AffineLogTransformElastix<TElastix>::InitializeTransform()
    */
   if (!automaticTransformInitialization)
   {
-    OutputVectorType noTranslation;
-    noTranslation.Fill(0.0);
+    OutputVectorType noTranslation{};
     this->m_AffineLogTransform->SetTranslation(noTranslation);
   }
 

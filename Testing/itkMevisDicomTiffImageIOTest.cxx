@@ -57,9 +57,8 @@ testMevis()
   SizeType      size;
   SpacingType   spacing;
   OriginType    origin;
-  DirectionType direction;
+  DirectionType direction{};
 
-  direction.Fill(0.0);
   for (unsigned int i = 0; i < Dimension; ++i)
   {
     size[i] = 20 + i;

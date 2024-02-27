@@ -91,8 +91,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
     m_AffineTransform->SetFixedParameters(Conversion::ToOptimizerParameters(*itkFixedParameterValues));
   }
 
-  InputPointType centerOfRotationPoint;
-  centerOfRotationPoint.Fill(0.0);
+  InputPointType centerOfRotationPoint{};
 
   /** Try first to read the CenterOfRotationPoint from the
    * transform parameter file, this is the new, and preferred
@@ -282,8 +281,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
    */
   if (!automaticTransformInitialization)
   {
-    OutputVectorType noTranslation;
-    noTranslation.Fill(0.0);
+    OutputVectorType noTranslation{};
     this->m_AffineTransform->SetTranslation(noTranslation);
   }
 

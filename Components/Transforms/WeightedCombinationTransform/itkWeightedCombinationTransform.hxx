@@ -84,8 +84,7 @@ auto
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
   const InputPointType & inputPoint) const -> OutputPointType
 {
-  OutputPointType opp;
-  opp.Fill(0.0);
+  OutputPointType                opp{};
   OutputPointType                tempopp;
   const TransformContainerType & tc = this->m_TransformContainer;
   const unsigned int             N = tc.size();
@@ -147,8 +146,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
   if (this->m_NormalizeWeights)
   {
     /** dT/dmu_i = ( T_i(x) - T(x) ) / ( \sum_i w_i ) */
-    OutputPointType opp;
-    opp.Fill(0.0);
+    OutputPointType opp{};
     for (unsigned int i = 0; i < N; ++i)
     {
       tempopp = tc[i]->TransformPoint(inputPoint);

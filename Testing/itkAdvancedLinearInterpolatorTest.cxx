@@ -75,8 +75,7 @@ TestInterpolators()
   region.SetSize(size);
 
   /** Make sure to test for non-identity direction cosines. */
-  DirectionType direction;
-  direction.Fill(0.0);
+  DirectionType direction{};
   if (Dimension == 2)
   {
     direction[0][1] = -1.0;

@@ -331,8 +331,7 @@ main(int argc, char * argv[])
     return 1;
   }
 
-  JacobianType jacobianITK;
-  jacobianITK.Fill(0.0);
+  JacobianType jacobianITK{};
   transformITK->ComputeJacobianWithRespectToParameters(inputPoint, jacobianITK);
   JacobianType jacobianElastix;
   jacobianElastix.SetSize(Dimension, nzji.size());

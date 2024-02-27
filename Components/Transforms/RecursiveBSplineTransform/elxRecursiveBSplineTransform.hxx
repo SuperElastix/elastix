@@ -348,8 +348,7 @@ RecursiveBSplineTransform<TElastix>::IncreaseScale()
   DirectionType currentGridDirection = this->m_BSplineTransform->GetGridDirection();
 
   /** The new required grid. */
-  OriginType requiredGridOrigin;
-  requiredGridOrigin.Fill(0.0);
+  OriginType  requiredGridOrigin{};
   SpacingType requiredGridSpacing;
   requiredGridSpacing.Fill(1.0);
   RegionType    requiredGridRegion;
