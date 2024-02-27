@@ -91,8 +91,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SplitR
   IndexType index2 = inRegion.GetIndex();
 
   SizeType size1 = inRegion.GetSize();
-  SizeType size2;
-  size2.Fill(0);
+  SizeType size2{};
 
   /** Get last dimension information. */
   const unsigned int lastDim = imageRegion.GetImageDimension() - 1;

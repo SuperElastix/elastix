@@ -120,8 +120,7 @@ main(int argc, char * argv[])
   // gridSize[ 0 ] = 44; gridSize[ 1 ] = 43; gridSize[ 2 ] = 35;
   // gridSize[ 0 ] = 68; gridSize[ 1 ] = 69; gridSize[ 2 ] = 64;
 
-  IndexType gridIndex;
-  gridIndex.Fill(0);
+  IndexType  gridIndex{};
   RegionType gridRegion;
   gridRegion.SetSize(gridSize);
   gridRegion.SetIndex(gridIndex);
