@@ -1121,8 +1121,7 @@ template <class TInputImage, class TCoordRep>
 void
 AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordRep>::RayCastHelper::InitialiseVoxelPointers()
 {
-  IndexType index;
-  index.Fill(0);
+  IndexType index{};
 
   int Ix, Iy, Iz;
 

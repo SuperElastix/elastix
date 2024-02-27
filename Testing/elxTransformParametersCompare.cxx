@@ -208,8 +208,7 @@ main(int argc, char ** argv)
     /** Get coefficient image information. */
     SizeType gridSize;
     gridSize.Fill(1);
-    IndexType gridIndex;
-    gridIndex.Fill(0);
+    IndexType   gridIndex{};
     SpacingType gridSpacing;
     gridSpacing.Fill(1.0);
     OriginType gridOrigin{};

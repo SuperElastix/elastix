@@ -453,8 +453,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   const unsigned int numberOfChunks = splitter->GetNumberOfSplits(outputLargestRegion, requestedNumberOfSplits);
 
   // Get the maximum chunk size
-  SizeType maxChunkSize;
-  maxChunkSize.Fill(0);
+  SizeType maxChunkSize{};
   for (unsigned int i = 0; i < numberOfChunks; ++i)
   {
     OutputImageRegionType currentChunkRegion = outputLargestRegion;
