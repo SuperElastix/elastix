@@ -78,8 +78,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
     {
       if (par < paramDims)
       {
-        SpatialJacobianType sj;
-        sj.Fill(0.0);
+        SpatialJacobianType sj{};
         sj[row][col] = 1.0;
         this->m_JacobianOfSpatialJacobian[par] = sj;
         ++par;

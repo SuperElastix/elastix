@@ -65,9 +65,8 @@ SimilarityTransformElastix<TElastix>::ReadFromFile()
   if (!this->HasITKTransformParameters())
   {
     /** Variables. */
-    InputPointType centerOfRotationPoint;
-    centerOfRotationPoint.Fill(0.0);
-    bool indexRead = false;
+    InputPointType centerOfRotationPoint{};
+    bool           indexRead = false;
 
     /** Try first to read the CenterOfRotationPoint from the
      * transform parameter file, this is the new, and preferred
@@ -228,8 +227,7 @@ SimilarityTransformElastix<TElastix>::InitializeTransform()
    */
   if (!automaticTransformInitialization)
   {
-    OutputVectorType noTranslation;
-    noTranslation.Fill(0.0);
+    OutputVectorType noTranslation{};
     this->m_SimilarityTransform->SetTranslation(noTranslation);
   }
 

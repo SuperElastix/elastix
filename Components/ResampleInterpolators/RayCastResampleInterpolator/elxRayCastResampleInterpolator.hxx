@@ -68,8 +68,7 @@ RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator()
   this->SetTransform(this->m_CombinationTransform);
   this->SetInputImage(this->m_Elastix->GetMovingImage());
 
-  PointType focalPoint;
-  focalPoint.Fill(0.0);
+  PointType focalPoint{};
 
   for (unsigned int i = 0; i < this->m_Elastix->GetFixedImage()->GetImageDimension(); ++i)
   {
