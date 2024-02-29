@@ -114,7 +114,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::EvaluateT
   DerivativeType &                  imageJacobian) const
 {
   typename TransformJacobianType::const_iterator jac = jacobian.begin();
-  imageJacobian.Fill(0.0);
+  imageJacobian.fill(0.0);
 
   for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
   {

@@ -386,7 +386,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
   {
     nonZeroJacobianIndices.resize(nnzji);
     std::iota(nonZeroJacobianIndices.begin(), nonZeroJacobianIndices.end(), 0u);
-    imageJacobian.Fill(0.0);
+    imageJacobian.fill(0.0);
     return;
   }
 
