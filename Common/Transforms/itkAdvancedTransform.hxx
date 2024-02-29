@@ -56,19 +56,7 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
   this->GetJacobian(inputPoint, jacobian, nonZeroJacobianIndices);
 
   /** Perform a full multiplication. */
-  typename JacobianType::const_iterator jac = jacobian.begin();
-  imageJacobian.fill(0.0);
-
-  for (unsigned int dim = 0; dim < InputSpaceDimension; ++dim)
-  {
-    const double imDeriv = movingImageGradient[dim];
-
-    for (auto & imageJacobianElement : imageJacobian)
-    {
-      imageJacobianElement += (*jac) * imDeriv;
-      ++jac;
-    }
-  }
+  ImplementationDetails::EvaluateInnerProduct(jacobian, movingImageGradient, imageJacobian);
 
 } // end EvaluateJacobianWithImageGradientProduct()
 

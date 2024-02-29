@@ -136,21 +136,8 @@ PCAMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  typename TransformJacobianType::const_iterator jac = jacobian.begin();
-  imageJacobian.fill(0.0);
-
-  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
-  {
-    const double imDeriv = movingImageDerivative[dim];
-
-    for (auto & imageJacobianElement : imageJacobian)
-    {
-      imageJacobianElement += (*jac) * imDeriv;
-      ++jac;
-    }
-  }
-} // end EvaluateTransformJacobianInnerProduct()
-
+  ImplementationDetails::EvaluateInnerProduct(jacobian, movingImageDerivative, imageJacobian);
+}
 
 /**
  * ******************* GetValue *******************
