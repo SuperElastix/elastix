@@ -57,7 +57,7 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
 
   /** Perform a full multiplication. */
   typename JacobianType::const_iterator jac = jacobian.begin();
-  imageJacobian.Fill(0.0);
+  imageJacobian.fill(0.0);
 
   for (unsigned int dim = 0; dim < InputSpaceDimension; ++dim)
   {
