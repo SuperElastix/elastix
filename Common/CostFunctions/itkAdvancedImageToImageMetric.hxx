@@ -610,21 +610,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
   else
   {
     /** Otherwise perform a full multiplication. */
-    typename TransformJacobianType::const_iterator jac = jacobian.begin();
-    imageJacobian.fill(0.0);
-
-    for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
-    {
-      const double imDeriv = movingImageDerivative[dim];
-
-      for (auto & imageJacobianElement : imageJacobian)
-      {
-        imageJacobianElement += (*jac) * imDeriv;
-        ++jac;
-      }
-    }
+    ImplementationDetails::EvaluateInnerProduct(jacobian, movingImageDerivative, imageJacobian);
   }
-
 } // end EvaluateTransformJacobianInnerProduct()
 
 

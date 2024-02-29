@@ -164,19 +164,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::EvaluateTransfo
   const MovingImageDerivativeType & movingImageDerivative,
   DerivativeType &                  imageJacobian) const
 {
-  typename TransformJacobianType::const_iterator jac = jacobian.begin();
-  imageJacobian.fill(0.0);
+  ImplementationDetails::EvaluateInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 
-  for (unsigned int dim = 0; dim < FixedImageDimension; ++dim)
-  {
-    const double imDeriv = movingImageDerivative[dim];
-
-    for (auto & imageJacobianElement : imageJacobian)
-    {
-      imageJacobianElement += (*jac) * imDeriv;
-      ++jac;
-    }
-  }
 } // end EvaluateTransformJacobianInnerProduct()
 
 

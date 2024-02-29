@@ -36,6 +36,7 @@
 #include "itkTransform.h"
 #include "itkMatrix.h"
 #include "itkFixedArray.h"
+#include <cassert>
 
 namespace itk
 {
@@ -302,6 +303,33 @@ protected:
   bool m_HasNonZeroSpatialHessian{ true };
   bool m_HasNonZeroJacobianOfSpatialHessian{ true };
 };
+
+namespace ImplementationDetails
+{
+/** Multiplies the input matrix and the input vector. */
+template <class TScalarType, unsigned int VInputVectorSize>
+void
+EvaluateInnerProduct(const vnl_matrix<TScalarType> &                        inputMatrix,
+                     const CovariantVector<TScalarType, VInputVectorSize> & inputVector,
+                     vnl_vector<TScalarType> &                              outputVector)
+{
+  assert(inputMatrix.rows() == inputVector.size());
+  assert(inputMatrix.columns() == outputVector.size());
+
+  auto inputMatrixIterator = inputMatrix.begin();
+
+  outputVector.fill(0.0);
+
+  for (const double inputVectorElement : inputVector)
+  {
+    for (auto & outputVectorElement : outputVector)
+    {
+      outputVectorElement += (*inputMatrixIterator) * inputVectorElement;
+      ++inputMatrixIterator;
+    }
+  }
+}
+} // namespace ImplementationDetails
 
 } // end namespace itk
 
