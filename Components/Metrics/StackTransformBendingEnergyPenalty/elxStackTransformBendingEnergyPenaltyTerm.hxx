@@ -30,7 +30,7 @@ namespace elastix
 
 template <class TElastix>
 void
-StackTransformBendingEnergyPenalty<TElastix>::Initialize(void) throw(itk::ExceptionObject)
+StackTransformBendingEnergyPenalty<TElastix>::Initialize(void)
 {
   itk::TimeProbe timer;
   timer.Start();

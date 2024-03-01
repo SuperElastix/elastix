@@ -140,7 +140,7 @@ public:
    * calls the Superclass' implementation.
    */
   virtual void
-  Initialize(void) throw(itk::ExceptionObject);
+  Initialize(void);
 
   virtual void
   BeforeRegistration(void);
