@@ -179,7 +179,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetSpatialJaco
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(this->m_NumberOfSubTransforms - 1,
+    vnl_math_min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
                    vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
@@ -222,7 +222,7 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJaco
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(this->m_NumberOfSubTransforms - 1,
+    vnl_math_min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
                    vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
@@ -277,7 +277,7 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJaco
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(this->m_NumberOfSubTransforms - 1,
+    vnl_math_min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
                    vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
@@ -342,7 +342,7 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialHessian(const 
 
   /** Get Hessian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(this->m_NumberOfSubTransforms - 1,
+    vnl_math_min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
                    vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
@@ -389,7 +389,7 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHess
 
   /** Get Hessian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(this->m_NumberOfSubTransforms - 1,
+    vnl_math_min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
                    vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
@@ -450,7 +450,7 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHess
 
   /** Get Hessian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(this->m_NumberOfSubTransforms - 1,
+    vnl_math_min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
                    vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
