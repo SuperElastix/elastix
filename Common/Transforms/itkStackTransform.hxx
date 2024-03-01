@@ -24,6 +24,21 @@ namespace itk
 {
 
 /**
+<<<<<<< HEAD
+=======
+ * ********************* Constructor ****************************
+ */
+
+template< class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
+::StackTransform() : Superclass( OutputSpaceDimension ),
+  m_NumberOfSubTransforms( 0 ),
+  m_StackSpacing( 1.0 ),
+  m_StackOrigin( 0.0 )
+{} // end Constructor
+
+/**
+>>>>>>> e6acf3d9 (ENH: Added more functionality to the stacktransform)
  * ************************ SetParameters ***********************
  */
 
@@ -78,7 +93,6 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(
 
   return this->m_Parameters;
 } // end GetParameters()
-
 
 /**
  * ********************* TransformPoint ****************************
@@ -160,6 +174,358 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(co
   }
 
 } // end GetJacobian()
+
+
+/**
+ * ********************* GetSpatialJacobian ****************************
+ */
+
+template< class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions >
+void
+StackTransform< TScalarType, NInputDimensions, NOutputDimensions >
+::GetSpatialJacobian(
+  const InputPointType & ipp,
+  SpatialJacobianType & sj ) const
+{
+  /** Reduce dimension of input point. */
+  SubTransformInputPointType ippr;
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    ippr[ d ] = ipp[ d ];
+  }
+
+  /** Get Jacobian from right subtransform. */
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1,
+    static_cast< unsigned int >( vnl_math_max( 0, vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+
+  SubTransformSpatialJacobianType sjr;
+  this->m_SubTransformContainer[ subt ]->GetSpatialJacobian( ippr, sjr );
+
+  sj.Fill( 0.0 );
+
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    for( unsigned int e = 0; e < ReducedInputSpaceDimension; ++e )
+    {
+      sj[ d ][ e ] = sjr[ d ][ e ];
+    }
+  }
+
+  sj[ ReducedInputSpaceDimension ][ ReducedInputSpaceDimension ] = 1.0;
+
+} // end GetSpatialJacobian()
+
+
+/**
+ * ********************* GetJacobianOfSpatialJacobian ****************************
+ */
+
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+StackTransform< TScalarType, NDimensions, VSplineOrder >
+::GetJacobianOfSpatialJacobian(
+  const InputPointType & ipp,
+  JacobianOfSpatialJacobianType & jsj,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+
+  /** Reduce dimension of input point. */
+  SubTransformInputPointType ippr;
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    ippr[ d ] = ipp[ d ];
+  }
+
+  /** Get Jacobian from right subtransform. */
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1,
+    static_cast< unsigned int >( vnl_math_max( 0, vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+
+  SubTransformTypeJacobianOfSpatialJacobianType subjacspjac;
+  this->m_SubTransformContainer[ subt ]->GetJacobianOfSpatialJacobian( ippr, subjacspjac, nonZeroJacobianIndices );
+
+  jsj.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
+  for( unsigned int i = 0; i < jsj.size(); ++i )
+  {
+    jsj[ i ].Fill( 0.0 );
+  }
+
+  for( unsigned int n = 0; n < nonZeroJacobianIndices.size(); ++n )
+  {
+    for( unsigned int ii = 0; ii < ReducedInputSpaceDimension; ++ii )
+    {
+      for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+      {
+        jsj[ n ]( d, ii ) = subjacspjac[ n ]( d, ii );
+
+      }
+    }
+  }
+
+  /** Update non zero Jacobian indices. */
+  for( unsigned int i = 0; i < nonZeroJacobianIndices.size(); ++i )
+  {
+    nonZeroJacobianIndices[ i ] += subt * this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+  }
+
+}
+
+
+/**
+ * ********************* GetJacobianOfSpatialJacobian ****************************
+ */
+
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+StackTransform< TScalarType, NDimensions, VSplineOrder >
+::GetJacobianOfSpatialJacobian(
+  const InputPointType & ipp,
+  SpatialJacobianType & sj,
+  JacobianOfSpatialJacobianType & jsj,
+  NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const
+{
+
+  /** Reduce dimension of input point. */
+  SubTransformInputPointType ippr;
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    ippr[ d ] = ipp[ d ];
+  }
+
+  /** Get Jacobian from right subtransform. */
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1,
+    static_cast< unsigned int >( vnl_math_max( 0, vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+
+  SubTransformSpatialJacobianType               subjac;
+  SubTransformTypeJacobianOfSpatialJacobianType subjacspjac;
+  this->m_SubTransformContainer[ subt ]->GetJacobianOfSpatialJacobian( ippr, subjac, subjacspjac, nonZeroJacobianIndices );
+
+  jsj.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
+  for( unsigned int i = 0; i < jsj.size(); ++i )
+  {
+    jsj[ i ].Fill( 0.0 );
+  }
+
+  for( unsigned int n = 0; n < nonZeroJacobianIndices.size(); ++n )
+  {
+    for( unsigned int ii = 0; ii < ReducedInputSpaceDimension; ++ii )
+    {
+      for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+      {
+        jsj[ n ]( d, ii ) = subjacspjac[ n ]( d, ii );
+      }
+    }
+  }
+
+  sj.Fill( 0.0 );
+
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    for( unsigned int e = 0; e < ReducedInputSpaceDimension; ++e )
+    {
+      sj[ d ][ e ] = subjac[ d ][ e ];
+    }
+  }
+
+  sj[ ReducedInputSpaceDimension ][ ReducedInputSpaceDimension ] = 1.0;
+
+  /** Update non zero Jacobian indices. */
+  for( unsigned int i = 0; i < nonZeroJacobianIndices.size(); ++i )
+  {
+    nonZeroJacobianIndices[ i ] += subt * this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+  }
+
+}
+
+
+/**
+ * ********************* GetSpatialHessian ****************************
+ */
+
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+StackTransform< TScalarType, NDimensions, VSplineOrder >
+::GetSpatialHessian(
+  const InputPointType & ipp,
+  SpatialHessianType & sh ) const
+{
+
+  /** Reduce dimension of input point. */
+  SubTransformInputPointType ippr;
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    ippr[ d ] = ipp[ d ];
+  }
+
+  /** Get Hessian from right subtransform. */
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1,
+    static_cast< unsigned int >( vnl_math_max( 0, vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+
+  SubTransformSpatialHessianType subhes;
+  this->m_SubTransformContainer[ subt ]->GetSpatialHessian( ippr, subhes );
+
+  /** Fill output Spatial Hessian. */
+  for( unsigned int i = 0; i < sh.Size(); ++i )
+  {
+    sh[ i ].Fill( 0.0 );
+  }
+
+  for( unsigned int ii = 0; ii < ReducedInputSpaceDimension; ++ii )
+  {
+    for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+    {
+      for( unsigned int n = 0; n < ReducedInputSpaceDimension; ++n )
+      {
+        sh[ n ]( d, ii ) = subhes[ n ]( d, ii );
+      }
+    }
+  }
+}
+
+
+/**
+ * ********************* GetJacobianOfSpatialHessian ****************************
+ */
+
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+StackTransform< TScalarType, NDimensions, VSplineOrder >
+::GetJacobianOfSpatialHessian(
+  const InputPointType & ipp,
+  JacobianOfSpatialHessianType & jsh,
+  NonZeroJacobianIndicesType & nzji ) const
+{
+
+  /** Reduce dimension of input point. */
+  SubTransformInputPointType ippr;
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    ippr[ d ] = ipp[ d ];
+  }
+
+  /** Get Hessian from right subtransform. */
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1,
+    static_cast< unsigned int >( vnl_math_max( 0, vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+
+  SubTransformJacobianOfSpatialHessianType subjaches;
+  this->m_SubTransformContainer[ subt ]->GetJacobianOfSpatialHessian( ippr, subjaches, nzji );
+
+  jsh.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
+  for( unsigned int i = 0; i < jsh.size(); ++i )
+  {
+    for( unsigned int j = 0; j < jsh[ i ].Size(); ++j )
+    {
+      jsh[ i ][ j ].Fill( 0.0 );
+    }
+  }
+
+  for( unsigned int n = 0; n < nzji.size(); ++n )
+  {
+    for( unsigned int ii = 0; ii < ReducedInputSpaceDimension; ++ii )
+    {
+      for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+      {
+        for( unsigned int k = 0; k < ReducedInputSpaceDimension; ++k )
+        {
+          jsh[ n ][ k ]( d, ii ) = subjaches[ n ][ k ]( d, ii );
+        }
+      }
+    }
+  }
+
+  /** Update non zero Jacobian indices. */
+  for( unsigned int i = 0; i < nzji.size(); ++i )
+  {
+    nzji[ i ] += subt * this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+  }
+
+}
+
+
+/**
+ * ********************* GetJacobianOfSpatialHessian ****************************
+ */
+
+template< class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder >
+void
+StackTransform< TScalarType, NDimensions, VSplineOrder >
+::GetJacobianOfSpatialHessian(
+  const InputPointType & ipp,
+  SpatialHessianType & sh,
+  JacobianOfSpatialHessianType & jsh,
+  NonZeroJacobianIndicesType & nzji ) const
+{
+
+  /** Reduce dimension of input point. */
+  SubTransformInputPointType ippr;
+  for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+  {
+    ippr[ d ] = ipp[ d ];
+  }
+
+  /** Get Hessian from right subtransform. */
+  const unsigned int subt
+    = vnl_math_min( this->m_NumberOfSubTransforms - 1,
+    static_cast< unsigned int >( vnl_math_max( 0, vnl_math_rnd( ( ipp[ ReducedInputSpaceDimension ] - m_StackOrigin ) / m_StackSpacing ) ) ) );
+
+  SubTransformSpatialHessianType           subhes;
+  SubTransformJacobianOfSpatialHessianType subjaches;
+  this->m_SubTransformContainer[ subt ]->GetJacobianOfSpatialHessian( ippr, subhes, subjaches, nzji );
+
+  jsh.resize( this->GetNumberOfNonZeroJacobianIndices() );
+
+  for( unsigned int i = 0; i < jsh.size(); ++i )
+  {
+    for( unsigned int j = 0; j < jsh[ i ].Size(); ++j )
+    {
+      jsh[ i ][ j ].Fill( 0.0 );
+    }
+  }
+
+  for( unsigned int i = 0; i < sh.Size(); ++i )
+  {
+    sh[ i ].Fill( 0.0 );
+  }
+
+  for( unsigned int n = 0; n < nzji.size(); ++n )
+  {
+    for( unsigned int ii = 0; ii < ReducedInputSpaceDimension; ++ii )
+    {
+      for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+      {
+        for( unsigned int k = 0; k < ReducedInputSpaceDimension; ++k )
+        {
+          jsh[ n ][ k ]( d, ii ) = subjaches[ n ][ k ]( d, ii );
+        }
+      }
+    }
+  }
+
+  for( unsigned int ii = 0; ii < ReducedInputSpaceDimension; ++ii )
+  {
+    for( unsigned int d = 0; d < ReducedInputSpaceDimension; ++d )
+    {
+      for( unsigned int n = 0; n < ReducedInputSpaceDimension; ++n )
+      {
+        sh[ n ]( d, ii ) = subhes[ n ]( d, ii );
+      }
+    }
+  }
+
+  /** Update non zero Jacobian indices. */
+  for( unsigned int i = 0; i < nzji.size(); ++i )
+  {
+    nzji[ i ] += subt * this->m_SubTransformContainer[ 0 ]->GetNumberOfParameters();
+  }
+
+}
 
 
 /**
