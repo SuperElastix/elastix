@@ -83,13 +83,9 @@ public:
   itkStaticConstMacro(ReducedInputImageDimension, unsigned int, Superclass1::InputImageDimension - 1);
 
   /** Typedefs inherited from Elastix. */
-  typedef typename Superclass2::ElastixType          ElastixType;
-  typedef typename Superclass2::ElastixPointer       ElastixPointer;
-  typedef typename Superclass2::ConfigurationType    ConfigurationType;
-  typedef typename Superclass2::ConfigurationPointer ConfigurationPointer;
-  typedef typename Superclass2::RegistrationType     RegistrationType;
-  typedef typename Superclass2::RegistrationPointer  RegistrationPointer;
-  typedef typename Superclass2::ITKBaseType          ITKBaseType;
+  typedef typename Superclass2::ElastixType      ElastixType;
+  typedef typename Superclass2::RegistrationType RegistrationType;
+  typedef typename Superclass2::ITKBaseType      ITKBaseType;
 
 protected:
   /** The constructor. */
@@ -103,6 +99,8 @@ private:
   /** The private copy constructor. */
   void
   operator=(const Self &); // purposely not implemented
+
+  elxOverrideGetSelfMacro;
 };
 
 } // end namespace elastix

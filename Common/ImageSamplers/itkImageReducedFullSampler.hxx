@@ -113,7 +113,7 @@ ImageReducedFullSampler<TInputImage>::GenerateData(void)
       /** Translate index to point. */
       inputImage->TransformIndexToPhysicalPoint(index, tempSample.m_ImageCoordinates);
 
-      if (mask->IsInside(tempSample.m_ImageCoordinates))
+      if (mask->IsInsideInWorldSpace(tempSample.m_ImageCoordinates))
       {
         /** Get sampled image value. */
         tempSample.m_ImageValue = iter.Get();
