@@ -34,23 +34,21 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template< class TInputImage >
-class ImageReducedFullSampler :
-  public ImageSamplerBase< TInputImage >
+template <class TInputImage>
+class ImageReducedFullSampler : public ImageSamplerBase<TInputImage>
 {
 public:
-
   /** Standard ITK-stuff. */
-  typedef ImageReducedFullSampler         Self;
-  typedef ImageSamplerBase< TInputImage > Superclass;
-  typedef SmartPointer< Self >            Pointer;
-  typedef SmartPointer< const Self >      ConstPointer;
+  typedef ImageReducedFullSampler       Self;
+  typedef ImageSamplerBase<TInputImage> Superclass;
+  typedef SmartPointer<Self>            Pointer;
+  typedef SmartPointer<const Self>      ConstPointer;
 
   /** Method for creation through the object factory. */
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( ImageReducedFullSampler, ImageSamplerBase );
+  itkTypeMacro(ImageReducedFullSampler, ImageSamplerBase);
 
   /** Typedefs inherited from the superclass. */
   typedef typename Superclass::DataObjectPointer            DataObjectPointer;
@@ -67,9 +65,9 @@ public:
   typedef typename Superclass::MaskType                     MaskType;
 
   /** The input image dimension. */
-  itkStaticConstMacro( InputImageDimension, unsigned int, Superclass::InputImageDimension );
+  itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
-  itkStaticConstMacro( ReducedInputImageDimension, unsigned int, Superclass::InputImageDimension - 1 );
+  itkStaticConstMacro(ReducedInputImageDimension, unsigned int, Superclass::InputImageDimension - 1);
 
   /** Other typdefs. */
   typedef typename InputImageType::IndexType InputImageIndexType;
@@ -79,45 +77,47 @@ public:
   /** Selecting new samples makes no sense if nothing changed.
    * The same samples would be selected anyway.
    */
-  virtual bool SelectNewSamplesOnUpdate( void )
+  virtual bool
+  SelectNewSamplesOnUpdate(void)
   {
     return false;
   }
 
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
-  virtual bool SelectingNewSamplesOnUpdateSupported( void ) const
+  virtual bool
+  SelectingNewSamplesOnUpdateSupported(void) const
   {
     return false;
   }
 
 
 protected:
-
   /** The constructor. */
   ImageReducedFullSampler() {}
   /** The destructor. */
   virtual ~ImageReducedFullSampler() {}
 
   /** PrintSelf. */
-  void PrintSelf( std::ostream & os, Indent indent ) const;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const;
 
   /** Function that does the work. */
-  virtual void GenerateData( void );
+  virtual void
+  GenerateData(void);
 
 private:
-
   /** The private constructor. */
-  ImageReducedFullSampler( const Self & );          // purposely not implemented
+  ImageReducedFullSampler(const Self &); // purposely not implemented
   /** The private copy constructor. */
-  void operator=( const Self & );            // purposely not implemented
-
+  void
+  operator=(const Self &); // purposely not implemented
 };
 
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageReducedFullSampler.hxx"
+#  include "itkImageReducedFullSampler.hxx"
 #endif
 
 #endif // end #ifndef __ImageReducedFullSampler_h

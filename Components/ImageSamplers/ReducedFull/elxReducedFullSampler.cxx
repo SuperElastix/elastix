@@ -14,4 +14,4 @@
 
 #include "elxReducedFullSampler.h"
 
-elxInstallMacro( ReducedFullSampler );
+elxInstallMacro(ReducedFullSampler);
