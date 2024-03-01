@@ -77,16 +77,16 @@ public:
   /** Selecting new samples makes no sense if nothing changed.
    * The same samples would be selected anyway.
    */
-  virtual bool
-  SelectNewSamplesOnUpdate(void)
+  bool
+  SelectNewSamplesOnUpdate(void) override
   {
     return false;
   }
 
 
   /** Returns whether the sampler supports SelectNewSamplesOnUpdate(). */
-  virtual bool
-  SelectingNewSamplesOnUpdateSupported(void) const
+  bool
+  SelectingNewSamplesOnUpdateSupported(void) const override
   {
     return false;
   }
@@ -96,15 +96,15 @@ protected:
   /** The constructor. */
   ImageReducedFullSampler() {}
   /** The destructor. */
-  virtual ~ImageReducedFullSampler() {}
+  ~ImageReducedFullSampler() override {}
 
   /** PrintSelf. */
   void
-  PrintSelf(std::ostream & os, Indent indent) const;
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Function that does the work. */
-  virtual void
-  GenerateData(void);
+  void
+  GenerateData(void) override;
 
 private:
   /** The private constructor. */
