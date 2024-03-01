@@ -28,17 +28,16 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StackTransformBendingEnergyPenalty< TElastix >
-::Initialize( void ) throw ( itk::ExceptionObject )
+StackTransformBendingEnergyPenalty<TElastix>::Initialize(void) throw(itk::ExceptionObject)
 {
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of StackTransformBendingEnergy metric took: "
-         << static_cast< long >( timer.GetMean() * 1000 ) << " ms." << std::endl;
+  elxout << "Initialization of StackTransformBendingEnergy metric took: " << static_cast<long>(timer.GetMean() * 1000)
+         << " ms." << std::endl;
 
 } // end Initialize()
 
@@ -47,14 +46,13 @@ StackTransformBendingEnergyPenalty< TElastix >
  * ***************** BeforeRegistration ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StackTransformBendingEnergyPenalty< TElastix >
-::BeforeRegistration( void )
+StackTransformBendingEnergyPenalty<TElastix>::BeforeRegistration(void)
 {
   bool subtractMean = false;
-  this->GetConfiguration()->ReadParameter( subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0 );
-  this->SetSubtractMean( subtractMean );
+  this->GetConfiguration()->ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
+  this->SetSubtractMean(subtractMean);
 } // end BeforeRegistration()
 
 
@@ -62,50 +60,49 @@ StackTransformBendingEnergyPenalty< TElastix >
  * ***************** BeforeEachResolution ***********************
  */
 
-template< class TElastix >
+template <class TElastix>
 void
-StackTransformBendingEnergyPenalty< TElastix >
-::BeforeEachResolution( void )
+StackTransformBendingEnergyPenalty<TElastix>::BeforeEachResolution(void)
 {
   /** Get the current resolution level. */
-  unsigned int level = ( this->m_Registration->GetAsITKBaseType() )->GetCurrentLevel();
+  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Check if this transform is a B-spline transform. */
-  CombinationTransformType * testPtr1 = dynamic_cast< CombinationTransformType * >( this->GetElastix()->GetElxTransformBase() );
-  if( testPtr1 )
+  CombinationTransformType * testPtr1 =
+    dynamic_cast<CombinationTransformType *>(this->GetElastix()->GetElxTransformBase());
+  if (testPtr1)
   {
     /** Check for B-spline transform. */
-    BSplineTransformBaseType * testPtr2 = dynamic_cast< BSplineTransformBaseType * >( testPtr1->GetCurrentTransform() );
-    if( testPtr2 )
+    BSplineTransformBaseType * testPtr2 = dynamic_cast<BSplineTransformBaseType *>(testPtr1->GetCurrentTransform());
+    if (testPtr2)
     {
-      this->SetGridSize( testPtr2->GetGridRegion().GetSize() );
-      this->SetTransformIsBSpline( true );
-      itkExceptionMacro( << "This metric can only be used in combination with a StackTransform" );
+      this->SetGridSize(testPtr2->GetGridRegion().GetSize());
+      this->SetTransformIsBSpline(true);
+      itkExceptionMacro(<< "This metric can only be used in combination with a StackTransform");
     }
     else
     {
-      StackTransformType * testPtr3 = dynamic_cast< StackTransformType * >( testPtr1->GetCurrentTransform() );
-      if( testPtr3 )
+      StackTransformType * testPtr3 = dynamic_cast<StackTransformType *>(testPtr1->GetCurrentTransform());
+      if (testPtr3)
       {
-        this->SetTransformIsStackTransform( true );
+        this->SetTransformIsStackTransform(true);
 
-        if( testPtr3->GetNumberOfSubTransforms() > 0 )
+        if (testPtr3->GetNumberOfSubTransforms() > 0)
         {
-          ReducedDimensionBSplineTransformBaseType * testPtr4
-            = dynamic_cast< ReducedDimensionBSplineTransformBaseType * >( testPtr3->GetSubTransform( 0 ).GetPointer() );
-          if( testPtr4 )
+          ReducedDimensionBSplineTransformBaseType * testPtr4 =
+            dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(testPtr3->GetSubTransform(0).GetPointer());
+          if (testPtr4)
           {
             FixedImageSizeType gridSize;
-            gridSize.Fill( testPtr3->GetNumberOfSubTransforms() );
-            this->SetGridSize( gridSize );
-            this->SetSubTransformIsBSpline( true );
-
+            gridSize.Fill(testPtr3->GetNumberOfSubTransforms());
+            this->SetGridSize(gridSize);
+            this->SetSubTransformIsBSpline(true);
           }
         }
       }
       else
       {
-        itkExceptionMacro( << "This metric can only be used in combination with a StackTransform" );
+        itkExceptionMacro(<< "This metric can only be used in combination with a StackTransform");
       }
     }
   }
