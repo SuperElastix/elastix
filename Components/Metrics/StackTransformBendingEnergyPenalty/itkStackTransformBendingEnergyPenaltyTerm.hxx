@@ -527,7 +527,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetVal
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
-    vcl_ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
+    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end = nrOfSamplesPerThreads * (threadId + 1);
