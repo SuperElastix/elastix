@@ -368,56 +368,6 @@ private:
     itkExceptionMacro(<< unimplementedOverrideMessage);
   }
 
-
-  /** Must be provided. */
-  void
-  GetSpatialJacobian(const InputPointType &, SpatialJacobianType &) const override
-  {
-    itkExceptionMacro(<< unimplementedOverrideMessage);
-  }
-
-  void
-  GetSpatialHessian(const InputPointType &, SpatialHessianType &) const override
-  {
-    itkExceptionMacro(<< unimplementedOverrideMessage);
-  }
-
-  void
-  GetJacobianOfSpatialJacobian(const InputPointType &,
-                               JacobianOfSpatialJacobianType &,
-                               NonZeroJacobianIndicesType &) const override
-  {
-    itkExceptionMacro(<< unimplementedOverrideMessage);
-  }
-
-  void
-  GetJacobianOfSpatialJacobian(const InputPointType &,
-                               SpatialJacobianType &,
-                               JacobianOfSpatialJacobianType &,
-                               NonZeroJacobianIndicesType &) const override
-  {
-    itkExceptionMacro(<< unimplementedOverrideMessage);
-  }
-
-  void
-  GetJacobianOfSpatialHessian(const InputPointType &,
-                              JacobianOfSpatialHessianType &,
-                              NonZeroJacobianIndicesType &) const override
-  {
-    itkExceptionMacro(<< unimplementedOverrideMessage);
-  }
-
-
-  void
-  GetJacobianOfSpatialHessian(const InputPointType &,
-                              SpatialHessianType &,
-                              JacobianOfSpatialHessianType &,
-                              NonZeroJacobianIndicesType &) const override
-  {
-    itkExceptionMacro(<< unimplementedOverrideMessage);
-  }
-
-
   // Transform container
   std::vector<SubTransformPointer> m_SubTransformContainer{};
 
