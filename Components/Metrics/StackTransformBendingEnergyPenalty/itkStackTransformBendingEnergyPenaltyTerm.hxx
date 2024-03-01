@@ -101,8 +101,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const
 
     for (unsigned int s = 0; s < lastDimSize; s++)
     {
-      RealType             movingImageValueTemp;
-      MovingImagePointType mappedPoint;
+      RealType movingImageValueTemp;
 
       /** Set fixed point's last dimension to s. */
       voxelCoord[ReducedFixedImageDimension] = s;
@@ -110,14 +109,11 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
 
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+      /** Transform point. */
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
       /** Check if point is inside mask. */
-      if (sampleOk)
-      {
-        sampleOk = this->IsInsideMovingMask(mappedPoint);
-      }
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
       if (sampleOk)
       {
@@ -137,7 +133,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const
         // loop over spatial dimensions
         for (unsigned int k = 0; k < ReducedFixedImageDimension; k++)
         {
-          measure += vnl_math_sqr(spatialHessian[k].GetVnlMatrix().frobenius_norm()) / numSamplesOk;
+          measure += vnl_math::sqr(spatialHessian[k].GetVnlMatrix().frobenius_norm()) / numSamplesOk;
         } // end loop over spatial dimensions
       }   // end loop over last dimension
     }
@@ -256,21 +252,18 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDer
     for (unsigned int s = 0; s < lastDimSize; s++)
     {
       /** Initialize some variables. */
-      RealType             movingImageValueTemp;
-      MovingImagePointType mappedPoint;
+      RealType movingImageValueTemp;
 
       /** Set fixed point's last dimension to s. */
       voxelCoord[ReducedFixedImageDimension] = s;
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
-      /** Transform point and check if it is inside the B-spline support region. */
-      bool sampleOk = this->TransformPoint(fixedPoint, mappedPoint);
+
+      /** Transform point. */
+      const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
 
       /** Check if point is inside mask. */
-      if (sampleOk)
-      {
-        sampleOk = this->IsInsideMovingMask(mappedPoint);
-      }
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
 
       if (sampleOk)
       {
@@ -301,7 +294,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDer
         /** Compute the contribution to the metric value of this point. */
         for (unsigned int k = 0; k < ReducedFixedImageDimension; k++)
         {
-          measure += vnl_math_sqr(spatialHessian[k].GetVnlMatrix().frobenius_norm()) / lastDimSize;
+          measure += vnl_math::sqr(spatialHessian[k].GetVnlMatrix().frobenius_norm()) / lastDimSize;
         }
 
         /** Double checking the transform is a stracktransform */
@@ -541,7 +534,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetVal
 
   /** Get the samples for this thread. */
   const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
-    vcl_ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(this->m_NumberOfThreads)));
+    vcl_ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   unsigned long pos_begin = nrOfSamplesPerThreads * threadId;
   unsigned long pos_end = nrOfSamplesPerThreads * (threadId + 1);
@@ -621,7 +614,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetVal
         /** Compute the contribution to the metric value of this point. */
         for (unsigned int k = 0; k < ReducedFixedImageDimension; k++)
         {
-          measure += vnl_math_sqr(spatialHessian[k].GetVnlMatrix().frobenius_norm()) / numSamplesOk;
+          measure += vnl_math::sqr(spatialHessian[k].GetVnlMatrix().frobenius_norm()) / numSamplesOk;
         }
 
         /** Double checking to make sure the transform is a stacktransform */
@@ -713,7 +706,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedG
 
   /** Accumulate the number of pixels. */
   this->m_NumberOfPixelsCounted = 0;
-  for (ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i)
+  for (ThreadIdType i = 0; i < Self::GetNumberOfWorkUnits(); ++i)
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
 
@@ -727,7 +720,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedG
 
   /** Accumulate and normalize values. */
   value = NumericTraits<MeasureType>::Zero;
-  for (ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i)
+  for (ThreadIdType i = 0; i < Self::GetNumberOfWorkUnits(); ++i)
   {
     value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
@@ -740,7 +733,7 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedG
   // compute single-threadedly
   derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
   this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative.Fill(0.0);
-  for (ThreadIdType i = 1; i < this->m_NumberOfThreads; ++i)
+  for (ThreadIdType i = 1; i < Self::GetNumberOfWorkUnits(); ++i)
   {
     derivative += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
     this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.Fill(0.0);

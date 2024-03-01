@@ -36,8 +36,8 @@ StackTransformBendingEnergyPenalty<TElastix>::Initialize(void) throw(itk::Except
   timer.Start();
   this->Superclass1::Initialize();
   timer.Stop();
-  elxout << "Initialization of StackTransformBendingEnergy metric took: " << static_cast<long>(timer.GetMean() * 1000)
-         << " ms." << std::endl;
+  log::info(std::ostringstream{} << "Initialization of StackTransformBendingEnergy metric took: "
+                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
