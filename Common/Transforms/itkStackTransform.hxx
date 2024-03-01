@@ -19,6 +19,7 @@
 #define _itkStackTransform_hxx
 
 #include "itkStackTransform.h"
+#include <algorithm> // For min and max.
 
 namespace itk
 {
@@ -179,9 +180,9 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetSpatialJaco
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(m_SubTransformContainer.size() - 1,
+    std::min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
-                   vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+                   std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
   SubTransformSpatialJacobianType sjr;
   this->m_SubTransformContainer[subt]->GetSpatialJacobian(ippr, sjr);
@@ -222,9 +223,9 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJaco
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(m_SubTransformContainer.size() - 1,
+    std::min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
-                   vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+                   std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
   SubTransformTypeJacobianOfSpatialJacobianType subjacspjac;
   this->m_SubTransformContainer[subt]->GetJacobianOfSpatialJacobian(ippr, subjacspjac, nonZeroJacobianIndices);
@@ -277,9 +278,9 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJaco
 
   /** Get Jacobian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(m_SubTransformContainer.size() - 1,
+    std::min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
-                   vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+                   std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
   SubTransformSpatialJacobianType               subjac;
   SubTransformTypeJacobianOfSpatialJacobianType subjacspjac;
@@ -342,9 +343,9 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialHessian(const 
 
   /** Get Hessian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(m_SubTransformContainer.size() - 1,
+    std::min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
-                   vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+                   std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
   SubTransformSpatialHessianType subhes;
   this->m_SubTransformContainer[subt]->GetSpatialHessian(ippr, subhes);
@@ -389,9 +390,9 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHess
 
   /** Get Hessian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(m_SubTransformContainer.size() - 1,
+    std::min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
-                   vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+                   std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
   SubTransformJacobianOfSpatialHessianType subjaches;
   this->m_SubTransformContainer[subt]->GetJacobianOfSpatialHessian(ippr, subjaches, nzji);
@@ -450,9 +451,9 @@ StackTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHess
 
   /** Get Hessian from right subtransform. */
   const unsigned int subt =
-    vnl_math_min(m_SubTransformContainer.size() - 1,
+    std::min(m_SubTransformContainer.size() - 1,
                  static_cast<unsigned int>(
-                   vnl_math_max(0, vnl_math_rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
+                   std::max(0, vnl_math::rnd((ipp[ReducedInputSpaceDimension] - m_StackOrigin) / m_StackSpacing))));
 
   SubTransformSpatialHessianType           subhes;
   SubTransformJacobianOfSpatialHessianType subjaches;
