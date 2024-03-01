@@ -139,14 +139,14 @@ public:
   /** Sets up a timer to measure the initialization time and
    * calls the Superclass' implementation.
    */
-  virtual void
-  Initialize(void);
+  void
+  Initialize(void) override;
 
-  virtual void
-  BeforeRegistration(void);
+  void
+  BeforeRegistration(void) override;
 
-  virtual void
-  BeforeEachResolution(void);
+  void
+  BeforeEachResolution(void) override;
 
 protected:
   /** The constructor. */

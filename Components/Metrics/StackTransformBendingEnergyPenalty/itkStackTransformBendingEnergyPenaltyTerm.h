@@ -127,25 +127,27 @@ public:
   typedef typename Superclass::HessianValueType              HessianValueType;
   typedef typename Superclass::HessianType                   HessianType;
 
-  virtual MeasureType
-  GetValue(const ParametersType & parameters) const;
+  MeasureType
+  GetValue(const ParametersType & parameters) const override;
 
-  virtual void
-  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const;
+  void
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   virtual void
   GetValueAndDerivativeSingleThreaded(const ParametersType & parameters,
                                       MeasureType &          value,
                                       DerivativeType &       derivative) const;
 
-  virtual void
-  GetValueAndDerivative(const ParametersType & parameters, MeasureType & value, DerivativeType & derivative) const;
+  void
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
   inline void
   ThreadedGetValueAndDerivative(ThreadIdType threadID);
 
   inline void
-  AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const;
+  AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
   itkSetMacro(SubtractMean, bool);
   itkSetMacro(TransformIsStackTransform, bool);
