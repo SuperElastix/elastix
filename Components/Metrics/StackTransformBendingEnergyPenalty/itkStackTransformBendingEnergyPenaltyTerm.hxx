@@ -101,8 +101,6 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const
 
     for (unsigned int s = 0; s < lastDimSize; s++)
     {
-      RealType movingImageValueTemp;
-
       /** Set fixed point's last dimension to s. */
       voxelCoord[ReducedFixedImageDimension] = s;
 
@@ -188,8 +186,6 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDer
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
-  FixedImageSizeType m_GridSize;
-
   /** Create and initialize some variables. */
   this->m_NumberOfPixelsCounted = 0;
   RealType measure = NumericTraits<RealType>::Zero;
@@ -251,9 +247,6 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDer
     /** Loop over last dimension. */
     for (unsigned int s = 0; s < lastDimSize; s++)
     {
-      /** Initialize some variables. */
-      RealType movingImageValueTemp;
-
       /** Set fixed point's last dimension to s. */
       voxelCoord[ReducedFixedImageDimension] = s;
       /** Transform sampled point back to world coordinates. */
