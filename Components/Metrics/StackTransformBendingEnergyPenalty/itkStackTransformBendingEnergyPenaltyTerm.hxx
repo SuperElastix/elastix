@@ -93,8 +93,8 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const
   {
     /** Read fixed coordinates. */
     FixedImagePointType           fixedPoint = (*fiter).Value().m_ImageCoordinates;
-    FixedImageContinuousIndexType voxelCoord;
-    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex(fixedPoint, voxelCoord);
+    FixedImageContinuousIndexType voxelCoord =
+      this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
     std::vector<FixedImagePointType> fixedPoints(lastDimSize);
     unsigned int                     numSamplesOk = 0;
@@ -242,8 +242,8 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDer
     FixedImagePointType fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
-    FixedImageContinuousIndexType voxelCoord;
-    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex(fixedPoint, voxelCoord);
+    FixedImageContinuousIndexType voxelCoord =
+      this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
     std::vector<FixedImagePointType> fixedPoints(lastDimSize);
     unsigned int                     numSamplesOk = 0;
@@ -559,8 +559,8 @@ StackTransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetVal
     const FixedImagePointType & fixedPoint = (*fiter).Value().m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
-    FixedImageContinuousIndexType voxelCoord;
-    this->GetFixedImage()->TransformPhysicalPointToContinuousIndex(fixedPoint, voxelCoord);
+    FixedImageContinuousIndexType voxelCoord =
+      this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
     std::vector<FixedImagePointType> fixedPoints(lastDimSize);
     unsigned int                     numSamplesOk = 0;
