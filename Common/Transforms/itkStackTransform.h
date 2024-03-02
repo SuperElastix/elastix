@@ -108,38 +108,38 @@ public:
   GetJacobian(const InputPointType & inputPoint, JacobianType & jac, NonZeroJacobianIndicesType & nzji) const override;
 
   /** Compute the Spatial Jacobian. */
-  virtual void
-  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const;
+  void
+  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const override;
 
   /** Compute the Jacobian of the spatial Jacobian. */
-  virtual void
+  void
   GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
                                JacobianOfSpatialJacobianType & jsj,
-                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const;
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute the spatial Jacobian and its Jacobian. */
-  virtual void
+  void
   GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
                                SpatialJacobianType &           sj,
                                JacobianOfSpatialJacobianType & jsj,
-                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const;
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const override;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void
-  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const;
+  void
+  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const override;
 
   /** Compute the jacobian of the spatial Hessian of the transformation. */
   void
   GetJacobianOfSpatialHessian(const InputPointType &         ipp,
                               JacobianOfSpatialHessianType & jsh,
-                              NonZeroJacobianIndicesType &   nzji) const;
+                              NonZeroJacobianIndicesType &   nzji) const override;
 
   /** Compute the spatial Hessian (and its jacobian) of the transformation. */
   void
   GetJacobianOfSpatialHessian(const InputPointType &         ipp,
                               SpatialHessianType &           sh,
                               JacobianOfSpatialHessianType & jsh,
-                              NonZeroJacobianIndicesType &   nzji) const;
+                              NonZeroJacobianIndicesType &   nzji) const override;
 
   /** Set the parameters. Checks if the number of parameters
    * is correct and sets parameters of sub transforms. */
