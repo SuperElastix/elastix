@@ -83,11 +83,10 @@ public:
     AdvancedTransform<TScalarType, Self::ReducedInputSpaceDimension, Self::ReducedOutputSpaceDimension>;
   using SubTransformPointer = typename SubTransformType::Pointer;
   using SubTransformJacobianType = typename SubTransformType::JacobianType;
-  typedef typename SubTransformType::SpatialJacobianType SubTransformSpatialJacobianType;
-  typedef typename SubTransformType::JacobianOfSpatialJacobianType
-    SubTransformTypeJacobianOfSpatialJacobianType;
-  typedef typename SubTransformType::SpatialHessianType           SubTransformSpatialHessianType;
-  typedef typename SubTransformType::JacobianOfSpatialHessianType SubTransformJacobianOfSpatialHessianType;
+  typedef typename SubTransformType::SpatialJacobianType           SubTransformSpatialJacobianType;
+  typedef typename SubTransformType::JacobianOfSpatialJacobianType SubTransformTypeJacobianOfSpatialJacobianType;
+  typedef typename SubTransformType::SpatialHessianType            SubTransformSpatialHessianType;
+  typedef typename SubTransformType::JacobianOfSpatialHessianType  SubTransformJacobianOfSpatialHessianType;
 
   /** Dimension - 1 point types. */
   using SubTransformInputPointType = typename SubTransformType::InputPointType;
@@ -109,39 +108,38 @@ public:
   GetJacobian(const InputPointType & inputPoint, JacobianType & jac, NonZeroJacobianIndicesType & nzji) const override;
 
   /** Compute the Spatial Jacobian. */
-  virtual void GetSpatialJacobian(
-    const InputPointType & ipp,
-    SpatialJacobianType & sj ) const;
+  virtual void
+  GetSpatialJacobian(const InputPointType & ipp, SpatialJacobianType & sj) const;
 
   /** Compute the Jacobian of the spatial Jacobian. */
-  virtual void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+  virtual void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const;
 
   /** Compute the spatial Jacobian and its Jacobian. */
-  virtual void GetJacobianOfSpatialJacobian(
-    const InputPointType & ipp, SpatialJacobianType & sj,
-    JacobianOfSpatialJacobianType & jsj,
-    NonZeroJacobianIndicesType & nonZeroJacobianIndices ) const;
+  virtual void
+  GetJacobianOfSpatialJacobian(const InputPointType &          ipp,
+                               SpatialJacobianType &           sj,
+                               JacobianOfSpatialJacobianType & jsj,
+                               NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const;
 
   /** Compute the spatial Hessian of the transformation. */
-  virtual void GetSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh ) const;
+  virtual void
+  GetSpatialHessian(const InputPointType & ipp, SpatialHessianType & sh) const;
 
   /** Compute the jacobian of the spatial Hessian of the transformation. */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nzji ) const;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nzji) const;
 
   /** Compute the spatial Hessian (and its jacobian) of the transformation. */
-  void GetJacobianOfSpatialHessian(
-    const InputPointType & ipp,
-    SpatialHessianType & sh,
-    JacobianOfSpatialHessianType & jsh,
-    NonZeroJacobianIndicesType & nzji ) const;
+  void
+  GetJacobianOfSpatialHessian(const InputPointType &         ipp,
+                              SpatialHessianType &           sh,
+                              JacobianOfSpatialHessianType & jsh,
+                              NonZeroJacobianIndicesType &   nzji) const;
 
   /** Set the parameters. Checks if the number of parameters
    * is correct and sets parameters of sub transforms. */
