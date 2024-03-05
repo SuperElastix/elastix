@@ -33,7 +33,7 @@ namespace elastix
 std::string
 CoreMainGTestUtilities::GetDataDirectoryPath()
 {
-  constexpr auto sourceDirectoryPath = ELX_CMAKE_SOURCE_DIR;
+  static constexpr auto sourceDirectoryPath = ELX_CMAKE_SOURCE_DIR;
   static_assert(std::is_same<decltype(sourceDirectoryPath), const char * const>(),
                 "CMAKE_SOURCE_DIR must be a character string!");
   static_assert(sourceDirectoryPath != nullptr, "CMAKE_SOURCE_DIR must not be null!");
@@ -46,7 +46,7 @@ CoreMainGTestUtilities::GetDataDirectoryPath()
 std::string
 CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath()
 {
-  constexpr auto binaryDirectoryPath = ELX_CMAKE_CURRENT_BINARY_DIR;
+  static constexpr auto binaryDirectoryPath = ELX_CMAKE_CURRENT_BINARY_DIR;
   static_assert(std::is_same<decltype(binaryDirectoryPath), const char * const>(),
                 "CMAKE_CURRENT_BINARY_DIR must be a character string!");
   static_assert(binaryDirectoryPath != nullptr, "CMAKE_CURRENT_BINARY_DIR must not be null!");

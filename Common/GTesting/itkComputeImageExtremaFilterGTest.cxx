@@ -174,7 +174,7 @@ Expect_one_non_zero_pixel_value_masked_in(const typename TImage::SizeType & imag
   using FilterType = ComputeImageExtremaFilter<TImage>;
   using ImageSpatialMaskType = typename FilterType::ImageSpatialMaskType;
 
-  constexpr auto ImageDimension = TImage::ImageDimension;
+  static constexpr auto ImageDimension = TImage::ImageDimension;
 
   const auto image = TImage::New();
   image->SetRegions(imageSize);
@@ -223,7 +223,7 @@ Expect_one_positive_pixel_value_all_pixels_masked_in(const typename TImage::Size
   using FilterType = ComputeImageExtremaFilter<TImage>;
   using ImageSpatialMaskType = typename FilterType::ImageSpatialMaskType;
 
-  constexpr auto ImageDimension = TImage::ImageDimension;
+  static constexpr auto ImageDimension = TImage::ImageDimension;
 
   const auto image = TImage::New();
   image->SetRegions(imageSize);

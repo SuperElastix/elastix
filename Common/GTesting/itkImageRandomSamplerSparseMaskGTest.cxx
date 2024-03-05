@@ -43,7 +43,7 @@ using itk::Statistics::MersenneTwisterRandomVariateGenerator;
 GTEST_TEST(ImageRandomSamplerSparseMask, CheckImageValuesOfSamples)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2;
+  static constexpr auto Dimension = 2;
   using ImageType = itk::Image<PixelType, Dimension>;
   using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
 
@@ -85,7 +85,7 @@ GTEST_TEST(ImageRandomSamplerSparseMask, CheckImageValuesOfSamples)
 GTEST_TEST(ImageRandomSamplerSparseMask, SetSeedMakesRandomizationDeterministic)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2;
+  static constexpr auto Dimension = 2;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = itk::ImageRandomSamplerSparseMask<ImageType>;
   using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
@@ -127,7 +127,7 @@ GTEST_TEST(ImageRandomSamplerSparseMask, SetSeedMakesRandomizationDeterministic)
 GTEST_TEST(ImageRandomSamplerSparseMask, HasSameOutputWhenUsingMultiThread)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2;
+  static constexpr auto Dimension = 2;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = itk::ImageRandomSamplerSparseMask<ImageType>;
   using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;

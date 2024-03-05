@@ -372,7 +372,7 @@ GTEST_TEST(Conversion, ToString)
   // Note that this is different from std::to_string(0.5), which returns "0.500000"
   EXPECT_EQ(Conversion::ToString(0.5), "0.5");
 
-  constexpr auto expectedPrecision = 16;
+  static constexpr auto expectedPrecision = 16;
   static_assert(expectedPrecision == std::numeric_limits<double>::digits10 + 1,
                 "The expected precision for double floating point numbers");
   const auto expectedString = "0." + std::string(expectedPrecision, '3');
@@ -597,15 +597,15 @@ GTEST_TEST(Conversion, ToNativePathNameSeparators)
   EXPECT_EQ(Conversion::ToNativePathNameSeparators(std::string{}), std::string{});
   EXPECT_EQ(Conversion::ToNativePathNameSeparators(" "), std::string{ " " });
 
-  constexpr bool isBackslashNativeSeparator =
+  static constexpr bool isBackslashNativeSeparator =
 #ifdef _WIN32
     true;
 #else
     false;
 #endif
 
-  constexpr char nativeSeparator = isBackslashNativeSeparator ? '\\' : '/';
-  constexpr char nonNativeSeparator = isBackslashNativeSeparator ? '/' : '\\';
+  static constexpr char nativeSeparator = isBackslashNativeSeparator ? '\\' : '/';
+  static constexpr char nonNativeSeparator = isBackslashNativeSeparator ? '/' : '\\';
 
   EXPECT_EQ(Conversion::ToNativePathNameSeparators({ nativeSeparator }), std::string{ nativeSeparator });
   EXPECT_EQ(Conversion::ToNativePathNameSeparators({ nonNativeSeparator }), std::string{ nativeSeparator });

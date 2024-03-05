@@ -86,7 +86,7 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
   using elastix::ELASTIX;
   using RegistrationParametersContainerType = ELASTIX::ParameterMapListType;
   using ITKImageType = itk::Image<float>;
-  constexpr auto ImageDimension = ITKImageType::ImageDimension;
+  static constexpr auto ImageDimension = ITKImageType::ImageDimension;
 
   const auto parameters = CreateParameterMap<ImageDimension>({
     // Parameters with non-default values (A-Z):
@@ -204,7 +204,7 @@ GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
   elx::ForEachSupportedImageType([](const auto elxTypedef) {
     using ElxTypedef = decltype(elxTypedef);
     using ImageType = typename ElxTypedef::FixedImageType;
-    constexpr auto Dimension = ImageType::ImageDimension;
+    static constexpr auto Dimension = ImageType::ImageDimension;
     using PixelType = typename ImageType::PixelType;
     using SizeType = itk::Size<Dimension>;
 
@@ -241,7 +241,7 @@ GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
 // Tests registering two small binary images.
 GTEST_TEST(ElastixLib, Translation3D)
 {
-  constexpr auto ImageDimension = 3;
+  static constexpr auto ImageDimension = 3;
   using ImageType = itk::Image<float, ImageDimension>;
 
   const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
@@ -276,7 +276,7 @@ GTEST_TEST(ElastixLib, Translation3D)
 // of a single slice, by specifying a mask for the fixed image.
 GTEST_TEST(ElastixLib, SingleSliceMaskedTranslation3D)
 {
-  constexpr auto ImageDimension = 3;
+  static constexpr auto ImageDimension = 3;
   using ImageType = itk::Image<float, ImageDimension>;
 
   const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },

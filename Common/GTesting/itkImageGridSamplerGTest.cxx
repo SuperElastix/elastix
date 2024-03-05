@@ -71,7 +71,7 @@ GTEST_TEST(ImageGridSampler, DefaultConstructFillsSampleGridSpacingWithOne)
 GTEST_TEST(ImageGridSampler, HasSameOutputAsFullSamplerByDefault)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
 
   std::mt19937 randomNumberEngine{};
@@ -95,7 +95,7 @@ GTEST_TEST(ImageGridSampler, HasSameOutputAsFullSamplerByDefault)
 GTEST_TEST(ImageGridSampler, MaxSampleGridSpacing)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = ImageGridSampler<ImageType>;
 
@@ -122,7 +122,7 @@ GTEST_TEST(ImageGridSampler, MaxSampleGridSpacing)
 GTEST_TEST(ImageGridSampler, SampleGridSpacingGreaterEqualToImageSize)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = ImageGridSampler<ImageType>;
 
@@ -154,7 +154,7 @@ GTEST_TEST(ImageGridSampler, SampleGridSpacingGreaterEqualToImageSize)
 GTEST_TEST(ImageGridSampler, SampleGridSpacingOneLessThanImageSize)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = ImageGridSampler<ImageType>;
 
@@ -188,7 +188,7 @@ GTEST_TEST(ImageGridSampler, SampleGridSpacingOneLessThanImageSize)
 GTEST_TEST(ImageGridSampler, SampleGridSpacingTwo)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = ImageGridSampler<ImageType>;
 
@@ -221,7 +221,7 @@ GTEST_TEST(ImageGridSampler, SampleGridSpacingTwo)
 GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingMultiThread)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = itk::ImageGridSampler<ImageType>;
 

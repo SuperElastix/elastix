@@ -165,7 +165,7 @@ private:
 // Checks if a default-constructed AdvancedImageToImageMetric has the expected properties.
 GTEST_TEST(AdvancedImageToImageMetric, DefaultConstruct)
 {
-  constexpr auto imageDimension = 3U;
+  static constexpr auto imageDimension = 3U;
   using ImageType = itk::Image<int, imageDimension>;
   using MetricType = TestMetric<ImageType>;
   const elx::DefaultConstruct<MetricType> defaultConstructedMetric{};
