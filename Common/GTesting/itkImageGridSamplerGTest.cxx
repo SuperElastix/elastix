@@ -251,10 +251,7 @@ GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingMultiThread)
 GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingFullyFilledMask)
 {
   using PixelType = int;
-  enum
-  {
-    Dimension = 2U
-  };
+  static constexpr auto Dimension = 2U;
   using SamplerType = itk::ImageGridSampler<itk::Image<PixelType, Dimension>>;
 
   const ImageDomain<Dimension> imageDomain(itk::Size<Dimension>::Filled(4));
@@ -297,10 +294,7 @@ GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingFullyFilledMask)
 GTEST_TEST(ImageGridSampler, OneOutOfThreeMask)
 {
   using PixelType = int;
-  enum
-  {
-    Dimension = 3U
-  };
+  static constexpr auto Dimension = 2U;
   using SamplerType = itk::ImageGridSampler<itk::Image<PixelType, Dimension>>;
 
   const ImageDomain<Dimension> imageDomain(itk::Size<Dimension>::Filled(8));

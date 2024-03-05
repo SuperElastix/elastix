@@ -992,10 +992,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileWithInitialTransformParameterFile)
 {
   using PixelType = float;
-  enum
-  {
-    ImageDimension = 2U
-  };
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<PixelType, ImageDimension>;
 
   const auto doDummyRegistration =
@@ -1048,10 +1045,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileWithInitia
 GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransform)
 {
   using PixelType = float;
-  enum
-  {
-    ImageDimension = 2U
-  };
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
@@ -1420,10 +1414,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndOutputDir
   const std::string outputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
   itk::FileTools::CreateDirectory(outputDirectoryPath);
 
-  enum
-  {
-    ImageDimension = 2
-  };
+  static constexpr auto ImageDimension = 2U;
 
   using PixelType = float;
   using SizeType = itk::Size<ImageDimension>;
@@ -1599,11 +1590,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
 
     // ITK's RecursiveSeparableImageFilter "requires a minimum of four pixels along the dimension to be processed", at
     // https://github.com/InsightSoftwareConsortium/ITK/blob/v5.3.0/Modules/Filtering/ImageFilterBase/include/itkRecursiveSeparableImageFilter.hxx#L226
-    enum
-    {
-      smallImageSizeValue = 8
-    };
-
+    static constexpr auto smallImageSizeValue = 8U;
     const ImageDomainType simpleImageDomain{
       ImageDomainType::SizeType::Filled(smallImageSizeValue),
     };

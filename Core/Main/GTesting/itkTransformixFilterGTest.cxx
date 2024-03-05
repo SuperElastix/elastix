@@ -809,11 +809,8 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndDefaultTransform)
 
 GTEST_TEST(itkTransformixFilter, CombineTranslationAndInverseTranslation)
 {
-  const auto imageSize = itk::MakeSize(5, 6);
-  enum
-  {
-    dimension = decltype(imageSize)::Dimension
-  };
+  const auto            imageSize = itk::MakeSize(5, 6);
+  static constexpr auto dimension = decltype(imageSize)::Dimension;
 
   const auto inputImage = itk::Image<float, dimension>::New();
   inputImage->SetRegions(imageSize);
@@ -876,12 +873,9 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndInverseTranslation)
 
 GTEST_TEST(itkTransformixFilter, CombineTranslationAndScale)
 {
-  const auto imageSize = itk::MakeSize(5, 6);
-  enum
-  {
-    dimension = decltype(imageSize)::Dimension
-  };
-  const auto inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize);
+  const auto            imageSize = itk::MakeSize(5, 6);
+  static constexpr auto dimension = decltype(imageSize)::Dimension;
+  const auto            inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize);
 
   using ParametersValueType = double;
 
@@ -921,9 +915,10 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndScale)
 GTEST_TEST(itkTransformixFilter, OutputEqualsRegistrationOutputForStackTransform)
 {
   using PixelType = float;
+  static constexpr auto ImageDimension = 3U;
+
   enum
   {
-    ImageDimension = 3,
     imageSizeX = 5,
     imageSizeY = 6,
     imageSizeZ = 4
@@ -1528,10 +1523,7 @@ GTEST_TEST(itkTransformixFilter, ExternalTransform)
 
 GTEST_TEST(itkTransformixFilter, SetExternalTransform)
 {
-  enum
-  {
-    ImageDimension = 2
-  };
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using SizeType = itk::Size<ImageDimension>;
   const SizeType imageSize{ { 5, 6 } };
