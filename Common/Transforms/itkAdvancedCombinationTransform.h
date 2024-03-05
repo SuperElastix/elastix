@@ -547,7 +547,7 @@ protected:
 
 private:
   /** Exception text. */
-  constexpr static const char * NoCurrentTransformSet = "No current transform set in the AdvancedCombinationTransform";
+  static constexpr const char * NoCurrentTransformSet = "No current transform set in the AdvancedCombinationTransform";
 
   /** Declaration of members. */
   InitialTransformPointer m_InitialTransform{ nullptr };

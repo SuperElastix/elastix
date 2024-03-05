@@ -64,7 +64,7 @@ struct FixedImageDimensionSupport
 {
   // Adds those dimensions from the specified `dimensionSequence` that are supported.
   template <std::size_t... VIndex>
-  constexpr static auto
+  static constexpr auto
   AddSupportedDimensions(std::index_sequence<VIndex...> dimensionSequence)
   {
     using AddDimensionIfSupported = std::conditional_t<SupportsFixedDimension<VDimension>(),
@@ -80,7 +80,7 @@ template <>
 struct FixedImageDimensionSupport<maxSupportedImageDimension + 1>
 {
   template <std::size_t... VIndex>
-  constexpr static auto
+  static constexpr auto
   AddSupportedDimensions(std::index_sequence<VIndex...> dimensionSequence)
   {
     return dimensionSequence;

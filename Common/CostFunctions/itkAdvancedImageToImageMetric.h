@@ -661,8 +661,8 @@ private:
   {};
 
   // Prevent accidentally accessing m_FixedImageMask or m_MovingImageMask directly from the ITK's ImageToImageMetric.
-  constexpr static DummyMask m_FixedImageMask{};
-  constexpr static DummyMask m_MovingImageMask{};
+  static constexpr DummyMask m_FixedImageMask{};
+  static constexpr DummyMask m_MovingImageMask{};
 };
 
 } // end namespace itk
