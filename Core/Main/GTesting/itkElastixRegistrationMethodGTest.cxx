@@ -441,7 +441,7 @@ Test_WriteBSplineTransformToItkFileFormat(const std::string & rootOutputDirector
   // FixedParameters store the grid size, origin, spacing, and direction, according to the ITK `BSplineTransform`
   // default-constructor at
   // https://github.com/InsightSoftwareConsortium/ITK/blob/v5.2.0/Modules/Core/Transform/include/itkBSplineTransform.hxx#L35-L61.
-  constexpr auto expectedNumberOfFixedParameters = NDimension * (NDimension + 3);
+  static constexpr auto expectedNumberOfFixedParameters = NDimension * (NDimension + 3);
   ASSERT_EQ(defaultFixedParameters.size(), expectedNumberOfFixedParameters);
 
   elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
@@ -547,7 +547,7 @@ GTEST_TEST(itkElastixRegistrationMethod, LogLevel)
 
 GTEST_TEST(itkElastixRegistrationMethod, IsDefaultInitialized)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
 
@@ -567,7 +567,7 @@ GTEST_TEST(itkElastixRegistrationMethod, IsDefaultInitialized)
 // Tests that the value zero is rejected for the "NumberOfResolutions" parameter.
 GTEST_TEST(itkElastixRegistrationMethod, RejectZeroValueForNumberOfResolution)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
@@ -610,7 +610,7 @@ GTEST_TEST(itkElastixRegistrationMethod, RejectZeroValueForNumberOfResolution)
 // Tests registering two small (5x6) binary images, which are translated with respect to each other.
 GTEST_TEST(itkElastixRegistrationMethod, Translation)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -648,7 +648,7 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 // Tests "MaximumNumberOfIterations" value "0"
 GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -693,7 +693,7 @@ GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
 // Tests "AutomaticTransformInitializationMethod" "CenterOfGravity".
 GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterOfGravity)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -737,7 +737,7 @@ GTEST_TEST(itkElastixRegistrationMethod, AutomaticTransformInitializationCenterO
 // Tests registering two images, having "WriteResultImage" set.
 GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -801,7 +801,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
 // Tests registering two images, having a custom "ResultImageName" specified.
 GTEST_TEST(itkElastixRegistrationMethod, ResultImageName)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -876,7 +876,7 @@ GTEST_TEST(itkElastixRegistrationMethod, ResultImageName)
 // Tests that the origin of the output image is equal to the origin of the fixed image (by default).
 GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
@@ -945,7 +945,7 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFile)
 {
   using PixelType = float;
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
@@ -1145,7 +1145,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransform)
 GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 {
   using PixelType = float;
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
@@ -1241,7 +1241,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 
 GTEST_TEST(itkElastixRegistrationMethod, SetExternalTransformAsInitialTransform)
 {
-  constexpr unsigned int ImageDimension{ 2 };
+  static constexpr unsigned int ImageDimension{ 2 };
 
   using PixelType = float;
   using SizeType = itk::Size<ImageDimension>;
@@ -1321,7 +1321,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalTransformAsInitialTransform)
 
 GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransform)
 {
-  constexpr unsigned int ImageDimension{ 2 };
+  static constexpr unsigned int ImageDimension{ 2 };
 
   using PixelType = float;
   using SizeType = itk::Size<ImageDimension>;
@@ -1487,7 +1487,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndOutputDir
 // transform".
 GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndConvertToItkTransform)
 {
-  constexpr auto ImageDimension = 2u;
+  static constexpr auto ImageDimension = 2u;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
@@ -1553,7 +1553,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
         NonDefaultTransformParameter(
           { "TransformParameters", elx::Conversion::ToVectorOfStrings(translationTransformParameters) }) });
 
-    constexpr auto gridValueSize = 4U;
+    static constexpr auto gridValueSize = 4U;
 
     std::array<double, ImageDimension * itk::Math::UnsignedPower(gridValueSize, ImageDimension)>
       bsplineTransformParameters;
@@ -1658,7 +1658,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
 GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTransformFile)
 {
   using PixelType = float;
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
@@ -1740,7 +1740,7 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
 
 GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
@@ -1794,7 +1794,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
 
 GTEST_TEST(itkElastixRegistrationMethod, GetNumberOfTransforms)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
@@ -1824,7 +1824,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetNumberOfTransforms)
 
 GTEST_TEST(itkElastixRegistrationMethod, GetNthTransform)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
@@ -1861,7 +1861,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetNthTransform)
 
 GTEST_TEST(itkElastixRegistrationMethod, ConvertToItkTransform)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
@@ -1902,7 +1902,7 @@ GTEST_TEST(itkElastixRegistrationMethod, ConvertToItkTransform)
 
 GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
@@ -2019,7 +2019,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteBSplineTransformToItkFileFormat)
 GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
 {
   using PixelType = float;
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
   using IndexType = itk::Index<ImageDimension>;
@@ -2101,7 +2101,7 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
         offset[i] = index[i] - ((imageSizeValue - 1) / 2.0);
       }
 
-      constexpr auto radius = (imageSizeValue / 2.0) - 2.0;
+      static constexpr auto radius = (imageSizeValue / 2.0) - 2.0;
 
       if (std::inner_product(offset.begin(), offset.end(), offset.begin(), 0.0) < (radius * radius))
       {
@@ -2137,7 +2137,7 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
 
   for (const auto degree : { -2, 0, 1, 30 })
   {
-    constexpr auto radiansPerDegree = M_PI / 180.0;
+    static constexpr auto radiansPerDegree = M_PI / 180.0;
 
     setPixelsOfDisc(*movingImage, degree * radiansPerDegree);
     registration.SetMovingImage(movingImage);
@@ -2159,7 +2159,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageHavingInternalPi
   elx::ForEachSupportedImageType([](const auto elxTypedef) {
     using ElxTypedef = decltype(elxTypedef);
     using ImageType = typename ElxTypedef::MovingImageType;
-    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+    static constexpr auto ImageDimension = ElxTypedef::MovingDimension;
 
     using PixelType = typename ImageType::PixelType;
 
@@ -2215,7 +2215,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
   elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
     using ElxTypedef = decltype(elxTypedef);
     using ImageType = typename ElxTypedef::MovingImageType;
-    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+    static constexpr auto ImageDimension = ElxTypedef::MovingDimension;
 
     using PixelType = typename ImageType::PixelType;
 
@@ -2363,7 +2363,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
 // Checks that InitialTransform and ExternalInitialTransform are mutually exclusive.
 GTEST_TEST(itkElastixRegistrationMethod, SetAndGetInitialTransform)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
 
   elx::DefaultConstruct<itk::DisplacementFieldTransform<double, ImageDimension>> displacementFieldTransform{};

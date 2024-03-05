@@ -101,8 +101,8 @@ template <unsigned ImageDimension>
 auto
 CreateDefaultDirectionParameterValues()
 {
-  constexpr auto      numberOfValues = ImageDimension * ImageDimension;
-  ParameterValuesType values(numberOfValues, "0");
+  static constexpr auto numberOfValues = ImageDimension * ImageDimension;
+  ParameterValuesType   values(numberOfValues, "0");
 
   for (std::size_t i{}; i < numberOfValues; i += (ImageDimension + 1))
   {
@@ -131,7 +131,7 @@ template <typename TImage>
 itk::SmartPointer<TImage>
 TranslateImage(TImage & image, const typename TImage::OffsetType & translationOffset)
 {
-  constexpr auto ImageDimension = TImage::ImageDimension;
+  static constexpr auto ImageDimension = TImage::ImageDimension;
 
   DefaultConstructibleTransformixFilter<TImage> filter;
 
@@ -421,7 +421,7 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
 
 GTEST_TEST(itkTransformixFilter, IsDefaultInitialized)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using TransformixFilterType = itk::TransformixFilter<itk::Image<PixelType, ImageDimension>>;
 
@@ -442,7 +442,7 @@ GTEST_TEST(itkTransformixFilter, IsDefaultInitialized)
 // Tests translating a small (5x6) binary image, having a 2x2 white square.
 GTEST_TEST(itkTransformixFilter, Translation2D)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
 
@@ -470,7 +470,7 @@ GTEST_TEST(itkTransformixFilter, Translation2D)
 // Tests translating a small (5x6) binary image, using a TransformParameterFileName.
 GTEST_TEST(itkTransformixFilter, Translation2DTransformParameterFileName)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using ImageType = itk::Image<float, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
 
@@ -504,7 +504,7 @@ GTEST_TEST(itkTransformixFilter, Translation2DTransformParameterFileName)
 // Tests translating a mesh of two points.
 GTEST_TEST(itkTransformixFilter, MeshTranslation2D)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using TransformixFilterType = itk::TransformixFilter<itk::Image<PixelType, ImageDimension>>;
   using VectorType = itk::Vector<float, ImageDimension>;
@@ -559,7 +559,7 @@ GTEST_TEST(itkTransformixFilter, MeshTranslation2D)
 // Tests translating a small (5x7x9) binary 3D image, having a 2x2x2 white cube.
 GTEST_TEST(itkTransformixFilter, Translation3D)
 {
-  constexpr auto ImageDimension = 3U;
+  static constexpr auto ImageDimension = 3U;
   using ImageType = itk::Image<float, ImageDimension>;
   using SizeType = itk::Size<ImageDimension>;
 
@@ -586,7 +586,7 @@ GTEST_TEST(itkTransformixFilter, Translation3D)
 
 GTEST_TEST(itkTransformixFilter, TranslationViaExternalTransformFile)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
 
   const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
@@ -635,7 +635,7 @@ GTEST_TEST(itkTransformixFilter, BSplineViaExternalTransformFile)
 
 GTEST_TEST(itkTransformixFilter, ITKTranslationTransform2D)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
 
   elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> itkTransform;
   itkTransform.SetOffset(itk::MakeVector(1.0, -2.0));
@@ -647,7 +647,7 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform2D)
 
 GTEST_TEST(itkTransformixFilter, ITKTranslationTransform3D)
 {
-  constexpr auto ImageDimension = 3U;
+  static constexpr auto ImageDimension = 3U;
 
   elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> itkTransform;
   itkTransform.SetOffset(itk::MakeVector(1.0, -2.0, 3.0));
@@ -659,7 +659,7 @@ GTEST_TEST(itkTransformixFilter, ITKTranslationTransform3D)
 
 GTEST_TEST(itkTransformixFilter, ITKAffineTransform2D)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
 
   elx::DefaultConstruct<itk::AffineTransform<double, ImageDimension>> itkTransform;
   itkTransform.SetTranslation(itk::MakeVector(1.0, -2.0));
@@ -673,7 +673,7 @@ GTEST_TEST(itkTransformixFilter, ITKAffineTransform2D)
 
 GTEST_TEST(itkTransformixFilter, ITKAffineTransform3D)
 {
-  constexpr auto ImageDimension = 3U;
+  static constexpr auto ImageDimension = 3U;
 
   elx::DefaultConstruct<itk::AffineTransform<double, ImageDimension>> itkTransform;
   itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0, 3.0));
@@ -767,9 +767,9 @@ GTEST_TEST(itkTransformixFilter, ITKBSplineTransform3D)
 
 GTEST_TEST(itkTransformixFilter, CombineTranslationAndDefaultTransform)
 {
-  const auto     imageSize = itk::MakeSize(5, 6);
-  const auto     inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize);
-  constexpr auto dimension = decltype(imageSize)::Dimension;
+  const auto            imageSize = itk::MakeSize(5, 6);
+  const auto            inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<float>(imageSize);
+  static constexpr auto dimension = decltype(imageSize)::Dimension;
 
   using ParametersValueType = double;
 
@@ -991,7 +991,7 @@ GTEST_TEST(itkTransformixFilter, OutputEqualsRegistrationOutputForBSplineStackTr
 GTEST_TEST(itkTransformixFilter, SetTranslationTransform)
 {
   using PixelType = float;
-  constexpr unsigned int ImageDimension{ 2 };
+  static constexpr unsigned int ImageDimension{ 2 };
 
   using SizeType = itk::Size<ImageDimension>;
   const itk::Offset<ImageDimension> translationOffset{ { 1, -2 } };
@@ -1054,7 +1054,7 @@ GTEST_TEST(itkTransformixFilter, SetTranslationTransform)
 
 GTEST_TEST(itkTransformixFilter, SetCombinationTransform)
 {
-  constexpr auto ImageDimension = 2U;
+  static constexpr auto ImageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, ImageDimension>;
   const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
@@ -1134,7 +1134,7 @@ GTEST_TEST(itkTransformixFilter, SetCombinationTransform)
 GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnZeroParameterMaps)
 {
   using PixelType = float;
-  constexpr unsigned int ImageDimension{ 2 };
+  static constexpr unsigned int ImageDimension{ 2 };
   using ImageType = itk::Image<PixelType, ImageDimension>;
   const auto imageSize = ImageType::SizeType::Filled(2);
 
@@ -1183,7 +1183,7 @@ GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnZeroParameterMaps)
 GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnEmptyCompositeTransform)
 {
   using PixelType = float;
-  constexpr unsigned int ImageDimension{ 2 };
+  static constexpr unsigned int ImageDimension{ 2 };
   using ImageType = itk::Image<PixelType, ImageDimension>;
   const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
 
@@ -1224,8 +1224,8 @@ GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnEmptyCompositeTransform)
 GTEST_TEST(itkTransformixFilter, SetCompositeTransformOfTranslationAndScale)
 {
   using PixelType = float;
-  const auto             imageSize = itk::MakeSize(5, 6);
-  constexpr unsigned int ImageDimension{ decltype(imageSize)::Dimension };
+  const auto                    imageSize = itk::MakeSize(5, 6);
+  static constexpr unsigned int ImageDimension{ decltype(imageSize)::Dimension };
   using ImageType = itk::Image<PixelType, ImageDimension>;
 
   const auto inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
@@ -1273,7 +1273,7 @@ GTEST_TEST(itkTransformixFilter, SetCompositeTransformOfTranslationAndScale)
 GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImage)
 {
   using PixelType = float;
-  constexpr unsigned int ImageDimension{ 2 };
+  static constexpr unsigned int ImageDimension{ 2 };
 
   using SizeType = itk::Size<ImageDimension>;
   const SizeType imageSize{ { 5, 6 } };
@@ -1328,7 +1328,7 @@ GTEST_TEST(itkTransformixFilter, CheckMinimumMovingImageHavingInternalPixelType)
   elx::ForEachSupportedImageType([](const auto elxTypedef) {
     using ElxTypedef = decltype(elxTypedef);
     using ImageType = typename ElxTypedef::MovingImageType;
-    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+    static constexpr auto ImageDimension = ElxTypedef::MovingDimension;
 
     using PixelType = typename ImageType::PixelType;
     using SizeType = itk::Size<ImageDimension>;
@@ -1378,7 +1378,7 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainHavin
   elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
     using ElxTypedef = decltype(elxTypedef);
     using ImageType = typename ElxTypedef::MovingImageType;
-    constexpr auto ImageDimension = ElxTypedef::MovingDimension;
+    static constexpr auto ImageDimension = ElxTypedef::MovingDimension;
 
     using PixelType = typename ImageType::PixelType;
     using SizeType = itk::Size<ImageDimension>;
@@ -1491,7 +1491,7 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsing
 
 GTEST_TEST(itkTransformixFilter, ExternalTransform)
 {
-  constexpr unsigned int ImageDimension{ 2 };
+  static constexpr unsigned int ImageDimension{ 2 };
 
   using PixelType = float;
   using SizeType = itk::Size<ImageDimension>;

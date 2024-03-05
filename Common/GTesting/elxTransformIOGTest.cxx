@@ -289,8 +289,8 @@ struct WithDimension
     Test_CreateTransformParameterMap_double_precision()
     {
       // Use 0.3333333333333333... as test value.
-      constexpr auto testValue = 1.0 / 3.0;
-      constexpr auto expectedPrecision = 16;
+      static constexpr auto testValue = 1.0 / 3.0;
+      static constexpr auto expectedPrecision = 16;
       static_assert(expectedPrecision == std::numeric_limits<double>::digits10 + 1,
                     "The expected precision for double floating point numbers");
       const auto expectedString = "0." + std::string(expectedPrecision, '3');
@@ -576,27 +576,27 @@ Expect_elx_TransformPoint_yields_same_point_as_ITK(const TITKTransform & itkTran
 
   using NumericLimits = std::numeric_limits<double>;
 
-  constexpr double testInputValues[] = { NumericLimits::lowest(),
-                                         -2.0,
-                                         -1.0,
-                                         -0.5,
-                                         -NumericLimits::min(),
-                                         -0.0,
-                                         0.0,
-                                         NumericLimits::min(),
-                                         0.5,
-                                         1.0 - (2 * NumericLimits::epsilon()), // Note: 1.0 fails on BSpline!!!
-                                         1.0 + 1.0e-14,
-                                         2.0,
-                                         NumericLimits::max() };
+  static constexpr double testInputValues[] = { NumericLimits::lowest(),
+                                                -2.0,
+                                                -1.0,
+                                                -0.5,
+                                                -NumericLimits::min(),
+                                                -0.0,
+                                                0.0,
+                                                NumericLimits::min(),
+                                                0.5,
+                                                1.0 - (2 * NumericLimits::epsilon()), // Note: 1.0 fails on BSpline!!!
+                                                1.0 + 1.0e-14,
+                                                2.0,
+                                                NumericLimits::max() };
 
-  constexpr auto numberOfTestInputValues = std::extent_v<decltype(testInputValues)>;
+  static constexpr auto numberOfTestInputValues = std::extent_v<decltype(testInputValues)>;
 
   // Use the test input values as coordinates.
   for (const auto index : itk::ZeroBasedIndexRange<Dimension>(itk::Size<Dimension>::Filled(numberOfTestInputValues)))
   {
     itk::Point<double, Dimension> inputPoint;
-    std::transform(index.begin(), index.end(), inputPoint.begin(), [&testInputValues](const itk::SizeValueType value) {
+    std::transform(index.begin(), index.end(), inputPoint.begin(), [](const itk::SizeValueType value) {
       return testInputValues[value];
     });
 
@@ -857,7 +857,7 @@ GTEST_TEST(Transform, CreateTransformParametersSetUseAddition)
 
 GTEST_TEST(Transform, TransformedPointSameAsITKTranslation2D)
 {
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
 
   elx::DefaultConstruct<itk::TranslationTransform<double, Dimension>> itkTransform;
   itkTransform.SetOffset(itk::MakeVector(1.0, 2.0));
@@ -868,7 +868,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation2D)
 
 GTEST_TEST(Transform, TransformedPointSameAsITKTranslation3D)
 {
-  constexpr auto Dimension = 3U;
+  static constexpr auto Dimension = 3U;
 
   elx::DefaultConstruct<itk::TranslationTransform<double, Dimension>> itkTransform;
   itkTransform.SetOffset(itk::MakeVector(1.0, 2.0, 3.0));
@@ -879,7 +879,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKTranslation3D)
 
 GTEST_TEST(Transform, TransformedPointSameAsITKAffine2D)
 {
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
 
   elx::DefaultConstruct<itk::AffineTransform<double, Dimension>> itkTransform;
   itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0));
@@ -893,7 +893,7 @@ GTEST_TEST(Transform, TransformedPointSameAsITKAffine2D)
 
 GTEST_TEST(Transform, TransformedPointSameAsITKAffine3D)
 {
-  constexpr auto Dimension = 3U;
+  static constexpr auto Dimension = 3U;
 
   elx::DefaultConstruct<itk::AffineTransform<double, Dimension>> itkTransform;
   itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0, 3.0));

@@ -37,7 +37,7 @@ using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 GTEST_TEST(ImageFullSampler, OutputHasSameSequenceOfPixelValuesAsInput)
 {
   using PixelType = std::uint8_t;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
   using ImageFullSamplerType = itk::ImageFullSampler<ImageType>;
 
@@ -64,7 +64,7 @@ GTEST_TEST(ImageFullSampler, OutputHasSameSequenceOfPixelValuesAsInput)
 GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingMultiThread)
 {
   using PixelType = int;
-  constexpr auto Dimension = 2U;
+  static constexpr auto Dimension = 2U;
   using ImageType = itk::Image<PixelType, Dimension>;
   using SamplerType = itk::ImageFullSampler<ImageType>;
 
@@ -89,10 +89,7 @@ GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingMultiThread)
 GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingFullyFilledMask)
 {
   using PixelType = int;
-  enum
-  {
-    Dimension = 2U
-  };
+  static constexpr auto Dimension = 2U;
   using SamplerType = itk::ImageFullSampler<itk::Image<PixelType, Dimension>>;
 
   const ImageDomain<Dimension> imageDomain(itk::Size<Dimension>::Filled(4));
@@ -129,10 +126,7 @@ GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingFullyFilledMask)
 GTEST_TEST(ImageFullSampler, ExactlyEqualVersusSlightlyDifferentMaskImageDomain)
 {
   using PixelType = int;
-  enum
-  {
-    Dimension = 2U
-  };
+  static constexpr auto Dimension = 2U;
   using SamplerType = itk::ImageFullSampler<itk::Image<PixelType, Dimension>>;
 
   std::mt19937 randomNumberEngine{};

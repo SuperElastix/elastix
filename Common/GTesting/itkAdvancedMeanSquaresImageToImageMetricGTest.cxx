@@ -52,10 +52,10 @@ RandomizePixelValues(TImage & image, TRandomNumberEngine && randomNumberEngine)
 // Checks if a default-constructed AdvancedMeanSquaresImageToImageMetric has the expected properties.
 GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, DefaultConstruct)
 {
-  constexpr itk::SizeValueType defaultNumberOfFixedImageSamples{ 50000 };
-  constexpr double             defaultLimitRangeRatio{ 0.01 };
+  static constexpr itk::SizeValueType defaultNumberOfFixedImageSamples{ 50000 };
+  static constexpr double             defaultLimitRangeRatio{ 0.01 };
 
-  constexpr auto imageDimension = 3U;
+  static constexpr auto imageDimension = 3U;
   using ImageType = itk::Image<int, imageDimension>;
   using MetricType = AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>;
   const elx::DefaultConstruct<MetricType> defaultConstructedMetric{};
@@ -129,7 +129,7 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, DefaultConstruct)
 // an identity transform is used.
 GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, YieldsZeroWhenFixedAndMovingImageAreEqual)
 {
-  constexpr auto imageDimension = 3U;
+  static constexpr auto imageDimension = 3U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, imageDimension>;
 
@@ -176,7 +176,7 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, MultiThreadResultEqualsSingleT
 {
   std::mt19937 randomNumberEngine{};
 
-  constexpr auto imageDimension = 3U;
+  static constexpr auto imageDimension = 3U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, imageDimension>;
 
