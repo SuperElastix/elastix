@@ -37,12 +37,12 @@ public:
   /** In the specialisations of this template class */
   /** this typedef will make sense */
   using ElastixType = ::itk::Object;
-  constexpr static const char * FixedPixelTypeString{ "" };
-  constexpr static const char * MovingPixelTypeString{ "" };
-  constexpr static unsigned int FixedDimension{ 0 };
-  constexpr static unsigned int MovingDimension{ 0 };
+  static constexpr const char * FixedPixelTypeString{ "" };
+  static constexpr const char * MovingPixelTypeString{ "" };
+  static constexpr unsigned int FixedDimension{ 0 };
+  static constexpr unsigned int MovingDimension{ 0 };
   /** In the specialisations of this template class, this value will be 'true' */
-  constexpr static bool IsDefined{ false };
+  static constexpr bool IsDefined{ false };
 };
 
 } // namespace elastix
@@ -82,11 +82,11 @@ public:
     using FixedImageType = ::itk::Image<_fPixelType, _fDim>;                                                           \
     using MovingImageType = ::itk::Image<_mPixelType, _mDim>;                                                          \
     using ElastixType = ::elx::ElastixTemplate<FixedImageType, MovingImageType>;                                       \
-    constexpr static const char * FixedPixelTypeString{ #_fPixelType };                                                \
-    constexpr static const char * MovingPixelTypeString{ #_mPixelType };                                               \
-    constexpr static unsigned int FixedDimension{ _fDim };                                                             \
-    constexpr static unsigned int MovingDimension{ _mDim };                                                            \
-    constexpr static bool         IsDefined{ true };                                                                   \
+    static constexpr const char * FixedPixelTypeString{ #_fPixelType };                                                \
+    static constexpr const char * MovingPixelTypeString{ #_mPixelType };                                               \
+    static constexpr unsigned int FixedDimension{ _fDim };                                                             \
+    static constexpr unsigned int MovingDimension{ _mDim };                                                            \
+    static constexpr bool         IsDefined{ true };                                                                   \
   }
 
 #endif // end #ifndef elxPrepareImageTypeSupport_h
