@@ -303,10 +303,7 @@ GTEST_TEST(ComputeImageExtremaFilter, OneNonZeroPixelValueMaskedIn)
 GTEST_TEST(ComputeImageExtremaFilter, MaskSpacingAndDirectionAffectResults)
 {
   using PixelType = int;
-  enum
-  {
-    Dimension = 2U
-  };
+  static constexpr auto Dimension = 2U;
   enum class MaskChange
   {
     None,
