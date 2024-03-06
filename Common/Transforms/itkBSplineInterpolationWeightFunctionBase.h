@@ -121,7 +121,7 @@ protected:
   using WeightArrayType = typename KernelType::WeightArrayType;
 
   /** Lookup table type. */
-  using TableType = Array2D<unsigned long>;
+  using TableType = vnl_matrix<unsigned long>;
 
   /** Typedef for intermediary 1D weights.
    * The Matrix is at least twice as fast as std::vector< vnl_vector< double > >,
