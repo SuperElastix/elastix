@@ -84,7 +84,6 @@ protected:
   using typename Superclass::KernelType;
   using typename Superclass::DerivativeKernelType;
   using typename Superclass::SecondOrderDerivativeKernelType;
-  using typename Superclass::TableType;
   using typename Superclass::OneDWeightsType;
 
   /** Compute the 1D weights, which are:
