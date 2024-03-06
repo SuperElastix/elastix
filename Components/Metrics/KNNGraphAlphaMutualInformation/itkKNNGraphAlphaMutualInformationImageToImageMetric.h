@@ -286,7 +286,7 @@ private:
   using TransformJacobianContainerType = std::vector<TransformJacobianType>;
   // typedef std::vector<ParameterIndexArrayType>           TransformJacobianIndicesContainerType;
   using TransformJacobianIndicesContainerType = std::vector<NonZeroJacobianIndicesType>;
-  using SpatialDerivativeType = Array2D<double>;
+  using SpatialDerivativeType = vnl_matrix<double>;
   using SpatialDerivativeContainerType = std::vector<SpatialDerivativeType>;
 
   /** This function takes the fixed image samples from the ImageSampler

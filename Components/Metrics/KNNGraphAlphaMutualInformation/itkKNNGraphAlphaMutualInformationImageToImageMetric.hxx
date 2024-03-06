@@ -915,7 +915,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Eva
       /** Compute the gradient at feature image i. */
       gradient = this->m_BSplineInterpolatorVector[i]->EvaluateDerivativeAtContinuousIndex(cindex);
 
-      /** Set the gradient into the Array2D. */
+      /** Set the gradient into the matrix. */
       featureGradients.set_row(i - 1, gradient.GetDataPointer());
     } // end for-loop
   }   // end if
@@ -938,7 +938,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Eva
   //  /** Compute the gradient at feature image i. */
   //  gradient = this->m_GradientFeatureImage[ i ]->GetPixel( index );
   //
-  //  /** Set the gradient into the Array2D. */
+  //  /** Set the gradient into the matrix. */
   //  featureGradients.set_column( i, gradient.GetDataPointer() );
   //  } // end for-loop
   //  } // end if
