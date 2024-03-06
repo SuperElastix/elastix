@@ -257,7 +257,7 @@ protected:
 private:
   /** Helper array for storing the values of the JointPDF ratios. */
   using PRatioType = double;
-  using PRatioArrayType = Array2D<PRatioType>;
+  using PRatioArrayType = vnl_matrix<PRatioType>;
   mutable PRatioArrayType m_PRatioArray{};
 
   /** Setting */

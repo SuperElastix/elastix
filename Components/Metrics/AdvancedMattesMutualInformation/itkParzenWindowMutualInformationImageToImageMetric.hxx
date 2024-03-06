@@ -63,7 +63,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Init
   /** Allocate small amount of memory for the m_PRatioArray. */
   if (!this->GetUseExplicitPDFDerivatives())
   {
-    this->m_PRatioArray.SetSize(this->GetNumberOfFixedHistogramBins(), this->GetNumberOfMovingHistogramBins());
+    this->m_PRatioArray.set_size(this->GetNumberOfFixedHistogramBins(), this->GetNumberOfMovingHistogramBins());
   }
 
 } // end InitializeHistograms()
@@ -664,7 +664,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   const MarginalPDFIteratorType movingPDFend = this->m_MovingImageMarginalPDF.end();
 
   /** Initialize */
-  this->m_PRatioArray.Fill(PRatioType{});
+  this->m_PRatioArray.fill(PRatioType{});
 
   /** Loop over the joint histogram. */
   PDFValueType sum = 0.0;
