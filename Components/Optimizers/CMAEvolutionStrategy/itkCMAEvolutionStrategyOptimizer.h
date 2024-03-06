@@ -227,7 +227,7 @@ public:
 protected:
   using RecombinationWeightsType = Array<double>;
   using EigenValueMatrixType = vnl_diag_matrix<double>;
-  using CovarianceMatrixType = Array2D<double>;
+  using CovarianceMatrixType = vnl_matrix<double>;
   using ParameterContainerType = std::vector<ParametersType>;
   using MeasureHistoryType = std::deque<MeasureType>;
 
