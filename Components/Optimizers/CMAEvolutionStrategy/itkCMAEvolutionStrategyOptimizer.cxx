@@ -420,13 +420,13 @@ CMAEvolutionStrategyOptimizer::InitializeBCD()
     const unsigned int N = numberOfParameters;
 
     /** Resize */
-    this->m_B.SetSize(N, N);
-    this->m_C.SetSize(N, N);
+    this->m_B.set_size(N, N);
+    this->m_C.set_size(N, N);
     this->m_D.set_size(N);
 
     /** Initialize */
-    this->m_B.Fill(0.0);
-    this->m_C.Fill(0.0);
+    this->m_B.fill(0.0);
+    this->m_C.fill(0.0);
     this->m_B.fill_diagonal(1.0);
     this->m_C.fill_diagonal(1.0);
     this->m_D.fill(1.0);
@@ -434,8 +434,8 @@ CMAEvolutionStrategyOptimizer::InitializeBCD()
   else
   {
     /** Clear */
-    this->m_B.SetSize(0, 0);
-    this->m_C.SetSize(0, 0);
+    this->m_B.set_size(0, 0);
+    this->m_C.set_size(0, 0);
     this->m_D.clear();
   }
 
