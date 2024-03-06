@@ -36,9 +36,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 {
   this->m_CurrentLevel = 0;
   this->m_ComputeOnlyForCurrentLevel = false;
-  SmoothingScheduleType temp(this->GetNumberOfLevels(), ImageDimension);
-  temp.Fill(ScalarRealType{});
-  this->m_SmoothingSchedule = temp;
+  this->m_SmoothingSchedule = SmoothingScheduleType(this->GetNumberOfLevels(), ImageDimension, ScalarRealType());
   this->m_SmoothingScheduleDefined = false;
 } // end Constructor
 
@@ -58,9 +56,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   Superclass::SetNumberOfLevels(num);
 
   /** Resize the smoothing schedule too. */
-  SmoothingScheduleType temp(this->m_NumberOfLevels, ImageDimension);
-  temp.Fill(ScalarRealType{});
-  this->m_SmoothingSchedule = temp;
+  this->m_SmoothingSchedule = SmoothingScheduleType(this->GetNumberOfLevels(), ImageDimension, ScalarRealType());
   this->m_SmoothingScheduleDefined = false;
 
 } // end SetNumberOfLevels()
@@ -130,9 +126,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
    * Only in GenerateData we use SetSmoothingScheduleToDefault, because only
    * there all required information is available.
    */
-  SmoothingScheduleType temp(this->GetNumberOfLevels(), ImageDimension);
-  temp.Fill(0);
-  this->m_SmoothingSchedule = temp;
+  this->m_SmoothingSchedule = SmoothingScheduleType(this->GetNumberOfLevels(), ImageDimension, ScalarRealType());
   this->m_SmoothingScheduleDefined = false;
 } // end SetSchedule()
 
@@ -223,9 +217,7 @@ template <class TInputImage, class TOutputImage, class TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetSmoothingScheduleToZero()
 {
-  SmoothingScheduleType schedule;
-  schedule.Fill(ScalarRealType{});
-  this->SetSmoothingSchedule(schedule);
+  this->SetSmoothingSchedule(SmoothingScheduleType());
 } // end SetSmoothingScheduleToZero()
 
 
@@ -735,9 +727,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   const SpacingType &    spacing = input->GetSpacing();
 
   // Resize the smoothing schedule
-  SmoothingScheduleType temp(this->GetNumberOfLevels(), ImageDimension);
-  temp.Fill(0);
-  this->m_SmoothingSchedule = temp;
+  this->m_SmoothingSchedule = SmoothingScheduleType(this->GetNumberOfLevels(), ImageDimension, ScalarRealType());
 
   unsigned int factors[ImageDimension];
   for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)

@@ -149,7 +149,7 @@ public:
   using ScalarRealType = typename NumericTraits<PixelType>::ScalarRealType;
 
   /** SmoothingScheduleType typedef support. */
-  using SmoothingScheduleType = Array2D<ScalarRealType>;
+  using SmoothingScheduleType = vnl_matrix<ScalarRealType>;
   using RescaleScheduleType = ScheduleType;
 
   /** Define the type for the sigma array. */
