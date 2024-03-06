@@ -120,9 +120,6 @@ protected:
   using SecondOrderDerivativeKernelPointer = typename SecondOrderDerivativeKernelType::Pointer;
   using WeightArrayType = typename KernelType::WeightArrayType;
 
-  /** Lookup table type. */
-  using TableType = vnl_matrix<unsigned long>;
-
   /** Typedef for intermediary 1D weights.
    * The Matrix is at least twice as fast as std::vector< vnl_vector< double > >,
    * probably because of the fixed size at compile time.
@@ -140,9 +137,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  unsigned long m_NumberOfWeights{};
-  SizeType      m_SupportSize{};
-  TableType     m_OffsetToIndexTable{};
+  unsigned long             m_NumberOfWeights{};
+  SizeType                  m_SupportSize{};
+  vnl_matrix<unsigned long> m_OffsetToIndexTable{};
 
 private:
   /** Function to initialize the support region. */
