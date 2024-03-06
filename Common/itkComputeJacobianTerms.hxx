@@ -178,7 +178,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   }
 
   using CovarianceValueType = double;
-  using CovarianceMatrixType = itk::Array2D<CovarianceValueType>;
+  using CovarianceMatrixType = vnl_matrix<CovarianceValueType>;
   using DiagCovarianceMatrixType = vnl_diag_matrix<CovarianceValueType>;
 
   /** Initialize covariance matrix. Sparse, diagonal, and band form. */
@@ -220,12 +220,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   DiagCovarianceMatrixType diagcov(numberOfParameters, 0.0);
 
   /** For temporary storage of J'J. */
-  CovarianceMatrixType jactjac(sizejacind, sizejacind);
-  jactjac.Fill(0.0);
+  CovarianceMatrixType jactjac(sizejacind, sizejacind, 0.0);
 
   /** Initialize band matrix. */
-  CovarianceMatrixType bandcov(numberOfParameters, bandcovsize);
-  bandcov.Fill(0.0);
+  CovarianceMatrixType bandcov(numberOfParameters, bandcovsize, 0.0);
 
   /**
    *    TERM 1
