@@ -669,7 +669,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 //::GetJacobian( const InputPointType & point ) const -> const JacobianType&
 //{
 //  this->m_Jacobian.set_size(SpaceDimension, this->GetNumberOfParameters());
-//  this->m_Jacobian.Fill(0.0);
+//  this->m_Jacobian.fill(0.0);
 //  JacobianType jacobian;
 //  NonZeroJacobianIndicesType nonZeroJacobianIndices;
 //  this->GetJacobian(point, jacobian, nonZeroJacobianIndices);

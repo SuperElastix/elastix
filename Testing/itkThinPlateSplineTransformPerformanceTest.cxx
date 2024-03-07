@@ -299,7 +299,7 @@ main(int argc, char * argv[])
     timeCollector.Start("ComputeJacobianOLD");
     JacobianType jac1;
     jac1.set_size(Dimension, numberOfLandmarks * Dimension);
-    jac1.Fill(0.0);
+    jac1.fill(0.0);
     PointsIterator sp = usedLandmarks->GetPoints()->Begin();
     for (unsigned int lnd = 0; lnd < numberOfLandmarks; ++lnd)
     {

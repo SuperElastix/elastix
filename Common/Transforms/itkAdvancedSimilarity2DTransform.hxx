@@ -173,7 +173,7 @@ AdvancedSimilarity2DTransform<TScalarType>::GetJacobian(const InputPointType &  
   // Filling with zeros is needed because the lower loops only visit
   // the nonzero positions.
   j.set_size(OutputSpaceDimension, ParametersDimension);
-  j.Fill(0.0);
+  j.fill(0.0);
 
   // Some helper variables
   const double         angle = this->GetAngle();

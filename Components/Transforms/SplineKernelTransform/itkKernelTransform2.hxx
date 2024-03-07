@@ -734,7 +734,7 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
 {
   const unsigned long numberOfLandmarks = this->m_SourceLandmarks->GetNumberOfPoints();
   jac.set_size(NDimensions, numberOfLandmarks * NDimensions);
-  jac.Fill(0.0);
+  jac.fill(0.0);
   GMatrixType    Gmatrix; // , GMatrixSym; // dim x dim
   PointsIterator sp = this->m_SourceLandmarks->GetPoints()->Begin();
 

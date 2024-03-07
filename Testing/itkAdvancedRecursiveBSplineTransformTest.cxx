@@ -386,12 +386,12 @@ main(int argc, char * argv[])
   /** Jacobian. */
   JacobianType jacobianElastix;
   jacobianElastix.set_size(Dimension, nzji.size());
-  jacobianElastix.Fill(0.0);
+  jacobianElastix.fill(0.0);
   transform->GetJacobian(inputPoint, jacobianElastix, nzjiElastix);
 
   JacobianType jacobianRecursive;
   jacobianRecursive.set_size(Dimension, nzji.size());
-  jacobianRecursive.Fill(0.0);
+  jacobianRecursive.fill(0.0);
   recursiveTransform->GetJacobian(inputPoint, jacobianRecursive, nzjiRecursive);
 
   JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianRecursive;
