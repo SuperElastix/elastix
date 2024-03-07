@@ -692,7 +692,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 {
   if (this->GetNumberOfParameters() == 0)
   {
-    jacobian.SetSize(SpaceDimension, 0);
+    jacobian.set_size(SpaceDimension, 0);
     nonZeroJacobianIndices.clear();
     return;
   }
@@ -701,7 +701,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   const unsigned int nnzji = this->GetNumberOfNonZeroJacobianIndices();
   if ((jacobian.cols() != nnzji) || (jacobian.rows() != SpaceDimension))
   {
-    jacobian.SetSize(SpaceDimension, nnzji);
+    jacobian.set_size(SpaceDimension, nnzji);
   }
   jacobian.Fill(0.0);
 
@@ -725,8 +725,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   JacobianType njac, ljac;
-  njac.SetSize(SpaceDimension, nnzji);
-  ljac.SetSize(SpaceDimension, nnzji);
+  njac.set_size(SpaceDimension, nnzji);
+  ljac.set_size(SpaceDimension, nnzji);
 
   // nzji should be the same so keep only one
   m_Trans[0]->GetJacobian(inputPoint, njac, nonZeroJacobianIndices);

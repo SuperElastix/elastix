@@ -283,7 +283,7 @@ AffineDTI3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                JacobianType &               j,
                                                NonZeroJacobianIndicesType & nzji) const
 {
-  j.SetSize(OutputSpaceDimension, ParametersDimension);
+  j.set_size(OutputSpaceDimension, ParametersDimension);
   j.Fill(0.0);
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 

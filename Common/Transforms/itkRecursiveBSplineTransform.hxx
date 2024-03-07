@@ -105,7 +105,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
   const NumberOfParametersType nnzji = this->GetNumberOfNonZeroJacobianIndices();
   if ((jacobian.cols() != nnzji) || (jacobian.rows() != SpaceDimension))
   {
-    jacobian.SetSize(SpaceDimension, nnzji);
+    jacobian.set_size(SpaceDimension, nnzji);
     jacobian.Fill(0.0);
   }
 

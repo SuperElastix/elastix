@@ -217,7 +217,7 @@ AdvancedSimilarity3DTransform<TScalarType>::GetJacobian(const InputPointType &  
   // Initialize the Jacobian. Resizing is only performed when needed.
   // Filling with zeros is needed because the lower loops only visit
   // the nonzero positions.
-  j.SetSize(OutputSpaceDimension, ParametersDimension);
+  j.set_size(OutputSpaceDimension, ParametersDimension);
   j.Fill(0.0);
 
   // Some helper variables
