@@ -1192,9 +1192,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreade
   {
     this->m_NumberOfPixelsCounted +=
       this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */

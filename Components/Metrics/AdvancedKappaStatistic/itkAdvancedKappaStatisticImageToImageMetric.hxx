@@ -561,9 +561,6 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
     this->m_NumberOfPixelsCounted += this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_KappaGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */

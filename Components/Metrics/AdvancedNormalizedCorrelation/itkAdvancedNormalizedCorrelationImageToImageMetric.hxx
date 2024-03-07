@@ -614,9 +614,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   {
     this->m_NumberOfPixelsCounted +=
       this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
