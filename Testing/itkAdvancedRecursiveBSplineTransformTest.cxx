@@ -192,7 +192,7 @@ main(int argc, char * argv[])
 
   /** Resize some of the variables. */
   nzji.resize(nonzji);
-  jacobian.SetSize(Dimension, nonzji);
+  jacobian.set_size(Dimension, nonzji);
   jacobianOfSpatialJacobian.resize(nonzji);
   jacobianOfSpatialHessian.resize(nonzji);
   jacobian.Fill(0.0);
@@ -385,12 +385,12 @@ main(int argc, char * argv[])
 
   /** Jacobian. */
   JacobianType jacobianElastix;
-  jacobianElastix.SetSize(Dimension, nzji.size());
+  jacobianElastix.set_size(Dimension, nzji.size());
   jacobianElastix.Fill(0.0);
   transform->GetJacobian(inputPoint, jacobianElastix, nzjiElastix);
 
   JacobianType jacobianRecursive;
-  jacobianRecursive.SetSize(Dimension, nzji.size());
+  jacobianRecursive.set_size(Dimension, nzji.size());
   jacobianRecursive.Fill(0.0);
   recursiveTransform->GetJacobian(inputPoint, jacobianRecursive, nzjiRecursive);
 

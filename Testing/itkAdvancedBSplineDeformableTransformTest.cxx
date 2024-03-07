@@ -161,7 +161,7 @@ main(int argc, char * argv[])
 
   /** Resize some of the variables. */
   nzji.resize(nonzji);
-  jacobian.SetSize(Dimension, nonzji);
+  jacobian.set_size(Dimension, nonzji);
   jacobianOfSpatialJacobian.resize(nonzji);
   jacobianOfSpatialHessian.resize(nonzji);
   jacobian.Fill(0.0);
@@ -333,7 +333,7 @@ main(int argc, char * argv[])
   JacobianType jacobianITK{};
   transformITK->ComputeJacobianWithRespectToParameters(inputPoint, jacobianITK);
   JacobianType jacobianElastix;
-  jacobianElastix.SetSize(Dimension, nzji.size());
+  jacobianElastix.set_size(Dimension, nzji.size());
   jacobianElastix.Fill(0.0);
   transform->GetJacobian(inputPoint, jacobianElastix, nzji);
   // ITK4 B-spline is non-local and returns a full matrix. Cannot compute diff like this anymore:
@@ -356,7 +356,7 @@ main(int argc, char * argv[])
 
   //// Check
   // JacobianType jacobian1, jacobian2;
-  // jacobian1.SetSize( Dimension, nzji.size() ); jacobian2.SetSize( Dimension, nzji.size() );
+  // jacobian1.set_size( Dimension, nzji.size() ); jacobian2.set_size( Dimension, nzji.size() );
   // jacobian1.Fill( 0.0 ); jacobian2.Fill( 0.0 );
   // transform->GetJacobian( inputPoint, jacobian1, nzji );
   // transform->GetJacobian_opt( inputPoint, jacobian2, nzji );

@@ -153,7 +153,7 @@ AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &  
 {
   unsigned int d = Dimension;
 
-  j.SetSize(d, ParametersDimension);
+  j.set_size(d, ParametersDimension);
   j.Fill(ScalarType{});
 
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;

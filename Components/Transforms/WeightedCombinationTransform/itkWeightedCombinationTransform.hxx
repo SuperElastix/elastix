@@ -54,7 +54,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
     itkExceptionMacro("Number of parameters does not match the number of transforms set in the transform container.");
   }
 
-  // this->m_Jacobian.SetSize( OutputSpaceDimension, param.GetSize() );
+  // this->m_Jacobian.set_size( OutputSpaceDimension, param.GetSize() );
   this->m_Parameters = param;
   this->m_SumOfWeights = param.sum();
   if (this->m_SumOfWeights < 1e-10 && this->m_NormalizeWeights)
@@ -138,7 +138,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
   const TransformContainerType & tc = this->m_TransformContainer;
   const unsigned int             N = tc.size();
   const ParametersType &         param = this->m_Parameters;
-  jac.SetSize(OutputSpaceDimension, N);
+  jac.set_size(OutputSpaceDimension, N);
 
   /** This transform has only nonzero jacobians. */
   nzji = this->m_NonZeroJacobianIndices;
