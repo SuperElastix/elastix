@@ -154,7 +154,7 @@ AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &  
   unsigned int d = Dimension;
 
   j.set_size(d, ParametersDimension);
-  j.Fill(ScalarType{});
+  j.fill(ScalarType{});
 
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   const InputVectorType                 pp = p - this->GetCenter();

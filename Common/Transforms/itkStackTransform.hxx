@@ -144,7 +144,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(co
 
   /** Fill output Jacobian. */
   jac.set_size(InputSpaceDimension, nzji.size());
-  jac.Fill(0.0);
+  jac.fill(0.0);
   for (unsigned int d = 0; d < ReducedInputSpaceDimension; ++d)
   {
     for (unsigned int n = 0; n < nzji.size(); ++n)

@@ -334,7 +334,7 @@ main(int argc, char * argv[])
   transformITK->ComputeJacobianWithRespectToParameters(inputPoint, jacobianITK);
   JacobianType jacobianElastix;
   jacobianElastix.set_size(Dimension, nzji.size());
-  jacobianElastix.Fill(0.0);
+  jacobianElastix.fill(0.0);
   transform->GetJacobian(inputPoint, jacobianElastix, nzji);
   // ITK4 B-spline is non-local and returns a full matrix. Cannot compute diff like this anymore:
   // JacobianType jacobianDifferenceMatrix = jacobianElastix - jacobianITK;
@@ -357,7 +357,7 @@ main(int argc, char * argv[])
   //// Check
   // JacobianType jacobian1, jacobian2;
   // jacobian1.set_size( Dimension, nzji.size() ); jacobian2.set_size( Dimension, nzji.size() );
-  // jacobian1.Fill( 0.0 ); jacobian2.Fill( 0.0 );
+  // jacobian1.fill( 0.0 ); jacobian2.Fill( 0.0 );
   // transform->GetJacobian( inputPoint, jacobian1, nzji );
   // transform->GetJacobian_opt( inputPoint, jacobian2, nzji );
   // JacobianType jacobianDifferenceMatrix = jacobian1 - jacobian2;

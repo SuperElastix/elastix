@@ -315,7 +315,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   if ((jacobian.cols() != nnzji) || (jacobian.rows() != SpaceDimension))
   {
     jacobian.set_size(SpaceDimension, nnzji);
-    jacobian.Fill(0.0);
+    jacobian.fill(0.0);
   }
 
   /** NOTE: if the support region does not lie totally within the grid

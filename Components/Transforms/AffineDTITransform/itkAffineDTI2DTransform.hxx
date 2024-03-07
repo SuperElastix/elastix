@@ -201,7 +201,7 @@ AffineDTI2DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                NonZeroJacobianIndicesType & nzji) const
 {
   j.set_size(OutputSpaceDimension, ParametersDimension);
-  j.Fill(0.0);
+  j.fill(0.0);
   const JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
 
   /** Compute dR/dmu * (p-c) */

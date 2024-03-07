@@ -433,7 +433,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
   // Filling with zeros is needed because the lower loops only visit
   // the nonzero positions.
   j.set_size(OutputSpaceDimension, ParametersDimension);
-  j.Fill(0.0);
+  j.fill(0.0);
 
   const InputVectorType v = p - this->GetCenter();
 
