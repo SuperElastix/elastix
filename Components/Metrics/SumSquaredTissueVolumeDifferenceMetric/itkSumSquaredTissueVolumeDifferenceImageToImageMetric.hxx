@@ -286,9 +286,6 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
@@ -619,9 +616,6 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
     this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
-
-    /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = 0;
   }
 
   /** Check if enough samples were valid. */
