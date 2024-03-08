@@ -364,8 +364,6 @@ protected:
   using LinearInterpolatorType = AdvancedLinearInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
   using LinearInterpolatorPointer = typename LinearInterpolatorType::Pointer;
   using MovingImageDerivativeType = typename BSplineInterpolatorType::CovariantVectorType;
-  using CentralDifferenceGradientFilterType = GradientImageFilter<MovingImageType, RealType, RealType>;
-  using CentralDifferenceGradientFilterPointer = typename CentralDifferenceGradientFilterType::Pointer;
 
   /** Typedefs for support of sparse Jacobians and compact support of transformations. */
   using NonZeroJacobianIndicesType = typename AdvancedTransformType::NonZeroJacobianIndicesType;
@@ -386,8 +384,6 @@ protected:
   BSplineInterpolatorPointer        m_BSplineInterpolator{ nullptr };
   BSplineInterpolatorFloatPointer   m_BSplineInterpolatorFloat{ nullptr };
   ReducedBSplineInterpolatorPointer m_ReducedBSplineInterpolator{ nullptr };
-
-  CentralDifferenceGradientFilterPointer m_CentralDifferenceGradientFilter{ nullptr };
 
   /** Variables to store the AdvancedTransform. */
   bool                                    m_TransformIsAdvanced{ false };

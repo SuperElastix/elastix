@@ -62,7 +62,6 @@ public:
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_BSplineInterpolator, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_BSplineInterpolatorFloat, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ReducedBSplineInterpolator, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_CentralDifferenceGradientFilter, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_TransformIsAdvanced, false);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_AdvancedTransform, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_TransformIsBSpline, false);
