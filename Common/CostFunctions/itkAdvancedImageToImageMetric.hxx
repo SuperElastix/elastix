@@ -19,6 +19,7 @@
 #define _itkAdvancedImageToImageMetric_hxx
 
 #include "itkAdvancedImageToImageMetric.h"
+#include "elxDefaultConstruct.h"
 
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkComputeImageExtremaFilter.h"
@@ -372,15 +373,16 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     if (!this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat &&
         !this->m_InterpolatorIsReducedBSpline && !this->m_InterpolatorIsLinear && !interpolatorIsRayCast)
     {
-      this->m_CentralDifferenceGradientFilter = CentralDifferenceGradientFilterType::New();
-      this->m_CentralDifferenceGradientFilter->SetUseImageSpacing(true);
-      this->m_CentralDifferenceGradientFilter->SetInput(this->m_MovingImage);
-      this->m_CentralDifferenceGradientFilter->Update();
-      this->m_GradientImage = this->m_CentralDifferenceGradientFilter->GetOutput();
+      using CentralDifferenceGradientFilterType = GradientImageFilter<TMovingImage, RealType, RealType>;
+
+      elastix::DefaultConstruct<CentralDifferenceGradientFilterType> centralDifferenceGradientFilter{};
+      centralDifferenceGradientFilter.SetUseImageSpacing(true);
+      centralDifferenceGradientFilter.SetInput(this->m_MovingImage);
+      centralDifferenceGradientFilter.Update();
+      this->m_GradientImage = centralDifferenceGradientFilter.GetOutput();
     }
     else
     {
-      this->m_CentralDifferenceGradientFilter = nullptr;
       this->m_GradientImage = nullptr;
     }
   }
@@ -908,8 +910,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & 
   os << indent.GetNextIndent() << "InterpolatorIsBSplineFloat: " << this->m_InterpolatorIsBSplineFloat << std::endl;
   os << indent.GetNextIndent() << "BSplineInterpolatorFloat: " << this->m_BSplineInterpolatorFloat.GetPointer()
      << std::endl;
-  os << indent.GetNextIndent()
-     << "CentralDifferenceGradientFilter: " << this->m_CentralDifferenceGradientFilter.GetPointer() << std::endl;
 
   /** Variables used when the transform is a B-spline transform. */
   os << indent << "Variables store the transform as an AdvancedTransform: " << std::endl;
