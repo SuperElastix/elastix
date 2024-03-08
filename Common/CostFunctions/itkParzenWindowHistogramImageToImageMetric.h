@@ -238,7 +238,6 @@ protected:
   using typename Superclass::MovingImageContinuousIndexType;
   using typename Superclass::BSplineInterpolatorType;
   using typename Superclass::MovingImageDerivativeType;
-  using typename Superclass::CentralDifferenceGradientFilterType;
   using typename Superclass::NonZeroJacobianIndicesType;
 
   /** Typedefs for the PDFs and PDF derivatives. */

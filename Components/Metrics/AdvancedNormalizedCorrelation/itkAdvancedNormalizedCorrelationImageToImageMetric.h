@@ -202,7 +202,6 @@ protected:
   using typename Superclass::MovingImagePointType;
   using typename Superclass::MovingImageContinuousIndexType;
   using typename Superclass::BSplineInterpolatorType;
-  using typename Superclass::CentralDifferenceGradientFilterType;
   using typename Superclass::MovingImageDerivativeType;
   using typename Superclass::NonZeroJacobianIndicesType;
 
