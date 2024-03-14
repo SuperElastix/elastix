@@ -96,8 +96,6 @@ public:
   using typename Superclass1::GradientPixelType;
   using typename Superclass1::GradientImageType;
   using typename Superclass1::GradientImagePointer;
-  using typename Superclass1::GradientImageFilterType;
-  using typename Superclass1::GradientImageFilterPointer;
   using typename Superclass1::FixedImageMaskType;
   using typename Superclass1::FixedImageMaskPointer;
   using typename Superclass1::MovingImageMaskType;
