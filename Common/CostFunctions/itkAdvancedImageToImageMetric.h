@@ -376,10 +376,6 @@ protected:
   mutable ImageSamplerPointer m_ImageSampler{ nullptr };
 
   /** Variables for image derivative computation. */
-  bool                              m_InterpolatorIsLinear{ false };
-  bool                              m_InterpolatorIsBSpline{ false };
-  bool                              m_InterpolatorIsBSplineFloat{ false };
-  bool                              m_InterpolatorIsReducedBSpline{ false };
   LinearInterpolatorPointer         m_LinearInterpolator{ nullptr };
   BSplineInterpolatorPointer        m_BSplineInterpolator{ nullptr };
   BSplineInterpolatorFloatPointer   m_BSplineInterpolatorFloat{ nullptr };

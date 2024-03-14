@@ -289,61 +289,38 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
    * Otherwise, we precompute the gradients using a central difference scheme,
    * and do evaluate the gradient using nearest neighbor interpolation.
    */
-  this->m_InterpolatorIsBSpline = false;
-  BSplineInterpolatorType * testPtr = dynamic_cast<BSplineInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
-  if (testPtr)
+  m_BSplineInterpolator = dynamic_cast<BSplineInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
+  if (m_BSplineInterpolator)
   {
-    this->m_InterpolatorIsBSpline = true;
-    this->m_BSplineInterpolator = testPtr;
     itkDebugMacro("Interpolator is B-spline");
   }
   else
   {
-    this->m_BSplineInterpolator = nullptr;
     itkDebugMacro("Interpolator is not B-spline");
   }
 
-  this->m_InterpolatorIsBSplineFloat = false;
-  BSplineInterpolatorFloatType * testPtr2 =
-    dynamic_cast<BSplineInterpolatorFloatType *>(Superclass::m_Interpolator.GetPointer());
-  if (testPtr2)
+  m_BSplineInterpolatorFloat = dynamic_cast<BSplineInterpolatorFloatType *>(Superclass::m_Interpolator.GetPointer());
+  if (m_BSplineInterpolatorFloat)
   {
-    this->m_InterpolatorIsBSplineFloat = true;
-    this->m_BSplineInterpolatorFloat = testPtr2;
     itkDebugMacro("Interpolator is BSplineFloat");
   }
   else
   {
-    this->m_BSplineInterpolatorFloat = nullptr;
     itkDebugMacro("Interpolator is not BSplineFloat");
   }
 
-  this->m_InterpolatorIsReducedBSpline = false;
-  ReducedBSplineInterpolatorType * testPtr3 =
+  m_ReducedBSplineInterpolator =
     dynamic_cast<ReducedBSplineInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
-  if (testPtr3)
+  if (m_ReducedBSplineInterpolator)
   {
-    this->m_InterpolatorIsReducedBSpline = true;
-    this->m_ReducedBSplineInterpolator = testPtr3;
     itkDebugMacro("Interpolator is ReducedBSpline");
   }
   else
   {
-    this->m_ReducedBSplineInterpolator = nullptr;
     itkDebugMacro("Interpolator is not ReducedBSpline");
   }
 
-  this->m_InterpolatorIsLinear = false;
-  LinearInterpolatorType * testPtr4 = dynamic_cast<LinearInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
-  if (testPtr4)
-  {
-    this->m_InterpolatorIsLinear = true;
-    this->m_LinearInterpolator = testPtr4;
-  }
-  else
-  {
-    this->m_LinearInterpolator = nullptr;
-  }
+  m_LinearInterpolator = dynamic_cast<LinearInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
 
   /** Don't overwrite the gradient image if GetComputeGradient() == true.
    * Otherwise we can use a forward difference derivative, or the derivative
@@ -370,8 +347,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     const bool interpolatorIsRayCast =
       dynamic_cast<RayCastInterpolatorType *>(Superclass::m_Interpolator.GetPointer()) != nullptr;
 
-    if (!this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat &&
-        !this->m_InterpolatorIsReducedBSpline && !this->m_InterpolatorIsLinear && !interpolatorIsRayCast)
+    if (!m_BSplineInterpolator && !m_BSplineInterpolatorFloat && !m_ReducedBSplineInterpolator &&
+        !m_LinearInterpolator && !interpolatorIsRayCast)
     {
       using CentralDifferenceGradientFilterType = GradientImageFilter<TMovingImage, RealType, RealType>;
 
@@ -485,19 +462,19 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
     /** Compute value and possibly derivative. */
     if (gradient)
     {
-      if (this->m_InterpolatorIsBSpline && !this->GetComputeGradient())
+      if (m_BSplineInterpolator && !this->GetComputeGradient())
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient, optionalThreadId...);
       }
-      else if (this->m_InterpolatorIsBSplineFloat && !this->GetComputeGradient())
+      else if (m_BSplineInterpolatorFloat && !this->GetComputeGradient())
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient, optionalThreadId...);
       }
-      else if (this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient())
+      else if (m_ReducedBSplineInterpolator && !this->GetComputeGradient())
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
@@ -505,7 +482,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
         // this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
       }
-      else if (this->m_InterpolatorIsLinear && !this->GetComputeGradient())
+      else if (m_LinearInterpolator && !this->GetComputeGradient())
       {
         /** Compute moving image value and gradient using the linear interpolator. */
         this->m_LinearInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(cindex, movingImageValue, *gradient);
@@ -905,9 +882,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & 
 
   /** Variables related to image derivative computation. */
   os << indent << "Variables related to image derivative computation: " << std::endl;
-  os << indent.GetNextIndent() << "InterpolatorIsBSpline: " << this->m_InterpolatorIsBSpline << std::endl;
   os << indent.GetNextIndent() << "BSplineInterpolator: " << this->m_BSplineInterpolator.GetPointer() << std::endl;
-  os << indent.GetNextIndent() << "InterpolatorIsBSplineFloat: " << this->m_InterpolatorIsBSplineFloat << std::endl;
   os << indent.GetNextIndent() << "BSplineInterpolatorFloat: " << this->m_BSplineInterpolatorFloat.GetPointer()
      << std::endl;
 

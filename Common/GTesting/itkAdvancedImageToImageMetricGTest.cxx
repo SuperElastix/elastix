@@ -54,10 +54,6 @@ public:
 
       // Superclass data members:
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ImageSampler, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_InterpolatorIsLinear, false);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_InterpolatorIsBSpline, false);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_InterpolatorIsBSplineFloat, false);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_InterpolatorIsReducedBSpline, false);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_LinearInterpolator, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_BSplineInterpolator, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_BSplineInterpolatorFloat, nullptr);
