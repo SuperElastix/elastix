@@ -376,18 +376,14 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform()
 {
   /** Check if the transform is of type AdvancedTransform. */
-  this->m_TransformIsAdvanced = false;
-  AdvancedTransformType * testPtr = dynamic_cast<AdvancedTransformType *>(this->m_Transform.GetPointer());
-  if (!testPtr)
+  m_AdvancedTransform = dynamic_cast<AdvancedTransformType *>(this->m_Transform.GetPointer());
+  if (!m_AdvancedTransform)
   {
-    this->m_AdvancedTransform = nullptr;
     itkDebugMacro("Transform is not Advanced");
     itkExceptionMacro("The AdvancedImageToImageMetric requires an AdvancedTransform");
   }
   else
   {
-    this->m_TransformIsAdvanced = true;
-    this->m_AdvancedTransform = testPtr;
     itkDebugMacro("Transform is Advanced");
   }
 
@@ -888,7 +884,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & 
 
   /** Variables used when the transform is a B-spline transform. */
   os << indent << "Variables store the transform as an AdvancedTransform: " << std::endl;
-  os << indent.GetNextIndent() << "TransformIsAdvanced: " << this->m_TransformIsAdvanced << std::endl;
   os << indent.GetNextIndent() << "AdvancedTransform: " << this->m_AdvancedTransform.GetPointer() << std::endl;
 
   /** Other variables. */

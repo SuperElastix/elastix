@@ -382,7 +382,6 @@ protected:
   ReducedBSplineInterpolatorPointer m_ReducedBSplineInterpolator{ nullptr };
 
   /** Variables to store the AdvancedTransform. */
-  bool                                    m_TransformIsAdvanced{ false };
   typename AdvancedTransformType::Pointer m_AdvancedTransform{ nullptr };
   mutable bool                            m_TransformIsBSpline{ false };
 
