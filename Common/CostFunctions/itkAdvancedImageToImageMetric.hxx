@@ -322,11 +322,11 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
 
   m_LinearInterpolator = dynamic_cast<LinearInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
 
-  /** Don't overwrite the gradient image if GetComputeGradient() == true.
+  /** Don't overwrite the gradient image if m_ComputeGradient == true.
    * Otherwise we can use a forward difference derivative, or the derivative
    * provided by the B-spline interpolator.
    */
-  if (!this->GetComputeGradient())
+  if (!Superclass::m_ComputeGradient)
   {
     /** In addition, don't compute the moving image gradient for 2D/3D registration,
      * i.e. whenever the interpolator is a ray cast interpolator.
@@ -462,19 +462,19 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
     /** Compute value and possibly derivative. */
     if (gradient)
     {
-      if (m_BSplineInterpolator && !this->GetComputeGradient())
+      if (m_BSplineInterpolator && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient, optionalThreadId...);
       }
-      else if (m_BSplineInterpolatorFloat && !this->GetComputeGradient())
+      else if (m_BSplineInterpolatorFloat && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient, optionalThreadId...);
       }
-      else if (m_ReducedBSplineInterpolator && !this->GetComputeGradient())
+      else if (m_ReducedBSplineInterpolator && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
@@ -482,7 +482,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
         // this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
       }
-      else if (m_LinearInterpolator && !this->GetComputeGradient())
+      else if (m_LinearInterpolator && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the linear interpolator. */
         this->m_LinearInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(cindex, movingImageValue, *gradient);
