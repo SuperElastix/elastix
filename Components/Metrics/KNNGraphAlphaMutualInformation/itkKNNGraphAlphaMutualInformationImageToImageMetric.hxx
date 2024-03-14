@@ -906,7 +906,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Eva
    *   pre-computed gradient images.
    * \todo: for now we only implement the first option.
    */
-  if (this->m_InterpolatorsAreBSpline && !this->GetComputeGradient())
+  if (this->m_InterpolatorsAreBSpline && !Superclass::m_ComputeGradient)
   {
     /** Computed moving image gradient using derivative B-spline kernel. */
     MovingImageDerivativeType gradient;
