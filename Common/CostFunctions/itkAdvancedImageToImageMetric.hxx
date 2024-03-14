@@ -19,7 +19,9 @@
 #define _itkAdvancedImageToImageMetric_hxx
 
 #include "itkAdvancedImageToImageMetric.h"
+#include "elxConversion.h"
 #include "elxDefaultConstruct.h"
+#include "elxlog.h"
 
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkComputeImageExtremaFilter.h"
@@ -283,6 +285,9 @@ template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolator()
 {
+  elastix::log::info(std::string("Check interpolator\n  Metric type:\n  `") + typeid(*this).name() +
+                     "`\n  Interpolator type:\n  `" + typeid(*Superclass::m_Interpolator).name() + '`');
+
   /** Check if the interpolator is of type BSplineInterpolateImageFunction,
    * or of type AdvancedLinearInterpolateImageFunction.
    * If so, we can make use of their EvaluateDerivatives methods.
@@ -375,11 +380,18 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     {
       using CentralDifferenceGradientFilterType = GradientImageFilter<TMovingImage, RealType, RealType>;
 
+      using namespace std::chrono;
+      const auto timePoint = high_resolution_clock::now();
+
       elastix::DefaultConstruct<CentralDifferenceGradientFilterType> centralDifferenceGradientFilter{};
       centralDifferenceGradientFilter.SetUseImageSpacing(true);
       centralDifferenceGradientFilter.SetInput(this->m_MovingImage);
       centralDifferenceGradientFilter.Update();
       this->m_GradientImage = centralDifferenceGradientFilter.GetOutput();
+
+      elastix::log::info("  Computing the gradient image of the moving image took " +
+                         elastix::Conversion::SecondsToDHMS(
+                           duration_cast<duration<double>>(high_resolution_clock::now() - timePoint).count(), 6));
     }
     else
     {
