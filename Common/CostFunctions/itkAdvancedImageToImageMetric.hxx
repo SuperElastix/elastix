@@ -290,7 +290,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
    * and do evaluate the gradient using nearest neighbor interpolation.
    */
   this->m_InterpolatorIsBSpline = false;
-  BSplineInterpolatorType * testPtr = dynamic_cast<BSplineInterpolatorType *>(this->m_Interpolator.GetPointer());
+  BSplineInterpolatorType * testPtr = dynamic_cast<BSplineInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
   if (testPtr)
   {
     this->m_InterpolatorIsBSpline = true;
@@ -305,7 +305,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
 
   this->m_InterpolatorIsBSplineFloat = false;
   BSplineInterpolatorFloatType * testPtr2 =
-    dynamic_cast<BSplineInterpolatorFloatType *>(this->m_Interpolator.GetPointer());
+    dynamic_cast<BSplineInterpolatorFloatType *>(Superclass::m_Interpolator.GetPointer());
   if (testPtr2)
   {
     this->m_InterpolatorIsBSplineFloat = true;
@@ -320,7 +320,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
 
   this->m_InterpolatorIsReducedBSpline = false;
   ReducedBSplineInterpolatorType * testPtr3 =
-    dynamic_cast<ReducedBSplineInterpolatorType *>(this->m_Interpolator.GetPointer());
+    dynamic_cast<ReducedBSplineInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
   if (testPtr3)
   {
     this->m_InterpolatorIsReducedBSpline = true;
@@ -334,7 +334,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
   }
 
   this->m_InterpolatorIsLinear = false;
-  LinearInterpolatorType * testPtr4 = dynamic_cast<LinearInterpolatorType *>(this->m_Interpolator.GetPointer());
+  LinearInterpolatorType * testPtr4 = dynamic_cast<LinearInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
   if (testPtr4)
   {
     this->m_InterpolatorIsLinear = true;
@@ -368,7 +368,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     using RayCastInterpolatorType =
       itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
     const bool interpolatorIsRayCast =
-      dynamic_cast<RayCastInterpolatorType *>(this->m_Interpolator.GetPointer()) != nullptr;
+      dynamic_cast<RayCastInterpolatorType *>(Superclass::m_Interpolator.GetPointer()) != nullptr;
 
     if (!this->m_InterpolatorIsBSpline && !this->m_InterpolatorIsBSplineFloat &&
         !this->m_InterpolatorIsReducedBSpline && !this->m_InterpolatorIsLinear && !interpolatorIsRayCast)
@@ -478,8 +478,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
 {
   /** Check if mapped point inside image buffer. */
   MovingImageContinuousIndexType cindex;
-  this->m_Interpolator->ConvertPointToContinuousIndex(mappedPoint, cindex);
-  bool sampleOk = this->m_Interpolator->IsInsideBuffer(cindex);
+  Superclass::m_Interpolator->ConvertPointToContinuousIndex(mappedPoint, cindex);
+  bool sampleOk = Superclass::m_Interpolator->IsInsideBuffer(cindex);
   if (sampleOk)
   {
     /** Compute value and possibly derivative. */
@@ -500,7 +500,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
       else if (this->m_InterpolatorIsReducedBSpline && !this->GetComputeGradient())
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
-        movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex(cindex);
+        movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
         (*gradient) = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
         // this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
@@ -515,7 +515,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
         /** Get the gradient by NearestNeighboorInterpolation of the gradient image.
          * It is assumed that the gradient image is computed.
          */
-        movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex(cindex);
+        movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
         MovingImageIndexType index;
         for (unsigned int j = 0; j < MovingImageDimension; ++j)
         {
@@ -566,7 +566,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
     }   // end if gradient
     else
     {
-      movingImageValue = this->m_Interpolator->EvaluateAtContinuousIndex(cindex);
+      movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
     }
   } // end if sampleOk
 
