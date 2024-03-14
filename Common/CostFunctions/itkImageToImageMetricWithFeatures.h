@@ -72,8 +72,6 @@ public:
   using typename Superclass::GradientPixelType;
   using typename Superclass::GradientImageType;
   using typename Superclass::GradientImagePointer;
-  using typename Superclass::GradientImageFilterType;
-  using typename Superclass::GradientImageFilterPointer;
   using typename Superclass::FixedImageMaskType;
   using typename Superclass::FixedImageMaskPointer;
   using typename Superclass::MovingImageMaskType;
