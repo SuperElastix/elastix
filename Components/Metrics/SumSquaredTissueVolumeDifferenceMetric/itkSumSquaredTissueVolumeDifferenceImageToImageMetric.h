@@ -238,11 +238,11 @@ protected:
   AfterThreadedGetValueAndDerivative(MeasureType & measure, DerivativeType & derivative) const override;
 
 private:
-  /** Intensity value to use for air.  Default is -1000 */
-  RealType m_AirValue{};
+  /** Intensity value to use for air. */
+  RealType m_AirValue{ -1000.0 };
 
-  /** Intensity value to use for tissue.  Default is 55 */
-  RealType m_TissueValue{};
+  /** Intensity value to use for tissue. */
+  RealType m_TissueValue{ 55.0 };
 
 }; // end class SumSquaredTissueVolumeDifferenceImageToImageMetric
 

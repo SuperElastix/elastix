@@ -39,8 +39,6 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,
   this->SetUseImageSampler(true);
   this->SetUseFixedImageLimiter(false);
   this->SetUseMovingImageLimiter(false);
-  this->m_AirValue = -1000.0;
-  this->m_TissueValue = 55.0;
 
 } // end Constructor
 
