@@ -146,9 +146,9 @@ private:
   /** Member variables. */
   ScalesType                      m_Scales{};
   ScalesType                      m_SquaredScales{};
-  SingleValuedCostFunctionPointer m_UnscaledCostFunction{};
-  bool                            m_UseScales{};
-  bool                            m_NegateCostFunction{};
+  SingleValuedCostFunctionPointer m_UnscaledCostFunction{ nullptr };
+  bool                            m_UseScales{ false };
+  bool                            m_NegateCostFunction{ false };
 };
 
 } // end namespace itk
