@@ -26,14 +26,7 @@ namespace itk
  * **************** Constructor *****************************
  */
 
-ScaledSingleValuedCostFunction::ScaledSingleValuedCostFunction()
-{
-  this->m_UnscaledCostFunction = nullptr;
-  this->m_UseScales = false;
-  this->m_NegateCostFunction = false;
-
-} // end Constructor
-
+ScaledSingleValuedCostFunction::ScaledSingleValuedCostFunction() = default;
 
 /**
  * ******************** GetValue *****************************
