@@ -36,37 +36,9 @@ namespace itk
 template <class TFixedImage, class TMovingImage>
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ParzenWindowHistogramImageToImageMetric()
 {
-  this->m_NumberOfFixedHistogramBins = 32;
-  this->m_NumberOfMovingHistogramBins = 32;
-  this->m_JointPDF = nullptr;
-  this->m_JointPDFDerivatives = nullptr;
-  this->m_FixedImageNormalizedMin = 0.0;
-  this->m_MovingImageNormalizedMin = 0.0;
-  this->m_FixedImageBinSize = 0.0;
-  this->m_MovingImageBinSize = 0.0;
-  this->m_Alpha = 0.0;
-  this->m_FixedIncrementalMarginalPDFRight = nullptr;
-  this->m_MovingIncrementalMarginalPDFRight = nullptr;
-  this->m_FixedIncrementalMarginalPDFLeft = nullptr;
-  this->m_MovingIncrementalMarginalPDFLeft = nullptr;
-
-  this->m_FixedKernel = nullptr;
-  this->m_MovingKernel = nullptr;
-  this->m_DerivativeMovingKernel = nullptr;
-  this->m_FixedKernelBSplineOrder = 0;
-  this->m_MovingKernelBSplineOrder = 3;
-  this->m_FixedParzenTermToIndexOffset = 0.5;
-  this->m_MovingParzenTermToIndexOffset = -1.0;
-
-  this->m_UseDerivative = false;
-  this->m_UseFiniteDifferenceDerivative = false;
-  this->m_FiniteDifferencePerturbation = 1.0;
-
   this->SetUseImageSampler(true);
   this->SetUseFixedImageLimiter(true);
   this->SetUseMovingImageLimiter(true);
-
-  this->m_UseExplicitPDFDerivatives = true;
 
   /** Initialize the m_ParzenWindowHistogramThreaderParameters */
   this->m_ParzenWindowHistogramThreaderParameters.m_Metric = this;

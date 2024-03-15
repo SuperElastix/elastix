@@ -266,33 +266,33 @@ protected:
   /** Protected variables **************************** */
 
   /** Variables for Alpha (the normalization factor of the histogram). */
-  mutable double         m_Alpha{};
+  mutable double         m_Alpha{ 0.0 };
   mutable DerivativeType m_PerturbedAlphaRight{};
   mutable DerivativeType m_PerturbedAlphaLeft{};
 
   /** Variables for the pdfs (actually: histograms). */
   mutable MarginalPDFType       m_FixedImageMarginalPDF{};
   mutable MarginalPDFType       m_MovingImageMarginalPDF{};
-  JointPDFPointer               m_JointPDF{};
-  JointPDFDerivativesPointer    m_JointPDFDerivatives{};
+  JointPDFPointer               m_JointPDF{ nullptr };
+  JointPDFDerivativesPointer    m_JointPDFDerivatives{ nullptr };
   JointPDFDerivativesPointer    m_IncrementalJointPDFRight{};
   JointPDFDerivativesPointer    m_IncrementalJointPDFLeft{};
-  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFRight{};
-  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFRight{};
-  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFLeft{};
-  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFLeft{};
+  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFRight{ nullptr };
+  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFRight{ nullptr };
+  IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFLeft{ nullptr };
+  IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFLeft{ nullptr };
   mutable JointPDFRegionType    m_JointPDFWindow{}; // no need for mutable anymore?
-  double                        m_MovingImageNormalizedMin{};
-  double                        m_FixedImageNormalizedMin{};
-  double                        m_FixedImageBinSize{};
-  double                        m_MovingImageBinSize{};
-  double                        m_FixedParzenTermToIndexOffset{};
-  double                        m_MovingParzenTermToIndexOffset{};
+  double                        m_MovingImageNormalizedMin{ 0.0 };
+  double                        m_FixedImageNormalizedMin{ 0.0 };
+  double                        m_FixedImageBinSize{ 0.0 };
+  double                        m_MovingImageBinSize{ 0.0 };
+  double                        m_FixedParzenTermToIndexOffset{ 0.5 };
+  double                        m_MovingParzenTermToIndexOffset{ -1.0 };
 
   /** Kernels for computing Parzen histograms and derivatives. */
-  KernelFunctionPointer m_FixedKernel{};
-  KernelFunctionPointer m_MovingKernel{};
-  KernelFunctionPointer m_DerivativeMovingKernel{};
+  KernelFunctionPointer m_FixedKernel{ nullptr };
+  KernelFunctionPointer m_MovingKernel{ nullptr };
+  KernelFunctionPointer m_DerivativeMovingKernel{ nullptr };
 
   /** Initialize threading related parameters. */
   void
@@ -496,14 +496,14 @@ private:
     m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables;
 
   /** Variables that can/should be accessed by their Set/Get functions. */
-  unsigned long m_NumberOfFixedHistogramBins{};
-  unsigned long m_NumberOfMovingHistogramBins{};
-  unsigned int  m_FixedKernelBSplineOrder{};
-  unsigned int  m_MovingKernelBSplineOrder{};
-  bool          m_UseDerivative{};
-  bool          m_UseExplicitPDFDerivatives{};
-  bool          m_UseFiniteDifferenceDerivative{};
-  double        m_FiniteDifferencePerturbation{};
+  unsigned long m_NumberOfFixedHistogramBins{ 32 };
+  unsigned long m_NumberOfMovingHistogramBins{ 32 };
+  unsigned int  m_FixedKernelBSplineOrder{ 0 };
+  unsigned int  m_MovingKernelBSplineOrder{ 3 };
+  bool          m_UseDerivative{ false };
+  bool          m_UseExplicitPDFDerivatives{ true };
+  bool          m_UseFiniteDifferenceDerivative{ false };
+  double        m_FiniteDifferencePerturbation{ 1.0 };
 };
 
 } // end namespace itk
