@@ -38,11 +38,6 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AdvancedKap
   this->SetUseFixedImageLimiter(false);
   this->SetUseMovingImageLimiter(false);
 
-  this->m_UseForegroundValue = true; // for backwards compatibility
-  this->m_ForegroundValue = 1.0;
-  this->m_Epsilon = 1e-3;
-  this->m_Complement = true;
-
 } // end Constructor
 
 
