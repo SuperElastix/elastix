@@ -222,10 +222,10 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  bool     m_UseForegroundValue{};
-  RealType m_ForegroundValue{};
-  RealType m_Epsilon{};
-  bool     m_Complement{};
+  bool     m_UseForegroundValue{ true }; // for backwards compatibility
+  RealType m_ForegroundValue{ 1.0 };
+  RealType m_Epsilon{ 1e-3 };
+  bool     m_Complement{ true };
 
   /** Threading related parameters. */
 
