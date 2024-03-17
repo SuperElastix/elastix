@@ -41,8 +41,6 @@ template <class TFixedImage, class TMovingImage>
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::ParzenWindowMutualInformationImageToImageMetric()
 {
-  this->m_UseJacobianPreconditioning = false;
-
   /** Initialize the m_ParzenWindowHistogramThreaderParameters. */
   this->m_ParzenWindowMutualInformationThreaderParameters.m_Metric = this;
 
