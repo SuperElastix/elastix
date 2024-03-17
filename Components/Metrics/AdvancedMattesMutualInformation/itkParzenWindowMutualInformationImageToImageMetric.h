@@ -258,7 +258,7 @@ private:
   mutable PRatioArrayType m_PRatioArray{};
 
   /** Setting */
-  bool m_UseJacobianPreconditioning{};
+  bool m_UseJacobianPreconditioning{ false };
 
   /** Helper function to compute the derivative for the low memory variant. */
   void
