@@ -235,7 +235,7 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  mutable bool m_SubtractMean{};
+  mutable bool m_SubtractMean{ false };
 
   using AccumulateType = typename NumericTraits<MeasureType>::AccumulateType;
 
