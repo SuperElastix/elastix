@@ -24,20 +24,6 @@ namespace itk
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
-ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
-  ImageToImageMetricWithFeatures()
-{
-  this->m_NumberOfFixedFeatureImages = 0;
-  this->m_NumberOfMovingFeatureImages = 0;
-
-} // end Constructor
-
-
-/**
  * ********************* Initialize *****************************
  */
 

@@ -222,7 +222,7 @@ public:
   Initialize();
 
 protected:
-  ImageToImageMetricWithFeatures();
+  ImageToImageMetricWithFeatures() = default;
   virtual ~ImageToImageMetricWithFeatures() {}
   void
   PrintSelf(std::ostream & os, Indent indent) const;
@@ -236,8 +236,8 @@ protected:
   using typename Superclass::MovingImageContinuousIndexType;
 
   /** Member variables. */
-  unsigned int                        m_NumberOfFixedFeatureImages{};
-  unsigned int                        m_NumberOfMovingFeatureImages{};
+  unsigned int                        m_NumberOfFixedFeatureImages{ 0 };
+  unsigned int                        m_NumberOfMovingFeatureImages{ 0 };
   FixedFeatureImageVectorType         m_FixedFeatureImages{};
   MovingFeatureImageVectorType        m_MovingFeatureImages{};
   FixedFeatureInterpolatorVectorType  m_FixedFeatureInterpolators{};
