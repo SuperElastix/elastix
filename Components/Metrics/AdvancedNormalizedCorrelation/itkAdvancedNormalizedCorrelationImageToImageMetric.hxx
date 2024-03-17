@@ -37,8 +37,6 @@ template <class TFixedImage, class TMovingImage>
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::AdvancedNormalizedCorrelationImageToImageMetric()
 {
-  this->m_SubtractMean = false;
-
   this->SetUseImageSampler(true);
   this->SetUseFixedImageLimiter(false);
   this->SetUseMovingImageLimiter(false);
