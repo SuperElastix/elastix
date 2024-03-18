@@ -108,10 +108,6 @@ public:
   using typename Superclass::DerivativeValueType;
   using typename Superclass::ParametersType;
 
-  /** Some typedefs for computing the SelfHessian */
-  using typename Superclass::HessianValueType;
-  using typename Superclass::HessianType;
-
   /**
   using typename Superclass::ImageSamplerType;
   using typename Superclass::ImageSamplerPointer;
@@ -426,10 +422,6 @@ public:
   GetValueAndDerivative(const ParametersType & parameters,
                         MeasureType &          value,
                         DerivativeType &       derivative) const override;
-
-  /** Experimental feature: compute SelfHessian. */
-  void
-  GetSelfHessian(const TransformParametersType & parameters, HessianType & H) const override;
 
   /** Method to return the latest modified time of this object or any of its
    * cached ivars.

@@ -126,13 +126,6 @@ public:
   void
   Initialize() override;
 
-  /**
-   * Do some things before each resolution:
-   * \li Set options for SelfHessian
-   */
-  void
-  BeforeEachResolution() override;
-
 protected:
   /** The constructor. */
   TransformBendingEnergyPenalty() = default;

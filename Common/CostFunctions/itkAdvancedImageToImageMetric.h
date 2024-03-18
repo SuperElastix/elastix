@@ -28,7 +28,6 @@
 #include "itkLimiterFunctionBase.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
-#include <vnl/vnl_sparse_matrix.h>
 
 #include "itkImageMaskSpatialObject.h"
 
@@ -169,10 +168,6 @@ public:
   using BSplineOrder2TransformPointer = typename BSplineOrder2TransformType::Pointer;
   using BSplineOrder3TransformPointer = typename BSplineOrder3TransformType::Pointer;
 
-  /** Hessian type; for SelfHessian (experimental feature) */
-  using HessianValueType = typename DerivativeType::ValueType;
-  using HessianType = vnl_sparse_matrix<HessianValueType>;
-
   /** Typedefs for multi-threading. */
   using ThreaderType = itk::PlatformMultiThreader;
   using ThreadInfoType = typename ThreaderType::WorkUnitInfo;
@@ -298,12 +293,6 @@ public:
    */
   void
   Initialize() override;
-
-  /** Experimental feature: compute SelfHessian.
-   * This base class just returns an identity matrix of the right size.
-   */
-  virtual void
-  GetSelfHessian(const TransformParametersType & parameters, HessianType & H) const;
 
   /** Set number of threads to use for computations. */
   void

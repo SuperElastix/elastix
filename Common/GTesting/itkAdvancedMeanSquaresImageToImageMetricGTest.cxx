@@ -67,9 +67,6 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, DefaultConstruct)
     // Note: m_NormalizationFactor cannot be tested this way, because there is no
     // `AdvancedMeanSquaresImageToImageMetric::GetNormalizationFactor()`.
     EXPECT_EQ(advancedMeanSquaresImageToImageMetric.GetUseNormalization(), false);
-    EXPECT_EQ(advancedMeanSquaresImageToImageMetric.GetSelfHessianSmoothingSigma(), 1.0);
-    EXPECT_EQ(advancedMeanSquaresImageToImageMetric.GetSelfHessianNoiseRange(), 1.0);
-    EXPECT_EQ(advancedMeanSquaresImageToImageMetric.GetNumberOfSamplesForSelfHessian(), 100000);
   }
   {
     const itk::AdvancedImageToImageMetric<ImageType, ImageType> & advancedImageToImageMetric = defaultConstructedMetric;
