@@ -41,27 +41,6 @@ TransformBendingEnergyPenalty<TElastix>::Initialize()
 
 } // end Initialize()
 
-
-/**
- * ***************** BeforeEachResolution ***********************
- */
-
-template <class TElastix>
-void
-TransformBendingEnergyPenalty<TElastix>::BeforeEachResolution()
-{
-  /** Get the current resolution level. */
-  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
-
-  /** Set the number of samples used to compute the SelfHessian */
-  unsigned int numberOfSamplesForSelfHessian = 100000;
-  this->GetConfiguration()->ReadParameter(
-    numberOfSamplesForSelfHessian, "NumberOfSamplesForSelfHessian", this->GetComponentLabel(), level, 0);
-  this->SetNumberOfSamplesForSelfHessian(numberOfSamplesForSelfHessian);
-
-} // end BeforeEachResolution()
-
-
 } // end namespace elastix
 
 #endif // end #ifndef elxTransformBendingEnergyPenaltyTerm_hxx

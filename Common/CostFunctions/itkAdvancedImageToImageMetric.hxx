@@ -646,32 +646,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::IsInsideMovingMask(const 
 
 
 /**
- * *********************** GetSelfHessian ***********************
- */
-
-template <class TFixedImage, class TMovingImage>
-void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetSelfHessian(
-  const TransformParametersType & itkNotUsed(parameters),
-  HessianType &                   H) const
-{
-  itkDebugMacro("GetSelfHessian()");
-
-  const auto numberOfParameters = this->GetNumberOfParameters();
-
-  /** Set identity matrix as default implementation. */
-  H.set_size(numberOfParameters, numberOfParameters);
-  // H.Fill(0.0);
-  // H.fill_diagonal(1.0);
-  for (unsigned int i = 0; i < numberOfParameters; ++i)
-  {
-    H(i, i) = 1.0;
-  }
-
-} // end GetSelfHessian()
-
-
-/**
  * *********************** BeforeThreadedGetValueAndDerivative ***********************
  */
 

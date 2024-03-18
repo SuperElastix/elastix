@@ -20,10 +20,6 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 
-#include "itkSmoothingRecursiveGaussianImageFilter.h"   // needed for SelfHessian
-#include "itkImageGridSampler.h"                        // needed for SelfHessian
-#include "itkNearestNeighborInterpolateImageFunction.h" // needed for SelfHessian
-
 namespace itk
 {
 
@@ -111,8 +107,6 @@ public:
   using typename Superclass::FixedImageLimiterOutputType;
   using typename Superclass::MovingImageLimiterOutputType;
   using typename Superclass::MovingImageDerivativeScalesType;
-  using typename Superclass::HessianValueType;
-  using typename Superclass::HessianType;
   using typename Superclass::ThreaderType;
   using typename Superclass::ThreadInfoType;
 
@@ -143,22 +137,6 @@ public:
   GetValueAndDerivative(const TransformParametersType & parameters,
                         MeasureType &                   value,
                         DerivativeType &                derivative) const override;
-
-  /** Experimental feature: compute SelfHessian */
-  void
-  GetSelfHessian(const TransformParametersType & parameters, HessianType & H) const override;
-
-  /** Default: 1.0 mm */
-  itkSetMacro(SelfHessianSmoothingSigma, double);
-  itkGetConstMacro(SelfHessianSmoothingSigma, double);
-
-  /** Default: 1.0 mm */
-  itkSetMacro(SelfHessianNoiseRange, double);
-  itkGetConstMacro(SelfHessianNoiseRange, double);
-
-  /** Default: 100000 */
-  itkSetMacro(NumberOfSamplesForSelfHessian, unsigned int);
-  itkGetConstMacro(NumberOfSamplesForSelfHessian, unsigned int);
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
@@ -204,13 +182,6 @@ protected:
   using typename Superclass::MovingImageDerivativeType;
   using typename Superclass::NonZeroJacobianIndicesType;
 
-  /** Protected typedefs for SelfHessian */
-  using SmootherType = SmoothingRecursiveGaussianImageFilter<FixedImageType, FixedImageType>;
-  using FixedImageInterpolatorType = BSplineInterpolateImageFunction<FixedImageType, CoordinateRepresentationType>;
-  using DummyFixedImageInterpolatorType =
-    NearestNeighborInterpolateImageFunction<FixedImageType, CoordinateRepresentationType>;
-  using SelfHessianSamplerType = ImageGridSampler<FixedImageType>;
-
   /** Compute a pixel's contribution to the measure and derivatives;
    * Called by GetValueAndDerivative(). */
   void
@@ -220,13 +191,6 @@ protected:
                                 const NonZeroJacobianIndicesType & nzji,
                                 MeasureType &                      measure,
                                 DerivativeType &                   deriv) const;
-
-  /** Compute a pixel's contribution to the SelfHessian;
-   * Called by GetSelfHessian(). */
-  void
-  UpdateSelfHessianTerms(const DerivativeType &             imageJacobian,
-                         const NonZeroJacobianIndicesType & nzji,
-                         HessianType &                      H) const;
 
   /** Get value for each thread. */
   void
@@ -247,11 +211,6 @@ protected:
 private:
   double m_NormalizationFactor{ 1.0 };
   bool   m_UseNormalization{ false };
-
-  /** SelfHessian related member variables, experimental feature. */
-  double       m_SelfHessianSmoothingSigma{ 1.0 };
-  double       m_SelfHessianNoiseRange{ 1.0 };
-  unsigned int m_NumberOfSamplesForSelfHessian{ 100000 };
 };
 
 } // end namespace itk

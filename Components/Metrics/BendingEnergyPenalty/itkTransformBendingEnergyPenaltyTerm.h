@@ -117,8 +117,6 @@ public:
   using typename Superclass::SpatialHessianType;
   using typename Superclass::JacobianOfSpatialHessianType;
   using typename Superclass::InternalMatrixType;
-  using typename Superclass::HessianValueType;
-  using typename Superclass::HessianType;
 
   /** Define the dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
@@ -150,14 +148,6 @@ public:
   void
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
-  /** Experimental feature: compute SelfHessian */
-  void
-  GetSelfHessian(const TransformParametersType & parameters, HessianType & H) const override;
-
-  /** Default: 100000 */
-  itkSetMacro(NumberOfSamplesForSelfHessian, unsigned int);
-  itkGetConstMacro(NumberOfSamplesForSelfHessian, unsigned int);
-
 protected:
   /** Typedefs for indices and points. */
   using typename Superclass::FixedImageIndexType;
@@ -168,17 +158,11 @@ protected:
   using typename Superclass::MovingImageContinuousIndexType;
   using typename Superclass::NonZeroJacobianIndicesType;
 
-  /** Typedefs for SelfHessian */
-  using SelfHessianSamplerType = ImageGridSampler<FixedImageType>;
-
   /** The constructor. */
   TransformBendingEnergyPenaltyTerm();
 
   /** The destructor. */
   ~TransformBendingEnergyPenaltyTerm() override = default;
-
-private:
-  unsigned int m_NumberOfSamplesForSelfHessian{};
 };
 
 } // end namespace itk
