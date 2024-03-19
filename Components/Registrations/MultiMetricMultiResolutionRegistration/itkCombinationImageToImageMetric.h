@@ -436,11 +436,11 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Store the metrics and the corresponding weights. */
-  unsigned int                                 m_NumberOfMetrics{};
+  unsigned int                                 m_NumberOfMetrics{ 0 };
   std::vector<SingleValuedCostFunctionPointer> m_Metrics{};
   std::vector<double>                          m_MetricWeights{};
   std::vector<double>                          m_MetricRelativeWeights{};
-  bool                                         m_UseRelativeWeights{};
+  bool                                         m_UseRelativeWeights{ false };
   std::vector<bool>                            m_UseMetric{};
   mutable std::vector<MeasureType>             m_MetricValues{};
   mutable std::vector<DerivativeType>          m_MetricDerivatives{};
