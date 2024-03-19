@@ -32,29 +32,6 @@ namespace itk
 {
 
 /**
- * ********************* Constructor ******************************
- */
-
-template <class TFixedImage, class TMovingImage>
-PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::PatternIntensityImageToImageMetric()
-{
-  this->m_NormalizationFactor = 1.0;
-  this->m_Rescalingfactor = 1.0;
-  this->m_DerivativeDelta = 0.001;
-  this->m_NoiseConstant = 10000; // = sigma * sigma = 100*100 if not specified
-  this->m_NeighborhoodRadius = 3;
-  this->m_FixedMeasure = 0;
-  this->m_OptimizeNormalizationFactor = false;
-  this->m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
-  this->m_CombinationTransform = CombinationTransformType::New();
-  this->m_RescaleImageFilter = RescaleIntensityImageFilterType::New();
-  this->m_DifferenceImageFilter = DifferenceImageFilterType::New();
-  this->m_MultiplyImageFilter = MultiplyImageFilterType::New();
-
-} // end Constructor
-
-
-/**
  * ********************* Initialize ******************************
  */
 
