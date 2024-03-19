@@ -142,8 +142,6 @@ itkImplementationGetConstObjectMacro1(MovingImage, MovingImageType);
 template <class TFixedImage, class TMovingImage>
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::CombinationImageToImageMetric()
 {
-  this->m_NumberOfMetrics = 0;
-  this->m_UseRelativeWeights = false;
   this->ComputeGradientOff();
 
 } // end Constructor
