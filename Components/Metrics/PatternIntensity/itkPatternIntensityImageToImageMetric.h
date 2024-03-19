@@ -161,7 +161,7 @@ public:
   itkGetConstReferenceMacro(OptimizeNormalizationFactor, bool);
 
 protected:
-  PatternIntensityImageToImageMetric();
+  PatternIntensityImageToImageMetric() = default;
   ~PatternIntensityImageToImageMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
@@ -175,19 +175,19 @@ protected:
   ComputePIDiff(const TransformParametersType & parameters, float scalingfactor) const;
 
 private:
-  TransformMovingImageFilterPointer  m_TransformMovingImageFilter{};
-  DifferenceImageFilterPointer       m_DifferenceImageFilter{};
-  RescaleIntensityImageFilterPointer m_RescaleImageFilter{};
-  MultiplyImageFilterPointer         m_MultiplyImageFilter{};
-  double                             m_NoiseConstant{};
-  unsigned int                       m_NeighborhoodRadius{};
-  double                             m_DerivativeDelta{};
-  double                             m_NormalizationFactor{};
-  double                             m_Rescalingfactor{};
-  bool                               m_OptimizeNormalizationFactor{};
+  TransformMovingImageFilterPointer  m_TransformMovingImageFilter{ TransformMovingImageFilterType::New() };
+  DifferenceImageFilterPointer       m_DifferenceImageFilter{ DifferenceImageFilterType::New() };
+  RescaleIntensityImageFilterPointer m_RescaleImageFilter{ RescaleIntensityImageFilterType::New() };
+  MultiplyImageFilterPointer         m_MultiplyImageFilter{ MultiplyImageFilterType::New() };
+  double                             m_NoiseConstant{ 10000 }; // = sigma * sigma = 100*100 if not specified
+  unsigned int                       m_NeighborhoodRadius{ 3 };
+  double                             m_DerivativeDelta{ 0.001 };
+  double                             m_NormalizationFactor{ 1.0 };
+  double                             m_Rescalingfactor{ 1.0 };
+  bool                               m_OptimizeNormalizationFactor{ false };
   ScalesType                         m_Scales{};
-  MeasureType                        m_FixedMeasure{};
-  CombinationTransformPointer        m_CombinationTransform{};
+  MeasureType                        m_FixedMeasure{ 0 };
+  CombinationTransformPointer        m_CombinationTransform{ CombinationTransformType::New() };
 };
 
 } // end namespace itk
