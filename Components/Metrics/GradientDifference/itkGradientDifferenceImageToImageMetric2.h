@@ -165,7 +165,7 @@ public:
   itkGetConstReferenceMacro(DerivativeDelta, double);
 
 protected:
-  GradientDifferenceImageToImageMetric();
+  GradientDifferenceImageToImageMetric() = default;
   ~GradientDifferenceImageToImageMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
@@ -199,10 +199,12 @@ private:
   mutable FixedGradientPixelType m_MaxFixedGradient[FixedImageDimension]{};
 
   /** The filter for transforming the moving image. */
-  typename TransformMovingImageFilterType::Pointer m_TransformMovingImageFilter{};
+  typename TransformMovingImageFilterType::Pointer m_TransformMovingImageFilter{
+    TransformMovingImageFilterType::New()
+  };
 
   /** The Sobel gradients of the fixed image */
-  CastFixedImageFilterPointer m_CastFixedImageFilter{};
+  CastFixedImageFilterPointer m_CastFixedImageFilter{ CastFixedImageFilterType::New() };
 
   SobelOperator<FixedGradientPixelType, Self::FixedImageDimension> m_FixedSobelOperators[FixedImageDimension]{};
 
@@ -212,16 +214,16 @@ private:
   ZeroFluxNeumannBoundaryCondition<FixedGradientImageType> m_FixedBoundCond{};
 
   /** The Sobel gradients of the moving image */
-  CastMovedImageFilterPointer m_CastMovedImageFilter{};
+  CastMovedImageFilterPointer m_CastMovedImageFilter{ CastMovedImageFilterType::New() };
 
   SobelOperator<MovedGradientPixelType, Self::MovedImageDimension> m_MovedSobelOperators[MovedImageDimension]{};
 
   typename MovedSobelFilter::Pointer m_MovedSobelFilters[Self::MovedImageDimension]{};
 
   ScalesType                  m_Scales{};
-  double                      m_DerivativeDelta{};
-  double                      m_Rescalingfactor{};
-  CombinationTransformPointer m_CombinationTransform{};
+  double                      m_DerivativeDelta{ 0.001 };
+  double                      m_Rescalingfactor{ 1.0 };
+  CombinationTransformPointer m_CombinationTransform{ CombinationTransformType::New() };
 };
 
 } // end namespace itk

@@ -49,37 +49,6 @@ namespace itk
 {
 
 /**
- * ********************* Constructor ******************************
- */
-
-template <class TFixedImage, class TMovingImage>
-GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GradientDifferenceImageToImageMetric()
-{
-  unsigned int iDimension;
-  this->m_CastMovedImageFilter = CastMovedImageFilterType::New();
-  this->m_CastFixedImageFilter = CastFixedImageFilterType::New();
-  this->m_CombinationTransform = CombinationTransformType::New();
-  this->m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
-
-  for (iDimension = 0; iDimension < FixedImageDimension; ++iDimension)
-  {
-    this->m_MinFixedGradient[iDimension] = 0;
-    this->m_MaxFixedGradient[iDimension] = 0;
-    this->m_Variance[iDimension] = 0;
-  }
-
-  for (iDimension = 0; iDimension < MovedImageDimension; ++iDimension)
-  {
-    this->m_MinMovedGradient[iDimension] = 0;
-    this->m_MaxMovedGradient[iDimension] = 0;
-  }
-
-  this->m_DerivativeDelta = 0.001;
-  this->m_Rescalingfactor = 1.0;
-}
-
-
-/**
  * ********************* Initialize ******************************
  */
 
