@@ -153,7 +153,7 @@ public:
   SetTransformParameters(const TransformParametersType & parameters) const;
 
 protected:
-  NormalizedGradientCorrelationImageToImageMetric();
+  NormalizedGradientCorrelationImageToImageMetric() = default;
   ~NormalizedGradientCorrelationImageToImageMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
@@ -174,8 +174,8 @@ protected:
 
 private:
   ScalesType                  m_Scales{};
-  double                      m_DerivativeDelta{};
-  CombinationTransformPointer m_CombinationTransform{};
+  double                      m_DerivativeDelta{ 0.001 };
+  CombinationTransformPointer m_CombinationTransform{ CombinationTransformType::New() };
 
   /** The mean of the moving image gradients. */
   mutable MovedGradientPixelType m_MeanMovedGradient[MovedImageDimension]{};
@@ -184,10 +184,10 @@ private:
   mutable FixedGradientPixelType m_MeanFixedGradient[FixedImageDimension]{};
 
   /** The filter for transforming the moving images. */
-  TransformMovingImageFilterPointer m_TransformMovingImageFilter{};
+  TransformMovingImageFilterPointer m_TransformMovingImageFilter{ TransformMovingImageFilterType::New() };
 
   /** The Sobel gradients of the fixed image */
-  CastFixedImageFilterPointer m_CastFixedImageFilter{};
+  CastFixedImageFilterPointer m_CastFixedImageFilter{ CastFixedImageFilterType::New() };
 
   SobelOperator<FixedGradientPixelType, Self::FixedImageDimension> m_FixedSobelOperators[FixedImageDimension]{};
 
@@ -197,7 +197,7 @@ private:
   ZeroFluxNeumannBoundaryCondition<FixedGradientImageType> m_FixedBoundCond{};
 
   /** The Sobel gradients of the moving image */
-  CastMovedImageFilterPointer                                      m_CastMovedImageFilter{};
+  CastMovedImageFilterPointer m_CastMovedImageFilter{ CastMovedImageFilterType::New() };
   SobelOperator<MovedGradientPixelType, Self::MovedImageDimension> m_MovedSobelOperators[MovedImageDimension]{};
 
   typename MovedSobelFilter::Pointer m_MovedSobelFilters[Self::MovedImageDimension]{};
