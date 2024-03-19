@@ -275,8 +275,6 @@ main(int argc, char * argv[])
     //   std::cerr << "L matrix inversion (method 2, lu ) took: "
     //     << clock() - startClock << " ms." << std::endl;
 
-    // To do: Add SuiteSparse tests.
-
     // Write L Matrix to Matlab file. For inspection of matrix appearance.
     std::ostringstream makeFileName;
     makeFileName << argv[2] << "/LMatrix_N" << numberOfLandmarks << ".mat";
