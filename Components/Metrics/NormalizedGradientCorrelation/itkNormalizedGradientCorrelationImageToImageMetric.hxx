@@ -31,29 +31,6 @@ namespace itk
 {
 
 /**
- * ***************** Constructor *****************
- */
-
-template <class TFixedImage, class TMovingImage>
-NormalizedGradientCorrelationImageToImageMetric<TFixedImage,
-                                                TMovingImage>::NormalizedGradientCorrelationImageToImageMetric()
-{
-  this->m_CastFixedImageFilter = CastFixedImageFilterType::New();
-  this->m_CastMovedImageFilter = CastMovedImageFilterType::New();
-  this->m_CombinationTransform = CombinationTransformType::New();
-  this->m_TransformMovingImageFilter = TransformMovingImageFilterType::New();
-  this->m_DerivativeDelta = 0.001;
-
-  for (unsigned int iDimension = 0; iDimension < MovedImageDimension; ++iDimension)
-  {
-    this->m_MeanFixedGradient[iDimension] = 0;
-    this->m_MeanMovedGradient[iDimension] = 0;
-  }
-
-} // end Constructor
-
-
-/**
  * ***************** Initialize *****************
  */
 
