@@ -33,16 +33,6 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,
 {
   this->SetComputeGradient(false); // don't use the default gradient
   this->SetUseImageSampler(true);
-  this->m_Alpha = 0.99;
-  this->m_AvoidDivisionBy = 1e-10;
-
-  this->m_BinaryKNNTreeFixed = nullptr;
-  this->m_BinaryKNNTreeMoving = nullptr;
-  this->m_BinaryKNNTreeJoint = nullptr;
-
-  this->m_BinaryKNNTreeSearcherFixed = nullptr;
-  this->m_BinaryKNNTreeSearcherMoving = nullptr;
-  this->m_BinaryKNNTreeSearcherJoint = nullptr;
 
 } // end Constructor()
 
