@@ -289,7 +289,9 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
    * Otherwise, we precompute the gradients using a central difference scheme,
    * and do evaluate the gradient using nearest neighbor interpolation.
    */
-  m_BSplineInterpolator = dynamic_cast<BSplineInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
+  InterpolatorType * const interpolator = Superclass::m_Interpolator.GetPointer();
+
+  m_BSplineInterpolator = dynamic_cast<BSplineInterpolatorType *>(interpolator);
   if (m_BSplineInterpolator)
   {
     itkDebugMacro("Interpolator is B-spline");
@@ -299,7 +301,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     itkDebugMacro("Interpolator is not B-spline");
   }
 
-  m_BSplineInterpolatorFloat = dynamic_cast<BSplineInterpolatorFloatType *>(Superclass::m_Interpolator.GetPointer());
+  m_BSplineInterpolatorFloat = dynamic_cast<BSplineInterpolatorFloatType *>(interpolator);
   if (m_BSplineInterpolatorFloat)
   {
     itkDebugMacro("Interpolator is BSplineFloat");
@@ -309,8 +311,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     itkDebugMacro("Interpolator is not BSplineFloat");
   }
 
-  m_ReducedBSplineInterpolator =
-    dynamic_cast<ReducedBSplineInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
+  m_ReducedBSplineInterpolator = dynamic_cast<ReducedBSplineInterpolatorType *>(interpolator);
   if (m_ReducedBSplineInterpolator)
   {
     itkDebugMacro("Interpolator is ReducedBSpline");
@@ -320,7 +321,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     itkDebugMacro("Interpolator is not ReducedBSpline");
   }
 
-  m_LinearInterpolator = dynamic_cast<LinearInterpolatorType *>(Superclass::m_Interpolator.GetPointer());
+  m_LinearInterpolator = dynamic_cast<LinearInterpolatorType *>(interpolator);
 
   /** Don't overwrite the gradient image if m_ComputeGradient == true.
    * Otherwise we can use a forward difference derivative, or the derivative
@@ -344,8 +345,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
      */
     using RayCastInterpolatorType =
       itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
-    const bool interpolatorIsRayCast =
-      dynamic_cast<RayCastInterpolatorType *>(Superclass::m_Interpolator.GetPointer()) != nullptr;
+    const bool interpolatorIsRayCast = dynamic_cast<RayCastInterpolatorType *>(interpolator) != nullptr;
 
     if (!m_BSplineInterpolator && !m_BSplineInterpolatorFloat && !m_ReducedBSplineInterpolator &&
         !m_LinearInterpolator && !interpolatorIsRayCast)
