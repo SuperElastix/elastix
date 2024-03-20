@@ -24,15 +24,6 @@ namespace itk
 {
 
 /**
- * ******************* Constructor *******************
- */
-
-template <class TFixedPointSet, class TMovingPointSet>
-CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet,
-                                                TMovingPointSet>::CorrespondingPointsEuclideanDistancePointMetric() =
-  default; // end Constructor
-
-/**
  * ******************* GetValue *******************
  */
 

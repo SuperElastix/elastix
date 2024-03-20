@@ -86,7 +86,7 @@ public:
 
 protected:
   /** The constructor. */
-  CyclicGridScheduleComputer();
+  CyclicGridScheduleComputer() = default;
 
   /** The destructor. */
   ~CyclicGridScheduleComputer() override = default;
