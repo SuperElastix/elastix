@@ -71,7 +71,7 @@ public:
   using typename Superclass::ContinuousIndexType;
 
 protected:
-  BSplineInterpolationWeightFunction2();
+  BSplineInterpolationWeightFunction2() = default;
   ~BSplineInterpolationWeightFunction2() override = default;
 
   /** Interpolation kernel types. */

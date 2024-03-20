@@ -24,15 +24,6 @@ namespace itk
 {
 
 /**
- * ****************** Constructor *******************************
- */
-
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>::BSplineInterpolationWeightFunction2() =
-  default;
-
-
-/**
  * ******************* Compute1DWeights *******************
  */
 

@@ -93,7 +93,7 @@ public:
                         DerivativeType &                Derivative) const override;
 
 protected:
-  CorrespondingPointsEuclideanDistancePointMetric();
+  CorrespondingPointsEuclideanDistancePointMetric() = default;
   ~CorrespondingPointsEuclideanDistancePointMetric() override = default;
 };
 
