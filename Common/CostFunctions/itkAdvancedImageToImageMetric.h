@@ -362,12 +362,6 @@ protected:
    */
   mutable ImageSamplerPointer m_ImageSampler{ nullptr };
 
-  /** Variables for image derivative computation. */
-  LinearInterpolatorPointer         m_LinearInterpolator{ nullptr };
-  BSplineInterpolatorPointer        m_BSplineInterpolator{ nullptr };
-  BSplineInterpolatorFloatPointer   m_BSplineInterpolatorFloat{ nullptr };
-  ReducedBSplineInterpolatorPointer m_ReducedBSplineInterpolator{ nullptr };
-
   /** Variables to store the AdvancedTransform. */
   typename AdvancedTransformType::Pointer m_AdvancedTransform{ nullptr };
   mutable bool                            m_TransformIsBSpline{ false };
@@ -599,7 +593,14 @@ private:
                                                             MovingImageDerivativeType *  gradient,
                                                             const TOptionalThreadId... optionalThreadId) const;
 
+  /** Variables for image derivative computation. */
+  LinearInterpolatorPointer         m_LinearInterpolator{ nullptr };
+  BSplineInterpolatorPointer        m_BSplineInterpolator{ nullptr };
+  BSplineInterpolatorFloatPointer   m_BSplineInterpolatorFloat{ nullptr };
+  ReducedBSplineInterpolatorPointer m_ReducedBSplineInterpolator{ nullptr };
+
   /** Private member variables. */
+
   bool   m_UseImageSampler{ false };
   bool   m_UseFixedImageLimiter{ false };
   bool   m_UseMovingImageLimiter{ false };
