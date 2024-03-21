@@ -50,16 +50,16 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AdvancedImageToImageMetri
 
   /** OpenMP related. Switch to on when available */
 #ifdef ELASTIX_USE_OPENMP
-  this->m_UseOpenMP = true;
+  m_UseOpenMP = true;
 
   const int nthreads = static_cast<int>(Self::GetNumberOfWorkUnits());
   omp_set_num_threads(nthreads);
 #else
-  this->m_UseOpenMP = false;
+  m_UseOpenMP = false;
 #endif
 
   /** Initialize the m_ThreaderMetricParameters. */
-  this->m_ThreaderMetricParameters.st_Metric = this;
+  m_ThreaderMetricParameters.st_Metric = this;
 
 } // end Constructor
 
@@ -110,7 +110,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   this->CheckForBSplineTransform();
 
   /** Initialize some threading related parameters. */
-  if (this->m_UseMultiThread)
+  if (m_UseMultiThread)
   {
     this->InitializeThreadingParameters();
 
@@ -148,30 +148,29 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
    */
 
   /** Only resize the array of structs when needed. */
-  if (this->m_GetValuePerThreadVariablesSize != numberOfThreads)
+  if (m_GetValuePerThreadVariablesSize != numberOfThreads)
   {
-    this->m_GetValuePerThreadVariables.reset(new AlignedGetValuePerThreadStruct[numberOfThreads]);
-    this->m_GetValuePerThreadVariablesSize = numberOfThreads;
+    m_GetValuePerThreadVariables.reset(new AlignedGetValuePerThreadStruct[numberOfThreads]);
+    m_GetValuePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Only resize the array of structs when needed. */
-  if (this->m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
+  if (m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
   {
-    this->m_GetValueAndDerivativePerThreadVariables.reset(
-      new AlignedGetValueAndDerivativePerThreadStruct[numberOfThreads]);
-    this->m_GetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
+    m_GetValueAndDerivativePerThreadVariables.reset(new AlignedGetValueAndDerivativePerThreadStruct[numberOfThreads]);
+    m_GetValueAndDerivativePerThreadVariablesSize = numberOfThreads;
   }
 
   /** Some initialization. */
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    this->m_GetValuePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
-    this->m_GetValuePerThreadVariables[i].st_Value = MeasureType{};
+    m_GetValuePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
+    m_GetValuePerThreadVariables[i].st_Value = MeasureType{};
 
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.SetSize(this->GetNumberOfParameters());
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.Fill(DerivativeValueType{});
+    m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
+    m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
+    m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.SetSize(this->GetNumberOfParameters());
+    m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.Fill(DerivativeValueType{});
   }
 
 } // end InitializeThreadingParameters()
@@ -198,22 +197,20 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
     computeFixedImageExtrema->SetImageSpatialMask(this->GetFixedImageMask());
     computeFixedImageExtrema->Update();
 
-    this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
-    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
+    m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
+    m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
 
-    this->m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
-      this->m_FixedImageTrueMin -
-      this->m_FixedLimitRangeRatio * (this->m_FixedImageTrueMax - this->m_FixedImageTrueMin));
-    this->m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
-      this->m_FixedImageTrueMax +
-      this->m_FixedLimitRangeRatio * (this->m_FixedImageTrueMax - this->m_FixedImageTrueMin));
+    m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
+      m_FixedImageTrueMin - m_FixedLimitRangeRatio * (m_FixedImageTrueMax - m_FixedImageTrueMin));
+    m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
+      m_FixedImageTrueMax + m_FixedLimitRangeRatio * (m_FixedImageTrueMax - m_FixedImageTrueMin));
 
-    this->m_FixedImageLimiter->SetLowerThreshold(static_cast<RealType>(this->m_FixedImageTrueMin));
-    this->m_FixedImageLimiter->SetUpperThreshold(static_cast<RealType>(this->m_FixedImageTrueMax));
-    this->m_FixedImageLimiter->SetLowerBound(this->m_FixedImageMinLimit);
-    this->m_FixedImageLimiter->SetUpperBound(this->m_FixedImageMaxLimit);
+    m_FixedImageLimiter->SetLowerThreshold(static_cast<RealType>(m_FixedImageTrueMin));
+    m_FixedImageLimiter->SetUpperThreshold(static_cast<RealType>(m_FixedImageTrueMax));
+    m_FixedImageLimiter->SetLowerBound(m_FixedImageMinLimit);
+    m_FixedImageLimiter->SetUpperBound(m_FixedImageMaxLimit);
 
-    this->m_FixedImageLimiter->Initialize();
+    m_FixedImageLimiter->Initialize();
   }
 
   /** Set up moving limiter. */
@@ -229,22 +226,20 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
     computeMovingImageExtrema->SetImageSpatialMask(this->GetMovingImageMask());
     computeMovingImageExtrema->Update();
 
-    this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
-    this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
+    m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
+    m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
 
-    this->m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
-      this->m_MovingImageTrueMin -
-      this->m_MovingLimitRangeRatio * (this->m_MovingImageTrueMax - this->m_MovingImageTrueMin));
-    this->m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
-      this->m_MovingImageTrueMax +
-      this->m_MovingLimitRangeRatio * (this->m_MovingImageTrueMax - this->m_MovingImageTrueMin));
+    m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
+      m_MovingImageTrueMin - m_MovingLimitRangeRatio * (m_MovingImageTrueMax - m_MovingImageTrueMin));
+    m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
+      m_MovingImageTrueMax + m_MovingLimitRangeRatio * (m_MovingImageTrueMax - m_MovingImageTrueMin));
 
-    this->m_MovingImageLimiter->SetLowerThreshold(static_cast<RealType>(this->m_MovingImageTrueMin));
-    this->m_MovingImageLimiter->SetUpperThreshold(static_cast<RealType>(this->m_MovingImageTrueMax));
-    this->m_MovingImageLimiter->SetLowerBound(this->m_MovingImageMinLimit);
-    this->m_MovingImageLimiter->SetUpperBound(this->m_MovingImageMaxLimit);
+    m_MovingImageLimiter->SetLowerThreshold(static_cast<RealType>(m_MovingImageTrueMin));
+    m_MovingImageLimiter->SetUpperThreshold(static_cast<RealType>(m_MovingImageTrueMax));
+    m_MovingImageLimiter->SetLowerBound(m_MovingImageMinLimit);
+    m_MovingImageLimiter->SetUpperBound(m_MovingImageMaxLimit);
 
-    this->m_MovingImageLimiter->Initialize();
+    m_MovingImageLimiter->Initialize();
   }
 
 } // end InitializeLimiters()
@@ -261,15 +256,15 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
   if (this->GetUseImageSampler())
   {
     /** Check if the ImageSampler is set. */
-    if (!this->m_ImageSampler)
+    if (!m_ImageSampler)
     {
       itkExceptionMacro("ImageSampler is not present");
     }
 
     /** Initialize the Image Sampler. */
-    this->m_ImageSampler->SetInput(this->m_FixedImage);
-    this->m_ImageSampler->SetMask(this->GetFixedImageMask());
-    this->m_ImageSampler->SetInputImageRegion(this->GetFixedImageRegion());
+    m_ImageSampler->SetInput(this->m_FixedImage);
+    m_ImageSampler->SetMask(this->GetFixedImageMask());
+    m_ImageSampler->SetInputImageRegion(this->GetFixedImageRegion());
   }
 
 } // end InitializeImageSampler()
@@ -399,16 +394,12 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform() const
 {
   /** Check if this transform is a combo transform. */
-  CombinationTransformType * testPtr_combo =
-    dynamic_cast<CombinationTransformType *>(this->m_AdvancedTransform.GetPointer());
+  CombinationTransformType * testPtr_combo = dynamic_cast<CombinationTransformType *>(m_AdvancedTransform.GetPointer());
 
   /** Check if this transform is a B-spline transform. */
-  BSplineOrder1TransformType * testPtr_1 =
-    dynamic_cast<BSplineOrder1TransformType *>(this->m_AdvancedTransform.GetPointer());
-  BSplineOrder2TransformType * testPtr_2 =
-    dynamic_cast<BSplineOrder2TransformType *>(this->m_AdvancedTransform.GetPointer());
-  BSplineOrder3TransformType * testPtr_3 =
-    dynamic_cast<BSplineOrder3TransformType *>(this->m_AdvancedTransform.GetPointer());
+  BSplineOrder1TransformType * testPtr_1 = dynamic_cast<BSplineOrder1TransformType *>(m_AdvancedTransform.GetPointer());
+  BSplineOrder2TransformType * testPtr_2 = dynamic_cast<BSplineOrder2TransformType *>(m_AdvancedTransform.GetPointer());
+  BSplineOrder3TransformType * testPtr_3 = dynamic_cast<BSplineOrder3TransformType *>(m_AdvancedTransform.GetPointer());
 
   bool transformIsBSpline = false;
   if (testPtr_1 || testPtr_2 || testPtr_3)
@@ -431,7 +422,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform(
   }
 
   /** Store the result. */
-  this->m_TransformIsBSpline = transformIsBSpline;
+  m_TransformIsBSpline = transformIsBSpline;
 
 } // end CheckForBSplineTransform()
 
@@ -461,27 +452,27 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
       if (m_BSplineInterpolator && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
-        this->m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+        m_BSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient, optionalThreadId...);
       }
       else if (m_BSplineInterpolatorFloat && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
-        this->m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
+        m_BSplineInterpolatorFloat->EvaluateValueAndDerivativeAtContinuousIndex(
           cindex, movingImageValue, *gradient, optionalThreadId...);
       }
       else if (m_ReducedBSplineInterpolator && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
         movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
-        (*gradient) = this->m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
-        // this->m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
+        (*gradient) = m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
+        // m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
       }
       else if (m_LinearInterpolator && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the linear interpolator. */
-        this->m_LinearInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(cindex, movingImageValue, *gradient);
+        m_LinearInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(cindex, movingImageValue, *gradient);
       }
       else
       {
@@ -498,13 +489,13 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
       }
 
       /** The moving image gradient is multiplied with its scales, when requested. */
-      if (this->m_UseMovingImageDerivativeScales)
+      if (m_UseMovingImageDerivativeScales)
       {
-        if (!this->m_ScaleGradientWithRespectToMovingImageOrientation)
+        if (!m_ScaleGradientWithRespectToMovingImageOrientation)
         {
           for (unsigned int i = 0; i < MovingImageDimension; ++i)
           {
-            (*gradient)[i] *= this->m_MovingImageDerivativeScales[i];
+            (*gradient)[i] *= m_MovingImageDerivativeScales[i];
           }
         }
         else
@@ -523,7 +514,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
           /** Then scales are applied. */
           for (unsigned int i = 0; i < MovingImageDimension; ++i)
           {
-            rotated_gradient_vnl[i] *= this->m_MovingImageDerivativeScales[i];
+            rotated_gradient_vnl[i] *= m_MovingImageDerivativeScales[i];
           }
 
           /** The scaled gradient is then rotated forwards again. */
@@ -563,7 +554,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
    * dim-by-length matrix jacobian, to get a 1-by-length vector imageJacobian.
    * An optimized route can be taken for B-spline transforms.
    */
-  if (this->m_TransformIsBSpline)
+  if (m_TransformIsBSpline)
   {
     // For the B-spline we know that the Jacobian is mostly empty.
     //       [ j ... j 0 ... 0 0 ... 0 ]
@@ -616,7 +607,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
   NonZeroJacobianIndicesType & nzji) const
 {
   /** Advanced transform: generic sparse Jacobian support */
-  this->m_AdvancedTransform->GetJacobian(fixedImagePoint, jacobian, nzji);
+  m_AdvancedTransform->GetJacobian(fixedImagePoint, jacobian, nzji);
 
   /** For future use: return whether the sample is valid */
   const bool valid = true;
@@ -655,10 +646,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::BeforeThreadedGetValueAnd
   const TransformParametersType & parameters) const
 {
   /** In this function do all stuff that cannot be multi-threaded. */
-  if (this->m_UseMetricSingleThreaded)
+  if (m_UseMetricSingleThreaded)
   {
     this->SetTransformParameters(parameters);
-    if (this->m_UseImageSampler)
+    if (m_UseImageSampler)
     {
       this->GetImageSampler()->Update();
     }
@@ -702,7 +693,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCal
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(this->GetValueThreaderCallback,
-                                    const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
+                                    const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();
@@ -745,7 +736,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivati
 {
   /** Setup threader. */
   this->m_Threader->SetSingleMethod(this->GetValueAndDerivativeThreaderCallback,
-                                    const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
+                                    const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();
@@ -830,42 +821,40 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & 
 
   /** Variables related to the Sampler. */
   os << indent << "Variables related to the Sampler: " << std::endl;
-  os << indent.GetNextIndent() << "ImageSampler: " << this->m_ImageSampler.GetPointer() << std::endl;
-  os << indent.GetNextIndent() << "UseImageSampler: " << this->m_UseImageSampler << std::endl;
+  os << indent.GetNextIndent() << "ImageSampler: " << m_ImageSampler.GetPointer() << std::endl;
+  os << indent.GetNextIndent() << "UseImageSampler: " << m_UseImageSampler << std::endl;
 
   /** Variables for the Limiters. */
   os << indent << "Variables related to the Limiters: " << std::endl;
-  os << indent.GetNextIndent() << "FixedLimitRangeRatio: " << this->m_FixedLimitRangeRatio << std::endl;
-  os << indent.GetNextIndent() << "MovingLimitRangeRatio: " << this->m_MovingLimitRangeRatio << std::endl;
-  os << indent.GetNextIndent() << "UseFixedImageLimiter: " << this->m_UseFixedImageLimiter << std::endl;
-  os << indent.GetNextIndent() << "UseMovingImageLimiter: " << this->m_UseMovingImageLimiter << std::endl;
-  os << indent.GetNextIndent() << "FixedImageLimiter: " << this->m_FixedImageLimiter.GetPointer() << std::endl;
-  os << indent.GetNextIndent() << "MovingImageLimiter: " << this->m_MovingImageLimiter.GetPointer() << std::endl;
-  os << indent.GetNextIndent() << "FixedImageTrueMin: " << this->m_FixedImageTrueMin << std::endl;
-  os << indent.GetNextIndent() << "MovingImageTrueMin: " << this->m_MovingImageTrueMin << std::endl;
-  os << indent.GetNextIndent() << "FixedImageTrueMax: " << this->m_FixedImageTrueMax << std::endl;
-  os << indent.GetNextIndent() << "MovingImageTrueMax: " << this->m_MovingImageTrueMax << std::endl;
-  os << indent.GetNextIndent() << "FixedImageMinLimit: " << this->m_FixedImageMinLimit << std::endl;
-  os << indent.GetNextIndent() << "MovingImageMinLimit: " << this->m_MovingImageMinLimit << std::endl;
-  os << indent.GetNextIndent() << "FixedImageMaxLimit: " << this->m_FixedImageMaxLimit << std::endl;
-  os << indent.GetNextIndent() << "MovingImageMaxLimit: " << this->m_MovingImageMaxLimit << std::endl;
+  os << indent.GetNextIndent() << "FixedLimitRangeRatio: " << m_FixedLimitRangeRatio << std::endl;
+  os << indent.GetNextIndent() << "MovingLimitRangeRatio: " << m_MovingLimitRangeRatio << std::endl;
+  os << indent.GetNextIndent() << "UseFixedImageLimiter: " << m_UseFixedImageLimiter << std::endl;
+  os << indent.GetNextIndent() << "UseMovingImageLimiter: " << m_UseMovingImageLimiter << std::endl;
+  os << indent.GetNextIndent() << "FixedImageLimiter: " << m_FixedImageLimiter.GetPointer() << std::endl;
+  os << indent.GetNextIndent() << "MovingImageLimiter: " << m_MovingImageLimiter.GetPointer() << std::endl;
+  os << indent.GetNextIndent() << "FixedImageTrueMin: " << m_FixedImageTrueMin << std::endl;
+  os << indent.GetNextIndent() << "MovingImageTrueMin: " << m_MovingImageTrueMin << std::endl;
+  os << indent.GetNextIndent() << "FixedImageTrueMax: " << m_FixedImageTrueMax << std::endl;
+  os << indent.GetNextIndent() << "MovingImageTrueMax: " << m_MovingImageTrueMax << std::endl;
+  os << indent.GetNextIndent() << "FixedImageMinLimit: " << m_FixedImageMinLimit << std::endl;
+  os << indent.GetNextIndent() << "MovingImageMinLimit: " << m_MovingImageMinLimit << std::endl;
+  os << indent.GetNextIndent() << "FixedImageMaxLimit: " << m_FixedImageMaxLimit << std::endl;
+  os << indent.GetNextIndent() << "MovingImageMaxLimit: " << m_MovingImageMaxLimit << std::endl;
 
   /** Variables related to image derivative computation. */
   os << indent << "Variables related to image derivative computation: " << std::endl;
-  os << indent.GetNextIndent() << "BSplineInterpolator: " << this->m_BSplineInterpolator.GetPointer() << std::endl;
-  os << indent.GetNextIndent() << "BSplineInterpolatorFloat: " << this->m_BSplineInterpolatorFloat.GetPointer()
-     << std::endl;
+  os << indent.GetNextIndent() << "BSplineInterpolator: " << m_BSplineInterpolator.GetPointer() << std::endl;
+  os << indent.GetNextIndent() << "BSplineInterpolatorFloat: " << m_BSplineInterpolatorFloat.GetPointer() << std::endl;
 
   /** Variables used when the transform is a B-spline transform. */
   os << indent << "Variables store the transform as an AdvancedTransform: " << std::endl;
-  os << indent.GetNextIndent() << "AdvancedTransform: " << this->m_AdvancedTransform.GetPointer() << std::endl;
+  os << indent.GetNextIndent() << "AdvancedTransform: " << m_AdvancedTransform.GetPointer() << std::endl;
 
   /** Other variables. */
   os << indent << "Other variables of the AdvancedImageToImageMetric: " << std::endl;
-  os << indent.GetNextIndent() << "RequiredRatioOfValidSamples: " << this->m_RequiredRatioOfValidSamples << std::endl;
-  os << indent.GetNextIndent() << "UseMovingImageDerivativeScales: " << this->m_UseMovingImageDerivativeScales
-     << std::endl;
-  os << indent.GetNextIndent() << "MovingImageDerivativeScales: " << this->m_MovingImageDerivativeScales << std::endl;
+  os << indent.GetNextIndent() << "RequiredRatioOfValidSamples: " << m_RequiredRatioOfValidSamples << std::endl;
+  os << indent.GetNextIndent() << "UseMovingImageDerivativeScales: " << m_UseMovingImageDerivativeScales << std::endl;
+  os << indent.GetNextIndent() << "MovingImageDerivativeScales: " << m_MovingImageDerivativeScales << std::endl;
 
 } // end PrintSelf()
 
