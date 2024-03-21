@@ -186,3 +186,41 @@ GTEST_TEST(ImageFullSampler, ExactlyEqualVersusSlightlyDifferentMaskImageDomain)
 
   EXPECT_EQ(samplesOnExactlyEqualImageDomains, samplesOnSlightlyDifferentImageDomains);
 }
+
+
+GTEST_TEST(ImageFullSampler, UseForGroupwiseRegistration)
+{
+  using PixelType = std::uint8_t;
+  static constexpr auto Dimension = 3U;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using ImageFullSamplerType = itk::ImageFullSampler<ImageType>;
+
+  std::mt19937 randomNumberEngine{};
+  const auto   imageDomain = CreateRandomImageDomain<Dimension>(randomNumberEngine);
+  const auto   image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageDomain);
+  elx::DefaultConstruct<ImageFullSamplerType> sampler{};
+
+  sampler.SetInput(image);
+  sampler.UseForGroupwiseRegistration();
+  sampler.Update();
+
+  const auto & output = DerefRawPointer(sampler.GetOutput());
+
+  const auto reducedRegion = [imageDomain] {
+    auto size = imageDomain.size;
+    size.back() = 1;
+    return itk::ImageRegion<Dimension>{ imageDomain.index, size };
+  }();
+
+  const itk::ImageRegionRange imageRegionRange(*image, reducedRegion);
+  const std::size_t           numberOfSamples{ output.size() };
+
+  ASSERT_EQ(numberOfSamples, imageRegionRange.size());
+
+  auto imageRegionIterator = imageRegionRange.cbegin();
+  for (std::size_t i{}; i < numberOfSamples; ++i)
+  {
+    EXPECT_EQ(output[i].m_ImageValue, *imageRegionIterator);
+    ++imageRegionIterator;
+  }
+}

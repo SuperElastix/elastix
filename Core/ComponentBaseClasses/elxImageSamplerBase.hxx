@@ -36,6 +36,10 @@ ImageSamplerBase<TElastix>::BeforeRegistrationBase()
   const Configuration & configuration = Deref(Superclass::GetConfiguration());
   ITKBaseType &         sampler = GetSelf();
   sampler.SetUseMultiThread(configuration.RetrieveParameterValue(true, "UseMultiThreadingForSamplers", 0, false));
+  if (configuration.RetrieveParameterValue(false, "UseSamplingForGroupwiseRegistration", 0, false))
+  {
+    sampler.UseForGroupwiseRegistration();
+  }
 }
 
 /**
