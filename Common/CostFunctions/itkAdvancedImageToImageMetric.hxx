@@ -262,7 +262,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
     }
 
     /** Initialize the Image Sampler. */
-    m_ImageSampler->SetInput(this->m_FixedImage);
+    m_ImageSampler->SetInput(Superclass::m_FixedImage);
     m_ImageSampler->SetMask(this->GetFixedImageMask());
     m_ImageSampler->SetInputImageRegion(this->GetFixedImageRegion());
   }
@@ -349,13 +349,13 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
 
       elastix::DefaultConstruct<CentralDifferenceGradientFilterType> centralDifferenceGradientFilter{};
       centralDifferenceGradientFilter.SetUseImageSpacing(true);
-      centralDifferenceGradientFilter.SetInput(this->m_MovingImage);
+      centralDifferenceGradientFilter.SetInput(Superclass::m_MovingImage);
       centralDifferenceGradientFilter.Update();
-      this->m_GradientImage = centralDifferenceGradientFilter.GetOutput();
+      Superclass::m_GradientImage = centralDifferenceGradientFilter.GetOutput();
     }
     else
     {
-      this->m_GradientImage = nullptr;
+      Superclass::m_GradientImage = nullptr;
     }
   }
 
@@ -371,7 +371,7 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform()
 {
   /** Check if the transform is of type AdvancedTransform. */
-  m_AdvancedTransform = dynamic_cast<AdvancedTransformType *>(this->m_Transform.GetPointer());
+  m_AdvancedTransform = dynamic_cast<AdvancedTransformType *>(Superclass::m_Transform.GetPointer());
   if (!m_AdvancedTransform)
   {
     itkDebugMacro("Transform is not Advanced");
@@ -485,7 +485,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
         {
           index[j] = static_cast<long>(Math::Round<int64_t>(cindex[j]));
         }
-        (*gradient) = this->m_GradientImage->GetPixel(index);
+        (*gradient) = Superclass::m_GradientImage->GetPixel(index);
       }
 
       /** The moving image gradient is multiplied with its scales, when requested. */
@@ -692,11 +692,11 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(this->GetValueThreaderCallback,
-                                    const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
+  Superclass::m_Threader->SetSingleMethod(this->GetValueThreaderCallback,
+                                          const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
 
   /** Launch. */
-  this->m_Threader->SingleMethodExecute();
+  Superclass::m_Threader->SingleMethodExecute();
 
 } // end LaunchGetValueThreaderCallback()
 
@@ -735,11 +735,11 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivativeThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(this->GetValueAndDerivativeThreaderCallback,
-                                    const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
+  Superclass::m_Threader->SetSingleMethod(this->GetValueAndDerivativeThreaderCallback,
+                                          const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
 
   /** Launch. */
-  this->m_Threader->SingleMethodExecute();
+  Superclass::m_Threader->SingleMethodExecute();
 
 } // end LaunchGetValueAndDerivativeThreaderCallback()
 
@@ -800,7 +800,7 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsigned long wanted,
                                                                             unsigned long found) const
 {
-  this->m_NumberOfPixelsCounted = found;
+  Superclass::m_NumberOfPixelsCounted = found;
   if (found < wanted * this->GetRequiredRatioOfValidSamples())
   {
     itkExceptionMacro("Too many samples map outside moving image buffer: " << found << " / " << wanted << '\n');
