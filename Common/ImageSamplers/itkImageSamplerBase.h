@@ -209,6 +209,12 @@ public:
   /** Allows disabling the use of multi-threading, by `SetUseMultiThread(false)`. */
   itkSetMacro(UseMultiThread, bool);
 
+  /** Tells whether the dimensionality is reduced. */
+  itkGetConstMacro(ReduceDimension, bool);
+
+  /** Allows reducing the dimensionality by 1. */
+  itkSetMacro(ReduceDimension, bool);
+
 protected:
   /** The constructor. */
   ImageSamplerBase();
@@ -264,6 +270,8 @@ private:
 
   InputImageRegionType m_CroppedInputImageRegion{};
   InputImageRegionType m_DummyInputImageRegion{};
+
+  bool m_ReduceDimension{ false };
 };
 
 } // end namespace itk
