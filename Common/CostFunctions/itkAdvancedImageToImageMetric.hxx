@@ -29,6 +29,7 @@
 #endif
 
 #include <algorithm> // For min.
+#include <cassert>
 
 namespace itk
 {
@@ -338,12 +339,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
      * For more details see the post about "2D/3D registration memory issue" in
      * elastix's mailing list (2 July 2012).
      */
-    using RayCastInterpolatorType =
-      itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
-    const bool interpolatorIsRayCast = dynamic_cast<RayCastInterpolatorType *>(interpolator) != nullptr;
+    using NearestNeighborInterpolatorType =
+      NearestNeighborInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
 
-    if (!m_BSplineInterpolator && !m_BSplineInterpolatorFloat && !m_ReducedBSplineInterpolator &&
-        !m_LinearInterpolator && !interpolatorIsRayCast)
+    if (dynamic_cast<NearestNeighborInterpolatorType *>(interpolator))
     {
       using CentralDifferenceGradientFilterType = GradientImageFilter<TMovingImage, RealType, RealType>;
 
@@ -355,6 +354,12 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     }
     else
     {
+      using RayCastInterpolatorType =
+        itk::AdvancedRayCastInterpolateImageFunction<MovingImageType, CoordinateRepresentationType>;
+
+      assert(m_BSplineInterpolator || m_BSplineInterpolatorFloat || m_ReducedBSplineInterpolator ||
+             m_LinearInterpolator || dynamic_cast<RayCastInterpolatorType *>(interpolator));
+
       Superclass::m_GradientImage = nullptr;
     }
   }
