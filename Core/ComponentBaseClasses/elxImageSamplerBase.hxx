@@ -36,6 +36,7 @@ ImageSamplerBase<TElastix>::BeforeRegistrationBase()
   const Configuration & configuration = Deref(Superclass::GetConfiguration());
   ITKBaseType &         sampler = GetSelf();
   sampler.SetUseMultiThread(configuration.RetrieveParameterValue(true, "UseMultiThreadingForSamplers", 0, false));
+  sampler.SetReduceDimension(configuration.RetrieveParameterValue(false, "ReduceDimension", 0, false));
 }
 
 /**
