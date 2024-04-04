@@ -1265,7 +1265,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   Superclass::m_NumberOfPixelsCounted = 0;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   DerivativeType             imageJacobian(nzji.size());
   TransformJacobianType      jacobian;
 
@@ -1369,7 +1369,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   const double delta = this->GetFiniteDifferencePerturbation();
 
   /** sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   TransformJacobianType      jacobian;
 
   /** Arrays that store dM(x)/dmu and dMask(x)/dmu. */

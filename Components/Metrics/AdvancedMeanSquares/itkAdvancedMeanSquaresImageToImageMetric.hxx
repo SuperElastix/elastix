@@ -399,7 +399,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   derivative.Fill(DerivativeValueType{});
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   DerivativeType             imageJacobian(nzji.size());
   TransformJacobianType      jacobian;
 
@@ -460,7 +460,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
         jacobian, movingImageDerivative, imageJacobian );
 #else
       /** Compute the inner product of the transform Jacobian and the moving image gradient. */
-      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+      Superclass::m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
         fixedPoint, movingImageDerivative, imageJacobian, nzji);
 #endif
 
@@ -540,7 +540,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
   ThreadIdType threadId) const
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji = Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji(nnzji);
   DerivativeType               imageJacobian(nnzji);
 
@@ -610,7 +610,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
         jacobian, movingImageDerivative, imageJacobian );
 #else
       /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
-      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+      Superclass::m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
         fixedPoint, movingImageDerivative, imageJacobian, nzji);
 #endif
 
