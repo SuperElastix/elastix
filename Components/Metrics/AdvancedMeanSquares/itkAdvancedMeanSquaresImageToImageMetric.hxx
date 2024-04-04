@@ -133,7 +133,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
   const TransformParametersType & parameters) const -> MeasureType
 {
   /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Call non-thread-safe stuff, such as:
@@ -177,7 +177,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
@@ -191,13 +191,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Update measure value. */
   double normal_sum = 0.0;
-  if (this->m_NumberOfPixelsCounted > 0)
+  if (Superclass::m_NumberOfPixelsCounted > 0)
   {
-    normal_sum = this->m_NormalizationFactor / static_cast<double>(this->m_NumberOfPixelsCounted);
+    normal_sum = this->m_NormalizationFactor / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
   }
   measure *= normal_sum;
 
@@ -330,19 +330,19 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** The normalization factor. */
   DerivativeValueType normal_sum =
-    this->m_NormalizationFactor / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+    this->m_NormalizationFactor / static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
   value = MeasureType{};
@@ -393,7 +393,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
   /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
@@ -446,7 +446,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
@@ -472,13 +472,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute the measure value and derivative. */
   double normal_sum = 0.0;
-  if (this->m_NumberOfPixelsCounted > 0)
+  if (Superclass::m_NumberOfPixelsCounted > 0)
   {
-    normal_sum = this->m_NormalizationFactor / static_cast<double>(this->m_NumberOfPixelsCounted);
+    normal_sum = this->m_NormalizationFactor / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
   }
   measure *= normal_sum;
   derivative *= normal_sum;
@@ -641,19 +641,19 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** The normalization factor. */
   DerivativeValueType normal_sum =
-    this->m_NormalizationFactor / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+    this->m_NormalizationFactor / static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
   value = MeasureType{};

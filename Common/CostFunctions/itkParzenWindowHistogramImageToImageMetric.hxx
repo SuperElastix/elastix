@@ -961,7 +961,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
 {
   /** Initialize some variables. */
   this->m_JointPDF->FillBuffer(0.0);
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   this->m_Alpha = 0.0;
 
   /** Call non-thread-safe stuff, such as:
@@ -1005,7 +1005,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
@@ -1022,10 +1022,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
   } // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute alpha. */
-  this->m_Alpha = 1.0 / static_cast<double>(this->m_NumberOfPixelsCounted);
+  this->m_Alpha = 1.0 / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
 
 } // end ComputePDFsSingleThreaded()
 
@@ -1158,20 +1158,20 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreade
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted =
+  Superclass::m_NumberOfPixelsCounted =
     this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted +=
+    Superclass::m_NumberOfPixelsCounted +=
       this->m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute alpha. */
-  this->m_Alpha = 1.0 / static_cast<double>(this->m_NumberOfPixelsCounted);
+  this->m_Alpha = 1.0 / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate joint histogram. */
   // could be multi-threaded too, by each thread updating only a part of the JointPDF.
@@ -1262,7 +1262,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   this->m_JointPDF->FillBuffer(0.0);
   this->m_JointPDFDerivatives->FillBuffer(0.0);
   this->m_Alpha = 0.0;
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
@@ -1312,7 +1312,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
@@ -1335,13 +1335,13 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   }   // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute alpha. */
   this->m_Alpha = 0.0;
-  if (this->m_NumberOfPixelsCounted > 0)
+  if (Superclass::m_NumberOfPixelsCounted > 0)
   {
-    this->m_Alpha = 1.0 / static_cast<double>(this->m_NumberOfPixelsCounted);
+    this->m_Alpha = 1.0 / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
   }
 
 } // end ComputePDFsAndPDFDerivatives()
@@ -1364,7 +1364,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   this->m_PerturbedAlphaRight.Fill(0.0);
   this->m_PerturbedAlphaLeft.Fill(0.0);
 
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   double       sumOfMovingMaskValues = 0.0;
   const double delta = this->GetFiniteDifferencePerturbation();
 
@@ -1449,7 +1449,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
 
       /** Count how many samples were used. */
       sumOfMovingMaskValues += movingMaskValue;
-      this->m_NumberOfPixelsCounted += static_cast<unsigned int>(sampleOk);
+      Superclass::m_NumberOfPixelsCounted += static_cast<unsigned int>(sampleOk);
 
       /** Get the TransformJacobian dT/dmu. We assume the transform is a linear
        * function of its parameters, so that we can evaluate T(x;\mu+delta_ek)
@@ -1531,7 +1531,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
   }   // end iterating over fixed image spatial sample container for loop
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute alpha and its perturbed versions. */
   this->m_Alpha = 0.0;

@@ -181,7 +181,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Call non-thread-safe stuff, such as:
@@ -275,7 +275,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
 
     if (numSamplesOk > 0)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Add this variance to the variance sum. */
       const float expectedValue = sumValues / static_cast<float>(numSamplesOk);
@@ -286,10 +286,10 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute average over variances. */
-  measure /= static_cast<float>(this->m_NumberOfPixelsCounted);
+  measure /= static_cast<float>(Superclass::m_NumberOfPixelsCounted);
   /** Normalize with initial variance. */
   measure /= m_InitialVariance;
 
@@ -337,7 +337,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   using DerivativeValueType = typename DerivativeType::ValueType;
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
@@ -381,9 +381,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   DerivativeType        imageJacobian(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
 
   /** Get real last dim samples. */
-  const unsigned int realNumLastDimPositions = m_SampleLastDimensionRandomly
-                                                 ? m_NumSamplesLastDimension + m_NumAdditionalSamplesFixed
-                                                 : lastDimSize;
+  const unsigned int realNumLastDimPositions =
+    m_SampleLastDimensionRandomly ? m_NumSamplesLastDimension + m_NumAdditionalSamplesFixed : lastDimSize;
 
   /** Variable to store and nzjis. */
   std::vector<NonZeroJacobianIndicesType> nzjis(realNumLastDimPositions, NonZeroJacobianIndicesType());
@@ -467,7 +466,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
 
     if (numSamplesOk > 0)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Compute average intensity value. */
       const float expectedValue = sumValues / static_cast<float>(numSamplesOk);
@@ -487,11 +486,11 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute average over variances and normalize with initial variance. */
-  measure /= static_cast<float>(this->m_NumberOfPixelsCounted * m_InitialVariance);
-  derivative /= static_cast<float>(this->m_NumberOfPixelsCounted * m_InitialVariance);
+  measure /= static_cast<float>(Superclass::m_NumberOfPixelsCounted * m_InitialVariance);
+  derivative /= static_cast<float>(Superclass::m_NumberOfPixelsCounted * m_InitialVariance);
 
   /** Subtract mean from derivative elements. */
   if (m_SubtractMean)
