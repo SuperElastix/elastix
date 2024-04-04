@@ -56,9 +56,9 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize()
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
   /** Check num last samples. */
-  if (this->m_NumSamplesLastDimension > lastDimSize)
+  if (m_NumSamplesLastDimension > lastDimSize)
   {
-    this->m_NumSamplesLastDimension = lastDimSize;
+    m_NumSamplesLastDimension = lastDimSize;
   }
 
   /** Compute variance over last dimension for complete image to use as normalization factor. */
@@ -95,11 +95,11 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize()
   /** Compute average variance. */
   if (sumvar == 0)
   {
-    this->m_InitialVariance = 1.0f;
+    m_InitialVariance = 1.0f;
   }
   else
   {
-    this->m_InitialVariance = sumvar / static_cast<float>(num);
+    m_InitialVariance = sumvar / static_cast<float>(num);
   }
 
 } // end Initialize()
@@ -137,7 +137,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::SampleRandom(co
   /** Sample additional at fixed timepoint. */
   for (unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i)
   {
-    numbers.push_back(this->m_ReducedDimensionIndex);
+    numbers.push_back(m_ReducedDimensionIndex);
   }
 
   /** Get n random samples. */
@@ -205,13 +205,13 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
-  const unsigned int numLastDimSamples = this->m_NumSamplesLastDimension;
+  const unsigned int numLastDimSamples = m_NumSamplesLastDimension;
 
   /** Vector containing last dimension positions to use:
    * initialize on all positions when random sampling turned off.
    */
   std::vector<int> lastDimPositions;
-  if (!this->m_SampleLastDimensionRandomly)
+  if (!m_SampleLastDimensionRandomly)
   {
     for (unsigned int i = 0; i < lastDimSize; ++i)
     {
@@ -226,7 +226,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
     FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Determine random last dimension positions if needed. */
-    if (this->m_SampleLastDimensionRandomly)
+    if (m_SampleLastDimensionRandomly)
     {
       this->SampleRandom(numLastDimSamples, lastDimSize, lastDimPositions);
     }
@@ -291,7 +291,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   /** Compute average over variances. */
   measure /= static_cast<float>(this->m_NumberOfPixelsCounted);
   /** Normalize with initial variance. */
-  measure /= this->m_InitialVariance;
+  measure /= m_InitialVariance;
 
   /** Return the mean squares measure value. */
   return measure;
@@ -368,7 +368,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
    * initialize on all positions when random sampling turned off.
    */
   std::vector<int> lastDimPositions;
-  if (!this->m_SampleLastDimensionRandomly)
+  if (!m_SampleLastDimensionRandomly)
   {
     for (unsigned int i = 0; i < lastDimSize; ++i)
     {
@@ -381,8 +381,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   DerivativeType        imageJacobian(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
 
   /** Get real last dim samples. */
-  const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly
-                                                 ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed
+  const unsigned int realNumLastDimPositions = m_SampleLastDimensionRandomly
+                                                 ? m_NumSamplesLastDimension + m_NumAdditionalSamplesFixed
                                                  : lastDimSize;
 
   /** Variable to store and nzjis. */
@@ -398,9 +398,9 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
     FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Determine random last dimension positions if needed. */
-    if (this->m_SampleLastDimensionRandomly)
+    if (m_SampleLastDimensionRandomly)
     {
-      this->SampleRandom(this->m_NumSamplesLastDimension, lastDimSize, lastDimPositions);
+      this->SampleRandom(m_NumSamplesLastDimension, lastDimSize, lastDimPositions);
     }
 
     /** Initialize MT vector. */
@@ -490,19 +490,19 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
   /** Compute average over variances and normalize with initial variance. */
-  measure /= static_cast<float>(this->m_NumberOfPixelsCounted * this->m_InitialVariance);
-  derivative /= static_cast<float>(this->m_NumberOfPixelsCounted * this->m_InitialVariance);
+  measure /= static_cast<float>(this->m_NumberOfPixelsCounted * m_InitialVariance);
+  derivative /= static_cast<float>(this->m_NumberOfPixelsCounted * m_InitialVariance);
 
   /** Subtract mean from derivative elements. */
-  if (this->m_SubtractMean)
+  if (m_SubtractMean)
   {
-    if (!this->m_TransformIsStackTransform)
+    if (!m_TransformIsStackTransform)
     {
       /** Update derivative per dimension.
        * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
        * per dimension xyz.
        */
-      const unsigned int lastDimGridSize = this->m_GridSize[lastDim];
+      const unsigned int lastDimGridSize = m_GridSize[lastDim];
       const unsigned int numParametersPerDimension =
         this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
       const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
