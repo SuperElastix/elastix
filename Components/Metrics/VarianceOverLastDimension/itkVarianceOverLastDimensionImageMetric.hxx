@@ -378,7 +378,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
 
   /** Create variables to store intermediate results in. */
   TransformJacobianType jacobian;
-  DerivativeType        imageJacobian(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  DerivativeType        imageJacobian(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
 
   /** Get real last dim samples. */
   const unsigned int realNumLastDimPositions =
@@ -458,9 +458,9 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
       }
       else
       {
-        dMTdmu[d] = DerivativeType(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+        dMTdmu[d] = DerivativeType(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
         dMTdmu[d].Fill(DerivativeValueType{});
-        nzjis[d] = NonZeroJacobianIndicesType(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices(), 0);
+        nzjis[d] = NonZeroJacobianIndicesType(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices(), 0);
       } // end if sampleOk
     }
 

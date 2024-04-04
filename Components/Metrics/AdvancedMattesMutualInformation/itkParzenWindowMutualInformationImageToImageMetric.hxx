@@ -283,7 +283,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   DerivativeType & derivative) const
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji = Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji(nnzji);
   DerivativeType               imageJacobian(nzji.size());
   TransformJacobianType        jacobian;
@@ -417,7 +417,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   ThreadIdType threadId)
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji = Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji(nnzji);
   DerivativeType               imageJacobian(nzji.size());
 
@@ -494,7 +494,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
         jacobian, movingImageDerivative, imageJacobian );
 #else
       /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
-      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+      Superclass::m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
         fixedPoint, movingImageDerivative, imageJacobian, nzji);
 #endif
 
