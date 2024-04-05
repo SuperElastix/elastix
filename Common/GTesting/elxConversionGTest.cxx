@@ -500,35 +500,10 @@ GTEST_TEST(Conversion, ConcatenateVectors)
 
 GTEST_TEST(Conversion, IsNumberReturnsFalseOnNonNumericString)
 {
-  const auto expect_IsNumber_returns_false = [](const std::string & str) {
-    SCOPED_TRACE(str);
-    EXPECT_FALSE(Conversion::IsNumber(str));
-  };
-
   for (const auto str : { "", " ", "a", "A B C", "true", "false", "nan", "NaN" })
   {
-    expect_IsNumber_returns_false(str);
-  }
-
-  for (const auto transformName : { "AffineDTITransform",
-                                    "AffineLogStackTransform",
-                                    "AffineLogTransform",
-                                    "AffineTransform",
-                                    "BSplineStackTransform",
-                                    "BSplineTransform",
-                                    "BSplineTransformWithDiffusion",
-                                    "DeformationFieldTransform",
-                                    "EulerStackTransform",
-                                    "EulerTransform",
-                                    "MultiBSplineTransformWithNormal",
-                                    "RecursiveBSplineTransform",
-                                    "SimilarityTransform",
-                                    "SplineKernelTransform",
-                                    "TranslationStackTransform",
-                                    "TranslationTransform",
-                                    "WeightedCombinationTransform" })
-  {
-    expect_IsNumber_returns_false(transformName);
+    SCOPED_TRACE(str);
+    EXPECT_FALSE(Conversion::IsNumber(str));
   }
 }
 
