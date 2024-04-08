@@ -28,6 +28,7 @@
 #include <itkTimeProbe.h>
 
 // Standard C++ header files:
+#include <cassert>
 #include <iostream>
 
 

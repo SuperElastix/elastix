@@ -29,6 +29,7 @@
 #include "itkMaskImageFilter.h"
 #include "itkConstantPadImageFilter.h"
 
+#include <cassert>
 #include <numeric> // For iota.
 
 namespace itk

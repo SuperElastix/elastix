@@ -25,6 +25,7 @@
 #endif
 
 #include <algorithm> // For min.
+#include <cassert>
 
 namespace itk
 {

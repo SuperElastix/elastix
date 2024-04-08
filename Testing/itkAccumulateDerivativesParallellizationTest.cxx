@@ -35,6 +35,8 @@
 #  include <omp.h>
 #endif
 
+#include <cassert>
+
 // select double or float internal type of array
 #if 0
 typedef float InternalScalarType;
