@@ -43,7 +43,8 @@
 #include "elxTransformIO.h"
 
 #include <algorithm> // For find.
-#include <memory>    // For unique_ptr.
+#include <cassert>
+#include <memory> // For unique_ptr.
 
 namespace itk
 {

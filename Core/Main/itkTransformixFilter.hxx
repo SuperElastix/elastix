@@ -45,6 +45,7 @@
 
 #include <itkCompositeTransform.h>
 
+#include <cassert>
 #include <memory> // For unique_ptr.
 
 namespace itk

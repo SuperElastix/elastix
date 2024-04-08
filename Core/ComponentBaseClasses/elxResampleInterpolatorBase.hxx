@@ -22,6 +22,8 @@
 #include "elxResampleInterpolatorBase.h"
 #include "elxConversion.h"
 
+#include <cassert>
+
 namespace elastix
 {
 

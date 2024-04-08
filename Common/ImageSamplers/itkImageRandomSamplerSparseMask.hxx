@@ -20,6 +20,7 @@
 
 #include "itkImageRandomSamplerSparseMask.h"
 #include "elxDeref.h"
+#include <cassert>
 
 namespace itk
 {

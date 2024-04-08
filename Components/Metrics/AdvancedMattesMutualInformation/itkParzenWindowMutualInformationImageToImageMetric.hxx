@@ -31,6 +31,8 @@
 #  include <omp.h>
 #endif
 
+#include <cassert>
+
 namespace itk
 {
 /**

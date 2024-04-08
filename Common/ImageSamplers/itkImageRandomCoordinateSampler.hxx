@@ -21,6 +21,7 @@
 #include "itkImageRandomCoordinateSampler.h"
 #include "elxDeref.h"
 #include <vnl/vnl_math.h>
+#include <cassert>
 
 namespace itk
 {

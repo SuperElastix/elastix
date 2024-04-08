@@ -21,7 +21,8 @@
 #include "itkAdvancedKappaStatisticImageToImageMetric.h"
 
 #include <algorithm> // For min.
-#include <cmath>     // For abs.
+#include <cassert>
+#include <cmath> // For abs.
 
 namespace itk
 {

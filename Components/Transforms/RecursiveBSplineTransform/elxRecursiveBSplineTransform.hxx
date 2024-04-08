@@ -22,6 +22,7 @@
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
 #include <vnl/vnl_math.h>
+#include <cassert>
 #include <regex>
 
 

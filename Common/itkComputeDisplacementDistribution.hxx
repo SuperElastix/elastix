@@ -32,6 +32,8 @@
 #include "itkZeroFluxNeumannPadImageFilter.h"
 #include "itkSmoothingRecursiveGaussianImageFilter.h"
 
+#include <cassert>
+
 namespace itk
 {
 

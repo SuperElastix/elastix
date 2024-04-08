@@ -27,6 +27,8 @@
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkTimeProbe.h"
 
+#include <cassert>
+
 namespace elastix
 {
 

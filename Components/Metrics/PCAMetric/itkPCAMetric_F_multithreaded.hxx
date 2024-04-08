@@ -26,6 +26,7 @@
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_trace.h>
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
+#include <cassert>
 #include <numeric>
 #include <fstream>
 

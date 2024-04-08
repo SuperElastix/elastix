@@ -35,6 +35,7 @@
 #include <itkTransformFileReader.h>
 #include <itkTransformFileWriter.h>
 
+#include <cassert>
 #include <string>
 
 

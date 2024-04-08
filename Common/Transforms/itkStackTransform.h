@@ -21,6 +21,8 @@
 #include "itkAdvancedTransform.h"
 #include "itkIndex.h"
 
+#include <cassert>
+
 namespace itk
 {
 
