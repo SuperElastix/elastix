@@ -56,8 +56,6 @@ public:
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ImageSampler, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_AdvancedTransform, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_TransformIsBSpline, false);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedImageLimiter, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_MovingImageLimiter, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedImageTrueMin, 0);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedImageTrueMax, 1);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_MovingImageTrueMin, 0);

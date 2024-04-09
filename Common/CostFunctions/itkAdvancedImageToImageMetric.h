@@ -367,8 +367,6 @@ protected:
   mutable bool                            m_TransformIsBSpline{ false };
 
   /** Variables for the Limiters. */
-  FixedImageLimiterPointer     m_FixedImageLimiter{ nullptr };
-  MovingImageLimiterPointer    m_MovingImageLimiter{ nullptr };
   FixedImagePixelType          m_FixedImageTrueMin{ 0 };
   FixedImagePixelType          m_FixedImageTrueMax{ 1 };
   MovingImagePixelType         m_MovingImageTrueMin{ 0 };
@@ -593,14 +591,15 @@ private:
                                                             MovingImageDerivativeType *  gradient,
                                                             const TOptionalThreadId... optionalThreadId) const;
 
-  /** Variables for image derivative computation. */
+  /** Private member variables for limiters and for image derivative computation. */
+  FixedImageLimiterPointer          m_FixedImageLimiter{ nullptr };
+  MovingImageLimiterPointer         m_MovingImageLimiter{ nullptr };
   LinearInterpolatorPointer         m_LinearInterpolator{ nullptr };
   BSplineInterpolatorPointer        m_BSplineInterpolator{ nullptr };
   BSplineInterpolatorFloatPointer   m_BSplineInterpolatorFloat{ nullptr };
   ReducedBSplineInterpolatorPointer m_ReducedBSplineInterpolator{ nullptr };
 
-  /** Private member variables. */
-
+  /** Other private member variables. */
   bool   m_UseImageSampler{ false };
   bool   m_UseFixedImageLimiter{ false };
   bool   m_UseMovingImageLimiter{ false };
