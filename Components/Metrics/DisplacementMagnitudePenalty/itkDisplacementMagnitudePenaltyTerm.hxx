@@ -150,7 +150,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
   derivative.Fill(DerivativeValueType{});
 
   /** Array that stores sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   const unsigned long        nrNonZeroJacobianIndices = nzji.size();
   TransformJacobianType      jacobian(FixedImageDimension, nrNonZeroJacobianIndices);
   jacobian.Fill(0.0);

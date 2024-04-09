@@ -57,7 +57,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
   SpatialHessianType spatialHessian;
 
   /** Check if the SpatialHessian is nonzero. */
-  if (!this->m_AdvancedTransform->GetHasNonZeroSpatialHessian())
+  if (!Superclass::m_AdvancedTransform->GetHasNonZeroSpatialHessian())
   {
     return static_cast<MeasureType>(measure);
   }
@@ -99,7 +99,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
        */
-      this->m_AdvancedTransform->GetSpatialHessian(fixedPoint, spatialHessian);
+      Superclass::m_AdvancedTransform->GetSpatialHessian(fixedPoint, spatialHessian);
 
       /** Compute the contribution of this point. */
       for (unsigned int k = 0; k < FixedImageDimension; ++k)
@@ -160,13 +160,13 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
   NonZeroJacobianIndicesType   nonZeroJacobianIndices;
   const NumberOfParametersType numberOfNonZeroJacobianIndices =
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+    Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   jacobianOfSpatialHessian.resize(numberOfNonZeroJacobianIndices);
   nonZeroJacobianIndices.resize(numberOfNonZeroJacobianIndices);
 
   /** Check if the SpatialHessian is nonzero. */
-  if (!this->m_AdvancedTransform->GetHasNonZeroSpatialHessian() &&
-      !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian())
+  if (!Superclass::m_AdvancedTransform->GetHasNonZeroSpatialHessian() &&
+      !Superclass::m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian())
   {
     value = static_cast<MeasureType>(measure);
     return;
@@ -219,11 +219,11 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
        */
-      //       this->m_AdvancedTransform->GetSpatialHessian( fixedPoint,
+      //       Superclass::m_AdvancedTransform->GetSpatialHessian( fixedPoint,
       //         spatialHessian );
-      //       this->m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
+      //       Superclass::m_AdvancedTransform->GetJacobianOfSpatialHessian( fixedPoint,
       //         jacobianOfSpatialHessian, nonZeroJacobianIndices );
-      this->m_AdvancedTransform->GetJacobianOfSpatialHessian(
+      Superclass::m_AdvancedTransform->GetJacobianOfSpatialHessian(
         fixedPoint, spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices);
 
       /** Prepare some stuff for the computation of the metric (derivative). */
@@ -378,13 +378,13 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
   JacobianOfSpatialHessianType jacobianOfSpatialHessian;
   NonZeroJacobianIndicesType   nonZeroJacobianIndices;
   const NumberOfParametersType numberOfNonZeroJacobianIndices =
-    this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+    Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   jacobianOfSpatialHessian.resize(numberOfNonZeroJacobianIndices);
   nonZeroJacobianIndices.resize(numberOfNonZeroJacobianIndices);
 
   /** Check if the SpatialHessian is nonzero. */
-  if (!this->m_AdvancedTransform->GetHasNonZeroSpatialHessian() &&
-      !this->m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian())
+  if (!Superclass::m_AdvancedTransform->GetHasNonZeroSpatialHessian() &&
+      !Superclass::m_AdvancedTransform->GetHasNonZeroJacobianOfSpatialHessian())
   {
     return;
   }
@@ -445,7 +445,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
        */
-      this->m_AdvancedTransform->GetJacobianOfSpatialHessian(
+      Superclass::m_AdvancedTransform->GetJacobianOfSpatialHessian(
         fixedPoint, spatialHessian, jacobianOfSpatialHessian, nonZeroJacobianIndices);
 
       /** Prepare some stuff for the computation of the metric (derivative). */

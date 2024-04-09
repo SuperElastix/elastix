@@ -493,9 +493,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   MatrixType eigenVectorMatrixTranspose(eigenVectorMatrix.transpose());
 
   /** Create variables to store intermediate results in. */
-  TransformJacobianType                   jacobian;
-  DerivativeType                          dMTdmu;
-  DerivativeType                          imageJacobian(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  TransformJacobianType jacobian;
+  DerivativeType        dMTdmu;
+  DerivativeType        imageJacobian(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   std::vector<NonZeroJacobianIndicesType> nzjis(G, NonZeroJacobianIndicesType());
 
   /** Sub components of metric derivative */

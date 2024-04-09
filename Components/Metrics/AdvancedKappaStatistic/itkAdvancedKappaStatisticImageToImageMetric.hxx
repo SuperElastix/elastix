@@ -264,7 +264,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
   derivative = DerivativeType(this->GetNumberOfParameters());
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   DerivativeType             imageJacobian(nzji.size());
   TransformJacobianType      jacobian;
 
@@ -438,7 +438,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
   ThreadIdType threadId) const
 {
   /** Initialize array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
-  const NumberOfParametersType nnzji = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
+  const NumberOfParametersType nnzji = Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   NonZeroJacobianIndicesType   nzji(nnzji);
   DerivativeType               imageJacobian(nzji.size());
 
@@ -512,7 +512,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
         jacobian, movingImageDerivative, imageJacobian );
 #else
       /** Compute the inner product of the transform Jacobian dT/dmu and the moving image gradient dM/dx. */
-      this->m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
+      Superclass::m_AdvancedTransform->EvaluateJacobianWithImageGradientProduct(
         fixedPoint, movingImageDerivative, imageJacobian, nzji);
 #endif
 

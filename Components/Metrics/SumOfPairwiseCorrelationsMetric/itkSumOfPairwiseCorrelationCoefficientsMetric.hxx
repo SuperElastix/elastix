@@ -421,8 +421,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   DerivativeMatrixType K(S * C * S);
 
   /** Create variables to store intermediate results in. */
-  TransformJacobianType                   jacobian;
-  DerivativeType                          imageJacobian(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  TransformJacobianType jacobian;
+  DerivativeType        imageJacobian(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   std::vector<NonZeroJacobianIndicesType> nzjis(G, NonZeroJacobianIndicesType());
 
   DerivativeType dMTdmu;

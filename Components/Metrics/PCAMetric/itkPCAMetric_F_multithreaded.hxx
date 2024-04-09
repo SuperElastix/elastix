@@ -462,9 +462,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   MatrixType eigenVectorMatrixTranspose(eigenVectorMatrix.transpose());
 
   /** Create variables to store intermediate results in. */
-  TransformJacobianType                   jacobian;
-  DerivativeType                          dMTdmu;
-  DerivativeType                          imageJacobian(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  TransformJacobianType jacobian;
+  DerivativeType        dMTdmu;
+  DerivativeType        imageJacobian(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   std::vector<NonZeroJacobianIndicesType> nzjis(this->m_G, NonZeroJacobianIndicesType());
 
   /** Sub components of metric derivative */
@@ -905,8 +905,8 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivative(ThreadIdType thr
   MovingImageDerivativeType movingImageDerivative;
 
   TransformJacobianType      jacobian;
-  DerivativeType             imageJacobian(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
-  NonZeroJacobianIndicesType nzjis(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  DerivativeType             imageJacobian(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzjis(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
 
   unsigned int dummyindex = 0;
   /** Second loop over fixed image samples. */
