@@ -1124,7 +1124,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
   configuration.ReadParameter(this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
 
   /** Use noise Compensation factor or not. */
-  if (this->m_UseNoiseCompensation == true)
+  if (this->m_UseNoiseCompensation)
   {
     double sigma4 = 0.0;
     double gg = 0.0;
@@ -1231,7 +1231,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
   configuration.ReadParameter(this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
 
   /** Use noise Compensation factor or not. */
-  if (this->m_UseNoiseCompensation == true)
+  if (this->m_UseNoiseCompensation)
   {
     /** This use the time t_k = 0. */
     a = delta * std::pow(A + 1.0, alpha) / jacg * this->m_NoiseFactor;

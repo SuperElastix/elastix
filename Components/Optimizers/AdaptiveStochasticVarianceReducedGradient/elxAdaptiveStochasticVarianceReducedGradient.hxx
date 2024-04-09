@@ -981,7 +981,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   configuration.ReadParameter(this->m_UseNoiseCompensation, "NoiseCompensation", this->GetComponentLabel(), 0, 0);
 
   /** Use noise Compensation factor or not. */
-  if (this->m_UseNoiseCompensation == true)
+  if (this->m_UseNoiseCompensation)
   {
     double sigma4 = 0.0;
     double gg = 0.0;
