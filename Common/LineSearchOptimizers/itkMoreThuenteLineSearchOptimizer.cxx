@@ -868,8 +868,7 @@ MoreThuenteLineSearchOptimizer::SafeGuardedStep(double &     stx,
 
   /*     COMPUTE THE NEW STEP AND SAFEGUARD IT. */
 
-  stpf = std::min(stpmax, stpf);
-  stpf = std::max(stpmin, stpf);
+  stpf = std::clamp(stpf, stpmin, stpmax);
   stp = stpf;
   if (brackt && bound)
   {
