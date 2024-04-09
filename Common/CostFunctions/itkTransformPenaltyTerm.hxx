@@ -35,7 +35,7 @@ TransformPenaltyTerm<TFixedImage, TScalarType>::CheckForBSplineTransform2(BSplin
   this->CheckForBSplineTransform();
 
   /** Quit if the advanced transform is not a B-spline. */
-  if (!this->m_TransformIsBSpline)
+  if (!Superclass::m_TransformIsBSpline)
     return false;
 
   /** We will return the B-spline by reference, but only in case it is a third order B-spline. */
@@ -61,7 +61,7 @@ TransformPenaltyTerm<TFixedImage, TScalarType>::CheckForBSplineTransform2(BSplin
     }
   }
 
-  return this->m_TransformIsBSpline;
+  return true;
 
 } // end CheckForBSplineTransform()
 
