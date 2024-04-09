@@ -290,7 +290,7 @@ SimilarityTransformElastix<TElastix>::SetScales()
   else
   {
     /** If the dimension is 2, then the first parameter represents the
-     * isotropic scaling, the the second the rotation, and the third and
+     * isotropic scaling, the second the rotation, and the third and
      * fourth the translation.
      * If the dimension is 3, then the first three represent rotations,
      * the second three translations, and the last parameter the isotropic

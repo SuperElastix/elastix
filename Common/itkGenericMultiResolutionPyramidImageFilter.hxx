@@ -633,7 +633,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
      */
     SuperSuperclass::GenerateInputRequestedRegion();
 
-    /** This filter needs all of the input, because it uses the the
+    /** This filter needs all of the input, because it uses the
      * GausianRecursiveFilter.
      */
     InputImagePointer image = const_cast<InputImageType *>(this->GetInput());

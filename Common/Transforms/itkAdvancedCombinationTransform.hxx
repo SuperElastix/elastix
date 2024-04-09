@@ -463,7 +463,7 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>::SetInitialTransform(InitialTransformType * _arg)
 {
-  /** Set the the initial transform and call the UpdateCombinationMethod. */
+  /** Set the initial transform and call the UpdateCombinationMethod. */
   if (m_InitialTransform != _arg)
   {
     m_InitialTransform = _arg;
@@ -482,7 +482,7 @@ template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>::SetCurrentTransform(CurrentTransformType * _arg)
 {
-  /** Set the the current transform and call the UpdateCombinationMethod. */
+  /** Set the current transform and call the UpdateCombinationMethod. */
   if (m_CurrentTransform != _arg)
   {
     m_CurrentTransform = _arg;

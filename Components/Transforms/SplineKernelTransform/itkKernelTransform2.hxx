@@ -177,7 +177,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeReflexiveG(PointsIterator, GM
 /**
  * ******************* ComputeDeformationContribution *******************
  *
- * Default implementation of the the method. This can be overloaded
+ * Default implementation of the method. This can be overloaded
  * in transforms whose kernel produce diagonal G matrices.
  */
 
