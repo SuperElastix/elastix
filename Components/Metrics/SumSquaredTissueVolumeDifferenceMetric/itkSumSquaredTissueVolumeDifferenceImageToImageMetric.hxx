@@ -110,7 +110,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       this->m_NumberOfPixelsCounted++;
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
@@ -247,7 +247,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
@@ -342,7 +342,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   derivative.Fill(DerivativeValueType{});
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   DerivativeType             imageJacobian(nzji.size());
   TransformJacobianType      jacobian;
 
@@ -401,7 +401,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       this->EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
@@ -410,7 +410,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       inverseSpatialJacobian = spatialJac.GetInverse();
 
       /** Compute the JacobianOfSpatialJacobian. */
-      this->m_AdvancedTransform->GetJacobianOfSpatialJacobian(fixedPoint, jacobianOfSpatialJacobian, nzji);
+      Superclass::m_AdvancedTransform->GetJacobianOfSpatialJacobian(fixedPoint, jacobianOfSpatialJacobian, nzji);
 
       /** Compute the dot product of the inverse spatialJacobian and JacobianOfSpatialJacobian
        * to support calculation of the JacobianOfSpatialJacobianDeterminant. */
@@ -493,7 +493,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   DerivativeType             imageJacobian(nzji.size());
   TransformJacobianType      jacobian;
 
@@ -561,7 +561,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       this->EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 
       /** Get the SpatialJacobian dT/dx. */
-      this->m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
+      Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
       const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
@@ -570,7 +570,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       inverseSpatialJacobian = spatialJac.GetInverse();
 
       /** Compute the JacobianOfSpatialJacobian. */
-      this->m_AdvancedTransform->GetJacobianOfSpatialJacobian(fixedPoint, jacobianOfSpatialJacobian, nzji);
+      Superclass::m_AdvancedTransform->GetJacobianOfSpatialJacobian(fixedPoint, jacobianOfSpatialJacobian, nzji);
 
       /** Compute the dot product of the inverse spatialJacobian and JacobianOfSpatialJacobian
        * to support calculation of the JacobianOfSpatialJacobianDeterminant.

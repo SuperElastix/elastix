@@ -763,7 +763,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
   RealType                   movingImageValue;
   double                     fixedFeatureValue = 0.0;
   double                     movingFeatureValue = 0.0;
-  NonZeroJacobianIndicesType nzji(this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
   TransformJacobianType      jacobian;
 
   /** Loop over the fixed image samples to calculate the list samples. */
