@@ -209,9 +209,9 @@ public:
   SetTransform(AdvancedTransformType * arg)
   {
     this->Superclass::SetTransform(arg);
-    if (this->m_AdvancedTransform != arg)
+    if (m_AdvancedTransform != arg)
     {
-      this->m_AdvancedTransform = arg;
+      m_AdvancedTransform = arg;
       this->Modified();
     }
   }
@@ -221,7 +221,7 @@ public:
   const AdvancedTransformType *
   GetTransform() const override
   {
-    return this->m_AdvancedTransform.GetPointer();
+    return m_AdvancedTransform.GetPointer();
   }
 
 
@@ -230,7 +230,7 @@ public:
   ImageSamplerType *
   GetImageSampler() const
   {
-    return this->m_ImageSampler.GetPointer();
+    return m_ImageSampler.GetPointer();
   }
 
 
