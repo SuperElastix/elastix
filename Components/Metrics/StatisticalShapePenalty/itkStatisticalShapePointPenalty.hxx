@@ -178,7 +178,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
     }
     case 1: // decomposed covariance (uniform regularization)
     {
-      if (this->m_NormalizedShapeModel == true)
+      if (this->m_NormalizedShapeModel)
       {
         itkExceptionMacro("ShapeModelCalculation option 1 is only implemented for NormalizedShapeModel = false");
       }
