@@ -231,7 +231,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::InitializeImageSamp
   if (this->GetUseImageSampler())
   {
     /** Check if the ImageSampler is set. */
-    if (!this->m_ImageSampler)
+    if (!Superclass::m_ImageSampler)
     {
       itkExceptionMacro("ImageSampler is not present");
     }
@@ -239,19 +239,19 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::InitializeImageSamp
     /** Initialize the Image Sampler: set the fixed images. */
     for (unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i)
     {
-      this->m_ImageSampler->SetInput(i, this->m_FixedImageVector[i]);
+      Superclass::m_ImageSampler->SetInput(i, this->m_FixedImageVector[i]);
     }
 
     /** Initialize the Image Sampler: set the fixed image masks. */
     for (unsigned int i = 0; i < this->GetNumberOfFixedImageMasks(); ++i)
     {
-      this->m_ImageSampler->SetMask(this->m_FixedImageMaskVector[i], i);
+      Superclass::m_ImageSampler->SetMask(this->m_FixedImageMaskVector[i], i);
     }
 
     /** Initialize the Image Sampler: set the fixed image regions. */
     for (unsigned int i = 0; i < this->GetNumberOfFixedImages(); ++i)
     {
-      this->m_ImageSampler->SetInputImageRegion(this->m_FixedImageRegionVector[i], i);
+      Superclass::m_ImageSampler->SetInputImageRegion(this->m_FixedImageRegionVector[i], i);
     }
   }
 
