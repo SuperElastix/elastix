@@ -364,7 +364,9 @@ protected:
 
   /** Variables to store the AdvancedTransform. */
   typename AdvancedTransformType::Pointer m_AdvancedTransform{ nullptr };
-  mutable bool                            m_TransformIsBSpline{ false };
+
+  /** Member variable for TransformPenaltyTerm::CheckForBSplineTransform2 */
+  mutable bool m_TransformIsBSpline{ false };
 
   /** Variables for the Limiters. */
   FixedImagePixelType          m_FixedImageTrueMin{ 0 };
