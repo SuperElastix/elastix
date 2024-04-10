@@ -679,11 +679,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   // compute multi-threadedly with itk threads
   else if (true) // force ITK threads !Superclass::m_UseOpenMP )
   {
-    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
-    this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
+    Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
-                                      const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
+    this->m_Threader->SetSingleMethod(
+      this->AccumulateDerivativesThreaderCallback,
+      const_cast<void *>(static_cast<const void *>(&(Superclass::m_ThreaderMetricParameters))));
     this->m_Threader->SingleMethodExecute();
   }
 #ifdef ELASTIX_USE_OPENMP

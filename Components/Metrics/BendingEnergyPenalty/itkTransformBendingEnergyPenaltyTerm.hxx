@@ -583,12 +583,13 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
   // compute multi-threadedly with itk threads
   else if (!Superclass::m_UseOpenMP || true) // force
   {
-    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
-    this->m_ThreaderMetricParameters.st_NormalizationFactor =
+    Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
       static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
-    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
-                                      const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
+    this->m_Threader->SetSingleMethod(
+      this->AccumulateDerivativesThreaderCallback,
+      const_cast<void *>(static_cast<const void *>(&(Superclass::m_ThreaderMetricParameters))));
     this->m_Threader->SingleMethodExecute();
   }
 #ifdef ELASTIX_USE_OPENMP
