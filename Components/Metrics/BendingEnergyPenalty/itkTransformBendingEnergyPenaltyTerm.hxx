@@ -399,7 +399,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
    * InitializeThreadingParameters(), and at the end of each iteration in
    * AfterThreadedGetValueAndDerivative() and the accumulate functions.
    */
-  DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
+  DerivativeType & derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -527,8 +527,8 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
   }     // end for loop over the image sample container
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
 
 } // end ThreadedGetValueAndDerivative()
 
@@ -549,7 +549,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
   this->m_NumberOfPixelsCounted = 0;
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    this->m_NumberOfPixelsCounted += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
@@ -560,10 +560,10 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
   value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
+    value += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
+    Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
   value /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
 
@@ -573,10 +573,10 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
   // compute single-threadedly
   if (!Superclass::m_UseMultiThread)
   {
-    derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
+    derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)
     {
-      derivative += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
+      derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
     }
     derivative /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
   }
@@ -606,7 +606,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
       DerivativeValueType sum{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
-        sum += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
       }
       derivative[j] = sum / numPix;
     }

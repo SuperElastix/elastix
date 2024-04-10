@@ -428,7 +428,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
    * InitializeThreadingParameters(), and at the end of each iteration in
    * AfterThreadedGetValueAndDerivative() and the accumulate functions.
    */
-  DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
+  DerivativeType & derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
   /** Declare and allocate arrays for Jacobian preconditioning. */
   DerivativeType jacobianPreconditioner, preconditioningDivisor;
@@ -562,10 +562,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   // compute single-threadedly
   if (!Superclass::m_UseMultiThread && false) // force multi-threaded
   {
-    derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
+    derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)
     {
-      derivative += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
+      derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
     }
   }
 #ifdef ELASTIX_USE_OPENMP
@@ -577,10 +577,10 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
 #  pragma omp parallel for
     for (int j = 0; j < spaceDimension; ++j)
     {
-      DerivativeValueType sum = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative[j];
+      DerivativeValueType sum = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative[j];
       for (ThreadIdType i = 1; i < numberOfThreads; ++i)
       {
-        sum += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
       }
       derivative[j] = sum;
     }
