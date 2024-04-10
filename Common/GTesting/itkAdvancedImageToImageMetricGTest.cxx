@@ -71,8 +71,6 @@ public:
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_Metric, this);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_DerivativePointer, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_NormalizationFactor, 0.0);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_GetValuePerThreadVariables, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_GetValuePerThreadVariablesSize, 0U);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_GetValueAndDerivativePerThreadVariables, nullptr);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_GetValueAndDerivativePerThreadVariablesSize, 0U);
       EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedLimitRangeRatio, defaultLimitRangeRatio);
