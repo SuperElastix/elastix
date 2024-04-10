@@ -65,7 +65,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
   // this->InitializeLimiters();
 
-  this->m_NormalizationFactor = this->m_FixedImageTrueMax / this->m_MovingImageTrueMax;
+  this->m_NormalizationFactor = Superclass::m_FixedImageTrueMax / Superclass::m_MovingImageTrueMax;
   this->m_MultiplyImageFilter->SetInput(this->m_TransformMovingImageFilter->GetOutput());
   this->m_MultiplyImageFilter->SetConstant(this->m_NormalizationFactor);
   this->m_DifferenceImageFilter->SetInput1(this->m_FixedImage);

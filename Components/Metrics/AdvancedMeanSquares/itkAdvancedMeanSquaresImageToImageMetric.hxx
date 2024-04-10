@@ -59,35 +59,35 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     computeFixedImageExtrema->SetImageSpatialMask(this->GetFixedImageMask());
     computeFixedImageExtrema->Update();
 
-    this->m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
-    this->m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
+    Superclass::m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
+    Superclass::m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
 
     this->m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
-      this->m_FixedImageTrueMin -
-      this->m_FixedLimitRangeRatio * (this->m_FixedImageTrueMax - this->m_FixedImageTrueMin));
+      Superclass::m_FixedImageTrueMin -
+      this->m_FixedLimitRangeRatio * (Superclass::m_FixedImageTrueMax - Superclass::m_FixedImageTrueMin));
     this->m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
-      this->m_FixedImageTrueMax +
-      this->m_FixedLimitRangeRatio * (this->m_FixedImageTrueMax - this->m_FixedImageTrueMin));
+      Superclass::m_FixedImageTrueMax +
+      this->m_FixedLimitRangeRatio * (Superclass::m_FixedImageTrueMax - Superclass::m_FixedImageTrueMin));
 
     const auto computeMovingImageExtrema = ComputeImageExtremaFilter<MovingImageType>::New();
     computeMovingImageExtrema->SetInput(this->GetMovingImage());
     computeMovingImageExtrema->SetImageSpatialMask(this->GetMovingImageMask());
     computeMovingImageExtrema->Update();
 
-    this->m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
-    this->m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
+    Superclass::m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
+    Superclass::m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
 
     this->m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
-      this->m_MovingImageTrueMin -
-      this->m_MovingLimitRangeRatio * (this->m_MovingImageTrueMax - this->m_MovingImageTrueMin));
+      Superclass::m_MovingImageTrueMin -
+      this->m_MovingLimitRangeRatio * (Superclass::m_MovingImageTrueMax - Superclass::m_MovingImageTrueMin));
     this->m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
-      this->m_MovingImageTrueMax +
-      this->m_MovingLimitRangeRatio * (this->m_MovingImageTrueMax - this->m_MovingImageTrueMin));
+      Superclass::m_MovingImageTrueMax +
+      this->m_MovingLimitRangeRatio * (Superclass::m_MovingImageTrueMax - Superclass::m_MovingImageTrueMin));
 
     // TODO: we may actually reuse these values from AdvancedImageToImageMetric::InitializeLimiters
     // without recomputing them here.
-    const double diff1 = this->m_FixedImageTrueMax - this->m_MovingImageTrueMin;
-    const double diff2 = this->m_MovingImageTrueMax - this->m_FixedImageTrueMin;
+    const double diff1 = Superclass::m_FixedImageTrueMax - Superclass::m_MovingImageTrueMin;
+    const double diff2 = Superclass::m_MovingImageTrueMax - Superclass::m_FixedImageTrueMin;
     const double maxdiff = std::max(diff1, diff2);
 
     /** We guess that maxdiff/10 is the maximum average difference that will
