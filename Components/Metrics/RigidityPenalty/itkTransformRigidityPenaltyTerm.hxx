@@ -872,7 +872,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::BeforeThreadedGetValueAn
   /** In this function do all stuff that cannot be multi-threaded.
    * Meant for use in the combo-metric. So, I did not think about general usage yet.
    */
-  if (this->m_UseMetricSingleThreaded)
+  if (Superclass::m_UseMetricSingleThreaded)
   {
     this->m_BSplineTransform->SetParameters(parameters);
   }
