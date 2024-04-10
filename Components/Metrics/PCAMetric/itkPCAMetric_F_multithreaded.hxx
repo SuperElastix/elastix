@@ -47,8 +47,6 @@ PCAMetric<TFixedImage, TMovingImage>::PCAMetric()
   this->SetUseFixedImageLimiter(false);
   this->SetUseMovingImageLimiter(false);
 
-  /** Initialize the m_ParzenWindowHistogramThreaderParameters. */
-  this->m_PCAMetricThreaderParameters.m_Metric = this;
 } // end constructor
 
 
@@ -858,9 +856,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetSamplesThreaderCallback(void * arg)
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  const auto & userData = *static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
+  auto & self = *static_cast<Self *>(infoStruct.UserData);
 
-  userData.m_Metric->ThreadedGetSamples(threadId);
+  self.ThreadedGetSamples(threadId);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -879,8 +877,7 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchGetSamplesThreaderCallback() const
   // \todo: is a global threader better performance-wise? check
   auto local_threader = ThreaderType::New();
   local_threader->SetNumberOfWorkUnits(Self::GetNumberOfWorkUnits());
-  local_threader->SetSingleMethod(this->GetSamplesThreaderCallback,
-                                  const_cast<void *>(static_cast<const void *>(&this->m_PCAMetricThreaderParameters)));
+  local_threader->SetSingleMethod(this->GetSamplesThreaderCallback, &m_MutableSelf);
 
   /** Launch. */
   local_threader->SingleMethodExecute();
@@ -1062,9 +1059,9 @@ PCAMetric<TFixedImage, TMovingImage>::ComputeDerivativeThreaderCallback(void * a
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  const auto & userData = *static_cast<PCAMetricMultiThreaderParameterType *>(infoStruct.UserData);
+  auto & self = *static_cast<Self *>(infoStruct.UserData);
 
-  userData.m_Metric->ThreadedComputeDerivative(threadId);
+  self.ThreadedComputeDerivative(threadId);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -1083,8 +1080,7 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback() 
   // \todo: is a global threader better performance-wise? check
   auto local_threader = ThreaderType::New();
   local_threader->SetNumberOfWorkUnits(Self::GetNumberOfWorkUnits());
-  local_threader->SetSingleMethod(this->ComputeDerivativeThreaderCallback,
-                                  const_cast<void *>(static_cast<const void *>(&this->m_PCAMetricThreaderParameters)));
+  local_threader->SetSingleMethod(this->GetSamplesThreaderCallback, &m_MutableSelf);
 
   /** Launch. */
   local_threader->SingleMethodExecute();

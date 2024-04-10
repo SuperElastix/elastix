@@ -196,13 +196,6 @@ protected:
   InitializeThreadingParameters() const override;
 
 private:
-  struct PCAMetricMultiThreaderParameterType
-  {
-    Self * m_Metric;
-  };
-
-  PCAMetricMultiThreaderParameterType m_PCAMetricThreaderParameters{};
-
   struct PCAMetricGetSamplesPerThreadStruct
   {
     SizeValueType                    st_NumberOfPixelsCounted;
@@ -241,6 +234,9 @@ private:
   mutable DerivativeMatrixType      m_CSv{};
   mutable DerivativeMatrixType      m_Sv{};
   mutable DerivativeMatrixType      m_vdSdmu_part1{};
+
+  /** To give the threads access to all member variables and functions. */
+  Self & m_MutableSelf{ *this };
 };
 
 } // end namespace itk

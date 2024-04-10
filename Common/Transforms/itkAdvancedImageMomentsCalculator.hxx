@@ -48,9 +48,6 @@ AdvancedImageMomentsCalculator<TImage>::AdvancedImageMomentsCalculator()
   this->m_UseMultiThread = true;
   this->m_Threader = ThreaderType::New();
 
-  /** Initialize the m_ThreaderParameters. */
-  this->m_ThreaderParameters.st_Self = this;
-
   // Multi-threading structs
   this->m_CenterOfGravityUsesLowerThreshold = false;
   this->m_NumberOfSamplesForCenteredTransformInitialization = 10000;
@@ -219,7 +216,7 @@ void
 AdvancedImageMomentsCalculator<TImage>::LaunchComputeThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback, &m_ThreaderParameters);
+  this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback, &m_MutableSelf);
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();
@@ -240,10 +237,10 @@ AdvancedImageMomentsCalculator<TImage>::ComputeThreaderCallback(void * arg)
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  auto & self = *static_cast<Self *>(infoStruct.UserData);
 
   /** Call the real implementation. */
-  userData.st_Self->ThreadedCompute(threadID);
+  self.ThreadedCompute(threadID);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 

@@ -55,9 +55,6 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeDisplacementDis
   this->m_UseMultiThread = true;
   this->m_Threader = ThreaderType::New();
 
-  /** Initialize the m_ThreaderParameters. */
-  this->m_ThreaderParameters.st_Self = this;
-
 } // end Constructor
 
 
@@ -286,7 +283,7 @@ void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::LaunchComputeThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback, &m_ThreaderParameters);
+  this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback, &m_MutableSelf);
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();
@@ -308,10 +305,10 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeThreaderCallbac
   ThreadIdType threadID = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  const auto & userData = *static_cast<MultiThreaderParameterType *>(infoStruct.UserData);
+  auto & self = *static_cast<Self *>(infoStruct.UserData);
 
   /** Call the real implementation. */
-  userData.st_Self->ThreadedCompute(threadID);
+  self.ThreadedCompute(threadID);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 

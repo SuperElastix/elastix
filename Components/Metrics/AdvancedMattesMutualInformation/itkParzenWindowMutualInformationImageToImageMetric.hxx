@@ -35,19 +35,6 @@
 
 namespace itk
 {
-/**
- * ********************* Constructor ******************************
- */
-
-template <class TFixedImage, class TMovingImage>
-ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
-                                                TMovingImage>::ParzenWindowMutualInformationImageToImageMetric()
-{
-  /** Initialize the m_ParzenWindowHistogramThreaderParameters. */
-  this->m_ParzenWindowMutualInformationThreaderParameters.m_Metric = this;
-
-} // end constructor
-
 
 /**
  * ********************* InitializeHistograms ******************************
@@ -614,9 +601,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  const auto & userData = *static_cast<ParzenWindowMutualInformationMultiThreaderParameterType *>(infoStruct.UserData);
+  auto & self = *static_cast<Self *>(infoStruct.UserData);
 
-  userData.m_Metric->ThreadedComputeDerivativeLowMemory(threadId);
+  self.ThreadedComputeDerivativeLowMemory(threadId);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -633,9 +620,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::LaunchComputeDerivativeLowMemoryThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(
-    this->ComputeDerivativeLowMemoryThreaderCallback,
-    const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowMutualInformationThreaderParameters)));
+  this->m_Threader->SetSingleMethod(this->ComputeDerivativeLowMemoryThreaderCallback, &m_MutableSelf);
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();

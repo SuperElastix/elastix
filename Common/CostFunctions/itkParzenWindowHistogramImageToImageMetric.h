@@ -472,15 +472,6 @@ private:
   /** Threading related parameters. */
   mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs{};
 
-  /** Helper structs that multi-threads the computation of
-   * the metric derivative using ITK threads.
-   */
-  struct ParzenWindowHistogramMultiThreaderParameterType // can't we use the one from AdvancedImageToImageMetric ?
-  {
-    Self * m_Metric;
-  };
-  ParzenWindowHistogramMultiThreaderParameterType m_ParzenWindowHistogramThreaderParameters{};
-
   struct ParzenWindowHistogramGetValueAndDerivativePerThreadStruct
   {
     SizeValueType   st_NumberOfPixelsCounted;
@@ -504,6 +495,9 @@ private:
   bool          m_UseExplicitPDFDerivatives{ true };
   bool          m_UseFiniteDifferenceDerivative{ false };
   double        m_FiniteDifferencePerturbation{ 1.0 };
+
+  /** To give the threads access to all member variables and functions. */
+  Self & m_MutableSelf{ *this };
 };
 
 } // end namespace itk

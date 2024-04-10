@@ -276,12 +276,6 @@ protected:
   virtual void
   InitializeThreadingParameters();
 
-  /** To give the threads access to all member variables and functions. */
-  struct MultiThreaderParameterType
-  {
-    Self * st_Self;
-  };
-
   struct ComputePerThreadStruct
   {
     /**  Used for accumulating variables. */
@@ -310,8 +304,6 @@ private:
 
   ThreaderType::Pointer m_Threader{};
 
-  mutable MultiThreaderParameterType m_ThreaderParameters{};
-
   mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
   bool                                               m_UseMultiThread{};
   SizeValueType                                      m_NumberOfPixelsCounted{};
@@ -332,6 +324,9 @@ private:
 
   ImageConstPointer         m_Image{};
   SpatialObjectConstPointer m_SpatialObjectMask{};
+
+  /** To give the threads access to all member variables and functions. */
+  Self & m_MutableSelf{ *this };
 
 }; // class AdvancedImageMomentsCalculator
 } // end namespace itk

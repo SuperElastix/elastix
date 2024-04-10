@@ -199,11 +199,6 @@ protected:
   virtual void
   InitializeThreadingParameters();
 
-  /** To give the threads access to all member variables and functions. */
-  struct MultiThreaderParameterType
-  {
-    Self * st_Self;
-  };
   struct ComputePerThreadStruct
   {
     /**  Used for accumulating variables. */
@@ -216,13 +211,14 @@ protected:
   itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedComputePerThreadStruct, AlignedComputePerThreadStruct);
 
 private:
-  mutable MultiThreaderParameterType m_ThreaderParameters{};
-
   mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
 
   SizeValueType               m_NumberOfPixelsCounted{};
   bool                        m_UseMultiThread{};
   ImageSampleContainerPointer m_SampleContainer{};
+
+  /** To give the threads access to all member variables and functions. */
+  Self & m_MutableSelf{ *this };
 };
 
 } // end namespace itk

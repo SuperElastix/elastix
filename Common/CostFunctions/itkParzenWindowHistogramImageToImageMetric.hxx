@@ -41,9 +41,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ParzenWindow
   this->SetUseFixedImageLimiter(true);
   this->SetUseMovingImageLimiter(true);
 
-  /** Initialize the m_ParzenWindowHistogramThreaderParameters */
-  this->m_ParzenWindowHistogramThreaderParameters.m_Metric = this;
-
 } // end Constructor
 
 
@@ -1227,9 +1224,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsT
   ThreadIdType threadId = infoStruct.WorkUnitID;
 
   assert(infoStruct.UserData);
-  const auto & userData = *static_cast<ParzenWindowHistogramMultiThreaderParameterType *>(infoStruct.UserData);
+  auto & self = *static_cast<Self *>(infoStruct.UserData);
 
-  userData.m_Metric->ThreadedComputePDFs(threadId);
+  self.ThreadedComputePDFs(threadId);
 
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
@@ -1245,9 +1242,7 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComputePDFsThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(
-    this->ComputePDFsThreaderCallback,
-    const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowHistogramThreaderParameters)));
+  this->m_Threader->SetSingleMethod(this->ComputePDFsThreaderCallback, &m_MutableSelf);
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();

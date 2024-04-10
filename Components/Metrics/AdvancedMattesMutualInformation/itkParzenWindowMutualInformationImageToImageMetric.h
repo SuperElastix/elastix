@@ -149,7 +149,7 @@ public:
 
 protected:
   /** The constructor. */
-  ParzenWindowMutualInformationImageToImageMetric();
+  ParzenWindowMutualInformationImageToImageMetric() = default;
 
   /** The destructor. */
   ~ParzenWindowMutualInformationImageToImageMetric() override = default;
@@ -228,13 +228,6 @@ protected:
   void
   InitializeHistograms() override;
 
-  /** Threading related parameters. */
-  struct ParzenWindowMutualInformationMultiThreaderParameterType
-  {
-    Self * m_Metric;
-  };
-  ParzenWindowMutualInformationMultiThreaderParameterType m_ParzenWindowMutualInformationThreaderParameters{};
-
   /** Multi-threaded versions of the ComputePDF function. */
   void
   ThreadedComputeDerivativeLowMemory(ThreadIdType threadId);
@@ -259,6 +252,9 @@ private:
 
   /** Setting */
   bool m_UseJacobianPreconditioning{ false };
+
+  /** To give the threads access to all member variables and functions. */
+  Self & m_MutableSelf{ *this };
 
   /** Helper function to compute the derivative for the low memory variant. */
   void
