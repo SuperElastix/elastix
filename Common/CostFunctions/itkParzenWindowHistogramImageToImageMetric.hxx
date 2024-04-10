@@ -143,9 +143,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
 
   /** The ratio times the expected bin size will be added twice to the image range. */
   const double smallNumberRatio = 0.001;
-  const double smallNumberFixed = smallNumberRatio * (this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit) /
+  const double smallNumberFixed = smallNumberRatio *
+                                  (Superclass::m_FixedImageMaxLimit - Superclass::m_FixedImageMinLimit) /
                                   static_cast<double>(this->m_NumberOfFixedHistogramBins - 2 * fixedPadding - 1);
-  const double smallNumberMoving = smallNumberRatio * (this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit) /
+  const double smallNumberMoving = smallNumberRatio *
+                                   (Superclass::m_MovingImageMaxLimit - Superclass::m_MovingImageMinLimit) /
                                    static_cast<double>(this->m_NumberOfFixedHistogramBins - 2 * movingPadding - 1);
 
   /** Compute binsizes. */
@@ -153,21 +155,24 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
     static_cast<OffsetValueType>(this->m_NumberOfFixedHistogramBins) // requires cast to signed type!
     - 2.0 * fixedPadding - 1.0);
   this->m_FixedImageBinSize =
-    (this->m_FixedImageMaxLimit - this->m_FixedImageMinLimit + 2.0 * smallNumberFixed) / fixedHistogramWidth;
+    (Superclass::m_FixedImageMaxLimit - Superclass::m_FixedImageMinLimit + 2.0 * smallNumberFixed) /
+    fixedHistogramWidth;
   this->m_FixedImageBinSize = std::max(this->m_FixedImageBinSize, 1e-10);
   this->m_FixedImageBinSize = std::min(this->m_FixedImageBinSize, 1e+10);
-  this->m_FixedImageNormalizedMin =
-    (this->m_FixedImageMinLimit - smallNumberFixed) / this->m_FixedImageBinSize - static_cast<double>(fixedPadding);
+  this->m_FixedImageNormalizedMin = (Superclass::m_FixedImageMinLimit - smallNumberFixed) / this->m_FixedImageBinSize -
+                                    static_cast<double>(fixedPadding);
 
   const double movingHistogramWidth = static_cast<double>(
     static_cast<OffsetValueType>(this->m_NumberOfMovingHistogramBins) // requires cast to signed type!
     - 2.0 * movingPadding - 1.0);
   this->m_MovingImageBinSize =
-    (this->m_MovingImageMaxLimit - this->m_MovingImageMinLimit + 2.0 * smallNumberMoving) / movingHistogramWidth;
+    (Superclass::m_MovingImageMaxLimit - Superclass::m_MovingImageMinLimit + 2.0 * smallNumberMoving) /
+    movingHistogramWidth;
   this->m_MovingImageBinSize = std::max(this->m_MovingImageBinSize, 1e-10);
   this->m_MovingImageBinSize = std::min(this->m_MovingImageBinSize, 1e+10);
   this->m_MovingImageNormalizedMin =
-    (this->m_MovingImageMinLimit - smallNumberMoving) / this->m_MovingImageBinSize - static_cast<double>(movingPadding);
+    (Superclass::m_MovingImageMinLimit - smallNumberMoving) / this->m_MovingImageBinSize -
+    static_cast<double>(movingPadding);
 
   /** Allocate memory for the marginal PDF. */
   this->m_FixedImageMarginalPDF.SetSize(this->m_NumberOfFixedHistogramBins);
