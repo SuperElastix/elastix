@@ -286,8 +286,7 @@ void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::LaunchComputeThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback,
-                                    const_cast<void *>(static_cast<const void *>(&this->m_ThreaderParameters)));
+  this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback, &m_ThreaderParameters);
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();
