@@ -448,17 +448,6 @@ protected:
    */
 
   // test per thread struct with padding and alignment
-  struct GetValuePerThreadStruct
-  {
-    SizeValueType st_NumberOfPixelsCounted;
-    MeasureType   st_Value;
-  };
-  itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, GetValuePerThreadStruct, PaddedGetValuePerThreadStruct);
-  itkAlignedTypedef(ITK_CACHE_LINE_ALIGNMENT, PaddedGetValuePerThreadStruct, AlignedGetValuePerThreadStruct);
-  mutable std::unique_ptr<AlignedGetValuePerThreadStruct[]> m_GetValuePerThreadVariables{ nullptr };
-  mutable ThreadIdType                                      m_GetValuePerThreadVariablesSize{ 0 };
-
-  // test per thread struct with padding and alignment
   struct GetValueAndDerivativePerThreadStruct
   {
     SizeValueType  st_NumberOfPixelsCounted;

@@ -149,13 +149,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
    */
 
   /** Only resize the array of structs when needed. */
-  if (m_GetValuePerThreadVariablesSize != numberOfThreads)
-  {
-    m_GetValuePerThreadVariables.reset(new AlignedGetValuePerThreadStruct[numberOfThreads]);
-    m_GetValuePerThreadVariablesSize = numberOfThreads;
-  }
-
-  /** Only resize the array of structs when needed. */
   if (m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads)
   {
     m_GetValueAndDerivativePerThreadVariables.reset(new AlignedGetValueAndDerivativePerThreadStruct[numberOfThreads]);
@@ -165,9 +158,6 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
   /** Some initialization. */
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    m_GetValuePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
-    m_GetValuePerThreadVariables[i].st_Value = MeasureType{};
-
     m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
     m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
     m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.SetSize(this->GetNumberOfParameters());
