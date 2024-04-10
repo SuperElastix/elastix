@@ -62,10 +62,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     Superclass::m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
     Superclass::m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
 
-    this->m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
+    Superclass::m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
       Superclass::m_FixedImageTrueMin -
       this->m_FixedLimitRangeRatio * (Superclass::m_FixedImageTrueMax - Superclass::m_FixedImageTrueMin));
-    this->m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
+    Superclass::m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
       Superclass::m_FixedImageTrueMax +
       this->m_FixedLimitRangeRatio * (Superclass::m_FixedImageTrueMax - Superclass::m_FixedImageTrueMin));
 
@@ -77,10 +77,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     Superclass::m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
     Superclass::m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
 
-    this->m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
+    Superclass::m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
       Superclass::m_MovingImageTrueMin -
       this->m_MovingLimitRangeRatio * (Superclass::m_MovingImageTrueMax - Superclass::m_MovingImageTrueMin));
-    this->m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
+    Superclass::m_MovingImageMaxLimit = static_cast<MovingImageLimiterOutputType>(
       Superclass::m_MovingImageTrueMax +
       this->m_MovingLimitRangeRatio * (Superclass::m_MovingImageTrueMax - Superclass::m_MovingImageTrueMin));
 
