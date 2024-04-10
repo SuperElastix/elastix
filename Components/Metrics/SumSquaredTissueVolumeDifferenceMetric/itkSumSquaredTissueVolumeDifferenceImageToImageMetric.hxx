@@ -651,9 +651,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
     Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
       static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
-    this->m_Threader->SetSingleMethod(
-      this->AccumulateDerivativesThreaderCallback,
-      const_cast<void *>(static_cast<const void *>(&(Superclass::m_ThreaderMetricParameters))));
+    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
+                                      &(Superclass::m_ThreaderMetricParameters));
     this->m_Threader->SingleMethodExecute();
   }
 
