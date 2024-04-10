@@ -262,8 +262,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   } // end for loop over the image sample container
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
 
 } // end ThreadedGetValue()
 
@@ -280,10 +280,10 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  this->m_NumberOfPixelsCounted = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    this->m_NumberOfPixelsCounted += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
@@ -294,10 +294,10 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
+    value += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
+    Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
   value /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
@@ -490,7 +490,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   /*Create variables to store intermediate results. Circumvent false sharing*/
   unsigned long    numberOfPixelsCounted = 0;
   MeasureType      measure{};
-  DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
+  DerivativeType & derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
@@ -592,8 +592,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   }
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
 } // end ThreadedGetValueAndDerivative()
 
 
@@ -610,10 +610,10 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  this->m_NumberOfPixelsCounted = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    this->m_NumberOfPixelsCounted += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
@@ -624,10 +624,10 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
+    value += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
+    Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
 
   value /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
@@ -636,10 +636,10 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   /** compute single-threadedly */
   if (!Superclass::m_UseMultiThread && false) // force multi-threaded as in AdvancedMeanSquares
   {
-    derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
+    derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)
     {
-      derivative += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
+      derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
     }
 
     derivative /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
@@ -669,7 +669,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
       DerivativeValueType sum{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
-        sum += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
       }
       derivative[j] = sum / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
     }

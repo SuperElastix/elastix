@@ -313,8 +313,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
   } // end for loop over the image sample container
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
 
 } // end ThreadedGetValue()
 
@@ -330,10 +330,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  Superclass::m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted =
+    Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    Superclass::m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted +=
+      Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
@@ -348,10 +350,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
+    value += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
+    Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
   value *= normal_sum;
 
@@ -549,7 +551,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
    * InitializeThreadingParameters(), and at the end of each iteration in
    * AfterThreadedGetValueAndDerivative() and the accumulate functions.
    */
-  DerivativeType & derivative = this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
+  DerivativeType & derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
@@ -622,8 +624,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
   } // end for loop over the image sample container
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
-  this->m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;
+  Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Value = measure;
 
 } // end ThreadedGetValueAndDerivative()
 
@@ -641,10 +643,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  Superclass::m_NumberOfPixelsCounted = this->m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted =
+    Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    Superclass::m_NumberOfPixelsCounted += this->m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted +=
+      Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
@@ -659,10 +663,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   value = MeasureType{};
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    value += this->m_GetValueAndDerivativePerThreadVariables[i].st_Value;
+    value += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value;
 
     /** Reset this variable for the next iteration. */
-    this->m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
+    Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
   value *= normal_sum;
 
@@ -670,10 +674,10 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   // compute single-threadedly
   if (!Superclass::m_UseMultiThread && false) // force multi-threaded
   {
-    derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative * normal_sum;
+    derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative * normal_sum;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)
     {
-      derivative += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative * normal_sum;
+      derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative * normal_sum;
     }
   }
   // compute multi-threadedly with itk threads
@@ -699,7 +703,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
       DerivativeValueType sum{};
       for (ThreadIdType i = 0; i < numberOfThreads; ++i)
       {
-        sum += this->m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
+        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
       }
       derivative[j] = sum * normal_sum;
     }
