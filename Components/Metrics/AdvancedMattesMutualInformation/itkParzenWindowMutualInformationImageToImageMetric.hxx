@@ -589,11 +589,12 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   // compute multi-threadedly with itk threads
   else
   {
-    this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
-    this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
+    Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+    Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
 
-    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
-                                      const_cast<void *>(static_cast<const void *>(&this->m_ThreaderMetricParameters)));
+    this->m_Threader->SetSingleMethod(
+      this->AccumulateDerivativesThreaderCallback,
+      const_cast<void *>(static_cast<const void *>(&(Superclass::m_ThreaderMetricParameters))));
     this->m_Threader->SingleMethodExecute();
   }
 
