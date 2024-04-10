@@ -645,7 +645,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
     derivative /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
   }
   // compute multi-threadedly with itk threads
-  else if (true) // force ITK threads !this->m_UseOpenMP )
+  else if (true) // force ITK threads !Superclass::m_UseOpenMP )
   {
     this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor =
