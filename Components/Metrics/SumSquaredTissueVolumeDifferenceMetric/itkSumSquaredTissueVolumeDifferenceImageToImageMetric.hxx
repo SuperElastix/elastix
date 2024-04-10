@@ -155,7 +155,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 {
 
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueSingleThreaded(parameters);
   }
@@ -460,7 +460,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   DerivativeType &                derivative) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
   }
@@ -634,7 +634,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
 
   /** Accumulate derivatives. */
   /** compute single-threadedly */
-  if (!this->m_UseMultiThread && false) // force multi-threaded as in AdvancedMeanSquares
+  if (!Superclass::m_UseMultiThread && false) // force multi-threaded as in AdvancedMeanSquares
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)

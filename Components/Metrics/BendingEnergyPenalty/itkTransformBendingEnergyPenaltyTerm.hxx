@@ -336,7 +336,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
                                                                                    DerivativeType & derivative) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
   }
@@ -571,7 +571,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
   // it seems that multi-threaded adding is faster than single-threaded
   // it seems that openmp is faster than itk threads
   // compute single-threadedly
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)

@@ -395,7 +395,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   DerivativeType & derivative) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->ComputeDerivativeLowMemorySingleThreaded(derivative);
   }
@@ -560,7 +560,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
 
   /** Accumulate derivatives. */
   // compute single-threadedly
-  if (!this->m_UseMultiThread && false) // force multi-threaded
+  if (!Superclass::m_UseMultiThread && false) // force multi-threaded
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)

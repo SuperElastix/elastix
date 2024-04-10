@@ -399,7 +399,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
   DerivativeType &                derivative) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
   }
@@ -599,7 +599,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
   const MeasureType tmp2 = 2.0 * intersection / areaSumSquare;
 
   /** Accumulate intermediate values and calculate derivative. */
-  if (!this->m_UseMultiThread) // single-threaded
+  if (!Superclass::m_UseMultiThread) // single-threaded
   {
     DerivativeType vecSum1 = this->m_KappaGetValueAndDerivativePerThreadVariables[0].st_DerivativeSum1;
     DerivativeType vecSum2 = this->m_KappaGetValueAndDerivativePerThreadVariables[0].st_DerivativeSum2;
