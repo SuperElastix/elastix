@@ -581,7 +581,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
     derivative /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
   }
   // compute multi-threadedly with itk threads
-  else if (!this->m_UseOpenMP || true) // force
+  else if (!Superclass::m_UseOpenMP || true) // force
   {
     this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor =

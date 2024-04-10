@@ -570,7 +570,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp
-  else if (false) // this->m_UseOpenMP )
+  else if (false) // Superclass::m_UseOpenMP )
   {
     const int spaceDimension = static_cast<int>(this->GetNumberOfParameters());
 

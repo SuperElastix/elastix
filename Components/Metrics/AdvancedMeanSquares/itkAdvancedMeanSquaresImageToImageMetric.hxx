@@ -677,7 +677,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
     }
   }
   // compute multi-threadedly with itk threads
-  else if (true) // force ITK threads !this->m_UseOpenMP )
+  else if (true) // force ITK threads !Superclass::m_UseOpenMP )
   {
     this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;

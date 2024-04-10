@@ -701,7 +701,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
       }
     }
   }
-  else if (true) // force !this->m_UseOpenMP ) // multi-threaded using ITK threads
+  else if (true) // force !Superclass::m_UseOpenMP ) // multi-threaded using ITK threads
   {
     MultiThreaderAccumulateDerivativeType userData;
 
