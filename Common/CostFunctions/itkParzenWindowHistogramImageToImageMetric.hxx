@@ -1245,9 +1245,8 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComputePDFsThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(
-    this->ComputePDFsThreaderCallback,
-    const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowHistogramThreaderParameters)));
+  auto threaderParameters = m_ParzenWindowHistogramThreaderParameters;
+  this->m_Threader->SetSingleMethod(this->ComputePDFsThreaderCallback, &threaderParameters);
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();

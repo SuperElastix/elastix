@@ -879,8 +879,8 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchGetSamplesThreaderCallback() const
   // \todo: is a global threader better performance-wise? check
   auto local_threader = ThreaderType::New();
   local_threader->SetNumberOfWorkUnits(Self::GetNumberOfWorkUnits());
-  local_threader->SetSingleMethod(this->GetSamplesThreaderCallback,
-                                  const_cast<void *>(static_cast<const void *>(&this->m_PCAMetricThreaderParameters)));
+  auto threaderParameters = m_PCAMetricThreaderParameters;
+  local_threader->SetSingleMethod(this->GetSamplesThreaderCallback, &threaderParameters);
 
   /** Launch. */
   local_threader->SingleMethodExecute();
@@ -1083,8 +1083,8 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback() 
   // \todo: is a global threader better performance-wise? check
   auto local_threader = ThreaderType::New();
   local_threader->SetNumberOfWorkUnits(Self::GetNumberOfWorkUnits());
-  local_threader->SetSingleMethod(this->ComputeDerivativeThreaderCallback,
-                                  const_cast<void *>(static_cast<const void *>(&this->m_PCAMetricThreaderParameters)));
+  auto threaderParameters = m_PCAMetricThreaderParameters;
+  local_threader->SetSingleMethod(this->GetSamplesThreaderCallback, &threaderParameters);
 
   /** Launch. */
   local_threader->SingleMethodExecute();

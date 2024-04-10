@@ -633,9 +633,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::LaunchComputeDerivativeLowMemoryThreaderCallback() const
 {
   /** Setup threader. */
-  this->m_Threader->SetSingleMethod(
-    this->ComputeDerivativeLowMemoryThreaderCallback,
-    const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowMutualInformationThreaderParameters)));
+  auto threaderParameters = m_ParzenWindowMutualInformationThreaderParameters;
+  this->m_Threader->SetSingleMethod(this->ComputeDerivativeLowMemoryThreaderCallback, &threaderParameters);
 
   /** Launch. */
   this->m_Threader->SingleMethodExecute();
