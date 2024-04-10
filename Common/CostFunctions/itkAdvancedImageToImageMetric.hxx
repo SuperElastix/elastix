@@ -687,8 +687,7 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCallback() const
 {
   /** Setup threader. */
-  Superclass::m_Threader->SetSingleMethod(this->GetValueThreaderCallback,
-                                          const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
+  Superclass::m_Threader->SetSingleMethod(this->GetValueThreaderCallback, &m_ThreaderMetricParameters);
 
   /** Launch. */
   Superclass::m_Threader->SingleMethodExecute();
@@ -730,8 +729,7 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivativeThreaderCallback() const
 {
   /** Setup threader. */
-  Superclass::m_Threader->SetSingleMethod(this->GetValueAndDerivativeThreaderCallback,
-                                          const_cast<void *>(static_cast<const void *>(&m_ThreaderMetricParameters)));
+  Superclass::m_Threader->SetSingleMethod(this->GetValueAndDerivativeThreaderCallback, &m_ThreaderMetricParameters);
 
   /** Launch. */
   Superclass::m_Threader->SingleMethodExecute();
