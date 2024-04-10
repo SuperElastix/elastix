@@ -1045,7 +1045,7 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFs(const ParametersType & parameters) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->ComputePDFsSingleThreaded(parameters);
   }

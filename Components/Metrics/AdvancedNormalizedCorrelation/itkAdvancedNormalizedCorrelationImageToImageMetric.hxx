@@ -449,7 +449,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   DerivativeType &                derivative) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
   }
@@ -666,7 +666,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
 
   /** Calculate the metric derivative. */
   // single-threaded
-  if (!this->m_UseMultiThread && false) // force multi-threaded
+  if (!Superclass::m_UseMultiThread && false) // force multi-threaded
   {
     DerivativeType & derivativeF = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_DerivativeF;
     DerivativeType & derivativeM = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_DerivativeM;

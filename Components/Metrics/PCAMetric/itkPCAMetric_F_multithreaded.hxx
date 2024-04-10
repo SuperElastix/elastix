@@ -622,7 +622,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
                                                             DerivativeType &                derivative) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
   }

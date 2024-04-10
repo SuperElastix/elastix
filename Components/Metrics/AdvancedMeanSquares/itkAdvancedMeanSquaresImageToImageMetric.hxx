@@ -217,7 +217,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueSingleThreaded(parameters);
   }
@@ -501,7 +501,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   DerivativeType &                derivative) const
 {
   /** Option for now to still use the single threaded code. */
-  if (!this->m_UseMultiThread)
+  if (!Superclass::m_UseMultiThread)
   {
     return this->GetValueAndDerivativeSingleThreaded(parameters, value, derivative);
   }
@@ -668,7 +668,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
 
   /** Accumulate derivatives. */
   // compute single-threadedly
-  if (!this->m_UseMultiThread && false) // force multi-threaded
+  if (!Superclass::m_UseMultiThread && false) // force multi-threaded
   {
     derivative = this->m_GetValueAndDerivativePerThreadVariables[0].st_Derivative * normal_sum;
     for (ThreadIdType i = 1; i < numberOfThreads; ++i)
