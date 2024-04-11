@@ -53,80 +53,79 @@ public:
       using AdvancedImageToImageMetricType = itk::AdvancedImageToImageMetric<TImage, TImage>;
 
       // Superclass data members:
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ImageSampler, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_AdvancedTransform, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_TransformIsBSpline, false);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedImageTrueMin, 0);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedImageTrueMax, 1);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_MovingImageTrueMin, 0);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_MovingImageTrueMax, 1);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedImageMinLimit, 0);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedImageMaxLimit, 1);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_MovingImageMinLimit, 0);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_MovingImageMaxLimit, 1);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_UseMetricSingleThreaded, true);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_UseMultiThread, false);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_UseOpenMP,
-                bool{ this->AdvancedImageToImageMetricType::m_UseOpenMP });
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_Metric, this);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_DerivativePointer, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_NormalizationFactor, 0.0);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_GetValueAndDerivativePerThreadVariables, nullptr);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_GetValueAndDerivativePerThreadVariablesSize, 0U);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_FixedLimitRangeRatio, defaultLimitRangeRatio);
-      EXPECT_EQ(this->AdvancedImageToImageMetricType::m_MovingLimitRangeRatio, defaultLimitRangeRatio);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_ImageSampler, nullptr);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_AdvancedTransform, nullptr);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_TransformIsBSpline, false);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_FixedImageTrueMin, 0);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_FixedImageTrueMax, 1);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_MovingImageTrueMin, 0);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_MovingImageTrueMax, 1);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_FixedImageMinLimit, 0);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_FixedImageMaxLimit, 1);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_MovingImageMinLimit, 0);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_MovingImageMaxLimit, 1);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_UseMetricSingleThreaded, true);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_UseMultiThread, false);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_UseOpenMP, bool{ AdvancedImageToImageMetricType::m_UseOpenMP });
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_Metric, this);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_DerivativePointer, nullptr);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_NormalizationFactor, 0.0);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_GetValueAndDerivativePerThreadVariables, nullptr);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_GetValueAndDerivativePerThreadVariablesSize, 0U);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_FixedLimitRangeRatio, defaultLimitRangeRatio);
+      EXPECT_EQ(AdvancedImageToImageMetricType::m_MovingLimitRangeRatio, defaultLimitRangeRatio);
     }
 
     // Superclass::Superclass data members:
     using ImageToImageMetricType = itk::ImageToImageMetric<TImage, TImage>;
 
-    EXPECT_EQ(this->ImageToImageMetricType::m_UseFixedImageIndexes, false);
-    EXPECT_TRUE(this->ImageToImageMetricType::m_FixedImageIndexes.empty());
-    EXPECT_EQ(this->ImageToImageMetricType::m_UseFixedImageSamplesIntensityThreshold, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_FixedImageSamplesIntensityThreshold, 0);
-    EXPECT_TRUE(this->ImageToImageMetricType::m_FixedImageSamples.empty());
-    EXPECT_EQ(this->ImageToImageMetricType::m_NumberOfParameters, 0);
-    EXPECT_EQ(this->ImageToImageMetricType::m_NumberOfFixedImageSamples, defaultNumberOfFixedImageSamples);
-    EXPECT_EQ(this->ImageToImageMetricType::m_NumberOfPixelsCounted, 0);
-    EXPECT_EQ(this->ImageToImageMetricType::m_FixedImage, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_MovingImage, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_Transform, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_ThreaderTransform, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_Interpolator, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_ComputeGradient, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_GradientImage, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_FixedImageMask, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_MovingImageMask, nullptr);
-    EXPECT_GT(this->ImageToImageMetricType::m_NumberOfWorkUnits, 0);
-    EXPECT_EQ(this->ImageToImageMetricType::m_UseAllPixels, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_UseSequentialSampling, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_ReseedIterator, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_RandomSeed, int{ this->ImageToImageMetricType::m_RandomSeed });
-    EXPECT_EQ(this->ImageToImageMetricType::m_TransformIsBSpline, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_NumBSplineWeights, 0);
-    EXPECT_EQ(this->ImageToImageMetricType::m_BSplineTransform, nullptr);
-    EXPECT_TRUE(this->ImageToImageMetricType::m_BSplineTransformWeightsArray.empty());
-    EXPECT_TRUE(this->ImageToImageMetricType::m_BSplineTransformIndicesArray.empty());
-    EXPECT_TRUE(this->ImageToImageMetricType::m_BSplinePreTransformPointsArray.empty());
-    EXPECT_TRUE(this->ImageToImageMetricType::m_WithinBSplineSupportRegionArray.empty());
-    EXPECT_EQ(this->ImageToImageMetricType::m_BSplineParametersOffset,
+    EXPECT_EQ(ImageToImageMetricType::m_UseFixedImageIndexes, false);
+    EXPECT_TRUE(ImageToImageMetricType::m_FixedImageIndexes.empty());
+    EXPECT_EQ(ImageToImageMetricType::m_UseFixedImageSamplesIntensityThreshold, false);
+    EXPECT_EQ(ImageToImageMetricType::m_FixedImageSamplesIntensityThreshold, 0);
+    EXPECT_TRUE(ImageToImageMetricType::m_FixedImageSamples.empty());
+    EXPECT_EQ(ImageToImageMetricType::m_NumberOfParameters, 0);
+    EXPECT_EQ(ImageToImageMetricType::m_NumberOfFixedImageSamples, defaultNumberOfFixedImageSamples);
+    EXPECT_EQ(ImageToImageMetricType::m_NumberOfPixelsCounted, 0);
+    EXPECT_EQ(ImageToImageMetricType::m_FixedImage, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_MovingImage, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_Transform, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_ThreaderTransform, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_Interpolator, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_ComputeGradient, false);
+    EXPECT_EQ(ImageToImageMetricType::m_GradientImage, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_FixedImageMask, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_MovingImageMask, nullptr);
+    EXPECT_GT(ImageToImageMetricType::m_NumberOfWorkUnits, 0);
+    EXPECT_EQ(ImageToImageMetricType::m_UseAllPixels, false);
+    EXPECT_EQ(ImageToImageMetricType::m_UseSequentialSampling, false);
+    EXPECT_EQ(ImageToImageMetricType::m_ReseedIterator, false);
+    EXPECT_EQ(ImageToImageMetricType::m_RandomSeed, int{ ImageToImageMetricType::m_RandomSeed });
+    EXPECT_EQ(ImageToImageMetricType::m_TransformIsBSpline, false);
+    EXPECT_EQ(ImageToImageMetricType::m_NumBSplineWeights, 0);
+    EXPECT_EQ(ImageToImageMetricType::m_BSplineTransform, nullptr);
+    EXPECT_TRUE(ImageToImageMetricType::m_BSplineTransformWeightsArray.empty());
+    EXPECT_TRUE(ImageToImageMetricType::m_BSplineTransformIndicesArray.empty());
+    EXPECT_TRUE(ImageToImageMetricType::m_BSplinePreTransformPointsArray.empty());
+    EXPECT_TRUE(ImageToImageMetricType::m_WithinBSplineSupportRegionArray.empty());
+    EXPECT_EQ(ImageToImageMetricType::m_BSplineParametersOffset,
               typename ImageToImageMetricType::BSplineParametersOffsetType());
-    EXPECT_EQ(this->ImageToImageMetricType::m_UseCachingOfBSplineWeights, true);
-    EXPECT_EQ(this->ImageToImageMetricType::m_BSplineTransformWeights,
+    EXPECT_EQ(ImageToImageMetricType::m_UseCachingOfBSplineWeights, true);
+    EXPECT_EQ(ImageToImageMetricType::m_BSplineTransformWeights,
               typename ImageToImageMetricType::BSplineTransformWeightsType());
-    EXPECT_EQ(this->ImageToImageMetricType::m_BSplineTransformIndices,
+    EXPECT_EQ(ImageToImageMetricType::m_BSplineTransformIndices,
               typename ImageToImageMetricType::BSplineTransformIndexArrayType());
-    EXPECT_EQ(this->ImageToImageMetricType::m_ThreaderBSplineTransformWeights, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_ThreaderBSplineTransformIndices, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_InterpolatorIsBSpline, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_BSplineInterpolator, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_DerivativeCalculator, nullptr);
-    EXPECT_NE(this->ImageToImageMetricType::m_Threader, nullptr);
-    ASSERT_NE(this->ImageToImageMetricType::m_ConstSelfWrapper, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_ConstSelfWrapper->GetConstMetricPointer(), this);
-    EXPECT_EQ(this->ImageToImageMetricType::m_ThreaderNumberOfMovingImageSamples, nullptr);
-    EXPECT_EQ(this->ImageToImageMetricType::m_WithinThreadPreProcess, false);
-    EXPECT_EQ(this->ImageToImageMetricType::m_WithinThreadPostProcess, false);
+    EXPECT_EQ(ImageToImageMetricType::m_ThreaderBSplineTransformWeights, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_ThreaderBSplineTransformIndices, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_InterpolatorIsBSpline, false);
+    EXPECT_EQ(ImageToImageMetricType::m_BSplineInterpolator, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_DerivativeCalculator, nullptr);
+    EXPECT_NE(ImageToImageMetricType::m_Threader, nullptr);
+    ASSERT_NE(ImageToImageMetricType::m_ConstSelfWrapper, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_ConstSelfWrapper->GetConstMetricPointer(), this);
+    EXPECT_EQ(ImageToImageMetricType::m_ThreaderNumberOfMovingImageSamples, nullptr);
+    EXPECT_EQ(ImageToImageMetricType::m_WithinThreadPreProcess, false);
+    EXPECT_EQ(ImageToImageMetricType::m_WithinThreadPostProcess, false);
   }
 
 protected:
