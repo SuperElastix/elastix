@@ -238,3 +238,59 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, MultiThreadResultEqualsSingleT
   EXPECT_EQ(multiThreadResult.value, singleThreadResult.value);
   EXPECT_EQ(multiThreadResult.derivative, singleThreadResult.derivative);
 }
+
+
+// Tests that the MeanSquares value is as expected, for random images.
+GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, ValueIsAsExpected)
+{
+  std::mt19937 randomNumberEngine{};
+
+  static constexpr auto imageDimension = 3U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, imageDimension>;
+
+  const auto imageSize = itk::Size<imageDimension>::Filled(minimumImageSizeValue);
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  RandomizePixelValues(*fixedImage, randomNumberEngine);
+  RandomizePixelValues(*movingImage, randomNumberEngine);
+
+  const auto sumOfSquareDifferences = [fixedImage, movingImage] {
+    const itk::ImageBufferRange fixedImageBufferRange(*fixedImage);
+    const itk::ImageBufferRange movingImageBufferRange(*movingImage);
+
+    const auto numberOfPixels = fixedImageBufferRange.size();
+    EXPECT_EQ(numberOfPixels, movingImageBufferRange.size());
+
+    double sum{};
+
+    for (std::size_t i{}; i < numberOfPixels; ++i)
+    {
+      sum += vnl_math::sqr(movingImageBufferRange[i] - fixedImageBufferRange[i]);
+    }
+    return sum;
+  }();
+
+  // Sanity check: if the sum of squares is not greater than 0, the images are too similar for this test to be of
+  // interest.
+  EXPECT_GT(sumOfSquareDifferences, 0.0);
+
+  const auto numberOfPixels = fixedImage->GetBufferedRegion().GetNumberOfPixels();
+
+  elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, imageDimension>> transform{};
+  elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                          imageSampler{};
+
+  for (const auto interpolator : { CreateInterpolator<itk::AdvancedLinearInterpolateImageFunction<ImageType>>(),
+                                   CreateInterpolator<itk::BSplineInterpolateImageFunction<ImageType>>(),
+                                   CreateInterpolator<itk::NearestNeighborInterpolateImageFunction<ImageType>>() })
+  {
+    elx::DefaultConstruct<AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>> metric{};
+    InitializeMetric(
+      metric, *fixedImage, *movingImage, imageSampler, transform, *interpolator, fixedImage->GetBufferedRegion());
+    const auto value = ValueAndDerivative::FromCostFunction(metric, transform.GetParameters()).value;
+
+    // Expect numberOfPixels times the estimated mean of square differences equals the sum of square differences.
+    EXPECT_EQ(std::round(numberOfPixels * value), sumOfSquareDifferences);
+  }
+}
