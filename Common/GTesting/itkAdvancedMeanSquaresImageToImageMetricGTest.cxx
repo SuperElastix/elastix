@@ -19,6 +19,7 @@
 // First include the header file to be tested:
 #include "AdvancedMeanSquares/itkAdvancedMeanSquaresImageToImageMetric.h"
 #include <itkNearestNeighborInterpolateImageFunction.h>
+#include <itkBSplineInterpolateImageFunction.h>
 #include "itkAdvancedTranslationTransform.h"
 #include "itkImageFullSampler.h"
 #include "GTesting/elxCoreMainGTestUtilities.h"
@@ -45,11 +46,22 @@ RandomizePixelValues(TImage & image, TRandomNumberEngine && randomNumberEngine)
 {
   using PixelType = typename TImage::PixelType;
   const itk::ImageBufferRange imageBufferRange(image);
-  const auto                  maxValue = imageBufferRange.size();
-  std::generate(imageBufferRange.begin(), imageBufferRange.end(), [&randomNumberEngine, maxValue] {
-    return static_cast<PixelType>(std::uniform_int_distribution<std::size_t>{ 0, maxValue }(randomNumberEngine));
-  });
+
+  // Just use whole numbers, but ensure that each pixel may have a unique number, by maxValue = imageBufferRange.size().
+  std::generate(
+    imageBufferRange.begin(), imageBufferRange.end(), [&randomNumberEngine, maxValue = imageBufferRange.size()] {
+      return static_cast<PixelType>(std::uniform_int_distribution<std::size_t>{ 0, maxValue }(randomNumberEngine));
+    });
 };
+
+
+template <typename TInterpolator>
+itk::SmartPointer<itk::InterpolateImageFunction<typename TInterpolator::InputImageType>>
+CreateInterpolator()
+{
+  return TInterpolator::New().GetPointer();
+}
+
 } // namespace
 
 // Checks if a default-constructed AdvancedMeanSquaresImageToImageMetric has the expected properties.
@@ -186,25 +198,43 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, MultiThreadResultEqualsSingleT
   EXPECT_NE(*fixedImage, *movingImage);
 
   elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, imageDimension>> transform{};
-  elx::DefaultConstruct<itk::NearestNeighborInterpolateImageFunction<ImageType>>   interpolator{};
   elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                          imageSampler{};
+
+  for (const auto interpolator : { CreateInterpolator<itk::AdvancedLinearInterpolateImageFunction<ImageType>>(),
+                                   CreateInterpolator<itk::BSplineInterpolateImageFunction<ImageType>>(),
+                                   CreateInterpolator<itk::NearestNeighborInterpolateImageFunction<ImageType>>() })
+  {
+    const auto getValueAndDerivative =
+      [&fixedImage, &movingImage, &transform, &interpolator, &imageSampler](const bool useMultiThread) {
+        elx::DefaultConstruct<AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>> metric{};
+        metric.SetUseMultiThread(useMultiThread);
+        // Test for one work unit, to avoid test failures caused by rounding errors
+        metric.SetNumberOfWorkUnits(1);
+        InitializeMetric(
+          metric, *fixedImage, *movingImage, imageSampler, transform, *interpolator, fixedImage->GetBufferedRegion());
+        return ValueAndDerivative::FromCostFunction(metric, transform.GetParameters());
+      };
+
+    const auto singleThreadResult = getValueAndDerivative(false);
+    const auto multiThreadResult = getValueAndDerivative(true);
+    EXPECT_EQ(multiThreadResult.value, singleThreadResult.value);
+    EXPECT_EQ(multiThreadResult.derivative, singleThreadResult.derivative);
+  }
+
+  // Specifically test with NearestNeighbor interpolation, as it should not introduce rounding errors.
+  elx::DefaultConstruct<itk::NearestNeighborInterpolateImageFunction<ImageType>> interpolator{};
 
   const auto getValueAndDerivative =
     [&fixedImage, &movingImage, &transform, &interpolator, &imageSampler](const bool useMultiThread) {
-      using MetricType = AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>;
-
-      elx::DefaultConstruct<MetricType> metric{};
-
+      elx::DefaultConstruct<AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>> metric{};
       metric.SetUseMultiThread(useMultiThread);
       InitializeMetric(
         metric, *fixedImage, *movingImage, imageSampler, transform, interpolator, fixedImage->GetBufferedRegion());
-
       return ValueAndDerivative::FromCostFunction(metric, transform.GetParameters());
     };
 
   const auto singleThreadResult = getValueAndDerivative(false);
   const auto multiThreadResult = getValueAndDerivative(true);
-
   EXPECT_EQ(multiThreadResult.value, singleThreadResult.value);
   EXPECT_EQ(multiThreadResult.derivative, singleThreadResult.derivative);
 }
