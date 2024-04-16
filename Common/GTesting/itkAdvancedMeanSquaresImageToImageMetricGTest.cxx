@@ -35,6 +35,7 @@ using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::GTestUtilities::InitializeMetric;
+using elx::GTestUtilities::ValueAndDerivative;
 
 namespace
 {
@@ -153,14 +154,11 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, YieldsZeroWhenFixedAndMovingIm
   InitializeMetric(
     metric, *fixedImage, *movingImage, imageSampler, transform, interpolator, fixedImage->GetBufferedRegion());
 
-  double             value{ 1.0 };
-  itk::Array<double> derivative(transform.GetNumberOfParameters(), 1.0);
-
-  metric.GetValueAndDerivative(transform.GetParameters(), value, derivative);
+  const auto valueAndDerivative = ValueAndDerivative::FromCostFunction(metric, transform.GetParameters());
 
   // Both value and derivative are zero-filled by GetValueAndDerivative, even when they are initialized by 1.
-  EXPECT_EQ(value, 0.0);
-  EXPECT_EQ(derivative, itk::Array<double>(itk::SizeValueType{ imageDimension }, 0.0));
+  EXPECT_EQ(valueAndDerivative.value, 0.0);
+  EXPECT_EQ(valueAndDerivative.derivative, itk::Array<double>(itk::SizeValueType{ imageDimension }, 0.0));
 }
 
 
@@ -191,12 +189,6 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, MultiThreadResultEqualsSingleT
   elx::DefaultConstruct<itk::NearestNeighborInterpolateImageFunction<ImageType>>   interpolator{};
   elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                          imageSampler{};
 
-  struct Result
-  {
-    double             value;
-    itk::Array<double> derivative;
-  };
-
   const auto getValueAndDerivative =
     [&fixedImage, &movingImage, &transform, &interpolator, &imageSampler](const bool useMultiThread) {
       using MetricType = AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>;
@@ -207,9 +199,7 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, MultiThreadResultEqualsSingleT
       InitializeMetric(
         metric, *fixedImage, *movingImage, imageSampler, transform, interpolator, fixedImage->GetBufferedRegion());
 
-      Result result = { 0.0, itk::Array<double>(transform.GetNumberOfParameters(), 0.0) };
-      metric.GetValueAndDerivative(transform.GetParameters(), result.value, result.derivative);
-      return result;
+      return ValueAndDerivative::FromCostFunction(metric, transform.GetParameters());
     };
 
   const auto singleThreadResult = getValueAndDerivative(false);
