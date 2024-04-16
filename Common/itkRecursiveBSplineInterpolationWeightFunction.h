@@ -91,10 +91,9 @@ public:
   EvaluateSecondOrderDerivative(const ContinuousIndexType & index, const IndexType & startIndex) const;
 
 protected:
-  RecursiveBSplineInterpolationWeightFunction();
+  RecursiveBSplineInterpolationWeightFunction() = default;
   ~RecursiveBSplineInterpolationWeightFunction() override = default;
-  void
-  PrintSelf(std::ostream & os, Indent indent) const override;
+  using Superclass::PrintSelf;
 
 private:
   /** Evaluate the weights at specified ContinousIndex position.
@@ -115,7 +114,6 @@ private:
 
   /** Private members; We unfortunatly cannot use those of the superclass. */
   unsigned int m_NumberOfIndices{};
-  SizeType     m_SupportSize{};
 
   /** Interpolation kernel type. */
   using KernelType = BSplineKernelFunction2<VSplineOrder>;

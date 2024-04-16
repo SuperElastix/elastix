@@ -29,35 +29,6 @@ namespace itk
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::
-  RecursiveBSplineInterpolationWeightFunction()
-{
-  // Initialize support region is a hypercube of length SplineOrder + 1
-  this->m_SupportSize.Fill(SplineOrder + 1);
-
-} // end Constructor
-
-
-/**
- * ********************* PrintSelf ****************************
- */
-
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-void
-RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::PrintSelf(std::ostream & os,
-                                                                                                 Indent indent) const
-{
-  Superclass::PrintSelf(os, indent);
-
-  os << indent << "SupportSize: " << m_SupportSize << std::endl;
-} // end PrintSelf()
-
-
-/**
  * ********************* Evaluate ****************************
  */
 
@@ -124,7 +95,7 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     double x = cindex[i] - static_cast<double>(startIndex[i]);
-    DerivativeKernelType::FastEvaluate(x, &derivativeWeights[i * this->m_SupportSize[i]]);
+    DerivativeKernelType::FastEvaluate(x, &derivativeWeights[i * (VSplineOrder + 1)]);
   }
 
   return derivativeWeights;
@@ -147,7 +118,7 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     double x = cindex[i] - static_cast<double>(startIndex[i]);
-    SecondOrderDerivativeKernelType::FastEvaluate(x, &hessianWeights[i * this->m_SupportSize[i]]);
+    SecondOrderDerivativeKernelType::FastEvaluate(x, &hessianWeights[i * (VSplineOrder + 1)]);
   }
 
   return hessianWeights;
