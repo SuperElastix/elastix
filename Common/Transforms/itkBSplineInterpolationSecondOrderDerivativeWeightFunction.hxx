@@ -106,7 +106,7 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
 
     if (i != this->m_DerivativeDirections[0] && i != this->m_DerivativeDirections[1])
     {
-      for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)
+      for (unsigned int k = 0; k < VSplineOrder + 1; ++k)
       {
         weights1D[i][k] = KernelType::FastEvaluate(x);
         x -= 1.0;
@@ -116,7 +116,7 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
     {
       if (this->m_EqualDerivativeDirections)
       {
-        for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)
+        for (unsigned int k = 0; k < VSplineOrder + 1; ++k)
         {
           weights1D[i][k] = SecondOrderDerivativeKernelType::FastEvaluate(x);
           x -= 1.0;
@@ -124,7 +124,7 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
       }
       else
       {
-        for (unsigned int k = 0; k < this->m_SupportSize[i]; ++k)
+        for (unsigned int k = 0; k < VSplineOrder + 1; ++k)
         {
           weights1D[i][k] = DerivativeKernelType::FastEvaluate(x);
           x -= 1.0;

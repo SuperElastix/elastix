@@ -69,7 +69,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
       this->m_SODerivativeWeightsFunctions[i][j]->SetDerivativeDirections(i, j);
     }
   }
-  this->m_SupportSize = this->m_WeightsFunction->GetSupportSize();
+  this->m_SupportSize = WeightsFunctionType::SupportSize;
 
   this->m_InternalParametersBuffer = ParametersType(0);
   // Make sure the parameters pointer is not NULL after construction.
