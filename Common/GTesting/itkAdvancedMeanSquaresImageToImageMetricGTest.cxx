@@ -22,6 +22,7 @@
 #include "itkAdvancedTranslationTransform.h"
 #include "itkImageFullSampler.h"
 #include "GTesting/elxCoreMainGTestUtilities.h"
+#include "elxGTestUtilities.h"
 #include "elxDefaultConstruct.h"
 #include <itkImage.h>
 #include <gtest/gtest.h>
@@ -33,6 +34,7 @@ using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
+using elx::GTestUtilities::InitializeMetric;
 
 namespace
 {
@@ -148,13 +150,8 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, YieldsZeroWhenFixedAndMovingIm
 
   elx::DefaultConstruct<MetricType> metric{};
 
-  metric.SetImageSampler(&imageSampler);
-  metric.SetMovingImage(movingImage);
-  metric.SetFixedImage(fixedImage);
-  metric.SetTransform(&transform);
-  metric.SetInterpolator(&interpolator);
-  metric.SetFixedImageRegion(fixedImage->GetBufferedRegion());
-  metric.Initialize();
+  InitializeMetric(
+    metric, *fixedImage, *movingImage, imageSampler, transform, interpolator, fixedImage->GetBufferedRegion());
 
   double             value{ 1.0 };
   itk::Array<double> derivative(transform.GetNumberOfParameters(), 1.0);
@@ -207,13 +204,8 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, MultiThreadResultEqualsSingleT
       elx::DefaultConstruct<MetricType> metric{};
 
       metric.SetUseMultiThread(useMultiThread);
-      metric.SetImageSampler(&imageSampler);
-      metric.SetMovingImage(movingImage);
-      metric.SetFixedImage(fixedImage);
-      metric.SetTransform(&transform);
-      metric.SetInterpolator(&interpolator);
-      metric.SetFixedImageRegion(fixedImage->GetBufferedRegion());
-      metric.Initialize();
+      InitializeMetric(
+        metric, *fixedImage, *movingImage, imageSampler, transform, interpolator, fixedImage->GetBufferedRegion());
 
       Result result = { 0.0, itk::Array<double>(transform.GetNumberOfParameters(), 0.0) };
       metric.GetValueAndDerivative(transform.GetParameters(), result.value, result.derivative);

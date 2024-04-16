@@ -20,7 +20,12 @@
 
 #include <elxConfiguration.h>
 #include <elxElastixBase.h>
+#include <itkAdvancedImageToImageMetric.h>
+#include <itkAdvancedTransform.h>
+#include <itkImageSamplerBase.h>
 
+// ITK header files:
+#include <itkInterpolateImageFunction.h>
 #include <itkOptimizerParameters.h>
 #include <itkPoint.h>
 #include <itkSize.h>
@@ -110,6 +115,35 @@ GeneratePseudoRandomParameters(const unsigned numberOfParameters, const double m
   });
   return parameters;
 }
+
+
+/// Does set up and initialize the specified advanced metric.
+template <typename TFixedImage, typename TMovingImage>
+void
+InitializeMetric(
+  itk::AdvancedImageToImageMetric<TFixedImage, TMovingImage> &                                metric,
+  const TFixedImage &                                                                         fixedImage,
+  const TMovingImage &                                                                        movingImage,
+  itk::ImageSamplerBase<TFixedImage> &                                                        imageSampler,
+  itk::AdvancedTransform<double, TFixedImage::ImageDimension, TMovingImage::ImageDimension> & advancedTransform,
+  itk::InterpolateImageFunction<TMovingImage> &                                               interpolator,
+  const typename TFixedImage::RegionType &                                                    fixedImageRegion)
+{
+  // In elastix, this member function is just called by elx::MetricBase::SetAdvancedMetricImageSampler, at
+  // https://github.com/SuperElastix/elastix/blob/5.1.0/Core/ComponentBaseClasses/elxMetricBase.hxx#L313
+  metric.SetImageSampler(&imageSampler);
+
+  // Similar to the six member function calls in `MultiResolutionImageRegistrationMethod2::Initialize()` "Setup the
+  // metric", at
+  // https://github.com/SuperElastix/elastix/blob/5.1.0/Common/itkMultiResolutionImageRegistrationMethod2.hxx#L118-L124
+  metric.SetMovingImage(&movingImage);
+  metric.SetFixedImage(&fixedImage);
+  metric.SetTransform(&advancedTransform);
+  metric.SetInterpolator(&interpolator);
+  metric.SetFixedImageRegion(fixedImage.GetBufferedRegion());
+  metric.Initialize();
+}
+
 
 } // namespace GTestUtilities
 } // namespace elastix
