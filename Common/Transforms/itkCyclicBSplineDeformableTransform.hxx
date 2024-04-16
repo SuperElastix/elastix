@@ -42,7 +42,10 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetGri
   /** Check if last dimension of supportregion < last dimension of grid. */
   const int lastDim = this->m_GridRegion.GetImageDimension() - 1;
   const int lastDimSize = this->m_GridRegion.GetSize(lastDim);
-  const int supportLastDimSize = this->m_SupportSize.GetElement(lastDim);
+
+  // The support size is the same for all dimensions.
+  const int supportLastDimSize = VSplineOrder + 1;
+
   if (supportLastDimSize > lastDimSize)
   {
     itkExceptionMacro("Last dimension (" << lastDim << ") of support size (" << supportLastDimSize
@@ -163,7 +166,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   this->m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
 
   /** For each dimension, correlate coefficient with weights. */
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Split support region into two parts. */
   RegionType supportRegions[2];
@@ -220,7 +223,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
   ParameterIndexArrayType & indexes) const
 {
   RegionType supportRegion;
-  supportRegion.SetSize(this->m_SupportSize);
+  supportRegion.SetSize(WeightsFunctionType::SupportSize);
   const PixelType * basePointer = this->m_CoefficientImages[0]->GetBufferPointer();
 
   /** Tranform from world coordinates to grid coordinates. */
@@ -302,7 +305,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
 
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Split support region into two parts. */
   RegionType supportRegions[2];

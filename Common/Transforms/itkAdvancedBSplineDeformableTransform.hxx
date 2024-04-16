@@ -69,7 +69,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
       this->m_SODerivativeWeightsFunctions[i][j]->SetDerivativeDirections(i, j);
     }
   }
-  this->m_SupportSize = WeightsFunctionType::SupportSize;
 
   this->m_InternalParametersBuffer = ParametersType(0);
   // Make sure the parameters pointer is not NULL after construction.
@@ -216,7 +215,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   this->m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
 
   // For each dimension, correlate coefficient with weights
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   OutputPointType outputPoint{};
 
@@ -339,7 +338,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   this->m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
 
   /** Setup support region */
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Put at the right positions. */
   ParametersValueType * jacobianPointer = jacobian.data_block();
@@ -412,7 +411,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
   }
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
@@ -454,7 +453,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
 
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Copy values from coefficient image to linear coeffs array. */
   auto itCoeffsLinear = coeffs.begin();
@@ -555,7 +554,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
 
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex, supportIndex);
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Copy values from coefficient image to linear coeffs array. */
   auto itCoeffsLinear = coeffs.begin();
@@ -671,7 +670,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** On the stack instead of heap is faster. */
   double weightVector[SpaceDimension * NumberOfWeights];
@@ -761,7 +760,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Helper variables. */
   IndexType supportIndex;
   this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Allocate weight on the stack. */
   using WeightsValueType = typename WeightsType::ValueType;
@@ -916,7 +915,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex, supportIndex);
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** For all derivative directions, compute the derivatives of the
    * spatial Hessian to the transformation parameters mu:
@@ -1027,7 +1026,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Get the support region. */
   IndexType supportIndex;
   this->m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex, supportIndex);
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Allocate weight on the stack. */
   using WeightsValueType = typename WeightsType::ValueType;
