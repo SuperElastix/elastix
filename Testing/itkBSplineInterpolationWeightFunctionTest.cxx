@@ -253,7 +253,7 @@ main()
     return EXIT_FAILURE;
   }
 
-  if (weight2Function2D->GetNumberOfWeights() !=
+  if (WeightFunction2Type2D::NumberOfWeights !=
       static_cast<unsigned long>(std::pow(static_cast<float>(SplineOrder + 1), 2.0f)))
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;

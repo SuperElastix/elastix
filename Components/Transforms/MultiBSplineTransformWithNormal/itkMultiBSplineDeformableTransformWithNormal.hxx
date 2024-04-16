@@ -751,13 +751,12 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   using BaseContainer = typename ImageBaseType::PixelContainer;
   const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
 
-  const unsigned nweights = this->GetNumberOfWeights();
-  for (unsigned i = 0; i < nweights; ++i)
+  for (unsigned i = 0; i < NumberOfWeights; ++i)
   {
     VectorType tmp = bases[nonZeroJacobianIndices[i]][0];
     for (unsigned j = 0; j < SpaceDimension; ++j)
     {
-      jacobian[j][i] = tmp[j] * njac[j][i + j * nweights];
+      jacobian[j][i] = tmp[j] * njac[j][i + j * NumberOfWeights];
     }
 
     for (unsigned d = 1; d < SpaceDimension; ++d)
@@ -765,7 +764,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       tmp = bases[nonZeroJacobianIndices[i]][d];
       for (unsigned j = 0; j < SpaceDimension; ++j)
       {
-        jacobian[j][i + d * nweights] = tmp[j] * ljac[j][i + j * nweights];
+        jacobian[j][i + d * NumberOfWeights] = tmp[j] * ljac[j][i + j * NumberOfWeights];
       }
     }
   }
@@ -774,11 +773,11 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   if (lidx > 1)
   {
     unsigned to_add = (lidx - 1) * m_Trans[0]->GetNumberOfParametersPerDimension() * (SpaceDimension - 1);
-    for (unsigned i = 0; i < nweights; ++i)
+    for (unsigned i = 0; i < NumberOfWeights; ++i)
     {
       for (unsigned d = 1; d < SpaceDimension; ++d)
       {
-        nonZeroJacobianIndices[d * nweights + i] += to_add;
+        nonZeroJacobianIndices[d * NumberOfWeights + i] += to_add;
       }
     }
   }
@@ -936,15 +935,14 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   using BaseContainer = typename ImageBaseType::PixelContainer;
   const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
 
-  const unsigned nweights = this->GetNumberOfWeights();
-  for (unsigned i = 0; i < nweights; ++i)
+  for (unsigned i = 0; i < NumberOfWeights; ++i)
   {
     VectorType tmp = bases[nonZeroJacobianIndices[i]][0];
     for (unsigned j = 0; j < SpaceDimension; ++j)
     {
       for (unsigned k = 0; k < SpaceDimension; ++k)
       {
-        jsj[j][i][k] = tmp[j] * njsj[j][i + j * nweights][k];
+        jsj[j][i][k] = tmp[j] * njsj[j][i + j * NumberOfWeights][k];
       }
     }
 
@@ -955,7 +953,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       {
         for (unsigned k = 0; k < SpaceDimension; ++k)
         {
-          jsj[j][i + d * nweights][k] = tmp[j] * ljsj[j][i + j * nweights][k];
+          jsj[j][i + d * NumberOfWeights][k] = tmp[j] * ljsj[j][i + j * NumberOfWeights][k];
         }
       }
     }
@@ -966,11 +964,11 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   if (lidx > 1)
   {
     unsigned to_add = (lidx - 1) * m_Trans[0]->GetNumberOfParametersPerDimension() * (SpaceDimension - 1);
-    for (unsigned i = 0; i < nweights; ++i)
+    for (unsigned i = 0; i < NumberOfWeights; ++i)
     {
       for (unsigned d = 1; d < SpaceDimension; ++d)
       {
-        nonZeroJacobianIndices[d * nweights + i] += to_add;
+        nonZeroJacobianIndices[d * NumberOfWeights + i] += to_add;
       }
     }
   }
@@ -1041,8 +1039,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   using BaseContainer = typename ImageBaseType::PixelContainer;
   const BaseContainer & bases = *m_LocalBases->GetPixelContainer();
 
-  const unsigned nweights = this->GetNumberOfWeights();
-  for (unsigned i = 0; i < nweights; ++i)
+  for (unsigned i = 0; i < NumberOfWeights; ++i)
   {
     VectorType tmp = bases[nonZeroJacobianIndices[i]][0];
     for (unsigned j = 0; j < SpaceDimension; ++j)
@@ -1051,7 +1048,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       {
         for (unsigned l = 0; l < SpaceDimension; ++l)
         {
-          jsh[j][i][k][l] = tmp[j] * njsh[j][i + j * nweights][k][l];
+          jsh[j][i][k][l] = tmp[j] * njsh[j][i + j * NumberOfWeights][k][l];
         }
       }
     }
@@ -1065,7 +1062,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
         {
           for (unsigned l = 0; l < SpaceDimension; ++l)
           {
-            jsh[j][i + l * nweights][k][l] = tmp[j] * ljsh[j][i + j * nweights][k][l];
+            jsh[j][i + l * NumberOfWeights][k][l] = tmp[j] * ljsh[j][i + j * NumberOfWeights][k][l];
           }
         }
       }
@@ -1087,11 +1084,11 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   if (lidx > 1)
   {
     unsigned to_add = (lidx - 1) * m_Trans[0]->GetNumberOfParametersPerDimension() * (SpaceDimension - 1);
-    for (unsigned i = 0; i < nweights; ++i)
+    for (unsigned i = 0; i < NumberOfWeights; ++i)
     {
       for (unsigned d = 1; d < SpaceDimension; ++d)
       {
-        nonZeroJacobianIndices[d * nweights + i] += to_add;
+        nonZeroJacobianIndices[d * NumberOfWeights + i] += to_add;
       }
     }
   }

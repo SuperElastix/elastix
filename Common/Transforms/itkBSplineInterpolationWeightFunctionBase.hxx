@@ -52,13 +52,6 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   /** Initialize support region. */
   this->m_SupportSize.Fill(SplineOrder + 1);
 
-  /** Initialize the number of weights. */
-  this->m_NumberOfWeights = 1;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    this->m_NumberOfWeights *= this->m_SupportSize[i];
-  }
-
 } // end InitializeSupport()
 
 
@@ -82,7 +75,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   it.GoToBegin();
 
   /** Fill the OffsetToIndexTable. */
-  this->m_OffsetToIndexTable.set_size(this->m_NumberOfWeights, SpaceDimension);
+  this->m_OffsetToIndexTable.set_size(NumberOfWeights, SpaceDimension);
   unsigned long counter = 0;
   while (!it.IsAtEnd())
   {
@@ -110,7 +103,6 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 {
   Superclass::PrintSelf(os, indent);
 
-  os << indent << "NumberOfWeights: " << this->m_NumberOfWeights << std::endl;
   os << indent << "SupportSize: " << this->m_SupportSize << std::endl;
   os << indent << "OffsetToIndexTable: " << this->m_OffsetToIndexTable << std::endl;
 
@@ -171,7 +163,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   WeightsType &               weights) const
 {
   /** Don't initialize the weights!
-   * weights.SetSize( this->m_NumberOfWeights );
+   * weights.SetSize( NumberOfWeights );
    * This will result in a big performance penalty (50%). In Evaluate( index )
    * we have set the size correctly anyway. We just assume that when this
    * function is called directly, the user has set the size correctly.
@@ -182,7 +174,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   this->Compute1DWeights(cindex, startIndex, weights1D);
 
   /** Compute the vector of weights. */
-  for (unsigned int k = 0; k < this->m_NumberOfWeights; ++k)
+  for (unsigned int k = 0; k < NumberOfWeights; ++k)
   {
     double                tmp1 = 1.0;
     const unsigned long * tmp2 = this->m_OffsetToIndexTable[k];

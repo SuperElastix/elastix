@@ -216,14 +216,8 @@ public:
   /** Parameter index array type. */
   using typename Superclass::ParameterIndexArrayType;
 
-
-  /** Get number of weights. */
-  unsigned long
-  GetNumberOfWeights() const
-  {
-    return this->m_WeightsFunction->GetNumberOfWeights();
-  }
-
+  /** The number of weights. */
+  static constexpr unsigned NumberOfWeights = WeightsFunctionType::NumberOfWeights;
 
   unsigned int
   GetNumberOfAffectedWeights() const override;

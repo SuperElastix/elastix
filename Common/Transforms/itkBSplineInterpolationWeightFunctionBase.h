@@ -104,9 +104,6 @@ public:
   /** Get support region size. */
   itkGetConstReferenceMacro(SupportSize, SizeType);
 
-  /** Get number of weights. */
-  itkGetConstMacro(NumberOfWeights, unsigned long);
-
 protected:
   BSplineInterpolationWeightFunctionBase();
   ~BSplineInterpolationWeightFunctionBase() override = default;
@@ -137,7 +134,6 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  unsigned long             m_NumberOfWeights{};
   SizeType                  m_SupportSize{};
   vnl_matrix<unsigned long> m_OffsetToIndexTable{};
 
