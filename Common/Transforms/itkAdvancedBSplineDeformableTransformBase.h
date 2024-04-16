@@ -387,7 +387,6 @@ protected:
 
   /** Variables defining the interpolation support region. */
   unsigned long       m_Offset{};
-  SizeType            m_SupportSize{};
   ContinuousIndexType m_ValidRegionBegin{};
   ContinuousIndexType m_ValidRegionEnd{};
 

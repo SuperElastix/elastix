@@ -112,7 +112,7 @@ public:
 
     // For each dimension, correlate coefficient with weights
     RegionType supportRegion;
-    supportRegion.SetSize(this->m_SupportSize);
+    supportRegion.SetSize(WeightsFunctionType::SupportSize);
     supportRegion.SetIndex(supportIndex);
 
     outputPoint.Fill(ScalarType{});

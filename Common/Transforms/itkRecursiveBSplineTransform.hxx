@@ -136,7 +136,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
    */
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
   this->ComputeNonZeroJacobianIndices(nonZeroJacobianIndices, supportRegion);
 
 } // end GetJacobian()
@@ -190,7 +190,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
   ImplementationType::EvaluateJacobianWithImageGradientProduct(imageJacobianPointer, migArray, weights1D.data(), 1.0);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Compute the nonzero Jacobian indices.
    * Takes a significant portion of the computation time of this function.
@@ -425,7 +425,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   ImplementationType::GetJacobianOfSpatialJacobian(jsjPtr2, weights1D.data(), derivativeWeights1D.data(), dc, dummy);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices(nonZeroJacobianIndices, supportRegion);
@@ -515,7 +515,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
     jshPtr, weights1D.data(), derivativeWeights1D.data(), hessianWeights1D.data(), dc, dummy);
 
   /** Setup support region needed for the nonZeroJacobianIndices. */
-  const RegionType supportRegion(supportIndex, Superclass::m_SupportSize);
+  const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Compute the nonzero Jacobian indices. */
   this->ComputeNonZeroJacobianIndices(nonZeroJacobianIndices, supportRegion);
