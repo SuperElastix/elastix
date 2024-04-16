@@ -35,24 +35,9 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   BSplineInterpolationWeightFunctionBase()
 {
   /** Initialize members. */
-  this->InitializeSupport();
   this->InitializeOffsetToIndexTable();
 
 } // end Constructor
-
-
-/**
- * ******************* InitializeSupport *******************
- */
-
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-void
-BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::InitializeSupport()
-{
-  /** Initialize support region. */
-  this->m_SupportSize.Fill(SplineOrder + 1);
-
-} // end InitializeSupport()
 
 
 /**
@@ -66,7 +51,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   /** Create a temporary image. */
   using CharImageType = Image<char, SpaceDimension>;
   auto tempImage = CharImageType::New();
-  tempImage->SetRegions(this->m_SupportSize);
+  tempImage->SetRegions(SupportSize);
   tempImage->Allocate();
 
   /** Create an iterator over the image. */
@@ -103,7 +88,6 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 {
   Superclass::PrintSelf(os, indent);
 
-  os << indent << "SupportSize: " << this->m_SupportSize << std::endl;
   os << indent << "OffsetToIndexTable: " << this->m_OffsetToIndexTable << std::endl;
 
 } // end PrintSelf()
@@ -123,7 +107,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     startIndex[i] = static_cast<typename IndexType::IndexValueType>(
-      std::floor(cindex[i] - static_cast<double>(this->m_SupportSize[i] - 2.0) / 2.0));
+      std::floor(cindex[i] - static_cast<double>(VSplineOrder - 1.0) / 2.0));
   }
 
 } // end ComputeStartIndex()

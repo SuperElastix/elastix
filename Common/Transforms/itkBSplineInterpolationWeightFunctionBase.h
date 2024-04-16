@@ -101,8 +101,8 @@ public:
   void
   ComputeStartIndex(const ContinuousIndexType & index, IndexType & startIndex) const;
 
-  /** Get support region size. */
-  itkGetConstReferenceMacro(SupportSize, SizeType);
+  /** The support region size: a hypercube of length SplineOrder + 1 */
+  static constexpr SizeType SupportSize{ SizeType::Filled(VSplineOrder + 1) };
 
 protected:
   BSplineInterpolationWeightFunctionBase();
@@ -134,14 +134,9 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Member variables. */
-  SizeType                  m_SupportSize{};
   vnl_matrix<unsigned long> m_OffsetToIndexTable{};
 
 private:
-  /** Function to initialize the support region. */
-  void
-  InitializeSupport();
-
   /** Function to initialize the offset table.
    * The offset table is a convenience table, just to
    * keep track where is what.
