@@ -28,6 +28,7 @@
 #include <itkInterpolateImageFunction.h>
 #include <itkOptimizerParameters.h>
 #include <itkPoint.h>
+#include <itkSingleValuedCostFunction.h>
 #include <itkSize.h>
 #include <itkSmartPointer.h>
 #include <itkVector.h>
@@ -38,6 +39,7 @@
 #include <algorithm> // For generate_n.
 #include <cassert>
 #include <cfloat> // For DBL_MAX.
+#include <limits>
 #include <random>
 
 namespace elastix
@@ -144,6 +146,24 @@ InitializeMetric(
   metric.Initialize();
 }
 
+
+/// Represents the value and derivative retrieved from a metric (cost function).
+struct ValueAndDerivative
+{
+  double             value;
+  itk::Array<double> derivative;
+
+  static ValueAndDerivative
+  FromCostFunction(const itk::SingleValuedCostFunction &    costFunction,
+                   const itk::OptimizerParameters<double> & optimizerParameters)
+  {
+    static constexpr auto quiet_NaN = std::numeric_limits<double>::quiet_NaN();
+
+    ValueAndDerivative valueAndDerivative{ quiet_NaN, itk::Array<double>(optimizerParameters.size(), quiet_NaN) };
+    costFunction.GetValueAndDerivative(optimizerParameters, valueAndDerivative.value, valueAndDerivative.derivative);
+    return valueAndDerivative;
+  }
+};
 
 } // namespace GTestUtilities
 } // namespace elastix
