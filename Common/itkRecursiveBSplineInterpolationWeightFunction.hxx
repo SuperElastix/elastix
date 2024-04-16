@@ -39,12 +39,6 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
   // Initialize support region is a hypercube of length SplineOrder + 1
   this->m_SupportSize.Fill(SplineOrder + 1);
 
-  this->m_NumberOfWeights = 1;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    this->m_NumberOfWeights *= this->m_SupportSize[i];
-  }
-
 } // end Constructor
 
 
@@ -59,7 +53,6 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
 {
   Superclass::PrintSelf(os, indent);
 
-  os << indent << "NumberOfWeights: " << m_NumberOfWeights << std::endl;
   os << indent << "SupportSize: " << m_SupportSize << std::endl;
 } // end PrintSelf()
 

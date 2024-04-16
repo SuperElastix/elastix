@@ -167,7 +167,7 @@ main()
     return 1;
   }
 
-  if (foWeightFunction->GetNumberOfWeights() !=
+  if (DerivativeWeightFunctionType::NumberOfWeights !=
       static_cast<unsigned long>(std::pow(static_cast<float>(SplineOrder + 1), 2.0f)))
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;

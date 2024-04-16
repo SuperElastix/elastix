@@ -319,25 +319,18 @@ public:
     return false;
   }
 
-  /** Get number of weights. */
-  virtual unsigned long
-  GetNumberOfWeights() const
-  {
-    return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights();
-  }
-
 
   virtual unsigned int
   GetNumberOfAffectedWeights() const
   {
-    return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights();
+    return NumberOfWeights;
   }
 
 
   NumberOfParametersType
   GetNumberOfNonZeroJacobianIndices() const override
   {
-    return m_Trans[0]->m_WeightsFunction->GetNumberOfWeights() * SpaceDimension;
+    return NumberOfWeights * SpaceDimension;
   }
 
 
@@ -509,6 +502,9 @@ protected:
   ImageBasePointer                             m_LocalBases{};
 
 private:
+  /** The number of weights. */
+  static constexpr unsigned NumberOfWeights = TransformType::NumberOfWeights;
+
   void
   DispatchParameters(const ParametersType & parameters);
 
