@@ -75,9 +75,6 @@ public:
   using typename Superclass::SizeType;
   using typename Superclass::ContinuousIndexType;
 
-  /** The number of weights. */
-  static constexpr unsigned NumberOfWeights = (VSplineOrder + 1) * VSpaceDimension;
-
   /** The number of indices. */
   static constexpr unsigned NumberOfIndices = Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension);
 
