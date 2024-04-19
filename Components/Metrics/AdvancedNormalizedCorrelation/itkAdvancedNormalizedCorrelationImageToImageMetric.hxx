@@ -87,21 +87,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
 
 
 /**
- * ******************* PrintSelf *******************
- */
-
-template <class TFixedImage, class TMovingImage>
-void
-AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os,
-                                                                                      Indent         indent) const
-{
-  Superclass::PrintSelf(os, indent);
-  os << indent << "SubtractMean: " << this->m_SubtractMean << std::endl;
-
-} // end PrintSelf()
-
-
-/**
  * *************** UpdateDerivativeTerms ***************************
  */
 
@@ -225,11 +210,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
       sff += fixedImageValue * fixedImageValue;
       smm += movingImageValue * movingImageValue;
       sfm += fixedImageValue * movingImageValue;
-      if (this->m_SubtractMean)
-      {
-        sf += fixedImageValue;
-        sm += movingImageValue;
-      }
+      sf += fixedImageValue;
+      sm += movingImageValue;
 
     } // end if sampleOk
 
@@ -238,9 +220,9 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Check if enough samples were valid. */
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
 
-  /** If SubtractMean, then subtract things from sff, smm and sfm. */
+  /** If NumberOfPixelsCounted > 0, then subtract things from sff, smm and sfm. */
   const RealType N = static_cast<RealType>(this->m_NumberOfPixelsCounted);
-  if (this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0)
+  if (this->m_NumberOfPixelsCounted > 0)
   {
     sff -= (sf * sf / N);
     smm -= (sm * sm / N);
@@ -383,8 +365,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
       sff += fixedImageValue * fixedImageValue;
       smm += movingImageValue * movingImageValue;
       sfm += fixedImageValue * movingImageValue;
-      sf += fixedImageValue;  // Only needed when m_SubtractMean == true
-      sm += movingImageValue; // Only needed when m_SubtractMean == true
+      sf += fixedImageValue;
+      sm += movingImageValue;
 
       /** Compute this pixel's contribution to the derivative terms. */
       this->UpdateDerivativeTerms(
@@ -399,11 +381,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 
   const auto numberOfParameters = this->GetNumberOfParameters();
 
-  /** If SubtractMean, then subtract things from sff, smm, sfm,
+  /** If NumberOfPixelsCounted > 0, then subtract things from sff, smm, sfm,
    * derivativeF and derivativeM.
    */
   const RealType N = static_cast<RealType>(this->m_NumberOfPixelsCounted);
-  if (this->m_SubtractMean && this->m_NumberOfPixelsCounted > 0)
+  if (this->m_NumberOfPixelsCounted > 0)
   {
     sff -= (sf * sf / N);
     smm -= (sm * sm / N);
@@ -572,8 +554,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
       sff += fixedImageValue * fixedImageValue;
       smm += movingImageValue * movingImageValue;
       sfm += fixedImageValue * movingImageValue;
-      sf += fixedImageValue;  // Only needed when m_SubtractMean == true
-      sm += movingImageValue; // Only needed when m_SubtractMean == true
+      sf += fixedImageValue;
+      sm += movingImageValue;
 
       /** Compute this voxel's contribution to the derivative terms. */
       this->UpdateDerivativeTerms(
@@ -641,14 +623,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Sm = 0.0;
   }
 
-  /** If SubtractMean, then subtract things from sff, smm and sfm. */
+  /** Subtract things from sff, smm and sfm. */
   const RealType N = static_cast<RealType>(this->m_NumberOfPixelsCounted);
-  if (this->m_SubtractMean)
-  {
-    sff -= (sf * sf / N);
-    smm -= (sm * sm / N);
-    sfm -= (sf * sm / N);
-  }
+  sff -= (sf * sf / N);
+  smm -= (sm * sm / N);
+  sfm -= (sf * sm / N);
 
   /** The denominator of the value and the derivative. */
   const RealType denom = -1.0 * std::sqrt(sff * smm);
@@ -681,24 +660,14 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
 
     const auto numberOfParameters = this->GetNumberOfParameters();
 
-    /** If SubtractMean, then subtract things from  derivativeF and derivativeM. */
-    if (this->m_SubtractMean)
+    /** Subtract things from  derivativeF and derivativeM. */
+    double diff, derF, derM;
+    for (unsigned int i = 0; i < numberOfParameters; ++i)
     {
-      double diff, derF, derM;
-      for (unsigned int i = 0; i < numberOfParameters; ++i)
-      {
-        diff = differential[i];
-        derF = derivativeF[i] - (sf / N) * diff;
-        derM = derivativeM[i] - (sm / N) * diff;
-        derivative[i] = (derF - (sfm / smm) * derM) / denom;
-      }
-    }
-    else
-    {
-      for (unsigned int i = 0; i < numberOfParameters; ++i)
-      {
-        derivative[i] = (derivativeF[i] - (sfm / smm) * derivativeM[i]) / denom;
-      }
+      diff = differential[i];
+      derF = derivativeF[i] - (sf / N) * diff;
+      derM = derivativeM[i] - (sm / N) * diff;
+      derivative[i] = (derF - (sfm / smm) * derM) / denom;
     }
   }
   else if (true) // force !Superclass::m_UseOpenMP ) // multi-threaded using ITK threads
@@ -739,11 +708,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
         differential += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j];
       }
 
-      if (this->m_SubtractMean)
-      {
-        derivativeF -= sf_N * differential;
-        derivativeM -= sm_N * differential;
-      }
+      derivativeF -= sf_N * differential;
+      derivativeM -= sm_N * differential;
 
       derivative[j] = (derivativeF - sfm_smm * derivativeM) / denom;
     }
@@ -777,7 +743,6 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   const AccumulateType sm_N = userData.st_sm_N;
   const AccumulateType sfm_smm = userData.st_sfm_smm;
   const RealType       invertedDenominator = userData.st_InvertedDenominator;
-  const bool           subtractMean = metric.m_SubtractMean;
 
   const unsigned int numPar = metric.GetNumberOfParameters();
   const unsigned int subSize =
@@ -803,11 +768,8 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
       metric.m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j] = 0.0;
     }
 
-    if (subtractMean)
-    {
-      derivativeF -= sf_N * differential;
-      derivativeM -= sm_N * differential;
-    }
+    derivativeF -= sf_N * differential;
+    derivativeM -= sm_N * differential;
 
     userData.st_DerivativePointer[j] = (derivativeF - sfm_smm * derivativeM) * invertedDenominator;
   }

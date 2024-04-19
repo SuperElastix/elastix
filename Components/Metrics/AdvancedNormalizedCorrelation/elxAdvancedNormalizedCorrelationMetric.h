@@ -31,10 +31,11 @@ namespace elastix
  * The parameters used in this class are:
  * \parameter Metric: Select this metric as follows:\n
  *    <tt>(Metric "AdvancedNormalizedCorrelation")</tt>
- * \parameter SubtractMean: Flag to set if the sample mean is subtracted from the
- *    sample values in the cross correlation formula. This typically results in narrower
- *    valleys in the cost function. Default value is true. Can be defined for each resolution\n
- *    example: <tt>(SubtractMean "false")</tt>
+ *
+ * \note The parameter "SubtractMean" is obsolete, and will be ignored. The current elastix version just has the default
+ * behavior of elastix <= version 5.1.0: For this parameter, the default value was true. This means that the sample mean
+ * is subtracted from the sample values in the cross correlation formula. This typically results in narrower valleys in
+ * the cost function.
  *
  * \ingroup Metrics
  *
