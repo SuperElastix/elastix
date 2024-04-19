@@ -32,13 +32,28 @@ template <class TElastix>
 void
 AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution()
 {
-  /** Get the current resolution level. */
-  unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
+  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
 
-  /** Get and set SubtractMean. Default true. */
-  bool subtractMean = true;
-  this->GetConfiguration()->ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), level, 0);
-  this->SetSubtractMean(subtractMean);
+  if (configuration.HasParameter("SubtractMean"))
+  {
+    /** Get the current resolution level. */
+    unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
+
+    /** Get and set SubtractMean. Default true. */
+    bool subtractMean = true;
+    configuration.ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), level, 0);
+
+    if (subtractMean)
+    {
+      log::info("From elastix > version 5.1.0, AdvancedNormalizedCorrelationMetric ignores parameter SubtractMean, and "
+                "just behaves as if its value is true.");
+    }
+    else
+    {
+      log::warn("From elastix > version 5.1.0, AdvancedNormalizedCorrelationMetric no longer supports \"false\" as "
+                "value of parameter SubtractMean! It just behaves as if its value is true!");
+    }
+  }
 
 } // end BeforeEachResolution()
 

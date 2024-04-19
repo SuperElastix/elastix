@@ -174,21 +174,11 @@ public:
                         MeasureType &                   value,
                         DerivativeType &                derivative) const override;
 
-  /** Set/Get SubtractMean boolean. If true, the sample mean is subtracted
-   * from the sample values in the cross-correlation formula and
-   * typically results in narrower valleys in the cost function.
-   * Default value is false.
-   */
-  itkSetMacro(SubtractMean, bool);
-  itkGetConstReferenceMacro(SubtractMean, bool);
-  itkBooleanMacro(SubtractMean);
-
 protected:
   AdvancedNormalizedCorrelationImageToImageMetric();
   ~AdvancedNormalizedCorrelationImageToImageMetric() override = default;
 
-  void
-  PrintSelf(std::ostream & os, Indent indent) const override;
+  using Superclass::PrintSelf;
 
   /** Protected Typedefs ******************/
 
@@ -235,8 +225,6 @@ protected:
   AccumulateDerivativesThreaderCallback(void * arg);
 
 private:
-  mutable bool m_SubtractMean{ false };
-
   using AccumulateType = typename NumericTraits<MeasureType>::AccumulateType;
 
   /** Helper structs that multi-threads the computation of
