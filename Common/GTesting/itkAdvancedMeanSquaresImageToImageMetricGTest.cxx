@@ -62,6 +62,27 @@ CreateInterpolator()
   return TInterpolator::New().GetPointer();
 }
 
+
+template <typename TPixel, unsigned VImageDimension>
+auto
+CreateImageOfDistanceToPoint(const itk::Size<VImageDimension> &          imageSize,
+                             const itk::Point<double, VImageDimension> & point)
+{
+  const auto                                        image = CreateImage<TPixel>(imageSize);
+  const itk::ImageBufferRange                       imageBufferRange{ *image };
+  const itk::ImageRegionIndexRange<VImageDimension> indexRange{ image->GetBufferedRegion() };
+
+  auto indexIterator = indexRange.cbegin();
+
+  for (TPixel & pixel : imageBufferRange)
+  {
+    pixel = point.EuclideanDistanceTo(image->template TransformIndexToPhysicalPoint<double>(*indexIterator));
+    ++indexIterator;
+  }
+
+  return image;
+}
+
 } // namespace
 
 // Checks if a default-constructed AdvancedMeanSquaresImageToImageMetric has the expected properties.
@@ -310,5 +331,50 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, ValueIsAsExpected)
     const itk::OptimizerParameters parameters(transform.GetNumberOfParameters(), 0.0);
     transform.SetParameters(parameters);
     check(transform);
+  }
+}
+
+
+// Checks the derivative when using the TranslationTransform. The test input images are distance images, both
+// representing the distance to a corner point.
+GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, DerivativeTranslation)
+{
+  static constexpr auto imageDimension = 3U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, imageDimension>;
+  using PointType = itk::Point<double, imageDimension>;
+
+  const auto imageSizeValue = minimumImageSizeValue;
+  const auto imageSize = itk::Size<imageDimension>::Filled(imageSizeValue);
+
+  // Pixel values represent the distance to the left upper corner point.
+  const auto leftImage = CreateImageOfDistanceToPoint<PixelType>(imageSize, PointType{});
+
+  // Pixel values represent the distance to the right bottom corner point.
+  const auto rightImage =
+    CreateImageOfDistanceToPoint<PixelType>(imageSize, itk::MakeFilled<PointType>(imageSizeValue - 1.0));
+
+  const auto getDerivative = [](const auto & fixedImage, const auto & movingImage, auto & interpolator) {
+    elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, imageDimension>>   transform{};
+    elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                            imageSampler{};
+    elx::DefaultConstruct<AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>> metric{};
+    InitializeMetric(
+      metric, *fixedImage, *movingImage, imageSampler, transform, *interpolator, fixedImage->GetBufferedRegion());
+    return ValueAndDerivative::FromCostFunction(metric, transform.GetParameters()).derivative;
+  };
+
+  for (const auto interpolator : { CreateInterpolator<itk::AdvancedLinearInterpolateImageFunction<ImageType>>(),
+                                   CreateInterpolator<itk::BSplineInterpolateImageFunction<ImageType>>(),
+                                   CreateInterpolator<itk::NearestNeighborInterpolateImageFunction<ImageType>>() })
+  {
+    for (const double derivativeValue : getDerivative(leftImage, rightImage, interpolator))
+    {
+      EXPECT_GT(derivativeValue, 0.0);
+    }
+
+    for (const double derivativeValue : getDerivative(rightImage, leftImage, interpolator))
+    {
+      EXPECT_LT(derivativeValue, 0.0);
+    }
   }
 }
