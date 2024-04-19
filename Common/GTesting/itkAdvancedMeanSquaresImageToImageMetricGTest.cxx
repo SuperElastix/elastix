@@ -245,7 +245,7 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, ValueIsAsExpected)
 {
   std::mt19937 randomNumberEngine{};
 
-  static constexpr auto imageDimension = 3U;
+  static constexpr auto imageDimension = 2U;
   using PixelType = float;
   using ImageType = itk::Image<PixelType, imageDimension>;
 
@@ -276,21 +276,39 @@ GTEST_TEST(AdvancedMeanSquaresImageToImageMetric, ValueIsAsExpected)
   // interest.
   EXPECT_GT(sumOfSquareDifferences, 0.0);
 
-  const auto numberOfPixels = fixedImage->GetBufferedRegion().GetNumberOfPixels();
+  const auto check = [fixedImage, movingImage, sumOfSquareDifferences](auto && transform) {
+    for (const auto interpolator : { CreateInterpolator<itk::AdvancedLinearInterpolateImageFunction<ImageType>>(),
+                                     CreateInterpolator<itk::BSplineInterpolateImageFunction<ImageType>>(),
+                                     CreateInterpolator<itk::NearestNeighborInterpolateImageFunction<ImageType>>() })
+    {
+      elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                            imageSampler{};
+      elx::DefaultConstruct<AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>> metric{};
 
-  elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, imageDimension>> transform{};
-  elx::DefaultConstruct<itk::ImageFullSampler<ImageType>>                          imageSampler{};
+      InitializeMetric(
+        metric, *fixedImage, *movingImage, imageSampler, transform, *interpolator, fixedImage->GetBufferedRegion());
+      const auto value = ValueAndDerivative::FromCostFunction(metric, transform.GetParameters()).value;
 
-  for (const auto interpolator : { CreateInterpolator<itk::AdvancedLinearInterpolateImageFunction<ImageType>>(),
-                                   CreateInterpolator<itk::BSplineInterpolateImageFunction<ImageType>>(),
-                                   CreateInterpolator<itk::NearestNeighborInterpolateImageFunction<ImageType>>() })
+      // Expect numberOfPixels times the estimated mean of square differences equals the sum of square differences.
+      EXPECT_EQ(std::round(fixedImage->GetBufferedRegion().GetNumberOfPixels() * value), sumOfSquareDifferences);
+    }
+  };
+
+  check(elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, imageDimension>>{});
+
+  // Check with bspline transform:
   {
-    elx::DefaultConstruct<AdvancedMeanSquaresImageToImageMetric<ImageType, ImageType>> metric{};
-    InitializeMetric(
-      metric, *fixedImage, *movingImage, imageSampler, transform, *interpolator, fixedImage->GetBufferedRegion());
-    const auto value = ValueAndDerivative::FromCostFunction(metric, transform.GetParameters()).value;
+    static constexpr unsigned int                                                                       splineOrder = 2;
+    elx::DefaultConstruct<itk::AdvancedBSplineDeformableTransform<double, imageDimension, splineOrder>> transform{};
 
-    // Expect numberOfPixels times the estimated mean of square differences equals the sum of square differences.
-    EXPECT_EQ(std::round(numberOfPixels * value), sumOfSquareDifferences);
+    transform.SetGridRegion(itk::ImageRegion<imageDimension>(itk::Size<imageDimension>::Filled(splineOrder + 1)));
+
+    // The optimizer parameters "are assumed to be maintained by the caller", according to
+    // `AdvancedBSplineDeformableTransformBase::WrapAsImages()`, at
+    // https://github.com/SuperElastix/elastix/blob/5.1.0/Common/Transforms/itkAdvancedBSplineDeformableTransformBase.hxx#L378-L379
+    // Note that transform.GetNumberOfParameters() must be called after SetGridRegion, because GetNumberOfParameters()
+    // internally uses the size of the grid region.
+    const itk::OptimizerParameters parameters(transform.GetNumberOfParameters(), 0.0);
+    transform.SetParameters(parameters);
+    check(transform);
   }
 }
