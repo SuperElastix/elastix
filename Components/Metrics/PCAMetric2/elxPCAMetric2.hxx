@@ -54,7 +54,7 @@ PCAMetric2<TElastix>::BeforeEachResolution()
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set if we want to subtract the mean from the derivative. */
-  bool subtractMean = false;
+  bool subtractMean = true;
   this->GetConfiguration()->ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
   this->SetSubtractMean(subtractMean);
 

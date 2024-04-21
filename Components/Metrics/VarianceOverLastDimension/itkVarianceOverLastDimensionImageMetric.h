@@ -188,7 +188,7 @@ private:
   unsigned int m_ReducedDimensionIndex{};
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
-  bool m_SubtractMean{ false };
+  bool m_SubtractMean{ true };
 
   /** Initial variance in last dimension, used as normalization factor. */
   float m_InitialVariance{};

@@ -223,7 +223,7 @@ private:
   unsigned int m_LastDimIndex{};
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
-  bool m_SubtractMean{ false };
+  bool m_SubtractMean{ true };
 
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize{};

@@ -188,7 +188,7 @@ private:
   double m_VarNoise{};
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
-  bool m_SubtractMean{};
+  bool m_SubtractMean{ true };
 
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize{};
