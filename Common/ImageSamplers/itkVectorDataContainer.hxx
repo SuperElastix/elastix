@@ -286,9 +286,9 @@ VectorDataContainer<TElementIdentifier, TElement>::Initialize()
  */
 template <typename TElementIdentifier, typename TElement>
 void
-VectorDataContainer<TElementIdentifier, TElement>::Reserve(ElementIdentifier size)
+VectorDataContainer<TElementIdentifier, TElement>::Reserve(ElementIdentifier numberOfElements)
 {
-  this->CreateIndex(size - 1);
+  this->CreateIndex(numberOfElements - 1);
 }
 
 
