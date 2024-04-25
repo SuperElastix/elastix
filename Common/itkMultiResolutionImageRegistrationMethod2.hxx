@@ -228,8 +228,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
   // the result of the fixed image pyramid.
   using PointType = typename FixedImageType::PointType;
   using CoordRepType = typename PointType::CoordRepType;
-  using IndexValueType = typename IndexType::IndexValueType;
-  using SizeValueType = typename SizeType::SizeValueType;
 
   PointType inputStartPoint;
   PointType inputEndPoint;
