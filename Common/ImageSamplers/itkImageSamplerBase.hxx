@@ -337,8 +337,7 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
     bbIndex->ComputeBoundingBox();
 
     /** Create a bounding box region. */
-    InputImageIndexType minIndex, maxIndex;
-    using IndexValueType = typename InputImageIndexType::IndexValueType;
+    InputImageIndexType  minIndex, maxIndex;
     InputImageSizeType   size;
     InputImageRegionType boundingBoxRegion;
     for (unsigned int i = 0; i < InputImageDimension; ++i)
