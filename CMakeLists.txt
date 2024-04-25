@@ -81,6 +81,10 @@ include(elastixExportTarget)
 
 if (MSVC)
   add_compile_options(/W3)
+else()
+  add_compile_options(
+    -Wshadow
+    )
 endif()
 
 #---------------------------------------------------------------------
