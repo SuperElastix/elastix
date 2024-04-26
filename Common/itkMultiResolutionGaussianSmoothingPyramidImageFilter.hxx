@@ -214,8 +214,6 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
     itkExceptionMacro("Input has not been set");
   }
 
-  OutputImagePointer outputPtr;
-
   unsigned int ilevel;
   for (ilevel = 0; ilevel < this->m_NumberOfLevels; ++ilevel)
   {
