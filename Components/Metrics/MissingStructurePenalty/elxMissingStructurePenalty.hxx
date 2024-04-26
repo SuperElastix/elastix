@@ -404,13 +404,13 @@ the sequence of points to form a 2d connected polydata contour.
   using FixedImageDirectionType = typename FixedImageType::DirectionType;
 
   using DummyIPPPixelType = unsigned char;
-  using MeshTraitsType =
+  using DummyMeshTraitsType =
     itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
-  using PointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  using DummyPointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, DummyMeshTraitsType>;
   using DeformationVectorType = itk::Vector<float, FixedImageDimension>;
 
   /** Construct an ipp-file reader. */
-  auto ippReader = itk::TransformixInputPointFileReader<PointSetType>::New();
+  auto ippReader = itk::TransformixInputPointFileReader<DummyPointSetType>::New();
   ippReader->SetFileName(filename);
 
   /** Read the input points. */
@@ -437,7 +437,7 @@ the sequence of points to form a 2d connected polydata contour.
   log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   /** Get the set of input points. */
-  typename PointSetType::Pointer inputPointSet = ippReader->GetOutput();
+  typename DummyPointSetType::Pointer inputPointSet = ippReader->GetOutput();
 
   /** Create the storage classes. */
   std::vector<FixedImageIndexType> inputindexvec(nrofpoints);
