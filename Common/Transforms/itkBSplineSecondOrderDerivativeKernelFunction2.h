@@ -150,7 +150,7 @@ private:
 
 
   static void
-  Evaluate(const Dispatch<2> &, const double u, double * weights)
+  Evaluate(const Dispatch<2> &, const double, double * weights)
   {
     weights[0] = 1.0;
     weights[1] = -2.0;
