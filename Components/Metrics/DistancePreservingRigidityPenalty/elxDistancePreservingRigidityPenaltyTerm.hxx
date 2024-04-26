@@ -40,7 +40,6 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
   this->GetConfiguration()->ReadParameter(
     segmentedImageName, "SegmentedImageName", this->GetComponentLabel(), 0, -1, false);
 
-  using SegmentedImageType = typename Superclass1::SegmentedImageType;
   using DirectionType = typename SegmentedImageType::DirectionType;
   using SizeValueType = typename SegmentedImageType::SizeType::SizeValueType;
 
