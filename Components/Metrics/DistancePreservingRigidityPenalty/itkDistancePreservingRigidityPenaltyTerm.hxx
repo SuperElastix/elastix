@@ -219,9 +219,9 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
       {
         numberOfRigidGridsNeighbor = 0;
 
-        for (unsigned int kk = 0; kk < numberOfNeighborhood; ++kk)
+        for (unsigned int neighbor = 0; neighbor < numberOfNeighborhood; ++neighbor)
         {
-          neighborPenaltyGridIndex = ni.GetIndex(kk);
+          neighborPenaltyGridIndex = ni.GetIndex(neighbor);
 
           this->m_PenaltyGridImage->TransformIndexToPhysicalPoint(neighborPenaltyGridIndex, neighborPenaltyGridPoint);
 
@@ -236,9 +236,9 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
 
         if (numberOfRigidGridsNeighbor > 1)
         {
-          for (unsigned int kk = 0; kk < numberOfNeighborhood; ++kk)
+          for (unsigned int neighbor = 0; neighbor < numberOfNeighborhood; ++neighbor)
           {
-            neighborPenaltyGridIndex = ni.GetIndex(kk);
+            neighborPenaltyGridIndex = ni.GetIndex(neighbor);
 
             this->m_PenaltyGridImage->TransformIndexToPhysicalPoint(neighborPenaltyGridIndex, neighborPenaltyGridPoint);
 
@@ -381,9 +381,9 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
       {
         numberOfRigidGridsNeighbor = 0;
 
-        for (unsigned int kk = 0; kk < numberOfNeighborhood; ++kk)
+        for (unsigned int neighbor = 0; neighbor < numberOfNeighborhood; ++neighbor)
         {
-          neighborPenaltyGridIndex = ni.GetIndex(kk);
+          neighborPenaltyGridIndex = ni.GetIndex(neighbor);
 
           this->m_PenaltyGridImage->TransformIndexToPhysicalPoint(neighborPenaltyGridIndex, neighborPenaltyGridPoint);
 
@@ -398,9 +398,9 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
         if (numberOfRigidGridsNeighbor > 1)
         {
-          for (unsigned int kk = 0; kk < numberOfNeighborhood; ++kk)
+          for (unsigned int neighbor = 0; neighbor < numberOfNeighborhood; ++neighbor)
           {
-            neighborPenaltyGridIndex = ni.GetIndex(kk);
+            neighborPenaltyGridIndex = ni.GetIndex(neighbor);
 
             this->m_PenaltyGridImage->TransformIndexToPhysicalPoint(neighborPenaltyGridIndex, neighborPenaltyGridPoint);
 
