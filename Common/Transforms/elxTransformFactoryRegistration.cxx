@@ -38,9 +38,6 @@ template <template <unsigned> class TTransform, std::size_t... VDimension>
 static void
 RegisterTransformForEachDimension(std::index_sequence<VDimension...>)
 {
-  struct EmptyStruct
-  {};
-
   const EmptyStruct registered[] = { (itk::TransformFactory<TTransform<VDimension>>::RegisterTransform(),
                                       EmptyStruct())... };
   (void)registered;
