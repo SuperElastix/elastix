@@ -72,6 +72,9 @@ public:
   MakeOutput(ProcessObject::DataObjectPointerArraySizeType idx) override;
 
 protected:
+  // Protected using-declaration, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using ProcessObject::MakeOutput;
+
   /** The constructor. */
   VectorContainerSource();
   /** The destructor. */
