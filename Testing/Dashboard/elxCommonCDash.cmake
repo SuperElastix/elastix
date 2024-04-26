@@ -143,6 +143,12 @@ set(CTEST_UPDATE_VERSION_ONLY 1)
 # For CDash integration with GitHub: https://blog.kitware.com/cdash-integration-with-github
 set(CTEST_CHANGE_ID $ENV{CHANGE_ID})
 
+
+# Override the default maximum number of reported warnings and errors, using the same custom
+# maximum numbers as https://github.com/SimpleITK/SimpleITK/blob/v2.3.1/CMake/CTestCustom.cmake.in
+set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_ERRORS 99)
+set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 999)
+
 # Configure testing.
 if(NOT DEFINED CTEST_TEST_CTEST)
   set(CTEST_TEST_CTEST 1)
