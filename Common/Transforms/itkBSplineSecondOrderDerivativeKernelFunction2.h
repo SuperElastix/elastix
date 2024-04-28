@@ -152,9 +152,9 @@ private:
   static void
   Evaluate(const Dispatch<2> &, const double, double * weights)
   {
-    weights[0] = 1.0;
-    weights[1] = -2.0;
-    weights[2] = 1.0;
+    weights[0] = std::numeric_limits<double>::quiet_NaN();
+    weights[1] = std::numeric_limits<double>::quiet_NaN();
+    weights[2] = std::numeric_limits<double>::quiet_NaN();
   }
 
 
