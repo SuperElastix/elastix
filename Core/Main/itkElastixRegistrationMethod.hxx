@@ -84,34 +84,40 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   using elx::LibUtilities::RetrievePixelTypeParameterValue;
   using elx::LibUtilities::SetParameterValueAndWarnOnOverride;
 
-  DataObjectContainerPointer fixedMaskContainer = nullptr;
-  DataObjectContainerPointer movingMaskContainer = nullptr;
-  DataObjectContainerPointer resultImageContainer = nullptr;
-  ElastixMainObjectPointer   transform = nullptr;
-  FlatDirectionCosinesType   fixedImageOriginalDirection;
+  struct RegistrationData
+  {
+    DataObjectContainerPointer fixedMaskContainer{ nullptr };
+    DataObjectContainerPointer movingMaskContainer{ nullptr };
+    DataObjectContainerPointer resultImageContainer{ nullptr };
+    ElastixMainObjectPointer   transform{ nullptr };
+    FlatDirectionCosinesType   fixedImageOriginalDirection{};
+  };
+
+  RegistrationData registrationData{};
+
 
   // Split inputs into separate containers
   for (const auto & inputName : this->GetInputNames())
   {
     if (this->IsInputOfType("FixedMask", inputName))
     {
-      if (fixedMaskContainer.IsNull())
+      if (registrationData.fixedMaskContainer.IsNull())
       {
-        fixedMaskContainer = DataObjectContainerType::New();
+        registrationData.fixedMaskContainer = DataObjectContainerType::New();
       }
 
-      fixedMaskContainer->push_back(this->ProcessObject::GetInput(inputName));
+      registrationData.fixedMaskContainer->push_back(this->ProcessObject::GetInput(inputName));
       continue;
     }
 
     if (this->IsInputOfType("MovingMask", inputName))
     {
-      if (movingMaskContainer.IsNull())
+      if (registrationData.movingMaskContainer.IsNull())
       {
-        movingMaskContainer = DataObjectContainerType::New();
+        registrationData.movingMaskContainer = DataObjectContainerType::New();
       }
 
-      movingMaskContainer->push_back(this->ProcessObject::GetInput(inputName));
+      registrationData.movingMaskContainer->push_back(this->ProcessObject::GetInput(inputName));
     }
   }
 
@@ -346,7 +352,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     elastixMain->SetTotalNumberOfElastixLevels(parameterMapVector.size());
 
     // Set stuff we get from a previous registration
-    elastixMain->SetInitialTransform(transform);
+    elastixMain->SetInitialTransform(registrationData.transform);
     elastixMain->SetFixedImageContainer(
       createImageContainer(fixedInputImages,
                            RetrievePixelTypeParameterValue(parameterMap, "FixedInternalImagePixelType"),
@@ -355,10 +361,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
       createImageContainer(movingInputImages,
                            RetrievePixelTypeParameterValue(parameterMap, "MovingInternalImagePixelType"),
                            movingInternalImageContainers));
-    elastixMain->SetFixedMaskContainer(fixedMaskContainer);
-    elastixMain->SetMovingMaskContainer(movingMaskContainer);
-    elastixMain->SetResultImageContainer(resultImageContainer);
-    elastixMain->SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirection);
+    elastixMain->SetFixedMaskContainer(registrationData.fixedMaskContainer);
+    elastixMain->SetMovingMaskContainer(registrationData.movingMaskContainer);
+    elastixMain->SetResultImageContainer(registrationData.resultImageContainer);
+    elastixMain->SetOriginalFixedImageDirectionFlat(registrationData.fixedImageOriginalDirection);
 
     // Start registration
     unsigned int isError = 0;
@@ -380,11 +386,11 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     }
 
     // Get stuff in order to put it in the next registration
-    transform = elastixMain->GetFinalTransform();
-    fixedMaskContainer = elastixMain->GetFixedMaskContainer();
-    movingMaskContainer = elastixMain->GetMovingMaskContainer();
-    resultImageContainer = elastixMain->GetResultImageContainer();
-    fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
+    registrationData = { elastixMain->GetFixedMaskContainer(),
+                         elastixMain->GetMovingMaskContainer(),
+                         elastixMain->GetResultImageContainer(),
+                         elastixMain->GetFinalTransform(),
+                         elastixMain->GetOriginalFixedImageDirectionFlat() };
 
     transformParameterMapVector.push_back(elastixMain->GetTransformParameterMap());
 
@@ -393,10 +399,10 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   } // End loop over registrations
 
   // Save result image
-  if (resultImageContainer.IsNotNull() && resultImageContainer->Size() > 0 &&
-      resultImageContainer->ElementAt(0).IsNotNull())
+  if (registrationData.resultImageContainer.IsNotNull() && registrationData.resultImageContainer->Size() > 0 &&
+      registrationData.resultImageContainer->ElementAt(0).IsNotNull())
   {
-    this->GraftOutput(resultImageContainer->ElementAt(0));
+    this->GraftOutput(registrationData.resultImageContainer->ElementAt(0));
   }
   else
   {
