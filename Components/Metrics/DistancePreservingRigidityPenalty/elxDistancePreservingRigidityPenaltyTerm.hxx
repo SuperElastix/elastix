@@ -97,8 +97,7 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
   auto identityTransform = IdentityTransformType::New();
   identityTransform->SetIdentity();
 
-  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<SegmentedImageType, double>;
-  auto linearInterpolator = LinearInterpolatorType::New();
+  auto linearInterpolator = itk::LinearInterpolateImageFunction<SegmentedImageType, double>::New();
 
   /** Configure the resampler and run it. */
   resampler->SetInterpolator(linearInterpolator);
