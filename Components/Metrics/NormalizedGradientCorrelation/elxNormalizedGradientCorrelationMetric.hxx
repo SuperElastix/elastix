@@ -73,9 +73,7 @@ template <class TElastix>
 void
 NormalizedGradientCorrelationMetric<TElastix>::BeforeEachResolution()
 {
-  using ScalesType = typename elastix::OptimizerBase<TElastix>::ITKBaseType::ScalesType;
-  ScalesType scales = this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales();
-  this->SetScales(scales);
+  this->SetScales(this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales());
 
 } // end BeforeEachResolution()
 
