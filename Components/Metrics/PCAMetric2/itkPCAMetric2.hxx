@@ -237,26 +237,27 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   const unsigned int N = this->m_NumberOfPixelsCounted;
   MatrixType         A(datablock.extract(N, G));
 
-  /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(G);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
-  {
-    for (unsigned int j = 0; j < G; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(N);
-
   MatrixType Amm(N, G);
   Amm.fill(RealType{});
-
-  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; ++j)
+    /** Calculate mean of from columns */
+    vnl_vector<RealType> mean(G);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < N; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(N);
+
+    for (unsigned int i = 0; i < N; ++i)
+    {
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 
@@ -437,26 +438,28 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
   MatrixType A(datablock.extract(N, G));
 
-  /** Calculate mean of columns */
-  vnl_vector<RealType> mean(G);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
-  {
-    for (unsigned int j = 0; j < G; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(N);
-
   /** Calculate standard deviation of columns */
   MatrixType Amm(N, G);
   Amm.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; ++j)
+    /** Calculate mean of columns */
+    vnl_vector<RealType> mean(G);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < N; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(N);
+
+    for (unsigned int i = 0; i < N; ++i)
+    {
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 

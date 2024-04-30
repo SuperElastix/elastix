@@ -210,25 +210,27 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   MatrixType A(datablock.extract(N, G));
 
-  /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(G);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
-  {
-    for (unsigned int j = 0; j < G; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(N);
-
   MatrixType Amm(N, G);
   Amm.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; ++j)
+    /** Calculate mean of from columns */
+    vnl_vector<RealType> mean(G);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < N; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(N);
+
+    for (unsigned int i = 0; i < N; ++i)
+    {
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 
@@ -384,25 +386,27 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
   MatrixType A(datablock.extract(N, G));
 
-  /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(G);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
-  {
-    for (unsigned int j = 0; j < G; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(N);
-
   MatrixType Amm(N, G);
   Amm.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; ++j)
+    /** Calculate mean of from columns */
+    vnl_vector<RealType> mean(G);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < N; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(N);
+
+    for (unsigned int i = 0; i < N; ++i)
+    {
+      for (unsigned int j = 0; j < G; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 

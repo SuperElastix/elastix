@@ -230,26 +230,27 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   this->CheckNumberOfSamples(numberOfSamples, this->m_NumberOfPixelsCounted);
   MatrixType A(datablock.extract(this->m_NumberOfPixelsCounted, this->m_G));
 
-  /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(this->m_G);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
-  {
-    for (unsigned int j = 0; j < this->m_G; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(this->m_NumberOfPixelsCounted);
-
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
   Amm.fill(RealType{});
-
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; ++j)
+    /** Calculate mean of from columns */
+    vnl_vector<RealType> mean(this->m_G);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < this->m_G; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(this->m_NumberOfPixelsCounted);
+
+    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    {
+      for (unsigned int j = 0; j < this->m_G; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 
@@ -407,26 +408,28 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   MatrixType A(datablock.extract(this->m_NumberOfPixelsCounted, this->m_G));
 
-  /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(this->m_G);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
-  {
-    for (unsigned int j = 0; j < this->m_G; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(this->m_NumberOfPixelsCounted);
-
   /** Calculate standard deviation from columns */
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
   Amm.fill(RealType{});
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; ++j)
+    /** Calculate mean of from columns */
+    vnl_vector<RealType> mean(this->m_G);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < this->m_G; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(this->m_NumberOfPixelsCounted);
+
+    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    {
+      for (unsigned int j = 0; j < this->m_G; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 
@@ -775,26 +778,28 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
     row_start += this->m_PCAMetricGetSamplesPerThreadVariables[i].st_DataBlock.rows();
   }
 
-  /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(this->m_G);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
-  {
-    for (unsigned int j = 0; j < this->m_G; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(this->m_NumberOfPixelsCounted);
-
   /** Calculate standard deviation from columns */
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
   Amm.fill(RealType{});
-  for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
   {
-    for (unsigned int j = 0; j < this->m_G; ++j)
+    /** Calculate mean of from columns */
+    vnl_vector<RealType> mean(this->m_G);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < this->m_G; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(this->m_NumberOfPixelsCounted);
+
+    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    {
+      for (unsigned int j = 0; j < this->m_G; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 
