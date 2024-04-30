@@ -527,8 +527,6 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
     auto voxelCoord =
       this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
-    const unsigned int G = lastDimPositions.size();
-
     for (unsigned int d = 0; d < G; ++d)
     {
       /** Initialize some variables. */
