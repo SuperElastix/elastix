@@ -925,20 +925,22 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
    */
   const unsigned int         d = SpaceDimension * (SpaceDimension + 1) / 2;
   FixedArray<WeightsType, d> weightVector;
-  unsigned int               count = 0;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    for (unsigned int j = 0; j <= i; ++j)
+    unsigned int count = 0;
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
-      /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
+      for (unsigned int j = 0; j <= i; ++j)
+      {
+        /** Compute the derivative weights. */
+        this->m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
 
-      /** Remember the weights. */
-      weightVector[count] = weights;
-      ++count;
+        /** Remember the weights. */
+        weightVector[count] = weights;
+        ++count;
 
-    } // end for j
-  }   // end for i
+      } // end for j
+    }   // end for i
+  }
 
   /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
   for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
@@ -1064,48 +1066,50 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
    * Make use of the fact that the Hessian is symmetrical, so do not compute
    * both i,j and j,i for i != j.
    */
-  unsigned int count = 0;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    for (unsigned int j = 0; j <= i; ++j)
+    unsigned int count = 0;
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
-      /** Compute the derivative weights. */
-      this->m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
-
-      /** Remember the weights. */
-      std::copy_n(weights.begin(), NumberOfWeights, weightVector + count * NumberOfWeights);
-      ++count;
-
-      /** Reset coeffs iterator */
-      auto itCoeffs = coeffs.cbegin();
-
-      /** Compute the spatial Hessian sh:
-       *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
-       */
-      for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
+      for (unsigned int j = 0; j <= i; ++j)
       {
-        /** Reset weights iterator. */
-        typename WeightsType::const_iterator itWeights = weights.begin();
+        /** Compute the derivative weights. */
+        this->m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
 
-        /** Compute the sum for this dimension. */
-        double sum = 0.0;
-        for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
+        /** Remember the weights. */
+        std::copy_n(weights.begin(), NumberOfWeights, weightVector + count * NumberOfWeights);
+        ++count;
+
+        /** Reset coeffs iterator */
+        auto itCoeffs = coeffs.cbegin();
+
+        /** Compute the spatial Hessian sh:
+         *    d^2T_{dim} / dx_i dx_j = \sum coefs_{dim} * weights.
+         */
+        for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
         {
-          sum += (*itCoeffs) * (*itWeights);
-          ++itWeights;
-          ++itCoeffs;
+          /** Reset weights iterator. */
+          typename WeightsType::const_iterator itWeights = weights.begin();
+
+          /** Compute the sum for this dimension. */
+          double sum = 0.0;
+          for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
+          {
+            sum += (*itCoeffs) * (*itWeights);
+            ++itWeights;
+            ++itCoeffs;
+          }
+
+          /** Update the spatial Hessian sh. The Hessian is symmetrical. */
+          sh[dim](i, j) = sum;
+          if (j < i)
+          {
+            sh[dim](j, i) = sum;
+          }
         }
 
-        /** Update the spatial Hessian sh. The Hessian is symmetrical. */
-        sh[dim](i, j) = sum;
-        if (j < i)
-        {
-          sh[dim](j, i) = sum;
-        }
-      }
-
-    } // end for j
-  }   // end for i
+      } // end for j
+    }   // end for i
+  }
 
   /** Take into account grid spacing and direction matrix. */
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
