@@ -321,8 +321,8 @@ struct ImageDomain
   ImageDomain() = default;
 
   // Explicit constructor
-  explicit ImageDomain(const SizeType & size)
-    : size(size)
+  explicit ImageDomain(const SizeType & initialSize)
+    : size(initialSize)
   {}
 
   explicit ImageDomain(const ImageBaseType & image)
@@ -334,16 +334,16 @@ struct ImageDomain
   {}
 
   // Constructor, allowing to explicitly specify all the settings of the domain.
-  ImageDomain(const DirectionType & direction,
-              const IndexType &     index,
-              const SizeType &      size,
-              const SpacingType &   spacing,
-              const PointType &     origin)
-    : direction(direction)
-    , index(index)
-    , size(size)
-    , spacing(spacing)
-    , origin(origin)
+  ImageDomain(const DirectionType & initialDirection,
+              const IndexType &     initialIndex,
+              const SizeType &      initialSize,
+              const SpacingType &   initialSpacing,
+              const PointType &     initialOrigin)
+    : direction(initialDirection)
+    , index(initialIndex)
+    , size(initialSize)
+    , spacing(initialSpacing)
+    , origin(initialOrigin)
   {}
 
   // Puts the domain settings into the specified image.
