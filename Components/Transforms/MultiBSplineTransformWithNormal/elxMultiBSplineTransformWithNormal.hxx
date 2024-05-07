@@ -612,7 +612,6 @@ void
 MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int edgeWidth)
 {
   /** Some typedefs. */
-  using IteratorType = itk::ImageRegionExclusionConstIteratorWithIndex<ImageType>;
   using ScalesValueType = itk::Optimizer::ScalesType::ValueType;
 
   /** Define new scales. */
@@ -656,7 +655,7 @@ MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int
   insetgridregion.SetIndex(insetgridindex);
 
   /** Set up iterator over the coefficient image. */
-  IteratorType cIt(coeff, coeff->GetLargestPossibleRegion());
+  itk::ImageRegionExclusionConstIteratorWithIndex<ImageType> cIt(coeff, coeff->GetLargestPossibleRegion());
   cIt.SetExclusionRegion(insetgridregion);
   cIt.GoToBegin();
 
