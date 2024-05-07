@@ -502,15 +502,12 @@ RecursiveBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeW
 {
   /** Some typedefs. */
   using IteratorType = itk::ImageRegionExclusionConstIteratorWithIndex<ImageType>;
-  using ITKRegistrationType = typename RegistrationType::ITKBaseType;
-  using OptimizerType = typename ITKRegistrationType::OptimizerType;
-  using ScalesType = typename OptimizerType::ScalesType;
-  using ScalesValueType = typename ScalesType::ValueType;
+  using ScalesValueType = itk::Optimizer::ScalesType::ValueType;
 
   /** Define new scales. */
   const NumberOfParametersType numberOfParameters = this->m_BSplineTransform->GetNumberOfParameters();
   const unsigned long          offset = numberOfParameters / SpaceDimension;
-  ScalesType                   newScales(numberOfParameters, ScalesValueType{ 1.0 });
+  itk::Optimizer::ScalesType   newScales(numberOfParameters, ScalesValueType{ 1.0 });
   const ScalesValueType        infScale = 10000.0;
 
   if (edgeWidth == 0)
