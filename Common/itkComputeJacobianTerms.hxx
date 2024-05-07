@@ -222,8 +222,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   /** Initialize band matrix. */
   CovarianceMatrixType bandcov(numberOfParameters, bandcovsize, 0.0);
 
-  unsigned int samplenr = 0;
-
   /**
    *    TERM 1
    *
@@ -238,10 +236,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   }
   for (const auto & sample : *sampleContainer)
   {
-    /** Print progress 0-50%.
-     *progressObserver->UpdateAndPrintProgress( samplenr );*/
-    ++samplenr;
-
     /** Read fixed coordinates and get Jacobian J_j. */
     const FixedImagePointType & point = sample.m_ImageCoordinates;
     this->m_Transform->GetJacobian(point, jacj, jacind);
@@ -412,7 +406,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   JacobianType              jacjcovjacj(outdim, outdim);
   itk::Array<SizeValueType> jacindExpanded(numberOfParameters);
 
-  samplenr = 0;
   for (const auto & sample : *sampleContainer)
   {
     /** Read fixed coordinates and get Jacobian. */
@@ -503,10 +496,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
 
     /** Max_j [JCJ_j]. */
     maxJCJ = std::max(maxJCJ, JCJ_j);
-
-    /** Show progress 50-100%. */
-    // progressObserver->UpdateAndPrintProgress( samplenr + nrofsamples );
-    ++samplenr;
 
   } // end loop over sample container
 
