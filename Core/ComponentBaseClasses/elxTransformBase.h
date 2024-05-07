@@ -187,7 +187,7 @@ public:
   /** Typedefs needed for AutomaticScalesEstimation function */
   using ITKRegistrationType = typename RegistrationType::ITKBaseType;
   using OptimizerType = typename ITKRegistrationType::OptimizerType;
-  using ScalesType = typename OptimizerType::ScalesType;
+  using ScalesType = itk::Optimizer::ScalesType;
 
   /** Typedefs for images of determinants of spatial Jacobian matrices, and images of spatial Jacobian matrices */
   using SpatialJacobianDeterminantImageType = itk::Image<float, FixedImageDimension>;
