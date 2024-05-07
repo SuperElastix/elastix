@@ -252,10 +252,9 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
 
   /** For each dimension, copy the weight to the support region. */
   unsigned long counter = 0;
-  using IteratorType = ImageRegionIterator<JacobianImageType>;
   for (unsigned int r = 0; r < 2; ++r)
   {
-    IteratorType iterator = IteratorType(this->m_CoefficientImages[0], supportRegions[r]);
+    ImageRegionIterator<JacobianImageType> iterator(this->m_CoefficientImages[0], supportRegions[r]);
 
     while (!iterator.IsAtEnd())
     {

@@ -686,7 +686,6 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
   using IdentityTransformType = itk::IdentityTransform<CoordRepType, SpaceDimension>;
   using CoefficientUpsampleFunctionType = itk::BSplineResampleImageFunction<ImageType, CoordRepType>;
   using DecompositionFilterType = itk::BSplineDecompositionImageFilter<ImageType, ImageType>;
-  using IteratorType = itk::ImageRegionConstIterator<ImageType>;
 
   /** The current region/spacing settings of the grid. */
   RegionType gridregionLow = this->m_BSplineTransform->GetGridRegion();
@@ -806,7 +805,7 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
     ImagePointer coeffs2 = decompositionFilter->GetOutput();
 
     /** Create an iterator on the new coefficient image. */
-    IteratorType iterator(coeffs2, gridregionHigh);
+    itk::ImageRegionConstIterator<ImageType> iterator(coeffs2, gridregionHigh);
     iterator.GoToBegin();
     while (!iterator.IsAtEnd())
     {
