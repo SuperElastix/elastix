@@ -67,7 +67,6 @@ public:
   using SpacingType = typename ImageBaseType::SpacingType;
   using DirectionType = typename ImageBaseType::DirectionType;
   using SizeType = typename ImageBaseType::SizeType;
-  using SizeValueType = typename ImageBaseType::SizeValueType;
   using RegionType = typename ImageBaseType::RegionType;
   using GridSpacingFactorType = SpacingType;
   using VectorOriginType = std::vector<OriginType>;

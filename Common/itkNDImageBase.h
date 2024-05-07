@@ -90,8 +90,6 @@ public:
 
   using SpacingValueType = typename Spacing2DType::ValueType;
   using PointValueType = typename Point2DType::ValueType;
-  using IndexValueType = typename ImageBase<2>::IndexValueType;
-  using SizeValueType = typename ImageBase<2>::SizeValueType;
   using OffsetValueType = typename ImageBase<2>::OffsetValueType;
 
   /** ND versions of the index and sizetypes. Unlike in
