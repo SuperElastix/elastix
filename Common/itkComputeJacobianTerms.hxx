@@ -71,8 +71,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   /** Get scales vector */
   const ScalesType & scales = this->m_Scales;
 
-  unsigned int samplenr = 0;
-
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const NumberOfParametersType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType                 jacj(outdim, sizejacind);
@@ -224,6 +222,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
 
   /** Initialize band matrix. */
   CovarianceMatrixType bandcov(numberOfParameters, bandcovsize, 0.0);
+
+  unsigned int samplenr = 0;
 
   /**
    *    TERM 1
