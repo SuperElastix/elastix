@@ -255,9 +255,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
     /** If no automatic parameter estimation is used, a and alpha also need
      * to be specified.
      */
-    double a = 1.0; // arbitrary guess
     double alpha = 0.602;
-    configuration.ReadParameter(a, "SP_a", this->GetComponentLabel(), level, 0);
     configuration.ReadParameter(alpha, "SP_alpha", this->GetComponentLabel(), level, 0);
     this->SetParam_a(a);
     this->SetParam_alpha(alpha);
