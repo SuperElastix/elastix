@@ -53,7 +53,7 @@ GenericConjugateGradientOptimizer::StartOptimization()
 
   /** Reset some variables */
   this->m_Stop = false;
-  this->m_StopCondition = Unknown;
+  this->m_StopCondition = StopConditionType::Unknown;
   this->m_CurrentIteration = 0;
   this->m_CurrentStepLength = 0.0;
   this->m_CurrentValue = MeasureType{};
@@ -95,7 +95,7 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
 {
   itkDebugMacro("ResumeOptimization");
 
-  this->m_StopCondition = Unknown;
+  this->m_StopCondition = StopConditionType::Unknown;
   this->m_PreviousGradientAndSearchDirValid = false;
   const double TINY_NUMBER = 1e-20;
   unsigned int limitCount = 0;
@@ -113,7 +113,7 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
   }
   catch (const ExceptionObject &)
   {
-    this->m_StopCondition = MetricError;
+    this->m_StopCondition = StopConditionType::MetricError;
     this->StopOptimization();
     throw;
   }
@@ -179,7 +179,7 @@ GenericConjugateGradientOptimizer::ResumeOptimization()
       }
       else
       {
-        this->m_StopCondition = ValueTolerance;
+        this->m_StopCondition = StopConditionType::ValueTolerance;
         this->StopOptimization();
         break;
       }
@@ -279,7 +279,7 @@ GenericConjugateGradientOptimizer::LineSearch(const ParametersType searchDir,
 
   if (LSO.IsNull())
   {
-    this->m_StopCondition = LineSearchError;
+    this->m_StopCondition = StopConditionType::LineSearchError;
     this->StopOptimization();
     itkExceptionMacro("No line search optimizer set");
   }
@@ -297,7 +297,7 @@ GenericConjugateGradientOptimizer::LineSearch(const ParametersType searchDir,
   }
   catch (const ExceptionObject &)
   {
-    this->m_StopCondition = LineSearchError;
+    this->m_StopCondition = StopConditionType::LineSearchError;
     this->StopOptimization();
     throw;
   }
@@ -312,7 +312,7 @@ GenericConjugateGradientOptimizer::LineSearch(const ParametersType searchDir,
   }
   catch (const ExceptionObject &)
   {
-    this->m_StopCondition = MetricError;
+    this->m_StopCondition = StopConditionType::MetricError;
     this->StopOptimization();
     throw;
   }
@@ -378,7 +378,7 @@ GenericConjugateGradientOptimizer::ComputeBetaFR(const DerivativeType & previous
 
   if (den <= NumericTraits<double>::epsilon())
   {
-    this->m_StopCondition = InfiniteBeta;
+    this->m_StopCondition = StopConditionType::InfiniteBeta;
     this->StopOptimization();
     return 0.0;
   }
@@ -410,7 +410,7 @@ GenericConjugateGradientOptimizer::ComputeBetaPR(const DerivativeType & previous
 
   if (den <= NumericTraits<double>::epsilon())
   {
-    this->m_StopCondition = InfiniteBeta;
+    this->m_StopCondition = StopConditionType::InfiniteBeta;
     this->StopOptimization();
     return 0.0;
   }
@@ -441,7 +441,7 @@ GenericConjugateGradientOptimizer::ComputeBetaDY(const DerivativeType & previous
 
   if (den <= NumericTraits<double>::epsilon())
   {
-    this->m_StopCondition = InfiniteBeta;
+    this->m_StopCondition = StopConditionType::InfiniteBeta;
     this->StopOptimization();
     return 0.0;
   }
@@ -471,7 +471,7 @@ GenericConjugateGradientOptimizer::ComputeBetaHS(const DerivativeType & previous
 
   if (den <= NumericTraits<double>::epsilon())
   {
-    this->m_StopCondition = InfiniteBeta;
+    this->m_StopCondition = StopConditionType::InfiniteBeta;
     this->StopOptimization();
     return 0.0;
   }
@@ -558,7 +558,7 @@ GenericConjugateGradientOptimizer::TestConvergence(bool itkNotUsed(firstLineSear
   /** Check if the maximum number of iterations will not be exceeded in the following iteration */
   if ((this->GetCurrentIteration() + 1) >= this->GetMaximumNumberOfIterations())
   {
-    this->m_StopCondition = MaximumNumberOfIterations;
+    this->m_StopCondition = StopConditionType::MaximumNumberOfIterations;
     return true;
   }
 
@@ -567,7 +567,7 @@ GenericConjugateGradientOptimizer::TestConvergence(bool itkNotUsed(firstLineSear
   const double xnorm = this->GetScaledCurrentPosition().magnitude();
   if (gnorm / std::max(1.0, xnorm) <= this->GetGradientMagnitudeTolerance())
   {
-    this->m_StopCondition = GradientMagnitudeTolerance;
+    this->m_StopCondition = StopConditionType::GradientMagnitudeTolerance;
     return true;
   }
 
@@ -589,7 +589,7 @@ GenericConjugateGradientOptimizer::PrintSelf(std::ostream & os, Indent indent) c
   os << indent << "m_CurrentGradient: " << this->m_CurrentGradient << std::endl;
   os << indent << "m_CurrentValue: " << this->m_CurrentValue << std::endl;
   os << indent << "m_CurrentIteration: " << this->m_CurrentIteration << std::endl;
-  os << indent << "m_StopCondition: " << this->m_StopCondition << std::endl;
+  os << indent << "m_StopCondition: " << static_cast<unsigned int>(this->m_StopCondition) << std::endl;
   os << indent << "m_Stop: " << (this->m_Stop ? "true" : "false") << std::endl;
   os << indent << "m_CurrentStepLength: " << this->m_CurrentStepLength << std::endl;
   os << indent << "m_UseDefaultMaxNrOfItWithoutImprovement: "
