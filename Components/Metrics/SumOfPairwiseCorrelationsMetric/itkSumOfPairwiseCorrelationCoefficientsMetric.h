@@ -81,6 +81,7 @@ public:
   using typename Superclass::MovingImageMaskPointer;
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
+  using typename Superclass::DerivativeValueType;
   using typename Superclass::ParametersType;
   using typename Superclass::FixedImagePixelType;
   using typename Superclass::MovingImageRegionType;

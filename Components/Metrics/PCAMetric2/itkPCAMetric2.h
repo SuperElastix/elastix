@@ -92,6 +92,7 @@ public:
   using typename Superclass::FixedImageLimiterOutputType;
   using typename Superclass::MovingImageLimiterOutputType;
   using typename Superclass::MovingImageDerivativeScalesType;
+  using typename Superclass::DerivativeValueType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);

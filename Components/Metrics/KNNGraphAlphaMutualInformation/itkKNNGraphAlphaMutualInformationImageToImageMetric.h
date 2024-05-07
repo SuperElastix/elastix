@@ -164,7 +164,7 @@ public:
   using IndexArrayType = typename BinaryKNNTreeSearchType::IndexArrayType;
   using DistanceArrayType = typename BinaryKNNTreeSearchType::DistanceArrayType;
 
-  using DerivativeValueType = typename DerivativeType::ValueType;
+  using typename Superclass::DerivativeValueType;
   using TransformJacobianValueType = typename TransformJacobianType::ValueType;
 
   /**
