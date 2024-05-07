@@ -291,10 +291,6 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
-  /** Define derivative and Jacobian types. */
-  using DerivativeValueType = typename DerivativeType::ValueType;
-  // typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
-
   /** Initialize some variables */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   this->m_NumberOfPixelsCounted = 0;

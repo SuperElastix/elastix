@@ -92,7 +92,7 @@ public:
   using typename Superclass::FixedImageLimiterOutputType;
   using typename Superclass::MovingImageLimiterOutputType;
   using typename Superclass::MovingImageDerivativeScalesType;
-  using DerivativeValueType = typename DerivativeType::ValueType;
+  using typename Superclass::DerivativeValueType;
   using typename Superclass::ThreaderType;
   using typename Superclass::ThreadInfoType;
 

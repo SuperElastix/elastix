@@ -136,7 +136,6 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
   if (UseGetValueAndDerivative)
   {
-    using DerivativeValueType = typename DerivativeType::ValueType;
     const unsigned int numberOfParameters = this->GetNumberOfParameters();
     MeasureType        dummymeasure{};
     DerivativeType     dummyderivative = DerivativeType(numberOfParameters);
@@ -336,9 +335,6 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
                                                              DerivativeType &                derivative) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
-  /** Define derivative and Jacobian types. */
-  using DerivativeValueType = typename DerivativeType::ValueType;
-  // typedef typename TransformJacobianType::ValueType TransformJacobianValueType;
 
   /** Initialize some variables */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();

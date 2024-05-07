@@ -333,9 +333,6 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
-  /** Define derivative and Jacobian types. */
-  using DerivativeValueType = typename DerivativeType::ValueType;
-
   /** Initialize some variables */
   Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
