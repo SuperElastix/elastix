@@ -48,7 +48,7 @@ QuasiNewtonLBFGSOptimizer::StartOptimization()
   this->m_PreviousPoint = 0;
   this->m_Bound = 0;
   this->m_Stop = false;
-  this->m_StopCondition = Unknown;
+  this->m_StopCondition = StopConditionType::Unknown;
   this->m_CurrentIteration = 0;
   this->m_CurrentStepLength = 0.0;
   this->m_CurrentValue = MeasureType{};
@@ -90,7 +90,7 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
   itkDebugMacro("ResumeOptimization");
 
   this->m_Stop = false;
-  this->m_StopCondition = Unknown;
+  this->m_StopCondition = StopConditionType::Unknown;
   this->m_CurrentStepLength = 0.0;
 
   ParametersType searchDir;
@@ -105,7 +105,7 @@ QuasiNewtonLBFGSOptimizer::ResumeOptimization()
   }
   catch (const ExceptionObject &)
   {
-    this->m_StopCondition = MetricError;
+    this->m_StopCondition = StopConditionType::MetricError;
     this->StopOptimization();
     throw;
   }
@@ -226,7 +226,7 @@ QuasiNewtonLBFGSOptimizer::ComputeDiagonalMatrix(DiagonalMatrixType & diag_H0)
     fill_value = ys / yy;
     if (fill_value <= 0.)
     {
-      this->m_StopCondition = InvalidDiagonalMatrix;
+      this->m_StopCondition = StopConditionType::InvalidDiagonalMatrix;
       this->StopOptimization();
     }
   }
@@ -328,7 +328,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(const ParametersType searchDir,
 
   if (LSO.IsNull())
   {
-    this->m_StopCondition = LineSearchError;
+    this->m_StopCondition = StopConditionType::LineSearchError;
     this->StopOptimization();
     itkExceptionMacro("No line search optimizer set");
   }
@@ -346,7 +346,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(const ParametersType searchDir,
   }
   catch (const ExceptionObject &)
   {
-    this->m_StopCondition = LineSearchError;
+    this->m_StopCondition = StopConditionType::LineSearchError;
     this->StopOptimization();
     throw;
   }
@@ -361,7 +361,7 @@ QuasiNewtonLBFGSOptimizer::LineSearch(const ParametersType searchDir,
   }
   catch (const ExceptionObject &)
   {
-    this->m_StopCondition = MetricError;
+    this->m_StopCondition = StopConditionType::MetricError;
     this->StopOptimization();
     throw;
   }
@@ -399,7 +399,7 @@ QuasiNewtonLBFGSOptimizer::TestConvergence(bool firstLineSearchDone)
   {
     if (this->m_CurrentStepLength < NumericTraits<double>::epsilon())
     {
-      this->m_StopCondition = ZeroStep;
+      this->m_StopCondition = StopConditionType::ZeroStep;
       return true;
     }
   }
@@ -407,7 +407,7 @@ QuasiNewtonLBFGSOptimizer::TestConvergence(bool firstLineSearchDone)
   /** Check if the maximum number of iterations will not be exceeded in the following iteration */
   if ((this->GetCurrentIteration() + 1) >= this->GetMaximumNumberOfIterations())
   {
-    this->m_StopCondition = MaximumNumberOfIterations;
+    this->m_StopCondition = StopConditionType::MaximumNumberOfIterations;
     return true;
   }
 
@@ -416,7 +416,7 @@ QuasiNewtonLBFGSOptimizer::TestConvergence(bool firstLineSearchDone)
   const double xnorm = this->GetScaledCurrentPosition().magnitude();
   if (gnorm / std::max(1.0, xnorm) <= this->GetGradientMagnitudeTolerance())
   {
-    this->m_StopCondition = GradientMagnitudeTolerance;
+    this->m_StopCondition = StopConditionType::GradientMagnitudeTolerance;
     return true;
   }
 

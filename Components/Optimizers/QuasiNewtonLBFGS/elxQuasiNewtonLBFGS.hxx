@@ -130,7 +130,7 @@ QuasiNewtonLBFGS<TElastix>::LineSearch(const ParametersType searchDir,
     {
       throw;
     }
-    else if (this->GetStopCondition() != LineSearchError)
+    else if (this->GetStopCondition() != StopConditionType::LineSearchError)
     {
       throw;
     }
@@ -355,7 +355,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachIteration()
       }
       catch (const itk::ExceptionObject &)
       {
-        this->m_StopCondition = MetricError;
+        this->m_StopCondition = StopConditionType::MetricError;
         this->StopOptimization();
         throw;
       }
@@ -395,27 +395,27 @@ QuasiNewtonLBFGS<TElastix>::AfterEachResolution()
     switch (this->GetStopCondition())
     {
 
-      case MetricError:
+      case StopConditionType::MetricError:
         stopcondition = "Error in metric";
         break;
 
-      case LineSearchError:
+      case StopConditionType::LineSearchError:
         stopcondition = "Error in LineSearch";
         break;
 
-      case MaximumNumberOfIterations:
+      case StopConditionType::MaximumNumberOfIterations:
         stopcondition = "Maximum number of iterations has been reached";
         break;
 
-      case InvalidDiagonalMatrix:
+      case StopConditionType::InvalidDiagonalMatrix:
         stopcondition = "The diagonal matrix is invalid";
         break;
 
-      case GradientMagnitudeTolerance:
+      case StopConditionType::GradientMagnitudeTolerance:
         stopcondition = "The gradient magnitude has (nearly) vanished";
         break;
 
-      case ZeroStep:
+      case StopConditionType::ZeroStep:
         stopcondition = "The last step size was (nearly) zero";
         break;
 
@@ -485,7 +485,7 @@ QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition() const
 {
   /** Must be repeated here; otherwise the StopconditionTypes of the
    * QuasiNewtonOptimizer and the LineSearchOptimizer are mixed up. */
-  enum LineSearchStopConditionType
+  enum class LineSearchStopConditionType
   {
     StrongWolfeConditionsSatisfied,
     MetricError,
@@ -506,35 +506,35 @@ QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition() const
   switch (lineSearchStopCondition)
   {
 
-    case StrongWolfeConditionsSatisfied:
+    case LineSearchStopConditionType::StrongWolfeConditionsSatisfied:
       stopcondition = "WolfeSatisfied";
       break;
 
-    case MetricError:
+    case LineSearchStopConditionType::MetricError:
       stopcondition = "MetricError";
       break;
 
-    case MaximumNumberOfIterations:
+    case LineSearchStopConditionType::MaximumNumberOfIterations:
       stopcondition = "MaxNrIterations";
       break;
 
-    case StepTooSmall:
+    case LineSearchStopConditionType::StepTooSmall:
       stopcondition = "StepTooSmall";
       break;
 
-    case StepTooLarge:
+    case LineSearchStopConditionType::StepTooLarge:
       stopcondition = "StepTooLarge";
       break;
 
-    case IntervalTooSmall:
+    case LineSearchStopConditionType::IntervalTooSmall:
       stopcondition = "IntervalTooSmall";
       break;
 
-    case RoundingError:
+    case LineSearchStopConditionType::RoundingError:
       stopcondition = "RoundingError";
       break;
 
-    case AscentSearchDirection:
+    case LineSearchStopConditionType::AscentSearchDirection:
       stopcondition = "AscentSearchDir";
       break;
 

@@ -68,7 +68,7 @@ public:
   using BetaDefinitionType = std::string;
   using BetaDefinitionMapType = std::map<BetaDefinitionType, ComputeBetaFunctionType>;
 
-  enum StopConditionType
+  enum class StopConditionType : unsigned int
   {
     MetricError,
     LineSearchError,
@@ -147,7 +147,7 @@ protected:
   DerivativeType    m_CurrentGradient{};
   MeasureType       m_CurrentValue{ 0.0 };
   unsigned long     m_CurrentIteration{ 0 };
-  StopConditionType m_StopCondition{ Unknown };
+  StopConditionType m_StopCondition{ StopConditionType::Unknown };
   bool              m_Stop{ false };
   double            m_CurrentStepLength{ 0.0 };
 
