@@ -194,7 +194,7 @@ public:
 
   using IndexType = typename RegionType::IndexType;
   using SizeType = typename RegionType::SizeType;
-  using SpacingType = typename ImageType::SpacingType;
+  using SpacingType = typename ImageBase<NDimensions>::SpacingType;
   using DirectionType = typename ImageType::DirectionType;
   using OriginType = typename ImageType::PointType;
   using GridOffsetType = IndexType;

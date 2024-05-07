@@ -356,8 +356,6 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   using AddVectorImageType = itk::AddImageFilter<ImageVectorType, ImageVectorType, ImageVectorType>;
   using MaskVectorImageType = itk::MaskImageFilter<ImageVectorType, ImageLabelType, ImageVectorType>;
   using PointType = typename ImageLabelType::PointType;
-  using RegionType = typename ImageLabelType::RegionType;
-  using SpacingType = typename ImageLabelType::SpacingType;
 
   PointType transOrig = GetGridOrigin();
   PointType transEnd;
