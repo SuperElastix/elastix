@@ -78,8 +78,6 @@ public:
 
   using typename Superclass::SpacingValueType;
   using typename Superclass::PointValueType;
-  using typename Superclass::IndexValueType;
-  using typename Superclass::SizeValueType;
   using typename Superclass::OffsetValueType;
 
   /** ND versions of the index and sizetypes etc. */
