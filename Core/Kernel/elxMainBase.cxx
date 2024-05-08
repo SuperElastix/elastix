@@ -52,7 +52,7 @@ const ComponentDatabase &
 MainBase::GetComponentDatabase()
 {
   // Improved thread-safety by using C++11 "magic statics".
-  static const auto componentDatabase = [] {
+  static const auto staticComponentDatabase = [] {
     const auto componentDatabase = ComponentDatabase::New();
     const auto componentLoader = ComponentLoader::New();
     componentLoader->SetComponentDatabase(componentDatabase);
@@ -63,7 +63,7 @@ MainBase::GetComponentDatabase()
     }
     return componentDatabase;
   }();
-  return *componentDatabase;
+  return *staticComponentDatabase;
 }
 
 
