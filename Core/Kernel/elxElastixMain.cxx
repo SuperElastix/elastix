@@ -213,9 +213,7 @@ ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &       
                                                   const ParameterMapType &              inputMap,
                                                   const std::vector<ParameterMapType> & initialTransformParameterMaps)
 {
-  Configuration & configuration = Deref(MainBase::GetConfiguration());
-
-  if (configuration.Initialize(argmap, inputMap) != 0)
+  if (Deref(MainBase::GetConfiguration()).Initialize(argmap, inputMap) != 0)
   {
     log::error("ERROR: Something went wrong during initialization of the configuration object.");
   }
