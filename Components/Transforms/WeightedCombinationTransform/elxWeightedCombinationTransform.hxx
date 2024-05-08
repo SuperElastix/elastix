@@ -193,10 +193,6 @@ template <class TElastix>
 void
 WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
 {
-  /** Typedef's from ComponentDatabase. */
-  using ComponentDescriptionType = typename Superclass2::ComponentDescriptionType;
-  using PtrToCreator = typename Superclass2::PtrToCreator;
-
   const std::size_t N = this->m_Configuration->CountNumberOfParameterEntries("SubTransforms");
 
   if (N == 0)
@@ -238,11 +234,11 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
     }
 
     /** Read the SubTransform name. */
-    ComponentDescriptionType subTransformName = "AffineTransform";
+    typename Superclass2::ComponentDescriptionType subTransformName = "AffineTransform";
     configurationSubTransform->ReadParameter(subTransformName, "Transform", 0);
 
     /** Create a SubTransform. */
-    if (const PtrToCreator creator =
+    if (const typename Superclass2::PtrToCreator creator =
           ElastixMain::GetComponentDatabase().GetCreator(subTransformName, this->m_Elastix->GetDBIndex()))
     {
       if (const itk::Object::Pointer subTransform = creator())
