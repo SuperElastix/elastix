@@ -39,7 +39,6 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
   this->GetConfiguration()->ReadParameter(
     fixedRigidityImageName, "FixedRigidityImageName", this->GetComponentLabel(), 0, -1, false);
 
-  using RigidityImageType = typename Superclass1::RigidityImageType;
   using DirectionType = typename RigidityImageType::DirectionType;
 
   if (!fixedRigidityImageName.empty())

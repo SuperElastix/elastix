@@ -172,6 +172,7 @@ public:
   using typename Superclass1::MovingImageLimiterOutputType;
 
   using typename Superclass1::CoefficientImageType;
+  using typename Superclass1::RigidityImageType;
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
