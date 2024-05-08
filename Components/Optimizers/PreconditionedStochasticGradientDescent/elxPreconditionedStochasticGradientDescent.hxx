@@ -810,12 +810,12 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
   double         approxgg = 0.0;
 
   /** Compute gg for some random parameters. */
-  for (unsigned int i = 0; i < this->m_NumberOfGradientMeasurements; ++i)
+  for (unsigned int measurementIndex = 0; measurementIndex < this->m_NumberOfGradientMeasurements; ++measurementIndex)
   {
     if (progressObserver != nullptr)
     {
       /** Show progress 0-100% */
-      progressObserver->UpdateAndPrintProgress(i);
+      progressObserver->UpdateAndPrintProgress(measurementIndex);
     }
     /** Generate a perturbation, according to:
      *    \mu_i ~ N( \mu_0, perturbationsigma^2 I ).
