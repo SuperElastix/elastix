@@ -336,14 +336,16 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian
    * function GetSpatialHessian() has the TransformPoint as a free by-product.
    * In addition, the spatial Jacobian is a by-product.
    */
-  unsigned int k = 2 * SpaceDimension;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    for (unsigned int j = 0; j < (i + 1) * SpaceDimension; ++j)
+    unsigned int k = 2 * SpaceDimension;
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
-      sh[j % SpaceDimension](i, j / SpaceDimension) = spatialHessian[k + j];
+      for (unsigned int j = 0; j < (i + 1) * SpaceDimension; ++j)
+      {
+        sh[j % SpaceDimension](i, j / SpaceDimension) = spatialHessian[k + j];
+      }
+      k += (i + 2) * SpaceDimension;
     }
-    k += (i + 2) * SpaceDimension;
   }
 
   /** Mirror, as only the lower triangle is now filled. */
