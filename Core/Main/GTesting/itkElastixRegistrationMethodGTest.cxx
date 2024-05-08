@@ -1179,8 +1179,6 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
 
   for (const unsigned int numberOfRegistrationParameterMaps : { 1, 2, 3 })
   {
-    using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
-
     // Specify multiple (one or more) registration parameter maps.
     registrationParameterObject.SetParameterMaps(
       ParameterMapVectorType(numberOfRegistrationParameterMaps, registrationParameterMap));
