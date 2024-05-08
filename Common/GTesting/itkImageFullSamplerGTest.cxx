@@ -129,9 +129,11 @@ GTEST_TEST(ImageFullSampler, ExactlyEqualVersusSlightlyDifferentMaskImageDomain)
   static constexpr auto Dimension = 2U;
   using SamplerType = itk::ImageFullSampler<itk::Image<PixelType, Dimension>>;
 
-  std::mt19937 randomNumberEngine{};
-  const auto   image =
-    CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(CreateRandomImageDomain<Dimension>(randomNumberEngine));
+  const auto image = [] {
+    std::mt19937 randomNumberEngine{};
+    return CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(
+      CreateRandomImageDomain<Dimension>(randomNumberEngine));
+  }();
 
   const auto generateSamples = [image](const bool exactlyEqualImageDomain) {
     elx::DefaultConstruct<SamplerType> sampler{};
