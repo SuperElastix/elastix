@@ -162,9 +162,9 @@ FillImageRegion(itk::Image<TPixel, VImageDimension> & image,
 inline std::vector<double>
 ConvertStringsToVectorOfDouble(const std::vector<std::string> & strings)
 {
-  std::vector<double> result(strings.size());
+  std::vector<double> vectorOfDouble(strings.size());
 
-  std::transform(strings.cbegin(), strings.cend(), result.begin(), [](const std::string & str) {
+  std::transform(strings.cbegin(), strings.cend(), vectorOfDouble.begin(), [](const std::string & str) {
     std::size_t index{};
     const auto  result = std::stod(str, &index);
 
@@ -173,7 +173,7 @@ ConvertStringsToVectorOfDouble(const std::vector<std::string> & strings)
     return result;
   });
 
-  return result;
+  return vectorOfDouble;
 }
 
 
