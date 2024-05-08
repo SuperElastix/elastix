@@ -1037,14 +1037,16 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
   for (unsigned i = 0; i < NumberOfWeights; ++i)
   {
-    VectorType tmp = bases[nonZeroJacobianIndices[i]][0];
-    for (unsigned j = 0; j < SpaceDimension; ++j)
     {
-      for (unsigned k = 0; k < SpaceDimension; ++k)
+      VectorType tmp = bases[nonZeroJacobianIndices[i]][0];
+      for (unsigned j = 0; j < SpaceDimension; ++j)
       {
-        for (unsigned l = 0; l < SpaceDimension; ++l)
+        for (unsigned k = 0; k < SpaceDimension; ++k)
         {
-          jsh[j][i][k][l] = tmp[j] * njsh[j][i + j * NumberOfWeights][k][l];
+          for (unsigned l = 0; l < SpaceDimension; ++l)
+          {
+            jsh[j][i][k][l] = tmp[j] * njsh[j][i + j * NumberOfWeights][k][l];
+          }
         }
       }
     }
