@@ -1051,9 +1051,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
       }
     }
 
-    for (unsigned l = 1; l <= m_NbLabels; ++l)
+    for (unsigned labelIndex = 1; labelIndex <= m_NbLabels; ++labelIndex)
     {
-      VectorType tmp = bases[nonZeroJacobianIndices[i]][l];
+      VectorType tmp = bases[nonZeroJacobianIndices[i]][labelIndex];
       for (unsigned j = 0; j < SpaceDimension; ++j)
       {
         for (unsigned k = 0; k < SpaceDimension; ++k)
