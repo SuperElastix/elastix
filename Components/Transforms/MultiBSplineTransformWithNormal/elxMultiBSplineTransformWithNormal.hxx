@@ -426,7 +426,6 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale()
   ImageBasePointer      new_Bases = this->m_MultiBSplineTransformWithNormal->GetLocalBases();
   const BaseContainer & new_bases = *new_Bases->GetPixelContainer();
 
-  using ImageLabelType = itk::Image<unsigned char, Self::SpaceDimension>;
   typename ImageLabelType::Pointer labels1 = this->m_MultiBSplineTransformWithNormal->GetLabels();
   typename itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::Pointer filter =
     itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();
