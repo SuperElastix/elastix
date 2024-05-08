@@ -809,13 +809,15 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
       // Property A: G = G(0,0) * I_d.
       ScalarType g = gVector[lnd];
 
-      // Property C: First process the diagonal only
-      unsigned int lIdx = lnd * NDimensions;
-      ScalarType   linv = this->m_LMatrixInverse[lIdx][lIdx];
-      // Property B: only access non-zero values
-      for (unsigned int dim = 0; dim < NDimensions; ++dim)
       {
-        jac[dim][lIdx + dim] += g * linv;
+        // Property C: First process the diagonal only
+        unsigned int lIdx = lnd * NDimensions;
+        ScalarType   linv = this->m_LMatrixInverse[lIdx][lIdx];
+        // Property B: only access non-zero values
+        for (unsigned int dim = 0; dim < NDimensions; ++dim)
+        {
+          jac[dim][lIdx + dim] += g * linv;
+        }
       }
 
       // Property C: Then process right of diagonal
