@@ -83,6 +83,7 @@ if (MSVC)
   add_compile_options(/W3)
 else()
   add_compile_options(
+    -Woverloaded-virtual
     -Wshadow
     )
 endif()
