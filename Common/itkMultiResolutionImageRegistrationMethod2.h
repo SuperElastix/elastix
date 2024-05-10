@@ -233,8 +233,8 @@ public:
   /** Make a DataObject of the correct type to be used as the specified
    * output.
    */
-  virtual DataObjectPointer
-  MakeOutput(unsigned int idx);
+  DataObjectPointer
+  MakeOutput(ProcessObject::DataObjectPointerArraySizeType idx) override;
 
   /** Method to return the latest modified time of this object or
    * any of its cached ivars.

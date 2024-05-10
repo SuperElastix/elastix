@@ -49,7 +49,8 @@ VectorContainerSource<TOutputVectorContainer>::VectorContainerSource()
 
 template <class TOutputVectorContainer>
 auto
-VectorContainerSource<TOutputVectorContainer>::MakeOutput(unsigned int itkNotUsed(idx)) -> DataObjectPointer
+VectorContainerSource<TOutputVectorContainer>::MakeOutput(ProcessObject::DataObjectPointerArraySizeType itkNotUsed(idx))
+  -> DataObjectPointer
 {
   return static_cast<DataObject *>(TOutputVectorContainer::New().GetPointer());
 } // end MakeOutput()

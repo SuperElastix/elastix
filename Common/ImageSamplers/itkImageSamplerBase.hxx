@@ -420,7 +420,7 @@ ImageSamplerBase<TInputImage>::ImageSamplerBase()
 
 template <class TInputImage>
 DataObject::Pointer
-ImageSamplerBase<TInputImage>::MakeOutput(unsigned int itkNotUsed(idx))
+ImageSamplerBase<TInputImage>::MakeOutput(ProcessObject::DataObjectPointerArraySizeType itkNotUsed(idx))
 {
   OutputVectorContainerPointer outputVectorContainer = OutputVectorContainerType::New();
   return outputVectorContainer.GetPointer();
