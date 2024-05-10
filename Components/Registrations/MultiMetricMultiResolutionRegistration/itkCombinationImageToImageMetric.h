@@ -255,7 +255,15 @@ public:
   virtual const TransformType *
   GetTransform(unsigned int pos) const;
 
-  /** Return Transform 0 */
+  /** Get the first transform. */
+  TransformType *
+  GetTransform() override
+  {
+    const auto metric = dynamic_cast<ImageMetricType *>(this->GetMetric(0));
+    return metric ? metric->GetTransform() : nullptr;
+  }
+
+  /** Get the first transform. Const overload. */
   const TransformType *
   GetTransform() const override
   {
@@ -277,7 +285,15 @@ public:
   virtual const InterpolatorType *
   GetInterpolator(unsigned int pos) const;
 
-  /** Return Interpolator 0 */
+  /** Get the first interpolator. */
+  InterpolatorType *
+  GetInterpolator() override
+  {
+    const auto metric = dynamic_cast<ImageMetricType *>(this->GetMetric(0));
+    return metric ? metric->GetInterpolator() : nullptr;
+  }
+
+  /** Get the first interpolator. Const overload. */
   const InterpolatorType *
   GetInterpolator() const override
   {

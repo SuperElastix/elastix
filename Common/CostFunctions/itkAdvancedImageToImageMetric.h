@@ -218,6 +218,13 @@ public:
 
 
   /** Get the advanced transform. */
+  AdvancedTransformType *
+  GetTransform() override
+  {
+    return m_AdvancedTransform.GetPointer();
+  }
+
+  /** Get the advanced transform. Const overload. */
   const AdvancedTransformType *
   GetTransform() const override
   {
