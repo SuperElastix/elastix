@@ -89,7 +89,7 @@ public:
 
   /** Create a valid output. */
   DataObject::Pointer
-  MakeOutput(unsigned int idx) override;
+  MakeOutput(ProcessObject::DataObjectPointerArraySizeType idx) override;
 
   /** Set the input image of this process object.  */
   void

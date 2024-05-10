@@ -68,8 +68,8 @@ public:
   GraftNthOutput(unsigned int idx, DataObject * output);
 
   /** Make a DataObject of the correct type to used as the specified output. */
-  virtual DataObjectPointer
-  MakeOutput(unsigned int idx);
+  DataObjectPointer
+  MakeOutput(ProcessObject::DataObjectPointerArraySizeType idx) override;
 
 protected:
   /** The constructor. */
