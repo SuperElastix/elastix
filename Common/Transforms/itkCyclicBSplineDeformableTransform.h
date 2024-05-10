@@ -134,6 +134,10 @@ protected:
               const RegionType & inRegion,
               RegionType &       outRegion1,
               RegionType &       outRegion2) const;
+
+private:
+  // Private using-declaration, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using Superclass::GetJacobian;
 };
 
 } // namespace itk
