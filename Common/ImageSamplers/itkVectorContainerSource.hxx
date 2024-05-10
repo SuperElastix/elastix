@@ -30,12 +30,8 @@ namespace itk
 template <class TOutputVectorContainer>
 VectorContainerSource<TOutputVectorContainer>::VectorContainerSource()
 {
-  // Create the output. We use static_cast<> here because we know the default
-  // output must be of type TOutputVectorContainer
-  OutputVectorContainerPointer output = static_cast<TOutputVectorContainer *>(this->MakeOutput(0).GetPointer());
-
   this->ProcessObject::SetNumberOfRequiredOutputs(1);
-  this->ProcessObject::SetNthOutput(0, output.GetPointer());
+  this->ProcessObject::SetNthOutput(0, TOutputVectorContainer::New().GetPointer());
 
   this->m_GenerateDataRegion = 0;
   this->m_GenerateDataNumberOfRegions = 0;

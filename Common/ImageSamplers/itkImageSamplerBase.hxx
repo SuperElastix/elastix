@@ -405,11 +405,8 @@ template <class TInputImage>
 ImageSamplerBase<TInputImage>::ImageSamplerBase()
 {
   this->ProcessObject::SetNumberOfRequiredInputs(1);
-
-  OutputVectorContainerPointer output = dynamic_cast<OutputVectorContainerType *>(this->MakeOutput(0).GetPointer());
-
   this->ProcessObject::SetNumberOfRequiredOutputs(1);
-  this->ProcessObject::SetNthOutput(0, output.GetPointer());
+  this->ProcessObject::SetNthOutput(0, OutputVectorContainerType::New().GetPointer());
 
 } // end Constructor
 
