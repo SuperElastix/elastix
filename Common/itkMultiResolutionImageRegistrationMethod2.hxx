@@ -79,9 +79,7 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::MultiResolut
   this->m_InitialTransformParametersOfNextLevel.Fill(0.0f);
   this->m_LastTransformParameters.Fill(0.0f);
 
-  TransformOutputPointer transformDecorator = static_cast<TransformOutputType *>(this->MakeOutput(0).GetPointer());
-
-  this->ProcessObject::SetNthOutput(0, transformDecorator.GetPointer());
+  this->ProcessObject::SetNthOutput(0, TransformOutputType::New().GetPointer());
 
 } // end Constructor
 
