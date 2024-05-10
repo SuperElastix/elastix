@@ -291,6 +291,13 @@ public:
 
   /** Get the first interpolator. */
   InterpolatorType *
+  GetInterpolator() override
+  {
+    return this->GetInterpolator(0);
+  }
+
+  /** Get the first interpolator. Const overload. */
+  const InterpolatorType *
   GetInterpolator() const override
   {
     return this->GetInterpolator(0);
