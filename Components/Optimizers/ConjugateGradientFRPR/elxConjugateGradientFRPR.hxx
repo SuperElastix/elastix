@@ -285,18 +285,9 @@ template <class TElastix>
 void
 ConjugateGradientFRPR<TElastix>::GetValueAndDerivative(ParametersType p, double * val, ParametersType * xi)
 {
-  /** This implementation forces the metric to select new samples
-   * (if the user asked for this), calls the Superclass'
-   * implementation and caches the computed derivative. */
-
-  /** Select new spatial samples for the computation of the metric */
-  if (this->GetNewSamplesEveryIteration())
-  {
-    this->SelectNewSamples();
-  }
-
-  this->Superclass1::GetValueAndDerivative(p, val, xi);
-  this->m_CurrentDerivativeMagnitude = xi->magnitude();
+  struct Exception
+  {};
+  throw Exception{};
 
 } // end GetValueAndDerivative
 

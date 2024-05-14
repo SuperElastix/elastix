@@ -160,6 +160,7 @@ protected:
   itkSetMacro(LineOptimizing, bool);
   itkSetMacro(LineBracketing, bool);
 
+private:
   /** Get the value of the n-dimensional cost function at this scalar step
    * distance along the current line direction from the current line origin.
    * Line origin and distances are set via SetLine.
@@ -170,6 +171,7 @@ protected:
   virtual void
   GetValueAndDerivative(ParametersType p, double * val, ParametersType * xi);
 
+protected:
   /** The LineBracket routine from NRC. Uses current origin and line direction
    * (from SetLine) to find a triple of points (ax, bx, cx) that bracket the
    * extreme "near" the origin.  Search first considers the point StepLength
