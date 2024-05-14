@@ -167,8 +167,8 @@ protected:
    * This implementation calls the Superclass' implementation and caches
    * the computed derivative's magnitude. Besides, it invokes the
    * SelectNewSamples method. */
-  virtual void
-  GetValueAndDerivative(ParametersType p, double * val, ParametersType * xi);
+  void
+  GetValueAndDerivative(ParametersType & p, double * val, ParametersType * xi) override;
 
   /** The LineBracket routine from NRC. Uses current origin and line direction
    * (from SetLine) to find a triple of points (ax, bx, cx) that bracket the
@@ -206,8 +206,8 @@ protected:
    * store the line search direction's (xi) magnitude and call the superclass'
    * implementation.
    */
-  virtual void
-  LineOptimize(ParametersType * p, ParametersType xi, double * val);
+  void
+  LineOptimize(ParametersType * p, ParametersType & xi, double * val) override;
 
 private:
   elxOverrideGetSelfMacro;
