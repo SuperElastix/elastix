@@ -234,11 +234,6 @@ public:
   virtual FixedImagePyramidType *
   GetFixedImagePyramid(unsigned int pos) const;
 
-  FixedImagePyramidType *
-  GetFixedImagePyramid() override
-  {
-    return this->GetFixedImagePyramid(0);
-  }
   elxOverrideSimpleSetMacro(FixedImagePyramid, FixedImagePyramidType *);
   itkSetNumberOfMacro(FixedImagePyramid);
   itkGetNumberOfMacro(FixedImagePyramid);
@@ -250,11 +245,6 @@ public:
   virtual MovingImagePyramidType *
   GetMovingImagePyramid(unsigned int pos) const;
 
-  MovingImagePyramidType *
-  GetMovingImagePyramid() override
-  {
-    return this->GetMovingImagePyramid(0);
-  }
   elxOverrideSimpleSetMacro(MovingImagePyramid, MovingImagePyramidType *);
   itkSetNumberOfMacro(MovingImagePyramid);
   itkGetNumberOfMacro(MovingImagePyramid);
@@ -336,6 +326,43 @@ protected:
 
   /** Dummy image region. */
   FixedImageRegionType m_NullFixedImageRegion{};
+
+private:
+  FixedImagePyramidType *
+  GetFixedImagePyramid() override
+  {
+    itkExceptionMacro("Please call GetFixedImagePyramid(0) instead!");
+  }
+
+  const FixedImagePyramidType *
+  GetFixedImagePyramid() const override
+  {
+    itkExceptionMacro("Please call GetFixedImagePyramid(0) instead!");
+  }
+
+  FixedImagePyramidType *
+  GetModifiableFixedImagePyramid() override
+  {
+    itkExceptionMacro("Please call GetFixedImagePyramid(0) instead!");
+  }
+
+  MovingImagePyramidType *
+  GetMovingImagePyramid() override
+  {
+    itkExceptionMacro("Please call GetMovingImagePyramid(0) instead!");
+  }
+
+  const MovingImagePyramidType *
+  GetMovingImagePyramid() const override
+  {
+    itkExceptionMacro("Please call GetMovingImagePyramid(0) instead!");
+  }
+
+  MovingImagePyramidType *
+  GetModifiableMovingImagePyramid() override
+  {
+    itkExceptionMacro("Please call GetMovingImagePyramid(0) instead!");
+  }
 };
 
 } // end namespace itk

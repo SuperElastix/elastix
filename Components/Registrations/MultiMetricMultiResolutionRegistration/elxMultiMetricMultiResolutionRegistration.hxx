@@ -389,7 +389,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int 
      * --> we can use one mask for all metrics! (or no mask at all).
      */
     FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
-      this->GetElastix()->GetFixedMask(), useMaskErosion, this->GetFixedImagePyramid(), level);
+      this->GetElastix()->GetFixedMask(), useMaskErosion, this->GetFixedImagePyramid(0), level);
     this->GetCombinationMetric()->SetFixedImageMask(fixedMask);
   }
   else if ((nrOfFixedImages == 1) && (nrOfFixedMasks == 1))
@@ -421,7 +421,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int 
       {
         useMask_i = useMaskErosionArray[i];
       }
-      FixedImagePyramidPointer pyramid_i = this->GetFixedImagePyramid(); // default value in case of only 1 pyramid
+      FixedImagePyramidPointer pyramid_i = this->GetFixedImagePyramid(0); // default value in case of only 1 pyramid
       if (i < nrOfFixedImagePyramids)
       {
         pyramid_i = this->GetFixedImagePyramid(i);
@@ -477,7 +477,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int
      * --> we can use one mask for all metrics! (or no mask at all).
      */
     MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
-      this->GetElastix()->GetMovingMask(), useMaskErosion, this->GetMovingImagePyramid(), level);
+      this->GetElastix()->GetMovingMask(), useMaskErosion, this->GetMovingImagePyramid(0), level);
     this->GetCombinationMetric()->SetMovingImageMask(movingMask);
   }
   else if ((nrOfMovingImages == 1) && (nrOfMovingMasks == 1))
@@ -509,7 +509,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int
       {
         useMask_i = useMaskErosionArray[i];
       }
-      MovingImagePyramidPointer pyramid_i = this->GetMovingImagePyramid(); // default value in case of only 1 pyramid
+      MovingImagePyramidPointer pyramid_i = this->GetMovingImagePyramid(0); // default value in case of only 1 pyramid
       if (i < nrOfMovingImagePyramids)
       {
         pyramid_i = this->GetMovingImagePyramid(i);

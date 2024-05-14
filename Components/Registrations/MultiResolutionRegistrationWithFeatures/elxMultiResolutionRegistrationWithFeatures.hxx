@@ -241,7 +241,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::UpdateFixedMasks(unsigned int
 
   /** Set the fixed image mask. Only one mask is assumed here. */
   FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
-    this->GetElastix()->GetFixedMask(), useMaskErosion, this->GetFixedImagePyramid(), level);
+    this->GetElastix()->GetFixedMask(), useMaskErosion, this->GetFixedImagePyramid(0), level);
   this->GetModifiableMultiInputMetric()->SetFixedImageMask(fixedMask);
 
   /** Stop timer and print the elapsed time. */
@@ -280,7 +280,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::UpdateMovingMasks(unsigned in
 
   /** Set the moving image mask. Only one mask is assumed here. */
   MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
-    this->GetElastix()->GetMovingMask(), useMaskErosion, this->GetMovingImagePyramid(), level);
+    this->GetElastix()->GetMovingMask(), useMaskErosion, this->GetMovingImagePyramid(0), level);
   this->GetModifiableMultiInputMetric()->SetMovingImageMask(movingMask);
 
   /** Stop timer and print the elapsed time. */

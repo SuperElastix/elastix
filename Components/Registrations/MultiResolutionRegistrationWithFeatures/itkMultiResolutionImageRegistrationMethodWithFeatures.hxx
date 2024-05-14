@@ -43,11 +43,11 @@ MultiResolutionImageRegistrationMethodWithFeatures<TFixedImage, TMovingImage>::C
   {
     itkExceptionMacro("MovingImage is not present");
   }
-  if (this->GetFixedImagePyramid() == nullptr)
+  if (this->GetFixedImagePyramid(0) == nullptr)
   {
     itkExceptionMacro("Fixed image pyramid is not present");
   }
-  if (this->GetMovingImagePyramid() == nullptr)
+  if (this->GetMovingImagePyramid(0) == nullptr)
   {
     itkExceptionMacro("Moving image pyramid is not present");
   }
