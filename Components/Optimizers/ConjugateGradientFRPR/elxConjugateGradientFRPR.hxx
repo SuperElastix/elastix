@@ -283,7 +283,7 @@ ConjugateGradientFRPR<TElastix>::SetInitialPosition(const ParametersType & param
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::GetValueAndDerivative(ParametersType p, double * val, ParametersType * xi)
+ConjugateGradientFRPR<TElastix>::GetValueAndDerivative(ParametersType & p, double * val, ParametersType * xi)
 {
   /** This implementation forces the metric to select new samples
    * (if the user asked for this), calls the Superclass'
@@ -361,7 +361,7 @@ ConjugateGradientFRPR<TElastix>::BracketedLineOptimize(double   ax,
  */
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::LineOptimize(ParametersType * p, ParametersType xi, double * val)
+ConjugateGradientFRPR<TElastix>::LineOptimize(ParametersType * p, ParametersType & xi, double * val)
 {
   this->m_CurrentSearchDirectionMagnitude = xi.magnitude();
   this->Superclass1::LineOptimize(p, xi, val);
