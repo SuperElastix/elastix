@@ -181,6 +181,13 @@ public:
   {
     return this->GetFixedImagePyramid(0);
   }
+
+  const FixedImagePyramidType *
+  GetFixedImagePyramid() const override
+  {
+    return this->GetFixedImagePyramid(0);
+  }
+
   elxOverrideSimpleSetMacro(FixedImagePyramid, FixedImagePyramidType *);
   itkSetNumberOfMacro(FixedImagePyramid);
   itkGetNumberOfMacro(FixedImagePyramid);
@@ -213,6 +220,13 @@ public:
   {
     return this->GetMovingImagePyramid(0);
   }
+
+  const MovingImagePyramidType *
+  GetMovingImagePyramid() const override
+  {
+    return this->GetMovingImagePyramid(0);
+  }
+
   elxOverrideSimpleSetMacro(MovingImagePyramid, MovingImagePyramidType *);
   itkSetNumberOfMacro(MovingImagePyramid);
   itkGetNumberOfMacro(MovingImagePyramid);
@@ -229,6 +243,13 @@ public:
   {
     return this->GetInterpolator(0);
   }
+
+  const InterpolatorType *
+  GetInterpolator() const override
+  {
+    return this->GetInterpolator(0);
+  }
+
   elxOverrideSimpleSetMacro(Interpolator, InterpolatorType *);
   itkSetNumberOfMacro(Interpolator);
   itkGetNumberOfMacro(Interpolator);
