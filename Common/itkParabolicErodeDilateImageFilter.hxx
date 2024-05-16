@@ -60,10 +60,10 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ParabolicE
 
 
 template <typename TInputImage, bool doDilate, typename TOutputImage>
-int
+unsigned int
 ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::SplitRequestedRegion(
-  int                     i,
-  int                     num,
+  unsigned int            i,
+  unsigned int            num,
   OutputImageRegionType & splitRegion)
 {
   // Get the output pointer
@@ -98,7 +98,7 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::SplitReque
   int                                            maxThreadIdUsed = (int)::ceil(range / (double)valuesPerThread) - 1;
 
   // Split the region
-  if (i < maxThreadIdUsed)
+  if (static_cast<intmax_t>(i) < maxThreadIdUsed)
   {
     splitIndex[splitAxis] += i * valuesPerThread;
     splitSize[splitAxis] = valuesPerThread;
