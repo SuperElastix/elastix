@@ -142,9 +142,6 @@ protected:
   void
   GenerateData() override;
 
-  int
-  SplitRequestedRegion(int i, int num, OutputImageRegionType & splitRegion);
-
   void
   ThreadedGenerateData(const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId) override;
 
@@ -156,6 +153,17 @@ protected:
   bool m_UseImageSpacing{};
 
 private:
+  int
+  SplitRequestedRegion(int i, int num, OutputImageRegionType & splitRegion);
+
+  unsigned int
+  SplitRequestedRegion(unsigned int i, unsigned int num, OutputImageRegionType & splitRegion) override
+  {
+    struct OverrideException
+    {};
+    throw OverrideException();
+  }
+
   RadiusType                      m_Scale{};
   typename TInputImage::PixelType m_Extreme{};
 
