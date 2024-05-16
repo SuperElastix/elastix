@@ -510,7 +510,6 @@ ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputReg
     if (splitAxis == 0)
     {
       // cannot split
-      assert(!"The region size must be greater than 1!");
       return { inputRegion };
     }
     --splitAxis;
