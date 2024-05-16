@@ -142,8 +142,8 @@ protected:
   void
   GenerateData() override;
 
-  int
-  SplitRequestedRegion(int i, int num, OutputImageRegionType & splitRegion);
+  unsigned int
+  SplitRequestedRegion(unsigned int i, unsigned int num, OutputImageRegionType & splitRegion) override;
 
   void
   ThreadedGenerateData(const OutputImageRegionType & outputRegionForThread, ThreadIdType threadId) override;
