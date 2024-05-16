@@ -61,62 +61,13 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ParabolicE
 
 template <typename TInputImage, bool doDilate, typename TOutputImage>
 int
-ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::SplitRequestedRegion(
-  int                     i,
-  int                     num,
-  OutputImageRegionType & splitRegion)
+ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::SplitRequestedRegion(int,
+                                                                                           int,
+                                                                                           OutputImageRegionType &)
 {
-  // Get the output pointer
-  OutputImageType *                       outputPtr = this->GetOutput();
-  const typename TOutputImage::SizeType & requestedRegionSize = outputPtr->GetRequestedRegion().GetSize();
-
-  int                              splitAxis;
-  typename TOutputImage::IndexType splitIndex;
-  typename TOutputImage::SizeType  splitSize;
-
-  // Initialize the splitRegion to the output requested region
-  splitRegion = outputPtr->GetRequestedRegion();
-  splitIndex = splitRegion.GetIndex();
-  splitSize = splitRegion.GetSize();
-
-  // split on the outermost dimension available
-  // and avoid the current dimension
-  splitAxis = outputPtr->GetImageDimension() - 1;
-  while (requestedRegionSize[splitAxis] == 1 || splitAxis == (int)m_CurrentDimension)
-  {
-    --splitAxis;
-    if (splitAxis < 0)
-    { // cannot split
-      itkDebugMacro("  Cannot Split");
-      return 1;
-    }
-  }
-
-  // determine the actual number of pieces that will be generated
-  typename TOutputImage::SizeType::SizeValueType range = requestedRegionSize[splitAxis];
-  int                                            valuesPerThread = (int)::ceil(range / (double)num);
-  int                                            maxThreadIdUsed = (int)::ceil(range / (double)valuesPerThread) - 1;
-
-  // Split the region
-  if (i < maxThreadIdUsed)
-  {
-    splitIndex[splitAxis] += i * valuesPerThread;
-    splitSize[splitAxis] = valuesPerThread;
-  }
-  if (i == maxThreadIdUsed)
-  {
-    splitIndex[splitAxis] += i * valuesPerThread;
-    // last thread needs to process the "rest" dimension being split
-    splitSize[splitAxis] = splitSize[splitAxis] - i * valuesPerThread;
-  }
-
-  // set the split region ivars
-  splitRegion.SetIndex(splitIndex);
-  splitRegion.SetSize(splitSize);
-
-  itkDebugMacro("  Split Piece: " << splitRegion);
-
-  return maxThreadIdUsed + 1;
+  class UnusedSplitRequestedRegion
+  {};
+  throw UnusedSplitRequestedRegion();
 }
 
 
