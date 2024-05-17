@@ -432,6 +432,10 @@ protected:
   JacobianOfSpatialHessianType  m_JacobianOfSpatialHessian{};
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using Superclass::TransformCovariantVector;
+  using Superclass::TransformVector;
+
   AdvancedMatrixOffsetTransformBase(const Self & other);
   const Self &
   operator=(const Self &);

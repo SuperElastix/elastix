@@ -281,6 +281,9 @@ protected:
   bool           m_Stop{};
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using ProcessObject::MakeOutput;
+
   /** Member variables. */
   MetricPointer          m_Metric{};
   OptimizerType::Pointer m_Optimizer{};

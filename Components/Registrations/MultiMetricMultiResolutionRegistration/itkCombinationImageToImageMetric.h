@@ -471,6 +471,7 @@ private:
   // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
   using Superclass::SetFixedImageMask;
   using Superclass::SetMovingImageMask;
+  using Superclass::SetTransform;
 
   /** Initialize some multi-threading related parameters.
    * Overrides function in AdvancedImageToImageMetric, because

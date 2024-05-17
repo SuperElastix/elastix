@@ -327,6 +327,10 @@ protected:
   ~AdvancedIdentityTransform() override = default;
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using Superclass::TransformVector;
+  using Superclass::TransformCovariantVector;
+
   JacobianType                  m_LocalJacobian{};
   SpatialJacobianType           m_SpatialJacobian{};
   SpatialHessianType            m_SpatialHessian{};

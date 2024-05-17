@@ -257,6 +257,11 @@ protected:
   DeformationFieldPointer             m_DeformationField{};
   DeformationFieldPointer             m_ZeroDeformationField{};
   DeformationFieldInterpolatorPointer m_DeformationFieldInterpolator{};
+
+private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using Superclass::TransformCovariantVector;
+  using Superclass::TransformVector;
 };
 
 } // namespace itk
