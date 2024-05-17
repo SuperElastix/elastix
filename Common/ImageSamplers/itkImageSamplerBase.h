@@ -254,6 +254,10 @@ protected:
   bool m_UseMultiThread{ true };
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using ProcessObject::MakeOutput;
+  using ProcessObject::SetInput;
+
   /** Member variables. */
   MaskConstPointer           m_Mask{ nullptr };
   MaskVectorType             m_MaskVector{};
