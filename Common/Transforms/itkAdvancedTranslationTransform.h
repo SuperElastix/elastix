@@ -251,6 +251,10 @@ protected:
   PrintSelf(std::ostream & os, Indent indent) const override;
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using Superclass::TransformCovariantVector;
+  using Superclass::TransformVector;
+
   OutputVectorType m_Offset{}; // Offset of the transformation
 
   // The Jacobian of this transform is constant. Therefore it can be shared among all the threads.

@@ -546,6 +546,10 @@ protected:
                                                 NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const;
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using Superclass::TransformCovariantVector;
+  using Superclass::TransformVector;
+
   /** Exception text. */
   static constexpr const char * NoCurrentTransformSet = "No current transform set in the AdvancedCombinationTransform";
 

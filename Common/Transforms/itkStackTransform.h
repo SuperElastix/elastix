@@ -304,6 +304,10 @@ protected:
   }
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using Superclass::TransformCovariantVector;
+  using Superclass::TransformVector;
+
   /** Each override of this pure virtual member function should create a subtransform for the specific (derived) stack
    * transform type. For example, for an `TranslationStackTransform` it should create an `AdvancedTranslationTransform`,
    * and for an `EulerStackTransform` it should create an `EulerTransform`. */

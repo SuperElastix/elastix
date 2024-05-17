@@ -502,6 +502,10 @@ protected:
   ImageBasePointer                             m_LocalBases{};
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
+  using Superclass::TransformCovariantVector;
+  using Superclass::TransformVector;
+
   /** The number of weights. */
   static constexpr unsigned NumberOfWeights = TransformType::NumberOfWeights;
 
