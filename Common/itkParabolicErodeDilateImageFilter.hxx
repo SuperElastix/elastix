@@ -42,6 +42,8 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ParabolicE
   this->SetNumberOfRequiredInputs(1);
   // needs to be selected according to erosion/dilation
 
+  static_assert(!doDilate, "In practice, we assume that `doDilate` is always false!");
+
   if (doDilate)
   {
     m_Extreme = NumericTraits<PixelType>::min();

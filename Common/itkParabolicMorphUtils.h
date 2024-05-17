@@ -27,6 +27,8 @@ template <class LineBufferType, class RealType, bool doDilate>
 void
 DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType magnitude, const RealType m_Extreme)
 {
+  static_assert(!doDilate, "In practice, we assume that `doDilate` is always false!");
+
   // contact point algorithm
   long koffset = 0, newcontact = 0; // how far away the search starts.
 
@@ -83,6 +85,8 @@ doOneDimension(TInIter &          inputIterator,
                const RealType     image_scale,
                const RealType     Sigma)
 {
+  static_assert(!doDilate, "In practice, we assume that `doDilate` is always false!");
+
   //  using LineBufferType = typename std::vector<RealType>;
 
   // message from M.Starring suggested performance gain using Array
