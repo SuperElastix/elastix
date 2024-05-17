@@ -279,7 +279,8 @@ GTEST_TEST(ElastixLib, SingleSliceMaskedTranslation3D)
   static constexpr auto ImageDimension = 3;
   using ImageType = itk::Image<float, ImageDimension>;
 
-  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+  const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ErodeMask", "false" },
+                                                                 { "ImageSampler", "Full" },
                                                                  { "MaximumNumberOfIterations", "3" },
                                                                  { "Metric", "AdvancedNormalizedCorrelation" },
                                                                  { "Optimizer", "AdaptiveStochasticGradientDescent" },
