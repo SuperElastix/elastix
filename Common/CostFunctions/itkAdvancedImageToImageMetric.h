@@ -600,6 +600,10 @@ private:
 
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales{ MovingImageDerivativeScalesType::Filled(1.0) };
 
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using Superclass::SetTransform;
+  using Superclass::TransformPoint;
+
   // Prevent accidentally calling SetFixedImageMask or SetMovingImageMask through the ITK ImageToImageMetric interface.
   void
   SetFixedImageMask(typename Superclass::FixedImageMaskType *) final

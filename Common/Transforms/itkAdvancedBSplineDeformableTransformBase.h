@@ -361,6 +361,10 @@ protected:
 private:
   const unsigned m_SplineOrder{};
 
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using Superclass::TransformVector;
+  using Superclass::TransformCovariantVector;
+
 protected:
   /** Array of images representing the B-spline coefficients
    *  in each dimension.
