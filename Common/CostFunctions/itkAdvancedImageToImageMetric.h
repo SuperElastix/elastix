@@ -574,6 +574,31 @@ protected:
   double m_FixedLimitRangeRatio{ 0.01 };
   double m_MovingLimitRangeRatio{ 0.01 };
 
+  // Prevent accidentally calling SetFixedImageMask or SetMovingImageMask through the ITK ImageToImageMetric interface.
+  void
+  SetFixedImageMask(typename Superclass::FixedImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
+  void
+  SetFixedImageMask(const typename Superclass::FixedImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
+  void
+  SetMovingImageMask(typename Superclass::MovingImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
+  void
+  SetMovingImageMask(const typename Superclass::MovingImageMaskType *) final
+  {
+    itkExceptionMacro("Intentionally left unimplemented!");
+  }
+
 private:
   template <typename... TOptionalThreadId>
   bool
@@ -603,32 +628,6 @@ private:
   // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
   using Superclass::SetTransform;
   using Superclass::TransformPoint;
-
-  // Prevent accidentally calling SetFixedImageMask or SetMovingImageMask through the ITK ImageToImageMetric interface.
-  void
-  SetFixedImageMask(typename Superclass::FixedImageMaskType *) final
-  {
-    itkExceptionMacro("Intentionally left unimplemented!");
-  }
-
-  void
-  SetFixedImageMask(const typename Superclass::FixedImageMaskType *) final
-  {
-    itkExceptionMacro("Intentionally left unimplemented!");
-  }
-
-  void
-  SetMovingImageMask(typename Superclass::MovingImageMaskType *) final
-  {
-    itkExceptionMacro("Intentionally left unimplemented!");
-  }
-
-  void
-  SetMovingImageMask(const typename Superclass::MovingImageMaskType *) final
-  {
-    itkExceptionMacro("Intentionally left unimplemented!");
-  }
-
 
   struct DummyMask
   {};

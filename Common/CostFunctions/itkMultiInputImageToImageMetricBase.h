@@ -399,6 +399,10 @@ protected:
   BSplineInterpolatorVectorType m_BSplineInterpolatorVector{};
 
 private:
+  // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using Superclass::SetFixedImageMask;
+  using Superclass::SetMovingImageMask;
+
   /// Avoids accidentally calling `this->FastEvaluateMovingImageValueAndDerivative(mappedPoint, ..., threadId)`, when
   /// `*this` is derived from `MultiInputImageToImageMetricBase`. (The non-virtual member function
   /// `AdvancedImageToImageMetric::FastEvaluateMovingImageValueAndDerivative` does not entirely replace the
