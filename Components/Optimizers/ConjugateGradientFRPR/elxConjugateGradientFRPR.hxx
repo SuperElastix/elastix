@@ -307,19 +307,20 @@ ConjugateGradientFRPR<TElastix>::GetValueAndDerivative(ParametersType & p, doubl
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::LineBracket(double * ax,
-                                             double * bx,
-                                             double * cx,
-                                             double * fa,
-                                             double * fb,
-                                             double * fc)
+ConjugateGradientFRPR<TElastix>::LineBracket(double *         ax,
+                                             double *         bx,
+                                             double *         cx,
+                                             double *         fa,
+                                             double *         fb,
+                                             double *         fc,
+                                             ParametersType & tempCoord)
 {
   /** This implementation sets the LineBracketing flag to 'true', calls the
    * superclass' implementation, remembers the current step length (bx), invokes
    * an iteration event, and sets the LineBracketing flag to 'false' */
 
   this->SetLineBracketing(true);
-  this->Superclass1::LineBracket(ax, bx, cx, fa, fb, fc);
+  this->Superclass1::LineBracket(ax, bx, cx, fa, fb, fc, tempCoord);
   this->m_CurrentStepLength = *bx;
   this->InvokeEvent(itk::IterationEvent());
   this->SetLineBracketing(false);
@@ -333,21 +334,22 @@ ConjugateGradientFRPR<TElastix>::LineBracket(double * ax,
 
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::BracketedLineOptimize(double   ax,
-                                                       double   bx,
-                                                       double   cx,
-                                                       double   fa,
-                                                       double   fb,
-                                                       double   fc,
-                                                       double * extX,
-                                                       double * extVal)
+ConjugateGradientFRPR<TElastix>::BracketedLineOptimize(double           ax,
+                                                       double           bx,
+                                                       double           cx,
+                                                       double           fa,
+                                                       double           fb,
+                                                       double           fc,
+                                                       double *         extX,
+                                                       double *         extVal,
+                                                       ParametersType & tempCoord)
 {
   /** This implementation sets the LineOptimizing flag to 'true', calls the
    * the superclass's implementation, remembers the resulting step length,
    * and sets the LineOptimizing flag to 'false' again. */
 
   this->SetLineOptimizing(true);
-  this->Superclass1::BracketedLineOptimize(ax, bx, cx, fa, fb, fc, extX, extVal);
+  this->Superclass1::BracketedLineOptimize(ax, bx, cx, fa, fb, fc, extX, extVal, tempCoord);
   this->m_CurrentStepLength = *extX;
   this->SetLineOptimizing(false);
 
@@ -361,10 +363,13 @@ ConjugateGradientFRPR<TElastix>::BracketedLineOptimize(double   ax,
  */
 template <class TElastix>
 void
-ConjugateGradientFRPR<TElastix>::LineOptimize(ParametersType * p, ParametersType & xi, double * val)
+ConjugateGradientFRPR<TElastix>::LineOptimize(ParametersType * p,
+                                              ParametersType & xi,
+                                              double *         val,
+                                              ParametersType & tempCoord)
 {
   this->m_CurrentSearchDirectionMagnitude = xi.magnitude();
-  this->Superclass1::LineOptimize(p, xi, val);
+  this->Superclass1::LineOptimize(p, xi, val, tempCoord);
 } // end LineOptimize
 
 

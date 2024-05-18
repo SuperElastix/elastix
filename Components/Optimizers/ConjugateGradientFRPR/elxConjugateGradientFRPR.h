@@ -181,7 +181,8 @@ protected:
    * superclass' implementation, stores bx as the current step length,
    * invokes an iteration event, and sets the LineBracketing flag to 'false' */
   void
-  LineBracket(double * ax, double * bx, double * cx, double * fa, double * fb, double * fc) override;
+  LineBracket(double * ax, double * bx, double * cx, double * fa, double * fb, double * fc, ParametersType & tempCoord)
+    override;
 
   /** Given a bracketing triple of points and their function values, returns
    * a bounded extreme.  These values are in parameter space, along the
@@ -193,21 +194,22 @@ protected:
    * the superclass's implementation, stores extX as the current step length,
    * and sets the LineOptimizing flag to 'false' again. */
   void
-  BracketedLineOptimize(double   ax,
-                        double   bx,
-                        double   cx,
-                        double   fa,
-                        double   fb,
-                        double   fc,
-                        double * extX,
-                        double * extVal) override;
+  BracketedLineOptimize(double           ax,
+                        double           bx,
+                        double           cx,
+                        double           fa,
+                        double           fb,
+                        double           fc,
+                        double *         extX,
+                        double *         extVal,
+                        ParametersType & tempCoord) override;
 
   /**
    * store the line search direction's (xi) magnitude and call the superclass'
    * implementation.
    */
   void
-  LineOptimize(ParametersType * p, ParametersType & xi, double * val) override;
+  LineOptimize(ParametersType * p, ParametersType & xi, double * val, ParametersType & tempCoord) override;
 
 private:
   elxOverrideGetSelfMacro;
@@ -217,6 +219,12 @@ private:
 
   const char *
   DeterminePhase() const;
+
+  // Private using-declarations, to avoid accidentally calling the wrong overload of those member functions, and to
+  // avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using itk::PowellOptimizer::LineBracket;
+  using itk::PowellOptimizer::BracketedLineOptimize;
+  using itk::FRPROptimizer::LineOptimize;
 };
 
 } // end namespace elastix
