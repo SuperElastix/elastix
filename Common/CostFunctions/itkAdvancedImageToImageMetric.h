@@ -606,6 +606,9 @@ protected:
     itkExceptionMacro("Intentionally left unimplemented!");
   }
 
+  // Protected using-declaration, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
+  using Superclass::SetTransform;
+
 private:
   template <typename... TOptionalThreadId>
   bool
@@ -633,7 +636,6 @@ private:
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales{ MovingImageDerivativeScalesType::Filled(1.0) };
 
   // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
-  using Superclass::SetTransform;
   using Superclass::TransformPoint;
 
   struct DummyMask
