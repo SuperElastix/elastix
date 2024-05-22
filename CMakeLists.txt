@@ -85,6 +85,7 @@ else()
   add_compile_options(
     -Woverloaded-virtual
     -Wshadow
+    -Wunused-parameter
     )
 endif()
 
