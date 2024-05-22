@@ -157,9 +157,7 @@ private:
 
   /** Method to compute both the value and the derivative. Generic. */
   void
-  EvaluateValueAndDerivativeUnOptimized(const ContinuousIndexType & x,
-                                        OutputType &                value,
-                                        CovariantVectorType &       deriv) const
+  EvaluateValueAndDerivativeUnOptimized(const ContinuousIndexType &, OutputType &, CovariantVectorType &) const
   {
     itkExceptionMacro("ERROR: EvaluateValueAndDerivativeAtContinuousIndex() is not implemented for this dimension ("
                       << ImageDimension << ").");

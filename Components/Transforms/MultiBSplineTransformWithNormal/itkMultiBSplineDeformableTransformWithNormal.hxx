@@ -865,9 +865,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
-  const InputPointType &          inputPoint,
-  JacobianOfSpatialJacobianType & jsj,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
+  const InputPointType &,
+  JacobianOfSpatialJacobianType &,
+  NonZeroJacobianIndicesType &) const
 {
   itkExceptionMacro("ERROR: GetJacobianOfSpatialJacobian() not yet implemented in the "
                     "MultiBSplineDeformableTransformWithNormal class.");

@@ -89,7 +89,7 @@ public:
 
   /** Set the fixed parameters. Not implemented for this transform. */
   void
-  SetFixedParameters(const ParametersType & fixedParameters) override
+  SetFixedParameters(const ParametersType &) override
   {
     itkExceptionMacro(<< unimplementedOverrideMessage);
   }
