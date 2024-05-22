@@ -677,8 +677,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointNoInitialT
 
 template <typename TScalarType, unsigned int NDimensions>
 auto
-AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointNoCurrentTransform(
-  const InputPointType & point) const -> OutputPointType
+AdvancedCombinationTransform<TScalarType, NDimensions>::TransformPointNoCurrentTransform(const InputPointType &) const
+  -> OutputPointType
 {
   /** Throw an exception. */
   itkExceptionMacro(<< NoCurrentTransformSet);
@@ -812,10 +812,10 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImag
 template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedCombinationTransform<TScalarType, NDimensions>::EvaluateJacobianWithImageGradientProductNoCurrentTransform(
-  const InputPointType &          inputPoint,
-  const MovingImageGradientType & movingImageGradient,
-  DerivativeType &                imageJacobian,
-  NonZeroJacobianIndicesType &    nonZeroJacobianIndices) const
+  const InputPointType &,
+  const MovingImageGradientType &,
+  DerivativeType &,
+  NonZeroJacobianIndicesType &) const
 {
   /** Throw an exception. */
   itkExceptionMacro(<< NoCurrentTransformSet);

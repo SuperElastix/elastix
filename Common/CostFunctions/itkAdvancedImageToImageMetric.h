@@ -388,13 +388,11 @@ protected:
   /** Multi-threaded metric computation. */
 
   /** Multi-threaded version of GetValue(). */
-  virtual void
-  ThreadedGetValue(ThreadIdType threadID) const
-  {}
+  virtual void ThreadedGetValue(ThreadIdType) const {}
 
   /** Finalize multi-threaded metric computation. */
   virtual void
-  AfterThreadedGetValue(MeasureType & value) const
+  AfterThreadedGetValue(MeasureType &) const
   {}
 
   /** GetValue threader callback function. */
@@ -406,13 +404,11 @@ protected:
   LaunchGetValueThreaderCallback() const;
 
   /** Multi-threaded version of GetValueAndDerivative(). */
-  virtual void
-  ThreadedGetValueAndDerivative(ThreadIdType threadID) const
-  {}
+  virtual void ThreadedGetValueAndDerivative(ThreadIdType) const {}
 
   /** Finalize multi-threaded metric computation. */
   virtual void
-  AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const
+  AfterThreadedGetValueAndDerivative(MeasureType &, DerivativeType &) const
   {}
 
   /** GetValueAndDerivative threader callback function. */

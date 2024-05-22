@@ -397,9 +397,9 @@ public:
   GetSpatialHessian(const InputPointType & inputPoint, SpatialHessianType & sh) const override;
 
   void
-  GetJacobianOfSpatialHessian(const InputPointType &         inputPoint,
-                              JacobianOfSpatialHessianType & jsh,
-                              NonZeroJacobianIndicesType &   nonZeroJacobianIndices) const override
+  GetJacobianOfSpatialHessian(const InputPointType &,
+                              JacobianOfSpatialHessianType &,
+                              NonZeroJacobianIndicesType &) const override
   {
     itkExceptionMacro("ERROR: GetJacobianOfSpatialHessian() not yet implemented in the "
                       "MultiBSplineDeformableTransformWithNormal class.");

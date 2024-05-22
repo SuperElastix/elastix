@@ -55,10 +55,10 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage,
 
 template <class TFixedImage, class TTransform>
 void
-ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Compute(const ParametersType & mu,
-                                                                                     double &               jacg,
-                                                                                     double &               maxJJ,
-                                                                                     std::string            methods)
+ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Compute(const ParametersType &,
+                                                                                     double &,
+                                                                                     double &,
+                                                                                     std::string)
 {
   itkExceptionMacro("ERROR: do not call");
 } // end Compute()
