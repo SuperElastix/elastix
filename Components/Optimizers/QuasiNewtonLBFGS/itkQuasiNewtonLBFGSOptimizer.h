@@ -139,7 +139,7 @@ protected:
 
   // \todo: should be implemented
   void
-  PrintSelf(std::ostream & os, Indent indent) const override
+  PrintSelf(std::ostream &, Indent) const override
   {}
 
   DerivativeType    m_CurrentGradient{};
