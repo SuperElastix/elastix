@@ -160,9 +160,7 @@ public:
                 const typename ImageType::ConstPointer image);
 
   unsigned int
-  ReadShape(const std::string &                    ShapeFileName,
-            typename PointSetType::Pointer &       pointSet,
-            const typename ImageType::ConstPointer image);
+  ReadShape(const std::string & ShapeFileName, typename PointSetType::Pointer & pointSet);
 
   /** Overwrite to silence warning. */
   void
