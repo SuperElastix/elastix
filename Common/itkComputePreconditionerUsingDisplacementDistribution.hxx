@@ -544,9 +544,8 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
 template <class TFixedImage, class TTransform>
 void
 ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::ComputeJacobiTypePreconditioner(
-  const ParametersType & mu,
-  double &               maxJJ,
-  ParametersType &       preconditioner)
+  double &         maxJJ,
+  ParametersType & preconditioner)
 {
   /** Initialize. */
   maxJJ = 0.0;

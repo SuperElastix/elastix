@@ -594,7 +594,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
 
   if( JacobiType )
   {
-    preconditionerEstimator->ComputeJacobiTypePreconditioner( this->GetScaledCurrentPosition(),
+    preconditionerEstimator->ComputeJacobiTypePreconditioner(
       maxJJ, this->m_PreconditionVector );
   }
   else
