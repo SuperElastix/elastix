@@ -130,7 +130,7 @@ public:
   GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
 protected:
-  AdvancedVersorRigid3DTransform(unsigned int outputSpaceDim, unsigned int paramDim);
+  explicit AdvancedVersorRigid3DTransform(unsigned int paramDim);
   AdvancedVersorRigid3DTransform(const MatrixType & matrix, const OutputVectorType & offset);
   AdvancedVersorRigid3DTransform();
   ~AdvancedVersorRigid3DTransform() override = default;

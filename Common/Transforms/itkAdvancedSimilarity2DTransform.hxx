@@ -42,7 +42,7 @@ namespace itk
 // Constructor with default arguments
 template <class TScalarType>
 AdvancedSimilarity2DTransform<TScalarType>::AdvancedSimilarity2DTransform()
-  : Superclass(OutputSpaceDimension, ParametersDimension)
+  : Superclass(ParametersDimension)
 {
   m_Scale = 1.0f;
   this->PrecomputeJacobianOfSpatialJacobian();

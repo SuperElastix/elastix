@@ -43,7 +43,7 @@ namespace itk
 // Constructor with default arguments
 template <class TScalarType>
 AdvancedSimilarity3DTransform<TScalarType>::AdvancedSimilarity3DTransform()
-  : Superclass(OutputSpaceDimension, ParametersDimension)
+  : Superclass(ParametersDimension)
 {
   m_Scale = 1.0;
   this->PrecomputeJacobianOfSpatialJacobian();
