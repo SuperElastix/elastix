@@ -69,10 +69,9 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   this->SetShapeModelCalculation(shapeModelCalculation);
 
   /** Read and set the fixed pointset. */
-  std::string                            fixedName = this->GetConfiguration()->GetCommandLineArgument("-fp");
-  typename PointSetType::Pointer         fixedPointSet; // default-constructed (null)
-  const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
-  const unsigned int                     nrOfFixedPoints = this->ReadShape(fixedName, fixedPointSet, fixedImage);
+  std::string                    fixedName = this->GetConfiguration()->GetCommandLineArgument("-fp");
+  typename PointSetType::Pointer fixedPointSet; // default-constructed (null)
+  const unsigned int             nrOfFixedPoints = this->ReadShape(fixedName, fixedPointSet);
   this->SetFixedPointSet(fixedPointSet);
 
   // itkCombinationImageToImageMetric.hxx checks if metric base class is ImageMetricType or PointSetMetricType.
@@ -348,9 +347,8 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
 
 template <class TElastix>
 unsigned int
-StatisticalShapePenalty<TElastix>::ReadShape(const std::string &                    ShapeFileName,
-                                             typename PointSetType::Pointer &       pointSet,
-                                             const typename ImageType::ConstPointer image)
+StatisticalShapePenalty<TElastix>::ReadShape(const std::string &              ShapeFileName,
+                                             typename PointSetType::Pointer & pointSet)
 {
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
   using DummyIPPPixelType = double;
