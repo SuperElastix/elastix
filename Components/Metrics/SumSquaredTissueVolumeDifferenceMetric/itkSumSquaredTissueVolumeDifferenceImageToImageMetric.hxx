@@ -765,25 +765,6 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::U
 
 
 /**
- * *************** EvaluateInverseSpatialJacobian **************************
- */
-
-template <class TFixedImage, class TMovingImage>
-bool
-SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::EvaluateInverseSpatialJacobian(
-  const SpatialJacobianType & spatialJacobian,
-  const RealType              spatialJacobianDeterminant,
-  SpatialJacobianType &       inverseSpatialJacobian) const
-{
-  inverseSpatialJacobian.Fill(0.0);
-  inverseSpatialJacobian = spatialJacobian.GetInverse();
-
-  return true;
-
-} // end EvaluateInverseSpatialJacobian()
-
-
-/**
  * ********** EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct ******
  */
 

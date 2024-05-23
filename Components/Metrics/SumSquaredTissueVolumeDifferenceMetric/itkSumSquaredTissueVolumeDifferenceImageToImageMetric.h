@@ -199,17 +199,6 @@ protected:
                                 MeasureType &                      measure,
                                 DerivativeType &                   deriv) const;
 
-  /** Compute the inverse SpatialJacobian to support calculation of the metric gradient.
-   * Note that this function does not calculate the true inverse, but instead calculates
-   * the inverse SpatialJacobian multiplied by the determinant of the SpatialJacobian, to
-   * avoid redundant use of the determinant.
-   * This function returns false if the SpatialJacobianDeterminant is zero.
-   */
-  bool
-  EvaluateInverseSpatialJacobian(const SpatialJacobianType & spatialJacobian,
-                                 const RealType              spatialJacobianDeterminant,
-                                 SpatialJacobianType &       inverseSpatialJacobian) const;
-
   /** Compute the dot product of the inverse SpatialJacobian with the
    * Jacobian of SpatialJacobian.  The results are stored in
    * jacobianOfSpatialJacobianDeterminant, which has a length equal to
