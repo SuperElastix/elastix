@@ -51,8 +51,7 @@ AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform()
 
 // Constructor with arguments
 template <class TScalarType>
-AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform(unsigned int spaceDimension,
-                                                                unsigned int parametersDimension)
+AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform(unsigned int parametersDimension)
   : Superclass(parametersDimension)
 {
   m_Angle = TScalarType{};

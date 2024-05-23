@@ -190,7 +190,7 @@ public:
 
 protected:
   AdvancedRigid2DTransform();
-  AdvancedRigid2DTransform(unsigned int outputSpaceDimension, unsigned int parametersDimension);
+  explicit AdvancedRigid2DTransform(unsigned int parametersDimension);
   ~AdvancedRigid2DTransform() override = default;
 
   /**

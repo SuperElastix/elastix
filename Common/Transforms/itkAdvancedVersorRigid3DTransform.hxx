@@ -46,8 +46,7 @@ AdvancedVersorRigid3DTransform<TScalarType>::AdvancedVersorRigid3DTransform()
 
 // Constructor with arguments
 template <class TScalarType>
-AdvancedVersorRigid3DTransform<TScalarType>::AdvancedVersorRigid3DTransform(unsigned int outputSpaceDim,
-                                                                            unsigned int paramDim)
+AdvancedVersorRigid3DTransform<TScalarType>::AdvancedVersorRigid3DTransform(unsigned int paramDim)
   : Superclass(paramDim)
 {}
 
