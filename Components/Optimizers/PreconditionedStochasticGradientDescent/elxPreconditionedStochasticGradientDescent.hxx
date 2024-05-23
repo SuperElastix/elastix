@@ -593,8 +593,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
 
   if (useJacobiType)
   {
-    preconditionerEstimator->ComputeJacobiTypePreconditioner(
-      this->GetScaledCurrentPosition(), maxJJ, this->m_PreconditionVector);
+    preconditionerEstimator->ComputeJacobiTypePreconditioner(maxJJ, this->m_PreconditionVector);
   }
   else
   {

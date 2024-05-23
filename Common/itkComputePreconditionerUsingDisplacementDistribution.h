@@ -103,8 +103,8 @@ public:
   virtual void
   Compute(const ParametersType & mu, double & maxJJ, ParametersType & preconditioner);
 
-  virtual void
-  ComputeJacobiTypePreconditioner(const ParametersType & mu, double & maxJJ, ParametersType & preconditioner);
+  void
+  ComputeJacobiTypePreconditioner(double & maxJJ, ParametersType & preconditioner);
 
   /** Interpolate the preconditioner, for the non-visited entries. */
   virtual void
