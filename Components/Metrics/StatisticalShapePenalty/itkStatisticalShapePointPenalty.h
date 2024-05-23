@@ -209,7 +209,6 @@ private:
   CalculateDerivative(DerivativeType &      derivative,
                       const MeasureType &   value,
                       const VnlVectorType & differenceVector,
-                      const VnlVectorType & centerrotated,
                       const VnlVectorType & eigrot,
                       const unsigned int    shapeLength) const;
 

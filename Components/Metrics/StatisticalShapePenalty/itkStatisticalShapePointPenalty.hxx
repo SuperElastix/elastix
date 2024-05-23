@@ -528,7 +528,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
 
   if (value != 0.0)
   {
-    this->CalculateDerivative(derivative, value, differenceVector, centerrotated, eigrot, shapeLength);
+    this->CalculateDerivative(derivative, value, differenceVector, eigrot, shapeLength);
   }
   else
   {
@@ -861,7 +861,6 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateDerivati
   DerivativeType &      derivative,
   const MeasureType &   value,
   const VnlVectorType & differenceVector,
-  const VnlVectorType & centerrotated,
   const VnlVectorType & eigrot,
   const unsigned int    shapeLength) const
 {
