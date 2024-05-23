@@ -62,10 +62,10 @@ SupportsFixedDimension()
 template <unsigned VDimension = minSupportedImageDimension>
 struct FixedImageDimensionSupport
 {
-  // Adds those dimensions from the specified `dimensionSequence` that are supported.
+  // Adds those dimensions from the specified sequence that are supported.
   template <std::size_t... VIndex>
   static constexpr auto
-  AddSupportedDimensions(std::index_sequence<VIndex...> dimensionSequence)
+  AddSupportedDimensions(std::index_sequence<VIndex...>)
   {
     using AddDimensionIfSupported = std::conditional_t<SupportsFixedDimension<VDimension>(),
                                                        std::index_sequence<VDimension, VIndex...>,
