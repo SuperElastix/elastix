@@ -92,12 +92,6 @@ public:
   Compute(const ParametersType & mu, double & jacg, double & maxJJ, std::string method) override;
 
   /** The main function that performs the computation.
-   * DO NOT USE.
-   */
-  virtual void
-  ComputeDistributionTermsUsingSearchDir(const ParametersType & mu, double & jacg, double & maxJJ, std::string methods);
-
-  /** The main function that performs the computation.
    * B-spline specific thing we tried. Can be removed later.
    */
   void

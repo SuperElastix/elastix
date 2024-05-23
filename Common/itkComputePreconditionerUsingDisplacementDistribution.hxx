@@ -65,22 +65,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
 
 
 /**
- * ************************* ComputeDistributionTermsUsingSearchDir ************************
- */
-
-template <class TFixedImage, class TTransform>
-void
-ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::ComputeDistributionTermsUsingSearchDir(
-  const ParametersType & mu,
-  double &               jacg,
-  double &               maxJJ,
-  std::string            methods)
-{
-  itkExceptionMacro("ERROR: do not call");
-} // end ComputeDistributionTermsUsingSearchDir()
-
-
-/**
  * ************************* ComputeForBSplineOnly ************************
  */
 
