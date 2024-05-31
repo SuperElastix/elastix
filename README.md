@@ -2,7 +2,9 @@
   <img src="https://github.com/SuperElastix/elastix/blob/main/dox/art/elastix_logo_full_small.bmp" alt="elastix logo" title="elastix" align="right" height="80" />
 </a>
 
-THE WEBSITE IS CURRENTLY DOWN, AND WE ARE WORKING ON A SOLUTION.
+# THE WEBSITE IS CURRENTLY DOWN, AND WE ARE WORKING ON A SOLUTION.
+## A zip file with the doxygen documentation can be found [here](https://www.dropbox.com/scl/fi/tftqwu03qdgiieniv6636/doxygen.zip?rlkey=b5qfkejaudnq7y8vmv78e1z60&st=jqssi2dg&dl=0).
+
 
 # elastix image registration toolbox #
 
