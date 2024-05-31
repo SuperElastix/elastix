@@ -2,6 +2,8 @@
   <img src="https://github.com/SuperElastix/elastix/blob/main/dox/art/elastix_logo_full_small.bmp" alt="elastix logo" title="elastix" align="right" height="80" />
 </a>
 
+THE WEBSITE IS CURRENTLY DOWN, AND WE ARE WORKING ON A SOLUTION.
+
 # elastix image registration toolbox #
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/SuperElastix/elastix/raw/main/LICENSE)
