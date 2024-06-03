@@ -368,8 +368,8 @@ public:
   static void
   TransformPoint(TScalar * const               opp,
                  const TScalar * const * const mu,
-                 const OffsetValueType * const gridOffsetTable,
-                 const double * const          weights1D)
+                 const OffsetValueType * const itkNotUsed(gridOffsetTable),
+                 const double * const          itkNotUsed(weights1D))
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -380,7 +380,7 @@ public:
 
   /** GetJacobian recursive implementation. */
   static void
-  GetJacobian(TScalar *& jacobians, const double * const weights1D, const double value)
+  GetJacobian(TScalar *& jacobians, const double * const itkNotUsed(weights1D), const double value)
   {
     unsigned long offset = 0;
     for (unsigned int j = 0; j < OutputDimension; ++j)
@@ -396,7 +396,7 @@ public:
   static void
   EvaluateJacobianWithImageGradientProduct(TScalar *&                      imageJacobian,
                                            const InternalFloatType * const movingImageGradient,
-                                           const double * const            weights1D,
+                                           const double * const            itkNotUsed(weights1D),
                                            const double                    value)
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
@@ -412,7 +412,7 @@ public:
   ComputeNonZeroJacobianIndices(unsigned long *&              nzji,
                                 const unsigned long           parametersPerDim,
                                 const unsigned long           currentIndex,
-                                const OffsetValueType * const gridOffsetTable)
+                                const OffsetValueType * const itkNotUsed(gridOffsetTable))
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -426,9 +426,9 @@ public:
   static void
   GetSpatialJacobian(InternalFloatType * const     sj,
                      const TScalar * const * const mu,
-                     const OffsetValueType * const gridOffsetTable,
-                     const double * const          weights1D,  // normal B-spline weights
-                     const double * const          derivativeWeights1D) // 1st derivative of B-spline
+                     const OffsetValueType * const itkNotUsed(gridOffsetTable),
+                     const double * const          itkNotUsed(weights1D),  // normal B-spline weights
+                     const double * const          itkNotUsed(derivativeWeights1D)) // 1st derivative of B-spline
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -441,10 +441,10 @@ public:
   static void
   GetSpatialHessian(InternalFloatType * const     sh,
                     const TScalar * const * const mu,
-                    const OffsetValueType * const gridOffsetTable,
-                    const double * const          weights1D,           // normal B-spline weights
-                    const double * const          derivativeWeights1D, // 1st derivative of B-spline
-                    const double * const          hessianWeights1D)             // 2nd derivative of B-spline
+                    const OffsetValueType * const itkNotUsed(gridOffsetTable),
+                    const double * const          itkNotUsed(weights1D),           // normal B-spline weights
+                    const double * const          itkNotUsed(derivativeWeights1D), // 1st derivative of B-spline
+                    const double * const          itkNotUsed(hessianWeights1D))             // 2nd derivative of B-spline
   {
     for (unsigned int j = 0; j < OutputDimension; ++j)
     {
@@ -455,10 +455,10 @@ public:
 
   /** GetJacobianOfSpatialJacobian recursive implementation. */
   static void
-  GetJacobianOfSpatialJacobian(InternalFloatType *&            jsj_out,
-                               const double * const            weights1D,           // normal B-spline weights
-                               const double * const            derivativeWeights1D, // 1st derivative of B-spline
-                               const double * const            directionCosines,
+  GetJacobianOfSpatialJacobian(InternalFloatType *& jsj_out,
+                               const double * const itkNotUsed(weights1D),           // normal B-spline weights
+                               const double * const itkNotUsed(derivativeWeights1D), // 1st derivative of B-spline
+                               const double * const directionCosines,
                                const InternalFloatType * const jsj)
   {
     /** Copy the correct elements to the output.
@@ -494,11 +494,11 @@ public:
 
   /** GetJacobianOfSpatialHessian recursive implementation. */
   static void
-  GetJacobianOfSpatialHessian(InternalFloatType *&            jsh_out,
-                              const double * const            weights1D,           // normal B-spline weights
-                              const double * const            derivativeWeights1D, // 1st derivative of B-spline
-                              const double * const            hessianWeights1D,    // 2nd derivative of B-spline
-                              const double * const            directionCosines,
+  GetJacobianOfSpatialHessian(InternalFloatType *& jsh_out,
+                              const double * const itkNotUsed(weights1D),           // normal B-spline weights
+                              const double * const itkNotUsed(derivativeWeights1D), // 1st derivative of B-spline
+                              const double * const itkNotUsed(hessianWeights1D),    // 2nd derivative of B-spline
+                              const double * const directionCosines,
                               const InternalFloatType * const jsh)
   {
     double jsh_tmp[OutputDimension * OutputDimension];
