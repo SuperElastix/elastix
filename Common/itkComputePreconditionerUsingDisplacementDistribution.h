@@ -92,12 +92,6 @@ public:
   Compute(const ParametersType & mu, double & jacg, double & maxJJ, std::string method) override;
 
   /** The main function that performs the computation.
-   * B-spline specific thing we tried. Can be removed later.
-   */
-  void
-  ComputeForBSplineOnly(const ParametersType & mu, const double delta, double & maxJJ, ParametersType & preconditioner);
-
-  /** The main function that performs the computation.
    * The aims to be a generic function, working for all transformations.
    */
   virtual void
