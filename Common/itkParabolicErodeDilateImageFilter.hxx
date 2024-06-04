@@ -103,7 +103,7 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::SplitReque
     splitIndex[splitAxis] += i * valuesPerThread;
     splitSize[splitAxis] = valuesPerThread;
   }
-  if (i == maxThreadIdUsed)
+  if (static_cast<intmax_t>(i) == maxThreadIdUsed)
   {
     splitIndex[splitAxis] += i * valuesPerThread;
     // last thread needs to process the "rest" dimension being split
