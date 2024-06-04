@@ -612,9 +612,6 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
 
   InvokeEvent(itk::StartEvent());
 
-  /** Set the NumberOfSpatialSamples. */
-  SizeValueType numberOfSpatialSamples = this->m_NumberOfSpatialSamples;
-
   SizeValueType spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
   this->m_Gradient = DerivativeType(spaceDimension); // check this
