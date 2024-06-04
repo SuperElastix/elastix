@@ -190,7 +190,8 @@ public:
       const auto decimalPointPos = str.find_first_of('.');
       const bool hasDecimalPointAndTrailingZeros =
         (decimalPointPos != std::string::npos) &&
-        (std::count(str.cbegin() + decimalPointPos + 1, str.cend(), '0') == (str.size() - decimalPointPos - 1));
+        (static_cast<std::uintmax_t>(std::count(str.cbegin() + decimalPointPos + 1, str.cend(), '0')) ==
+         (str.size() - decimalPointPos - 1));
       return std::istringstream(
         hasDecimalPointAndTrailingZeros ? std::string(str.cbegin(), str.cbegin() + decimalPointPos) : str);
     }();
