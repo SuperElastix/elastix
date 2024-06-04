@@ -1514,15 +1514,9 @@ AdaptiveStochasticLBFGS<TElastix>::ComputeDiagonalMatrix(DiagonalMatrixType & di
 {
   diag_H0.SetSize(this->GetScaledCostFunction()->GetNumberOfParameters());
 
-  double curent_fill_value = 1.0;
-  double oldest_fill_value = 1.0;
   double fill_value = 1.0;
   if (this->m_Bound > 0)
   {
-    //     curent_fill_value = this->m_HessianFillValue[this->m_PreviousT];
-    //     oldest_fill_value = this->m_HessianFillValue[this->m_CurrentT];
-    //     fill_value = std::max(curent_fill_value,oldest_fill_value);
-
     fill_value = this->m_HessianFillValue[this->m_PreviousT];
   }
 
