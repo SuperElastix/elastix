@@ -523,8 +523,6 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
 
   this->m_SearchDirection = ParametersType(P);
   this->m_SearchDirection.Fill(0.0); // if the print out is not needed, this could be removed. YQ
-  /** Get the current resolution level. */
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Cast to advanced metric type. */
   using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
@@ -544,6 +542,9 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
   }
 
 #if 0
+  /** Get the current resolution level. */
+  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+
   /** Create some samplers that can be used for the pre-conditioner computation. */
   //std::vector< ImageRandomCoordinateSamplerPointer > preconditionSamplers( M, 0 ); // very slow, leave this for reminder. YQ
   std::vector< ImageRandomSamplerPointer > preconditionSamplers( M );
