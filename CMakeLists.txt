@@ -80,7 +80,10 @@ include(elastixVersion)
 include(elastixExportTarget)
 
 if (MSVC)
-  add_compile_options(/W3)
+  add_compile_options(/W4
+    /wd4373 # Unimportant: virtual function overrides, previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+    /wd4701 # Difficult: potentially uninitialized local variable used
+    )
 else()
   add_compile_options(
     -Woverloaded-virtual
