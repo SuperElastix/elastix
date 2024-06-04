@@ -94,7 +94,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
   ImageSampleContainerPointer sampleContainer;
   this->SampleFixedImageForJacobianTerms(sampleContainer);
-  const SizeValueType nrofsamples = sampleContainer->Size();
 
   /** Get transform and set current position. */
   typename TransformType::Pointer transform = this->m_Transform;
@@ -318,7 +317,6 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
   ImageSampleContainerPointer sampleContainer;
   this->SampleFixedImageForJacobianTerms(sampleContainer);
-  const SizeValueType nrofsamples = sampleContainer->Size();
 
   /** Get transform and set current position. */
   typename TransformType::Pointer transform = this->m_Transform;
