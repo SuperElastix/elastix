@@ -612,8 +612,6 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization()
 
     for (unsigned i = 0; i < this->m_NumberOfInnerIterations; ++i)
     {
-      unsigned int itp = i;
-
       this->SelectNewSamples();
       timeCollector.Start("g23");
       this->GetScaledDerivativeWithExceptionHandling(previousPosition, localPreviousGradient);
