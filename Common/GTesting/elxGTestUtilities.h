@@ -142,7 +142,7 @@ InitializeMetric(
   metric.SetFixedImage(&fixedImage);
   metric.SetTransform(&advancedTransform);
   metric.SetInterpolator(&interpolator);
-  metric.SetFixedImageRegion(fixedImage.GetBufferedRegion());
+  metric.SetFixedImageRegion(fixedImageRegion);
   metric.Initialize();
 }
 
