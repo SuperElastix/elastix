@@ -76,10 +76,10 @@ ElastixMain::Run()
     return errorCode;
   }
 
-  const Configuration & configuration = Deref(MainBase::GetConfiguration());
-
   /** Create OpenCL context and logger here. */
 #ifdef ELASTIX_USE_OPENCL
+  const Configuration & configuration = Deref(MainBase::GetConfiguration());
+
   /** Check if user overrides OpenCL device selection. */
   std::string userSuppliedOpenCLDeviceType = "GPU";
   configuration.ReadParameter(userSuppliedOpenCLDeviceType, "OpenCLDeviceType", 0, false);
