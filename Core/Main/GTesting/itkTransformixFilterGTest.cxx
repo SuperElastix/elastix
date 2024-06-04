@@ -1414,6 +1414,7 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainHavin
 GTEST_TEST(itkTransformixFilter, CheckMinimumMovingImageUsingAnyInternalPixelType)
 {
   const auto check = [](const auto inputPixelTypeHolder) {
+    (void)inputPixelTypeHolder;
     elx::ForEachSupportedImageType([](const auto elxTypedef) {
       using ElxTypedef = decltype(elxTypedef);
       using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;
@@ -1454,6 +1455,7 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsing
   std::mt19937 randomNumberEngine{};
 
   const auto check = [&randomNumberEngine](const auto inputPixelTypeHolder) {
+    (void)inputPixelTypeHolder;
     elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
       using ElxTypedef = decltype(elxTypedef);
       using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;

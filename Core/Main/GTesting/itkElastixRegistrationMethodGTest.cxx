@@ -2258,6 +2258,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
 GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageUsingAnyInternalPixelType)
 {
   const auto check = [](const auto inputPixelTypeHolder) {
+    (void)inputPixelTypeHolder;
     elx::ForEachSupportedImageType([](const auto elxTypedef) {
       using ElxTypedef = decltype(elxTypedef);
       using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;
@@ -2311,6 +2312,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
   std::mt19937 randomNumberEngine{};
 
   const auto check = [&randomNumberEngine](const auto inputPixelTypeHolder) {
+    (void)inputPixelTypeHolder;
     elx::ForEachSupportedImageType([&randomNumberEngine](const auto elxTypedef) {
       using ElxTypedef = decltype(elxTypedef);
       using InputPixelType = typename decltype(inputPixelTypeHolder)::Type;
