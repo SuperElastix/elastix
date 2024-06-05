@@ -26,23 +26,6 @@ namespace itk
 {
 
 /**
- * ************* Constructor *******************
- */
-
-template <class TImage>
-ErodeMaskImageFilter<TImage>::ErodeMaskImageFilter()
-{
-  this->m_IsMovingMask = false;
-  this->m_ResolutionLevel = 0;
-
-  ScheduleType defaultSchedule(1, InputImageDimension);
-  defaultSchedule.Fill(NumericTraits<unsigned int>::OneValue());
-  this->m_Schedule = defaultSchedule;
-
-} // end Constructor
-
-
-/**
  * ************* GenerateData *******************
  */
 

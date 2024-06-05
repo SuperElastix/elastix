@@ -122,7 +122,7 @@ public:
 
 protected:
   /** Constructor. */
-  ErodeMaskImageFilter();
+  ErodeMaskImageFilter() = default;
 
   /** Destructor */
   ~ErodeMaskImageFilter() override = default;
@@ -135,9 +135,9 @@ protected:
   GenerateData() override;
 
 private:
-  bool         m_IsMovingMask{};
-  unsigned int m_ResolutionLevel{};
-  ScheduleType m_Schedule{};
+  bool         m_IsMovingMask{ false };
+  unsigned int m_ResolutionLevel{ 0 };
+  ScheduleType m_Schedule{ 1, InputImageDimension, 1u };
 };
 
 } // end namespace itk
