@@ -1208,7 +1208,7 @@ GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnEmptyCompositeTransform)
                             { "Size", ConvertToParameterValues(imageSize) },
                             { "Spacing", ParameterValuesType(ImageDimension, "1") } }));
 
-  for (const bool isSecondIteration : { false, true })
+  for ([[maybe_unused]] const bool isSecondIteration : { false, true })
   {
     transformixFilter.SetTransform(&emptyCompositeTransform);
     EXPECT_THROW(transformixFilter.Update(), itk::ExceptionObject);
