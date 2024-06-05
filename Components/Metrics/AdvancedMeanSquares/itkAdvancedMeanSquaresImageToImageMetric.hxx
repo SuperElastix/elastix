@@ -686,9 +686,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
     Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
-                                      &(Superclass::m_ThreaderMetricParameters));
-    this->m_Threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
+                                                &(Superclass::m_ThreaderMetricParameters));
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp

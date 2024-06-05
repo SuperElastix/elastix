@@ -686,11 +686,8 @@ template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCallback() const
 {
-  /** Setup threader. */
-  Superclass::m_Threader->SetSingleMethod(this->GetValueThreaderCallback, &m_ThreaderMetricParameters);
-
-  /** Launch. */
-  Superclass::m_Threader->SingleMethodExecute();
+  /** Setup threader and launch. */
+  Superclass::m_Threader->SetSingleMethodAndExecute(this->GetValueThreaderCallback, &m_ThreaderMetricParameters);
 
 } // end LaunchGetValueThreaderCallback()
 
@@ -728,11 +725,9 @@ template <class TFixedImage, class TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivativeThreaderCallback() const
 {
-  /** Setup threader. */
-  Superclass::m_Threader->SetSingleMethod(this->GetValueAndDerivativeThreaderCallback, &m_ThreaderMetricParameters);
-
-  /** Launch. */
-  Superclass::m_Threader->SingleMethodExecute();
+  /** Setup threader and launch. */
+  Superclass::m_Threader->SetSingleMethodAndExecute(this->GetValueAndDerivativeThreaderCallback,
+                                                    &m_ThreaderMetricParameters);
 
 } // end LaunchGetValueAndDerivativeThreaderCallback()
 

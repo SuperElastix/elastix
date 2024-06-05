@@ -587,9 +587,8 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
     Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
       static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
 
-    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
-                                      &(Superclass::m_ThreaderMetricParameters));
-    this->m_Threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
+                                                &(Superclass::m_ThreaderMetricParameters));
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp

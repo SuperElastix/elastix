@@ -679,8 +679,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
     userData.st_InvertedDenominator = 1.0 / denom;
     userData.st_DerivativePointer = derivative.begin();
 
-    this->m_Threader->SetSingleMethod(AccumulateDerivativesThreaderCallback, &userData);
-    this->m_Threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethodAndExecute(AccumulateDerivativesThreaderCallback, &userData);
   }
 #ifdef ELASTIX_USE_OPENMP
   // compute multi-threadedly with openmp

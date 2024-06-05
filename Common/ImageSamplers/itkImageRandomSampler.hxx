@@ -53,9 +53,8 @@ ImageRandomSampler<TInputImage>::GenerateData()
       randomNumberList, inputImage, croppedInputImageRegion.GetIndex(), croppedInputImageRegion.GetSize(), samples
     };
 
-    MultiThreaderBase & multiThreader = elastix::Deref(this->ProcessObject::GetMultiThreader());
-    multiThreader.SetSingleMethod(&Self::ThreaderCallback, &userData);
-    multiThreader.SingleMethodExecute();
+    elastix::Deref(this->ProcessObject::GetMultiThreader())
+      .SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
     return;
   }
 

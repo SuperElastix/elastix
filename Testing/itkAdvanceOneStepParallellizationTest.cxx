@@ -162,8 +162,7 @@ public:
       userData.t_Optimizer = this;
 
       /** Call multi-threaded AdvanceOneStep(). */
-      this->m_Threader->SetSingleMethod(AdvanceOneStepThreaderCallback, &userData);
-      this->m_Threader->SingleMethodExecute();
+      this->m_Threader->SetSingleMethodAndExecute(AdvanceOneStepThreaderCallback, &userData);
     }
   } // end
 

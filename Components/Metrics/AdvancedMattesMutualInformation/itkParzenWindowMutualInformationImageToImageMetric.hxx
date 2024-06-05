@@ -592,9 +592,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
     Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
 
-    this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback,
-                                      &(Superclass::m_ThreaderMetricParameters));
-    this->m_Threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
+                                                &(Superclass::m_ThreaderMetricParameters));
   }
 
 } // end AfterThreadedComputeDerivativeLowMemory()
@@ -632,13 +631,10 @@ void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::LaunchComputeDerivativeLowMemoryThreaderCallback() const
 {
-  /** Setup threader. */
-  this->m_Threader->SetSingleMethod(
+  /** Setup threader and launch. */
+  this->m_Threader->SetSingleMethodAndExecute(
     this->ComputeDerivativeLowMemoryThreaderCallback,
     const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowMutualInformationThreaderParameters)));
-
-  /** Launch. */
-  this->m_Threader->SingleMethodExecute();
 
 } // end LaunchComputeDerivativeLowMemoryThreaderCallback()
 
