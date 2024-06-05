@@ -245,11 +245,11 @@ Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransf
 
   elx::DefaultConstruct<ImageType> fixedImage{};
   fixedImageDomain.ToImage(fixedImage);
-  fixedImage.Allocate(true);
+  fixedImage.AllocateInitialized();
 
   elx::DefaultConstruct<ImageType> movingImage{};
   movingImageDomain.ToImage(movingImage);
-  movingImage.Allocate(true);
+  movingImage.AllocateInitialized();
   const itk::ImageBufferRange<ImageType> movingImageBufferRange(movingImage);
 
   std::mt19937 randomNumberEngine{};
@@ -373,12 +373,12 @@ Expect_equal_output_Transformix_SetTransformParameterObject_GetTransformParamete
 
   elx::DefaultConstruct<ImageType> fixedImage{};
   fixedImageDomain.ToImage(fixedImage);
-  fixedImage.Allocate(true);
+  fixedImage.AllocateInitialized();
   fillImageBufferRandomly(fixedImage);
 
   elx::DefaultConstruct<ImageType> movingImage{};
   movingImageDomain.ToImage(movingImage);
-  movingImage.Allocate(true);
+  movingImage.AllocateInitialized();
   fillImageBufferRandomly(movingImage);
 
   elx::DefaultConstruct<elx::ParameterObject> registrationParameterObject{};
@@ -1011,12 +1011,12 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileWithInitia
 
     elx::DefaultConstruct<ImageType> fixedImage{};
     fixedImage.SetRegions(imageSize);
-    fixedImage.Allocate(true);
+    fixedImage.AllocateInitialized();
     fillImageBufferRandomly(fixedImage);
 
     elx::DefaultConstruct<ImageType> movingImage{};
     movingImage.SetRegions(imageSize);
-    movingImage.Allocate(true);
+    movingImage.AllocateInitialized();
     fillImageBufferRandomly(movingImage);
 
     elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
@@ -1343,7 +1343,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransform)
   const auto displacementField = itk::Image<itk::Vector<double, ImageDimension>, ImageDimension>::New();
 
   displacementField->SetRegions(imageSize);
-  displacementField->Allocate(true);
+  displacementField->AllocateInitialized();
   itkTransform.SetDisplacementField(displacementField);
 
   const itk::ImageBufferRange displacementFieldImageBufferRange{ *displacementField };
@@ -1423,7 +1423,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndOutputDir
   const auto displacementField = itk::Image<itk::Vector<double, ImageDimension>, ImageDimension>::New();
 
   displacementField->SetRegions(imageSize);
-  displacementField->Allocate(true);
+  displacementField->AllocateInitialized();
 
   std::mt19937 randomNumberEngine{};
 
@@ -2158,11 +2158,11 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageHavingInternalPi
 
     elx::DefaultConstruct<ImageType> fixedImage{};
     imageDomain.ToImage(fixedImage);
-    fixedImage.Allocate(true);
+    fixedImage.AllocateInitialized();
 
     elx::DefaultConstruct<ImageType> movingImage{};
     imageDomain.ToImage(movingImage);
-    movingImage.Allocate(true);
+    movingImage.AllocateInitialized();
 
     // Some "extreme" values to test if each of them is preserved during the transformation.
     const std::array pixelValues{ PixelType{},
@@ -2220,7 +2220,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
 
     elx::DefaultConstruct<ImageType> movingImage{};
     imageDomain.ToImage(movingImage);
-    movingImage.Allocate(true);
+    movingImage.AllocateInitialized();
 
     // A dummy registration (that does not do any optimization).
     elx::DefaultConstruct<itk::ElastixRegistrationMethod<ImageType, ImageType>> registration{};
@@ -2261,7 +2261,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageUsingAnyInternal
 
       elx::DefaultConstruct<InputImageType> fixedImage{};
       imageDomain.ToImage(fixedImage);
-      fixedImage.Allocate(true);
+      fixedImage.AllocateInitialized();
 
       const auto movingImage = CreateImageFilledWithSequenceOfNaturalNumbers<InputPixelType>(imageDomain);
 
@@ -2321,7 +2321,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
 
       elx::DefaultConstruct<InputImageType> movingImage{};
       imageDomain.ToImage(movingImage);
-      movingImage.Allocate(true);
+      movingImage.AllocateInitialized();
 
       // A dummy registration (that does not do any optimization).
       elx::DefaultConstruct<itk::ElastixRegistrationMethod<InputImageType, InputImageType>> registration{};

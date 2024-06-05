@@ -182,7 +182,7 @@ Expect_one_non_zero_pixel_value_masked_in(const typename TImage::SizeType & imag
 
   const auto maskImage = itk::Image<MaskPixelType, ImageDimension>::New();
   maskImage->SetRegions(imageSize);
-  maskImage->Allocate(true);
+  maskImage->AllocateInitialized();
   maskImage->SetPixel(IndexType(), 1);
 
   const auto maskSpatialObject = ImageSpatialMaskType::New();

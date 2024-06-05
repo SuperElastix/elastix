@@ -139,12 +139,12 @@ GTEST_TEST(ElastixLib, ExampleFromManualRunningElastix)
 
   const auto fixed_image = ITKImageType::New();
   fixed_image->SetRegions(imageSize);
-  fixed_image->Allocate(true);
+  fixed_image->AllocateInitialized();
   FillImageRegion(*fixed_image, fixedImageRegionIndex, regionSize);
 
   const auto moving_image = ITKImageType::New();
   moving_image->SetRegions(imageSize);
-  moving_image->Allocate(true);
+  moving_image->AllocateInitialized();
   FillImageRegion(*moving_image, fixedImageRegionIndex + translationOffset, regionSize);
 
   const std::string output_directory(".");
@@ -222,7 +222,7 @@ GTEST_TEST(ElastixLib, TransformParametersAreZeroWhenFixedImageIsMovingImage)
 
     const auto image = ImageType::New();
     image->SetRegions(SizeType::Filled(imageSizeValue));
-    image->Allocate(true);
+    image->AllocateInitialized();
     FillImageRegion(*image, itk::Index<Dimension>::Filled(1), SizeType::Filled(regionSizeValue));
 
     elastix::ELASTIX elastixObject;
@@ -257,12 +257,12 @@ GTEST_TEST(ElastixLib, Translation3D)
 
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  fixedImage->AllocateInitialized();
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  movingImage->AllocateInitialized();
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   elastix::ELASTIX elastixObject;
@@ -294,17 +294,17 @@ GTEST_TEST(ElastixLib, SingleSliceMaskedTranslation3D)
 
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  fixedImage->AllocateInitialized();
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto maskImage = itk::Image<unsigned char, ImageDimension>::New();
   maskImage->SetRegions(imageSize);
-  maskImage->Allocate(true);
+  maskImage->AllocateInitialized();
   FillImageRegion(*maskImage, { 0, 0, z }, { imageSize[0], imageSize[1], 1 });
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  movingImage->AllocateInitialized();
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   elastix::ELASTIX elastixObject;

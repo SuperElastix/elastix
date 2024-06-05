@@ -453,12 +453,12 @@ GTEST_TEST(itkTransformixFilter, Translation2D)
 
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  fixedImage->AllocateInitialized();
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  movingImage->AllocateInitialized();
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto transformedImage = TranslateImage(*movingImage, translationOffset);
@@ -481,12 +481,12 @@ GTEST_TEST(itkTransformixFilter, Translation2DTransformParameterFileName)
 
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  fixedImage->AllocateInitialized();
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  movingImage->AllocateInitialized();
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   DefaultConstructibleTransformixFilter<ImageType> filter;
@@ -570,12 +570,12 @@ GTEST_TEST(itkTransformixFilter, Translation3D)
 
   const auto fixedImage = ImageType::New();
   fixedImage->SetRegions(imageSize);
-  fixedImage->Allocate(true);
+  fixedImage->AllocateInitialized();
   FillImageRegion(*fixedImage, fixedImageRegionIndex, regionSize);
 
   const auto movingImage = ImageType::New();
   movingImage->SetRegions(imageSize);
-  movingImage->Allocate(true);
+  movingImage->AllocateInitialized();
   FillImageRegion(*movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   const auto transformedImage = TranslateImage(*movingImage, translationOffset);
@@ -814,7 +814,7 @@ GTEST_TEST(itkTransformixFilter, CombineTranslationAndInverseTranslation)
 
   const auto inputImage = itk::Image<float, dimension>::New();
   inputImage->SetRegions(imageSize);
-  inputImage->Allocate(true);
+  inputImage->AllocateInitialized();
   FillImageRegion(*inputImage, { 2, 1 }, itk::Size<dimension>::Filled(2));
 
   using ParametersValueType = double;
@@ -1006,12 +1006,12 @@ GTEST_TEST(itkTransformixFilter, SetTranslationTransform)
 
   elx::DefaultConstruct<ImageType> fixedImage{};
   fixedImage.SetRegions(imageSize);
-  fixedImage.Allocate(true);
+  fixedImage.AllocateInitialized();
   FillImageRegion(fixedImage, fixedImageRegionIndex, regionSize);
 
   elx::DefaultConstruct<ImageType> movingImage{};
   movingImage.SetRegions(imageSize);
-  movingImage.Allocate(true);
+  movingImage.AllocateInitialized();
   FillImageRegion(movingImage, fixedImageRegionIndex + translationOffset, regionSize);
 
   elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> transform{};
@@ -1142,7 +1142,7 @@ GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnZeroParameterMaps)
   {
     elx::DefaultConstruct<ImageType> image{};
     image.SetRegions(imageSize);
-    image.Allocate(true);
+    image.AllocateInitialized();
 
     elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> transform{};
 
@@ -1189,7 +1189,7 @@ GTEST_TEST(itkTransformixFilter, UpdateThrowsExceptionOnEmptyCompositeTransform)
 
   elx::DefaultConstruct<ImageType> movingImage{};
   movingImage.SetRegions(imageSize);
-  movingImage.Allocate(true);
+  movingImage.AllocateInitialized();
 
   elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> translationTransform{};
   elx::DefaultConstruct<itk::CompositeTransform<double, ImageDimension>>   compositeTransform{};
@@ -1283,7 +1283,7 @@ GTEST_TEST(itkTransformixFilter, ComputeSpatialJacobianDeterminantImage)
 
   elx::DefaultConstruct<ImageType> movingImage{};
   movingImage.SetRegions(imageSize);
-  movingImage.Allocate(true);
+  movingImage.AllocateInitialized();
 
   elx::DefaultConstruct<itk::TranslationTransform<double, ImageDimension>> transform{};
   transform.SetOffset(itk::MakeVector(1.0, -2.0));
@@ -1338,7 +1338,7 @@ GTEST_TEST(itkTransformixFilter, CheckMinimumMovingImageHavingInternalPixelType)
 
     elx::DefaultConstruct<ImageType> movingImage{};
     imageDomain.ToImage(movingImage);
-    movingImage.Allocate(true);
+    movingImage.AllocateInitialized();
 
     // Some "extreme" values to test if each of them is preserved during the transformation.
     const std::array pixelValues{ PixelType{},
@@ -1387,7 +1387,7 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainHavin
 
     elx::DefaultConstruct<ImageType> movingImage{};
     imageDomain.ToImage(movingImage);
-    movingImage.Allocate(true);
+    movingImage.AllocateInitialized();
 
     const ParameterMapType parameterMap = MakeMergedMap(
       { // Parameters in alphabetic order:
@@ -1464,7 +1464,7 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsing
       const auto imageDomain = CreateRandomImageDomain<ElxTypedef::MovingDimension>(randomNumberEngine);
       elx::DefaultConstruct<InputImageType> movingImage{};
       imageDomain.ToImage(movingImage);
-      movingImage.Allocate(true);
+      movingImage.AllocateInitialized();
 
       const ParameterMapType parameterMap = MakeMergedMap(
         { // Parameters in alphabetic order:
@@ -1539,7 +1539,7 @@ GTEST_TEST(itkTransformixFilter, SetExternalTransform)
   const auto displacementField = itk::Image<itk::Vector<double, ImageDimension>, ImageDimension>::New();
 
   displacementField->SetRegions(imageSize);
-  displacementField->Allocate(true);
+  displacementField->AllocateInitialized();
 
   std::mt19937 randomNumberEngine{};
 

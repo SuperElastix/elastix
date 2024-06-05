@@ -471,7 +471,7 @@ CreateImage(const itk::Size<VImageDimension> & imageSize)
 {
   const auto image = itk::Image<TPixel, VImageDimension>::New();
   image->SetRegions(imageSize);
-  image->Allocate(true);
+  image->AllocateInitialized();
   return image;
 }
 
@@ -482,7 +482,7 @@ CreateImage(const ImageDomain<VImageDimension> & imageDomain)
 {
   const auto image = itk::Image<TPixel, VImageDimension>::New();
   imageDomain.ToImage(*image);
-  image->Allocate(true);
+  image->AllocateInitialized();
   return image;
 }
 
