@@ -1759,19 +1759,13 @@ GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
       rootOutputDirectoryPath + "/" + (useInitialTransform ? "InitialTranslation(1,-2)" : "NoInitialTransform");
     itk::FileTools::CreateDirectory(outputSubdirectoryPath);
 
-    using PairType = std::pair<const char *, itk::Transform<double, ImageDimension, ImageDimension>::Pointer>;
-
-    for (const auto [transformName, itkTransform] :
-         { PairType{ "AffineTransform", itk::AffineTransform<double, ImageDimension>::New() },
-           PairType{ "BSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
-           PairType{ "EulerTransform", itk::Euler2DTransform<>::New() },
-           PairType{ "RecursiveBSplineTransform", itk::BSplineTransform<double, ImageDimension>::New() },
-           PairType{ "SimilarityTransform", itk::Similarity2DTransform<>::New() },
-           PairType{ "TranslationTransform", itk::TranslationTransform<double, ImageDimension>::New() } })
+    for (const char * const transformName : { "AffineTransform",
+                                              "BSplineTransform",
+                                              "EulerTransform",
+                                              "RecursiveBSplineTransform",
+                                              "SimilarityTransform",
+                                              "TranslationTransform" })
     {
-      const auto & expectedItkTransform = *itkTransform;
-      const auto   expectedNumberOfFixedParameters = expectedItkTransform.GetFixedParameters().size();
-
       registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
                                                               { "AutomaticTransformInitialization", "false" },
                                                               { "ImageSampler", "Full" },
@@ -1781,9 +1775,7 @@ GTEST_TEST(itkElastixRegistrationMethod, GetCombinationTransform)
                                                               { "Transform", transformName } }));
       registration.Update();
 
-      using CompositeTransformType = itk::CompositeTransform<double, ImageDimension>;
       const auto combinationTransform = registration.GetCombinationTransform();
-
       EXPECT_NE(combinationTransform, nullptr);
     }
   }
