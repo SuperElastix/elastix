@@ -58,7 +58,7 @@ main()
 
     const auto fixedImage = ImageType::New();
     fixedImage->SetRegions(itk::Size<>{ imageSizeX, imageSizeY });
-    fixedImage->Allocate(true);
+    fixedImage->AllocateInitialized();
     fixedImage->SetPixel({ 1, 1 }, 3);
     fixedImage->SetPixel({ 2, 1 }, 4);
     fixedImage->SetPixel({ 1, 2 }, 5);
@@ -67,7 +67,7 @@ main()
 
     const auto movingImage = ImageType::New();
     movingImage->SetRegions(itk::Size<>{ imageSizeX, imageSizeY });
-    movingImage->Allocate(true);
+    movingImage->AllocateInitialized();
     movingImage->SetPixel({ 3, 2 }, 3);
     movingImage->SetPixel({ 4, 2 }, 4);
     movingImage->SetPixel({ 3, 3 }, 5);
