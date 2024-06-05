@@ -619,8 +619,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
     userData.st_Coefficient2 = tmp2;
     userData.st_DerivativePointer = derivative.begin();
 
-    this->m_Threader->SetSingleMethod(AccumulateDerivativesThreaderCallback, &userData);
-    this->m_Threader->SingleMethodExecute();
+    this->m_Threader->SetSingleMethodAndExecute(AccumulateDerivativesThreaderCallback, &userData);
   }
 
 } // end AfterThreadedGetValueAndDerivative()

@@ -284,11 +284,8 @@ template <class TFixedImage, class TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::LaunchComputeThreaderCallback() const
 {
-  /** Setup threader. */
-  this->m_Threader->SetSingleMethod(this->ComputeThreaderCallback, &m_ThreaderParameters);
-
-  /** Launch. */
-  this->m_Threader->SingleMethodExecute();
+  /** Setup threader and launch. */
+  this->m_Threader->SetSingleMethodAndExecute(this->ComputeThreaderCallback, &m_ThreaderParameters);
 
 } // end LaunchComputeThreaderCallback()
 

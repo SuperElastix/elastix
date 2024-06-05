@@ -120,8 +120,8 @@ public:
       this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
       this->m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-      this->m_Threader->SetSingleMethod(this->AccumulateDerivativesThreaderCallback, &this->m_ThreaderMetricParameters);
-      this->m_Threader->SingleMethodExecute();
+      this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
+                                                  &this->m_ThreaderMetricParameters);
     }
 #ifdef ELASTIX_USE_OPENMP
     // compute multi-threadedly with openmp

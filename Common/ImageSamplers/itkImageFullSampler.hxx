@@ -118,16 +118,16 @@ ImageFullSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
 
   if (mask)
   {
-    multiThreader.SetSingleMethod(elastix::MaskHasSameImageDomain(*mask, inputImage)
-                                    ? &Self::ThreaderCallback<elastix::MaskCondition::HasSameImageDomain>
-                                    : &Self::ThreaderCallback<elastix::MaskCondition::HasDifferentImageDomain>,
-                                  &userData);
+    multiThreader.SetSingleMethodAndExecute(
+      elastix::MaskHasSameImageDomain(*mask, inputImage)
+        ? &Self::ThreaderCallback<elastix::MaskCondition::HasSameImageDomain>
+        : &Self::ThreaderCallback<elastix::MaskCondition::HasDifferentImageDomain>,
+      &userData);
   }
   else
   {
-    multiThreader.SetSingleMethod(&Self::ThreaderCallback<elastix::MaskCondition::IsNull>, &userData);
+    multiThreader.SetSingleMethodAndExecute(&Self::ThreaderCallback<elastix::MaskCondition::IsNull>, &userData);
   }
-  multiThreader.SingleMethodExecute();
 
   if (mask)
   {

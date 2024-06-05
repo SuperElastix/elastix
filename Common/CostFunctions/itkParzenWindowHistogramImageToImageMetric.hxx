@@ -1244,13 +1244,10 @@ template <class TFixedImage, class TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComputePDFsThreaderCallback() const
 {
-  /** Setup threader. */
-  this->m_Threader->SetSingleMethod(
+  /** Setup threader and launch. */
+  this->m_Threader->SetSingleMethodAndExecute(
     this->ComputePDFsThreaderCallback,
     const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowHistogramThreaderParameters)));
-
-  /** Launch. */
-  this->m_Threader->SingleMethodExecute();
 
 } // end LaunchComputePDFsThreaderCallback()
 
