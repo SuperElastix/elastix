@@ -73,9 +73,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const NumberOfParametersType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType                 jacj(outdim, sizejacind);
-  jacj.Fill(0.0);
-  NonZeroJacobianIndicesType jacind(sizejacind);
+  JacobianType                 jacj(outdim, sizejacind, 0.0);
+  NonZeroJacobianIndicesType   jacind(sizejacind);
   jacind[0] = 0;
   if (sizejacind > 1)
   {

@@ -100,9 +100,8 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   const unsigned int              outdim = this->m_Transform->GetOutputSpaceDimension();
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
-  const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType        jacj(outdim, sizejacind);
-  jacj.Fill(0.0);
+  const SizeValueType        sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
+  JacobianType               jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
 
   /** Declare temporary variables. Not needed for all methods. check later */

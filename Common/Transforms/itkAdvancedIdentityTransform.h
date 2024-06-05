@@ -304,8 +304,7 @@ protected:
     : AdvancedTransform<TScalarType, NDimensions, NDimensions>(NDimensions)
   {
     // The Jacobian is constant, therefore it can be initialized in the constructor.
-    this->m_LocalJacobian = JacobianType(NDimensions, 1);
-    this->m_LocalJacobian.Fill(0.0);
+    this->m_LocalJacobian = JacobianType(NDimensions, 1, 0.0);
 
     /** SpatialJacobian is also constant. */
     this->m_SpatialJacobian.SetIdentity();
