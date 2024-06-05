@@ -129,9 +129,8 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   unsigned int samplenr = 0;
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
-  const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType        jacj(outdim, sizejacind);
-  jacj.Fill(0.0);
+  const SizeValueType        sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
+  JacobianType               jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
   jacind[0] = 0;
   if (sizejacind > 1)
@@ -342,9 +341,8 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
-  const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType        jacj(outdim, sizejacind);
-  jacj.Fill(0.0);
+  const SizeValueType        sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
+  JacobianType               jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
   jacind[0] = 0;
   if (sizejacind > 1)
@@ -502,9 +500,8 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   unsigned int samplenr = 0;
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
-  const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
-  JacobianType        jacj(outdim, sizejacind);
-  jacj.Fill(0.0);
+  const SizeValueType        sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
+  JacobianType               jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
   jacind[0] = 0;
   if (sizejacind > 1)
