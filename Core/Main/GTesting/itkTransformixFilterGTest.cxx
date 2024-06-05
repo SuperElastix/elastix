@@ -1059,8 +1059,7 @@ GTEST_TEST(itkTransformixFilter, SetCombinationTransform)
   using ImageType = itk::Image<PixelType, ImageDimension>;
   const itk::Size<ImageDimension> imageSize{ { 5, 6 } };
 
-  const auto numberOfPixels =
-    std::accumulate(imageSize.cbegin(), imageSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
+  const auto numberOfPixels = imageSize.CalculateProductOfElements();
 
   const auto fixedImage = CreateImage<PixelType>(imageSize);
   const auto movingImage = CreateImage<PixelType>(imageSize);

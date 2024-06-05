@@ -142,9 +142,7 @@ ImageGridSampler<TInputImage>::GenerateWorkUnits(const ThreadIdType             
       }
       workUnits.push_back({ gridIndexForThread, gridSizeForThread, sampleData });
 
-      // TODO Use ITK 5.4: sampleData += gridSizeForThread.CalculateProductOfElements()
-      sampleData +=
-        std::accumulate(gridSizeForThread.cbegin(), gridSizeForThread.cend(), size_t{ 1 }, std::multiplies<>{});
+      sampleData += gridSizeForThread.CalculateProductOfElements();
     }();
   }
   assert(workUnits.size() <= numberOfSubregions);
@@ -167,9 +165,7 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
   /** Determine the grid. */
   const auto [gridIndex, gridSize] = DetermineGridIndexAndSize(croppedInputImageRegion, gridSpacing);
 
-  // TODO Use ITK 5.4: numberOfSamplesOnGrid = gridSize.CalculateProductOfElements()
-  const std::size_t numberOfSamplesOnGrid =
-    std::accumulate(gridSize.cbegin(), gridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
+  const std::size_t numberOfSamplesOnGrid = gridSize.CalculateProductOfElements();
   samples.resize(numberOfSamplesOnGrid);
   WorkUnit workUnit{ gridIndex, gridSize, samples.data(), size_t{} };
 
@@ -212,9 +208,7 @@ ImageGridSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
   /** Determine the grid. */
   const auto [gridIndex, gridSize] = DetermineGridIndexAndSize(croppedInputImageRegion, gridSpacing);
 
-  // TODO Use ITK 5.4: numberOfSamplesOnGrid = gridSize.CalculateProductOfElements()
-  const std::size_t numberOfSamplesOnGrid =
-    std::accumulate(gridSize.cbegin(), gridSize.cend(), std::size_t{ 1 }, std::multiplies<>{});
+  const std::size_t numberOfSamplesOnGrid = gridSize.CalculateProductOfElements();
   samples.resize(numberOfSamplesOnGrid);
 
   const bool maskHasSameImageDomain = mask ? elastix::MaskHasSameImageDomain(*mask, inputImage) : false;
