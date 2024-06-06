@@ -67,7 +67,6 @@ using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::CreateParameterObject;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
-using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::Front;
@@ -79,6 +78,7 @@ using elx::CoreMainGTestUtilities::ImageDomain;
 using elx::CoreMainGTestUtilities::TypeHolder;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::GTestUtilities::MakeMergedMap;
+using itk::Deref;
 
 
 template <typename TImage>
@@ -335,13 +335,13 @@ Expect_equal_output_SetInitialTransformParameterObject_and_Transformix_SetTransf
 
   transformix.Update();
 
-  const auto & transformixOutput = DerefRawPointer(transformix.GetOutput());
+  const auto & transformixOutput = Deref(transformix.GetOutput());
 
   // Sanity checks, checking that our test is non-trivial.
   EXPECT_NE(transformixOutput, fixedImage);
   EXPECT_NE(transformixOutput, movingImage);
 
-  const auto & actualRegistrationOutput = DerefRawPointer(registration.GetOutput());
+  const auto & actualRegistrationOutput = Deref(registration.GetOutput());
   EXPECT_EQ(actualRegistrationOutput, transformixOutput);
 }
 
@@ -413,14 +413,14 @@ Expect_equal_output_Transformix_SetTransformParameterObject_GetTransformParamete
   transformix.SetMovingImage(&movingImage);
   transformix.Update();
 
-  const auto & transformixOutput = DerefRawPointer(transformix.GetOutput());
+  const auto & transformixOutput = Deref(transformix.GetOutput());
 
   // Sanity checks, checking that our test is non-trivial.
   EXPECT_NE(movingImage, fixedImage);
   EXPECT_NE(transformixOutput, fixedImage);
   EXPECT_NE(transformixOutput, movingImage);
 
-  const auto & actualRegistrationOutput = DerefRawPointer(registration.GetOutput());
+  const auto & actualRegistrationOutput = Deref(registration.GetOutput());
   EXPECT_EQ(actualRegistrationOutput, transformixOutput);
 }
 
@@ -770,7 +770,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteResultImage)
                               { "WriteResultImage", (writeResultImage ? "true" : "false") } }));
     registration.Update();
 
-    const auto &       output = DerefRawPointer(registration.GetOutput());
+    const auto &       output = Deref(registration.GetOutput());
     const auto &       outputImageSize = output.GetBufferedRegion().GetSize();
     const auto * const outputBufferPointer = output.GetBufferPointer();
 
@@ -914,7 +914,7 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputHasSameOriginAsFixedImage)
                                                               { "Transform", "TranslationTransform" } }));
       registration.Update();
 
-      const auto & output = DerefRawPointer(registration.GetOutput());
+      const auto & output = Deref(registration.GetOutput());
 
       // The most essential check of this test.
       EXPECT_EQ(output.GetOrigin(), fixedImageOrigin);
@@ -1117,8 +1117,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransform)
         registration.SetMovingImage(movingImage);
         registration.Update();
 
-        const auto & transformParameterMaps =
-          DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
+        const auto & transformParameterMaps = Deref(registration.GetTransformParameterObject()).GetParameterMaps();
 
         ASSERT_EQ(transformParameterMaps.size(),
                   numberOfInitialTransformParameterMaps + numberOfRegistrationParameterMaps);
@@ -1208,8 +1207,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObject)
         registration.SetMovingImage(movingImage);
         registration.Update();
 
-        const auto & transformParameterMaps =
-          DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
+        const auto & transformParameterMaps = Deref(registration.GetTransformParameterObject()).GetParameterMaps();
 
         ASSERT_EQ(transformParameterMaps.size(),
                   numberOfInitialTransformParameterMaps + numberOfRegistrationParameterMaps);
@@ -1302,8 +1300,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalTransformAsInitialTransform)
     registration.SetMovingImage(movingImage);
     registration.Update();
 
-    const auto & transformParameterMaps =
-      DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
+    const auto & transformParameterMaps = Deref(registration.GetTransformParameterObject()).GetParameterMaps();
 
     ASSERT_EQ(transformParameterMaps.size(), 2);
 
@@ -1392,8 +1389,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransform)
     registration.SetMovingImage(movingImage);
     registration.Update();
 
-    const auto & transformParameterMaps =
-      DerefRawPointer(registration.GetTransformParameterObject()).GetParameterMaps();
+    const auto & transformParameterMaps = Deref(registration.GetTransformParameterObject()).GetParameterMaps();
 
     ASSERT_EQ(transformParameterMaps.size(), 2);
 
@@ -1471,7 +1467,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndOutputDir
   reader->Update();
 
   // Check that the read transform is equal to the initially specified ITK transform.
-  const auto & readTransformList = DerefRawPointer(reader->GetTransformList());
+  const auto & readTransformList = Deref(reader->GetTransformList());
   ASSERT_EQ(readTransformList.size(), 1);
   const auto & readTransform = DerefSmartPointer(readTransformList.front());
   EXPECT_EQ(readTransform.GetParameters(), itkTransform.GetParameters());
@@ -1511,10 +1507,10 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalInitialTransformAndConvertTo
 
   const auto combinationTransform = registration.GetCombinationTransform();
   const auto convertedTransform =
-    ElastixRegistrationMethodType<ImageType>::ConvertToItkTransform(DerefRawPointer(combinationTransform));
+    ElastixRegistrationMethodType<ImageType>::ConvertToItkTransform(Deref(combinationTransform));
 
   const auto & compositeTransform =
-    DerefRawPointer(dynamic_cast<itk::CompositeTransform<double, ImageDimension> *>(convertedTransform.GetPointer()));
+    Deref(dynamic_cast<itk::CompositeTransform<double, ImageDimension> *>(convertedTransform.GetPointer()));
   ASSERT_EQ(compositeTransform.GetNumberOfTransforms(), 2);
   EXPECT_NE(compositeTransform.GetFrontTransform(), &externalTransform);
   EXPECT_EQ(compositeTransform.GetBackTransform(), &externalTransform);
@@ -1706,9 +1702,8 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
       const auto updateAndRetrieveTransformParameterMap = [movingImage](RegistrationMethodType & registration) {
         registration.SetMovingImage(movingImage);
         registration.Update();
-        const elx::ParameterObject & transformParameterObject =
-          DerefRawPointer(registration.GetTransformParameterObject());
-        const auto & transformParameterMaps = transformParameterObject.GetParameterMaps();
+        const elx::ParameterObject & transformParameterObject = Deref(registration.GetTransformParameterObject());
+        const auto &                 transformParameterMaps = transformParameterObject.GetParameterMaps();
         EXPECT_EQ(transformParameterMaps.size(), 1);
         return Front(transformParameterMaps);
       };
@@ -1955,8 +1950,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
           const itk::TransformBase::Pointer compositeTransform =
             elx::TransformIO::Read(outputDirectoryPath + "/TransformParameters.0-Composite." + fileNameExtension);
           const auto & transformQueue =
-            DerefRawPointer(dynamic_cast<const CompositeTransformType *>(compositeTransform.GetPointer()))
-              .GetTransformQueue();
+            Deref(dynamic_cast<const CompositeTransformType *>(compositeTransform.GetPointer())).GetTransformQueue();
 
           ASSERT_EQ(transformQueue.size(), useInitialTransform ? 2 : 1);
 
@@ -1964,7 +1958,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
 
           for (const auto actualTransformPtr : { singleTransform.GetPointer(), frontTransform })
           {
-            const itk::TransformBase & actualTransform = DerefRawPointer(actualTransformPtr);
+            const itk::TransformBase & actualTransform = Deref(actualTransformPtr);
 
             EXPECT_EQ(typeid(actualTransform), typeid(expectedItkTransform));
             EXPECT_EQ(actualTransform.GetParameters(), expectedItkTransform.GetParameters());
@@ -1981,7 +1975,7 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
             // InitialTransformParameterFileName.
             const auto & backTransform = DerefSmartPointer(transformQueue.back());
             const auto & translationTransform =
-              DerefRawPointer(dynamic_cast<const itk::TranslationTransform<double, ImageDimension> *>(&backTransform));
+              Deref(dynamic_cast<const itk::TranslationTransform<double, ImageDimension> *>(&backTransform));
             EXPECT_EQ(translationTransform.GetOffset(), itk::MakeVector(1.0, -2.0));
           }
         }
@@ -2191,7 +2185,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageHavingInternalPi
     registration.SetMovingImage(&movingImage);
     registration.Update();
 
-    EXPECT_EQ(DerefRawPointer(registration.GetOutput()), movingImage);
+    EXPECT_EQ(Deref(registration.GetOutput()), movingImage);
   });
 }
 
@@ -2240,7 +2234,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
     registration.SetMovingImage(&movingImage);
     registration.Update();
 
-    EXPECT_EQ(DerefRawPointer(registration.GetOutput()), movingImage);
+    EXPECT_EQ(Deref(registration.GetOutput()), movingImage);
   });
 }
 
@@ -2283,7 +2277,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageUsingAnyInternal
       registration.SetMovingImage(movingImage);
       registration.Update();
 
-      EXPECT_EQ(DerefRawPointer(registration.GetOutput()), DerefSmartPointer(movingImage));
+      EXPECT_EQ(Deref(registration.GetOutput()), DerefSmartPointer(movingImage));
       EXPECT_EQ(registration.GetNumberOfTransforms(), 1);
       EXPECT_NE(registration.GetNthTransform(0), nullptr);
       EXPECT_NE(registration.GetCombinationTransform(), nullptr);
@@ -2341,7 +2335,7 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckZeroFilledMovingImageWithRandomDom
       registration.SetMovingImage(&movingImage);
       registration.Update();
 
-      EXPECT_EQ(DerefRawPointer(registration.GetOutput()), movingImage);
+      EXPECT_EQ(Deref(registration.GetOutput()), movingImage);
     });
   };
 

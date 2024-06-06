@@ -28,10 +28,10 @@
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
-using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::GenerateRandomSign;
 using elx::CoreMainGTestUtilities::ImageDomain;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
+using itk::Deref;
 
 
 GTEST_TEST(ImageFullSampler, OutputHasSameSequenceOfPixelValuesAsInput)
@@ -49,7 +49,7 @@ GTEST_TEST(ImageFullSampler, OutputHasSameSequenceOfPixelValuesAsInput)
   sampler.SetInput(image);
   sampler.Update();
 
-  const auto &                output = DerefRawPointer(sampler.GetOutput());
+  const auto &                output = Deref(sampler.GetOutput());
   const itk::ImageBufferRange imageBufferRange(*image);
   const std::size_t           numberOfSamples{ output.size() };
 
@@ -77,7 +77,7 @@ GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingMultiThread)
     sampler.SetUseMultiThread(useMultiThread);
     sampler.SetInput(image);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   EXPECT_EQ(generateSamples(true), generateSamples(false));
@@ -114,7 +114,7 @@ GTEST_TEST(ImageFullSampler, HasSameOutputWhenUsingFullyFilledMask)
     }
 
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   EXPECT_EQ(generateSamples(true), generateSamples(false));
@@ -177,7 +177,7 @@ GTEST_TEST(ImageFullSampler, ExactlyEqualVersusSlightlyDifferentMaskImageDomain)
 
     sampler.SetMask(maskSpatialObject);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   const auto samplesOnExactlyEqualImageDomains = generateSamples(true);

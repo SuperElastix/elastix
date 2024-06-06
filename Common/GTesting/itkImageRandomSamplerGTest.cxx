@@ -29,10 +29,10 @@
 #include <array>
 
 // Using-declarations:
-using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
+using itk::Deref;
 
 
 GTEST_TEST(ImageRandomSampler, CheckImageValuesOfSamples)
@@ -53,7 +53,7 @@ GTEST_TEST(ImageRandomSampler, CheckImageValuesOfSamples)
   sampler.SetInput(image);
   sampler.Update();
 
-  const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLConstContainer();
+  const auto & samples = Deref(sampler.GetOutput()).CastToSTLConstContainer();
 
   ASSERT_EQ(samples.size(), numberOfSamples);
 
@@ -83,7 +83,7 @@ GTEST_TEST(ImageRandomSampler, SetSeedMakesRandomizationDeterministic)
       sampler.SetSeed(seed);
       sampler.SetInput(image);
       sampler.Update();
-      return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+      return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
     };
 
     const auto samples = generateSamples();
@@ -113,7 +113,7 @@ GTEST_TEST(ImageRandomSampler, HasSameOutputWhenUsingMultiThread)
     sampler.SetSeed(1);
     sampler.SetInput(image);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   EXPECT_EQ(generateSamples(true), generateSamples(false));

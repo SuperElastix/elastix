@@ -23,6 +23,7 @@
 #include <elxParameterObject.h>
 #include <elxConversion.h>
 
+#include <itkDeref.h>
 #include <itkImage.h>
 #include <itkImageBase.h>
 #include <itkImageBufferRange.h>
@@ -85,30 +86,15 @@ public:
   }                                                                                                                    \
   static_assert(true, "Expect a semi-colon ';' at the end of a macro call")
 
-/// Dereferences the specified raw pointer. Throws an `Exception` instead, when the pointer is null.
-template <typename TRawPointer>
-decltype(auto)
-DerefRawPointer(const TRawPointer ptr)
-{
-  static_assert(std::is_pointer_v<TRawPointer>, "For smart pointers, use DerefSmartPointer instead!");
-
-  if (ptr == nullptr)
-  {
-    throw Exception("DerefRawPointer error: the pointer should not be null!");
-  }
-  return *ptr;
-}
-
-
 template <typename TSmartPointer>
 decltype(auto)
 DerefSmartPointer(const TSmartPointer & ptr)
 {
-  static_assert(!std::is_pointer_v<TSmartPointer>, "For raw pointers, use DerefRawPointer instead!");
+  static_assert(!std::is_pointer_v<TSmartPointer>, "For raw pointers, use itk::Deref instead!");
 
   if (ptr == nullptr)
   {
-    throw Exception("DerefRawPointer error: the (smart) pointer should not be null!");
+    throw Exception("DerefSmartPointer error: the (smart) pointer should not be null!");
   }
   return *ptr;
 }
@@ -286,7 +272,7 @@ std::vector<double>
 GetTransformParametersFromFilter(TFilter & filter)
 {
   const auto   transformParameterObject = filter.GetTransformParameterObject();
-  const auto & transformParameterMaps = DerefRawPointer(transformParameterObject).GetParameterMaps();
+  const auto & transformParameterMaps = itk::Deref(transformParameterObject).GetParameterMaps();
   return GetTransformParametersFromMaps(transformParameterMaps);
 }
 

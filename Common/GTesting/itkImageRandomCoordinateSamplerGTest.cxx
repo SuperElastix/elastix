@@ -22,6 +22,7 @@
 #include "GTesting/elxCoreMainGTestUtilities.h"
 
 // ITK header files:
+#include <itkDeref.h>
 #include <itkImage.h>
 #include <itkMersenneTwisterRandomVariateGenerator.h>
 
@@ -29,10 +30,10 @@
 #include <array>
 
 // Using-declarations:
-using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
+using itk::Deref;
 using itk::Statistics::MersenneTwisterRandomVariateGenerator;
 
 
@@ -55,7 +56,7 @@ GTEST_TEST(ImageRandomCoordinateSampler, CheckImageValuesOfSamples)
   sampler.SetInput(image);
   sampler.Update();
 
-  const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLConstContainer();
+  const auto & samples = Deref(sampler.GetOutput()).CastToSTLConstContainer();
 
   ASSERT_EQ(samples.size(), numberOfSamples);
 
@@ -88,7 +89,7 @@ GTEST_TEST(ImageRandomCoordinateSampler, SetSeedMakesRandomizationDeterministic)
       DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(seed);
       sampler.SetInput(image);
       sampler.Update();
-      return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+      return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
     };
 
     const auto samples = generateSamples();
@@ -119,7 +120,7 @@ GTEST_TEST(ImageRandomCoordinateSampler, HasSameOutputWhenUsingMultiThread)
     sampler.SetUseMultiThread(useMultiThread);
     sampler.SetInput(image);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   EXPECT_EQ(generateSamples(true), generateSamples(false));
