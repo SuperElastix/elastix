@@ -34,7 +34,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase()
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Check if the exact metric value, computed on all pixels, should be shown. */
 

@@ -45,7 +45,7 @@ ExternalTransform<TElastix>::ReadFromFile()
   /** Call the ReadFromFile from the TransformBase. */
   Superclass2::ReadFromFile();
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   if (const auto objectPtr = configuration.RetrieveParameterValue<itk::Object *>(nullptr, "TransformAddress", 0, false))
   {

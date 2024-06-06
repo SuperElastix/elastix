@@ -19,7 +19,7 @@
 #define elxRandomSampler_hxx
 
 #include "elxRandomSampler.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -32,7 +32,7 @@ template <class TElastix>
 void
 RandomSampler<TElastix>::BeforeEachResolution()
 {
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   const unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 

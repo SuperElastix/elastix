@@ -20,7 +20,7 @@
 #define elxFiniteDifferenceGradientDescent_hxx
 
 #include "elxFiniteDifferenceGradientDescent.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include <iomanip>
 #include <string>
 #include "math.h"
@@ -47,7 +47,7 @@ template <class TElastix>
 void
 FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration()
 {
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   std::string showMetricValues("false");
   configuration.ReadParameter(showMetricValues, "ShowMetricValues", 0);
@@ -86,7 +86,7 @@ FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution()
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Set the maximumNumberOfIterations.*/
   unsigned int maximumNumberOfIterations = 500;

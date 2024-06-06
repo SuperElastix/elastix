@@ -21,7 +21,7 @@
 #include "elxTransformBase.h"
 
 #include "elxConversion.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include "elxElastixMain.h"
 #include "elxTransformIO.h"
 
@@ -59,7 +59,7 @@ template <class TElastix>
 int
 TransformBase<TElastix>::BeforeAllBase()
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Check Command line options and print them to the logfile. */
   log::info("Command line options from TransformBase:");
@@ -91,7 +91,7 @@ template <class TElastix>
 int
 TransformBase<TElastix>::BeforeAllTransformix()
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Declare the return value and initialize it. */
   int returndummy = 0;
@@ -155,7 +155,7 @@ template <class TElastix>
 void
 TransformBase<TElastix>::BeforeRegistrationBase()
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Read from the configuration file how to combine the initial
    * transform with the current transform.
@@ -182,7 +182,7 @@ TransformBase<TElastix>::BeforeRegistrationBase()
     std::string fileName = configuration.GetCommandLineArgument("-t0");
     if (fileName.empty())
     {
-      const ElastixBase & elastixBase = Deref(Superclass::GetElastix());
+      const ElastixBase & elastixBase = itk::Deref(Superclass::GetElastix());
 
       const auto numberOfConfigurations = elastixBase.GetNumberOfTransformConfigurations();
 
@@ -287,7 +287,7 @@ TransformBase<TElastix>::ReadFromFile()
    * This method assumes the configuration is initialized with a
    * transform parameter file, so not an elastix parameter file!!
    */
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Task 1 - Read the parameters from file. */
 
@@ -347,7 +347,7 @@ TransformBase<TElastix>::ReadFromFile()
   } // end if this->m_ReadWriteTransformParameters
 
   /** Task 2 - Get the InitialTransform. */
-  const ElastixBase & elastixBase = Deref(Superclass::GetElastix());
+  const ElastixBase & elastixBase = itk::Deref(Superclass::GetElastix());
 
   if (elastixBase.GetNumberOfTransformConfigurations() > 1)
   {
@@ -514,7 +514,7 @@ template <class TElastix>
 void
 TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo, const ParametersType & param) const
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   const auto itkTransformOutputFileNameExtensions =
     configuration.GetValuesOfParameter("ITKTransformOutputFileNameExtension");
@@ -586,7 +586,7 @@ TransformBase<TElastix>::CreateTransformParameterMap(const ParametersType & para
                                                      ParameterMapType &     parameterMap,
                                                      const bool             includeDerivedTransformParameters) const
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   const auto & elastixObject = *(this->GetElastix());
 
@@ -659,7 +659,7 @@ template <class TElastix>
 void
 TransformBase<TElastix>::TransformPoints() const
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** If the optional command "-def" is given in the command
    * line arguments, then and only then we continue.
@@ -854,7 +854,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     deformationvec[j].CastFrom(outputpointvec[j] - inputpointvec[j]);
   }
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
       !outputDirectoryPath.empty())
@@ -964,7 +964,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
     log::error(std::ostringstream{} << "  Error while transforming points.\n" << err);
   }
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
       !outputDirectoryPath.empty())
@@ -1002,7 +1002,7 @@ TransformBase<TElastix>::TransformPointsAllPoints() const
   // put deformation field in container
   this->m_Elastix->SetResultDeformationField(deformationfield.GetPointer());
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   if (!configuration.GetCommandLineArgument("-out").empty())
   {
@@ -1045,7 +1045,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   infoChanger->SetChangeDirection(retdc && !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(defGenerator->GetOutput());
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Track the progress of the generation of the deformation field. */
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
@@ -1080,7 +1080,7 @@ void
 TransformBase<TElastix>::WriteDeformationFieldImage(
   typename TransformBase<TElastix>::DeformationFieldImageType::Pointer deformationfield) const
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Create a name for the deformation field file. */
   std::string resultImageFormat = "mhd";
@@ -1148,7 +1148,7 @@ template <class TElastix>
 void
 TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** If the optional command "-jac" is given in the command line arguments,
    * then and only then we continue.
@@ -1214,7 +1214,7 @@ template <class TElastix>
 void
 TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** If the optional command "-jacmat" is given in the command line arguments,
    * then and only then we continue.

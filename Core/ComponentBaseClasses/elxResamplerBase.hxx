@@ -20,7 +20,7 @@
 
 #include "elxResamplerBase.h"
 #include "elxConversion.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include "itkImageFileCastWriter.h"
 #include "itkChangeInformationImageFilter.h"
@@ -49,7 +49,7 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
    * \todo make it a cast to the fixed image type
    */
   using FixedImageType = typename ElastixType::FixedImageType;
-  FixedImageType & fixedImage = Deref(this->m_Elastix->GetFixedImage());
+  FixedImageType & fixedImage = itk::Deref(this->m_Elastix->GetFixedImage());
   ITKBaseType &    resampleImageFilter = this->GetSelf();
 
   /** Set the region info to the same values as in the fixedImage. */
@@ -59,7 +59,7 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
   resampleImageFilter.SetOutputSpacing(fixedImage.GetSpacing());
   resampleImageFilter.SetOutputDirection(fixedImage.GetDirection());
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Set the DefaultPixelValue (for pixels in the resampled image
    * that come from outside the original (moving) image.
@@ -87,7 +87,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Decide whether or not to write the result image this resolution. */
   bool writeResultImageThisResolution = false;
@@ -145,7 +145,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
   /** What is the current iteration number? */
   const unsigned int iter = this->m_Elastix->GetIterationCounter();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Decide whether or not to write the result image this iteration. */
   bool writeResultImageThisIteration = false;
@@ -193,7 +193,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
   /** Set the final transform parameters. */
   this->GetElastix()->GetElxTransformBase()->SetFinalParameters();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Decide whether or not to write the result image. */
   std::string writeResultImage = "true";
@@ -306,7 +306,7 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const std::string & filenam
   /** Make sure the resampler is updated. */
   resampleImageFilter.Modified();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Add a progress observer to the resampler. */
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
@@ -367,7 +367,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
     resampleImageFilter.SetTransform(testptr->GetTransform());
   }
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";
@@ -431,7 +431,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   /** Make sure the resampler is updated. */
   resampleImageFilter.Modified();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
   const auto progressObserver =
@@ -554,7 +554,7 @@ ResamplerBase<TElastix>::ReadFromFile()
   /** Connect the components. */
   this->SetComponents();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Get spacing, origin and size of the image to be produced by the resampler. */
   SpacingType     spacing;
@@ -664,7 +664,7 @@ ResamplerBase<TElastix>::CreateTransformParameterMap(ParameterMapType & paramete
   /** Store the DefaultPixelValue. */
   parameterMap["DefaultPixelValue"] = { Conversion::ToString(this->GetSelf().GetDefaultPixelValue()) };
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Store the output image format. */
   std::string resultImageFormat = "mhd";
@@ -700,7 +700,7 @@ template <class TElastix>
 void
 ResamplerBase<TElastix>::ReleaseMemory()
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Release some memory. Sometimes it is not possible to
    * resample and write an image, because too much memory is consumed by

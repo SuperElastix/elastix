@@ -17,7 +17,7 @@
  *=========================================================================*/
 
 #include "elxElastixMain.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #ifdef ELASTIX_USE_OPENCL
 #  include "itkOpenCLContext.h"
@@ -26,6 +26,7 @@
 
 namespace elastix
 {
+using itk::Deref;
 
 /**
  * ********************* Constructor ****************************

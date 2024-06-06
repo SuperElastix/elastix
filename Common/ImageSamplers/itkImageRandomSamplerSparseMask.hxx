@@ -19,7 +19,7 @@
 #define itkImageRandomSamplerSparseMask_hxx
 
 #include "itkImageRandomSamplerSparseMask.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include <cassert>
 
 namespace itk
@@ -45,8 +45,8 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   }
 
   /** Get handles to the input image and output sample container. */
-  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
-  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
+  const InputImageType &     inputImage = Deref(this->GetInput());
+  ImageSampleContainerType & sampleContainer = Deref(this->GetOutput());
 
   // Take capacity from the output container, and clear it.
   std::vector<ImageSampleType> sampleVector;
@@ -72,7 +72,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   }
 
   /** Get a handle to the full sampler output. */
-  const ImageSampleContainerType & allValidSamples = elastix::Deref(this->m_InternalFullSampler->GetOutput());
+  const ImageSampleContainerType & allValidSamples = Deref(this->m_InternalFullSampler->GetOutput());
   unsigned long                    numberOfValidSamples = allValidSamples.Size();
 
 
@@ -92,8 +92,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 
     UserData userData{ allValidSamples.CastToSTLConstContainer(), m_RandomIndices, samples };
 
-    elastix::Deref(this->ProcessObject::GetMultiThreader())
-      .SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
+    Deref(this->ProcessObject::GetMultiThreader()).SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
     return;
   }
 

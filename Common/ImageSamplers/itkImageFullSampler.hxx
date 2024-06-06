@@ -21,7 +21,7 @@
 #include "itkImageFullSampler.h"
 
 #include "itkImageRegionConstIteratorWithIndex.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include <algorithm> // For copy_n and min.
 #include <cassert>
@@ -155,8 +155,8 @@ void
 ImageFullSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container, and the mask. */
-  const InputImageType &     inputImage = elastix::Deref(this->GetInput());
-  ImageSampleContainerType & sampleContainer = elastix::Deref(this->GetOutput());
+  const InputImageType &     inputImage = Deref(this->GetInput());
+  ImageSampleContainerType & sampleContainer = Deref(this->GetOutput());
   const MaskType * const     mask = this->Superclass::GetMask();
 
   if (mask)
@@ -173,7 +173,7 @@ ImageFullSampler<TInputImage>::GenerateData()
 
   if (Superclass::m_UseMultiThread)
   {
-    MultiThreadedGenerateData(elastix::Deref(this->ProcessObject::GetMultiThreader()),
+    MultiThreadedGenerateData(Deref(this->ProcessObject::GetMultiThreader()),
                               ProcessObject::GetNumberOfWorkUnits(),
                               inputImage,
                               mask,

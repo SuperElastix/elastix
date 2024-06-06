@@ -19,7 +19,7 @@
 #define elxFullSearchOptimizer_hxx
 
 #include "elxFullSearchOptimizer.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -68,7 +68,7 @@ FullSearch<TElastix>::BeforeEachResolution()
   /** Get the current resolution level.*/
   unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Read FullSearchRange from the parameter file. */
 
@@ -218,7 +218,7 @@ template <class TElastix>
 void
 FullSearch<TElastix>::AfterEachResolution()
 {
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   // enum StopConditionType {FullRangeSearched,  MetricError };
   std::string stopcondition;

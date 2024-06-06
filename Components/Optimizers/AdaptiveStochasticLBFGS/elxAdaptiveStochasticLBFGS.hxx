@@ -19,7 +19,7 @@
 #define elxAdaptiveStochasticLBFGS_hxx
 
 #include "elxAdaptiveStochasticLBFGS.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include <iomanip>
 #include <string>
@@ -130,7 +130,7 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Set the LBFGSMemory. */
   SizeValueType memory = 5;
@@ -636,7 +636,7 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
     originalSampler[m] = sampler.GetPointer();
   }
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Get the sampler that is used for the curvature pair update. */
   std::string curvatureSamplerType = "Random";
@@ -870,7 +870,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation()
   log::info(std::ostringstream{} << "Starting automatic parameter estimation for " << this->elxGetClassName()
                                  << " ...");
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
@@ -1096,7 +1096,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
     computeDisplacementDistribution->SetUseScales(false);
   }
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   double      jacg = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
@@ -1208,7 +1208,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
     computeDisplacementDistribution->SetUseScales(false);
   }
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   double      jacg = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
@@ -1325,7 +1325,7 @@ AdaptiveStochasticLBFGS<TElastix>::SampleGradients(const ParametersType & mu0,
     } // end for loop over metrics
   }   // end if NewSamplesEveryIteration.
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Prepare for progress printing. */
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);

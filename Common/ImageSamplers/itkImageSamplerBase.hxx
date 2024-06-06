@@ -19,7 +19,7 @@
 #define itkImageSamplerBase_hxx
 
 #include "itkImageSamplerBase.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include <itkMultiThreaderBase.h>
 #include <cassert>
 #include <numeric> // For accumulate.
@@ -170,7 +170,7 @@ ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
   }
 
   /** Get a non-const reference to the input image. */
-  auto & inputImage = const_cast<InputImageType &>(elastix::Deref(this->GetInput()));
+  auto & inputImage = const_cast<InputImageType &>(Deref(this->GetInput()));
 
   /** Get and set the region. */
   if (this->GetInputImageRegion().GetNumberOfPixels() != 0)

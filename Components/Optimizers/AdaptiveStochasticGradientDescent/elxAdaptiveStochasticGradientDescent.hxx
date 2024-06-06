@@ -19,7 +19,7 @@
 #define elxAdaptiveStochasticGradientDescent_hxx
 
 #include "elxAdaptiveStochasticGradientDescent.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include <iomanip>
 #include <string>
@@ -102,7 +102,7 @@ AdaptiveStochasticGradientDescent<TElastix>::BeforeEachResolution()
   const unsigned int numberOfParameters =
     this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
@@ -466,7 +466,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimation()
   log::info(std::ostringstream{} << "Starting automatic parameter estimation for " << this->elxGetClassName()
                                  << " ...");
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
@@ -694,7 +694,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDi
     computeDisplacementDistribution->SetUseScales(false);
   }
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   double      jacg = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
@@ -852,7 +852,7 @@ AdaptiveStochasticGradientDescent<TElastix>::SampleGradients(const ParametersTyp
 
   } // end if NewSamplesEveryIteration.
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Prepare for progress printing. */
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);
