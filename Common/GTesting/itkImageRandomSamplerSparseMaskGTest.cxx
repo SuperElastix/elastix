@@ -22,6 +22,7 @@
 #include "GTesting/elxCoreMainGTestUtilities.h"
 
 // ITK header files:
+#include <itkDeref.h>
 #include <itkImage.h>
 #include <itkMersenneTwisterRandomVariateGenerator.h>
 
@@ -30,13 +31,13 @@
 #include <itkImageMaskSpatialObject.h>
 
 // Using-declarations:
-using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::ImageDomain;
+using itk::Deref;
 using itk::Statistics::MersenneTwisterRandomVariateGenerator;
 
 
@@ -68,7 +69,7 @@ GTEST_TEST(ImageRandomSamplerSparseMask, CheckImageValuesOfSamples)
   sampler.SetNumberOfSamples(numberOfSamples);
   sampler.Update();
 
-  const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLConstContainer();
+  const auto & samples = Deref(sampler.GetOutput()).CastToSTLConstContainer();
 
   ASSERT_EQ(samples.size(), numberOfSamples);
 
@@ -109,7 +110,7 @@ GTEST_TEST(ImageRandomSamplerSparseMask, SetSeedMakesRandomizationDeterministic)
       sampler.SetInput(image);
       sampler.SetMask(maskSpatialObject);
       sampler.Update();
-      return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+      return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
     };
 
     const auto samples = generateSamples();
@@ -149,7 +150,7 @@ GTEST_TEST(ImageRandomSamplerSparseMask, HasSameOutputWhenUsingMultiThread)
     sampler.SetInput(image);
     sampler.SetMask(maskSpatialObject);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   EXPECT_EQ(generateSamples(true), generateSamples(false));

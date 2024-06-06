@@ -20,6 +20,7 @@
 #include "itkImageGridSampler.h"
 #include "itkImageFullSampler.h"
 #include "elxDefaultConstruct.h"
+#include <itkDeref.h>
 #include <itkImage.h>
 #include <itkImageMaskSpatialObject.h>
 
@@ -35,8 +36,8 @@ using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::CoreMainGTestUtilities::CreateImage;
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
-using elx::CoreMainGTestUtilities::DerefRawPointer;
 using elx::CoreMainGTestUtilities::ImageDomain;
+using itk::Deref;
 
 namespace
 {
@@ -81,7 +82,7 @@ GTEST_TEST(ImageGridSampler, HasSameOutputAsFullSamplerByDefault)
   const auto generateSamples = [image](auto && sampler) {
     sampler.SetInput(image);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   const auto samples = generateSamples(elx::DefaultConstruct<ImageGridSampler<ImageType>>{});
@@ -110,7 +111,7 @@ GTEST_TEST(ImageGridSampler, MaxSampleGridSpacing)
   sampler.SetInput(image);
   sampler.SetUseMultiThread(false);
   sampler.Update();
-  const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLContainer();
+  const auto & samples = Deref(sampler.GetOutput()).CastToSTLContainer();
 
   ASSERT_FALSE(samples.empty());
   EXPECT_EQ(samples.size(), 1);
@@ -142,7 +143,7 @@ GTEST_TEST(ImageGridSampler, SampleGridSpacingGreaterEqualToImageSize)
   sampler.SetSampleGridSpacing(sampleGridSpacing);
   sampler.SetInput(image);
   sampler.Update();
-  const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLContainer();
+  const auto & samples = Deref(sampler.GetOutput()).CastToSTLContainer();
 
   ASSERT_FALSE(samples.empty());
   EXPECT_EQ(samples.size(), 1);
@@ -175,7 +176,7 @@ GTEST_TEST(ImageGridSampler, SampleGridSpacingOneLessThanImageSize)
   sampler.SetSampleGridSpacing(sampleGridSpacing);
   sampler.SetInput(image);
   sampler.Update();
-  const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLContainer();
+  const auto & samples = Deref(sampler.GetOutput()).CastToSTLContainer();
 
   ASSERT_FALSE(samples.empty());
   EXPECT_EQ(samples.size(), 4);
@@ -202,7 +203,7 @@ GTEST_TEST(ImageGridSampler, SampleGridSpacingTwo)
   sampler.SetSampleGridSpacing(itk::MakeFilled<SamplerType::SampleGridSpacingType>(2));
   sampler.SetInput(image);
   sampler.Update();
-  const auto & samples = DerefRawPointer(sampler.GetOutput()).CastToSTLContainer();
+  const auto & samples = Deref(sampler.GetOutput()).CastToSTLContainer();
 
   ASSERT_FALSE(samples.empty());
 
@@ -234,7 +235,7 @@ GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingMultiThread)
     sampler.SetUseMultiThread(useMultiThread);
     sampler.SetInput(image);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
   const auto samplesGeneratedUsingMultiThreading = generateSamples(true);
 
@@ -276,7 +277,7 @@ GTEST_TEST(ImageGridSampler, HasSameOutputWhenUsingFullyFilledMask)
     }
 
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   const auto samplesGeneratedUsingFullyFilledMask = generateSamples(true);
@@ -323,7 +324,7 @@ GTEST_TEST(ImageGridSampler, OneOutOfThreeMask)
     sampler.SetSampleGridSpacing(itk::MakeFilled<SamplerType::SampleGridSpacingType>(2));
     sampler.SetUseMultiThread(useMultiThread);
     sampler.Update();
-    return std::move(DerefRawPointer(sampler.GetOutput()).CastToSTLContainer());
+    return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
   };
 
   const auto samplesGeneratedUsingMultiThreading = generateSamples(true);
