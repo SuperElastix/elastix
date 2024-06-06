@@ -77,12 +77,11 @@ ImageFullSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
   {
     if (elastix::MaskHasSameImageDomain(*mask, inputImage))
     {
-      GenerateDataForWorkUnit<elastix::MaskCondition::HasSameImageDomain>(workUnit, inputImage, mask, nullptr);
+      GenerateDataForWorkUnit<elastix::MaskCondition::HasSameImageDomain>(workUnit, inputImage, mask);
     }
     else
     {
-      GenerateDataForWorkUnit<elastix::MaskCondition::HasDifferentImageDomain>(
-        workUnit, inputImage, mask, mask->GetObjectToWorldTransformInverse());
+      GenerateDataForWorkUnit<elastix::MaskCondition::HasDifferentImageDomain>(workUnit, inputImage, mask);
     }
 
     assert(workUnit.NumberOfSamples <= samples.size());
@@ -90,7 +89,7 @@ ImageFullSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
   }
   else
   {
-    GenerateDataForWorkUnit<elastix::MaskCondition::IsNull>(workUnit, inputImage, nullptr, nullptr);
+    GenerateDataForWorkUnit<elastix::MaskCondition::IsNull>(workUnit, inputImage, nullptr);
   }
 }
 
@@ -111,10 +110,7 @@ ImageFullSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
 
   const bool maskHasSameImageDomain = mask ? elastix::MaskHasSameImageDomain(*mask, inputImage) : false;
 
-  UserData userData{ inputImage,
-                     mask,
-                     (mask == nullptr || maskHasSameImageDomain) ? nullptr : mask->GetObjectToWorldTransformInverse(),
-                     GenerateWorkUnits(numberOfWorkUnits, croppedInputImageRegion, samples) };
+  UserData userData{ inputImage, mask, GenerateWorkUnits(numberOfWorkUnits, croppedInputImageRegion, samples) };
 
   if (mask)
   {
@@ -203,8 +199,7 @@ ImageFullSampler<TInputImage>::ThreaderCallback(void * const arg)
 
   if (const auto workUnitID = info.WorkUnitID; workUnitID < userData.WorkUnits.size())
   {
-    GenerateDataForWorkUnit<VMaskCondition>(
-      userData.WorkUnits[workUnitID], userData.InputImage, userData.Mask, userData.WorldToObjectTransform);
+    GenerateDataForWorkUnit<VMaskCondition>(userData.WorkUnits[workUnitID], userData.InputImage, userData.Mask);
   }
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 }
@@ -213,13 +208,11 @@ ImageFullSampler<TInputImage>::ThreaderCallback(void * const arg)
 template <class TInputImage>
 template <elastix::MaskCondition VMaskCondition>
 void
-ImageFullSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &                               workUnit,
-                                                       const InputImageType &                   inputImage,
-                                                       const MaskType * const                   mask,
-                                                       const WorldToObjectTransformType * const worldToObjectTransform)
+ImageFullSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &             workUnit,
+                                                       const InputImageType & inputImage,
+                                                       const MaskType * const mask)
 {
   assert((mask == nullptr) == (VMaskCondition == elastix::MaskCondition::IsNull));
-  assert((worldToObjectTransform == nullptr) == (VMaskCondition != elastix::MaskCondition::HasDifferentImageDomain));
 
   auto * samples = workUnit.Samples;
 
@@ -255,9 +248,7 @@ ImageFullSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &               
     }
     if constexpr (VMaskCondition == elastix::MaskCondition::HasDifferentImageDomain)
     {
-      // Equivalent to `mask->IsInsideInWorldSpace(point)`, but much faster.
-      if (mask->MaskType::IsInsideInObjectSpace(
-            worldToObjectTransform->WorldToObjectTransformType::TransformPoint(point)))
+      if (mask->IsInsideInWorldSpace(point))
       {
         // Store sample in container.
         *samples = { point, static_cast<RealType>(inputImage.GetPixel(index)) };

@@ -173,13 +173,11 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
   {
     if (elastix::MaskHasSameImageDomain(*mask, inputImage))
     {
-      GenerateDataForWorkUnit<elastix::MaskCondition::HasSameImageDomain>(
-        workUnit, inputImage, mask, nullptr, gridSpacing);
+      GenerateDataForWorkUnit<elastix::MaskCondition::HasSameImageDomain>(workUnit, inputImage, mask, gridSpacing);
     }
     else
     {
-      GenerateDataForWorkUnit<elastix::MaskCondition::HasDifferentImageDomain>(
-        workUnit, inputImage, mask, mask->GetObjectToWorldTransformInverse(), gridSpacing);
+      GenerateDataForWorkUnit<elastix::MaskCondition::HasDifferentImageDomain>(workUnit, inputImage, mask, gridSpacing);
     }
 
     assert(workUnit.NumberOfSamples <= numberOfSamplesOnGrid);
@@ -187,7 +185,7 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
   }
   else
   {
-    GenerateDataForWorkUnit<elastix::MaskCondition::IsNull>(workUnit, inputImage, nullptr, nullptr, gridSpacing);
+    GenerateDataForWorkUnit<elastix::MaskCondition::IsNull>(workUnit, inputImage, nullptr, gridSpacing);
   }
 }
 
@@ -211,20 +209,17 @@ ImageGridSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
   const std::size_t numberOfSamplesOnGrid = gridSize.CalculateProductOfElements();
   samples.resize(numberOfSamplesOnGrid);
 
-  const bool maskHasSameImageDomain = mask ? elastix::MaskHasSameImageDomain(*mask, inputImage) : false;
-
   UserData userData{ inputImage,
                      mask,
-                     (mask == nullptr || maskHasSameImageDomain) ? nullptr : mask->GetObjectToWorldTransformInverse(),
                      gridSpacing,
                      GenerateWorkUnits(numberOfWorkUnits, croppedInputImageRegion, gridIndex, gridSpacing, samples) };
-
 
   if (mask)
   {
     multiThreader.SetSingleMethodAndExecute(
-      maskHasSameImageDomain ? &Self::ThreaderCallback<elastix::MaskCondition::HasSameImageDomain>
-                             : &Self::ThreaderCallback<elastix::MaskCondition::HasDifferentImageDomain>,
+      elastix::MaskHasSameImageDomain(*mask, inputImage)
+        ? &Self::ThreaderCallback<elastix::MaskCondition::HasSameImageDomain>
+        : &Self::ThreaderCallback<elastix::MaskCondition::HasDifferentImageDomain>,
       &userData);
   }
   else
@@ -313,11 +308,8 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
 
   if (workUnitID < userData.WorkUnits.size())
   {
-    GenerateDataForWorkUnit<VMaskCondition>(userData.WorkUnits[workUnitID],
-                                            userData.InputImage,
-                                            userData.Mask,
-                                            userData.WorldToObjectTransform,
-                                            userData.GridSpacing);
+    GenerateDataForWorkUnit<VMaskCondition>(
+      userData.WorkUnits[workUnitID], userData.InputImage, userData.Mask, userData.GridSpacing);
   }
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 }
@@ -326,14 +318,12 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
 template <class TInputImage>
 template <elastix::MaskCondition VMaskCondition>
 void
-ImageGridSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &                               workUnit,
-                                                       const InputImageType &                   inputImage,
-                                                       const MaskType * const                   mask,
-                                                       const WorldToObjectTransformType * const worldToObjectTransform,
-                                                       const SampleGridSpacingType &            gridSpacing)
+ImageGridSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &                    workUnit,
+                                                       const InputImageType &        inputImage,
+                                                       const MaskType * const        mask,
+                                                       const SampleGridSpacingType & gridSpacing)
 {
   assert((mask == nullptr) == (VMaskCondition == elastix::MaskCondition::IsNull));
-  assert((worldToObjectTransform == nullptr) == (VMaskCondition != elastix::MaskCondition::HasDifferentImageDomain));
 
   auto * samples = workUnit.Samples;
 
@@ -377,9 +367,7 @@ ImageGridSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &               
           }
           if constexpr (VMaskCondition == elastix::MaskCondition::HasDifferentImageDomain)
           {
-            // Equivalent to `mask->IsInsideInWorldSpace(point)`, but much faster.
-            if (mask->MaskType::IsInsideInObjectSpace(
-                  worldToObjectTransform->WorldToObjectTransformType::TransformPoint(point)))
+            if (mask->IsInsideInWorldSpace(point))
             {
               // Store sample in container.
               *samples = { point, static_cast<RealType>(inputImage.GetPixel(index)) };
