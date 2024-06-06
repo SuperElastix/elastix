@@ -152,8 +152,6 @@ protected:
   GenerateData() override;
 
 private:
-  using WorldToObjectTransformType = AffineTransform<double, InputImageDimension>;
-
   struct WorkUnit
   {
     const SampleGridIndexType GridIndex{};
@@ -170,11 +168,10 @@ private:
   {
     ITK_DISALLOW_COPY_AND_MOVE(UserData);
 
-    const InputImageType &                   InputImage;
-    const MaskType * const                   Mask{};
-    const WorldToObjectTransformType * const WorldToObjectTransform{};
-    const SampleGridSpacingType              GridSpacing{};
-    std::vector<WorkUnit>                    WorkUnits{};
+    const InputImageType &      InputImage;
+    const MaskType * const      Mask{};
+    const SampleGridSpacingType GridSpacing{};
+    std::vector<WorkUnit>       WorkUnits{};
   };
 
   template <elastix::MaskCondition VMaskCondition>
@@ -244,11 +241,7 @@ private:
   /** Generates the data for one specific work unit. */
   template <elastix::MaskCondition VMaskCondition>
   static void
-  GenerateDataForWorkUnit(WorkUnit &,
-                          const InputImageType &,
-                          const MaskType *,
-                          const WorldToObjectTransformType *,
-                          const SampleGridSpacingType &);
+  GenerateDataForWorkUnit(WorkUnit &, const InputImageType &, const MaskType *, const SampleGridSpacingType &);
 
   /** An array of integer spacing factors */
   SampleGridSpacingType m_SampleGridSpacing{ itk::MakeFilled<SampleGridSpacingType>(1) };
