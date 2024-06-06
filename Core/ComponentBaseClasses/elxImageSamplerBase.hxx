@@ -20,7 +20,7 @@
 #define elxImageSamplerBase_hxx
 
 #include "elxImageSamplerBase.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -33,7 +33,7 @@ template <class TElastix>
 void
 ImageSamplerBase<TElastix>::BeforeRegistrationBase()
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
   ITKBaseType &         sampler = GetSelf();
   sampler.SetUseMultiThread(configuration.RetrieveParameterValue(true, "UseMultiThreadingForSamplers", 0, false));
 }
@@ -49,7 +49,7 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Check if NewSamplesEveryIteration is possible with the selected ImageSampler.
    * The "" argument means that no prefix is supplied.

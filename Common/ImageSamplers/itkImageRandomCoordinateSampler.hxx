@@ -19,7 +19,7 @@
 #define itkImageRandomCoordinateSampler_hxx
 
 #include "itkImageRandomCoordinateSampler.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include <vnl/vnl_math.h>
 #include <cassert>
 
@@ -35,8 +35,8 @@ void
 ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container, and interpolator. */
-  const InputImageType &             inputImage = elastix::Deref(this->GetInput());
-  auto &                             samples = elastix::Deref(this->GetOutput()).CastToSTLContainer();
+  const InputImageType &             inputImage = Deref(this->GetInput());
+  auto &                             samples = Deref(this->GetOutput()).CastToSTLContainer();
   typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();
 
   /** Set up the interpolator. */
@@ -75,8 +75,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 
     UserData userData{ m_RandomCoordinates, inputImage, *interpolator, samples };
 
-    elastix::Deref(this->ProcessObject::GetMultiThreader())
-      .SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
+    Deref(this->ProcessObject::GetMultiThreader()).SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
     return;
   }
 

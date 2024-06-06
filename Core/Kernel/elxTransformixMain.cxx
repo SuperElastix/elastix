@@ -25,7 +25,7 @@
 #endif
 
 #include "elxTransformixMain.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include "elxMacro.h"
 
@@ -36,6 +36,7 @@
 
 namespace elastix
 {
+using itk::Deref;
 
 /**
  * **************************** Run *****************************

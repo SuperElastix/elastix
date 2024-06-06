@@ -19,7 +19,7 @@
 #define elxAdaptiveStochasticVarianceReducedGradient_hxx
 
 #include "elxAdaptiveStochasticVarianceReducedGradient.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include <iomanip>
 #include <string>
@@ -122,7 +122,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Set the maximumNumberOfInnerLoopIterations. */
   SizeValueType maximumNumberOfInnerLoopIterations = 50;
@@ -606,7 +606,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization()
       }
     }
 
-    const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+    const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
     this->m_CurrentInnerIteration = 0;
 
@@ -726,7 +726,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
   log::info(std::ostringstream{} << "Starting automatic parameter estimation for " << this->elxGetClassName()
                                  << " ...");
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Decide which method is to be used. */
   std::string asgdParameterEstimationMethod = "Original";
@@ -954,7 +954,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
     computeDisplacementDistribution->SetUseScales(false);
   }
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   double      jacg = 0.0;
   std::string maximumDisplacementEstimationMethod = "2sigma";
@@ -1040,7 +1040,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const Param
   std::vector<ImageRandomCoordinateSamplerPointer> randomCoordinateSamplerVec(M);
   std::vector<ImageGridSamplerPointer>             gridSamplerVec(M);
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** If new samples every iteration, get each sampler, and check if it is
    * a kind of random sampler. If yes, prepare an additional grid sampler

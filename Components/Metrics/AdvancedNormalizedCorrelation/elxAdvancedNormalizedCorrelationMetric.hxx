@@ -32,7 +32,7 @@ template <class TElastix>
 void
 AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution()
 {
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   if (configuration.HasParameter("SubtractMean"))
   {

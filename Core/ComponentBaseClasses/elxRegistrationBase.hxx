@@ -19,7 +19,7 @@
 #define elxRegistrationBase_hxx
 
 #include "elxRegistrationBase.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -53,7 +53,7 @@ RegistrationBase<TElastix>::ReadMaskParameters(UseMaskErosionArrayType & useMask
   /** Read the parameters. */
   if (nrOfMasks > 0)
   {
-    const Configuration & configuration = Deref(Superclass::GetConfiguration());
+    const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
     /** Default values for all masks. Look for ErodeMask, or Erode<Fixed,Moving>Mask. */
     bool erosionOrNot = true;

@@ -19,7 +19,7 @@
 #define elxPreconditionedStochasticGradientDescent_hxx
 
 #include "elxPreconditionedStochasticGradientDescent.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include <cmath> // For abs.
 #include <iomanip>
@@ -114,7 +114,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
   const unsigned int numberOfParameters =
     this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
@@ -586,7 +586,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   log::info("  Computing preconditioner ...");
   double maxJJ = 0; // needed for the noise compensation term
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   bool useJacobiType = false;
   configuration.ReadParameter(useJacobiType, "JacobiTypePreconditioner", this->GetComponentLabel(), level, 0);
@@ -788,7 +788,7 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
 
   } // end if NewSamplesEveryIteration.
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Prepare for progress printing. */
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);

@@ -19,7 +19,7 @@
 #  define elxElastixTemplate_hxx
 
 #  include "elxElastixTemplate.h"
-#  include "elxDeref.h"
+#  include <itkDeref.h>
 
 #  define elxCheckAndSetComponentMacro(_name)                                                                          \
     _name##BaseType * base = this->GetElx##_name##Base(i);                                                             \
@@ -31,7 +31,7 @@
     else                                                                                                               \
     {                                                                                                                  \
       std::string par = "";                                                                                            \
-      Deref(ElastixBase::GetConfiguration()).ReadParameter(par, #_name, i, false);                                     \
+      itk::Deref(ElastixBase::GetConfiguration()).ReadParameter(par, #_name, i, false);                                \
       itkExceptionMacro("ERROR: entry " << i << " of " << #_name << " reads \"" << par << "\", which is not of type "  \
                                         << #_name << "BaseType.");                                                     \
     }
@@ -389,7 +389,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
     if (!BaseComponent::IsElastixLibrary())
     {
       // It is assumed the configuration is not null at this point in time.
-      const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+      const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
       /** Create a name for the final result. */
       const auto  resultImageName = configuration.RetrieveParameterStringValue("result", "ResultImageName", 0, false);
@@ -542,7 +542,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   /** Print the current resolution. */
   log::info(std::ostringstream{} << "\nResolution: " << level);
 
-  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+  const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
   /** Create a TransformParameter-file for the current resolution. */
   bool writeIterationInfo = true;
@@ -596,7 +596,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
   CallInEachComponent(&BaseComponentType::AfterEachResolutionBase);
   CallInEachComponent(&BaseComponentType::AfterEachResolution);
 
-  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+  const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
   /** Create a TransformParameter-file for the current resolution. */
   bool writeTransformParameterEachResolution = false;
@@ -656,7 +656,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
   /** Write the iteration info of this iteration. */
   this->GetIterationInfo().WriteBufferedData();
 
-  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+  const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
   /** Create a TransformParameter-file for the current iteration. */
   bool writeTansformParametersThisIteration = false;
@@ -723,7 +723,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   /** A white line. */
   elx::log::info("");
 
-  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+  const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
   /** Create the final TransformParameters filename. */
   bool writeFinalTansformParameters = true;
@@ -1034,7 +1034,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
     this->m_IterationInfoFile.close();
   }
 
-  const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+  const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
   if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
       !outputDirectoryPath.empty())
@@ -1074,7 +1074,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
 {
   if (this->GetFixedImage() == nullptr)
   {
-    const Configuration & configuration = Deref(ElastixBase::GetConfiguration());
+    const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
     /** Try to read direction cosines from (transform-)parameter file. */
     FixedImageDirectionType directionRead = direction;

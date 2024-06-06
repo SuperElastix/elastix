@@ -20,7 +20,7 @@
 #define elxMovingImagePyramidBase_hxx
 
 #include "elxMovingImagePyramidBase.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include "itkImageFileCastWriter.h"
 
 namespace elastix
@@ -51,7 +51,7 @@ MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
   /** What is the current resolution level? */
   const unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Decide whether or not to write the pyramid images this resolution. */
   bool writePyramidImage = false;
@@ -99,7 +99,7 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
   /** Get the ImageDimension. */
   const unsigned int ImageDimension = InputImageType::ImageDimension;
 
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Read numberOfResolutions. */
   unsigned int numberOfResolutions = 3;
@@ -159,7 +159,7 @@ void
 MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
                                                     const unsigned int  level) // const
 {
-  const Configuration & configuration = Deref(Superclass::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
 
   /** Read output pixeltype from parameter the file. Replace possible " " with "_". */
   std::string resultImagePixelType = "short";

@@ -19,7 +19,7 @@
 #define elxAdaGrad_hxx
 
 #include "elxAdaGrad.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 #include <cmath> // For abs.
 #include <iomanip>
@@ -113,7 +113,7 @@ AdaGrad<TElastix>::BeforeEachResolution()
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Set the maximumNumberOfIterations. */
   SizeValueType maximumNumberOfIterations = 500;
@@ -578,7 +578,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
   preconditionerEstimator->SetConditionNumber( this->m_ConditionNumber );
   preconditionerEstimator->SetUseScales( false ); // Make sure scales are not used
 #endif
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Construct the preconditioner and initialize. */
   this->m_PreconditionVector = ParametersType(P);
@@ -780,7 +780,7 @@ AdaGrad<TElastix>::SampleGradients(const ParametersType & mu0, double perturbati
 
   } // end if NewSamplesEveryIteration.
 
-  const Configuration & configuration = Deref(Superclass2::GetConfiguration());
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Prepare for progress printing. */
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);

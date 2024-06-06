@@ -38,7 +38,7 @@
 #include "elxPixelTypeToString.h"
 #include "itkElastixRegistrationMethod.h"
 
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include "elxLibUtilities.h"
 #include "elxTransformIO.h"
 
@@ -276,7 +276,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
           const auto transformFileName = "InitialTransform." + std::to_string(i) + '.' + outputFileNameExtension;
 
           // Write the external transform to file.
-          elx::TransformIO::Write(elx::Deref(externalTransform), m_OutputDirectory + transformFileName);
+          elx::TransformIO::Write(Deref(externalTransform), m_OutputDirectory + transformFileName);
 
           // Store the name of the written transform file.
           transformFound->second = { "File" };

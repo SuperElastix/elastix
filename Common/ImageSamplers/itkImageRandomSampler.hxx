@@ -22,7 +22,7 @@
 
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include <cassert>
 
 namespace itk
@@ -37,8 +37,8 @@ void
 ImageRandomSampler<TInputImage>::GenerateData()
 {
   /** Get handles to the input image, output sample container. */
-  const InputImageType & inputImage = elastix::Deref(this->GetInput());
-  auto &                 samples = elastix::Deref(this->GetOutput()).CastToSTLContainer();
+  const InputImageType & inputImage = Deref(this->GetInput());
+  auto &                 samples = Deref(this->GetOutput()).CastToSTLContainer();
 
   /** Get a handle to the mask. If there was no mask supplied we exercise a multi-threaded version. */
   const MaskType * const mask = this->Superclass::GetMask();
@@ -53,8 +53,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
       randomNumberList, inputImage, croppedInputImageRegion.GetIndex(), croppedInputImageRegion.GetSize(), samples
     };
 
-    elastix::Deref(this->ProcessObject::GetMultiThreader())
-      .SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
+    Deref(this->ProcessObject::GetMultiThreader()).SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
     return;
   }
 

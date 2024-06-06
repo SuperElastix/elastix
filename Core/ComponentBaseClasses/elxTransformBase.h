@@ -23,7 +23,7 @@
 
 #include "elxBaseComponentSE.h"
 #include "elxDefaultConstruct.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 #include "elxElastixBase.h"
 #include "itkAdvancedTransform.h"
 #include "itkAdvancedCombinationTransform.h"
@@ -298,7 +298,7 @@ protected:
   bool
   HasITKTransformParameters() const
   {
-    const Configuration & configuration = Deref(Superclass::GetConfiguration());
+    const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
     return configuration.HasParameter("ITKTransformParameters");
   }
 

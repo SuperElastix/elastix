@@ -21,7 +21,7 @@
 
 #include <itkImageBase.h>
 #include <itkImageMaskSpatialObject.h>
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -40,7 +40,7 @@ bool
 MaskHasSameImageDomain(const itk::ImageMaskSpatialObject<VImageDimension> & mask,
                        const itk::ImageBase<VImageDimension> &              inputImage)
 {
-  const auto & maskImage = Deref(mask.GetImage());
+  const auto & maskImage = itk::Deref(mask.GetImage());
   return maskImage.GetLargestPossibleRegion() == inputImage.GetLargestPossibleRegion() &&
          maskImage.GetOrigin() == inputImage.GetOrigin() && maskImage.GetSpacing() == inputImage.GetSpacing() &&
          maskImage.GetDirection() == inputImage.GetDirection();

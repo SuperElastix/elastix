@@ -21,7 +21,7 @@
 #include "itkMultiInputImageRandomCoordinateSampler.h"
 #include <vnl/vnl_inverse.h>
 #include "itkConfigure.h"
-#include "elxDeref.h"
+#include <itkDeref.h>
 
 namespace itk
 {
@@ -41,8 +41,8 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
   }
 
   /** Get handles to the input image, output sample container, and mask. */
-  const InputImageType &             inputImage = elastix::Deref(this->GetInput());
-  auto &                             samples = elastix::Deref(this->GetOutput()).CastToSTLContainer();
+  const InputImageType &             inputImage = Deref(this->GetInput());
+  auto &                             samples = Deref(this->GetOutput()).CastToSTLContainer();
   const MaskType * const             mask = this->Superclass::GetMask();
   typename InterpolatorType::Pointer interpolator = this->GetModifiableInterpolator();
 
