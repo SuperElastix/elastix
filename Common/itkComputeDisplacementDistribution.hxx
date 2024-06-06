@@ -513,7 +513,6 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   Jgg.Fill(0.0);
   std::vector<double> JGG_k;
   double              globalDeformation = 0.0;
-  JacobianType        jacjjacj(outdim, outdim);
 
   samplenr = 0;
   for (const auto & sample : *sampleContainer)
