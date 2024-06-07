@@ -21,7 +21,7 @@ jobs:
             itk-git-tag: "v5.4.0"
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.1.dll"
-            vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+            vcvars64: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
 
     steps:
     - uses: actions/checkout@v3
