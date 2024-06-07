@@ -74,6 +74,10 @@ jobs:
   - bash: ../../../externalproject-build/Release/elastix_translation_example
     displayName: 'Run externalproject'
     workingDirectory: $(Agent.BuildDirectory)\Elastix-build\bin\Release
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.9'
+      architecture: 'x64'
   - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
     displayName: 'Install PythonTests requirements'
   - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
