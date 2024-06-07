@@ -27,7 +27,7 @@ jobs:
 - job: Windows
   timeoutInMinutes: 0
   pool:
-    vmImage: 'windows-2022'
+    vmImage: 'windows-2019'
   strategy:
     matrix:
       ITKv5:
