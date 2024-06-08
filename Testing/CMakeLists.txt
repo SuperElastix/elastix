@@ -35,8 +35,10 @@ endforeach()
 
 #---------------------------------------------------------------------
 # Python is used by some tests
-find_program(python_executable python)
-if(NOT python_executable)
+find_package(Python3 COMPONENTS Interpreter)
+if (Python3_FOUND)
+  message("Python3 found: ${Python3_EXECUTABLE}")
+else()
   message(WARNING "WARNING: python not found! Some test results can not be evaluated.")
 endif()
 
@@ -354,11 +356,11 @@ macro(elx_add_run_test testbasename howtocompare)
     # Compare elastix output from IterationInfo with a baseline string
     if(NOT ${compare_metricvalue} EQUAL -1)
       # Only run when python was found
-      if(python_executable)
+      if(Python3_FOUND)
         # Add comparison test, checking the final metric value and more
         add_test(NAME ${testname}_COMPARE_METRIC
           CONFIGURATIONS Release
-          COMMAND ${python_executable} ${pythonfinalmetric}
+          COMMAND ${Python3_EXECUTABLE} ${pythonfinalmetric}
           -b ${baseline} -d ${output_dir})
         set_tests_properties(${testname}_COMPARE_METRIC
           PROPERTIES DEPENDS  ${testname}_OUTPUT)
@@ -368,11 +370,11 @@ macro(elx_add_run_test testbasename howtocompare)
     # Compare elastix output using checksum
     if(NOT ${compare_checksum} EQUAL -1)
       # Only run when python was found and if this is a known system
-      if(python_executable AND knownChecksumSystem)
+      if(Python3_FOUND AND knownChecksumSystem)
         # Add comparison test, checking the registration checksum
         add_test(NAME ${testname}_COMPARE_CHECKSUM
           CONFIGURATIONS Release
-          COMMAND ${python_executable} ${pythonchecksum}
+          COMMAND ${Python3_EXECUTABLE} ${pythonchecksum}
           -f ${checksumBaselineFile} -d ${output_dir} -v)
         set_tests_properties(${testname}_COMPARE_CHECKSUM
           PROPERTIES DEPENDS  ${testname}_OUTPUT)
@@ -382,10 +384,10 @@ macro(elx_add_run_test testbasename howtocompare)
     # Compare elastix output using segmentation overlap
     if(NOT ${compare_overlap} EQUAL -1)
       # Only run when python was found
-      if(python_executable)
+      if(Python3_FOUND)
         add_test(NAME ${testname}_COMPARE_OVERLAP
           CONFIGURATIONS Release
-          COMMAND ${python_executable} ${pythonoverlap}
+          COMMAND ${Python3_EXECUTABLE} ${pythonoverlap}
           -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha
           -p $<TARGET_FILE:elxComputeOverlap>)
         set_tests_properties(${testname}_COMPARE_OVERLAP
@@ -396,10 +398,10 @@ macro(elx_add_run_test testbasename howtocompare)
     # Compare elastix output using landmark distance
     if(NOT ${compare_landmarks} EQUAL -1)
       # Only run when python was found
-      if(python_executable)
+      if(Python3_FOUND)
         add_test(NAME ${testname}_COMPARE_LANDMARKS
           CONFIGURATIONS Release
-          COMMAND ${python_executable} ${pythonlandmarks}
+          COMMAND ${Python3_EXECUTABLE} ${pythonlandmarks}
           -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0
           -p $<TARGET_FILE:transformix_exe>)
         set_tests_properties(${testname}_COMPARE_LANDMARKS

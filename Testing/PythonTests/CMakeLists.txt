@@ -16,8 +16,8 @@
 #
 # =========================================================================
 
-if(python_executable AND ELASTIX_BUILD_EXECUTABLE)
-  add_test(NAME TransformixTest COMMAND ${python_executable}
+if(Python3_FOUND AND ELASTIX_BUILD_EXECUTABLE)
+  add_test(NAME TransformixTest COMMAND ${Python3_EXECUTABLE}
     "${CMAKE_CURRENT_LIST_DIR}/transformix_test.py")
   set_tests_properties(TransformixTest PROPERTIES ENVIRONMENT
     "TRANSFORMIX_EXE=$<TARGET_FILE_DIR:transformix_exe>/transformix;TRANSFORMIX_TEST_TEMP_DIR=${CMAKE_CURRENT_BINARY_DIR}")
