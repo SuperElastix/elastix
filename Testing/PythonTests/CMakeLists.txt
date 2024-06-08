@@ -17,6 +17,9 @@
 # =========================================================================
 
 if(Python3_FOUND AND ELASTIX_BUILD_EXECUTABLE)
+  foreach(python_package IN itk;SimpleITK;numpy)
+    execute_process(COMMAND ${Python3_EXECUTABLE} -m pip install "--user" ${python_package})
+  endforeach()
   add_test(NAME TransformixTest COMMAND ${Python3_EXECUTABLE}
     "${CMAKE_CURRENT_LIST_DIR}/transformix_test.py")
   set_tests_properties(TransformixTest PROPERTIES ENVIRONMENT
