@@ -76,7 +76,7 @@ jobs:
     workingDirectory: $(Agent.BuildDirectory)\Elastix-build\bin\Release
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.9'
+      versionSpec: '3.8'
       architecture: 'x64'
   - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
     displayName: 'Install PythonTests requirements'
