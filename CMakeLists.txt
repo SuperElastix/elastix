@@ -81,6 +81,12 @@ include(elastixExportTarget)
 
 if (MSVC)
   add_compile_options(/W3)
+  # See "`MSVC_VERSION` updated to 1940 for vs2022 17.10", https://gitlab.kitware.com/cmake/cmake/-/issues/26015
+  if(MSVC_VERSION GREATER_EQUAL 1940)
+    # Avoid segfaults triggered by the ABI change of having a constexpr mutex constructor.
+    # See https://github.com/microsoft/STL/wiki/Changelog#vs-2022-1710
+    add_compile_definitions(_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR)
+  endif()
 else()
   add_compile_options(
     -Woverloaded-virtual
