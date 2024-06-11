@@ -424,11 +424,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly
                                                  ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed
                                                  : lastDimSize;
-  const unsigned int G = realNumLastDimPositions;
-
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType   datablock(NumberOfSamples, G);
+  MatrixType   datablock(NumberOfSamples, realNumLastDimPositions);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
@@ -508,14 +506,14 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
   unsigned int N = pixelIndex;
 
-  MatrixType A(datablock.extract(N, G));
+  MatrixType A(datablock.extract(N, realNumLastDimPositions));
 
   /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(G);
+  vnl_vector<RealType> mean(realNumLastDimPositions);
   mean.fill(RealType{});
   for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; ++j)
+    for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -523,11 +521,11 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   mean /= RealType(N);
 
   /** Calculate standard deviation from columns */
-  MatrixType Amm(N, G);
+  MatrixType Amm(N, realNumLastDimPositions);
   Amm.fill(RealType{});
   for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < G; ++j)
+    for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -548,22 +546,22 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   }
 
   /** Calculate standard deviation from columns */
-  vnl_vector<RealType> var(G);
+  vnl_vector<RealType> var(realNumLastDimPositions);
   var.fill(RealType{});
-  for (unsigned int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
   {
     var(j) = C(j, j);
   }
   var -= varNoise;
 
-  vnl_diag_matrix<RealType> S(G);
+  vnl_diag_matrix<RealType> S(realNumLastDimPositions);
   S.fill(RealType{});
-  for (unsigned int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
   {
     S(j, j) = 1.0 / sqrt(var(j));
   }
 
-  for (unsigned int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
   {
     C(j, j) -= varNoise;
   }
@@ -576,7 +574,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   //    /** Compute sum of all eigenvalues = trace( K ) */
   //    RealType trace = itk::NumericTraits< RealType >::Zero;
-  //    for( int i = 0; i < G; i++ )
+  //    for( int i = 0; i < realNumLastDimPositions; i++ )
   //    {
   //        trace += K(i,i);
   //    }
@@ -586,13 +584,13 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   RealType sumEigenValuesUsed{};
   for (unsigned int i = 1; i < L + 1; ++i)
   {
-    sumEigenValuesUsed += eig.get_eigenvalue(G - i);
+    sumEigenValuesUsed += eig.get_eigenvalue(realNumLastDimPositions - i);
   }
 
-  MatrixType eigenVectorMatrix(G, L);
+  MatrixType eigenVectorMatrix(realNumLastDimPositions, L);
   for (unsigned int i = 1; i < L + 1; ++i)
   {
-    eigenVectorMatrix.set_column(i - 1, (eig.get_eigenvector(G - i)).normalize());
+    eigenVectorMatrix.set_column(i - 1, (eig.get_eigenvector(realNumLastDimPositions - i)).normalize());
   }
 
   MatrixType eigenVectorMatrixTranspose(eigenVectorMatrix.transpose());
@@ -601,20 +599,20 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   TransformJacobianType jacobian;
   DerivativeType        dMTdmu;
   DerivativeType        imageJacobian(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
-  std::vector<NonZeroJacobianIndicesType> nzjis(G, NonZeroJacobianIndicesType());
+  std::vector<NonZeroJacobianIndicesType> nzjis(realNumLastDimPositions, NonZeroJacobianIndicesType());
 
   /** Sub components of metric derivative */
   vnl_vector<DerivativeValueType> tracevKvdmu(P);
   vnl_vector<DerivativeValueType> tracevdSdmuCSv(P);
   vnl_vector<DerivativeValueType> tracevSdCdmuSv(P);
   vnl_vector<DerivativeValueType> tracevSdvarNoisedmuSv(P);
-  vnl_vector<DerivativeValueType> dSdmu_part1(G);
+  vnl_vector<DerivativeValueType> dSdmu_part1(realNumLastDimPositions);
   vnl_vector<DerivativeValueType> dvarNoisedmu(P);
 
-  DerivativeMatrixType vSAtmmdAdmu(L, G * P);
-  DerivativeMatrixType vAtmmdAdmu(L, G * P);
-  DerivativeMatrixType dSdmu(G, P);
-  DerivativeMatrixType v_GAtmmdAdmu(G, P);
+  DerivativeMatrixType vSAtmmdAdmu(L, realNumLastDimPositions * P);
+  DerivativeMatrixType vAtmmdAdmu(L, realNumLastDimPositions * P);
+  DerivativeMatrixType dSdmu(realNumLastDimPositions, P);
+  DerivativeMatrixType v_GAtmmdAdmu(realNumLastDimPositions, P);
 
   /** initialize */
   vSAtmmdAdmu.fill(DerivativeValueType{});
@@ -630,10 +628,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   /** Components for derivative of mean */
   vnl_vector<DerivativeValueType> meandAdmu(P);
-  DerivativeMatrixType            meandSdmu(G, P);
-  DerivativeMatrixType            v_GAtmmmeandAdmu(G, P);
-  DerivativeMatrixType            vAtmmmeandAdmu(L, G * P);
-  DerivativeMatrixType            vSAtmmmeandAdmu(L, G * P);
+  DerivativeMatrixType            meandSdmu(realNumLastDimPositions, P);
+  DerivativeMatrixType            v_GAtmmmeandAdmu(realNumLastDimPositions, P);
+  DerivativeMatrixType            vAtmmmeandAdmu(L, realNumLastDimPositions * P);
+  DerivativeMatrixType            vSAtmmmeandAdmu(L, realNumLastDimPositions * P);
   meandAdmu.fill(DerivativeValueType{});
   v_GAtmmmeandAdmu.fill(DerivativeValueType{});
   vSAtmmmeandAdmu.fill(DerivativeValueType{});
@@ -643,7 +641,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   unsigned int startSamplesOK;
   startSamplesOK = 0;
 
-  for (unsigned int d = 0; d < G; ++d)
+  for (unsigned int d = 0; d < realNumLastDimPositions; ++d)
   {
     dSdmu_part1[d] = -pow(S(d, d), 3.0);
   }
@@ -708,7 +706,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   {
     for (unsigned int i = 0; i < N; ++i)
     {
-      for (unsigned int d = 0; d < G; ++d)
+      for (unsigned int d = 0; d < realNumLastDimPositions; ++d)
       {
         for (unsigned int p = 0; p < P; ++p)
         {
@@ -716,7 +714,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
           meandSdmu[d][p] += Atmm[d][i] * dSdmu_part1[d] * meandAdmu[p];
           for (unsigned int z = 0; z < L; ++z)
           {
-            vSAtmmmeandAdmu[z][d + G * p] += vSAtmm[z][i] * meandAdmu[p];
+            vSAtmmmeandAdmu[z][d + realNumLastDimPositions * p] += vSAtmm[z][i] * meandAdmu[p];
           }
         }
       }
@@ -735,16 +733,17 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   for (unsigned int p = 0; p < P; ++p)
   {
-    vnl_diag_matrix<DerivativeValueType> diagonaldvarNoisedmu(G);
+    vnl_diag_matrix<DerivativeValueType> diagonaldvarNoisedmu(realNumLastDimPositions);
     diagonaldvarNoisedmu.fill(0.0);
-    vnl_diag_matrix<DerivativeValueType> diagonaldSdmu(G);
+    vnl_diag_matrix<DerivativeValueType> diagonaldSdmu(realNumLastDimPositions);
     diagonaldSdmu.fill(0.0);
-    for (unsigned int d = 0; d < G; ++d)
+    for (unsigned int d = 0; d < realNumLastDimPositions; ++d)
     {
       diagonaldvarNoisedmu(d, d) = dSdmu_part1[d] * dvarNoisedmu[p];
       diagonaldSdmu(d, d) = (dSdmu - meandSdmu).get_column(p)[d] - diagonaldvarNoisedmu(d, d);
     }
-    DerivativeMatrixType vSdCdmuSv = ((vSAtmmdAdmu - vSAtmmmeandAdmu).extract(L, G, 0, p * G)) * Sv;
+    DerivativeMatrixType vSdCdmuSv =
+      ((vSAtmmdAdmu - vSAtmmmeandAdmu).extract(L, realNumLastDimPositions, 0, p * realNumLastDimPositions)) * Sv;
     DerivativeMatrixType vSdvarNoisedmuSv = (vS * dvarNoisedmu[p] * Sv);
 
     tracevSdCdmuSv[p] = vnl_trace<DerivativeValueType>(vSdCdmuSv);
@@ -756,7 +755,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   tracevKvdmu *= (2.0 / (DerivativeValueType(N) - 1.0)); // normalize
 
   // measure = trace - sumEigenValuesUsed;
-  measure = G - sumEigenValuesUsed;
+  measure = realNumLastDimPositions - sumEigenValuesUsed;
   derivative = -tracevKvdmu;
 
   /** Subtract mean from derivative elements. */
