@@ -261,19 +261,20 @@ AdvancedSimilarity2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian(
   double                          sa = std::sin(angle);
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
   jsj.resize(ParametersDimension);
-  if (ParametersDimension > 1)
-  {
-    jsj[0](0, 0) = ca;
-    jsj[0](0, 1) = -sa;
-    jsj[0](1, 0) = sa;
-    jsj[0](1, 1) = ca;
-    ca *= this->m_Scale;
-    sa *= this->m_Scale;
-    jsj[1](0, 0) = -sa;
-    jsj[1](0, 1) = -ca;
-    jsj[1](1, 0) = ca;
-    jsj[1](1, 1) = -sa;
-  }
+
+  static_assert(ParametersDimension > 1);
+
+  jsj[0](0, 0) = ca;
+  jsj[0](0, 1) = -sa;
+  jsj[0](1, 0) = sa;
+  jsj[0](1, 1) = ca;
+  ca *= this->m_Scale;
+  sa *= this->m_Scale;
+  jsj[1](0, 0) = -sa;
+  jsj[1](0, 1) = -ca;
+  jsj[1](1, 0) = ca;
+  jsj[1](1, 1) = -sa;
+
   for (unsigned int par = 2; par < ParametersDimension; ++par)
   {
     jsj[par].Fill(0.0);

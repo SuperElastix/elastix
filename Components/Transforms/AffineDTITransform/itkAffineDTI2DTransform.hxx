@@ -231,11 +231,7 @@ template <class TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
-  if (ParametersDimension < 7)
-  {
-    /** Some subclass has a different number of parameters */
-    return;
-  }
+  static_assert(ParametersDimension >= 7);
 
   /** The Jacobian of spatial Jacobian is constant over input space, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;

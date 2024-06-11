@@ -274,11 +274,7 @@ template <class TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
-  if (ParametersDimension < 6)
-  {
-    /** Some subclass has a different number of parameters */
-    return;
-  }
+  static_assert(ParametersDimension >= 6);
 
   /** The Jacobian of spatial Jacobian is constant over inputspace, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;

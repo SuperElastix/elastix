@@ -314,11 +314,7 @@ template <class TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
-  if (ParametersDimension < 12)
-  {
-    /** Some subclass has a different number of parameters */
-    return;
-  }
+  static_assert(ParametersDimension >= 12);
 
   /** The Jacobian of spatial Jacobian is constant over inputspace, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
