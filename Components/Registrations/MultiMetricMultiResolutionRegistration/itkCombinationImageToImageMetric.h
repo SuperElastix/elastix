@@ -150,8 +150,7 @@ public:
                                                               CoordinateRepresentationType>>;
   using PointSetMetricType = SingleValuedPointSetToPointSetMetric<FixedPointSetType, MovingPointSetType>;
 
-  /** Typedefs for multi-threading. */
-  using typename Superclass::ThreaderType;
+  /** Typedef for multi-threading. */
   using typename Superclass::ThreadInfoType;
 
   /**

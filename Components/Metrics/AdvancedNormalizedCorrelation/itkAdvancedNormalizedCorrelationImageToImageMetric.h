@@ -146,7 +146,6 @@ public:
   using typename Superclass::FixedImageLimiterOutputType;
   using typename Superclass::MovingImageLimiterOutputType;
   using typename Superclass::MovingImageDerivativeScalesType;
-  using typename Superclass::ThreaderType;
   using typename Superclass::ThreadInfoType;
 
   /** The fixed image dimension. */

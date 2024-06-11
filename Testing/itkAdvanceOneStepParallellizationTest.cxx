@@ -27,7 +27,7 @@
 #include "itkTimeProbesCollectorBase.h"
 
 // Multi-threading using ITK threads
-#include "itkPlatformMultiThreader.h"
+#include "itkMultiThreaderBase.h"
 
 // Multi-threading using OpenMP
 #ifdef ELASTIX_USE_OPENMP
@@ -72,12 +72,11 @@ public:
   ParametersType     m_Gradient;
   InternalScalarType m_LearningRate;
 
-  using ThreaderType = itk::PlatformMultiThreader;
-  using ThreadInfoType = ThreaderType::WorkUnitInfo;
-  ThreaderType::Pointer m_Threader;
-  bool                  m_UseOpenMP;
-  bool                  m_UseEigen;
-  bool                  m_UseMultiThreaded;
+  using ThreadInfoType = itk::MultiThreaderBase::WorkUnitInfo;
+  itk::MultiThreaderBase::Pointer m_Threader;
+  bool                            m_UseOpenMP;
+  bool                            m_UseEigen;
+  bool                            m_UseMultiThreaded;
 
   struct MultiThreaderParameterType
   {
@@ -89,7 +88,7 @@ public:
   {
     this->m_NumberOfParameters = 0;
     this->m_LearningRate = 0.0;
-    this->m_Threader = ThreaderType::New();
+    this->m_Threader = itk::MultiThreaderBase::New();
     this->m_Threader->SetNumberOfWorkUnits(8);
     this->m_UseOpenMP = false;
     this->m_UseEigen = false;

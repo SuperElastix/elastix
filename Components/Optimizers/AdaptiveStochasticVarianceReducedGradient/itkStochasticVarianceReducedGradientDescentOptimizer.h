@@ -19,7 +19,7 @@
 #define itkStochasticVarianceReducedGradientDescentOptimizer_h
 
 #include "itkScaledSingleValuedNonLinearOptimizer.h"
-#include "itkPlatformMultiThreader.h"
+#include "itkMultiThreaderBase.h"
 
 namespace itk
 {
@@ -176,9 +176,8 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  /** Typedefs for multi-threading. */
-  using ThreaderType = itk::PlatformMultiThreader;
-  using ThreadInfoType = ThreaderType::WorkUnitInfo;
+  /** Typedef for multi-threading. */
+  using ThreadInfoType = MultiThreaderBase::WorkUnitInfo;
 
   // made protected so subclass can access
   double         m_Value{ 0.0 };
@@ -191,8 +190,8 @@ protected:
   StopConditionType m_StopCondition{ MaximumNumberOfIterations };
   DerivativeType    m_PreviousGradient{};
   // DerivativeType                m_PrePreviousGradient;
-  ParametersType        m_PreviousPosition{};
-  ThreaderType::Pointer m_Threader{ ThreaderType::New() };
+  ParametersType             m_PreviousPosition{};
+  MultiThreaderBase::Pointer m_Threader{ MultiThreaderBase::New() };
 
   bool          m_Stop{ false };
   unsigned long m_NumberOfIterations{ 100 };

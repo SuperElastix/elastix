@@ -28,7 +28,7 @@
 #include "elxComponentLoader.h"
 
 #include "elxMacro.h"
-#include "itkPlatformMultiThreader.h"
+#include "itkMultiThreaderBase.h"
 
 #ifdef ELASTIX_USE_OPENCL
 #  include "itkOpenCLContext.h"

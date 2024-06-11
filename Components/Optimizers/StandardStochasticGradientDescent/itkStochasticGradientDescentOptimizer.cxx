@@ -288,7 +288,7 @@ StochasticGradientDescentOptimizer::AdvanceOneStep()
     temp.t_Optimizer = this;
 
     /** Call multi-threaded AdvanceOneStep(). */
-    auto local_threader = ThreaderType::New();
+    auto local_threader = MultiThreaderBase::New();
     local_threader->SetNumberOfWorkUnits(this->m_Threader->GetNumberOfWorkUnits());
     local_threader->SetSingleMethodAndExecute(AdvanceOneStepThreaderCallback, &temp);
   }
