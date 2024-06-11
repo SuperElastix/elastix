@@ -272,9 +272,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
   mean.fill(RealType{});
-  for (int i = 0; i < N; ++i)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (int j = 0; j < G; ++j)
+    for (unsigned int j = 0; j < G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -284,9 +284,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   MatrixType Amm(N, G);
   Amm.fill(RealType{});
 
-  for (int i = 0; i < N; ++i)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (int j = 0; j < G; ++j)
+    for (unsigned int j = 0; j < G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -312,7 +312,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   /** Calculate variance of columns */
   vnl_vector<RealType> var(G);
   var.fill(RealType{});
-  for (int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < G; ++j)
   {
     var(j) = C(j, j);
   }
@@ -320,12 +320,12 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   MatrixType S(G, G);
   S.fill(RealType{});
-  for (int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(var(j));
   }
 
-  for (int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < G; ++j)
   {
     C(j, j) -= varNoise;
   }
@@ -513,9 +513,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   /** Calculate mean of from columns */
   vnl_vector<RealType> mean(G);
   mean.fill(RealType{});
-  for (int i = 0; i < N; ++i)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (int j = 0; j < G; ++j)
+    for (unsigned int j = 0; j < G; ++j)
     {
       mean(j) += A(i, j);
     }
@@ -525,9 +525,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   /** Calculate standard deviation from columns */
   MatrixType Amm(N, G);
   Amm.fill(RealType{});
-  for (int i = 0; i < N; ++i)
+  for (unsigned int i = 0; i < N; ++i)
   {
-    for (int j = 0; j < G; ++j)
+    for (unsigned int j = 0; j < G; ++j)
     {
       Amm(i, j) = A(i, j) - mean(j);
     }
@@ -550,7 +550,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   /** Calculate standard deviation from columns */
   vnl_vector<RealType> var(G);
   var.fill(RealType{});
-  for (int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < G; ++j)
   {
     var(j) = C(j, j);
   }
@@ -558,12 +558,12 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   vnl_diag_matrix<RealType> S(G);
   S.fill(RealType{});
-  for (int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(var(j));
   }
 
-  for (int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < G; ++j)
   {
     C(j, j) -= varNoise;
   }
