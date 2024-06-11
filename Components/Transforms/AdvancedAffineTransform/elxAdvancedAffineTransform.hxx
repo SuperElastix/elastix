@@ -264,7 +264,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
     }
     else if (method == "GeometryTop")
     {
-      if (SpaceDimension < 3)
+      if constexpr (SpaceDimension < 3)
       {
         /** Check if dimension is 3D or higher. **/
         itkExceptionMacro("ERROR: The GeometryTop intialization method does not make sense for 2D images. Use only "

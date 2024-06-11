@@ -510,12 +510,12 @@ public:
      * For dimensions 2 and 3 optimized code (loop unrolling) is provided. Smart compilers may
      * not need that.
      */
-    if (OutputDimension == 3)
+    if constexpr (OutputDimension == 3)
     {
       const double tmp[] = { jsh[9], jsh[8], jsh[7], jsh[8], jsh[5], jsh[4], jsh[7], jsh[4], jsh[2] };
       FastBitwiseCopy(jsh_tmp, tmp);
     }
-    else if (OutputDimension == 2)
+    else if constexpr (OutputDimension == 2)
     {
       const double tmp[] = { jsh[5], jsh[4], jsh[4], jsh[2] };
       FastBitwiseCopy(jsh_tmp, tmp);

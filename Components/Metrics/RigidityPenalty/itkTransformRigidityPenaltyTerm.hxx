@@ -477,7 +477,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   this->m_BSplineTransform->SetParameters(parameters);
 
   /** Sanity check. */
-  if (ImageDimension != 2 && ImageDimension != 3)
+  if constexpr (ImageDimension != 2 && ImageDimension != 3)
   {
     itkExceptionMacro("ERROR: This filter is only implemented for dimension 2 and 3.");
   }
@@ -541,7 +541,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     ui_FD[i] = CoefficientImageType::New();
     ui_FE[i] = CoefficientImageType::New();
     ui_FG[i] = CoefficientImageType::New();
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       ui_FC[i] = CoefficientImageType::New();
       ui_FF[i] = CoefficientImageType::New();
@@ -557,7 +557,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     this->Create1DOperator(Operators_D[i], "FD_xi", i + 1, spacing);
     this->Create1DOperator(Operators_E[i], "FE_xi", i + 1, spacing);
     this->Create1DOperator(Operators_G[i], "FG_xi", i + 1, spacing);
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       this->Create1DOperator(Operators_C[i], "FC_xi", i + 1, spacing);
       this->Create1DOperator(Operators_F[i], "FF_xi", i + 1, spacing);
@@ -579,7 +579,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     ui_FD[i] = this->FilterSeparable(inputImages[i], Operators_D);
     ui_FE[i] = this->FilterSeparable(inputImages[i], Operators_E);
     ui_FG[i] = this->FilterSeparable(inputImages[i], Operators_G);
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       ui_FC[i] = this->FilterSeparable(inputImages[i], Operators_C);
       ui_FF[i] = this->FilterSeparable(inputImages[i], Operators_F);
@@ -607,7 +607,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     itD[i] = CoefficientImageIteratorType(ui_FD[i], ui_FD[i]->GetLargestPossibleRegion());
     itE[i] = CoefficientImageIteratorType(ui_FE[i], ui_FE[i]->GetLargestPossibleRegion());
     itG[i] = CoefficientImageIteratorType(ui_FG[i], ui_FG[i]->GetLargestPossibleRegion());
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       itC[i] = CoefficientImageIteratorType(ui_FC[i], ui_FC[i]->GetLargestPossibleRegion());
       itF[i] = CoefficientImageIteratorType(ui_FF[i], ui_FF[i]->GetLargestPossibleRegion());
@@ -620,7 +620,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
     itD[i].GoToBegin();
     itE[i].GoToBegin();
     itG[i].GoToBegin();
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       itC[i].GoToBegin();
       itF[i].GoToBegin();
@@ -650,7 +650,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       mu2_A = itA[1].Get();
       mu1_B = itB[0].Get();
       mu2_B = itB[1].Get();
-      if (ImageDimension == 3)
+      if constexpr (ImageDimension == 3)
       {
         mu3_A = itA[2].Get();
         mu3_B = itB[2].Get();
@@ -659,14 +659,14 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
         mu3_C = itC[2].Get();
       }
 
-      if (ImageDimension == 2)
+      if constexpr (ImageDimension == 2)
       {
         this->m_OrthonormalityConditionValue +=
           it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A - 1.0, 2.0) +
                           std::pow(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) - 1.0, 2.0) +
                           std::pow(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B), 2.0));
       }
-      else if (ImageDimension == 3)
+      else if constexpr (ImageDimension == 3)
       {
         this->m_OrthonormalityConditionValue +=
           it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A + mu3_A * mu3_A - 1.0, 2.0) +
@@ -682,7 +682,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       {
         ++itA[i];
         ++itB[i];
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           ++itC[i];
         }
@@ -702,7 +702,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   {
     itA[i].GoToBegin();
     itB[i].GoToBegin();
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       itC[i].GoToBegin();
     }
@@ -721,7 +721,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       mu2_A = itA[1].Get();
       mu1_B = itB[0].Get();
       mu2_B = itB[1].Get();
-      if (ImageDimension == 3)
+      if constexpr (ImageDimension == 3)
       {
         mu3_A = itA[2].Get();
         mu3_B = itB[2].Get();
@@ -730,12 +730,12 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
         mu3_C = itC[2].Get();
       }
 
-      if (ImageDimension == 2)
+      if constexpr (ImageDimension == 2)
       {
         this->m_PropernessConditionValue +=
           it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu2_B) - mu2_A * mu1_B - 1.0, 2.0));
       }
-      else if (ImageDimension == 3)
+      else if constexpr (ImageDimension == 3)
       {
         this->m_PropernessConditionValue +=
           it_RCI.Get() * (std::pow(-mu1_C * (1.0 + mu2_B) * mu3_A + mu1_B * mu2_C * mu3_A + mu1_C * mu2_A * mu3_B -
@@ -749,7 +749,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       {
         ++itA[i];
         ++itB[i];
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           ++itC[i];
         }
@@ -777,7 +777,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       {
         this->m_LinearityConditionValue +=
           it_RCI.Get() * (+itD[i].Get() * itD[i].Get() + itE[i].Get() * itE[i].Get() + itG[i].Get() * itG[i].Get());
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           this->m_LinearityConditionValue +=
             it_RCI.Get() * (+itF[i].Get() * itF[i].Get() + itH[i].Get() * itH[i].Get() + itI[i].Get() * itI[i].Get());
@@ -790,7 +790,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
         ++itD[i];
         ++itE[i];
         ++itG[i];
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           ++itF[i];
           ++itH[i];
@@ -920,7 +920,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   this->BeforeThreadedGetValueAndDerivative(parameters);
 
   /** Sanity check. */
-  if (ImageDimension != 2 && ImageDimension != 3)
+  if constexpr (ImageDimension != 2 && ImageDimension != 3)
   {
     itkExceptionMacro("ERROR: This filter is only implemented for dimension 2 and 3.");
   }
@@ -984,7 +984,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     ui_FD[i] = CoefficientImageType::New();
     ui_FE[i] = CoefficientImageType::New();
     ui_FG[i] = CoefficientImageType::New();
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       ui_FC[i] = CoefficientImageType::New();
       ui_FF[i] = CoefficientImageType::New();
@@ -1000,7 +1000,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     this->Create1DOperator(Operators_D[i], "FD_xi", i + 1, spacing);
     this->Create1DOperator(Operators_E[i], "FE_xi", i + 1, spacing);
     this->Create1DOperator(Operators_G[i], "FG_xi", i + 1, spacing);
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       this->Create1DOperator(Operators_C[i], "FC_xi", i + 1, spacing);
       this->Create1DOperator(Operators_F[i], "FF_xi", i + 1, spacing);
@@ -1022,7 +1022,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     ui_FD[i] = this->FilterSeparable(inputImages[i], Operators_D);
     ui_FE[i] = this->FilterSeparable(inputImages[i], Operators_E);
     ui_FG[i] = this->FilterSeparable(inputImages[i], Operators_G);
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       ui_FC[i] = this->FilterSeparable(inputImages[i], Operators_C);
       ui_FF[i] = this->FilterSeparable(inputImages[i], Operators_F);
@@ -1050,7 +1050,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     itD[i] = CoefficientImageIteratorType(ui_FD[i], ui_FD[i]->GetLargestPossibleRegion());
     itE[i] = CoefficientImageIteratorType(ui_FE[i], ui_FE[i]->GetLargestPossibleRegion());
     itG[i] = CoefficientImageIteratorType(ui_FG[i], ui_FG[i]->GetLargestPossibleRegion());
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       itC[i] = CoefficientImageIteratorType(ui_FC[i], ui_FC[i]->GetLargestPossibleRegion());
       itF[i] = CoefficientImageIteratorType(ui_FF[i], ui_FF[i]->GetLargestPossibleRegion());
@@ -1063,7 +1063,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     itD[i].GoToBegin();
     itE[i].GoToBegin();
     itG[i].GoToBegin();
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       itC[i].GoToBegin();
       itF[i].GoToBegin();
@@ -1148,7 +1148,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       mu2_A = itA[1].Get();
       mu1_B = itB[0].Get();
       mu2_B = itB[1].Get();
-      if (ImageDimension == 3)
+      if constexpr (ImageDimension == 3)
       {
         mu3_A = itA[2].Get();
         mu3_B = itB[2].Get();
@@ -1156,7 +1156,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         mu2_C = itC[1].Get();
         mu3_C = itC[2].Get();
       }
-      if (ImageDimension == 2)
+      if constexpr (ImageDimension == 2)
       {
         /** Calculate the value of the orthonormality condition. */
         this->m_OrthonormalityConditionValue +=
@@ -1182,7 +1182,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
                   2.0 * (1.0 + mu2_B);
         itOCp[1][1].Set(2.0 * valueOC);
       } // end if dim == 2
-      else if (ImageDimension == 3)
+      else if constexpr (ImageDimension == 3)
       {
         /** Calculate the value of the orthonormality condition. */
         this->m_OrthonormalityConditionValue +=
@@ -1254,7 +1254,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       {
         ++itA[i];
         ++itB[i];
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           ++itC[i];
         }
@@ -1278,7 +1278,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   {
     itA[i].GoToBegin();
     itB[i].GoToBegin();
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       itC[i].GoToBegin();
     }
@@ -1298,7 +1298,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       mu2_A = itA[1].Get();
       mu1_B = itB[0].Get();
       mu2_B = itB[1].Get();
-      if (ImageDimension == 3)
+      if constexpr (ImageDimension == 3)
       {
         mu3_A = itA[2].Get();
         mu3_B = itB[2].Get();
@@ -1306,7 +1306,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         mu2_C = itC[1].Get();
         mu3_C = itC[2].Get();
       }
-      if (ImageDimension == 2)
+      if constexpr (ImageDimension == 2)
       {
         /** Calculate the value of the properness condition. */
         this->m_PropernessConditionValue +=
@@ -1325,7 +1325,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         valuePC = -(1.0 + mu1_A) + (1.0 + mu1_A) * (1.0 + mu1_A) * (1.0 + mu2_B) - mu1_B * (1.0 + mu1_A) * mu2_A;
         itPCp[1][1].Set(2.0 * valuePC);
       } // end if dim == 2
-      else if (ImageDimension == 3)
+      else if constexpr (ImageDimension == 3)
       {
         /** Calculate the value of the properness condition. */
         this->m_PropernessConditionValue +=
@@ -1435,7 +1435,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       {
         ++itA[i];
         ++itB[i];
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           ++itC[i];
         }
@@ -1467,7 +1467,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         /** Calculate the value of the linearity condition. */
         this->m_LinearityConditionValue +=
           it_RCI.Get() * (+itD[i].Get() * itD[i].Get() + itE[i].Get() * itE[i].Get() + itG[i].Get() * itG[i].Get());
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           this->m_LinearityConditionValue +=
             it_RCI.Get() * (+itF[i].Get() * itF[i].Get() + itH[i].Get() * itH[i].Get() + itI[i].Get() * itI[i].Get());
@@ -1475,7 +1475,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       } // end loop over i
 
       /** Calculate the derivative of the linearity condition. */
-      if (ImageDimension == 2)
+      if constexpr (ImageDimension == 2)
       {
         itLCp[0][0].Set(2.0 * itD[0].Get());
         itLCp[0][1].Set(2.0 * itE[0].Get());
@@ -1484,7 +1484,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         itLCp[1][1].Set(2.0 * itE[1].Get());
         itLCp[1][2].Set(2.0 * itG[1].Get());
       } // end if dim == 2
-      else if (ImageDimension == 3)
+      else if constexpr (ImageDimension == 3)
       {
         itLCp[0][0].Set(2.0 * itD[0].Get());
         itLCp[0][1].Set(2.0 * itE[0].Get());
@@ -1512,7 +1512,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         ++itD[i];
         ++itE[i];
         ++itG[i];
-        if (ImageDimension == 3)
+        if constexpr (ImageDimension == 3)
         {
           ++itF[i];
           ++itH[i];
@@ -1633,7 +1633,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     Operator_I;
   this->CreateNDOperator(Operator_A, "FA", spacing);
   this->CreateNDOperator(Operator_B, "FB", spacing);
-  if (ImageDimension == 3)
+  if constexpr (ImageDimension == 3)
   {
     this->CreateNDOperator(Operator_C, "FC", spacing);
   }
@@ -1643,7 +1643,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     this->CreateNDOperator(Operator_D, "FD", spacing);
     this->CreateNDOperator(Operator_E, "FE", spacing);
     this->CreateNDOperator(Operator_G, "FG", spacing);
-    if (ImageDimension == 3)
+    if constexpr (ImageDimension == 3)
     {
       this->CreateNDOperator(Operator_F, "FF", spacing);
       this->CreateNDOperator(Operator_H, "FH", spacing);
@@ -1677,7 +1677,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
           tmp[i] += Operator_B.GetElement(k)   // FB *
                     * nitOCp[i][1].GetPixel(k) // subpart[ i ][ 1 ]
                     * nit_RCI.GetPixel(k);     // c(k)
-          if (ImageDimension == 3)
+          if constexpr (ImageDimension == 3)
           {
             tmp[i] += Operator_C.GetElement(k)   // FC *
                       * nitOCp[i][2].GetPixel(k) // subpart[ i ][ 2 ]
@@ -1730,7 +1730,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
           tmp[i] += Operator_B.GetElement(k)   // FB *
                     * nitPCp[i][1].GetPixel(k) // subpart[ i ][ 1 ]
                     * nit_RCI.GetPixel(k);     // c(k)
-          if (ImageDimension == 3)
+          if constexpr (ImageDimension == 3)
           {
             tmp[i] += Operator_C.GetElement(k)   // FC *
                       * nitPCp[i][2].GetPixel(k) // subpart[ i ][ 2 ]
@@ -1785,7 +1785,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
           tmp[i] += Operator_G.GetElement(k)   // FG *
                     * nitLCp[i][2].GetPixel(k) // subpart[ i ][ 1 ]
                     * nit_RCI.GetPixel(k);     // c(k)
-          if (ImageDimension == 3)
+          if constexpr (ImageDimension == 3)
           {
             tmp[i] += Operator_F.GetElement(k)   // FF *
                       * nitLCp[i][3].GetPixel(k) // subpart[ i ][ 1 ]
@@ -2218,7 +2218,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
    */
   if (WhichF == "FA")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       F[0] = 1.0 / 12.0 / s[0];
       F[1] = 0.0;
@@ -2230,7 +2230,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
       F[7] = 0.0;
       F[8] = -1.0 / 12.0 / s[0];
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       /** Fill the operator. First slice. */
       F[0] = 1.0 / 72.0 / s[0];
@@ -2266,7 +2266,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FB")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       F[0] = 1.0 / 12.0 / s[1];
       F[1] = 1.0 / 3.0 / s[1];
@@ -2278,7 +2278,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
       F[7] = -1.0 / 3.0 / s[1];
       F[8] = -1.0 / 12.0 / s[1];
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       /** Fill the operator. First slice. */
       F[0] = 1.0 / 72.0 / s[1];
@@ -2314,12 +2314,12 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FC")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
       itkExceptionMacro("This type of operator (FC) is not appropriate in 2D.");
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       /** Fill the operator. First slice. */
       F[0] = 1.0 / 72.0 / s[2];
@@ -2355,7 +2355,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FD")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       double sp = s[0] * s[0];
       F[0] = 1.0 / 12.0 / sp;
@@ -2368,7 +2368,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
       F[7] = -1.0 / 6.0 / sp;
       F[8] = 1.0 / 12.0 / sp;
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       double sp = s[0] * s[0];
       /** Fill the operator. First slice. */
@@ -2405,7 +2405,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FE")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       double sp = s[1] * s[1];
       F[0] = 1.0 / 12.0 / sp;
@@ -2418,7 +2418,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
       F[7] = 1.0 / 3.0 / sp;
       F[8] = 1.0 / 12.0 / sp;
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       double sp = s[1] * s[1];
       /** Fill the operator. First slice. */
@@ -2455,12 +2455,12 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FF")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
       itkExceptionMacro("This type of operator (FF) is not appropriate in 2D.");
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       double sp = s[2] * s[2];
       /** Fill the operator. First slice. */
@@ -2497,7 +2497,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FG")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       double sp = s[0] * s[1];
       F[0] = 1.0 / 4.0 / sp;
@@ -2510,7 +2510,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
       F[7] = 0.0;
       F[8] = 1.0 / 4.0 / sp;
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       double sp = s[0] * s[1];
       /** Fill the operator. First slice. */
@@ -2547,12 +2547,12 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FH")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
       itkExceptionMacro("This type of operator (FH) is not appropriate in 2D.");
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       double sp = s[0] * s[2];
       /** Fill the operator. First slice. */
@@ -2589,12 +2589,12 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   }
   else if (WhichF == "FI")
   {
-    if (ImageDimension == 2)
+    if constexpr (ImageDimension == 2)
     {
       /** Not appropriate. Throw an exception. */
       itkExceptionMacro("This type of operator (FI) is not appropriate in 2D.");
     }
-    else if (ImageDimension == 3)
+    else if constexpr (ImageDimension == 3)
     {
       double sp = s[1] * s[2];
       /** Fill the operator. First slice. */

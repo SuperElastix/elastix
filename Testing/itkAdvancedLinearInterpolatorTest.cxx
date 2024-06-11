@@ -76,12 +76,12 @@ TestInterpolators()
 
   /** Make sure to test for non-identity direction cosines. */
   DirectionType direction{};
-  if (Dimension == 2)
+  if constexpr (Dimension == 2)
   {
     direction[0][1] = -1.0;
     direction[1][0] = 1.0;
   }
-  else if (Dimension == 3)
+  else if constexpr (Dimension == 3)
   {
     direction[0][2] = -1.0;
     direction[1][1] = 1.0;
@@ -123,7 +123,7 @@ TestInterpolators()
   /** Test some points. */
   const unsigned int count = 12;
   double             darray1[12][Dimension];
-  if (Dimension == 2)
+  if constexpr (Dimension == 2)
   {
     double darray2[12][2] = { { 0.1, 0.2 }, { 3.4, 5.8 }, { 4.0, 6.0 }, { 2.1, 8.0 },  { -0.1, -0.1 }, { 0.0, 0.0 },
                               { 1.3, 1.0 }, { 2.0, 5.7 }, { 9.5, 9.1 }, { 2.0, -0.1 }, { -0.1, 2.0 },  { 12.7, 15.3 } };
@@ -135,7 +135,7 @@ TestInterpolators()
       }
     }
   }
-  else if (Dimension == 3)
+  else if constexpr (Dimension == 3)
   {
     // double darray2[count][3] =
     //{ { 0.0, 0.0, 0.0}, { 0.1, 0.0, 0.0}, { 0.2, 0.0, 0.0} }; // x, y=z=0, works

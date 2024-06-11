@@ -44,7 +44,7 @@ template <class TElastix>
 void
 AffineDTITransformElastix<TElastix>::BeforeRegistration()
 {
-  if (SpaceDimension != 2 && SpaceDimension != 3)
+  if constexpr (SpaceDimension != 2 && SpaceDimension != 3)
   {
     itkExceptionMacro("AffineDTI transform only works for 2D or 3D images!");
   }

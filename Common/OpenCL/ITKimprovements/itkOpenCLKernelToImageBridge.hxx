@@ -327,7 +327,7 @@ OpenCLKernelToImageBridge<TImage>::SetDirection(OpenCLKernel &                  
                                                 const cl_uint                             argumentIndex,
                                                 const typename ImageType::DirectionType & direction)
 {
-  if (ImageDimension > 3 || ImageDimension < 1)
+  if constexpr (ImageDimension > 3 || ImageDimension < 1)
   {
     itkGenericExceptionMacro("OpenCLKernelToImageBridge::SetDirection"
                              " supports only 1D/2D/3D images.");
@@ -343,7 +343,7 @@ OpenCLKernelToImageBridge<TImage>::SetSize(OpenCLKernel &                       
                                            const cl_uint                        argumentIndex,
                                            const typename ImageType::SizeType & size)
 {
-  if (ImageDimension > 3 || ImageDimension < 1)
+  if constexpr (ImageDimension > 3 || ImageDimension < 1)
   {
     itkGenericExceptionMacro("OpenCLKernelToImageBridge::SetSize"
                              " supports only 1D/2D/3D images.");
@@ -359,7 +359,7 @@ itk::OpenCLKernelToImageBridge<TImage>::SetOrigin(OpenCLKernel &                
                                                   const cl_uint                         argumentIndex,
                                                   const typename ImageType::PointType & origin)
 {
-  if (ImageDimension > 3 || ImageDimension < 1)
+  if constexpr (ImageDimension > 3 || ImageDimension < 1)
   {
     itkGenericExceptionMacro("OpenCLKernelToImageBridge::SetOrigin"
                              " supports only 1D/2D/3D images.");
