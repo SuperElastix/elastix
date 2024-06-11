@@ -19,7 +19,7 @@
 #define elxPCAMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
-#include "itkPCAMetric_F_multithreaded.h"
+#include "itkPCAMetric.h"
 
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkStackTransform.h"

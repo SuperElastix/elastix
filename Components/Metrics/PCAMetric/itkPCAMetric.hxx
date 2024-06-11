@@ -15,10 +15,10 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkPCAMetric_F_multithreaded_hxx
-#define itkPCAMetric_F_multithreaded_hxx
+#ifndef itkPCAMetric_hxx
+#define itkPCAMetric_hxx
 
-#include "itkPCAMetric_F_multithreaded.h"
+#include "itkPCAMetric.h"
 
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include <vnl/algo/vnl_matrix_update.h>
@@ -1066,4 +1066,4 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback() 
 
 } // end namespace itk
 
-#endif // itkPCAMetric_F_multithreaded_hxx
+#endif // itkPCAMetric_hxx

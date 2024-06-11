@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkPCAMetric_F_multithreaded_h
-#define itkPCAMetric_F_multithreaded_h
+#ifndef itkPCAMetric_h
+#define itkPCAMetric_h
 
 #include "itkAdvancedImageToImageMetric.h"
 
@@ -245,7 +245,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#  include "itkPCAMetric_F_multithreaded.hxx"
+#  include "itkPCAMetric.hxx"
 #endif
 
-#endif // end #ifndef itkPCAMetric_F_multithreaded_h
+#endif // end #ifndef itkPCAMetric_h
