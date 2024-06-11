@@ -287,10 +287,7 @@ template <class TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
-  if (ParametersDimension < 7)
-  {
-    return;
-  }
+  static_assert(ParametersDimension >= 7);
 
   /** The Jacobian of spatial Jacobian remains constant, so is precomputed */
   JacobianOfSpatialJacobianType & jsj = this->m_JacobianOfSpatialJacobian;
