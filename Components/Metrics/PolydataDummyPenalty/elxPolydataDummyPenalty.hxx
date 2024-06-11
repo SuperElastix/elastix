@@ -480,7 +480,7 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
   mesh->SetPoints(inputPointSet->GetPoints());
 
   /** Floris: make connected mesh (polygon) if data is 2d by assuming the sequence of points being connected**/
-  if (FixedImageDimension == 2)
+  if constexpr (FixedImageDimension == 2)
   {
     using CellAutoPointer = typename MeshType::CellType::CellAutoPointer;
     using LineType = itk::LineCell<typename MeshType::CellType>;

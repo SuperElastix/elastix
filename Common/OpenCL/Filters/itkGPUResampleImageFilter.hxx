@@ -443,7 +443,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   // have to be computed based on the remaining global GPU memory.
   // Splitting is not used for low-dimensional images.
   unsigned int requestedNumberOfSplits = this->m_RequestedNumberOfSplits;
-  if (InputImageDimension < 3)
+  if constexpr (InputImageDimension < 3)
   {
     requestedNumberOfSplits = 1;
   }

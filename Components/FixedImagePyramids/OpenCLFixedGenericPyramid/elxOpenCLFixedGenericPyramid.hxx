@@ -52,7 +52,7 @@ OpenCLFixedGenericPyramid<TElastix>::OpenCLFixedGenericPyramid()
   // it is not beneficial to create pyramids for 2D images with OpenCL.
   // There are also small extra overhead and potential problems may appear.
   // To avoid it, we simply run it on CPU for 2D images.
-  if (ImageDimension <= 2)
+  if constexpr (ImageDimension <= 2)
   {
     log::warn(
       std::ostringstream{} << "WARNING: Creating the fixed pyramid with OpenCL for 2D images is not beneficial.\n"

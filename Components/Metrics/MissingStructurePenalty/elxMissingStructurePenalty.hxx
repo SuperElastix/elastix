@@ -509,7 +509,7 @@ the sequence of points to form a 2d connected polydata contour.
   // MeshType::PointsContainer * meshpointset = dynamic_cast<MeshType::PointsContainer *>(inputpointvec);
 
   /** FB: make connected mesh (polygon) for data that is 2d by assuming the sequence of points being connected**/
-  if (FixedImageDimension == 2)
+  if constexpr (FixedImageDimension == 2)
   {
     using CellAutoPointer = typename MeshType::CellType::CellAutoPointer;
     using LineType = itk::LineCell<typename MeshType::CellType>;

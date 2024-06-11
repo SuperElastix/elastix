@@ -84,7 +84,7 @@ EulerTransformElastix<TElastix>::ReadFromFile()
     this->m_EulerTransform->SetCenter(centerOfRotationPoint);
 
     /** Read the ComputeZYX. */
-    if (SpaceDimension == 3)
+    if constexpr (SpaceDimension == 3)
     {
       std::string computeZYX = "false";
       this->m_Configuration->ReadParameter(computeZYX, "ComputeZYX", 0);
@@ -116,7 +116,7 @@ EulerTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> P
                                    Conversion::ToVectorOfStrings(m_EulerTransform->GetCenter()) } };
 
   /** Write the ComputeZYX to file. */
-  if (SpaceDimension == 3)
+  if constexpr (SpaceDimension == 3)
   {
     parameterMap["ComputeZYX"] = { Conversion::ToString(m_EulerTransform->GetComputeZYX()) };
   }
@@ -334,7 +334,7 @@ EulerTransformElastix<TElastix>::SetScales()
      * If the Dimension is 2, only the first parameter represent a rotation.
      */
     unsigned int RotationPart = 3;
-    if (SpaceDimension == 2)
+    if constexpr (SpaceDimension == 2)
     {
       RotationPart = 1;
     }

@@ -52,7 +52,7 @@ SplineKernelTransform<TElastix>::SetKernelType(const std::string & kernelType)
    * appropriate for 2D and the normal for 3D
    * \todo: understand why
    */
-  if (SpaceDimension == 2)
+  if constexpr (SpaceDimension == 2)
   {
     /** only one variant for 2D possible: */
     this->m_KernelTransform = TPRKernelTransformType::New();

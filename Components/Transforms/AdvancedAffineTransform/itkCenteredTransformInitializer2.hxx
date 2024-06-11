@@ -211,13 +211,13 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
         {
           fixedCorners[index][0] = fixedRegion.GetIndex()[0] + x * fixedRegion.GetSize()[0];
           fixedCorners[index][1] = fixedRegion.GetIndex()[1] + y * fixedRegion.GetSize()[1];
-          if (InputSpaceDimension > 2)
+          if constexpr (InputSpaceDimension > 2)
           {
             fixedCorners[index][2] = fixedRegion.GetIndex()[2] + z * fixedRegion.GetSize()[2];
           }
           movingCorners[index][0] = movingRegion.GetIndex()[0] + x * movingRegion.GetSize()[0];
           movingCorners[index][1] = movingRegion.GetIndex()[1] + y * movingRegion.GetSize()[1];
-          if (InputSpaceDimension > 2)
+          if constexpr (InputSpaceDimension > 2)
           {
             movingCorners[index][2] = movingRegion.GetIndex()[2] + z * movingRegion.GetSize()[2];
           }

@@ -298,12 +298,12 @@ SimilarityTransformElastix<TElastix>::SetScales()
      */
 
     /** Create the scales and set to default values. */
-    if (SpaceDimension == 2)
+    if constexpr (SpaceDimension == 2)
     {
       newscales[0] = 10000.0;
       newscales[1] = 100000.0;
     }
-    else if (SpaceDimension == 3)
+    else if constexpr (SpaceDimension == 3)
     {
       newscales[6] = 10000.0;
       for (unsigned int i = 0; i < 3; ++i)

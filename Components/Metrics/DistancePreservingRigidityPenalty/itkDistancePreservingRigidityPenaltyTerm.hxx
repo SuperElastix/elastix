@@ -203,7 +203,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
   unsigned int pixelValue, pixelValueNeighbor;
 
   /** Penalty term computation */
-  if (MovingImageDimension == 3)
+  if constexpr (MovingImageDimension == 3)
   {
     for (pgi.GoToBegin(), ni.GoToBegin(); !pgi.IsAtEnd(); ++pgi, ++ni)
     {
@@ -364,7 +364,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
   unsigned int pixelValue, pixelValueNeighbor;
 
-  if (MovingImageDimension == 3)
+  if constexpr (MovingImageDimension == 3)
   {
     for (pgi.GoToBegin(), ni.GoToBegin(); !pgi.IsAtEnd(); ++pgi, ++ni)
     {

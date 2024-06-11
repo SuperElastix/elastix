@@ -183,7 +183,7 @@ DefineAffineParameters(typename AffineTransformType::ParametersType & parameters
   // Setup parameters
   parameters.SetSize(Dimension * Dimension + Dimension);
   unsigned int par = 0;
-  if (Dimension == 2)
+  if constexpr (Dimension == 2)
   {
     const double matrix[] = {
       0.9, 0.1, // matrix part
@@ -196,7 +196,7 @@ DefineAffineParameters(typename AffineTransformType::ParametersType & parameters
       parameters[par++] = matrix[i];
     }
   }
-  else if (Dimension == 3)
+  else if constexpr (Dimension == 3)
   {
     const double matrix[] = {
       1.0,    -0.045, 0.02,  // matrix part
@@ -283,13 +283,13 @@ DefineEulerParameters(const std::size_t transformIndex, typename EulerTransformT
   const double angle = (double)transformIndex * -0.05;
 
   std::size_t par = 0;
-  if (Dimension == 2)
+  if constexpr (Dimension == 2)
   {
     // See implementation of Rigid2DTransform::SetParameters()
     parameters[0] = angle;
     ++par;
   }
-  else if (Dimension == 3)
+  else if constexpr (Dimension == 3)
   {
     // See implementation of Rigid3DTransform::SetParameters()
     for (std::size_t i = 0; i < 3; ++i)
@@ -323,13 +323,13 @@ DefineSimilarityParameters(const std::size_t                                  tr
   const double scale = ((double)transformIndex + 1.0) * 0.05 + 1.0;
   const double angle = (double)transformIndex * -0.06;
 
-  if (Dimension == 2)
+  if constexpr (Dimension == 2)
   {
     // See implementation of Similarity2DTransform::SetParameters()
     parameters[0] = scale;
     parameters[1] = angle;
   }
-  else if (Dimension == 3)
+  else if constexpr (Dimension == 3)
   {
     // See implementation of Similarity3DTransform::SetParameters()
     for (std::size_t i = 0; i < Dimension; ++i)

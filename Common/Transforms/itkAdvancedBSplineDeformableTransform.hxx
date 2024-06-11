@@ -1189,7 +1189,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Comp
     globalStartNum += supportRegion.GetIndex()[dim] * this->m_GridOffsetTable[dim];
   }
 
-  if (SpaceDimension == 2)
+  if constexpr (SpaceDimension == 2)
   {
     /** Initialize some helper variables. */
     const unsigned int  sx = supportRegion.GetSize()[0];
@@ -1212,7 +1212,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Comp
       globalParNum += diffxy;
     }
   } // end if SpaceDimension == 2
-  else if (SpaceDimension == 3)
+  else if constexpr (SpaceDimension == 3)
   {
     /** Initialize some helper variables. */
     const unsigned int  sx = supportRegion.GetSize()[0];

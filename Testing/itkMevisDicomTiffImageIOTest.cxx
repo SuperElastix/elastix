@@ -67,7 +67,7 @@ testMevis()
     direction[i][i] = 1.0; // default, will be changed below
   }
   // 4th dimension origin/spacing are lost using dcm/tiff format!
-  if (Dimension == 4)
+  if constexpr (Dimension == 4)
   {
     // default values
     spacing[3] = 1.0;
@@ -75,7 +75,7 @@ testMevis()
   }
 
   // Difficult direction cosines:
-  if (Dimension == 2)
+  if constexpr (Dimension == 2)
   {
     // Test flips
     direction[0][0] = 1;
@@ -83,7 +83,7 @@ testMevis()
     direction[1][0] = 0;
     direction[1][1] = -1;
   }
-  else if (Dimension == 3)
+  else if constexpr (Dimension == 3)
   {
     // Test axis permutations
     // RM: won't work, because dicom always assume right hand
@@ -105,7 +105,7 @@ testMevis()
     direction[2][1] = 1;
     direction[2][2] = 0;
   }
-  else if (Dimension == 4)
+  else if constexpr (Dimension == 4)
   {
     // Test 4D. RM: also make sure it is a right hand coordinate system
     direction[0][0] = 1;
