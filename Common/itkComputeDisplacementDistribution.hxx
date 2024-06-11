@@ -53,7 +53,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeDisplacementDis
 
   /** Threading related variables. */
   this->m_UseMultiThread = true;
-  this->m_Threader = ThreaderType::New();
+  this->m_Threader = MultiThreaderBase::New();
 
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;

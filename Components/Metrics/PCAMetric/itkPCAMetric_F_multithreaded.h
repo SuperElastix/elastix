@@ -93,7 +93,6 @@ public:
   using typename Superclass::MovingImageLimiterOutputType;
   using typename Superclass::MovingImageDerivativeScalesType;
   using typename Superclass::DerivativeValueType;
-  using typename Superclass::ThreaderType;
   using typename Superclass::ThreadInfoType;
 
   using MatrixType = vnl_matrix<RealType>;

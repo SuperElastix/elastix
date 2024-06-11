@@ -28,7 +28,7 @@
 #include "itkTimeProbesCollectorBase.h"
 
 // Multi-threading using ITK threads
-#include "itkPlatformMultiThreader.h"
+#include "itkMultiThreaderBase.h"
 
 // Multi-threading using OpenMP
 #ifdef ELASTIX_USE_OPENMP
@@ -59,13 +59,13 @@ public:
   unsigned long                       m_NumberOfParameters;
   mutable std::vector<DerivativeType> m_ThreaderDerivatives;
 
-  using ThreaderType = itk::PlatformMultiThreader;
-  using ThreadInfoType = ThreaderType::WorkUnitInfo;
-  ThreaderType::Pointer m_Threader;
-  DerivativeValueType   m_NormalSum;
-  ThreadIdType          m_NumberOfThreads;
-  bool                  m_UseOpenMP;
-  bool                  m_UseMultiThreaded;
+  using ThreadInfoType = itk::MultiThreaderBase::WorkUnitInfo;
+
+  itk::MultiThreaderBase::Pointer m_Threader;
+  DerivativeValueType             m_NormalSum;
+  ThreadIdType                    m_NumberOfThreads;
+  bool                            m_UseOpenMP;
+  bool                            m_UseMultiThreaded;
 
   struct MultiThreaderParameterType
   {
@@ -85,7 +85,7 @@ public:
     this->m_ThreaderMetricParameters.st_NormalizationFactor = 0.0;
 
     this->m_NumberOfParameters = 0;
-    this->m_Threader = ThreaderType::New();
+    this->m_Threader = itk::MultiThreaderBase::New();
     this->m_NumberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
     this->m_UseOpenMP = false;
     this->m_UseMultiThreaded = false;

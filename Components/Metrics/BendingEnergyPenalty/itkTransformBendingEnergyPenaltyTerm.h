@@ -99,7 +99,6 @@ public:
   using typename Superclass::ImageSampleContainerType;
   using typename Superclass::ImageSampleContainerPointer;
   using typename Superclass::ScalarType;
-  using typename Superclass::ThreaderType;
   using typename Superclass::ThreadInfoType;
 
   /** Typedef's for the B-spline transform. */

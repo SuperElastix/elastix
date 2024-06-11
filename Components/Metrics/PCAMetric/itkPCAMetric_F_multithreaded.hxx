@@ -882,7 +882,7 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchGetSamplesThreaderCallback() const
 {
   /** Setup local threader. */
   // \todo: is a global threader better performance-wise? check
-  auto local_threader = ThreaderType::New();
+  auto local_threader = MultiThreaderBase::New();
   local_threader->SetNumberOfWorkUnits(Self::GetNumberOfWorkUnits());
   local_threader->SetSingleMethodAndExecute(
     this->GetSamplesThreaderCallback,
@@ -1084,7 +1084,7 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback() 
 {
   /** Setup local threader and launch. */
   // \todo: is a global threader better performance-wise? check
-  auto local_threader = ThreaderType::New();
+  auto local_threader = MultiThreaderBase::New();
   local_threader->SetNumberOfWorkUnits(Self::GetNumberOfWorkUnits());
   local_threader->SetSingleMethodAndExecute(
     this->ComputeDerivativeThreaderCallback,

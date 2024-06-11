@@ -35,8 +35,6 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkAdvancedCombinationTransform.h"
 
-#include "itkPlatformMultiThreader.h"
-
 #include <cassert>
 #include <memory> // For unique_ptr.
 #include <typeinfo>
@@ -168,9 +166,8 @@ public:
   using BSplineOrder2TransformPointer = typename BSplineOrder2TransformType::Pointer;
   using BSplineOrder3TransformPointer = typename BSplineOrder3TransformType::Pointer;
 
-  /** Typedefs for multi-threading. */
-  using ThreaderType = itk::PlatformMultiThreader;
-  using ThreadInfoType = typename ThreaderType::WorkUnitInfo;
+  /** Typedef for multi-threading. */
+  using ThreadInfoType = MultiThreaderBase::WorkUnitInfo;
 
   /** Public methods ********************/
 
