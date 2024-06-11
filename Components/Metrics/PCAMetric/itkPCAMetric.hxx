@@ -508,26 +508,28 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   MatrixType A(datablock.extract(N, realNumLastDimPositions));
 
-  /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(realNumLastDimPositions);
-  mean.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
-  {
-    for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
-    {
-      mean(j) += A(i, j);
-    }
-  }
-  mean /= RealType(N);
-
   /** Calculate standard deviation from columns */
   MatrixType Amm(N, realNumLastDimPositions);
   Amm.fill(RealType{});
-  for (unsigned int i = 0; i < N; ++i)
   {
-    for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
+    /** Calculate mean of from columns */
+    vnl_vector<RealType> mean(realNumLastDimPositions);
+    mean.fill(RealType{});
+    for (unsigned int i = 0; i < N; ++i)
     {
-      Amm(i, j) = A(i, j) - mean(j);
+      for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
+      {
+        mean(j) += A(i, j);
+      }
+    }
+    mean /= RealType(N);
+
+    for (unsigned int i = 0; i < N; ++i)
+    {
+      for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
+      {
+        Amm(i, j) = A(i, j) - mean(j);
+      }
     }
   }
 
