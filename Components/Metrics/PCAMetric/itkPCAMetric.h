@@ -112,31 +112,31 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Get the value for single valued optimizers. */
-  virtual MeasureType
-  GetValue(const TransformParametersType & parameters) const;
+  MeasureType
+  GetValue(const TransformParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
-  virtual void
-  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const;
+  void
+  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
-  virtual void
+  void
   GetValueAndDerivative(const TransformParametersType & parameters,
                         MeasureType &                   Value,
-                        DerivativeType &                Derivative) const;
+                        DerivativeType &                Derivative) const override;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
    * \li Call the superclass' implementation.   */
 
-  virtual void
-  Initialize();
+  void
+  Initialize() override;
 
 protected:
   PCAMetric();
   virtual ~PCAMetric() {}
   void
-  PrintSelf(std::ostream & os, Indent indent) const;
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
   /** Protected Typedefs ******************/
 
@@ -159,7 +159,7 @@ protected:
   void
   EvaluateTransformJacobianInnerProduct(const TransformJacobianType &     jacobian,
                                         const MovingImageDerivativeType & movingImageDerivative,
-                                        DerivativeType &                  imageJacobian) const;
+                                        DerivativeType &                  imageJacobian) const override;
 
   mutable vnl_vector<double> m_firstEigenVector{};
   mutable vnl_vector<double> m_secondEigenVector{};
