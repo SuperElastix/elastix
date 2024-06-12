@@ -133,7 +133,7 @@ public:
 
 protected:
   PCAMetric();
-  virtual ~PCAMetric() {}
+  ~PCAMetric() override = default;
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
