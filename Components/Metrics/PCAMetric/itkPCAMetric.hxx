@@ -211,7 +211,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
     FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
-    FixedImageContinuousIndexType voxelCoord =
+    auto voxelCoord =
       this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
     unsigned int numSamplesOk = 0;
@@ -447,7 +447,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
     FixedImagePointType fixedPoint = fixedImageSample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
-    FixedImageContinuousIndexType voxelCoord =
+    auto voxelCoord =
       this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
     const unsigned int G = lastDimPositions.size();
