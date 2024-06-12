@@ -37,12 +37,6 @@ namespace itk
 
 template <class TFixedImage, class TMovingImage>
 PCAMetric<TFixedImage, TMovingImage>::PCAMetric()
-  : m_SubtractMean(false)
-  , m_TransformIsStackTransform(false)
-  , m_NumEigenValues(6)
-  , m_UseDerivativeOfMean(false)
-  , m_DeNoise(false)
-  , m_VarNoise(0.0)
 {
   this->SetUseImageSampler(true);
   this->SetUseFixedImageLimiter(false);
