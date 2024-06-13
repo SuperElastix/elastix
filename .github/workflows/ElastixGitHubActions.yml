@@ -20,22 +20,22 @@ jobs:
             cxx-compiler: "g++"
             itk-git-tag: "v5.4.0"
             cmake-build-type: "Release"
-            ANNLib: "libANNlib-5.1.so"
-            ANNLib2: "libANNlib-5.1.so.1"
+            ANNLib: "libANNlib-5.2.so"
+            ANNLib2: "libANNlib-5.2.so.1"
           - os: windows-2022
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
             itk-git-tag: "v5.4.0"
             cmake-build-type: "Release"
-            ANNLib: "ANNlib-5.1.dll"
+            ANNLib: "ANNlib-5.2.dll"
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-12
             c-compiler: "clang"  
             cxx-compiler: "clang++"
             itk-git-tag: "v5.4.0"
             cmake-build-type: "Release"
-            ANNLib: "libANNlib-5.1.1.dylib"
-            ANNLib2: "libANNlib-5.1.dylib"
+            ANNLib: "libANNlib-5.2.1.dylib"
+            ANNLib2: "libANNlib-5.2.dylib"
 
     steps:
     - uses: actions/checkout@v3
