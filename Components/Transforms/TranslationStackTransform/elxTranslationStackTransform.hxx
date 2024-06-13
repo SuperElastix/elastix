@@ -36,7 +36,7 @@ TranslationStackTransform<TElastix>::InitializeTranslationTransform()
 {
   log::error("InitializeTranslationTransform");
 
-  this->m_DummySubTransform = ReducedDimensionTranslationTransformType::New();
+  m_DummySubTransform = ReducedDimensionTranslationTransformType::New();
   return 0;
 } // end InitializeTranslationTransform()
 
@@ -70,17 +70,17 @@ TranslationStackTransform<TElastix>::BeforeRegistration()
 
   /** Determine stack transform settings. Here they are based on the fixed image. */
   const SizeType imageSize = this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  this->m_NumberOfSubTransforms = imageSize[SpaceDimension - 1];
-  this->m_StackSpacing = this->GetElastix()->GetFixedImage()->GetSpacing()[SpaceDimension - 1];
-  this->m_StackOrigin = this->GetElastix()->GetFixedImage()->GetOrigin()[SpaceDimension - 1];
+  m_NumberOfSubTransforms = imageSize[SpaceDimension - 1];
+  m_StackSpacing = this->GetElastix()->GetFixedImage()->GetSpacing()[SpaceDimension - 1];
+  m_StackOrigin = this->GetElastix()->GetFixedImage()->GetOrigin()[SpaceDimension - 1];
 
   /** Set stack transform parameters. */
-  this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-  this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
-  this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
+  m_StackTransform->SetNumberOfSubTransforms(m_NumberOfSubTransforms);
+  m_StackTransform->SetStackOrigin(m_StackOrigin);
+  m_StackTransform->SetStackSpacing(m_StackSpacing);
 
   /** Initialize stack sub transforms. */
-  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
+  m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Task 2 - Give the registration an initial parameter-array. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(
@@ -100,10 +100,10 @@ TranslationStackTransform<TElastix>::InitializeTransform()
   log::error("InitializeTransform");
 
   /** Initialize the m_DummySubTransform */
-  this->m_DummySubTransform->SetIdentity();
+  m_DummySubTransform->SetIdentity();
 
   /** Set all subtransforms to a copy of the dummy Translation sub transform. */
-  this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
+  m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
 
   /** Set initial parameters for the first resolution to 0.0. */
   ParametersType initialParameters(this->GetNumberOfParameters());
@@ -127,20 +127,20 @@ TranslationStackTransform<TElastix>::ReadFromFile()
   {
     /** Read stack-spacing, stack-origin and number of sub-transforms. */
     this->GetConfiguration()->ReadParameter(
-      this->m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(this->m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(this->m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
+      m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+    this->GetConfiguration()->ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+    this->GetConfiguration()->ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
     /** Initialize translation transform. */
     InitializeTranslationTransform();
 
     /** Set stack transform parameters. */
-    this->m_StackTransform->SetNumberOfSubTransforms(this->m_NumberOfSubTransforms);
-    this->m_StackTransform->SetStackOrigin(this->m_StackOrigin);
-    this->m_StackTransform->SetStackSpacing(this->m_StackSpacing);
+    m_StackTransform->SetNumberOfSubTransforms(m_NumberOfSubTransforms);
+    m_StackTransform->SetStackOrigin(m_StackOrigin);
+    m_StackTransform->SetStackSpacing(m_StackSpacing);
 
     /** Set stack subtransforms. */
-    this->m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
+    m_StackTransform->SetAllSubTransforms(*m_DummySubTransform);
   }
 
   /** Call the ReadFromFile from the TransformBase. */
