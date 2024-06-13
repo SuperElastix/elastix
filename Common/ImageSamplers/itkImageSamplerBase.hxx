@@ -301,6 +301,12 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
    * InputImageRegion and the BoundingBoxRegion.
    */
   m_CroppedInputImageRegion = m_InputImageRegion;
+
+  if (m_UseForGroupwiseRegistration)
+  {
+    m_CroppedInputImageRegion.GetModifiableSize().back() = 1;
+  }
+
   if (!m_Mask.IsNull())
   {
     /** Get a handle to the input image. */
