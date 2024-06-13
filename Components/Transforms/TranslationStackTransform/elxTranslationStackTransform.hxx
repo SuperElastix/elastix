@@ -21,6 +21,7 @@
 #include "elxTranslationStackTransform.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
+#include <itkDeref.h>
 #include <vnl/vnl_math.h>
 
 namespace elastix
@@ -125,11 +126,12 @@ TranslationStackTransform<TElastix>::ReadFromFile()
 
   if (!this->HasITKTransformParameters())
   {
+    const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
     /** Read stack-spacing, stack-origin and number of sub-transforms. */
-    this->GetConfiguration()->ReadParameter(
-      m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
     /** Initialize translation transform. */
     InitializeTranslationTransform();
