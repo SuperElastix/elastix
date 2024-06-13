@@ -21,6 +21,7 @@
 #include "elxBSplineStackTransform.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
+#include <itkDeref.h>
 #include <vnl/vnl_math.h>
 
 namespace elastix
@@ -224,16 +225,18 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
    * Which is the default schedule, if no GridSpacingSchedule is supplied.
    */
 
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Determine which method is used. */
   bool        method1 = false;
-  std::size_t count1 = this->m_Configuration->CountNumberOfParameterEntries("FinalGridSpacingInVoxels");
+  std::size_t count1 = configuration.CountNumberOfParameterEntries("FinalGridSpacingInVoxels");
   if (count1 > 0)
   {
     method1 = true;
   }
 
   bool        method2 = false;
-  std::size_t count2 = this->m_Configuration->CountNumberOfParameterEntries("FinalGridSpacingInPhysicalUnits");
+  std::size_t count2 = configuration.CountNumberOfParameterEntries("FinalGridSpacingInPhysicalUnits");
   if (count2 > 0)
   {
     method2 = true;
@@ -257,7 +260,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
   {
     for (unsigned int dim = 0; dim < ReducedSpaceDimension; ++dim)
     {
-      this->m_Configuration->ReadParameter(
+      configuration.ReadParameter(
         finalGridSpacingInVoxels[dim], "FinalGridSpacingInVoxels", this->GetComponentLabel(), dim, 0);
     }
 
@@ -274,7 +277,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
   {
     for (unsigned int dim = 0; dim < ReducedSpaceDimension; ++dim)
     {
-      this->m_Configuration->ReadParameter(
+      configuration.ReadParameter(
         finalGridSpacingInPhysicalUnits[dim], "FinalGridSpacingInPhysicalUnits", this->GetComponentLabel(), dim, 0);
     }
   }
@@ -285,7 +288,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
   m_GridScheduleComputer->GetSchedule(gridSchedule);
 
   /** Read what the user has specified. This overrules everything. */
-  count2 = this->m_Configuration->CountNumberOfParameterEntries("GridSpacingSchedule");
+  count2 = configuration.CountNumberOfParameterEntries("GridSpacingSchedule");
   unsigned int entry_nr = 0;
   if (count2 == 0)
   {
@@ -297,7 +300,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
     {
       for (unsigned int dim = 0; dim < ReducedSpaceDimension; ++dim)
       {
-        this->m_Configuration->ReadParameter(gridSchedule[res][dim], "GridSpacingSchedule", entry_nr, false);
+        configuration.ReadParameter(gridSchedule[res][dim], "GridSpacingSchedule", entry_nr, false);
       }
       ++entry_nr;
     }
@@ -308,7 +311,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
     {
       for (unsigned int dim = 0; dim < ReducedSpaceDimension; ++dim)
       {
-        this->m_Configuration->ReadParameter(gridSchedule[res][dim], "GridSpacingSchedule", entry_nr, false);
+        configuration.ReadParameter(gridSchedule[res][dim], "GridSpacingSchedule", entry_nr, false);
         ++entry_nr;
       }
     }
@@ -444,16 +447,17 @@ BSplineStackTransform<TElastix>::ReadFromFile()
 {
   if (!this->HasITKTransformParameters())
   {
+    const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
     /** Read spline order settings and initialize BSplineTransform. */
     m_SplineOrder = 3;
-    this->GetConfiguration()->ReadParameter(
-      m_SplineOrder, "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_SplineOrder, "BSplineTransformSplineOrder", this->GetComponentLabel(), 0, 0);
 
     /** Read stack-spacing, stack-origin and number of sub-transforms. */
-    bool dummy = this->GetConfiguration()->ReadParameter(
-      m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
-    dummy |= this->GetConfiguration()->ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
-    dummy |= this->GetConfiguration()->ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
+    bool dummy =
+      configuration.ReadParameter(m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+    dummy |= configuration.ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+    dummy |= configuration.ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
     /** Initialize the right B-spline transform. */
     this->InitializeBSplineTransform();
@@ -475,13 +479,13 @@ BSplineStackTransform<TElastix>::ReadFromFile()
     /** Get GridSize, GridIndex, GridSpacing and GridOrigin. */
     for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
     {
-      dummy |= this->m_Configuration->ReadParameter(gridsize[i], "GridSize", i);
-      dummy |= this->m_Configuration->ReadParameter(gridindex[i], "GridIndex", i);
-      dummy |= this->m_Configuration->ReadParameter(gridspacing[i], "GridSpacing", i);
-      dummy |= this->m_Configuration->ReadParameter(gridorigin[i], "GridOrigin", i);
+      dummy |= configuration.ReadParameter(gridsize[i], "GridSize", i);
+      dummy |= configuration.ReadParameter(gridindex[i], "GridIndex", i);
+      dummy |= configuration.ReadParameter(gridspacing[i], "GridSpacing", i);
+      dummy |= configuration.ReadParameter(gridorigin[i], "GridOrigin", i);
       for (unsigned int j = 0; j < ReducedSpaceDimension; ++j)
       {
-        this->m_Configuration->ReadParameter(griddirection(j, i), "GridDirection", i * ReducedSpaceDimension + j);
+        configuration.ReadParameter(griddirection(j, i), "GridDirection", i * ReducedSpaceDimension + j);
       }
     }
 

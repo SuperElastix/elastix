@@ -21,6 +21,7 @@
 #include "elxAffineLogStackTransform.h"
 
 #include "itkImageRegionExclusionConstIteratorWithIndex.h"
+#include <itkDeref.h>
 #include <vnl/vnl_math.h>
 
 namespace elastix
@@ -100,11 +101,12 @@ AffineLogStackTransform<TElastix>::ReadFromFile()
 {
   if (!this->HasITKTransformParameters())
   {
+    const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
     /** Read stack-spacing, stack-origin and number of sub-transforms. */
-    this->GetConfiguration()->ReadParameter(
-      m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
     ReducedDimensionInputPointType RDcenterOfRotationPoint{};
 
@@ -184,17 +186,19 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   SizeType fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
+    bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!foundI)
     {
       centerGivenAsIndex = false;
     }
 
     /** Check COR point: Returns zero when parameter was in the parameter file. */
-    bool foundP = this->m_Configuration->ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
+    bool foundP = configuration.ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!foundP)
     {
       centerGivenAsPoint = false;
@@ -207,7 +211,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
    */
   bool automaticTransformInitialization = false;
   bool tmpBool = false;
-  this->m_Configuration->ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
+  configuration.ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
   if (tmpBool && this->Superclass1::GetInitialTransform() == nullptr)
   {
     automaticTransformInitialization = true;
@@ -270,17 +274,19 @@ template <class TElastix>
 void
 AffineLogStackTransform<TElastix>::SetScales()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Create the new scales. */
   const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
   ScalesType                   newscales(numberOfParameters);
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimation = false;
-  this->m_Configuration->ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
+  configuration.ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
 
   /** Check also AutomaticScalesEstimationStackTransform for backwards compatability. */
   bool automaticScalesEstimationStackTransform = false;
-  this->m_Configuration->ReadParameter(
+  configuration.ReadParameter(
     automaticScalesEstimationStackTransform, "AutomaticScalesEstimationStackTransform", 0, false);
 
   if (automaticScalesEstimationStackTransform)
@@ -327,7 +333,7 @@ AffineLogStackTransform<TElastix>::SetScales()
     const unsigned int rotationPart = (ReducedSpaceDimension) * (ReducedSpaceDimension);
     const unsigned int totalPart = (SpaceDimension) * (ReducedSpaceDimension);
 
-    /** this->m_Configuration->ReadParameter() returns 0 if there is a value given
+    /** configuration.ReadParameter() returns 0 if there is a value given
      * in the parameter-file, and returns 1 if there is no value given in the
      * parameter-file.
      * Check which option is used:
@@ -343,7 +349,7 @@ AffineLogStackTransform<TElastix>::SetScales()
     int sizeLastDimension =
       this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize()[SpaceDimension - 1];
 
-    std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
+    std::size_t count = configuration.CountNumberOfParameterEntries("Scales");
 
     /** Check which of the above options is used. */
     if (count == 0)
@@ -363,7 +369,7 @@ AffineLogStackTransform<TElastix>::SetScales()
     {
       /** In this case the second option is used. */
       double scale = defaultScalingvalue;
-      this->m_Configuration->ReadParameter(scale, "Scales", 0);
+      configuration.ReadParameter(scale, "Scales", 0);
       newscales.Fill(scale);
 
       /** The non-rotation scales are set to 1.0 */
@@ -379,7 +385,7 @@ AffineLogStackTransform<TElastix>::SetScales()
       /** In this case the third option is used. */
       for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
-        this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
+        configuration.ReadParameter(newscales[i], "Scales", i);
       }
     }
     else

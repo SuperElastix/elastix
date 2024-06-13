@@ -19,6 +19,7 @@
 #define elxEulerStackTransform_hxx
 
 #include "elxEulerStackTransform.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -96,11 +97,12 @@ EulerStackTransform<TElastix>::ReadFromFile()
 {
   if (!this->HasITKTransformParameters())
   {
+    const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
     /** Read stack-spacing, stack-origin and number of sub-transforms. */
-    this->GetConfiguration()->ReadParameter(
-      m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
-    this->GetConfiguration()->ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_NumberOfSubTransforms, "NumberOfSubTransforms", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_StackOrigin, "StackOrigin", this->GetComponentLabel(), 0, 0);
+    configuration.ReadParameter(m_StackSpacing, "StackSpacing", this->GetComponentLabel(), 0, 0);
 
     ReducedDimensionInputPointType RDcenterOfRotationPoint{};
 
@@ -163,6 +165,7 @@ template <class TElastix>
 void
 EulerStackTransform<TElastix>::InitializeTransform()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Set all parameters to zero (no rotations, no translation). */
   m_DummySubTransform->SetIdentity();
@@ -185,15 +188,14 @@ EulerStackTransform<TElastix>::InitializeTransform()
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     /** Check COR index: Returns zero when parameter was in the parameter file. */
-    const bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
+    const bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!foundI)
     {
       centerGivenAsIndex = false;
     }
 
     /** Check COR point: Returns zero when parameter was in the parameter file. */
-    const bool foundP =
-      this->m_Configuration->ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
+    const bool foundP = configuration.ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!foundP)
     {
       centerGivenAsPoint = false;
@@ -221,7 +223,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
 
     /** FIX: why may the cop not work when using direction cosines? */
     bool UseDirectionCosines = true;
-    this->m_Configuration->ReadParameter(UseDirectionCosines, "UseDirectionCosines", 0);
+    configuration.ReadParameter(UseDirectionCosines, "UseDirectionCosines", 0);
     if (!UseDirectionCosines)
     {
       log::info(std::ostringstream{}
@@ -325,6 +327,7 @@ template <class TElastix>
 void
 EulerStackTransform<TElastix>::SetScales()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   /** Create the new scales. */
   const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
@@ -332,11 +335,11 @@ EulerStackTransform<TElastix>::SetScales()
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimation = false;
-  this->m_Configuration->ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
+  configuration.ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
 
   /** Check also AutomaticScalesEstimationStackTransform for backwards compatability. */
   bool automaticScalesEstimationStackTransform = false;
-  this->m_Configuration->ReadParameter(
+  configuration.ReadParameter(
     automaticScalesEstimationStackTransform, "AutomaticScalesEstimationStackTransform", 0, false);
 
   if (automaticScalesEstimationStackTransform)
@@ -382,7 +385,7 @@ EulerStackTransform<TElastix>::SetScales()
     const unsigned int numRotationParsPerDimension = ReducedSpaceDimension == 2 ? 1 : 3;
     const unsigned int numTotalParsPerDimension = ReducedSpaceDimension == 2 ? 3 : 6;
 
-    /** this->m_Configuration->ReadParameter() returns 0 if there is a value given
+    /** configuration.ReadParameter() returns 0 if there is a value given
      * in the parameter-file, and returns 1 if there is no value given in the
      * parameter-file.
      *
@@ -399,7 +402,7 @@ EulerStackTransform<TElastix>::SetScales()
     const int sizeLastDimension =
       this->GetElastix()->GetFixedImage()->GetLargestPossibleRegion().GetSize()[SpaceDimension - 1];
 
-    std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
+    std::size_t count = configuration.CountNumberOfParameterEntries("Scales");
 
     /** Check which of the above options is used. */
     if (count == 0)
@@ -421,7 +424,7 @@ EulerStackTransform<TElastix>::SetScales()
     {
       /** In this case the second option is used. */
       double scale = defaultScalingvalue;
-      this->m_Configuration->ReadParameter(scale, "Scales", 0);
+      configuration.ReadParameter(scale, "Scales", 0);
       newscales.Fill(scale);
 
       /** The non-rotation scales are set to 1.0 for all dimensions */
@@ -440,7 +443,7 @@ EulerStackTransform<TElastix>::SetScales()
       /** In this case the third option is used. */
       for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
-        this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
+        configuration.ReadParameter(newscales[i], "Scales", i);
       }
     }
     else
