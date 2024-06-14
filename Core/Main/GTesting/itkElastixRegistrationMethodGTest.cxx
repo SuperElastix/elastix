@@ -34,6 +34,7 @@
 #include <itkCompositeTransform.h>
 #include <itkDisplacementFieldTransform.h>
 #include <itkEuler2DTransform.h>
+#include <itkEuler3DTransform.h>
 #include <itkImage.h>
 #include <itkIndexRange.h>
 #include <itkFileTools.h>
@@ -78,7 +79,9 @@ using elx::CoreMainGTestUtilities::ImageDomain;
 using elx::CoreMainGTestUtilities::TypeHolder;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
 using elx::GTestUtilities::MakeMergedMap;
+
 using itk::Deref;
+using itk::Statistics::MersenneTwisterRandomVariateGenerator;
 
 
 template <typename TImage>
@@ -2374,4 +2377,62 @@ GTEST_TEST(itkElastixRegistrationMethod, SetAndGetInitialTransform)
   registration.SetExternalInitialTransform(nullptr);
   EXPECT_EQ(registration.GetInitialTransform(), nullptr);
   EXPECT_EQ(registration.GetExternalInitialTransform(), nullptr);
+}
+
+
+// Tests that ComputeZYX = true yields a different result than ComputeZYX = false.
+GTEST_TEST(itkElastixRegistrationMethod, EulerStackTransformComputeZYX)
+{
+  using PixelType = float;
+  static constexpr auto ImageDimension = 4U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+
+  const auto                      numberOfImages = 4U;
+  const auto                      imageSizeValue = 6U;
+  const itk::Size<ImageDimension> imageStackSize{ imageSizeValue, imageSizeValue, imageSizeValue, numberOfImages };
+  const auto                      imageStack = CreateImage<PixelType>(imageStackSize);
+
+  const itk::ImageBufferRange<ImageType> imageBufferRange(*imageStack);
+
+  std::mt19937 randomNumberEngine{};
+
+  std::generate(imageBufferRange.begin(), imageBufferRange.end(), [&randomNumberEngine] {
+    return std::uniform_real_distribution<PixelType>{ PixelType{ 0 }, PixelType{ 2 } }(randomNumberEngine);
+  });
+
+  const auto doRegistration = [imageStack](const bool computeZYX) {
+    // Use a fixed seed, in order to have a reproducible sampler output.
+    DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
+    MersenneTwisterRandomVariateGenerator::ResetNextSeed();
+
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+    registration.SetFixedImage(imageStack);
+    registration.SetMovingImage(imageStack);
+    registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                            { "AutomaticTransformInitialization", "false" },
+                                                            { "ComputeZYX", elx::Conversion::BoolToString(computeZYX) },
+                                                            { "ImageSampler", "RandomCoordinate" },
+                                                            { "Interpolator", "ReducedDimensionBSplineInterpolator" },
+                                                            { "MaximumNumberOfIterations", "3" },
+                                                            { "Metric", "AdvancedNormalizedCorrelation" },
+                                                            { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                            { "Transform", "EulerStackTransform" } }));
+    registration.Update();
+    return GetTransformParametersFromFilter(registration);
+  };
+
+  const auto transformParameters = doRegistration(true);
+
+  const auto expectedNumberofParametersPerImage = itk::Euler3DTransform<>::New()->GetParameters().size();
+  EXPECT_EQ(transformParameters.size(), numberOfImages * expectedNumberofParametersPerImage);
+
+  // Sanity check: Expect at least one non-zero parameter value, otherwise the test is probably trivial.
+  EXPECT_TRUE(std::any_of(
+    transformParameters.cbegin(), transformParameters.cend(), [](const double parameter) { return parameter != 0.0; }));
+
+  // Sanity check: Expect the same result twice, when running with computeZYX = true twice.
+  EXPECT_EQ(transformParameters, doRegistration(true));
+
+  // Expect that the result is different that, when running with computeZYX = false.
+  EXPECT_NE(transformParameters, doRegistration(false));
 }

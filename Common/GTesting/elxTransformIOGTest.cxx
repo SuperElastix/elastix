@@ -455,10 +455,16 @@ struct WithDimension
       { { "DeformationFieldFileName", { expectedDeformationFieldFileName } },
         { "DeformationFieldInterpolationOrder", { expectedZero } } });
     WithElastixTransform<EulerStackTransform>::Test_CreateTransformParameterMap_for_default_transform(
-      { { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
-        { "NumberOfSubTransforms", { expectedZero } },
-        { "StackOrigin", { expectedZero } },
-        { "StackSpacing", { expectedOne } } });
+      (NDimension == 4)
+        ? ParameterMapType{ { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
+                            { "ComputeZYX", { expectedFalse } },
+                            { "NumberOfSubTransforms", { expectedZero } },
+                            { "StackOrigin", { expectedZero } },
+                            { "StackSpacing", { expectedOne } } }
+        : ParameterMapType{ { "CenterOfRotationPoint", ParameterValuesType(NDimension - 1, expectedZero) },
+                            { "NumberOfSubTransforms", { expectedZero } },
+                            { "StackOrigin", { expectedZero } },
+                            { "StackSpacing", { expectedOne } } });
 
     WithElastixTransform<EulerTransformElastix>::Test_CreateTransformParameterMap_for_default_transform(
       (NDimension == 3)
