@@ -350,8 +350,8 @@ unsigned int
 StatisticalShapePenalty<TElastix>::ReadShape(const std::string &              ShapeFileName,
                                              typename PointSetType::Pointer & pointSet)
 {
-  /** Typedef's. \todo test DummyIPPPixelType=bool. */
-  using DummyIPPPixelType = double;
+  /** Typedef's. */
+  using DummyIPPPixelType = unsigned char;
   using MeshTraitsType =
     DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
   using MeshType = Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;

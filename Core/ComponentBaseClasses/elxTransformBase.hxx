@@ -924,8 +924,8 @@ template <class TElastix>
 void
 TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filename) const
 {
-  /** Typedef's. \todo test DummyIPPPixelType=bool. */
-  using DummyIPPPixelType = float;
+  /** Typedef's. */
+  using DummyIPPPixelType = unsigned char;
   using MeshTraitsType =
     itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
   using MeshType = itk::Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
