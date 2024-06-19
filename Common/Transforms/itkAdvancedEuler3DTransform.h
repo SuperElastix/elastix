@@ -85,6 +85,7 @@ public:
   itkStaticConstMacro(ParametersDimension, unsigned int, 6);
 
   using typename Superclass::ParametersType;
+  using typename Superclass::FixedParametersType;
   using typename Superclass::NumberOfParametersType;
   using typename Superclass::JacobianType;
   using typename Superclass::ScalarType;
@@ -120,6 +121,12 @@ public:
   const ParametersType &
   GetParameters() const override;
 
+  const FixedParametersType &
+  GetFixedParameters() const override;
+
+  void
+  SetFixedParameters(const FixedParametersType & parameters) override;
+
   /** Set the rotational part of the transform. */
   void
   SetRotation(ScalarType angleX, ScalarType angleY, ScalarType angleZ);
@@ -132,8 +139,15 @@ public:
   void
   GetJacobian(const InputPointType &, JacobianType &, NonZeroJacobianIndicesType &) const override;
 
-  /** Set/Get the order of the computation. Default ZXY */
-  itkSetMacro(ComputeZYX, bool);
+  /** The Euler angle representation of a rotation is not unique and
+   * depends on the order of rotations. In general there are 12
+   * options. This class supports two of them, ZXY and ZYX. The
+   * default is ZXY. These functions set and get the value which
+   * indicates whether the rotation is ZYX or ZXY.
+   */
+  virtual void
+  SetComputeZYX(const bool flag);
+
   itkGetConstMacro(ComputeZYX, bool);
 
   void
