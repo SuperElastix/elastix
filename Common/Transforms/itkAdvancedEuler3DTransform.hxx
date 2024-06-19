@@ -45,6 +45,8 @@ AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform()
 {
   m_ComputeZYX = false;
   m_AngleX = m_AngleY = m_AngleZ = ScalarType{};
+  Superclass::m_FixedParameters.SetSize(SpaceDimension + 1);
+  Superclass::m_FixedParameters.Fill(0.0);
   this->PrecomputeJacobianOfSpatialJacobian();
 }
 
@@ -92,6 +94,59 @@ AdvancedEuler3DTransform<TScalarType>::GetParameters() const -> const Parameters
 
   return this->m_Parameters;
 }
+
+
+template <class TScalarType>
+auto
+AdvancedEuler3DTransform<TScalarType>::GetFixedParameters() const -> const FixedParametersType &
+{
+  if (const auto numberOfFixedParameters = Superclass::m_FixedParameters.size();
+      numberOfFixedParameters <= SpaceDimension)
+  {
+    itkExceptionMacro("Error getting fixed parameters: number of fixed parameters (" << numberOfFixedParameters
+                                                                                     << ") is less than expected");
+  }
+
+  const auto & center = this->GetCenter();
+
+  for (unsigned int i = 0; i < SpaceDimension; ++i)
+  {
+    Superclass::m_FixedParameters[i] = center[i];
+  }
+
+  Superclass::m_FixedParameters[3] = m_ComputeZYX ? 1.0 : 0.0;
+  return Superclass::m_FixedParameters;
+}
+
+
+template <class TScalarType>
+void
+AdvancedEuler3DTransform<TScalarType>::SetFixedParameters(const FixedParametersType & parameters)
+{
+  if (parameters.size() < InputSpaceDimension)
+  {
+    itkExceptionMacro("Error setting fixed parameters: parameters array size ("
+                      << parameters.size() << ") is less than expected  (InputSpaceDimension = " << InputSpaceDimension
+                      << ')');
+  }
+
+  InputPointType c;
+  for (unsigned int i = 0; i < InputSpaceDimension; ++i)
+  {
+    c[i] = Superclass::m_FixedParameters[i] = parameters[i];
+  }
+  this->SetCenter(c);
+  // conditional is here for backwards compatibility: the
+  // m_ComputeZYX flag was not serialized so it may or may
+  // not be included as part of the fixed parameters
+  if (parameters.Size() == 4)
+  {
+    const auto parameter = parameters[3];
+    Superclass::m_FixedParameters[3] = parameter;
+    this->SetComputeZYX(parameter != 0.0);
+  }
+}
+
 
 // Set Rotational Part
 template <class TScalarType>
@@ -381,6 +436,22 @@ AdvancedEuler3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
   for (unsigned int par = 3; par < ParametersDimension; ++par)
   {
     jsj[par].Fill(0.0);
+  }
+}
+
+
+template <class TScalarType>
+void
+AdvancedEuler3DTransform<TScalarType>::SetComputeZYX(const bool flag)
+{
+  if (m_ComputeZYX != flag)
+  {
+    m_ComputeZYX = flag;
+    this->ComputeMatrix();
+    this->ComputeOffset();
+    // The meaning of the parameters has changed so the transform
+    // has been modified even if the parameter values have not.
+    this->Modified();
   }
 }
 

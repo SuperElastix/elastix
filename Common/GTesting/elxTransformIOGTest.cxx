@@ -142,8 +142,11 @@ struct WithDimension
     Expect_default_elastix_FixedParameters_are_all_zero()
     {
       const auto fixedParameters = CheckNew<ElastixTransformType>()->GetFixedParameters();
-      ASSERT_EQ(fixedParameters.size(), NDimension);
-      ASSERT_EQ(fixedParameters, vnl_vector<double>(NDimension, 0.0));
+
+      for (const auto fixedParameter : fixedParameters)
+      {
+        EXPECT_EQ(fixedParameter, 0.0);
+      }
     }
 
 
@@ -777,32 +780,9 @@ GTEST_TEST(TransformIO, CopyDefaultParametersToCorrespondingItkTransform)
 
     WithDimension<2>::WithElastixTransform<elx::SimilarityTransformElastix>::Test_copying_default_parameters<
       itk::Euler2DTransform<double>>(fixed);
+    WithDimension<3>::WithElastixTransform<elx::EulerTransformElastix>::Test_copying_default_parameters<
+      itk::Euler3DTransform<double>>(fixed);
   }
-  WithDimension<3>::WithElastixTransform<elx::EulerTransformElastix>::Test_copying_default_parameters<
-    itk::Euler3DTransform<double>>(false);
-  // See also CopyDefaultEulerTransformElastix3DFixedParametersToCorrespondingItkTransform
-}
-
-
-GTEST_TEST(TransformIO, CopyDefaultEulerTransformElastix3DFixedParametersToCorrespondingItkTransform)
-{
-  const auto elxTransform = CheckNew<elx::EulerTransformElastix<ElastixType<3>>>();
-  const auto compositeTransform = elx::TransformIO::ConvertToItkCompositeTransform(*elxTransform);
-  ASSERT_NE(compositeTransform, nullptr);
-  const auto & transformQueue = compositeTransform->GetTransformQueue();
-  ASSERT_EQ(transformQueue.size(), 1);
-  const auto & itkTransform = transformQueue.front();
-  ASSERT_NE(itkTransform, nullptr);
-
-  const auto elxFixedParameters = elxTransform->GetFixedParameters();
-  itkTransform->SetFixedParameters(elxFixedParameters);
-  const auto itkFixedParameters = itkTransform->GetFixedParameters();
-
-  // Note: ideally itkFixedParameters and elxFixedParameters should be equal!
-  EXPECT_NE(itkFixedParameters, elxFixedParameters);
-
-  ASSERT_GE(itkFixedParameters.size(), elxFixedParameters.size());
-  ASSERT_EQ(itkFixedParameters, vnl_vector<double>(4, 0));
 }
 
 
@@ -918,12 +898,16 @@ GTEST_TEST(Transform, TransformedPointSameAsITKEuler2D)
 
 GTEST_TEST(Transform, TransformedPointSameAsITKEuler3D)
 {
-  elx::DefaultConstruct<itk::Euler3DTransform<double>> itkTransform;
-  itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0, 3.0));
-  itkTransform.SetCenter(itk::MakePoint(3.0, 2.0, 1.0));
-  itkTransform.SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
+  for (const bool computeZYX : { false, true })
+  {
+    elx::DefaultConstruct<itk::Euler3DTransform<double>> itkTransform;
+    itkTransform.SetTranslation(itk::MakeVector(1.0, 2.0, 3.0));
+    itkTransform.SetCenter(itk::MakePoint(3.0, 2.0, 1.0));
+    itkTransform.SetRotation(M_PI_2, M_PI_4, M_PI_4 / 2.0);
+    itkTransform.SetComputeZYX(computeZYX);
 
-  Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(itkTransform);
+    Expect_elx_TransformPoint_yields_same_point_as_ITK<elx::EulerTransformElastix>(itkTransform);
+  }
 }
 
 
