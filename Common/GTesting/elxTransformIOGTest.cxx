@@ -812,6 +812,7 @@ GTEST_TEST(Transform, CreateTransformParameterMapForDefaultTransform)
 {
   WithDimension<2>::Test_CreateTransformParameterMap_for_default_transform();
   WithDimension<3>::Test_CreateTransformParameterMap_for_default_transform();
+  WithDimension<4>::Test_CreateTransformParameterMap_for_default_transform();
 }
 
 
