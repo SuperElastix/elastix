@@ -1,4 +1,4 @@
-<a href="https://elastix.lumc.nl/">
+<a href="https://elastix.dev/">
   <img src="https://github.com/SuperElastix/elastix/blob/main/dox/art/elastix_logo_full_small.bmp" alt="elastix logo" title="elastix" align="right" height="80" />
 </a>
 
@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/SuperElastix/elastix/raw/main/LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/itk-elastix.svg)](https://pypi.python.org/pypi/itk-elastix)
 [![GitHub Actions](https://github.com/SuperElastix/elastix/workflows/Elastix/badge.svg)](https://github.com/SuperElastix/elastix/actions)
-[![Model Zoo](https://img.shields.io/badge/open-Model%20Zoo-blue.svg)](https://elastix.lumc.nl/modelzoo/)
+[![Model Zoo](https://img.shields.io/badge/open-Model%20Zoo-blue.svg)](https://elastix.dev/modelzoo/)
 [![Docker](https://img.shields.io/badge/open-docker%20image-blueviolet.svg)](https://hub.docker.com/repository/docker/superelastix/elastix)
 
 Welcome to elastix: a toolbox for rigid and nonrigid registration of images.
@@ -24,8 +24,8 @@ Nowadays elastix is accompanied by [ITKElastix](https://github.com/InsightSoftwa
 The lead developers of elastix are [Stefan Klein](https://github.com/stefanklein) and [Marius Staring](https://github.com/mstaring). This software was initially developed at the [Image Sciences Institute](http://www.isi.uu.nl), under supervision of [Josien P.W. Pluim](http://www.isi.uu.nl/People/Josien/). Today, [many](https://github.com/SuperElastix/elastix/graphs/contributors) have contributed to elastix.
 
 If you use this software anywhere we would appreciate if you cite the following articles:
-- S. Klein, M. Staring, K. Murphy, M.A. Viergever, J.P.W. Pluim, "elastix: a toolbox for intensity based medical image registration," IEEE Transactions on Medical Imaging, vol. 29, no. 1, pp. 196 - 205, January 2010. [download](https://elastix.lumc.nl/marius/publications/2010_j_TMI.php) [doi](http://dx.doi.org/10.1109/TMI.2009.2035616)
-- D.P. Shamonin, E.E. Bron, B.P.F. Lelieveldt, M. Smits, S. Klein and M. Staring, "Fast Parallel Image Registration on CPU and GPU for Diagnostic Classification of Alzheimer’s Disease", Frontiers in Neuroinformatics, vol. 7, no. 50, pp. 1-15, January 2014. [download](https://elastix.lumc.nl/marius/publications/2014_j_FNI.php) [doi](http://dx.doi.org/10.3389/fninf.2013.00050)
+- S. Klein, M. Staring, K. Murphy, M.A. Viergever, J.P.W. Pluim, "elastix: a toolbox for intensity based medical image registration," IEEE Transactions on Medical Imaging, vol. 29, no. 1, pp. 196 - 205, January 2010. [download](https://elastix.dev/marius/publications/2010_j_TMI.php) [doi](http://dx.doi.org/10.1109/TMI.2009.2035616)
+- D.P. Shamonin, E.E. Bron, B.P.F. Lelieveldt, M. Smits, S. Klein and M. Staring, "Fast Parallel Image Registration on CPU and GPU for Diagnostic Classification of Alzheimer’s Disease", Frontiers in Neuroinformatics, vol. 7, no. 50, pp. 1-15, January 2014. [download](https://elastix.dev/marius/publications/2014_j_FNI.php) [doi](http://dx.doi.org/10.3389/fninf.2013.00050)
 
 Specific components of elastix are made by many; The relevant citation can be found [here](https://github.com/SuperElastix/elastix/wiki/How-to-cite-elastix-(components)).
 

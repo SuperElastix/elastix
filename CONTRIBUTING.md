@@ -9,7 +9,7 @@
 
 * Do not open an issue on GitHub for general questions, registration questions, or issues you may have while running `elastix`. _GitHub issues are primarily intended for bug reports and fixes._
 
-* General information about `elastix` can be found on our [wiki](https://github.com/SuperElastix/elastix/wiki) or at the [website](https://elastix.lumc.nl/).
+* General information about `elastix` can be found on our [wiki](https://github.com/SuperElastix/elastix/wiki) or at the [website](https://elastix.dev/).
 
 * [The manual](https://github.com/SuperElastix/elastix/releases/download/5.0.0/elastix-5.0.0-manual.pdf) explains much of the inner workings of image registration.
 

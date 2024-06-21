@@ -40,7 +40,7 @@ namespace itk
  * [1] Y. Qiao, B. van Lew, B.P.F. Lelieveldt and M. Staring
  * "Fast Automatic Step Size Estimation for Gradient Descent Optimization of Image Registration,"
  * IEEE Transactions on Medical Imaging, vol. 35, no. 2, pp. 391 - 403, February 2016.
- * http://elastix.lumc.nl/marius/publications/2016_j_TMIa.php
+ * http://elastix.dev/marius/publications/2016_j_TMIa.php
  *
  */
 

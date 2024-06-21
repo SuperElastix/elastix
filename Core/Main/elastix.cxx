@@ -77,7 +77,7 @@ constexpr const char * elastixHelpText =
   "For a usable parameter-file, see the website.\n\n"
 
   "Need further help? Please check:\n"
-  " * the elastix website: https://elastix.lumc.nl\n"
+  " * the elastix website: https://elastix.dev\n"
   " * the source code repository site: https://github.com/SuperElastix/elastix\n"
   " * the discussion forum: https://groups.google.com/g/elastix-imageregistration";
 

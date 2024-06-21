@@ -532,8 +532,8 @@ if(ELASTIX_ENABLE_PACKAGER)
     # Adding information
     set(CPACK_NSIS_DISPLAY_NAME
       "${CPACK_PACKAGE_INSTALL_DIRECTORY} elastix")
-    set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\elastix.lumc.nl")
-    set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\elastix.lumc.nl")
+    set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\elastix.dev")
+    set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\elastix.dev")
     set(CPACK_NSIS_CONTACT "elastix@bigr.nl")
     set(CPACK_NSIS_PACKAGE_NAME "elastix")
     set(CPACK_NSIS_DISPLAY_NAME "elastix")

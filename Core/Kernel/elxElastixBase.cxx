@@ -361,7 +361,7 @@ ElastixBase::BeforeAllTransformixBase()
   {
     log::warn(std::ostringstream{} << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
                                    << "the UseDirectionCosines option to your parameter file! See\n"
-                                   << "http://elastix.lumc.nl/whatsnew_04_3.php for more information.\n");
+                                   << "http://elastix.dev/whatsnew_04_3.php for more information.\n");
   }
 
   return returndummy;
