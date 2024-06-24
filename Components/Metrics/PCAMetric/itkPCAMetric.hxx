@@ -760,16 +760,14 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
         const unsigned int starti = numParametersPerDimension * d;
         for (unsigned int i = starti; i < starti + numParametersPerDimension; ++i)
         {
-          const unsigned int index = i % numControlPointsPerDimension;
-          mean[index] += derivative[i];
+          mean[i % numControlPointsPerDimension] += derivative[i];
         }
         mean /= static_cast<RealType>(lastDimGridSize);
 
         /** Update derivative for every control point per dimension. */
         for (unsigned int i = starti; i < starti + numParametersPerDimension; ++i)
         {
-          const unsigned int index = i % numControlPointsPerDimension;
-          derivative[i] -= mean[index];
+          derivative[i] -= mean[i % numControlPointsPerDimension];
         }
       }
     }
@@ -789,8 +787,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
         const unsigned int startc = numParametersPerLastDimension * t;
         for (unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c)
         {
-          const unsigned int index = c % numParametersPerLastDimension;
-          mean[index] += derivative[c];
+          mean[c % numParametersPerLastDimension] += derivative[c];
         }
       }
       mean /= static_cast<RealType>(lastDimSize);
@@ -801,8 +798,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
         const unsigned int startc = numParametersPerLastDimension * t;
         for (unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c)
         {
-          const unsigned int index = c % numParametersPerLastDimension;
-          derivative[c] -= mean[index];
+          derivative[c] -= mean[c % numParametersPerLastDimension];
         }
       }
     }
