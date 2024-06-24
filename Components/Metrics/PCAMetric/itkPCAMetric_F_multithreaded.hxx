@@ -230,8 +230,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(this->m_G);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(this->m_G, RealType{});
     for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < this->m_G; ++j)
@@ -405,8 +404,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(this->m_G);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(this->m_G, RealType{});
     for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < this->m_G; ++j)
@@ -774,8 +772,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(this->m_G);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(this->m_G, RealType{});
     for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < this->m_G; ++j)

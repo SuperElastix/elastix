@@ -236,8 +236,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(G);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(G, RealType{});
     for (unsigned int i = 0; i < N; ++i)
     {
       for (unsigned int j = 0; j < G; ++j)
@@ -431,8 +430,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of columns */
-    vnl_vector<RealType> mean(G);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(G, RealType{});
     for (unsigned int i = 0; i < N; ++i)
     {
       for (unsigned int j = 0; j < G; ++j)
