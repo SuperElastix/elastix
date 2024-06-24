@@ -253,8 +253,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   MatrixType C(Amm.transpose() * Amm);
   C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
 
-  vnl_diag_matrix<RealType> S(this->m_G);
-  S.fill(RealType{});
+  vnl_diag_matrix<RealType> S(this->m_G, RealType{});
   for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -428,8 +427,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   MatrixType C(Atmm * Amm);
   C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
 
-  vnl_diag_matrix<RealType> S(this->m_G);
-  S.fill(RealType{});
+  vnl_diag_matrix<RealType> S(this->m_G, RealType{});
   for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -461,10 +459,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   std::vector<NonZeroJacobianIndicesType> nzjis(this->m_G, NonZeroJacobianIndicesType());
 
   /** Sub components of metric derivative */
-  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(this->m_G);
-
-  /** initialize */
-  dSdmu_part1.fill(DerivativeValueType{});
+  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(this->m_G, DerivativeValueType{});
 
   for (unsigned int d = 0; d < this->m_G; ++d)
   {
@@ -796,8 +791,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   MatrixType C(this->m_Atmm * Amm);
   C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
 
-  vnl_diag_matrix<RealType> S(this->m_G);
-  S.fill(RealType{});
+  vnl_diag_matrix<RealType> S(this->m_G, RealType{});
   for (unsigned int j = 0; j < this->m_G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));

@@ -234,8 +234,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   MatrixType C(Atmm * Amm);
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
-  vnl_diag_matrix<RealType> S(G);
-  S.fill(RealType{});
+  vnl_diag_matrix<RealType> S(G, RealType{});
   for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -401,8 +400,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   MatrixType C(Atmm * Amm);
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
-  vnl_diag_matrix<RealType> S(G);
-  S.fill(RealType{});
+  vnl_diag_matrix<RealType> S(G, RealType{});
   for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -418,10 +416,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   DerivativeType dMTdmu;
 
   /** Sub components of metric derivative */
-  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(G);
-
-  /** initialize */
-  dSdmu_part1.fill(DerivativeValueType{});
+  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(G, DerivativeValueType{});
 
   for (unsigned int d = 0; d < G; ++d)
   {
