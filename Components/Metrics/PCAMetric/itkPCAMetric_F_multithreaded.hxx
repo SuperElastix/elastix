@@ -168,13 +168,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, this->m_G);
+  MatrixType         datablock(numberOfSamples, this->m_G, vnl_matrix_null);
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
-
-  /** Initialize image sample matrix . */
-  datablock.fill(RealType{});
 
   for (const auto & fixedImageSample : *sampleContainer)
   {
@@ -230,8 +227,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   this->CheckNumberOfSamples(numberOfSamples, this->m_NumberOfPixelsCounted);
   MatrixType A(datablock.extract(this->m_NumberOfPixelsCounted, this->m_G));
 
-  MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
-  Amm.fill(RealType{});
+  MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(this->m_G);
@@ -344,13 +340,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, this->m_G);
+  MatrixType         datablock(numberOfSamples, this->m_G, vnl_matrix_null);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
-
-  /** Initialize image sample matrix . */
-  datablock.fill(RealType{});
 
   for (const auto & fixedImageSample : *sampleContainer)
   {
@@ -409,8 +402,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   MatrixType A(datablock.extract(this->m_NumberOfPixelsCounted, this->m_G));
 
   /** Calculate standard deviation from columns */
-  MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
-  Amm.fill(RealType{});
+  MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(this->m_G);
@@ -779,8 +771,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   }
 
   /** Calculate standard deviation from columns */
-  MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G);
-  Amm.fill(RealType{});
+  MatrixType Amm(this->m_NumberOfPixelsCounted, this->m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(this->m_G);

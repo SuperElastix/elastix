@@ -146,13 +146,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType   datablock(NumberOfSamples, G);
+  MatrixType   datablock(NumberOfSamples, G, vnl_matrix_null);
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
-
-  /** Initialize image sample matrix . */
-  datablock.fill(RealType{});
 
   for (const auto & fixedImageSample : *sampleContainer)
   {
@@ -210,8 +207,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
   MatrixType A(datablock.extract(N, G));
 
-  MatrixType Amm(N, G);
-  Amm.fill(RealType{});
+  MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(G);
@@ -316,13 +312,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType   datablock(NumberOfSamples, G);
+  MatrixType   datablock(NumberOfSamples, G, vnl_matrix_null);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
-
-  /** Initialize image sample matrix . */
-  datablock.fill(0.0);
 
   for (const auto & fixedImageSample : *sampleContainer)
   {
@@ -382,8 +375,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
   MatrixType A(datablock.extract(N, G));
 
-  MatrixType Amm(N, G);
-  Amm.fill(RealType{});
+  MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(G);
