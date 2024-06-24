@@ -167,7 +167,7 @@ private:
   FixedImageSizeType m_GridSize{};
 
   /** Bool to indicate if the transform used is a stacktransform. Set by elx files. */
-  bool m_TransformIsStackTransform{ true };
+  bool m_TransformIsStackTransform{ false };
 };
 
 } // end namespace itk
