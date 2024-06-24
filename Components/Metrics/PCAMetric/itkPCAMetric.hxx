@@ -260,8 +260,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   MatrixType         A(datablock.extract(N, G));
 
   /** Calculate mean of from columns */
-  vnl_vector<RealType> mean(G);
-  mean.fill(RealType{});
+  vnl_vector<RealType> mean(G, RealType{});
   for (unsigned int i = 0; i < N; ++i)
   {
     for (unsigned int j = 0; j < G; ++j)
@@ -299,8 +298,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   // std::cout << "varNoise: " << varNoise << std::endl;
 
   /** Calculate variance of columns */
-  vnl_vector<RealType> var(G);
-  var.fill(RealType{});
+  vnl_vector<RealType> var(G, RealType{});
   for (unsigned int j = 0; j < G; ++j)
   {
     var(j) = C(j, j);
@@ -497,8 +495,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   MatrixType Amm(N, realNumLastDimPositions, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(realNumLastDimPositions);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(realNumLastDimPositions, RealType{});
     for (unsigned int i = 0; i < N; ++i)
     {
       for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
@@ -532,8 +529,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   }
 
   /** Calculate standard deviation from columns */
-  vnl_vector<RealType> var(realNumLastDimPositions);
-  var.fill(RealType{});
+  vnl_vector<RealType> var(realNumLastDimPositions, RealType{});
   for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
   {
     var(j) = C(j, j);

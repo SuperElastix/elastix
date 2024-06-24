@@ -210,8 +210,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(G);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(G, RealType{});
     for (unsigned int i = 0; i < N; ++i)
     {
       for (unsigned int j = 0; j < G; ++j)
@@ -378,8 +377,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(G);
-    mean.fill(RealType{});
+    vnl_vector<RealType> mean(G, RealType{});
     for (unsigned int i = 0; i < N; ++i)
     {
       for (unsigned int j = 0; j < G; ++j)
