@@ -164,7 +164,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, G);
+  MatrixType         datablock(numberOfSamples, G, vnl_matrix_null);
 
   /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
   std::vector<int> lastDimPositions;
@@ -177,9 +177,6 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
-
-  /** Initialize image sample matrix . */
-  datablock.fill(RealType{});
 
   for (const auto & fixedImageSample : *sampleContainer)
   {
@@ -236,8 +233,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   const unsigned int N = this->m_NumberOfPixelsCounted;
   MatrixType         A(datablock.extract(N, G));
 
-  MatrixType Amm(N, G);
-  Amm.fill(RealType{});
+  MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(G);
@@ -264,8 +260,8 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   MatrixType C(Amm.transpose() * Amm);
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
-  MatrixType S(G, G);
-  S.fill(RealType{});
+  MatrixType S(G, G, vnl_matrix_null);
+
   for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
@@ -361,13 +357,10 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, G);
+  MatrixType         datablock(numberOfSamples, G, vnl_matrix_null);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
-
-  /** Initialize image sample matrix . */
-  datablock.fill(RealType{});
 
   /** Determine random last dimension positions if needed. */
   /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
@@ -435,8 +428,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   MatrixType A(datablock.extract(N, G));
 
   /** Calculate standard deviation of columns */
-  MatrixType Amm(N, G);
-  Amm.fill(RealType{});
+  MatrixType Amm(N, G, vnl_matrix_null);
   {
     /** Calculate mean of columns */
     vnl_vector<RealType> mean(G);
