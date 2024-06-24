@@ -536,8 +536,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   }
   var -= varNoise;
 
-  vnl_diag_matrix<RealType> S(realNumLastDimPositions);
-  S.fill(RealType{});
+  vnl_diag_matrix<RealType> S(realNumLastDimPositions, RealType{});
   for (unsigned int j = 0; j < realNumLastDimPositions; ++j)
   {
     S(j, j) = 1.0 / sqrt(var(j));

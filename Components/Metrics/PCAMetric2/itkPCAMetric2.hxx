@@ -454,8 +454,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   MatrixType C(Atmm * Amm);
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
-  vnl_diag_matrix<RealType> S(G);
-  S.fill(RealType{});
+  vnl_diag_matrix<RealType> S(G, RealType{});
   for (unsigned int j = 0; j < G; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
