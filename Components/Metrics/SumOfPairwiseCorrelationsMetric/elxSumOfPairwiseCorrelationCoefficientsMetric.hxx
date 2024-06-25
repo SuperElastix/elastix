@@ -94,11 +94,10 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
   if (testPtr1)
   {
     /** Check for B-spline transform. */
-    const BSplineTransformBaseType * testPtr2 =
-      dynamic_cast<const BSplineTransformBaseType *>(testPtr1->GetCurrentTransform());
-    if (testPtr2)
+    const auto bsplineTransform = dynamic_cast<const BSplineTransformBaseType *>(testPtr1->GetCurrentTransform());
+    if (bsplineTransform)
     {
-      this->SetGridSize(testPtr2->GetGridRegion().GetSize());
+      this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
     }
     else
     {
