@@ -107,19 +107,19 @@ PCAMetric<TElastix>::BeforeEachResolution()
     else
     {
       /** Check for stack transform. */
-      StackTransformType * testPtr3 = dynamic_cast<StackTransformType *>(testPtr1->GetModifiableCurrentTransform());
-      if (testPtr3)
+      const auto stackTransform = dynamic_cast<StackTransformType *>(testPtr1->GetModifiableCurrentTransform());
+      if (stackTransform)
       {
         /** Set itk member variable. */
         this->SetTransformIsStackTransform(true);
 
-        if (testPtr3->GetNumberOfSubTransforms() > 0)
+        if (stackTransform->GetNumberOfSubTransforms() > 0)
         {
           /** Check if subtransform is a B-spline transform. */
-          if (dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(testPtr3->GetSubTransform(0).GetPointer()))
+          if (dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(stackTransform->GetSubTransform(0).GetPointer()))
           {
             FixedImageSizeType gridSize;
-            gridSize.Fill(testPtr3->GetNumberOfSubTransforms());
+            gridSize.Fill(stackTransform->GetNumberOfSubTransforms());
             this->SetGridSize(gridSize);
           }
         }
