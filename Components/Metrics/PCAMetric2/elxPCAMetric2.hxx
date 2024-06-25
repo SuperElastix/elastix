@@ -89,12 +89,13 @@ PCAMetric2<TElastix>::BeforeEachResolution()
   }
 
   /** Check if this transform is a B-spline transform. */
-  CombinationTransformType * testPtr1 =
-    dynamic_cast<CombinationTransformType *>(this->GetElastix()->GetElxTransformBase());
-  if (testPtr1)
+  CombinationTransformType * combinationTransform =
+    BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase());
+  if (combinationTransform)
   {
     /** Check for B-spline transform. */
-    const auto bsplineTransform = dynamic_cast<const BSplineTransformBaseType *>(testPtr1->GetCurrentTransform());
+    const auto bsplineTransform =
+      dynamic_cast<const BSplineTransformBaseType *>(combinationTransform->GetCurrentTransform());
     if (bsplineTransform)
     {
       this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
@@ -102,7 +103,8 @@ PCAMetric2<TElastix>::BeforeEachResolution()
     else
     {
       /** Check for stack transform. */
-      const auto stackTransform = dynamic_cast<StackTransformType *>(testPtr1->GetModifiableCurrentTransform());
+      const auto stackTransform =
+        dynamic_cast<StackTransformType *>(combinationTransform->GetModifiableCurrentTransform());
       if (stackTransform)
       {
         /** Set itk member variable. */
