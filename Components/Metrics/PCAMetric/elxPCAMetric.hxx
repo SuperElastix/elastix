@@ -116,9 +116,7 @@ PCAMetric<TElastix>::BeforeEachResolution()
         if (testPtr3->GetNumberOfSubTransforms() > 0)
         {
           /** Check if subtransform is a B-spline transform. */
-          const ReducedDimensionBSplineTransformBaseType * testPtr4 =
-            dynamic_cast<const ReducedDimensionBSplineTransformBaseType *>(testPtr3->GetSubTransform(0).GetPointer());
-          if (testPtr4)
+          if (dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(testPtr3->GetSubTransform(0).GetPointer()))
           {
             FixedImageSizeType gridSize;
             gridSize.Fill(testPtr3->GetNumberOfSubTransforms());
