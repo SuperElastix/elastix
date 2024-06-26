@@ -147,9 +147,13 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
             this->SetGridSize(FixedImageSizeType::Filled(numberOfSubTransforms));
           }
         }
+        // Return early, now that the current transform is a stack transform.
+        return;
       }
     }
   }
+  // If the current transform would have been a stack transform, the function would have returned earlier.
+  this->SetTransformIsStackTransform(false);
 
 } // end BeforeEachResolution()
 
