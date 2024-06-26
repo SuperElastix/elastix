@@ -90,23 +90,20 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
   }
 
   /** Check if this transform is a B-spline transform. */
-  CombinationTransformType * combinationTransform =
-    BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase());
-  if (combinationTransform)
+  if (CombinationTransformType * const combinationTransform{
+        BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
   {
     /** Check for B-spline transform. */
-    const auto bsplineTransform =
-      dynamic_cast<const BSplineTransformBaseType *>(combinationTransform->GetCurrentTransform());
-    if (bsplineTransform)
+    if (const auto bsplineTransform =
+          dynamic_cast<const BSplineTransformBaseType *>(combinationTransform->GetCurrentTransform()))
     {
       this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
     }
     else
     {
       /** Check for stack transform. */
-      const auto stackTransform =
-        dynamic_cast<StackTransformType *>(combinationTransform->GetModifiableCurrentTransform());
-      if (stackTransform)
+      if (const auto stackTransform =
+            dynamic_cast<StackTransformType *>(combinationTransform->GetModifiableCurrentTransform()))
       {
         /** Set itk member variable. */
         this->SetTransformIsStackTransform(true);
