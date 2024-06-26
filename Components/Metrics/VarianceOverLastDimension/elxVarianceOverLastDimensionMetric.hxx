@@ -119,7 +119,7 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
     reducedDimensionIndex, "ReducedDimensionIndex", this->GetComponentLabel(), 0, 0);
   this->SetReducedDimensionIndex(reducedDimensionIndex);
 
-  /** Check if this transform is a B-spline transform. */
+  /** Check if this elastix object has a transform. (If so, it must be a combination transform.) */
   if (CombinationTransformType * const combinationTransform{
         BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
   {
