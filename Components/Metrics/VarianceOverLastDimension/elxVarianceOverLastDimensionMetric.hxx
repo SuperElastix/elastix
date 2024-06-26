@@ -138,14 +138,13 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
         /** Set itk member variable. */
         this->SetTransformIsStackTransform(true);
 
-        if (stackTransform->GetNumberOfSubTransforms() > 0)
+        if (const unsigned int numberOfSubTransforms{ stackTransform->GetNumberOfSubTransforms() };
+            numberOfSubTransforms > 0)
         {
           /** Check if subtransform is a B-spline transform. */
           if (dynamic_cast<ReducedDimensionBSplineTransformBaseType *>(stackTransform->GetSubTransform(0).GetPointer()))
           {
-            FixedImageSizeType gridSize;
-            gridSize.Fill(stackTransform->GetNumberOfSubTransforms());
-            this->SetGridSize(gridSize);
+            this->SetGridSize(FixedImageSizeType::Filled(numberOfSubTransforms));
           }
         }
       }
