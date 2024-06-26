@@ -123,17 +123,17 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
   if (CombinationTransformType * const combinationTransform{
         BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
   {
+    auto * const currentTransform = combinationTransform->GetModifiableCurrentTransform();
+
     /** Check for B-spline transform. */
-    if (const auto bsplineTransform =
-          dynamic_cast<const BSplineTransformBaseType *>(combinationTransform->GetCurrentTransform()))
+    if (const auto bsplineTransform = dynamic_cast<BSplineTransformBaseType *>(currentTransform))
     {
       this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
     }
     else
     {
       /** Check for stack transform. */
-      if (const auto stackTransform =
-            dynamic_cast<StackTransformType *>(combinationTransform->GetModifiableCurrentTransform()))
+      if (const auto stackTransform = dynamic_cast<StackTransformType *>(currentTransform))
       {
         /** Set itk member variable. */
         this->SetTransformIsStackTransform(true);
