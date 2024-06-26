@@ -89,7 +89,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
     log::info(std::ostringstream{} << "Multiplying moving image derivatives by: " << movingImageDerivativeScales);
   }
 
-  /** Check if this transform is a B-spline transform. */
+  /** Check if this elastix object has a transform. (If so, it must be a combination transform.) */
   if (CombinationTransformType * const combinationTransform{
         BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
   {
