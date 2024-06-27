@@ -38,7 +38,7 @@ main()
               << imageSizeY << " pixels\n"
               << " - Linked to elastix library version " ELASTIX_VERSION_STRING "\n - Web site: https://elastix.dev"
                  "\n - Source code repository: https://github.com/SuperElastix/elastix"
-                 "\n - Discussion forum: https://groups.google.com/g/elastix-imageregistration\n\n";
+                 "\n - Discussion forum: https://github.com/SuperElastix/elastix/discussions\n\n";
 
     using ImageType = itk::Image<float>;
 
