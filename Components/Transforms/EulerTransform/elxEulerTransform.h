@@ -59,6 +59,8 @@ namespace elastix
  *    transform. Should be one of {GeometricalCenter, CenterOfGravity}.\n
  *    example: <tt>(AutomaticTransformInitializationMethod "CenterOfGravity")</tt> \n
  *    By default "GeometricalCenter" is assumed.\n
+ * \parameter ComputeZYX: whether the order of rotations is ZYX. Default: "false". When false, the order is ZXY.\n
+ *    This parameter is only relevant for 3D transformation, otherwise it is ignored.\n
  *
  * The transform parameters necessary for transformix, additionally defined by this class, are:
  * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n

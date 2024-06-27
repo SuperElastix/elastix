@@ -57,6 +57,9 @@ namespace elastix
  *    Default: "false" (for backwards compatibility). Recommended: "true".
  * \parameter CenterOfRotation: an index around which the image is rotated. \n
  *    example: <tt>(CenterOfRotation 128 128)</tt> \n
+ * \parameter ComputeZYX: whether the order of rotations is ZYX. Default: "false". When false, the order is ZXY.\n
+ *    This parameter is only relevant for 3D transformation (i.e. when the stack transform is 4D), otherwise it is
+ *    ignored.\n
  *
  * The transform parameters necessary for transformix, additionally defined by this class, are:
  * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
