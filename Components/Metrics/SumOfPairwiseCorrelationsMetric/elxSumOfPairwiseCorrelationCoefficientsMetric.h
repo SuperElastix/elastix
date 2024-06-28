@@ -51,9 +51,11 @@ namespace elastix
  *    be set with parameter NumSamplesLastDimension. \n
  * \parameter NumSamplesLastDimension: the number of random samples to take in the time
  *    time direction of the data when SampleLastDimensionRandomly is set to true.
- * \parameter SubtractMean: subtract the over time computed mean parameter value from
- *    each parameter. This should be used when registration is performed directly on the moving
- *    image, without using a fixed image. Possible values are "true" or "false".
+ * \parameter UseZeroAverageDisplacementConstraint: uses the zero average displacement constraint, as described in
+ *    <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a groupwise optimization
+ *    approach</em>, Metz et al., Medical Image Analysis, 2011. Subtract the over time computed mean parameter value
+ *    from each parameter. This should be used when registration is performed directly on the moving image, without
+ *    using a fixed image. Possible values are "true" or "false". Default is "true".
  *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics

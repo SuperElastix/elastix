@@ -490,7 +490,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   derivative /= static_cast<float>(Superclass::m_NumberOfPixelsCounted * m_InitialVariance);
 
   /** Subtract mean from derivative elements. */
-  if (m_SubtractMean)
+  if (m_UseZeroAverageDisplacementConstraint)
   {
     if (!m_TransformIsStackTransform)
     {
