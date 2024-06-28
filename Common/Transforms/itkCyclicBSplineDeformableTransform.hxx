@@ -40,7 +40,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetGri
   Superclass::SetGridRegion(region);
 
   /** Check if last dimension of supportregion < last dimension of grid. */
-  const int lastDim = this->m_GridRegion.GetImageDimension() - 1;
+  const int lastDim = NDimensions - 1;
   const int lastDimSize = this->m_GridRegion.GetSize(lastDim);
 
   // The support size is the same for all dimensions.
@@ -97,7 +97,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SplitR
   SizeType size2{};
 
   /** Get last dimension information. */
-  const unsigned int lastDim = imageRegion.GetImageDimension() - 1;
+  const unsigned int lastDim = NDimensions - 1;
   const unsigned int lastDimSize = imageRegion.GetSize(lastDim);
   const unsigned int supportLastDimSize = inRegion.GetSize(lastDim);
 
