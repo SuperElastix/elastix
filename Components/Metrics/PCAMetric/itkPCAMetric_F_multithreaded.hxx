@@ -160,7 +160,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   this->BeforeThreadedGetValueAndDerivative(parameters);
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
@@ -218,29 +218,29 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
     if (numSamplesOk == m_G)
     {
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
 
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(numberOfSamples, this->m_NumberOfPixelsCounted);
-  MatrixType A(datablock.extract(this->m_NumberOfPixelsCounted, m_G));
+  this->CheckNumberOfSamples(numberOfSamples, Superclass::m_NumberOfPixelsCounted);
+  MatrixType A(datablock.extract(Superclass::m_NumberOfPixelsCounted, m_G));
 
-  MatrixType Amm(this->m_NumberOfPixelsCounted, m_G, vnl_matrix_null);
+  MatrixType Amm(Superclass::m_NumberOfPixelsCounted, m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(m_G, RealType{});
-    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    for (unsigned int i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < m_G; ++j)
       {
         mean(j) += A(i, j);
       }
     }
-    mean /= RealType(this->m_NumberOfPixelsCounted);
+    mean /= RealType(Superclass::m_NumberOfPixelsCounted);
 
-    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    for (unsigned int i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < m_G; ++j)
       {
@@ -251,7 +251,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
   /** Compute covariance matrix C */
   MatrixType C(Amm.transpose() * Amm);
-  C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
+  C /= static_cast<RealType>(RealType(Superclass::m_NumberOfPixelsCounted) - 1.0);
 
   vnl_diag_matrix<RealType> S(m_G, RealType{});
   for (unsigned int j = 0; j < m_G; ++j)
@@ -312,7 +312,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
@@ -389,31 +389,31 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
     {
       SamplesOK.push_back(fixedPoint);
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
 
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
-  MatrixType A(datablock.extract(this->m_NumberOfPixelsCounted, m_G));
+  MatrixType A(datablock.extract(Superclass::m_NumberOfPixelsCounted, m_G));
 
   /** Calculate standard deviation from columns */
-  MatrixType Amm(this->m_NumberOfPixelsCounted, m_G, vnl_matrix_null);
+  MatrixType Amm(Superclass::m_NumberOfPixelsCounted, m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(m_G, RealType{});
-    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    for (unsigned int i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < m_G; ++j)
       {
         mean(j) += A(i, j);
       }
     }
-    mean /= RealType(this->m_NumberOfPixelsCounted);
+    mean /= RealType(Superclass::m_NumberOfPixelsCounted);
 
-    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    for (unsigned int i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < m_G; ++j)
       {
@@ -425,7 +425,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** Compute covariance matrix C */
   MatrixType Atmm = Amm.transpose();
   MatrixType C(Atmm * Amm);
-  C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
+  C /= static_cast<RealType>(RealType(Superclass::m_NumberOfPixelsCounted) - 1.0);
 
   vnl_diag_matrix<RealType> S(m_G, RealType{});
   for (unsigned int j = 0; j < m_G; ++j)
@@ -521,7 +521,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
   } // end second for loop over sample container
 
-  derivative *= -(2.0 / (DerivativeValueType(this->m_NumberOfPixelsCounted) - 1.0)); // normalize
+  derivative *= -(2.0 / (DerivativeValueType(Superclass::m_NumberOfPixelsCounted) - 1.0)); // normalize
   measure = m_G - sumEigenValuesUsed;
 
   /** Subtract mean from derivative elements. */
@@ -739,17 +739,17 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = m_PCAMetricGetSamplesPerThreadVariables[0].st_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted = m_PCAMetricGetSamplesPerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += m_PCAMetricGetSamplesPerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted += m_PCAMetricGetSamplesPerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
-  MatrixType   A(this->m_NumberOfPixelsCounted, m_G);
+  MatrixType   A(Superclass::m_NumberOfPixelsCounted, m_G);
   unsigned int row_start = 0;
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
@@ -759,20 +759,20 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   }
 
   /** Calculate standard deviation from columns */
-  MatrixType Amm(this->m_NumberOfPixelsCounted, m_G, vnl_matrix_null);
+  MatrixType Amm(Superclass::m_NumberOfPixelsCounted, m_G, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
     vnl_vector<RealType> mean(m_G, RealType{});
-    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    for (unsigned int i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < m_G; ++j)
       {
         mean(j) += A(i, j);
       }
     }
-    mean /= RealType(this->m_NumberOfPixelsCounted);
+    mean /= RealType(Superclass::m_NumberOfPixelsCounted);
 
-    for (unsigned int i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+    for (unsigned int i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
     {
       for (unsigned int j = 0; j < m_G; ++j)
       {
@@ -784,7 +784,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
   /** Compute covariancematrix C */
   m_Atmm = Amm.transpose();
   MatrixType C(m_Atmm * Amm);
-  C /= static_cast<RealType>(RealType(this->m_NumberOfPixelsCounted) - 1.0);
+  C /= static_cast<RealType>(RealType(Superclass::m_NumberOfPixelsCounted) - 1.0);
 
   vnl_diag_matrix<RealType> S(m_G, RealType{});
   for (unsigned int j = 0; j < m_G; ++j)
@@ -955,7 +955,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedComputeDerivative(DerivativeT
     derivative += m_PCAMetricGetSamplesPerThreadVariables[i].st_Derivative;
   }
 
-  derivative *= -(2.0 / (DerivativeValueType(this->m_NumberOfPixelsCounted) - 1.0)); // normalize
+  derivative *= -(2.0 / (DerivativeValueType(Superclass::m_NumberOfPixelsCounted) - 1.0)); // normalize
 
   /** Subtract mean from derivative elements. */
   if (m_SubtractMean)

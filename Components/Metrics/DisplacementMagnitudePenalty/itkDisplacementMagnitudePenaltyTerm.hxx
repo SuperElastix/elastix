@@ -66,7 +66,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const Param
   -> MeasureType
 {
   /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   RealType measure{};
 
   /** Make sure the transform parameters are up to date. */
@@ -90,7 +90,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const Param
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Compute the contribution of this point: ||T(x)-x||^2
        * \todo FixedImageDimension should be MovingImageDimension  */
@@ -104,10 +104,10 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const Param
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Update measure value. Avoid division by zero. */
-  measure /= std::max(NumericTraits<RealType>::One, static_cast<RealType>(this->m_NumberOfPixelsCounted));
+  measure /= std::max(NumericTraits<RealType>::One, static_cast<RealType>(Superclass::m_NumberOfPixelsCounted));
 
   /** Return the value. */
   return static_cast<MeasureType>(measure);
@@ -144,7 +144,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
   using VectorType = typename MovingImagePointType::VectorType;
 
   /** Create and initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   RealType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
@@ -186,7 +186,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
@@ -213,12 +213,12 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Update measure value and derivative. The factor 2 in the derivative
    * originates from the square in ||T(x)-x||^2 */
   const RealType normalizationConstant =
-    std::max(NumericTraits<RealType>::One, static_cast<RealType>(this->m_NumberOfPixelsCounted));
+    std::max(NumericTraits<RealType>::One, static_cast<RealType>(Superclass::m_NumberOfPixelsCounted));
   measure /= normalizationConstant;
   derivative /= (normalizationConstant / 2.0);
 

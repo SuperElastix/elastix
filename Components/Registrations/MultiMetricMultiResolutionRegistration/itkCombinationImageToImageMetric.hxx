@@ -550,8 +550,8 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetNumberOfPixelsCount
     }
   }
 
-  this->m_NumberOfPixelsCounted = sum;
-  return this->m_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted = sum;
+  return Superclass::m_NumberOfPixelsCounted;
 
 } // end GetNumberOfPixelsCounted()
 

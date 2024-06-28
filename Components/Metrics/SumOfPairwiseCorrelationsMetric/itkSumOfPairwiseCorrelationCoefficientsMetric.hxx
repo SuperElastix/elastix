@@ -131,7 +131,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   this->SetTransformParameters(parameters);
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
@@ -196,14 +196,14 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
     if (numSamplesOk == G)
     {
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
 
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(NumberOfSamples, this->m_NumberOfPixelsCounted);
-  unsigned int N = this->m_NumberOfPixelsCounted;
+  this->CheckNumberOfSamples(NumberOfSamples, Superclass::m_NumberOfPixelsCounted);
+  unsigned int N = Superclass::m_NumberOfPixelsCounted;
 
   MatrixType A(datablock.extract(N, G));
 
@@ -287,7 +287,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
 
   /** Initialize some variables */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative = DerivativeType(numberOfParameters);
   derivative.Fill(DerivativeValueType{});
@@ -362,14 +362,14 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
     {
       SamplesOK.push_back(fixedPoint);
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
 
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
-  unsigned int N = this->m_NumberOfPixelsCounted;
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  unsigned int N = Superclass::m_NumberOfPixelsCounted;
 
   MatrixType A(datablock.extract(N, G));
 

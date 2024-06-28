@@ -71,7 +71,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
   /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Matrix to store the spatial Jacobian, dT/dx. */
@@ -107,7 +107,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the SpatialJacobian dT/dx. */
       Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
@@ -128,13 +128,13 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Update measure value. */
   double sum = 0.0;
-  if (this->m_NumberOfPixelsCounted > 0)
+  if (Superclass::m_NumberOfPixelsCounted > 0)
   {
-    sum = 1.0F / static_cast<double>(this->m_NumberOfPixelsCounted);
+    sum = 1.0F / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
   }
   measure *= sum;
 
@@ -280,15 +280,17 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted =
+    Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted +=
+      Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
   value = MeasureType{};
@@ -299,7 +301,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
     /** Reset this variable for the next iteration. */
     Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
-  value /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+  value /= static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
 
 } // end AfterThreadedGetValue()
 
@@ -336,7 +338,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
   /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
@@ -389,7 +391,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
@@ -432,13 +434,13 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute the measure value and derivative. */
   double sum = 0.0;
-  if (this->m_NumberOfPixelsCounted > 0)
+  if (Superclass::m_NumberOfPixelsCounted > 0)
   {
-    sum = 1.0F / static_cast<double>(this->m_NumberOfPixelsCounted);
+    sum = 1.0F / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
   }
   measure *= sum;
   derivative *= sum;
@@ -610,15 +612,17 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
+  Superclass::m_NumberOfPixelsCounted =
+    Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted +=
+      Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
   value = MeasureType{};
@@ -630,7 +634,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
     Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
 
-  value /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
+  value /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate derivatives. */
   /** compute single-threadedly */
@@ -642,14 +646,14 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
       derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
     }
 
-    derivative /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+    derivative /= static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
   }
   // compute multi-threadedly with itk threads
   else if (true) // force ITK threads !Superclass::m_UseOpenMP )
   {
     Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
-      static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+      static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
 
     this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
                                                 &(Superclass::m_ThreaderMetricParameters));
@@ -669,7 +673,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
       {
         sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
       }
-      derivative[j] = sum / static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+      derivative[j] = sum / static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
     }
   }
 #endif

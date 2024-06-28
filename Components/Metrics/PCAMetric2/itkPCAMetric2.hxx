@@ -57,7 +57,7 @@ PCAMetric2<TFixedImage, TMovingImage>::Initialize()
 
   /** Retrieve slowest varying dimension and its size. */
   // const unsigned int lastDim = FixedImageDimension - 1;
-  // const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
+  // const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize( lastDim );
 
 } // end Initialize()
 
@@ -149,7 +149,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   this->SetTransformParameters(parameters);
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
@@ -158,19 +158,19 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = FixedImageDimension - 1;
-  const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
+  const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
   using MatrixType = vnl_matrix<RealType>;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, G, vnl_matrix_null);
+  MatrixType         datablock(numberOfSamples, lastDimSize, vnl_matrix_null);
 
   /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
   std::vector<int> lastDimPositions;
 
   /** Determine random last dimension positions if needed. */
-  for (unsigned int i = 0; i < G; ++i)
+  for (unsigned int i = 0; i < lastDimSize; ++i)
   {
     lastDimPositions.push_back(i);
   }
@@ -190,7 +190,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
     unsigned int numSamplesOk = 0;
 
     /** Loop over t */
-    for (unsigned int d = 0; d < G; ++d)
+    for (unsigned int d = 0; d < lastDimSize; ++d)
     {
       /** Initialize some variables. */
       RealType movingImageValue;
@@ -220,26 +220,26 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
     } /** end loop over t */
 
-    if (numSamplesOk == G)
+    if (numSamplesOk == lastDimSize)
     {
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
 
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(numberOfSamples, this->m_NumberOfPixelsCounted);
-  const unsigned int N = this->m_NumberOfPixelsCounted;
-  MatrixType         A(datablock.extract(N, G));
+  this->CheckNumberOfSamples(numberOfSamples, Superclass::m_NumberOfPixelsCounted);
+  const unsigned int N = Superclass::m_NumberOfPixelsCounted;
+  MatrixType         A(datablock.extract(N, lastDimSize));
 
-  MatrixType Amm(N, G, vnl_matrix_null);
+  MatrixType Amm(N, lastDimSize, vnl_matrix_null);
   {
     /** Calculate mean of from columns */
-    vnl_vector<RealType> mean(G, RealType{});
+    vnl_vector<RealType> mean(lastDimSize, RealType{});
     for (unsigned int i = 0; i < N; ++i)
     {
-      for (unsigned int j = 0; j < G; ++j)
+      for (unsigned int j = 0; j < lastDimSize; ++j)
       {
         mean(j) += A(i, j);
       }
@@ -248,7 +248,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
 
     for (unsigned int i = 0; i < N; ++i)
     {
-      for (unsigned int j = 0; j < G; ++j)
+      for (unsigned int j = 0; j < lastDimSize; ++j)
       {
         Amm(i, j) = A(i, j) - mean(j);
       }
@@ -259,9 +259,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   MatrixType C(Amm.transpose() * Amm);
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
-  MatrixType S(G, G, vnl_matrix_null);
+  MatrixType S(lastDimSize, lastDimSize, vnl_matrix_null);
 
-  for (unsigned int j = 0; j < G; ++j)
+  for (unsigned int j = 0; j < lastDimSize; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -273,7 +273,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   vnl_symmetric_eigensystem<RealType> eig(K);
 
   // The measure is the sum of weighted eigenvalues of the correlation matrix.
-  // measure = sum_{i=1}^G i*lambda_i
+  // measure = sum_{i=1}^lastDimSize i*lambda_i
 
   // Note that the system does NOT crash when you violate the number of possible
   // eigenvalues, i.e. when K is of size 30x30, eigenvalues > 30 also exist and have
@@ -286,9 +286,9 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   // eigenvalue 29 has a weight of 1 and eigenvalue 0 has a weight of 30
 
   RealType sumWeightedEigenValues{};
-  for (unsigned int i = 0; i < G; ++i)
+  for (unsigned int i = 0; i < lastDimSize; ++i)
   {
-    sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(G - i - 1);
+    sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(lastDimSize - i - 1);
   }
 
   measure = sumWeightedEigenValues;
@@ -333,7 +333,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
   /** Initialize some variables */
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative = DerivativeType(numberOfParameters);
   derivative.Fill(DerivativeValueType{});
@@ -347,7 +347,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
   /** Retrieve slowest varying dimension and its size. */
   const unsigned int lastDim = FixedImageDimension - 1;
-  const unsigned int G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
+  const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
   using MatrixType = vnl_matrix<RealType>;
   using DerivativeMatrixType = vnl_matrix<DerivativeValueType>;
@@ -356,7 +356,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, G, vnl_matrix_null);
+  MatrixType         datablock(numberOfSamples, lastDimSize, vnl_matrix_null);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
@@ -366,7 +366,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
   std::vector<int> lastDimPositions;
 
-  for (unsigned int i = 0; i < G; ++i)
+  for (unsigned int i = 0; i < lastDimSize; ++i)
   {
     lastDimPositions.push_back(i);
   }
@@ -383,7 +383,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
     unsigned int numSamplesOk = 0;
 
     /** Loop over t */
-    for (unsigned int d = 0; d < G; ++d)
+    for (unsigned int d = 0; d < lastDimSize; ++d)
     {
       /** Initialize some variables. */
       RealType movingImageValue;
@@ -412,28 +412,28 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
       } // end if sampleOk
 
     } // end loop over gradient images
-    if (numSamplesOk == G)
+    if (numSamplesOk == lastDimSize)
     {
       SamplesOK.push_back(fixedPoint);
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
   }
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
-  unsigned int N = this->m_NumberOfPixelsCounted;
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  unsigned int N = Superclass::m_NumberOfPixelsCounted;
 
-  MatrixType A(datablock.extract(N, G));
+  MatrixType A(datablock.extract(N, lastDimSize));
 
   /** Calculate standard deviation of columns */
-  MatrixType Amm(N, G, vnl_matrix_null);
+  MatrixType Amm(N, lastDimSize, vnl_matrix_null);
   {
     /** Calculate mean of columns */
-    vnl_vector<RealType> mean(G, RealType{});
+    vnl_vector<RealType> mean(lastDimSize, RealType{});
     for (unsigned int i = 0; i < N; ++i)
     {
-      for (unsigned int j = 0; j < G; ++j)
+      for (unsigned int j = 0; j < lastDimSize; ++j)
       {
         mean(j) += A(i, j);
       }
@@ -442,7 +442,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
 
     for (unsigned int i = 0; i < N; ++i)
     {
-      for (unsigned int j = 0; j < G; ++j)
+      for (unsigned int j = 0; j < lastDimSize; ++j)
       {
         Amm(i, j) = A(i, j) - mean(j);
       }
@@ -454,8 +454,8 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   MatrixType C(Atmm * Amm);
   C /= static_cast<RealType>(RealType(N) - 1.0);
 
-  vnl_diag_matrix<RealType> S(G, RealType{});
-  for (unsigned int j = 0; j < G; ++j)
+  vnl_diag_matrix<RealType> S(lastDimSize, RealType{});
+  for (unsigned int j = 0; j < lastDimSize; ++j)
   {
     S(j, j) = 1.0 / sqrt(C(j, j));
   }
@@ -467,15 +467,15 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   vnl_symmetric_eigensystem<RealType> eig(K);
 
   RealType sumWeightedEigenValues{};
-  for (unsigned int i = 0; i < G; ++i)
+  for (unsigned int i = 0; i < lastDimSize; ++i)
   {
-    sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(G - i - 1);
+    sumWeightedEigenValues += (i + 1) * eig.get_eigenvalue(lastDimSize - i - 1);
   }
 
-  MatrixType eigenVectorMatrix(G, G);
-  for (unsigned int i = 0; i < G; ++i)
+  MatrixType eigenVectorMatrix(lastDimSize, lastDimSize);
+  for (unsigned int i = 0; i < lastDimSize; ++i)
   {
-    eigenVectorMatrix.set_column(i, (eig.get_eigenvector(G - i - 1)).normalize());
+    eigenVectorMatrix.set_column(i, (eig.get_eigenvector(lastDimSize - i - 1)).normalize());
   }
 
   MatrixType eigenVectorMatrixTranspose(eigenVectorMatrix.transpose());
@@ -484,15 +484,15 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   TransformJacobianType jacobian;
   DerivativeType        dMTdmu;
   DerivativeType        imageJacobian(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
-  std::vector<NonZeroJacobianIndicesType> nzjis(G, NonZeroJacobianIndicesType());
+  std::vector<NonZeroJacobianIndicesType> nzjis(lastDimSize, NonZeroJacobianIndicesType());
 
   /** Sub components of metric derivative */
-  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(G);
+  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(lastDimSize);
 
   unsigned int startSamplesOK;
   startSamplesOK = 0;
 
-  for (unsigned int d = 0; d < G; ++d)
+  for (unsigned int d = 0; d < lastDimSize; ++d)
   {
     double S_sqr = S(d, d) * S(d, d);
     double S_qub = S_sqr * S(d, d);
@@ -515,7 +515,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
     auto voxelCoord =
       this->GetFixedImage()->template TransformPhysicalPointToContinuousIndex<CoordinateRepresentationType>(fixedPoint);
 
-    for (unsigned int d = 0; d < G; ++d)
+    for (unsigned int d = 0; d < lastDimSize; ++d)
     {
       /** Initialize some variables. */
       RealType                  movingImageValue;
@@ -542,7 +542,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
       /** build metric derivative components */
       for (unsigned int p = 0; p < nzjis[d].size(); ++p)
       {
-        for (unsigned int z = 0; z < G; ++z)
+        for (unsigned int z = 0; z < lastDimSize; ++z)
         {
           derivative[nzjis[d][p]] += z * (vSAtmm[z][pixelIndex] * dMTdmu[p] * Sv[d][z] +
                                           vdSdmu_part1[z][d] * Atmm[d][pixelIndex] * dMTdmu[p] * CSv[d][z]);
@@ -594,12 +594,12 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
        * Parameters are ordered x0x0x0y0y0y0z0z0z0x1x1x1y1y1y1z1z1z1 with
        * the number the time point index.
        */
-      const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / G;
+      const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
       DerivativeType     mean(numParametersPerLastDimension);
       mean.Fill(0.0);
 
       /** Compute mean per control point. */
-      for (unsigned int t = 0; t < G; ++t)
+      for (unsigned int t = 0; t < lastDimSize; ++t)
       {
         const unsigned int startc = numParametersPerLastDimension * t;
         for (unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c)
@@ -607,10 +607,10 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
           mean[c % numParametersPerLastDimension] += derivative[c];
         }
       }
-      mean /= static_cast<RealType>(G);
+      mean /= static_cast<RealType>(lastDimSize);
 
       /** Update derivative per control point. */
-      for (unsigned int t = 0; t < G; ++t)
+      for (unsigned int t = 0; t < lastDimSize; ++t)
       {
         const unsigned int startc = numParametersPerLastDimension * t;
         for (unsigned int c = startc; c < startc + numParametersPerLastDimension; ++c)
