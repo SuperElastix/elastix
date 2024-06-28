@@ -81,7 +81,7 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::SplitReque
 
   // split on the outermost dimension available
   // and avoid the current dimension
-  splitAxis = outputPtr->GetImageDimension() - 1;
+  splitAxis = OutputImageDimension - 1;
   while (requestedRegionSize[splitAxis] == 1 || splitAxis == (int)m_CurrentDimension)
   {
     --splitAxis;
@@ -174,7 +174,6 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::GenerateDa
   typename TInputImage::ConstPointer inputImage(this->GetInput());
   typename TOutputImage::Pointer     outputImage(this->GetOutput());
 
-  // const unsigned int imageDimension = inputImage->GetImageDimension();
   outputImage->SetBufferedRegion(outputImage->GetRequestedRegion());
   outputImage->Allocate();
   // Set up the multithreaded processing
