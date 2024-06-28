@@ -19,6 +19,7 @@
 #define elxSumSquaredTissueVolumeDifferenceMetric_hxx
 
 #include "elxSumSquaredTissueVolumeDifferenceMetric.h"
+#include <itkDeref.h>
 
 
 namespace elastix
@@ -50,17 +51,19 @@ template <class TElastix>
 void
 SumSquaredTissueVolumeDifferenceMetric<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the AirValue. */
   float AirValue = -1000.0;
-  this->GetConfiguration()->ReadParameter(AirValue, "AirValue", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(AirValue, "AirValue", this->GetComponentLabel(), level, 0);
   this->SetAirValue(AirValue);
 
   /** Get and set the TissueValue. */
   float TissueValue = 55.0;
-  this->GetConfiguration()->ReadParameter(TissueValue, "TissueValue", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(TissueValue, "TissueValue", this->GetComponentLabel(), level, 0);
   this->SetTissueValue(TissueValue);
 
 } // end BeforeEachResolution()

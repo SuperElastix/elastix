@@ -20,6 +20,7 @@
 
 #include "elxAdvancedMeanSquaresMetric.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -50,16 +51,18 @@ template <class TElastix>
 void
 AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the normalization. */
   bool useNormalization = false;
-  this->GetConfiguration()->ReadParameter(useNormalization, "UseNormalization", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useNormalization, "UseNormalization", this->GetComponentLabel(), level, 0);
   this->SetUseNormalization(useNormalization);
 
   /** Select the use of an OpenMP implementation for GetValueAndDerivative. */
-  std::string useOpenMP = this->m_Configuration->GetCommandLineArgument("-useOpenMP_SSD");
+  std::string useOpenMP = configuration.GetCommandLineArgument("-useOpenMP_SSD");
   if (useOpenMP == "true")
   {
     this->SetUseOpenMP(true);

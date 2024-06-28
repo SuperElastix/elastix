@@ -23,6 +23,7 @@
 #include "itkHardLimiterFunction.h"
 #include "itkExponentialLimiterFunction.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 #include <string>
 
 namespace elastix
@@ -54,21 +55,22 @@ template <class TElastix>
 void
 NormalizedMutualInformationMetric<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the number of histogram bins. */
   unsigned int numberOfHistogramBins = 32;
-  this->GetConfiguration()->ReadParameter(
-    numberOfHistogramBins, "NumberOfHistogramBins", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfHistogramBins, "NumberOfHistogramBins", this->GetComponentLabel(), level, 0);
   this->SetNumberOfFixedHistogramBins(numberOfHistogramBins);
   this->SetNumberOfMovingHistogramBins(numberOfHistogramBins);
 
   unsigned int numberOfFixedHistogramBins = numberOfHistogramBins;
   unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     numberOfFixedHistogramBins, "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0);
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0);
   this->SetNumberOfFixedHistogramBins(numberOfFixedHistogramBins);
   this->SetNumberOfMovingHistogramBins(numberOfMovingHistogramBins);
@@ -82,19 +84,16 @@ NormalizedMutualInformationMetric<TElastix>::BeforeEachResolution()
   /** Get and set the number of histogram bins. */
   double fixedLimitRangeRatio = 0.01;
   double movingLimitRangeRatio = 0.01;
-  this->GetConfiguration()->ReadParameter(
-    fixedLimitRangeRatio, "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0);
-  this->GetConfiguration()->ReadParameter(
-    movingLimitRangeRatio, "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(fixedLimitRangeRatio, "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(movingLimitRangeRatio, "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0);
   this->SetFixedLimitRangeRatio(fixedLimitRangeRatio);
   this->SetMovingLimitRangeRatio(movingLimitRangeRatio);
 
   /** Set B-spline parzen kernel orders */
   unsigned int fixedKernelBSplineOrder = 0;
   unsigned int movingKernelBSplineOrder = 3;
-  this->GetConfiguration()->ReadParameter(
-    fixedKernelBSplineOrder, "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0);
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(fixedKernelBSplineOrder, "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(
     movingKernelBSplineOrder, "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0);
   this->SetFixedKernelBSplineOrder(fixedKernelBSplineOrder);
   this->SetMovingKernelBSplineOrder(movingKernelBSplineOrder);

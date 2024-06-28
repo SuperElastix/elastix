@@ -21,6 +21,7 @@
 #include "elxCorrespondingPointsEuclideanDistanceMetric.h"
 #include "itkTransformixInputPointFileReader.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 #include <cstdint> // For int64_t.
 
 namespace elastix
@@ -54,12 +55,14 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
 {
   this->Superclass2::BeforeAllBase();
 
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Check if the current configuration uses this metric. */
   unsigned int count = 0;
-  for (unsigned int i = 0; i < this->m_Configuration->CountNumberOfParameterEntries("Metric"); ++i)
+  for (unsigned int i = 0; i < configuration.CountNumberOfParameterEntries("Metric"); ++i)
   {
     std::string metricName = "";
-    this->m_Configuration->ReadParameter(metricName, "Metric", i);
+    configuration.ReadParameter(metricName, "Metric", i);
     if (metricName == "CorrespondingPointsEuclideanDistanceMetric")
     {
       ++count;
@@ -75,7 +78,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   std::string check("");
 
   /** Check for appearance of "-fp". */
-  check = this->m_Configuration->GetCommandLineArgument("-fp");
+  check = configuration.GetCommandLineArgument("-fp");
   if (check.empty())
   {
     log::info("-fp       unspecified");
@@ -86,7 +89,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   }
 
   /** Check for appearance of "-mp". */
-  check = this->m_Configuration->GetCommandLineArgument("-mp");
+  check = configuration.GetCommandLineArgument("-mp");
   if (check.empty())
   {
     log::info("-mp       unspecified");
@@ -110,15 +113,17 @@ template <class TElastix>
 void
 CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Read and set the fixed pointset. */
-  std::string                            fixedName = this->GetConfiguration()->GetCommandLineArgument("-fp");
+  std::string                            fixedName = configuration.GetCommandLineArgument("-fp");
   typename PointSetType::Pointer         fixedPointSet; // default-constructed (null)
   const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
   const unsigned int                     nrOfFixedPoints = this->ReadLandmarks(fixedName, fixedPointSet, fixedImage);
   this->SetFixedPointSet(fixedPointSet);
 
   /** Read and set the moving pointset. */
-  std::string                            movingName = this->GetConfiguration()->GetCommandLineArgument("-mp");
+  std::string                            movingName = configuration.GetCommandLineArgument("-mp");
   typename PointSetType::Pointer         movingPointSet; // default-constructed (null)
   const typename ImageType::ConstPointer movingImage = this->GetElastix()->GetMovingImage();
   const unsigned int nrOfMovingPoints = this->ReadLandmarks(movingName, movingPointSet, movingImage);

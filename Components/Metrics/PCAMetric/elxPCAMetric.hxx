@@ -20,6 +20,7 @@
 
 #include "elxPCAMetric.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -50,27 +51,29 @@ template <class TElastix>
 void
 PCAMetric<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   unsigned int NumEigenValues = 6;
-  this->GetConfiguration()->ReadParameter(NumEigenValues, "NumEigenValues", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(NumEigenValues, "NumEigenValues", this->GetComponentLabel(), level, 0);
   this->SetNumEigenValues(NumEigenValues);
 
   /** Get and set if we want to subtract the mean from the derivative. */
   bool subtractMean = false;
-  this->GetConfiguration()->ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
   this->SetSubtractMean(subtractMean);
 
   /** Get and set the number of additional samples sampled at the fixed timepoint.  */
   //    unsigned int numAdditionalSamplesFixed = 0;
-  //    this->GetConfiguration()->ReadParameter( numAdditionalSamplesFixed,
+  //    configuration.ReadParameter( numAdditionalSamplesFixed,
   //      "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0 );
   //    this->SetNumAdditionalSamplesFixed( numAdditionalSamplesFixed );
 
   /** Get and set the fixed timepoint number. */
   //    unsigned int reducedDimensionIndex = 0;
-  //    this->GetConfiguration()->ReadParameter(
+  //    configuration.ReadParameter(
   //        reducedDimensionIndex, "ReducedDimensionIndex",
   //        this->GetComponentLabel(), 0, 0 );
   //    this->SetReducedDimensionIndex( reducedDimensionIndex );
@@ -83,7 +86,7 @@ PCAMetric<TElastix>::BeforeEachResolution()
   {
     usescales =
       usescales &&
-      this->GetConfiguration()->ReadParameter(
+      configuration.ReadParameter(
         movingImageDerivativeScales[i], "MovingImageDerivativeScales", this->GetComponentLabel(), i, -1, true);
   }
   if (usescales)

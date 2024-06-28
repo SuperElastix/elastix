@@ -22,6 +22,7 @@
 
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 #include <string>
 
 namespace elastix
@@ -53,14 +54,16 @@ template <class TElastix>
 void
 KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeRegistration()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get and set alpha, from alpha - MI. */
   double alpha = 0.5;
-  this->m_Configuration->ReadParameter(alpha, "Alpha", 0);
+  configuration.ReadParameter(alpha, "Alpha", 0);
   this->SetAlpha(alpha);
 
   /** Get the small number that avoids division by that number. */
   double smallNumber = 1e-5;
-  this->m_Configuration->ReadParameter(smallNumber, "AvoidDivisionBy", 0, true);
+  configuration.ReadParameter(smallNumber, "AvoidDivisionBy", 0, true);
   this->SetAvoidDivisionBy(smallNumber);
 
 } // end BeforeRegistration()
@@ -74,6 +77,8 @@ template <class TElastix>
 void
 KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = this->m_Registration->GetAsITKBaseType()->GetCurrentLevel();
 
@@ -81,8 +86,8 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
 
   /** Get the tree type. */
   std::string treeType = "KDTree";
-  this->m_Configuration->ReadParameter(treeType, "TreeType", 0);
-  this->m_Configuration->ReadParameter(treeType, "TreeType", level, true);
+  configuration.ReadParameter(treeType, "TreeType", 0);
+  configuration.ReadParameter(treeType, "TreeType", level, true);
 
   bool silentBS = false;
   bool silentSplit = false;
@@ -100,48 +105,48 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
 
   /** Get the bucket size. */
   unsigned int bucketSize = 50;
-  this->m_Configuration->ReadParameter(bucketSize, "BucketSize", 0, silentBS);
-  this->m_Configuration->ReadParameter(bucketSize, "BucketSize", level, true);
+  configuration.ReadParameter(bucketSize, "BucketSize", 0, silentBS);
+  configuration.ReadParameter(bucketSize, "BucketSize", level, true);
 
   /** Get the splitting rule for all trees. */
   std::string splittingRule = "ANN_KD_SL_MIDPT";
-  bool        returnValue = this->m_Configuration->ReadParameter(splittingRule, "SplittingRule", 0, silentSplit);
-  this->m_Configuration->ReadParameter(splittingRule, "SplittingRule", level, true);
+  bool        returnValue = configuration.ReadParameter(splittingRule, "SplittingRule", 0, silentSplit);
+  configuration.ReadParameter(splittingRule, "SplittingRule", level, true);
 
   /** Get the splitting rule for the fixed tree. */
   std::string fixedSplittingRule = splittingRule;
-  this->m_Configuration->ReadParameter(fixedSplittingRule, "FixedSplittingRule", 0, silentSplit | !returnValue);
-  this->m_Configuration->ReadParameter(fixedSplittingRule, "FixedSplittingRule", level, true);
+  configuration.ReadParameter(fixedSplittingRule, "FixedSplittingRule", 0, silentSplit | !returnValue);
+  configuration.ReadParameter(fixedSplittingRule, "FixedSplittingRule", level, true);
 
   /** Get the splitting rule for the moving tree. */
   std::string movingSplittingRule = splittingRule;
-  this->m_Configuration->ReadParameter(movingSplittingRule, "MovingSplittingRule", 0, silentSplit | !returnValue);
-  this->m_Configuration->ReadParameter(movingSplittingRule, "MovingSplittingRule", level, true);
+  configuration.ReadParameter(movingSplittingRule, "MovingSplittingRule", 0, silentSplit | !returnValue);
+  configuration.ReadParameter(movingSplittingRule, "MovingSplittingRule", level, true);
 
   /** Get the splitting rule for the joint tree. */
   std::string jointSplittingRule = splittingRule;
-  this->m_Configuration->ReadParameter(jointSplittingRule, "JointSplittingRule", 0, silentSplit | !returnValue);
-  this->m_Configuration->ReadParameter(jointSplittingRule, "JointSplittingRule", level, true);
+  configuration.ReadParameter(jointSplittingRule, "JointSplittingRule", 0, silentSplit | !returnValue);
+  configuration.ReadParameter(jointSplittingRule, "JointSplittingRule", level, true);
 
   /** Get the shrinking rule for all trees. */
   std::string shrinkingRule = "ANN_BD_SIMPLE";
-  returnValue = this->m_Configuration->ReadParameter(shrinkingRule, "ShrinkingRule", 0, silentShrink);
-  this->m_Configuration->ReadParameter(shrinkingRule, "ShrinkingRule", level, true);
+  returnValue = configuration.ReadParameter(shrinkingRule, "ShrinkingRule", 0, silentShrink);
+  configuration.ReadParameter(shrinkingRule, "ShrinkingRule", level, true);
 
   /** Get the shrinking rule for the fixed tree. */
   std::string fixedShrinkingRule = shrinkingRule;
-  this->m_Configuration->ReadParameter(fixedShrinkingRule, "FixedShrinkingRule", 0, silentShrink | !returnValue);
-  this->m_Configuration->ReadParameter(fixedShrinkingRule, "FixedShrinkingRule", level, true);
+  configuration.ReadParameter(fixedShrinkingRule, "FixedShrinkingRule", 0, silentShrink | !returnValue);
+  configuration.ReadParameter(fixedShrinkingRule, "FixedShrinkingRule", level, true);
 
   /** Get the shrinking rule for the moving tree. */
   std::string movingShrinkingRule = shrinkingRule;
-  this->m_Configuration->ReadParameter(movingShrinkingRule, "MovingShrinkingRule", 0, silentShrink | !returnValue);
-  this->m_Configuration->ReadParameter(movingShrinkingRule, "MovingShrinkingRule", level, true);
+  configuration.ReadParameter(movingShrinkingRule, "MovingShrinkingRule", 0, silentShrink | !returnValue);
+  configuration.ReadParameter(movingShrinkingRule, "MovingShrinkingRule", level, true);
 
   /** Get the shrinking rule for the joint tree. */
   std::string jointShrinkingRule = shrinkingRule;
-  this->m_Configuration->ReadParameter(jointShrinkingRule, "JointShrinkingRule", 0, silentShrink | !returnValue);
-  this->m_Configuration->ReadParameter(jointShrinkingRule, "JointShrinkingRule", level, true);
+  configuration.ReadParameter(jointShrinkingRule, "JointShrinkingRule", 0, silentShrink | !returnValue);
+  configuration.ReadParameter(jointShrinkingRule, "JointShrinkingRule", level, true);
 
   /** Set the tree. */
   if (treeType == "KDTree")
@@ -171,8 +176,8 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
 
   /** Get the tree search type. */
   std::string treeSearchType = "Standard";
-  this->m_Configuration->ReadParameter(treeSearchType, "TreeSearchType", 0);
-  this->m_Configuration->ReadParameter(treeSearchType, "TreeSearchType", level, true);
+  configuration.ReadParameter(treeSearchType, "TreeSearchType", 0);
+  configuration.ReadParameter(treeSearchType, "TreeSearchType", level, true);
 
   bool silentSR = true;
   if (treeSearchType == "FixedRadius")
@@ -182,18 +187,18 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
 
   /** Get the k nearest neighbours. */
   unsigned int kNearestNeighbours = 20;
-  this->m_Configuration->ReadParameter(kNearestNeighbours, "KNearestNeighbours", 0);
-  this->m_Configuration->ReadParameter(kNearestNeighbours, "KNearestNeighbours", level, true);
+  configuration.ReadParameter(kNearestNeighbours, "KNearestNeighbours", 0);
+  configuration.ReadParameter(kNearestNeighbours, "KNearestNeighbours", level, true);
 
   /** Get the error bound. */
   double errorBound = 0.0;
-  this->m_Configuration->ReadParameter(errorBound, "ErrorBound", 0);
-  this->m_Configuration->ReadParameter(errorBound, "ErrorBound", level, true);
+  configuration.ReadParameter(errorBound, "ErrorBound", 0);
+  configuration.ReadParameter(errorBound, "ErrorBound", level, true);
 
   /** Get the squared search radius. */
   double squaredSearchRadius = 0.0;
-  this->m_Configuration->ReadParameter(squaredSearchRadius, "SquaredSearchRadius", 0, silentSR);
-  this->m_Configuration->ReadParameter(squaredSearchRadius, "SquaredSearchRadius", level, true);
+  configuration.ReadParameter(squaredSearchRadius, "SquaredSearchRadius", 0, silentSR);
+  configuration.ReadParameter(squaredSearchRadius, "SquaredSearchRadius", level, true);
 
   /** Set the tree searcher. */
   if (treeSearchType == "Standard")
