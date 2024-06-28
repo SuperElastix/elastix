@@ -41,7 +41,7 @@ AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution()
 
     /** Get and set SubtractMean. Default true. */
     bool subtractMean = true;
-    configuration.ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(subtractMean, "SubtractMean", BaseComponent::GetComponentLabel(), level, 0);
 
     if (subtractMean)
     {

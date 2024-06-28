@@ -72,22 +72,21 @@ void
 AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution()
 {
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+  const std::string     componentLabel = BaseComponent::GetComponentLabel();
 
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the number of histogram bins. */
   unsigned int numberOfHistogramBins = 32;
-  configuration.ReadParameter(numberOfHistogramBins, "NumberOfHistogramBins", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfHistogramBins, "NumberOfHistogramBins", componentLabel, level, 0);
   this->SetNumberOfFixedHistogramBins(numberOfHistogramBins);
   this->SetNumberOfMovingHistogramBins(numberOfHistogramBins);
 
   unsigned int numberOfFixedHistogramBins = numberOfHistogramBins;
   unsigned int numberOfMovingHistogramBins = numberOfHistogramBins;
-  configuration.ReadParameter(
-    numberOfFixedHistogramBins, "NumberOfFixedHistogramBins", this->GetComponentLabel(), level, 0);
-  configuration.ReadParameter(
-    numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numberOfFixedHistogramBins, "NumberOfFixedHistogramBins", componentLabel, level, 0);
+  configuration.ReadParameter(numberOfMovingHistogramBins, "NumberOfMovingHistogramBins", componentLabel, level, 0);
   this->SetNumberOfFixedHistogramBins(numberOfFixedHistogramBins);
   this->SetNumberOfMovingHistogramBins(numberOfMovingHistogramBins);
 
@@ -100,36 +99,32 @@ AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution()
   /** Get and set the limit range ratios. */
   double fixedLimitRangeRatio = 0.01;
   double movingLimitRangeRatio = 0.01;
-  configuration.ReadParameter(fixedLimitRangeRatio, "FixedLimitRangeRatio", this->GetComponentLabel(), level, 0);
-  configuration.ReadParameter(movingLimitRangeRatio, "MovingLimitRangeRatio", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(fixedLimitRangeRatio, "FixedLimitRangeRatio", componentLabel, level, 0);
+  configuration.ReadParameter(movingLimitRangeRatio, "MovingLimitRangeRatio", componentLabel, level, 0);
   this->SetFixedLimitRangeRatio(fixedLimitRangeRatio);
   this->SetMovingLimitRangeRatio(movingLimitRangeRatio);
 
   /** Set B-spline Parzen kernel orders. */
   unsigned int fixedKernelBSplineOrder = 0;
   unsigned int movingKernelBSplineOrder = 3;
-  configuration.ReadParameter(fixedKernelBSplineOrder, "FixedKernelBSplineOrder", this->GetComponentLabel(), level, 0);
-  configuration.ReadParameter(
-    movingKernelBSplineOrder, "MovingKernelBSplineOrder", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(fixedKernelBSplineOrder, "FixedKernelBSplineOrder", componentLabel, level, 0);
+  configuration.ReadParameter(movingKernelBSplineOrder, "MovingKernelBSplineOrder", componentLabel, level, 0);
   this->SetFixedKernelBSplineOrder(fixedKernelBSplineOrder);
   this->SetMovingKernelBSplineOrder(movingKernelBSplineOrder);
 
   /** Set whether a low memory consumption should be used. */
   bool useFastAndLowMemoryVersion = true;
-  configuration.ReadParameter(
-    useFastAndLowMemoryVersion, "UseFastAndLowMemoryVersion", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useFastAndLowMemoryVersion, "UseFastAndLowMemoryVersion", componentLabel, level, 0);
   this->SetUseExplicitPDFDerivatives(!useFastAndLowMemoryVersion);
 
   /** Set whether to use Nick Tustison's preconditioning technique. */
   bool useJacobianPreconditioning = false;
-  configuration.ReadParameter(
-    useJacobianPreconditioning, "UseJacobianPreconditioning", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useJacobianPreconditioning, "UseJacobianPreconditioning", componentLabel, level, 0);
   this->SetUseJacobianPreconditioning(useJacobianPreconditioning);
 
   /** Set whether a finite difference derivative should be used. */
   bool useFiniteDifferenceDerivative = false;
-  configuration.ReadParameter(
-    useFiniteDifferenceDerivative, "FiniteDifferenceDerivative", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useFiniteDifferenceDerivative, "FiniteDifferenceDerivative", componentLabel, level, 0);
   this->SetUseFiniteDifferenceDerivative(useFiniteDifferenceDerivative);
 
   /** Prepare for computing the perturbation gain c_k. */
@@ -138,8 +133,8 @@ AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution()
   {
     double c = 1.0;
     double gamma = 0.101;
-    configuration.ReadParameter(c, "SP_c", this->GetComponentLabel(), level, 0);
-    configuration.ReadParameter(gamma, "SP_gamma", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(c, "SP_c", componentLabel, level, 0);
+    configuration.ReadParameter(gamma, "SP_gamma", componentLabel, level, 0);
     this->SetParam_c(c);
     this->SetParam_gamma(gamma);
     this->SetFiniteDifferencePerturbation(this->Compute_c(0));

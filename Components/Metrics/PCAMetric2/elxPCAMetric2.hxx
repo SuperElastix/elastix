@@ -52,24 +52,24 @@ void
 PCAMetric2<TElastix>::BeforeEachResolution()
 {
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+  const std::string     componentLabel = BaseComponent::GetComponentLabel();
 
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set if we want to subtract the mean from the derivative. */
   bool subtractMean = false;
-  configuration.ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(subtractMean, "SubtractMean", componentLabel, 0, 0);
   this->SetSubtractMean(subtractMean);
 
   /** Get and set the number of additional samples sampled at the fixed timepoint.  */
   unsigned int numAdditionalSamplesFixed = 0;
-  configuration.ReadParameter(
-    numAdditionalSamplesFixed, "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numAdditionalSamplesFixed, "NumAdditionalSamplesFixed", componentLabel, level, 0);
   this->SetNumAdditionalSamplesFixed(numAdditionalSamplesFixed);
 
   /** Get and set the fixed timepoint number. */
   unsigned int reducedDimensionIndex = 0;
-  configuration.ReadParameter(reducedDimensionIndex, "ReducedDimensionIndex", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(reducedDimensionIndex, "ReducedDimensionIndex", componentLabel, 0, 0);
   this->SetReducedDimensionIndex(reducedDimensionIndex);
 
   /** Set moving image derivative scales. */
@@ -79,9 +79,8 @@ PCAMetric2<TElastix>::BeforeEachResolution()
   for (unsigned int i = 0; i < MovingImageDimension; ++i)
   {
     usescales =
-      usescales &&
-      configuration.ReadParameter(
-        movingImageDerivativeScales[i], "MovingImageDerivativeScales", this->GetComponentLabel(), i, -1, true);
+      usescales && configuration.ReadParameter(
+                     movingImageDerivativeScales[i], "MovingImageDerivativeScales", componentLabel, i, -1, true);
   }
   if (usescales)
   {
