@@ -36,6 +36,17 @@ PCAMetric2<TElastix>::Initialize()
   itk::TimeProbe timer;
   timer.Start();
   this->Superclass1::Initialize();
+
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
+  if (configuration.HasParameter("SubtractMean"))
+  {
+    log::warn(std::string("WARNING: From elastix version 5.2, the ") + elxGetClassNameStatic() +
+              " parameter `SubtractMean` (default \"false\") is "
+              "replaced with `UseZeroAverageDisplacementConstraint` "
+              "(default \"true\").");
+  }
+
   timer.Stop();
   log::info(std::ostringstream{} << "Initialization of PCAMetric2 metric took: "
                                  << static_cast<long>(timer.GetMean() * 1000) << " ms.");
@@ -58,9 +69,12 @@ PCAMetric2<TElastix>::BeforeEachResolution()
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set if we want to subtract the mean from the derivative. */
-  bool subtractMean = false;
-  configuration.ReadParameter(subtractMean, "SubtractMean", componentLabel, 0, 0);
-  this->SetSubtractMean(subtractMean);
+  bool useZeroAverageDisplacementConstraint = true;
+  // The parameter name "SubtractMean" is obsolete, so just use it as initial value, for backward compatibility.
+  configuration.ReadParameter(useZeroAverageDisplacementConstraint, "SubtractMean", componentLabel, 0, 0);
+  configuration.ReadParameter(
+    useZeroAverageDisplacementConstraint, "UseZeroAverageDisplacementConstraint", componentLabel, 0, 0);
+  this->SetUseZeroAverageDisplacementConstraint(useZeroAverageDisplacementConstraint);
 
   /** Get and set the number of additional samples sampled at the fixed timepoint.  */
   unsigned int numAdditionalSamplesFixed = 0;

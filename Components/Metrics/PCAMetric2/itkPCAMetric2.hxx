@@ -539,7 +539,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   measure = sumWeightedEigenValues;
 
   /** Subtract mean from derivative elements. */
-  if (m_SubtractMean)
+  if (m_UseZeroAverageDisplacementConstraint)
   {
     if (!m_TransformIsStackTransform)
     {

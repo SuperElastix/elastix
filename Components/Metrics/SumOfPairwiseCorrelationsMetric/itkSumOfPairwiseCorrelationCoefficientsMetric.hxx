@@ -481,7 +481,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   measure = RealType(1.0 - (K.fro_norm() / RealType(G)));
 
   /** Subtract mean from derivative elements. */
-  if (m_SubtractMean)
+  if (m_UseZeroAverageDisplacementConstraint)
   {
     if (!m_TransformIsStackTransform)
     {

@@ -525,7 +525,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   measure = m_G - sumEigenValuesUsed;
 
   /** Subtract mean from derivative elements. */
-  if (m_SubtractMean)
+  if (m_UseZeroAverageDisplacementConstraint)
   {
     if (!m_TransformIsStackTransform)
     {
@@ -958,7 +958,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedComputeDerivative(DerivativeT
   derivative *= -(2.0 / (DerivativeValueType(Superclass::m_NumberOfPixelsCounted) - 1.0)); // normalize
 
   /** Subtract mean from derivative elements. */
-  if (m_SubtractMean)
+  if (m_UseZeroAverageDisplacementConstraint)
   {
     if (!m_TransformIsStackTransform)
     {

@@ -52,7 +52,7 @@ public:
   /** Set functions. */
   itkSetMacro(NumAdditionalSamplesFixed, unsigned int);
   itkSetMacro(ReducedDimensionIndex, unsigned int);
-  itkSetMacro(SubtractMean, bool);
+  itkSetMacro(UseZeroAverageDisplacementConstraint, bool);
   itkSetMacro(GridSize, FixedImageSizeType);
   itkSetMacro(TransformIsStackTransform, bool);
 
@@ -161,7 +161,7 @@ private:
   unsigned int m_ReducedDimensionIndex{};
 
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
-  bool m_SubtractMean{ true };
+  bool m_UseZeroAverageDisplacementConstraint{ true };
 
   /** GridSize of B-spline transform. */
   FixedImageSizeType m_GridSize{};
