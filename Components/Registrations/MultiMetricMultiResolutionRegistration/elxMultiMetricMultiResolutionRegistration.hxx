@@ -20,6 +20,7 @@
 
 #include "elxMultiMetricMultiResolutionRegistration.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -182,6 +183,8 @@ template <class TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = this->GetCurrentLevel();
 
@@ -194,7 +197,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
 
   /** Set the use of relative metric weights. */
   bool useRelativeWeights = false;
-  this->GetConfiguration()->ReadParameter(useRelativeWeights, "UseRelativeWeights", 0);
+  configuration.ReadParameter(useRelativeWeights, "UseRelativeWeights", 0);
   this->GetCombinationMetric()->SetUseRelativeWeights(useRelativeWeights);
 
   /** Set the metric weights. The default metric weight is 1.0 / nrOfMetrics. */
@@ -206,7 +209,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
       double             weight = defaultWeight;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "Weight";
-      this->GetConfiguration()->ReadParameter(weight, makestring.str(), "", level, 0);
+      configuration.ReadParameter(weight, makestring.str(), "", level, 0);
       this->GetCombinationMetric()->SetMetricWeight(weight, metricnr);
     }
   }
@@ -221,7 +224,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
       double             weight = defaultRelativeWeight;
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "RelativeWeight";
-      this->GetConfiguration()->ReadParameter(weight, makestring.str(), "", level, 0);
+      configuration.ReadParameter(weight, makestring.str(), "", level, 0);
       this->GetCombinationMetric()->SetMetricRelativeWeight(weight, metricnr);
     }
   }
@@ -232,7 +235,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
     bool               use = true;
     std::ostringstream makestring;
     makestring << "Metric" << metricnr << "Use";
-    this->GetConfiguration()->ReadParameter(use, makestring.str(), "", level, 0, false);
+    configuration.ReadParameter(use, makestring.str(), "", level, 0, false);
     this->GetCombinationMetric()->SetUseMetric(use, metricnr);
   }
 

@@ -20,6 +20,7 @@
 
 #include "elxVarianceOverLastDimensionMetric.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -87,36 +88,35 @@ template <class TElastix>
 void
 VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Get and set the random sampling in the last dimension. */
   bool useRandomSampling = false;
-  this->GetConfiguration()->ReadParameter(
-    useRandomSampling, "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useRandomSampling, "SampleLastDimensionRandomly", this->GetComponentLabel(), level, 0);
   this->SetSampleLastDimensionRandomly(useRandomSampling);
 
   /** Get and set if we want to subtract the mean from the derivative. */
   bool subtractMean = false;
-  this->GetConfiguration()->ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(subtractMean, "SubtractMean", this->GetComponentLabel(), 0, 0);
   this->SetSubtractMean(subtractMean);
 
   /** Get and set the number of random samples for the last dimension. */
   int numSamplesLastDimension = 10;
-  this->GetConfiguration()->ReadParameter(
-    numSamplesLastDimension, "NumSamplesLastDimension", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(numSamplesLastDimension, "NumSamplesLastDimension", this->GetComponentLabel(), level, 0);
   this->SetNumSamplesLastDimension(numSamplesLastDimension);
 
   /** Get and set the number of additional samples sampled at the fixed time point.  */
   unsigned int numAdditionalSamplesFixed = 0;
-  this->GetConfiguration()->ReadParameter(
+  configuration.ReadParameter(
     numAdditionalSamplesFixed, "NumAdditionalSamplesFixed", this->GetComponentLabel(), level, 0);
   this->SetNumAdditionalSamplesFixed(numAdditionalSamplesFixed);
 
   /** Get and set the fixed timepoint number. */
   unsigned int reducedDimensionIndex = 0;
-  this->GetConfiguration()->ReadParameter(
-    reducedDimensionIndex, "ReducedDimensionIndex", this->GetComponentLabel(), 0, 0);
+  configuration.ReadParameter(reducedDimensionIndex, "ReducedDimensionIndex", this->GetComponentLabel(), 0, 0);
   this->SetReducedDimensionIndex(reducedDimensionIndex);
 
   /** Check if this elastix object has a transform. (If so, it must be a combination transform.) */

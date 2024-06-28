@@ -20,6 +20,7 @@
 
 #include "elxPatternIntensityMetric.h"
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -73,17 +74,19 @@ template <class TElastix>
 void
 PatternIntensityMetric<TElastix>::BeforeEachResolution()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get the current resolution level.*/
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Set noise constant, */
   double sigma = 100;
-  this->m_Configuration->ReadParameter(sigma, "Sigma", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(sigma, "Sigma", this->GetComponentLabel(), level, 0);
   this->SetNoiseConstant(sigma * sigma);
 
   /** Set optimization of normalization factor. */
   bool optimizenormalizationfactor = false;
-  this->m_Configuration->ReadParameter(
+  configuration.ReadParameter(
     optimizenormalizationfactor, "OptimizeNormalizationFactor", this->GetComponentLabel(), level, 0);
   this->SetOptimizeNormalizationFactor(optimizenormalizationfactor);
 

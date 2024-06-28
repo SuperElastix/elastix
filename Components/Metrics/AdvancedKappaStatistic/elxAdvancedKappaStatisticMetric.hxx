@@ -21,6 +21,7 @@
 #include "elxAdvancedKappaStatisticMetric.h"
 
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -51,9 +52,11 @@ template <class TElastix>
 void
 AdvancedKappaStatisticMetric<TElastix>::BeforeRegistration()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Get and set taking the complement. */
   bool useComplement = true;
-  this->GetConfiguration()->ReadParameter(useComplement, "UseComplement", this->GetComponentLabel(), 0, -1);
+  configuration.ReadParameter(useComplement, "UseComplement", this->GetComponentLabel(), 0, -1);
   this->SetComplement(useComplement);
 
   /** Get and set the use of the foreground value:
@@ -61,12 +64,12 @@ AdvancedKappaStatisticMetric<TElastix>::BeforeRegistration()
    * false) compare if larger than zero
    */
   bool useForegroundValue = true;
-  this->GetConfiguration()->ReadParameter(useForegroundValue, "UseForegroundValue", this->GetComponentLabel(), 0, -1);
+  configuration.ReadParameter(useForegroundValue, "UseForegroundValue", this->GetComponentLabel(), 0, -1);
   this->SetUseForegroundValue(useForegroundValue);
 
   /** Get and set the foreground value. */
   double foreground = 1.0;
-  this->GetConfiguration()->ReadParameter(foreground, "ForegroundValue", this->GetComponentLabel(), 0, -1);
+  configuration.ReadParameter(foreground, "ForegroundValue", this->GetComponentLabel(), 0, -1);
   this->SetForegroundValue(foreground);
 
 } // end BeforeRegistration()
