@@ -51,11 +51,11 @@ void
 GradientDifferenceMetric<TElastix>::BeforeRegistration()
 {
 
-  if (TElastix::FixedDimension != 3)
+  if constexpr (TElastix::FixedDimension != 3)
   {
     itkExceptionMacro("FixedImage must be 3D");
   }
-  if (TElastix::FixedDimension == 3)
+  if constexpr (TElastix::FixedDimension == 3)
   {
     if (this->m_Elastix->GetFixedImage()->GetLargestPossibleRegion().GetSize()[2] != 1)
     {

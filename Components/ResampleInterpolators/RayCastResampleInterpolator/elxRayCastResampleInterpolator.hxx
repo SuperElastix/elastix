@@ -98,12 +98,12 @@ RayCastResampleInterpolator<TElastix>::BeforeAll()
 {
 
   // Check if 2D-3D
-  if (TElastix::FixedDimension != 3)
+  if constexpr (TElastix::FixedDimension != 3)
   {
     itkExceptionMacro("The RayCastInterpolator expects the fixed image to be 3D.");
     return 1;
   }
-  if (TElastix::MovingDimension != 3)
+  if constexpr (TElastix::MovingDimension != 3)
   {
     itkExceptionMacro("The RayCastInterpolator expects the moving image to be 3D.");
     return 1;
