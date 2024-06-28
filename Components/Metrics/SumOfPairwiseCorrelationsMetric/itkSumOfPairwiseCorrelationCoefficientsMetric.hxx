@@ -85,7 +85,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::SampleRan
   /** Sample additional at fixed timepoint. */
   for (unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i)
   {
-    numbers.push_back(this->m_ReducedDimensionIndex);
+    numbers.push_back(m_ReducedDimensionIndex);
   }
 
   /** Get n random samples. */
@@ -481,15 +481,15 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   measure = RealType(1.0 - (K.fro_norm() / RealType(G)));
 
   /** Subtract mean from derivative elements. */
-  if (this->m_SubtractMean)
+  if (m_SubtractMean)
   {
-    if (!this->m_TransformIsStackTransform)
+    if (!m_TransformIsStackTransform)
     {
       /** Update derivative per dimension.
        * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
        * per dimension xyz.
        */
-      const unsigned int lastDimGridSize = this->m_GridSize[lastDim];
+      const unsigned int lastDimGridSize = m_GridSize[lastDim];
       const unsigned int numParametersPerDimension =
         this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
       const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
