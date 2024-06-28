@@ -901,7 +901,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   this->m_PropernessConditionValue = MeasureType{};
 
   /** Set output values to zero. */
-  derivative = DerivativeType(this->GetNumberOfParameters());
+  derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(MeasureType{});
 
   /** Call non-thread-safe stuff, such as:

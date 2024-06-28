@@ -432,7 +432,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetD
   TransformParametersType testPoint;
   testPoint = parameters;
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
-  derivative = DerivativeType(numberOfParameters);
+  derivative.set_size(numberOfParameters);
 
   for (unsigned int i = 0; i < numberOfParameters; ++i)
   {

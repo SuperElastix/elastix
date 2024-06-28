@@ -306,7 +306,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
   this->m_RigidityPenaltyTermValue = MeasureType{};
 
   /** Set output values to zero. */
-  derivative = DerivativeType(this->GetNumberOfParameters());
+  derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(MeasureType{});
 
   this->m_BSplineTransform->SetParameters(parameters);

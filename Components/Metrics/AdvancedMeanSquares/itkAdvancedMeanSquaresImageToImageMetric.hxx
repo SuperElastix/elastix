@@ -397,7 +397,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   /** Initialize some variables. */
   Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
-  derivative = DerivativeType(this->GetNumberOfParameters());
+  derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
   /** Array that stores dM(x)/dmu, and the sparse jacobian+indices. */

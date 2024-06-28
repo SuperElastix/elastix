@@ -335,7 +335,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
-  derivative = DerivativeType(numberOfParameters);
+  derivative.set_size(numberOfParameters);
   derivative.Fill(DerivativeValueType{});
 
   /** Make sure the transform parameters are up to date. */

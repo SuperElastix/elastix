@@ -153,7 +153,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
   /** Create and initialize some variables. */
   Superclass::m_NumberOfPixelsCounted = 0;
   RealType measure{};
-  derivative = DerivativeType(this->GetNumberOfParameters());
+  derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
   SpatialHessianType           spatialHessian;
