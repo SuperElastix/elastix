@@ -307,7 +307,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
 
   /** Check if enough samples were valid. */
   unsigned long size = this->GetImageSampler()->GetOutput()->Size();
-  this->CheckNumberOfSamples(size, this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(size, Superclass::m_NumberOfPixelsCounted);
 
   /**
    * *************** Generate the three trees ******************
@@ -384,7 +384,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   double       twoGamma = jointSize * (1.0 - this->m_Alpha);
 
   /** Loop over all query points, i.e. all samples. */
-  for (unsigned long i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+  for (unsigned long i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
   {
     /** Get the i-th query point. */
     listSampleFixed->GetMeasurementVector(i, z_F);
@@ -445,7 +445,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   if (sumG > this->m_AvoidDivisionBy)
   {
     /** Compute the measure. */
-    n = static_cast<double>(this->m_NumberOfPixelsCounted);
+    n = static_cast<double>(Superclass::m_NumberOfPixelsCounted);
     number = std::pow(n, this->m_Alpha);
     measure = std::log(sumG / number) / (this->m_Alpha - 1.0);
   }
@@ -531,7 +531,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
 
   /** Check if enough samples were valid. */
   unsigned long size = this->GetImageSampler()->GetOutput()->Size();
-  this->CheckNumberOfSamples(size, this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(size, Superclass::m_NumberOfPixelsCounted);
 
   /**
    * *************** Generate the three trees ******************
@@ -614,7 +614,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   double       twoGamma = jointSize * (1.0 - this->m_Alpha);
 
   /** Loop over all query points, i.e. all samples. */
-  for (unsigned long i = 0; i < this->m_NumberOfPixelsCounted; ++i)
+  for (unsigned long i = 0; i < Superclass::m_NumberOfPixelsCounted; ++i)
   {
     /** Get the i-th query point. */
     listSampleFixed->GetMeasurementVector(i, z_F);
@@ -702,7 +702,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   if (sumG > this->m_AvoidDivisionBy)
   {
     /** Compute the measure. */
-    n = static_cast<double>(this->m_NumberOfPixelsCounted);
+    n = static_cast<double>(Superclass::m_NumberOfPixelsCounted);
     number = std::pow(n, this->m_Alpha);
     measure = std::log(sumG / number) / (this->m_Alpha - 1.0);
 
@@ -730,7 +730,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
                                                    SpatialDerivativeContainerType & spatialDerivativesContainer) const
 {
   /** Initialize. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   jacobianContainer.clear();
   jacobianIndicesContainer.clear();
   spatialDerivativesContainer.clear();
@@ -806,26 +806,27 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
       const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Add the samples to the ListSampleCarrays. */
-      listSampleFixed->SetMeasurement(this->m_NumberOfPixelsCounted, 0, fixedImageValue);
-      listSampleMoving->SetMeasurement(this->m_NumberOfPixelsCounted, 0, movingImageValue);
-      listSampleJoint->SetMeasurement(this->m_NumberOfPixelsCounted, 0, fixedImageValue);
-      listSampleJoint->SetMeasurement(this->m_NumberOfPixelsCounted, this->GetNumberOfFixedImages(), movingImageValue);
+      listSampleFixed->SetMeasurement(Superclass::m_NumberOfPixelsCounted, 0, fixedImageValue);
+      listSampleMoving->SetMeasurement(Superclass::m_NumberOfPixelsCounted, 0, movingImageValue);
+      listSampleJoint->SetMeasurement(Superclass::m_NumberOfPixelsCounted, 0, fixedImageValue);
+      listSampleJoint->SetMeasurement(
+        Superclass::m_NumberOfPixelsCounted, this->GetNumberOfFixedImages(), movingImageValue);
 
       /** Get and set the values of the fixed feature images. */
       for (unsigned int j = 1; j < this->GetNumberOfFixedImages(); ++j)
       {
         fixedFeatureValue = this->m_FixedImageInterpolatorVector[j]->Evaluate(fixedPoint);
-        listSampleFixed->SetMeasurement(this->m_NumberOfPixelsCounted, j, fixedFeatureValue);
-        listSampleJoint->SetMeasurement(this->m_NumberOfPixelsCounted, j, fixedFeatureValue);
+        listSampleFixed->SetMeasurement(Superclass::m_NumberOfPixelsCounted, j, fixedFeatureValue);
+        listSampleJoint->SetMeasurement(Superclass::m_NumberOfPixelsCounted, j, fixedFeatureValue);
       }
 
       /** Get and set the values of the moving feature images. */
       for (unsigned int j = 1; j < this->GetNumberOfMovingImages(); ++j)
       {
         movingFeatureValue = this->m_InterpolatorVector[j]->Evaluate(mappedPoint);
-        listSampleMoving->SetMeasurement(this->m_NumberOfPixelsCounted, j, movingFeatureValue);
+        listSampleMoving->SetMeasurement(Superclass::m_NumberOfPixelsCounted, j, movingFeatureValue);
         listSampleJoint->SetMeasurement(
-          this->m_NumberOfPixelsCounted, j + this->GetNumberOfFixedImages(), movingFeatureValue);
+          Superclass::m_NumberOfPixelsCounted, j + this->GetNumberOfFixedImages(), movingFeatureValue);
       }
 
       /** Compute additional stuff for the computation of the derivative, if necessary.
@@ -855,7 +856,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
       } // end if doDerivative
 
       /** Update the NumberOfPixelsCounted. */
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       ++ii;
 
@@ -868,9 +869,9 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
    * the actual number of pixels in the sample container, so that the binary
    * trees know where to loop over. This must not be forgotten!
    */
-  listSampleFixed->SetActualSize(this->m_NumberOfPixelsCounted);
-  listSampleMoving->SetActualSize(this->m_NumberOfPixelsCounted);
-  listSampleJoint->SetActualSize(this->m_NumberOfPixelsCounted);
+  listSampleFixed->SetActualSize(Superclass::m_NumberOfPixelsCounted);
+  listSampleMoving->SetActualSize(Superclass::m_NumberOfPixelsCounted);
+  listSampleJoint->SetActualSize(Superclass::m_NumberOfPixelsCounted);
 
 } // end ComputeListSampleValuesAndDerivativePlusJacobian()
 

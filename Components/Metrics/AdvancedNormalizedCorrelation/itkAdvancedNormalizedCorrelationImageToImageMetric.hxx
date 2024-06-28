@@ -151,7 +151,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Call non-thread-safe stuff, such as:
@@ -201,7 +201,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const RealType fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
@@ -218,11 +218,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** If NumberOfPixelsCounted > 0, then subtract things from sff, smm and sfm. */
-  const RealType N = static_cast<RealType>(this->m_NumberOfPixelsCounted);
-  if (this->m_NumberOfPixelsCounted > 0)
+  const RealType N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
+  if (Superclass::m_NumberOfPixelsCounted > 0)
   {
     sff -= (sf * sf / N);
     smm -= (sm * sm / N);
@@ -233,7 +233,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   const RealType denom = -1.0 * std::sqrt(sff * smm);
 
   /** Calculate the measure value. */
-  if (this->m_NumberOfPixelsCounted > 0 && denom < -1e-14)
+  if (Superclass::m_NumberOfPixelsCounted > 0 && denom < -1e-14)
   {
     measure = sfm / denom;
   }
@@ -283,7 +283,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
   /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
   DerivativeType derivativeF = DerivativeType(this->GetNumberOfParameters());
@@ -348,7 +348,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
       const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
@@ -375,15 +375,15 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   const auto numberOfParameters = this->GetNumberOfParameters();
 
   /** If NumberOfPixelsCounted > 0, then subtract things from sff, smm, sfm,
    * derivativeF and derivativeM.
    */
-  const RealType N = static_cast<RealType>(this->m_NumberOfPixelsCounted);
-  if (this->m_NumberOfPixelsCounted > 0)
+  const RealType N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
+  if (Superclass::m_NumberOfPixelsCounted > 0)
   {
     sff -= (sf * sf / N);
     smm -= (sm * sm / N);
@@ -400,7 +400,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   const RealType denom = -1.0 * std::sqrt(sff * smm);
 
   /** Calculate the value and the derivative. */
-  if (this->m_NumberOfPixelsCounted > 0 && denom < -1e-14)
+  if (Superclass::m_NumberOfPixelsCounted > 0 && denom < -1e-14)
   {
     value = sfm / denom;
     for (unsigned int i = 0; i < numberOfParameters; ++i)
@@ -587,17 +587,17 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted =
+  Superclass::m_NumberOfPixelsCounted =
     this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_NumberOfPixelsCounted;
   for (ThreadIdType i = 1; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted +=
+    Superclass::m_NumberOfPixelsCounted +=
       this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate values. */
   AccumulateType sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sff;
@@ -622,7 +622,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   }
 
   /** Subtract things from sff, smm and sfm. */
-  const RealType N = static_cast<RealType>(this->m_NumberOfPixelsCounted);
+  const RealType N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
   sff -= (sf * sf / N);
   smm -= (sm * sm / N);
   sfm -= (sf * sm / N);

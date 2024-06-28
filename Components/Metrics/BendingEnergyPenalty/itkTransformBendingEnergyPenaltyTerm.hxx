@@ -52,7 +52,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
   -> MeasureType
 {
   /** Initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   RealType           measure{};
   SpatialHessianType spatialHessian;
 
@@ -94,7 +94,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
@@ -112,10 +112,10 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Update measure value. */
-  measure /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
+  measure /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
 
   /** Return the value. */
   return static_cast<MeasureType>(measure);
@@ -151,7 +151,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
   DerivativeType &       derivative) const
 {
   /** Create and initialize some variables. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   RealType measure{};
   derivative = DerivativeType(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
@@ -214,7 +214,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
 
     if (sampleOk)
     {
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the spatial Hessian of the transformation at the current point.
        * This is needed to compute the bending energy.
@@ -313,11 +313,11 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Update measure value. */
-  measure /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
-  derivative /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
+  measure /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
+  derivative /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
 
   /** The return value. */
   value = static_cast<MeasureType>(measure);
@@ -546,15 +546,16 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate the number of pixels. */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
-    this->m_NumberOfPixelsCounted += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
+    Superclass::m_NumberOfPixelsCounted +=
+      Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted;
   }
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate and normalize values. */
   value = MeasureType{};
@@ -565,7 +566,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
     /** Reset this variable for the next iteration. */
     Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
   }
-  value /= static_cast<RealType>(this->m_NumberOfPixelsCounted);
+  value /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate derivatives. */
   // it seems that multi-threaded adding is faster than single-threaded
@@ -578,14 +579,14 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
     {
       derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
     }
-    derivative /= static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+    derivative /= static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
   }
   // compute multi-threadedly with itk threads
   else if (!Superclass::m_UseOpenMP || true) // force
   {
     Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
-      static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+      static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
 
     this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
                                                 &(Superclass::m_ThreaderMetricParameters));
@@ -594,7 +595,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
   // compute multi-threadedly with openmp
   else
   {
-    const DerivativeValueType numPix = static_cast<DerivativeValueType>(this->m_NumberOfPixelsCounted);
+    const DerivativeValueType numPix = static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
     const int                 nthreads = static_cast<int>(numberOfThreads);
     omp_set_num_threads(nthreads);
     const int spaceDimension = static_cast<int>(this->GetNumberOfParameters());

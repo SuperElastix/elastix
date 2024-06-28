@@ -308,7 +308,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   movedIteratorx.GoToBegin();
   movedIteratory.GoToBegin();
 
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   bool sampleOK = false;
 
   if (!this->GetFixedImageMask())

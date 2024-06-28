@@ -159,7 +159,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   this->SetTransformParameters(parameters);
 
   /** Initialize some variables */
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
 
   /** Update the imageSampler and get a handle to the sample container. */
@@ -246,14 +246,14 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
     if (numSamplesOk == realNumLastDimPositions)
     {
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
 
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(NumberOfSamples, this->m_NumberOfPixelsCounted);
-  unsigned int N = this->m_NumberOfPixelsCounted;
+  this->CheckNumberOfSamples(NumberOfSamples, Superclass::m_NumberOfPixelsCounted);
+  unsigned int N = Superclass::m_NumberOfPixelsCounted;
   this->m_NumberOfSamples = N;
   const unsigned int G = realNumLastDimPositions;
   MatrixType         A(datablock.extract(N, G));
@@ -383,7 +383,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
 
   /** Initialize some variables */
   const unsigned int P = this->GetNumberOfParameters();
-  this->m_NumberOfPixelsCounted = 0;
+  Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative = DerivativeType(P);
   derivative.Fill(DerivativeValueType{});
@@ -477,14 +477,14 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
     {
       SamplesOK.push_back(fixedPoint);
       ++pixelIndex;
-      this->m_NumberOfPixelsCounted++;
+      Superclass::m_NumberOfPixelsCounted++;
     }
 
   } /** end first loop over image sample container */
-  this->m_NumberOfSamples = this->m_NumberOfPixelsCounted;
+  this->m_NumberOfSamples = Superclass::m_NumberOfPixelsCounted;
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), this->m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
   unsigned int N = pixelIndex;
 
   MatrixType A(datablock.extract(N, realNumLastDimPositions));
