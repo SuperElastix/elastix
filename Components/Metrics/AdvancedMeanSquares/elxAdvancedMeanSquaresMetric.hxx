@@ -58,7 +58,7 @@ AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution()
 
   /** Get and set the normalization. */
   bool useNormalization = false;
-  configuration.ReadParameter(useNormalization, "UseNormalization", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useNormalization, "UseNormalization", BaseComponent::GetComponentLabel(), level, 0);
   this->SetUseNormalization(useNormalization);
 
   /** Select the use of an OpenMP implementation for GetValueAndDerivative. */

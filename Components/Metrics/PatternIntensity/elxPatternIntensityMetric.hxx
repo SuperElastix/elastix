@@ -75,19 +75,19 @@ void
 PatternIntensityMetric<TElastix>::BeforeEachResolution()
 {
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+  const std::string     componentLabel = BaseComponent::GetComponentLabel();
 
   /** Get the current resolution level.*/
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
 
   /** Set noise constant, */
   double sigma = 100;
-  configuration.ReadParameter(sigma, "Sigma", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(sigma, "Sigma", componentLabel, level, 0);
   this->SetNoiseConstant(sigma * sigma);
 
   /** Set optimization of normalization factor. */
   bool optimizenormalizationfactor = false;
-  configuration.ReadParameter(
-    optimizenormalizationfactor, "OptimizeNormalizationFactor", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(optimizenormalizationfactor, "OptimizeNormalizationFactor", componentLabel, level, 0);
   this->SetOptimizeNormalizationFactor(optimizenormalizationfactor);
 
   this->SetScales(this->m_Elastix->GetElxOptimizerBase()->GetAsITKBaseType()->GetScales());
