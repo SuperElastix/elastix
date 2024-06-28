@@ -314,7 +314,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   /** Initialize some variables */
   Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
-  derivative = DerivativeType(this->GetNumberOfParameters());
+  derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
   /** Call non-thread-safe stuff, such as:

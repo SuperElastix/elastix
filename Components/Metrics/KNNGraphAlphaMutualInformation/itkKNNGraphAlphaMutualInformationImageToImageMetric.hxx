@@ -490,7 +490,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
 {
   /** Initialize some variables. */
   MeasureType measure{};
-  derivative = DerivativeType(this->GetNumberOfParameters());
+  derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
   /** Call non-thread-safe stuff, such as:

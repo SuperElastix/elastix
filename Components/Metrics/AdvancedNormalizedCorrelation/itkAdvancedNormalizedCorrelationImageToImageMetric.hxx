@@ -284,7 +284,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 
   /** Initialize some variables. */
   Superclass::m_NumberOfPixelsCounted = 0;
-  derivative = DerivativeType(this->GetNumberOfParameters());
+  derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
   DerivativeType derivativeF = DerivativeType(this->GetNumberOfParameters());
   derivativeF.Fill(DerivativeValueType{});
