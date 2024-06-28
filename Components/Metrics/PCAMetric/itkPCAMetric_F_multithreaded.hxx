@@ -64,7 +64,7 @@ PCAMetric<TFixedImage, TMovingImage>::Initialize()
   Superclass::Initialize();
 
   /** Retrieve slowest varying dimension and its size. */
-  m_LastDimIndex = this->GetFixedImage()->GetImageDimension() - 1;
+  m_LastDimIndex = FixedImageDimension - 1;
   m_G = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(m_LastDimIndex);
 
   if (m_NumEigenValues > m_G)
@@ -534,11 +534,10 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
        * per dimension xyz.
        */
       const unsigned int lastDimGridSize = m_GridSize[m_LastDimIndex];
-      const unsigned int numParametersPerDimension =
-        this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+      const unsigned int numParametersPerDimension = this->GetNumberOfParameters() / MovingImageDimension;
       const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
       DerivativeType     mean(numControlPointsPerDimension);
-      for (unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d)
+      for (unsigned int d = 0; d < MovingImageDimension; ++d)
       {
         /** Compute mean per dimension. */
         mean.Fill(0.0);
@@ -968,11 +967,10 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedComputeDerivative(DerivativeT
        * per dimension xyz.
        */
       const unsigned int lastDimGridSize = m_GridSize[m_LastDimIndex];
-      const unsigned int numParametersPerDimension =
-        this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+      const unsigned int numParametersPerDimension = this->GetNumberOfParameters() / MovingImageDimension;
       const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
       DerivativeType     mean(numControlPointsPerDimension);
-      for (unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d)
+      for (unsigned int d = 0; d < MovingImageDimension; ++d)
       {
         /** Compute mean per dimension. */
         mean.Fill(0.0);

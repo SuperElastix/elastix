@@ -52,7 +52,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize()
   Superclass::Initialize();
 
   /** Retrieve slowest varying dimension and its size. */
-  const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+  const unsigned int lastDim = FixedImageDimension - 1;
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
   /** Check num last samples. */
@@ -203,7 +203,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Retrieve slowest varying dimension and its size. */
-  const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+  const unsigned int lastDim = FixedImageDimension - 1;
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
   const unsigned int numLastDimSamples = m_NumSamplesLastDimension;
 
@@ -358,7 +358,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** Retrieve slowest varying dimension and its size. */
-  const unsigned int lastDim = this->GetFixedImage()->GetImageDimension() - 1;
+  const unsigned int lastDim = FixedImageDimension - 1;
   const unsigned int lastDimSize = this->GetFixedImage()->GetLargestPossibleRegion().GetSize(lastDim);
 
   /** Vector containing last dimension positions to use:
@@ -499,11 +499,10 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
        * per dimension xyz.
        */
       const unsigned int lastDimGridSize = m_GridSize[lastDim];
-      const unsigned int numParametersPerDimension =
-        this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
+      const unsigned int numParametersPerDimension = this->GetNumberOfParameters() / MovingImageDimension;
       const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
       DerivativeType     mean(numControlPointsPerDimension);
-      for (unsigned int d = 0; d < this->GetMovingImage()->GetImageDimension(); ++d)
+      for (unsigned int d = 0; d < MovingImageDimension; ++d)
       {
         /** Compute mean per dimension. */
         mean.Fill(0.0);
