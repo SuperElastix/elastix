@@ -65,7 +65,7 @@ PCAMetric<TFixedImage, TMovingImage>::Initialize()
     this->m_NumSamplesLastDimension = lastDimSize;
   }
 
-  if (this->m_NumEigenValues > lastDimSize)
+  if (m_NumEigenValues > lastDimSize)
   {
     std::cout << "ERROR: Number of eigenvalues is larger than number of images. Maximum number of eigenvalues equals: "
               << lastDimSize << std::endl;
@@ -103,7 +103,7 @@ PCAMetric<TFixedImage, TMovingImage>::SampleRandom(const int n, const int m, std
   /** Sample additional at fixed timepoint. */
   for (unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i)
   {
-    numbers.push_back(this->m_ReducedDimensionIndex);
+    numbers.push_back(m_ReducedDimensionIndex);
   }
 
   /** Get n random samples. */
@@ -174,9 +174,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   using MatrixType = vnl_matrix<RealType>;
 
   /** Get real last dim samples. */
-  const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly
-                                                 ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed
-                                                 : lastDimSize;
+  const unsigned int realNumLastDimPositions =
+    this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + m_NumAdditionalSamplesFixed : lastDimSize;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
@@ -331,7 +330,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   //    }
 
   //    RealType trace = vnl_trace( K );
-  const unsigned int L = this->m_NumEigenValues;
+  const unsigned int L = m_NumEigenValues;
 
   RealType sumEigenValuesUsed{};
   for (unsigned int i = 1; i < L + 1; ++i)
@@ -407,9 +406,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   std::vector<FixedImagePointType> SamplesOK;
 
   /** Get real last dim samples. */
-  const unsigned int realNumLastDimPositions = this->m_SampleLastDimensionRandomly
-                                                 ? this->m_NumSamplesLastDimension + this->m_NumAdditionalSamplesFixed
-                                                 : lastDimSize;
+  const unsigned int realNumLastDimPositions =
+    this->m_SampleLastDimensionRandomly ? this->m_NumSamplesLastDimension + m_NumAdditionalSamplesFixed : lastDimSize;
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
   unsigned int NumberOfSamples = sampleContainer->Size();
   MatrixType   datablock(NumberOfSamples, realNumLastDimPositions, vnl_matrix_null);
@@ -560,7 +558,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   //        trace += K(i,i);
   //    }
 
-  const unsigned int L = this->m_NumEigenValues;
+  const unsigned int L = m_NumEigenValues;
 
   RealType sumEigenValuesUsed{};
   for (unsigned int i = 1; i < L + 1; ++i)
@@ -740,15 +738,15 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   derivative = -tracevKvdmu;
 
   /** Subtract mean from derivative elements. */
-  if (this->m_SubtractMean)
+  if (m_SubtractMean)
   {
-    if (!this->m_TransformIsStackTransform)
+    if (!m_TransformIsStackTransform)
     {
       /** Update derivative per dimension.
        * Parameters are ordered xxxxxxx yyyyyyy zzzzzzz ttttttt and
        * per dimension xyz.
        */
-      const unsigned int lastDimGridSize = this->m_GridSize[lastDim];
+      const unsigned int lastDimGridSize = m_GridSize[lastDim];
       const unsigned int numParametersPerDimension =
         this->GetNumberOfParameters() / this->GetMovingImage()->GetImageDimension();
       const unsigned int numControlPointsPerDimension = numParametersPerDimension / lastDimGridSize;
