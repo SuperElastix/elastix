@@ -209,7 +209,7 @@ template <class TPixel, unsigned int VDimension>
 unsigned int
 NDImageTemplate<TPixel, VDimension>::ImageDimension()
 {
-  return this->m_Image->GetImageDimension();
+  return VDimension;
 }
 
 
@@ -217,7 +217,7 @@ template <class TPixel, unsigned int VDimension>
 unsigned int
 NDImageTemplate<TPixel, VDimension>::GetImageDimension()
 {
-  return this->m_Image->GetImageDimension();
+  return VDimension;
 }
 
 
