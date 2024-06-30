@@ -192,6 +192,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
   }
   else
   {
+    lastDimPositions.reserve(lastDimSize);
+
     for (unsigned int i = 0; i < lastDimSize; ++i)
     {
       lastDimPositions.push_back(i);
@@ -424,6 +426,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
   }
   else
   {
+    lastDimPositions.reserve(lastDimSize);
+
     for (unsigned int i = 0; i < lastDimSize; ++i)
     {
       lastDimPositions.push_back(i);
