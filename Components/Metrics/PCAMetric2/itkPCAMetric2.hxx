@@ -166,15 +166,6 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   const unsigned int numberOfSamples = sampleContainer->Size();
   MatrixType         datablock(numberOfSamples, lastDimSize, vnl_matrix_null);
 
-  /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
-  std::vector<int> lastDimPositions;
-
-  /** Determine random last dimension positions if needed. */
-  for (unsigned int i = 0; i < lastDimSize; ++i)
-  {
-    lastDimPositions.push_back(i);
-  }
-
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
 
@@ -195,8 +186,8 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
       /** Initialize some variables. */
       RealType movingImageValue;
 
-      /** Set fixed point's last dimension to lastDimPosition. */
-      voxelCoord[lastDim] = lastDimPositions[d];
+      /** Set fixed point's last dimension to d. */
+      voxelCoord[lastDim] = d;
 
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
@@ -361,16 +352,6 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
 
-  /** Determine random last dimension positions if needed. */
-  /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
-  /** Vector containing last dimension positions to use: initialize on all positions when random sampling turned off. */
-  std::vector<int> lastDimPositions;
-
-  for (unsigned int i = 0; i < lastDimSize; ++i)
-  {
-    lastDimPositions.push_back(i);
-  }
-
   for (const auto & fixedImageSample : *sampleContainer)
   {
     /** Read fixed coordinates. */
@@ -388,8 +369,8 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
       /** Initialize some variables. */
       RealType movingImageValue;
 
-      /** Set fixed point's last dimension to lastDimPosition. */
-      voxelCoord[lastDim] = lastDimPositions[d];
+      /** Set fixed point's last dimension to d. */
+      voxelCoord[lastDim] = d;
 
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
@@ -522,7 +503,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
       MovingImageDerivativeType movingImageDerivative;
 
       /** Set fixed point's last dimension to lastDimPosition. */
-      voxelCoord[lastDim] = lastDimPositions[d];
+      voxelCoord[lastDim] = d;
 
       /** Transform sampled point back to world coordinates. */
       this->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(voxelCoord, fixedPoint);
