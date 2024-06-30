@@ -213,6 +213,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   std::vector<int> lastDimPositions;
   if (!m_SampleLastDimensionRandomly)
   {
+    lastDimPositions.reserve(lastDimSize);
+
     for (unsigned int i = 0; i < lastDimSize; ++i)
     {
       lastDimPositions.push_back(i);
@@ -367,6 +369,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   std::vector<int> lastDimPositions;
   if (!m_SampleLastDimensionRandomly)
   {
+    lastDimPositions.reserve(lastDimSize);
+
     for (unsigned int i = 0; i < lastDimSize; ++i)
     {
       lastDimPositions.push_back(i);
