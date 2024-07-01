@@ -84,6 +84,7 @@ PCAMetric2<TFixedImage, TMovingImage>::SampleRandom(const int n, const int m, st
 {
   /** Empty list of last dimension positions. */
   numbers.clear();
+  numbers.reserve(m_NumAdditionalSamplesFixed + n);
 
   /** Initialize random number generator. */
   Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator =
