@@ -97,7 +97,9 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   }
 
   /** Take random samples from the allValidSamples-container. */
-  for (unsigned int i = 0; i < this->GetNumberOfSamples(); ++i)
+  sampleVector.reserve(Superclass::m_NumberOfSamples);
+
+  for (unsigned int i = 0; i < Superclass::m_NumberOfSamples; ++i)
   {
     unsigned long randomIndex = this->m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1);
     sampleVector.push_back(allValidSamples.ElementAt(randomIndex));
