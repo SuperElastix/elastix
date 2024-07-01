@@ -143,10 +143,13 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
    */
   DerivativeType Jgg(outdim);
   Jgg.Fill(0.0);
+
   std::vector<double> JGG_k;
-  double              globalDeformation = 0.0;
-  const double        sqrt2 = std::sqrt(static_cast<double>(2.0));
-  JacobianType        jacjjacj(outdim, outdim);
+  JGG_k.reserve(nrofsamples);
+
+  double       globalDeformation = 0.0;
+  const double sqrt2 = std::sqrt(static_cast<double>(2.0));
+  JacobianType jacjjacj(outdim, outdim);
 
   samplenr = 0;
   for (const auto & sample : *sampleContainer)
@@ -511,8 +514,11 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
    */
   DerivativeType Jgg(outdim);
   Jgg.Fill(0.0);
+
   std::vector<double> JGG_k;
-  double              globalDeformation = 0.0;
+  JGG_k.reserve(nrofsamples);
+
+  double globalDeformation = 0.0;
 
   samplenr = 0;
   for (const auto & sample : *sampleContainer)
