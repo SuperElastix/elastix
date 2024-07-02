@@ -396,7 +396,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
   /** Do the writing. */
   if (showProgress)
   {
-    log::to_stdout("\n  Writing image ...");
+    log::to_stdout("  Writing image ...");
   }
   try
   {
