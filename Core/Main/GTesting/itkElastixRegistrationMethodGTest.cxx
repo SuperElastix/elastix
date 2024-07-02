@@ -1273,7 +1273,6 @@ GTEST_TEST(itkElastixRegistrationMethod, SetExternalTransformAsInitialTransform)
   registration.SetFixedImage(fixedImage);
   registration.SetInitialTransformParameterObject(&initialTransformParameterObject);
   registration.SetParameterObject(&registrationParameterObject);
-  registration.SetLogToConsole(true);
 
   const elx::ParameterObject::ParameterMapType registrationParameterMap{
     // Parameters in alphabetic order:
