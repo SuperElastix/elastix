@@ -155,6 +155,9 @@ public:
   void
   Initialize() override;
 
+  void
+  BeforeRegistration() override;
+
   /**
    * Do some things before each resolution:
    * \li Set CheckNumberOfSamples setting

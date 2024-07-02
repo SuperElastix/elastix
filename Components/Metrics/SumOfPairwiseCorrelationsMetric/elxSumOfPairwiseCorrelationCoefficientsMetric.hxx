@@ -56,6 +56,43 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::Initialize()
 
 
 /**
+ * ***************** BeforeRegistration ***********************
+ */
+
+template <class TElastix>
+void
+SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeRegistration()
+{
+  /** Check if this elastix object has a transform. (If so, it must be a combination transform.) */
+  if (CombinationTransformType * const combinationTransform{
+        BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
+  {
+    auto * const currentTransform = combinationTransform->GetModifiableCurrentTransform();
+
+    /** Check for B-spline transform. */
+    if (const auto bsplineTransform = dynamic_cast<BSplineTransformBaseType *>(currentTransform))
+    {
+      this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
+    }
+    else
+    {
+      /** Check for stack transform. */
+      if (const auto stackTransform = dynamic_cast<StackTransformType *>(currentTransform))
+      {
+        /** Set itk member variable. */
+        this->SetTransformIsStackTransform(true);
+
+        // Return early, now that the current transform is a stack transform.
+        return;
+      }
+    }
+  }
+  // If the current transform would have been a stack transform, the function would have returned earlier.
+  this->SetTransformIsStackTransform(false);
+}
+
+
+/**
  * ***************** BeforeEachResolution ***********************
  */
 
@@ -103,33 +140,6 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
     this->SetMovingImageDerivativeScales(movingImageDerivativeScales);
     log::info(std::ostringstream{} << "Multiplying moving image derivatives by: " << movingImageDerivativeScales);
   }
-
-  /** Check if this elastix object has a transform. (If so, it must be a combination transform.) */
-  if (CombinationTransformType * const combinationTransform{
-        BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
-  {
-    auto * const currentTransform = combinationTransform->GetModifiableCurrentTransform();
-
-    /** Check for B-spline transform. */
-    if (const auto bsplineTransform = dynamic_cast<BSplineTransformBaseType *>(currentTransform))
-    {
-      this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
-    }
-    else
-    {
-      /** Check for stack transform. */
-      if (const auto stackTransform = dynamic_cast<StackTransformType *>(currentTransform))
-      {
-        /** Set itk member variable. */
-        this->SetTransformIsStackTransform(true);
-
-        // Return early, now that the current transform is a stack transform.
-        return;
-      }
-    }
-  }
-  // If the current transform would have been a stack transform, the function would have returned earlier.
-  this->SetTransformIsStackTransform(false);
 
   log::info("end BeforeEachResolution");
 
