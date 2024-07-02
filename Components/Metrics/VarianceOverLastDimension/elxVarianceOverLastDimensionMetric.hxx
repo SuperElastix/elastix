@@ -88,6 +88,33 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration()
                       << "       [ 0 0 1 ]");
   }
 
+  /** Check if this elastix object has a transform. (If so, it must be a combination transform.) */
+  if (CombinationTransformType * const combinationTransform{
+        BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
+  {
+    auto * const currentTransform = combinationTransform->GetModifiableCurrentTransform();
+
+    /** Check for B-spline transform. */
+    if (const auto bsplineTransform = dynamic_cast<BSplineTransformBaseType *>(currentTransform))
+    {
+      this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
+    }
+    else
+    {
+      /** Check for stack transform. */
+      if (const auto stackTransform = dynamic_cast<StackTransformType *>(currentTransform))
+      {
+        /** Set itk member variable. */
+        this->SetTransformIsStackTransform(true);
+
+        // Return early, now that the current transform is a stack transform.
+        return;
+      }
+    }
+  }
+  // If the current transform would have been a stack transform, the function would have returned earlier.
+  this->SetTransformIsStackTransform(false);
+
 } // end BeforeRegistration()
 
 
@@ -132,33 +159,6 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
   unsigned int reducedDimensionIndex = 0;
   configuration.ReadParameter(reducedDimensionIndex, "ReducedDimensionIndex", componentLabel, 0, 0);
   this->SetReducedDimensionIndex(reducedDimensionIndex);
-
-  /** Check if this elastix object has a transform. (If so, it must be a combination transform.) */
-  if (CombinationTransformType * const combinationTransform{
-        BaseComponent::AsITKBaseType(this->GetElastix()->GetElxTransformBase()) })
-  {
-    auto * const currentTransform = combinationTransform->GetModifiableCurrentTransform();
-
-    /** Check for B-spline transform. */
-    if (const auto bsplineTransform = dynamic_cast<BSplineTransformBaseType *>(currentTransform))
-    {
-      this->SetGridSize(bsplineTransform->GetGridRegion().GetSize());
-    }
-    else
-    {
-      /** Check for stack transform. */
-      if (const auto stackTransform = dynamic_cast<StackTransformType *>(currentTransform))
-      {
-        /** Set itk member variable. */
-        this->SetTransformIsStackTransform(true);
-
-        // Return early, now that the current transform is a stack transform.
-        return;
-      }
-    }
-  }
-  // If the current transform would have been a stack transform, the function would have returned earlier.
-  this->SetTransformIsStackTransform(false);
 
 } // end BeforeEachResolution()
 
