@@ -180,41 +180,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
 
   /** Initialize covariance matrix. Sparse, diagonal, and band form. */
   vnl_sparse_matrix<CovarianceValueType> cov(numberOfParameters, numberOfParameters);
-
-  // getCovariance(r, c) is faster than cov(r, c), at least when using the vnl_sparse_matrix implementation included
-  // with ITK 5.3.0 (released on December 20, 2022). The speed improvement is especially large on Debug builds.
-  const auto getCovariance = [&cov](const unsigned int r, const unsigned int c) -> CovarianceValueType & {
-    auto & row = cov.get_row(r);
-
-    if (row.empty())
-    {
-      row.push_back({ c, 0.0 });
-      return row.back().second;
-    }
-
-    if (c < row.back().first)
-    {
-      // Because the last column number in the row is greater than `c`, the following iteration will stop before the end
-      // of the row.
-      auto it = row.begin();
-
-      while (it->first < c)
-      {
-        ++it;
-      }
-      return (it->first == c ? it : row.insert(it, { c, 0.0 }))->second;
-    }
-
-    // At this point, the row is non-empty and c <= row.back().first.
-
-    if (c > row.back().first)
-    {
-      row.push_back({ c, 0.0 });
-    }
-    return row.back().second;
-  };
-
-  DiagCovarianceMatrixType diagcov(numberOfParameters, 0.0);
+  DiagCovarianceMatrixType               diagcov(numberOfParameters, 0.0);
 
   /** For temporary storage of J'J. */
   CovarianceMatrixType jactjac(sizejacind, sizejacind, 0.0);
@@ -278,7 +244,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
                 }
                 else
                 {
-                  getCovariance(p, q) += tempval;
+                  cov(p, q) += tempval;
                 }
               }
             }
@@ -316,7 +282,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
           }
           else
           {
-            getCovariance(p, q) += tempval;
+            cov(p, q) += tempval;
           }
         }
       }
@@ -334,7 +300,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
       if (std::abs(tempval) > 1e-14)
       {
         const unsigned int q = p + bandcovMap2[b];
-        getCovariance(p, q) = tempval;
+        cov(p, q) = tempval;
       }
     }
   }
@@ -353,7 +319,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
     while (notfinished)
     {
       const int col = cov.getcolumn();
-      getCovariance(cov.getrow(), col) /= scales[col];
+      cov(cov.getrow(), col) /= scales[col];
       notfinished = cov.next();
     }
   }
@@ -364,7 +330,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
     if (!cov.empty_row(p))
     {
       // avoid creation of element if the row is empty
-      CovarianceValueType & covpp = getCovariance(p, p);
+      CovarianceValueType & covpp = cov(p, p);
       TrC += covpp;
       diagcov[p] = covpp;
     }
