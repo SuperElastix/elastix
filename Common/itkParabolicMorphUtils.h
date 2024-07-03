@@ -23,10 +23,13 @@
 #include "itkProgressReporter.h"
 namespace itk
 {
-template <class LineBufferType, class RealType, bool doDilate>
+template <class LineBufferType, class RealType, class TInputPixel, bool doDilate>
 void
-DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType magnitude, const RealType m_Extreme)
+DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType magnitude)
 {
+  static constexpr RealType extreme =
+    doDilate ? NumericTraits<TInputPixel>::NonpositiveMin() : NumericTraits<TInputPixel>::max();
+
   // contact point algorithm
   long koffset = 0, newcontact = 0; // how far away the search starts.
 
@@ -34,8 +37,7 @@ DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType mag
   // negative half of the parabola
   for (long pos = 0; pos < LineLength; ++pos)
   {
-    RealType BaseVal = (RealType)m_Extreme; // the base value for
-    // comparison
+    RealType BaseVal = extreme; // the base value for comparison
     for (long krange = koffset; krange <= 0; ++krange)
     {
       // difference needs to be paramaterised
@@ -54,7 +56,7 @@ DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType mag
   koffset = newcontact = 0;
   for (long pos = LineLength - 1; pos >= 0; pos--)
   {
-    RealType BaseVal = (RealType)m_Extreme; // the base value for comparison
+    RealType BaseVal = extreme; // the base value for comparison
     for (long krange = koffset; krange >= 0; krange--)
     {
       RealType T = tmpLineBuf[pos + krange] - magnitude * krange * krange;
@@ -70,16 +72,14 @@ DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType mag
 }
 
 
-template <class TInIter, class TOutIter, class RealType, class OutputPixelType, bool doDilate>
+template <class TInIter, class TOutIter, class RealType, class TInputPixel, class OutputPixelType, bool doDilate>
 void
 doOneDimension(TInIter &          inputIterator,
                TOutIter &         outputIterator,
                ProgressReporter & progress,
                const long         LineLength,
                const unsigned     direction,
-               const int          m_MagnitudeSign,
                const bool         m_UseImageSpacing,
-               const RealType     m_Extreme,
                const RealType     image_scale,
                const RealType     Sigma)
 {
@@ -93,7 +93,8 @@ doOneDimension(TInIter &          inputIterator,
   {
     iscale = image_scale;
   }
-  const RealType magnitude = m_MagnitudeSign * 1.0 / (2.0 * Sigma / (iscale * iscale));
+  constexpr int  magnitudeSign = doDilate ? 1 : -1;
+  const RealType magnitude = magnitudeSign * 1.0 / (2.0 * Sigma / (iscale * iscale));
   LineBufferType LineBuf(LineLength);
   LineBufferType tmpLineBuf(LineLength);
   inputIterator.SetDirection(direction);
@@ -113,7 +114,7 @@ doOneDimension(TInIter &          inputIterator,
       ++inputIterator;
     }
 
-    DoLine<LineBufferType, RealType, doDilate>(LineBuf, tmpLineBuf, magnitude, m_Extreme);
+    DoLine<LineBufferType, RealType, TInputPixel, doDilate>(LineBuf, tmpLineBuf, magnitude);
     // copy the line back
     unsigned int j = 0;
     while (!outputIterator.IsAtEndOfLine())

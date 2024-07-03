@@ -42,16 +42,6 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ParabolicE
   this->SetNumberOfRequiredInputs(1);
   // needs to be selected according to erosion/dilation
 
-  if (doDilate)
-  {
-    m_Extreme = NumericTraits<PixelType>::NonpositiveMin();
-    m_MagnitudeSign = 1;
-  }
-  else
-  {
-    m_Extreme = NumericTraits<PixelType>::max();
-    m_MagnitudeSign = -1;
-  }
   m_UseImageSpacing = false;
 
   // Use the classic (ITK4) threading model, to ensure ThreadedGenerateData is being called.
@@ -253,17 +243,8 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ThreadedGe
       unsigned long LineLength = region.GetSize()[0];
       RealType      image_scale = this->GetInput()->GetSpacing()[0];
 
-      doOneDimension<InputConstIteratorType, OutputIteratorType, RealType, OutputPixelType, doDilate>(
-        inputIterator,
-        outputIterator,
-        progress,
-        LineLength,
-        0,
-        this->m_MagnitudeSign,
-        this->m_UseImageSpacing,
-        this->m_Extreme,
-        image_scale,
-        this->m_Scale[0]);
+      doOneDimension<InputConstIteratorType, OutputIteratorType, RealType, PixelType, OutputPixelType, doDilate>(
+        inputIterator, outputIterator, progress, LineLength, 0, this->m_UseImageSpacing, image_scale, this->m_Scale[0]);
     }
     else
     {
@@ -291,15 +272,13 @@ ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::ThreadedGe
       // RealType magnitude = 1.0/(2.0 * m_Scale[dd]);
       RealType image_scale = this->GetInput()->GetSpacing()[m_CurrentDimension];
 
-      doOneDimension<OutputConstIteratorType, OutputIteratorType, RealType, OutputPixelType, doDilate>(
+      doOneDimension<OutputConstIteratorType, OutputIteratorType, RealType, PixelType, OutputPixelType, doDilate>(
         inputIteratorStage2,
         outputIterator,
         progress,
         LineLength,
         m_CurrentDimension,
-        this->m_MagnitudeSign,
         this->m_UseImageSpacing,
-        this->m_Extreme,
         image_scale,
         this->m_Scale[m_CurrentDimension]);
     }
