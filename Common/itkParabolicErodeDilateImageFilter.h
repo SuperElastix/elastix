@@ -156,10 +156,8 @@ protected:
   bool m_UseImageSpacing{};
 
 private:
-  RadiusType                      m_Scale{};
-  typename TInputImage::PixelType m_Extreme{};
+  RadiusType m_Scale{};
 
-  int m_MagnitudeSign{};
   int m_CurrentDimension{};
 };
 
