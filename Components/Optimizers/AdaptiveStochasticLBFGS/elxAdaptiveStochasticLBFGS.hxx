@@ -33,10 +33,6 @@
 #include "itkEventObject.h"
 #include "itkMacro.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 #ifdef ELASTIX_USE_EIGEN
 #  include <Eigen/Dense>
 #  include <Eigen/Core>
