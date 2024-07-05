@@ -20,10 +20,6 @@
 
 #include "itkTransformBendingEnergyPenaltyTerm.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 namespace itk
 {
 
@@ -582,7 +578,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
     derivative /= static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
   }
   // compute multi-threadedly with itk threads
-  else if (!Superclass::m_UseOpenMP || true) // force
+  else
   {
     Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
     Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
@@ -591,26 +587,6 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
     this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
                                                 &(Superclass::m_ThreaderMetricParameters));
   }
-#ifdef ELASTIX_USE_OPENMP
-  // compute multi-threadedly with openmp
-  else
-  {
-    const DerivativeValueType numPix = static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
-    const int                 nthreads = static_cast<int>(numberOfThreads);
-    omp_set_num_threads(nthreads);
-    const int spaceDimension = static_cast<int>(this->GetNumberOfParameters());
-#  pragma omp parallel for
-    for (int j = 0; j < spaceDimension; ++j)
-    {
-      DerivativeValueType sum{};
-      for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-      {
-        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
-      }
-      derivative[j] = sum / numPix;
-    }
-  }
-#endif
 
 } // end AfterThreadedGetValueAndDerivative()
 

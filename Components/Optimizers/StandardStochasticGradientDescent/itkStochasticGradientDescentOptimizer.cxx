@@ -21,10 +21,6 @@
 #include "itkEventObject.h"
 #include "itkMacro.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 #ifdef ELASTIX_USE_EIGEN
 #  include <Eigen/Dense>
 #  include <Eigen/Core>
@@ -203,94 +199,14 @@ StochasticGradientDescentOptimizer::AdvanceOneStep()
   ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
   /** Advance one step. */
-  // single-threadedly
-  if (!this->m_UseMultiThread || true) // for now force single-threaded since it is fastest most of the times
-  // if( !this->m_UseMultiThread && false ) // force multi-threaded
+  // for now force single-threaded since it is fastest most of the times
+  /** Get a reference to the current position. */
+  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
+
+  /** Update the new position. */
+  for (unsigned int j = 0; j < spaceDimension; ++j)
   {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-
-    /** Update the new position. */
-    for (unsigned int j = 0; j < spaceDimension; ++j)
-    {
-      newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
-    }
-  }
-#ifdef ELASTIX_USE_OPENMP
-  else if (this->m_UseOpenMP && !this->m_UseEigen)
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-
-    /** Update the new position. */
-    const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
-    omp_set_num_threads(nthreads);
-#  pragma omp parallel for
-    for (int j = 0; j < static_cast<int>(spaceDimension); ++j)
-    {
-      newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
-    }
-  }
-#endif
-#ifdef ELASTIX_USE_EIGEN
-  else if (!this->m_UseOpenMP && this->m_UseEigen)
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-    const double           learningRate = this->m_LearningRate;
-
-    /** Wrap itk::Arrays into Eigen jackets. */
-    using ParametersTypeEigen = Eigen::VectorXd;
-    Eigen::Map<ParametersTypeEigen>       newPositionE(newPosition.data_block(), spaceDimension);
-    Eigen::Map<const ParametersTypeEigen> currentPositionE(currentPosition.data_block(), spaceDimension);
-    Eigen::Map<ParametersTypeEigen>       gradientE(this->m_Gradient.data_block(), spaceDimension);
-
-    /** Update the new position. */
-    newPositionE = currentPositionE - learningRate * gradientE;
-  }
-#endif
-#if defined(ELASTIX_USE_OPENMP) && defined(ELASTIX_USE_EIGEN)
-  else if (this->m_UseOpenMP && this->m_UseEigen)
-  {
-    /** Get a reference to the current position. */
-    const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-    const double           learningRate = this->m_LearningRate;
-
-    /** Wrap itk::Arrays into Eigen jackets. */
-    using ParametersTypeEigen = Eigen::VectorXd;
-    Eigen::Map<ParametersTypeEigen>       newPositionE(newPosition.data_block(), spaceDimension);
-    Eigen::Map<const ParametersTypeEigen> currentPositionE(currentPosition.data_block(), spaceDimension);
-    Eigen::Map<ParametersTypeEigen>       gradientE(this->m_Gradient.data_block(), spaceDimension);
-
-    /** Update the new position. */
-    const int spaceDim = static_cast<int>(spaceDimension);
-    const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
-    omp_set_num_threads(nthreads);
-#  pragma omp parallel for
-    for (int i = 0; i < nthreads; i += 1)
-    {
-      int threadId = omp_get_thread_num();
-      int chunk = (spaceDimension + nthreads - 1) / nthreads;
-      int jmin = threadId * chunk;
-      int jmax = (threadId + 1) * chunk < spaceDim ? (threadId + 1) * chunk : spaceDim;
-      int subSize = jmax - jmin;
-
-      newPositionE.segment(jmin, subSize) =
-        currentPositionE.segment(jmin, subSize) - learningRate * gradientE.segment(jmin, subSize);
-    }
-  }
-#endif
-  else
-  {
-    /** Fill the threader parameter struct with information. */
-    MultiThreaderParameterType temp;
-    temp.t_NewPosition = &newPosition;
-    temp.t_Optimizer = this;
-
-    /** Call multi-threaded AdvanceOneStep(). */
-    auto local_threader = MultiThreaderBase::New();
-    local_threader->SetNumberOfWorkUnits(this->m_Threader->GetNumberOfWorkUnits());
-    local_threader->SetSingleMethodAndExecute(AdvanceOneStepThreaderCallback, &temp);
+    newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
   }
 
   this->InvokeEvent(IterationEvent());

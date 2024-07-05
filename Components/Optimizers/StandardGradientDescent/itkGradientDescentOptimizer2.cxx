@@ -22,10 +22,6 @@
 #include "itkEventObject.h"
 #include "itkMacro.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 
 namespace itk
 {
@@ -194,8 +190,7 @@ GradientDescentOptimizer2 ::AdvanceOneStep()
   ParametersType & newPosition = this->m_ScaledCurrentPosition;
 
   /** Advance one step. */
-#if 1 // force single-threaded since it is fastest most of the times
-      //#ifndef ELASTIX_USE_OPENMP // If no OpenMP detected then use single-threaded code
+  // single-threaded since it is fastest most of the times
   /** Get a reference to the current position. */
   const ParametersType & currentPosition = this->GetScaledCurrentPosition();
 
@@ -204,19 +199,6 @@ GradientDescentOptimizer2 ::AdvanceOneStep()
   {
     newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
   }
-#else // Otherwise use OpenMP
-  /** Get a reference to the current position. */
-  const ParametersType & currentPosition = this->GetScaledCurrentPosition();
-
-  /** Update the new position. */
-  const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
-  omp_set_num_threads(nthreads);
-#  pragma omp parallel for
-  for (int j = 0; j < static_cast<int>(spaceDimension); ++j)
-  {
-    newPosition[j] = currentPosition[j] - this->m_LearningRate * this->m_Gradient[j];
-  }
-#endif
 
   this->InvokeEvent(IterationEvent());
 

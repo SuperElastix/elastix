@@ -23,10 +23,6 @@
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkComputeImageExtremaFilter.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 namespace itk
 {
 
@@ -671,42 +667,12 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
   value *= normal_sum;
 
   /** Accumulate derivatives. */
-  // compute single-threadedly
-  if (!Superclass::m_UseMultiThread && false) // force multi-threaded
-  {
-    derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative * normal_sum;
-    for (ThreadIdType i = 1; i < numberOfThreads; ++i)
-    {
-      derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative * normal_sum;
-    }
-  }
   // compute multi-threadedly with itk threads
-  else if (true) // force ITK threads !Superclass::m_UseOpenMP )
-  {
-    Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
-    Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
+  Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+  Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0 / normal_sum;
 
-    this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
-                                                &(Superclass::m_ThreaderMetricParameters));
-  }
-#ifdef ELASTIX_USE_OPENMP
-  // compute multi-threadedly with openmp
-  else
-  {
-    const int spaceDimension = static_cast<int>(this->GetNumberOfParameters());
-
-#  pragma omp parallel for
-    for (int j = 0; j < spaceDimension; ++j)
-    {
-      DerivativeValueType sum{};
-      for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-      {
-        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
-      }
-      derivative[j] = sum * normal_sum;
-    }
-  }
-#endif
+  this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
+                                              &(Superclass::m_ThreaderMetricParameters));
 
 } // end AfterThreadedGetValueAndDerivative()
 

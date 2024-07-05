@@ -555,42 +555,12 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
   /** Accumulate derivatives. */
-  // compute single-threadedly
-  if (!Superclass::m_UseMultiThread && false) // force multi-threaded
-  {
-    derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
-    for (ThreadIdType i = 1; i < numberOfThreads; ++i)
-    {
-      derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
-    }
-  }
-#ifdef ELASTIX_USE_OPENMP
-  // compute multi-threadedly with openmp
-  else if (false) // Superclass::m_UseOpenMP )
-  {
-    const int spaceDimension = static_cast<int>(this->GetNumberOfParameters());
-
-#  pragma omp parallel for
-    for (int j = 0; j < spaceDimension; ++j)
-    {
-      DerivativeValueType sum = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative[j];
-      for (ThreadIdType i = 1; i < numberOfThreads; ++i)
-      {
-        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
-      }
-      derivative[j] = sum;
-    }
-  }
-#endif
   // compute multi-threadedly with itk threads
-  else
-  {
-    Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
-    Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
+  Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+  Superclass::m_ThreaderMetricParameters.st_NormalizationFactor = 1.0;
 
-    this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
-                                                &(Superclass::m_ThreaderMetricParameters));
-  }
+  this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
+                                              &(Superclass::m_ThreaderMetricParameters));
 
 } // end AfterThreadedComputeDerivativeLowMemory()
 

@@ -20,10 +20,6 @@
 
 #include "itkAdvancedNormalizedCorrelationImageToImageMetric.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 #include <algorithm> // For min.
 #include <cassert>
 
@@ -642,76 +638,18 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   value = sfm / denom;
 
   /** Calculate the metric derivative. */
-  // single-threaded
-  if (!Superclass::m_UseMultiThread && false) // force multi-threaded
-  {
-    DerivativeType & derivativeF = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_DerivativeF;
-    DerivativeType & derivativeM = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_DerivativeM;
-    DerivativeType & differential = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Differential;
+  // force multi-threaded
 
-    for (ThreadIdType i = 1; i < numberOfThreads; ++i)
-    {
-      derivativeF += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF;
-      derivativeM += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM;
-      differential += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential;
-    }
+  MultiThreaderAccumulateDerivativeType userData;
 
-    const auto numberOfParameters = this->GetNumberOfParameters();
+  userData.st_Metric = const_cast<Self *>(this);
+  userData.st_sf_N = sf / N;
+  userData.st_sm_N = sm / N;
+  userData.st_sfm_smm = sfm / smm;
+  userData.st_InvertedDenominator = 1.0 / denom;
+  userData.st_DerivativePointer = derivative.begin();
 
-    /** Subtract things from  derivativeF and derivativeM. */
-    double diff, derF, derM;
-    for (unsigned int i = 0; i < numberOfParameters; ++i)
-    {
-      diff = differential[i];
-      derF = derivativeF[i] - (sf / N) * diff;
-      derM = derivativeM[i] - (sm / N) * diff;
-      derivative[i] = (derF - (sfm / smm) * derM) / denom;
-    }
-  }
-  else if (true) // force !Superclass::m_UseOpenMP ) // multi-threaded using ITK threads
-  {
-    MultiThreaderAccumulateDerivativeType userData;
-
-    userData.st_Metric = const_cast<Self *>(this);
-    userData.st_sf_N = sf / N;
-    userData.st_sm_N = sm / N;
-    userData.st_sfm_smm = sfm / smm;
-    userData.st_InvertedDenominator = 1.0 / denom;
-    userData.st_DerivativePointer = derivative.begin();
-
-    this->m_Threader->SetSingleMethodAndExecute(AccumulateDerivativesThreaderCallback, &userData);
-  }
-#ifdef ELASTIX_USE_OPENMP
-  // compute multi-threadedly with openmp
-  else
-  {
-    const int            spaceDimension = static_cast<int>(this->GetNumberOfParameters());
-    const AccumulateType sf_N = sf / N;
-    const AccumulateType sm_N = sm / N;
-    const AccumulateType sfm_smm = sfm / smm;
-
-#  pragma omp parallel for
-    for (int j = 0; j < spaceDimension; ++j)
-    {
-      DerivativeValueType derivativeF = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_DerivativeF[j];
-      DerivativeValueType derivativeM = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_DerivativeM[j];
-      DerivativeValueType differential =
-        this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Differential[j];
-
-      for (ThreadIdType i = 1; i < numberOfThreads; ++i)
-      {
-        derivativeF += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeF[j];
-        derivativeM += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_DerivativeM[j];
-        differential += this->m_CorrelationGetValueAndDerivativePerThreadVariables[i].st_Differential[j];
-      }
-
-      derivativeF -= sf_N * differential;
-      derivativeM -= sm_N * differential;
-
-      derivative[j] = (derivativeF - sfm_smm * derivativeM) / denom;
-    }
-  } // end OpenMP
-#endif
+  this->m_Threader->SetSingleMethodAndExecute(AccumulateDerivativesThreaderCallback, &userData);
 
 } // end AfterThreadedGetValueAndDerivative()
 
