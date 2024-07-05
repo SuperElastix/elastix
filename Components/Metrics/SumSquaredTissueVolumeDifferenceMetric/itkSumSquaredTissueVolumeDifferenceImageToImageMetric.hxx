@@ -21,10 +21,6 @@
 #include "itkSumSquaredTissueVolumeDifferenceImageToImageMetric.h"
 #include <vnl/algo/vnl_matrix_update.h>
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 namespace itk
 {
 
@@ -637,46 +633,12 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
   value /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate derivatives. */
-  /** compute single-threadedly */
-  if (!Superclass::m_UseMultiThread && false) // force multi-threaded as in AdvancedMeanSquares
-  {
-    derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[0].st_Derivative;
-    for (ThreadIdType i = 1; i < numberOfThreads; ++i)
-    {
-      derivative += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative;
-    }
+  Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
+  Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
+    static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
 
-    derivative /= static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
-  }
-  // compute multi-threadedly with itk threads
-  else if (true) // force ITK threads !Superclass::m_UseOpenMP )
-  {
-    Superclass::m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
-    Superclass::m_ThreaderMetricParameters.st_NormalizationFactor =
-      static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
-
-    this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
-                                                &(Superclass::m_ThreaderMetricParameters));
-  }
-
-#ifdef ELASTIX_USE_OPENMP
-  /** compute multi-threadedly with openmp.  Never used? */
-  else
-  {
-    const int spaceDimension = static_cast<int>(this->GetNumberOfParameters());
-
-#  pragma omp parallel for
-    for (int j = 0; j < spaceDimension; ++j)
-    {
-      DerivativeValueType sum{};
-      for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-      {
-        sum += Superclass::m_GetValueAndDerivativePerThreadVariables[i].st_Derivative[j];
-      }
-      derivative[j] = sum / static_cast<DerivativeValueType>(Superclass::m_NumberOfPixelsCounted);
-    }
-  }
-#endif
+  this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
+                                              &(Superclass::m_ThreaderMetricParameters));
 
 } // end AfterThreadedGetValueAndDerivative()
 
