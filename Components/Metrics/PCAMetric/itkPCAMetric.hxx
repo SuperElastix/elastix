@@ -30,10 +30,6 @@
 #include <numeric>
 #include <fstream>
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 namespace itk
 {
 /**

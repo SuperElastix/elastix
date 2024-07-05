@@ -31,10 +31,6 @@
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkTimeProbe.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 namespace elastix
 {
 
