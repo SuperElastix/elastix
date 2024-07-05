@@ -131,7 +131,7 @@ endif()
 #---------------------------------------------------------------------
 # Find OpenMP
 mark_as_advanced(ELASTIX_USE_OPENMP)
-option(ELASTIX_USE_OPENMP "Use OpenMP to speed up certain computations." ON)
+option(ELASTIX_USE_OPENMP "Use OpenMP to speed up certain computations." OFF)
 
 if(ELASTIX_USE_OPENMP)
   find_package(OpenMP QUIET)
