@@ -6,12 +6,6 @@ cmake_minimum_required(VERSION 3.16.3)
 
 find_package(Elastix REQUIRED)
 
-# Elastix might use OpenMP.
-find_package(OpenMP QUIET)
-if(OPENMP_FOUND)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
-
 # Use the version of ITK from Elastix.
 if ( DEFINED ELASTIX_ITK_DIR)
   set(ITK_DIR "${ELASTIX_ITK_DIR}" CACHE PATH "ITK_DIR from Elastix" FORCE)
