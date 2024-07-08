@@ -106,7 +106,7 @@ StochasticGradientDescentOptimizer::ResumeOptimization()
   this->m_PreviousPosition = this->GetPreviousPosition();
 
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
-  this->m_Gradient = DerivativeType(spaceDimension); // check this
+  this->m_Gradient.set_size(spaceDimension); // check this
 
   DerivativeType currentPositionGradient;
   DerivativeType previousPositionGradient;
