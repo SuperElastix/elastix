@@ -136,9 +136,6 @@ public:
   /** Get current search direction */
   itkGetConstReferenceMacro(SearchDirection, DerivativeType);
 
-  /** Set use OpenMP or not. */
-  itkSetMacro(UseOpenMP, bool);
-
 protected:
   GradientDescentOptimizer2();
   ~GradientDescentOptimizer2() override = default;
@@ -156,8 +153,6 @@ private:
   bool          m_Stop{ false };
   unsigned long m_NumberOfIterations{ 100 };
   unsigned long m_CurrentIteration{ 0 };
-
-  bool m_UseOpenMP{};
 };
 
 } // end namespace itk

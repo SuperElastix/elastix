@@ -30,11 +30,6 @@
 // Multi-threading using ITK threads
 #include "itkMultiThreaderBase.h"
 
-// Multi-threading using OpenMP
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 #include <cassert>
 
 // select double or float internal type of array
@@ -64,7 +59,6 @@ public:
   itk::MultiThreaderBase::Pointer m_Threader;
   DerivativeValueType             m_NormalSum;
   ThreadIdType                    m_NumberOfThreads;
-  bool                            m_UseOpenMP;
   bool                            m_UseMultiThreaded;
 
   struct MultiThreaderParameterType
@@ -87,14 +81,8 @@ public:
     this->m_NumberOfParameters = 0;
     this->m_Threader = itk::MultiThreaderBase::New();
     this->m_NumberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
-    this->m_UseOpenMP = false;
     this->m_UseMultiThreaded = false;
     this->m_NormalSum = 3.1415926;
-
-#ifdef ELASTIX_USE_OPENMP
-    const int nthreads = static_cast<int>(this->m_NumberOfThreads);
-    omp_set_num_threads(nthreads);
-#endif
   }
 
 
@@ -114,7 +102,7 @@ public:
       }
     }
     // compute multi-threadedly with itk threads
-    else if (!this->m_UseOpenMP)
+    else
     {
       this->m_ThreaderMetricParameters.st_Metric = this;
       this->m_ThreaderMetricParameters.st_DerivativePointer = derivative.begin();
@@ -123,23 +111,6 @@ public:
       this->m_Threader->SetSingleMethodAndExecute(this->AccumulateDerivativesThreaderCallback,
                                                   &this->m_ThreaderMetricParameters);
     }
-#ifdef ELASTIX_USE_OPENMP
-    // compute multi-threadedly with openmp
-    else
-    {
-      const int spaceDimension = static_cast<int>(this->m_NumberOfParameters);
-#  pragma omp parallel for
-      for (int j = 0; j < spaceDimension; ++j)
-      {
-        DerivativeValueType sum{};
-        for (ThreadIdType i = 0; i < this->m_NumberOfThreads; ++i)
-        {
-          sum += this->m_ThreaderDerivatives[i][j];
-        }
-        derivative[j] = sum * normal_sum;
-      }
-    }
-#endif
   } // end AccumulateDerivatives()
 
 
@@ -245,7 +216,6 @@ main()
     }
 
     /** Time the single-threaded implementation. */
-    metric->m_UseOpenMP = false;
     metric->m_UseMultiThreaded = false;
     for (unsigned int i = 0; i < repetitions[s]; ++i)
     {
@@ -255,7 +225,6 @@ main()
     }
 
     /** Time the ITK multi-threaded implementation. */
-    metric->m_UseOpenMP = false;
     metric->m_UseMultiThreaded = true;
     if (arraySizes[s] < 5000)
     {
@@ -275,30 +244,6 @@ main()
       metric->AccumulateDerivatives(derivative);
       timeCollector.Stop("ITK (mt)");
     }
-
-    /** Time the OpenMP multi-threaded implementation. */
-#ifdef ELASTIX_USE_OPENMP
-    metric->m_UseOpenMP = true;
-    metric->m_UseMultiThreaded = true;
-    if (arraySizes[s] < 10000)
-    {
-      rep = repetitions[s] / 10.0;
-      if (rep < 10)
-      {
-        rep = 10;
-      }
-    }
-    else
-    {
-      rep = repetitions[s];
-    }
-    for (unsigned int i = 0; i < rep; ++i)
-    {
-      timeCollector.Start("OMP (mt)");
-      metric->AccumulateDerivatives(derivative);
-      timeCollector.Stop("OMP (mt)");
-    }
-#endif
 
     /** Report timings for this array size. */
     timeCollector.Report();

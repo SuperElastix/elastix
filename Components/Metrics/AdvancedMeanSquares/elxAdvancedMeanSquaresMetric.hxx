@@ -61,13 +61,6 @@ AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution()
   configuration.ReadParameter(useNormalization, "UseNormalization", BaseComponent::GetComponentLabel(), level, 0);
   this->SetUseNormalization(useNormalization);
 
-  /** Select the use of an OpenMP implementation for GetValueAndDerivative. */
-  std::string useOpenMP = configuration.GetCommandLineArgument("-useOpenMP_SSD");
-  if (useOpenMP == "true")
-  {
-    this->SetUseOpenMP(true);
-  }
-
 } // end BeforeEachResolution()
 
 

@@ -566,7 +566,6 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
 
   /** Accumulate derivatives. */
   // it seems that multi-threaded adding is faster than single-threaded
-  // it seems that openmp is faster than itk threads
   // compute single-threadedly
   if (!Superclass::m_UseMultiThread)
   {

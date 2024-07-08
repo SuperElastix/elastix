@@ -31,11 +31,6 @@ namespace itk
  */
 
 GradientDescentOptimizer2 ::GradientDescentOptimizer2()
-  : m_UseOpenMP{
-#ifdef ELASTIX_USE_OPENMP
-    true
-#endif
-  }
 {
   itkDebugMacro("Constructor");
 

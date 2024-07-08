@@ -154,13 +154,6 @@ public:
   itkSetMacro(UseNormalization, bool);
   itkGetConstMacro(UseNormalization, bool);
 
-  /** If the compiler supports OpenMP, this flag specifies whether
-   * or not to use it. For this metric we have an OpenMP variant for
-   * GetValueAndDerivative(). It is also used at other places.
-   * Note that MS Visual Studio and gcc support OpenMP.
-   */
-  itkSetMacro(UseOpenMP, bool);
-
 protected:
   AdvancedMeanSquaresImageToImageMetric();
   ~AdvancedMeanSquaresImageToImageMetric() override = default;

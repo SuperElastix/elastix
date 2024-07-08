@@ -29,11 +29,6 @@
 // Multi-threading using ITK threads
 #include "itkMultiThreaderBase.h"
 
-// Multi-threading using OpenMP
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 // Single-threaded vector arithmetic using Eigen
 #ifdef ELASTIX_USE_EIGEN
 #  include <Eigen/Dense>
@@ -74,7 +69,6 @@ public:
 
   using ThreadInfoType = itk::MultiThreaderBase::WorkUnitInfo;
   itk::MultiThreaderBase::Pointer m_Threader;
-  bool                            m_UseOpenMP;
   bool                            m_UseEigen;
   bool                            m_UseMultiThreaded;
 
@@ -90,7 +84,6 @@ public:
     this->m_LearningRate = 0.0;
     this->m_Threader = itk::MultiThreaderBase::New();
     this->m_Threader->SetNumberOfWorkUnits(8);
-    this->m_UseOpenMP = false;
     this->m_UseEigen = false;
     this->m_UseMultiThreaded = false;
   }
@@ -117,27 +110,8 @@ public:
         newPos[j] = currentPosition[j] - learningRate * gradient[j];
       }
     }
-#ifdef ELASTIX_USE_OPENMP
-    else if (this->m_UseOpenMP && !this->m_UseEigen)
-    {
-      /** Get a pointer to the current position. */
-      const InternalScalarType * currentPosition = this->m_CurrentPosition.data_block();
-      const InternalScalarType   learningRate = this->m_LearningRate;
-      const InternalScalarType * gradient = this->m_Gradient.data_block();
-      InternalScalarType *       newPos = newPosition.data_block();
-
-      /** Update the new position. */
-      const int nthreads = static_cast<int>(this->m_Threader->GetNumberOfWorkUnits());
-      omp_set_num_threads(nthreads);
-#  pragma omp parallel for
-      for (int j = 0; j < static_cast<int>(spaceDimension); ++j)
-      {
-        newPos[j] = currentPosition[j] - learningRate * gradient[j];
-      }
-    }
-#endif
 #ifdef ELASTIX_USE_EIGEN
-    else if (!this->m_UseOpenMP && this->m_UseEigen)
+    else if (this->m_UseEigen)
     {
       /** Get a reference to the current position. */
       const ParametersType &   currentPosition = this->m_CurrentPosition;
@@ -293,7 +267,6 @@ main()
     optimizer->m_Gradient = gradient;
 
     /** Time the ITK single-threaded implementation. */
-    optimizer->m_UseOpenMP = false;
     optimizer->m_UseEigen = false;
     optimizer->m_UseMultiThreaded = false;
     for (unsigned int i = 0; i < repetitions[s]; ++i)
@@ -304,7 +277,6 @@ main()
     }
 
     /** Time the ITK multi-threaded implementation. */
-    optimizer->m_UseOpenMP = false;
     optimizer->m_UseEigen = false;
     optimizer->m_UseMultiThreaded = true;
     unsigned int rep = repetitions[s] / 1000.0;
@@ -319,34 +291,8 @@ main()
       timeCollector.Stop("ITK (mt)");
     }
 
-    /** Time the OpenMP multi-threaded implementation. */
-#ifdef ELASTIX_USE_OPENMP
-    optimizer->m_UseOpenMP = true;
-    optimizer->m_UseEigen = false;
-    optimizer->m_UseMultiThreaded = true;
-    if (arraySizes[s] < 10000)
-    {
-      rep = repetitions[s] / 100.0;
-      if (rep < 10)
-      {
-        rep = 10;
-      }
-    }
-    else
-    {
-      rep = repetitions[s];
-    }
-    for (unsigned int i = 0; i < rep; ++i)
-    {
-      timeCollector.Start("OMP (mt)");
-      optimizer->AdvanceOneStep();
-      timeCollector.Stop("OMP (mt)");
-    }
-#endif
-
     /** Time the Eigen single-threaded implementation. */
 #ifdef ELASTIX_USE_EIGEN
-    optimizer->m_UseOpenMP = false;
     optimizer->m_UseEigen = true;
     optimizer->m_UseMultiThreaded = true;
     for (unsigned int i = 0; i < repetitions[s]; ++i)
