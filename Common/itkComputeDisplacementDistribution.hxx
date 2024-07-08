@@ -141,8 +141,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   /**
    * Compute maxJJ and jac*gradient
    */
-  DerivativeType Jgg(outdim);
-  Jgg.Fill(0.0);
+  DerivativeType Jgg(outdim, 0.0);
 
   std::vector<double> JGG_k;
   JGG_k.reserve(nrofsamples);
@@ -352,15 +351,14 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
 
   /** Temporaries. */
   // std::vector< double > JGG_k; not here so only mean + 2 sigma is supported
-  DerivativeType Jgg(outdim);
-  Jgg.Fill(0.0);
-  const double  sqrt2 = std::sqrt(static_cast<double>(2.0));
-  JacobianType  jacjjacj(outdim, outdim);
-  double        maxJJ = 0.0;
-  double        jggMagnitude = 0.0;
-  double        displacement = 0.0;
-  double        displacementSquared = 0.0;
-  unsigned long numberOfPixelsCounted = 0;
+  DerivativeType Jgg(outdim, 0.0);
+  const double   sqrt2 = std::sqrt(static_cast<double>(2.0));
+  JacobianType   jacjjacj(outdim, outdim);
+  double         maxJJ = 0.0;
+  double         jggMagnitude = 0.0;
+  double         displacement = 0.0;
+  double         displacementSquared = 0.0;
+  unsigned long  numberOfPixelsCounted = 0;
 
   /** Create iterator over the sample container. */
   const auto beginOfSampleContainer = this->m_SampleContainer->cbegin();
@@ -512,8 +510,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   /**
    * Compute maxJJ and jac*gradient
    */
-  DerivativeType Jgg(outdim);
-  Jgg.Fill(0.0);
+  DerivativeType Jgg(outdim, 0.0);
 
   std::vector<double> JGG_k;
   JGG_k.reserve(nrofsamples);

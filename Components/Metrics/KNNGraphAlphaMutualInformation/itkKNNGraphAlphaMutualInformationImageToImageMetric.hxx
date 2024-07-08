@@ -599,8 +599,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
   MeasureType    H, G, Gpow;
   AccumulateType sumG{};
 
-  DerivativeType contribution(this->GetNumberOfParameters());
-  contribution.Fill(DerivativeValueType{});
+  DerivativeType contribution(this->GetNumberOfParameters(), DerivativeValueType{});
   DerivativeType dGamma_M(this->GetNumberOfParameters());
   DerivativeType dGamma_J(this->GetNumberOfParameters());
 
