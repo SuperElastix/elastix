@@ -720,7 +720,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const Pa
                                                                         DerivativeType &       derivative) const
 {
   /** Initialise. */
-  DerivativeType tmpDerivative = DerivativeType(this->GetNumberOfParameters());
+  DerivativeType tmpDerivative(this->GetNumberOfParameters());
   derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(MeasureType{});
 

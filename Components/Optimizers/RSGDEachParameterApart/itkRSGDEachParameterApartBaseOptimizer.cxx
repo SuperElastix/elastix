@@ -223,7 +223,7 @@ RSGDEachParameterApartBaseOptimizer::AdvanceOneStep()
     direction = -1.0;
   }
 
-  DerivativeType factor = DerivativeType(spaceDimension);
+  DerivativeType factor(spaceDimension);
 
   for (unsigned int i = 0; i < spaceDimension; ++i)
   {

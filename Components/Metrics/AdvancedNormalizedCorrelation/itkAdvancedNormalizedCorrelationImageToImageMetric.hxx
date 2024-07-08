@@ -282,11 +282,11 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   Superclass::m_NumberOfPixelsCounted = 0;
   derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
-  DerivativeType derivativeF = DerivativeType(this->GetNumberOfParameters());
+  DerivativeType derivativeF(this->GetNumberOfParameters());
   derivativeF.Fill(DerivativeValueType{});
-  DerivativeType derivativeM = DerivativeType(this->GetNumberOfParameters());
+  DerivativeType derivativeM(this->GetNumberOfParameters());
   derivativeM.Fill(DerivativeValueType{});
-  DerivativeType differential = DerivativeType(this->GetNumberOfParameters());
+  DerivativeType differential(this->GetNumberOfParameters());
   differential.Fill(DerivativeValueType{});
 
   /** Array that stores dM(x)/dmu, and the sparse Jacobian + indices. */

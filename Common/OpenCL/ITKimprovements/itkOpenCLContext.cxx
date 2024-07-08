@@ -528,7 +528,7 @@ OpenCLContext::CreateContext(const OpenCLPlatform &         platform,
   if (!platform.IsNull())
   {
     cl_context_properties props[] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platform.GetPlatformId()), 0 };
-    cl_device_type        device_type = cl_device_type(type);
+    cl_device_type        device_type(type);
     d->id = clCreateContextFromType(props, device_type, opencl_context_notify, 0, &(d->last_error));
   }
   else
@@ -863,7 +863,7 @@ OpenCLContext::CreateBufferDevice(const OpenCLMemoryObject::Access access, const
   }
 
   ITK_OPENCL_D(OpenCLContext);
-  cl_mem_flags flags = cl_mem_flags(access);
+  cl_mem_flags flags(access);
   cl_mem       mem = clCreateBuffer(d->id, flags, size, 0, &(d->last_error));
   this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
   if (mem)
@@ -887,7 +887,7 @@ OpenCLContext::CreateBufferHost(void * data, const OpenCLMemoryObject::Access ac
   }
 
   ITK_OPENCL_D(OpenCLContext);
-  cl_mem_flags flags = cl_mem_flags(access);
+  cl_mem_flags flags(access);
   if (data)
   {
     flags |= CL_MEM_USE_HOST_PTR;
@@ -919,7 +919,7 @@ OpenCLContext::CreateBufferCopy(const void * data, const OpenCLMemoryObject::Acc
   }
 
   ITK_OPENCL_D(OpenCLContext);
-  cl_mem_flags flags = cl_mem_flags(access);
+  cl_mem_flags flags(access);
   flags |= CL_MEM_COPY_HOST_PTR;
   cl_mem mem = clCreateBuffer(d->id, flags, size, const_cast<void *>(data), &(d->last_error));
   this->ReportError(d->last_error, __FILE__, __LINE__, ITK_LOCATION);
@@ -946,7 +946,7 @@ OpenCLContext::CreateImageDevice(const OpenCLImageFormat &        format,
   }
 
   ITK_OPENCL_D(OpenCLContext);
-  cl_mem_flags flags = cl_mem_flags(access);
+  cl_mem_flags flags(access);
 
 #ifdef CL_VERSION_1_2
   // Define image description
@@ -994,7 +994,7 @@ OpenCLContext::CreateImageHost(const OpenCLImageFormat &        format,
   }
 
   ITK_OPENCL_D(OpenCLContext);
-  cl_mem_flags flags = cl_mem_flags(access);
+  cl_mem_flags flags(access);
   if (data)
   {
     flags |= CL_MEM_USE_HOST_PTR;
