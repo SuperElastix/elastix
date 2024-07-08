@@ -25,7 +25,7 @@
 // Tests retrieving the component data base and a component creator in parallel.
 GTEST_TEST(ElastixMain, GetComponentDatabaseAndCreatorInParallel)
 {
-#pragma omp parallel for
+  // TODO Make iterations like this run in parallel, for the sake of the test.
   for (auto i = 0; i <= 9; ++i)
   {
     const auto creator = elx::ElastixMain::GetComponentDatabase().GetCreator("Elastix", 1);

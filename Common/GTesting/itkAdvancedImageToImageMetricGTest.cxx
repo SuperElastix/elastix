@@ -66,7 +66,6 @@ public:
       EXPECT_EQ(AdvancedImageToImageMetricType::m_MovingImageMaxLimit, 1);
       EXPECT_EQ(AdvancedImageToImageMetricType::m_UseMetricSingleThreaded, true);
       EXPECT_EQ(AdvancedImageToImageMetricType::m_UseMultiThread, false);
-      EXPECT_EQ(AdvancedImageToImageMetricType::m_UseOpenMP, bool{ AdvancedImageToImageMetricType::m_UseOpenMP });
       EXPECT_EQ(AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_Metric, this);
       EXPECT_EQ(AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_DerivativePointer, nullptr);
       EXPECT_EQ(AdvancedImageToImageMetricType::m_ThreaderMetricParameters.st_NormalizationFactor, 0.0);

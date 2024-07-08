@@ -166,8 +166,6 @@ public:
   }
   // itkGetConstReferenceMacro( NumberOfThreads, ThreadIdType );
   itkSetMacro(UseMultiThread, bool);
-
-  itkSetMacro(UseOpenMP, bool);
   itkSetMacro(UseEigen, bool);
 
 protected:
@@ -209,7 +207,6 @@ private:
     Self *           t_Optimizer;
   };
 
-  bool m_UseOpenMP{ false };
   bool m_UseEigen{ false };
 
   /** The callback function. */

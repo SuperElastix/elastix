@@ -24,10 +24,6 @@
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkComputeImageExtremaFilter.h"
 
-#ifdef ELASTIX_USE_OPENMP
-#  include <omp.h>
-#endif
-
 #include <algorithm> // For min.
 #include <cassert>
 
@@ -49,39 +45,10 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AdvancedImageToImageMetri
    */
   this->SetComputeGradient(false);
 
-  /** OpenMP related. Switch to on when available */
-#ifdef ELASTIX_USE_OPENMP
-  m_UseOpenMP = true;
-
-  const int nthreads = static_cast<int>(Self::GetNumberOfWorkUnits());
-  omp_set_num_threads(nthreads);
-#else
-  m_UseOpenMP = false;
-#endif
-
   /** Initialize the m_ThreaderMetricParameters. */
   m_ThreaderMetricParameters.st_Metric = this;
 
 } // end Constructor
-
-
-/**
- * ********************* SetNumberOfWorkUnits ****************************
- */
-
-template <class TFixedImage, class TMovingImage>
-void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::SetNumberOfWorkUnits(ThreadIdType numberOfThreads)
-{
-  // Note: This is a workaround for ITK5, which renamed NumberOfThreads
-  // to NumberOfWorkUnits
-  Superclass::SetNumberOfWorkUnits(numberOfThreads);
-
-#ifdef ELASTIX_USE_OPENMP
-  const int nthreads = static_cast<int>(Self::GetNumberOfWorkUnits());
-  omp_set_num_threads(nthreads);
-#endif
-} // end SetNumberOfWorkUnits()
 
 
 /**

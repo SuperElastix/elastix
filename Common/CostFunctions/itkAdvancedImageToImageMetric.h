@@ -298,10 +298,6 @@ public:
   void
   Initialize() override;
 
-  /** Set number of threads to use for computations. */
-  void
-  SetNumberOfWorkUnits(ThreadIdType numberOfThreads);
-
   /** Switch the function BeforeThreadedGetValueAndDerivative on or off. */
   itkSetMacro(UseMetricSingleThreaded, bool);
   itkGetConstReferenceMacro(UseMetricSingleThreaded, bool);
@@ -423,7 +419,6 @@ protected:
   /** Variables for multi-threading. */
   bool m_UseMetricSingleThreaded{ true };
   bool m_UseMultiThread{ false };
-  bool m_UseOpenMP{};
 
   /** Helper structs that multi-threads the computation of
    * the metric derivative using ITK threads.
