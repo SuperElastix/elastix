@@ -496,8 +496,8 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization()
 
   SizeValueType spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
-  this->m_Gradient = DerivativeType(spaceDimension); // check this
-  this->m_MeanGradient = DerivativeType(spaceDimension);
+  this->m_Gradient.set_size(spaceDimension); // check this
+  this->m_MeanGradient.set_size(spaceDimension);
   DerivativeType localCurrentGradient(spaceDimension);
   DerivativeType localPreviousGradient(spaceDimension);
 

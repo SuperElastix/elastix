@@ -46,9 +46,9 @@ RSGDEachParameterApartBaseOptimizer::StartOptimization()
 
   const unsigned int spaceDimension = m_CostFunction->GetNumberOfParameters();
 
-  m_Gradient = DerivativeType(spaceDimension);
-  m_PreviousGradient = DerivativeType(spaceDimension);
-  m_CurrentStepLengths = DerivativeType(spaceDimension);
+  m_Gradient.set_size(spaceDimension);
+  m_PreviousGradient.set_size(spaceDimension);
+  m_CurrentStepLengths.set_size(spaceDimension);
   m_Gradient.Fill(0.0f);
   m_PreviousGradient.Fill(0.0f);
   m_CurrentStepLengths.Fill(m_MaximumStepLength);

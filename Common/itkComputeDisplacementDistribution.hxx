@@ -119,7 +119,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   this->m_ScaledCostFunction->SetScales(scales);
 
   /** Get the exact gradient. */
-  this->m_ExactGradient = DerivativeType(numberOfParameters);
+  this->m_ExactGradient.set_size(numberOfParameters);
   this->m_ExactGradient.Fill(0.0);
   this->GetScaledDerivative(mu, this->m_ExactGradient);
 
@@ -268,7 +268,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::BeforeThreadedCompute(
   this->m_ScaledCostFunction->SetScales(scales);
 
   /** Get the exact gradient. */
-  this->m_ExactGradient = DerivativeType(this->m_NumberOfParameters);
+  this->m_ExactGradient.set_size(this->m_NumberOfParameters);
   this->m_ExactGradient.Fill(0.0);
   this->GetScaledDerivative(mu, this->m_ExactGradient);
 

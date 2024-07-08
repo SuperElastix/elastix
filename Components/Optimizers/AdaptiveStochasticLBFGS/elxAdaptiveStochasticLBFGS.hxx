@@ -610,9 +610,9 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
 
   SizeValueType spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
 
-  this->m_Gradient = DerivativeType(spaceDimension); // check this
+  this->m_Gradient.set_size(spaceDimension); // check this
   this->m_Gradient.fill(0);
-  this->m_SearchDir = DerivativeType(spaceDimension); // check this
+  this->m_SearchDir.set_size(spaceDimension); // check this
   this->m_SearchDir.fill(0);
   DerivativeType meanCurrentCurvatureGradient(spaceDimension);
   DerivativeType previousCurvatureGradient(spaceDimension);

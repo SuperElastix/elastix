@@ -120,7 +120,7 @@ FiniteDifferenceGradientDescentOptimizer::ResumeOptimization()
 
     /** Initialisation.*/
     ck = this->Compute_c(m_CurrentIteration);
-    this->m_Gradient = DerivativeType(spaceDimension);
+    this->m_Gradient.set_size(spaceDimension);
     param = this->GetScaledCurrentPosition();
 
     /** Compute the current value, if desired by interested users */

@@ -95,7 +95,7 @@ GradientDescentOptimizer2 ::ResumeOptimization()
   InvokeEvent(StartEvent());
 
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
-  this->m_Gradient = DerivativeType(spaceDimension); // check this
+  this->m_Gradient.set_size(spaceDimension); // check this
 
   while (!this->m_Stop)
   {
