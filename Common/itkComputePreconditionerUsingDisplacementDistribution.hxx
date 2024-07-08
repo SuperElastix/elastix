@@ -502,7 +502,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
     // Fill the holes by a left-right sweep on the interior only, i.e. not
     // considering the part outside the image.
     // ImageScanlineIteratorType it2 = ImageScanlineIteratorType( coefImage, coefImage->GetLargestPossibleRegion() );
-    ImageScanlineIteratorType it2 = ImageScanlineIteratorType(coefImage, region2);
+    ImageScanlineIteratorType it2(coefImage, region2);
     while (!it2.IsAtEnd())
     {
       // forward
@@ -542,7 +542,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
       it2.NextLine();
     }
 
-    SliceIteratorType itSlice = SliceIteratorType(coefImage, region2);
+    SliceIteratorType itSlice(coefImage, region2);
     itSlice.SetFirstDirection(2);
     itSlice.SetSecondDirection(0);
     while (!itSlice.IsAtEnd())

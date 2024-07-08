@@ -36,7 +36,7 @@ namespace elastix
 void
 ParameterObject::SetParameterMap(const ParameterMapType & parameterMap)
 {
-  ParameterMapVectorType parameterMapVector = ParameterMapVectorType(1, parameterMap);
+  ParameterMapVectorType parameterMapVector(1, parameterMap);
   this->SetParameterMaps(parameterMapVector);
 }
 

@@ -139,7 +139,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   {
     const unsigned int numberOfParameters = this->GetNumberOfParameters();
     MeasureType        dummymeasure{};
-    DerivativeType     dummyderivative = DerivativeType(numberOfParameters);
+    DerivativeType     dummyderivative(numberOfParameters);
     dummyderivative.Fill(DerivativeValueType{});
 
     this->GetValueAndDerivative(parameters, dummymeasure, dummyderivative);
