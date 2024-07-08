@@ -532,8 +532,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
        * the number the time point index.
        */
       const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
-      DerivativeType     mean(numParametersPerLastDimension);
-      mean.Fill(0.0);
+      DerivativeType     mean(numParametersPerLastDimension, 0.0);
 
       /** Compute mean per control point. */
       for (unsigned int t = 0; t < lastDimSize; ++t)

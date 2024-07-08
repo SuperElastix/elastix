@@ -198,8 +198,7 @@ main()
     unsigned int                 rep = 0;
     repetitions[s] = 1; // outcomment this line for full testing
 
-    DerivativeType derivative(arraySizes[s]);
-    derivative.Fill(0.0);
+    DerivativeType derivative(arraySizes[s], 0.0);
 
     metric->m_ThreaderDerivatives.resize(nrThreads);
     metric->m_NumberOfParameters = arraySizes[s];

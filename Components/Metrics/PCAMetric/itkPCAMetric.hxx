@@ -558,8 +558,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
        * the number the time point index.
        */
       const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / m_G;
-      DerivativeType     mean(numParametersPerLastDimension);
-      mean.Fill(0.0);
+      DerivativeType     mean(numParametersPerLastDimension, 0.0);
 
       /** Compute mean per control point. */
       for (unsigned int t = 0; t < m_G; ++t)
@@ -991,8 +990,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedComputeDerivative(DerivativeT
        * the number the time point index.
        */
       const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / m_G;
-      DerivativeType     mean(numParametersPerLastDimension);
-      mean.Fill(0.0);
+      DerivativeType     mean(numParametersPerLastDimension, 0.0);
 
       /** Compute mean per control point. */
       for (unsigned int t = 0; t < m_G; ++t)

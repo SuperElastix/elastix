@@ -139,8 +139,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
   {
     const unsigned int numberOfParameters = this->GetNumberOfParameters();
     MeasureType        dummymeasure{};
-    DerivativeType     dummyderivative(numberOfParameters);
-    dummyderivative.Fill(DerivativeValueType{});
+    DerivativeType     dummyderivative(numberOfParameters, DerivativeValueType{});
 
     this->GetValueAndDerivative(parameters, dummymeasure, dummyderivative);
     return dummymeasure;
@@ -577,8 +576,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformPara
        * the number the time point index.
        */
       const unsigned int numParametersPerLastDimension = this->GetNumberOfParameters() / lastDimSize;
-      DerivativeType     mean(numParametersPerLastDimension);
-      mean.Fill(0.0);
+      DerivativeType     mean(numParametersPerLastDimension, 0.0);
 
       /** Compute mean per control point. */
       for (unsigned int t = 0; t < lastDimSize; ++t)

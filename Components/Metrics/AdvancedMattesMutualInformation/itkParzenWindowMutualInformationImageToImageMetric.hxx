@@ -1043,8 +1043,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   }
 
   /** Update divisor = sum_samples diag(jac'*jac) */
-  DerivativeType temp(M);
-  temp.Fill(0.0);
+  DerivativeType temp(M, 0.0);
   /** Compute this sample's contribution */
   for (unsigned int drow = 0; drow < MovingImageDimension; ++drow)
   {
