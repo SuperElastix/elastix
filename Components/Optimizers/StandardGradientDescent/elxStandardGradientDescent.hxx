@@ -195,8 +195,7 @@ StandardGradientDescent<TElastix>::StartOptimization()
   const ScalesType & scales = this->GetScales();
   if (scales.GetSize() == this->GetInitialPosition().GetSize())
   {
-    ScalesType unit_scales(scales.GetSize());
-    unit_scales.Fill(1.0);
+    ScalesType unit_scales(scales.GetSize(), 1.0);
     if (scales != unit_scales)
     {
       /** only then: */

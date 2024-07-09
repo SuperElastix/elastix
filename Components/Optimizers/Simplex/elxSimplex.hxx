@@ -81,8 +81,7 @@ Simplex<TElastix>::BeforeEachResolution()
   {
     unsigned int numberofparameters =
       this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
-    ParametersType initialsimplexdelta(numberofparameters);
-    initialsimplexdelta.Fill(1);
+    ParametersType initialsimplexdelta(numberofparameters, 1);
 
     for (unsigned int i = 0; i < numberofparameters; ++i)
     {
@@ -168,8 +167,7 @@ Simplex<TElastix>::SetInitialPosition(const ParametersType & param)
 
   if ((scales.Size()) != paramsize)
   {
-    ScalesType newscales(paramsize);
-    newscales.Fill(1.0);
+    ScalesType newscales(paramsize, 1.0);
     this->SetScales(newscales);
   }
 

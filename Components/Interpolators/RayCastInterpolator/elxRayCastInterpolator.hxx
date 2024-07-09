@@ -60,8 +60,7 @@ RayCastInterpolator<TElastix>::BeforeRegistration()
   this->m_CombinationTransform->SetUseComposition(true);
 
   unsigned int numberofparameters = this->m_Elastix->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
-  TransformParametersType preParameters(numberofparameters);
-  preParameters.Fill(0.0);
+  TransformParametersType preParameters(numberofparameters, 0.0);
 
   for (unsigned int i = 0; i < numberofparameters; ++i)
   {

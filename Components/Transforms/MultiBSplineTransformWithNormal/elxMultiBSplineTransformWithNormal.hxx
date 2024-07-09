@@ -345,8 +345,7 @@ MultiBSplineTransformWithNormal<TElastix>::InitializeTransform()
   this->m_MultiBSplineTransformWithNormal->UpdateLocalBases();
 
   /** Set initial parameters for the first resolution to 0.0. */
-  ParametersType initialParameters(this->GetNumberOfParameters());
-  initialParameters.Fill(0.0);
+  ParametersType initialParameters(this->GetNumberOfParameters(), 0.0);
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParametersOfNextLevel(initialParameters);
 
 } // end InitializeTransform()
