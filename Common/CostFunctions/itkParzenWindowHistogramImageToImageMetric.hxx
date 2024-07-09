@@ -196,15 +196,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
    * the first dimension.
    */
   this->m_JointPDF = JointPDFType::New();
-  JointPDFRegionType jointPDFRegion;
-  JointPDFIndexType  jointPDFIndex;
-  JointPDFSizeType   jointPDFSize;
-  jointPDFIndex.Fill(0);
-  jointPDFSize[0] = this->m_NumberOfMovingHistogramBins;
-  jointPDFSize[1] = this->m_NumberOfFixedHistogramBins;
-  jointPDFRegion.SetIndex(jointPDFIndex);
-  jointPDFRegion.SetSize(jointPDFSize);
-  this->m_JointPDF->SetRegions(jointPDFRegion);
+  this->m_JointPDF->SetRegions(JointPDFSizeType{ m_NumberOfMovingHistogramBins, m_NumberOfFixedHistogramBins });
   this->m_JointPDF->Allocate();
 
   if (this->GetUseDerivative())
@@ -218,15 +210,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
      * the same size happens to be valid.
      */
 
-    JointPDFDerivativesRegionType jointPDFDerivativesRegion;
-    JointPDFDerivativesIndexType  jointPDFDerivativesIndex;
-    JointPDFDerivativesSizeType   jointPDFDerivativesSize;
-    jointPDFDerivativesIndex.Fill(0);
-    jointPDFDerivativesSize[0] = this->GetNumberOfParameters();
-    jointPDFDerivativesSize[1] = this->m_NumberOfMovingHistogramBins;
-    jointPDFDerivativesSize[2] = this->m_NumberOfFixedHistogramBins;
-    jointPDFDerivativesRegion.SetIndex(jointPDFDerivativesIndex);
-    jointPDFDerivativesRegion.SetSize(jointPDFDerivativesSize);
+    const JointPDFDerivativesSizeType jointPDFDerivativesSize{ this->GetNumberOfParameters(),
+                                                               m_NumberOfMovingHistogramBins,
+                                                               m_NumberOfFixedHistogramBins };
 
     if (this->GetUseFiniteDifferenceDerivative())
     {
@@ -234,41 +220,26 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
 
       this->m_IncrementalJointPDFRight = JointPDFDerivativesType::New();
       this->m_IncrementalJointPDFLeft = JointPDFDerivativesType::New();
-      this->m_IncrementalJointPDFRight->SetRegions(jointPDFDerivativesRegion);
-      this->m_IncrementalJointPDFLeft->SetRegions(jointPDFDerivativesRegion);
+      this->m_IncrementalJointPDFRight->SetRegions(jointPDFDerivativesSize);
+      this->m_IncrementalJointPDFLeft->SetRegions(jointPDFDerivativesSize);
       this->m_IncrementalJointPDFRight->Allocate();
       this->m_IncrementalJointPDFLeft->Allocate();
 
       /** Also initialize the incremental marginal pdfs. */
-      IncrementalMarginalPDFRegionType fixedIMPDFRegion;
-      IncrementalMarginalPDFIndexType  fixedIMPDFIndex;
-      IncrementalMarginalPDFSizeType   fixedIMPDFSize;
-
-      IncrementalMarginalPDFRegionType movingIMPDFRegion;
-      IncrementalMarginalPDFIndexType  movingIMPDFIndex;
-      IncrementalMarginalPDFSizeType   movingIMPDFSize;
-
-      fixedIMPDFIndex.Fill(0);
-      fixedIMPDFSize[0] = this->GetNumberOfParameters();
-      fixedIMPDFSize[1] = this->m_NumberOfFixedHistogramBins;
-      fixedIMPDFRegion.SetSize(fixedIMPDFSize);
-      fixedIMPDFRegion.SetIndex(fixedIMPDFIndex);
-
-      movingIMPDFIndex.Fill(0);
-      movingIMPDFSize[0] = this->GetNumberOfParameters();
-      movingIMPDFSize[1] = this->m_NumberOfMovingHistogramBins;
-      movingIMPDFRegion.SetSize(movingIMPDFSize);
-      movingIMPDFRegion.SetIndex(movingIMPDFIndex);
+      const IncrementalMarginalPDFSizeType fixedIMPDFSize{ this->GetNumberOfParameters(),
+                                                           m_NumberOfFixedHistogramBins };
+      const IncrementalMarginalPDFSizeType movingIMPDFSize{ this->GetNumberOfParameters(),
+                                                            m_NumberOfMovingHistogramBins };
 
       this->m_FixedIncrementalMarginalPDFRight = IncrementalMarginalPDFType::New();
       this->m_MovingIncrementalMarginalPDFRight = IncrementalMarginalPDFType::New();
       this->m_FixedIncrementalMarginalPDFLeft = IncrementalMarginalPDFType::New();
       this->m_MovingIncrementalMarginalPDFLeft = IncrementalMarginalPDFType::New();
 
-      this->m_FixedIncrementalMarginalPDFRight->SetRegions(fixedIMPDFRegion);
-      this->m_MovingIncrementalMarginalPDFRight->SetRegions(movingIMPDFRegion);
-      this->m_FixedIncrementalMarginalPDFLeft->SetRegions(fixedIMPDFRegion);
-      this->m_MovingIncrementalMarginalPDFLeft->SetRegions(movingIMPDFRegion);
+      this->m_FixedIncrementalMarginalPDFRight->SetRegions(fixedIMPDFSize);
+      this->m_MovingIncrementalMarginalPDFRight->SetRegions(movingIMPDFSize);
+      this->m_FixedIncrementalMarginalPDFLeft->SetRegions(fixedIMPDFSize);
+      this->m_MovingIncrementalMarginalPDFLeft->SetRegions(movingIMPDFSize);
 
       this->m_FixedIncrementalMarginalPDFRight->Allocate();
       this->m_MovingIncrementalMarginalPDFRight->Allocate();
@@ -283,7 +254,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
         this->m_IncrementalJointPDFLeft = nullptr;
 
         this->m_JointPDFDerivatives = JointPDFDerivativesType::New();
-        this->m_JointPDFDerivatives->SetRegions(jointPDFDerivativesRegion);
+        this->m_JointPDFDerivatives->SetRegions(jointPDFDerivativesSize);
         this->m_JointPDFDerivatives->Allocate();
       }
       else
@@ -292,9 +263,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
         // \todo Should not be allocated in the first place
         if (!this->m_JointPDFDerivatives.IsNull())
         {
-          jointPDFDerivativesSize.Fill(0);
-          jointPDFDerivativesRegion.SetSize(jointPDFDerivativesSize);
-          this->m_JointPDFDerivatives->SetRegions(jointPDFDerivativesRegion);
+          this->m_JointPDFDerivatives->SetRegions(JointPDFDerivativesSizeType{});
           this->m_JointPDFDerivatives->Allocate();
           this->m_JointPDFDerivatives->GetPixelContainer()->Squeeze();
         }
@@ -408,15 +377,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeTh
    * which has performance benefits for larger vector sizes.
    */
 
-  /** Construct regions for the joint histograms. */
-  JointPDFRegionType jointPDFRegion;
-  JointPDFIndexType  jointPDFIndex;
-  JointPDFSizeType   jointPDFSize;
-  jointPDFIndex.Fill(0);
-  jointPDFSize[0] = this->m_NumberOfMovingHistogramBins;
-  jointPDFSize[1] = this->m_NumberOfFixedHistogramBins;
-  jointPDFRegion.SetIndex(jointPDFIndex);
-  jointPDFRegion.SetSize(jointPDFSize);
+  /** Construct region size for the joint histograms. */
+  const JointPDFSizeType jointPDFSize{ m_NumberOfMovingHistogramBins, m_NumberOfFixedHistogramBins };
 
   const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
 
@@ -434,9 +396,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeTh
     {
       jointPDF = JointPDFType::New();
     }
-    if (jointPDF->GetLargestPossibleRegion() != jointPDFRegion)
+    if (jointPDF->GetLargestPossibleRegion() != JointPDFRegionType(jointPDFSize))
     {
-      jointPDF->SetRegions(jointPDFRegion);
+      jointPDF->SetRegions(jointPDFSize);
       jointPDF->Allocate();
     }
   }
