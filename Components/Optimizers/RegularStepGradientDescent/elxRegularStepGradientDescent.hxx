@@ -193,8 +193,7 @@ RegularStepGradientDescent<TElastix>::SetInitialPosition(const ParametersType & 
 
   if ((scales.Size()) != paramsize)
   {
-    ScalesType newscales(paramsize);
-    newscales.Fill(1.0);
+    ScalesType newscales(paramsize, 1.0);
     this->SetScales(newscales);
   }
 

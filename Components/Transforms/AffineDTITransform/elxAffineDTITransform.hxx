@@ -275,8 +275,7 @@ AffineDTITransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
-  ScalesType                   newscales(numberOfParameters);
-  newscales.Fill(1.0);
+  ScalesType                   newscales(numberOfParameters, 1.0);
 
   /** Always estimate scales automatically */
   log::info("Scales are estimated automatically.");

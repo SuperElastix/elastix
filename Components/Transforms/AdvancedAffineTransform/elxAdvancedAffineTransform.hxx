@@ -329,8 +329,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
 {
   /** Create the new scales. */
   const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
-  ScalesType                   newscales(numberOfParameters);
-  newscales.Fill(1.0);
+  ScalesType                   newscales(numberOfParameters, 1.0);
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimation = false;

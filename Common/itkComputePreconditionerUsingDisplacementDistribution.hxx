@@ -109,8 +109,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   JacobianType        jacjjacj(outdim, outdim);
   const double        sqrt2 = std::sqrt(static_cast<double>(2.0));
   std::vector<double> localStepSizeSquared(numberOfParameters, 0.0);
-  ParametersType      binCount(numberOfParameters);
-  binCount.Fill(0.0);
+  ParametersType      binCount(numberOfParameters, 0.0);
 
   /** Loop over all voxels in the sample container. */
   for (const auto & sample : *sampleContainer)

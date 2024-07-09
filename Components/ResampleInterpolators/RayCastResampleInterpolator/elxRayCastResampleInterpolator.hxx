@@ -39,8 +39,7 @@ RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator()
 
   this->m_PreTransform = EulerTransformType::New();
   unsigned int            numberofparameters = this->m_PreTransform->GetNumberOfParameters();
-  TransformParametersType preParameters(numberofparameters);
-  preParameters.Fill(0.0);
+  TransformParametersType preParameters(numberofparameters, 0.0);
 
   for (unsigned int i = 0; i < numberofparameters; ++i)
   {

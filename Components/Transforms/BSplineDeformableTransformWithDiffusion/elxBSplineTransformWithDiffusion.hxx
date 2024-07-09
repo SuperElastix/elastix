@@ -113,8 +113,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
   this->m_BSplineTransform->SetGridOrigin(gridorigin);
 
   /** Task 2 - Give the registration an initial parameter-array. */
-  ParametersType dummyInitialParameters(this->GetNumberOfParameters());
-  dummyInitialParameters.Fill(0.0);
+  ParametersType dummyInitialParameters(this->GetNumberOfParameters(), 0.0);
 
   /** Put parameters in the registration. */
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParameters(dummyInitialParameters);
@@ -664,8 +663,7 @@ BSplineTransformWithDiffusion<TElastix>::SetInitialGrid(bool upsampleGridOption)
   this->m_BSplineTransform->SetGridOrigin(gridorigin);
 
   /** Set initial parameters to 0.0. */
-  ParametersType initialParameters(this->GetNumberOfParameters());
-  initialParameters.Fill(0.0);
+  ParametersType initialParameters(this->GetNumberOfParameters(), 0.0);
   this->m_Registration->GetAsITKBaseType()->SetInitialTransformParametersOfNextLevel(initialParameters);
 
 } // end SetInitialGrid()
@@ -1258,8 +1256,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
   /** ------------- 6: Reset the current transform parameters of the optimizer. ------------- */
 
   /** Create a vector of zeros in order to reset the B-spline transform. */
-  ParametersType dummyParameters(this->GetNumberOfParameters());
-  dummyParameters.Fill(0.0);
+  ParametersType dummyParameters(this->GetNumberOfParameters(), 0.0);
   this->SetParameters(dummyParameters);
 
   /** Reset the optimizer.

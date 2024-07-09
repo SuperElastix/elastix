@@ -202,8 +202,7 @@ RSGDEachParameterApart<TElastix>::SetInitialPosition(const ParametersType & para
 
   if ((scales.Size()) != paramsize)
   {
-    ScalesType newscales(paramsize);
-    newscales.Fill(1.0);
+    ScalesType newscales(paramsize, 1.0);
     this->SetScales(newscales);
   }
 
