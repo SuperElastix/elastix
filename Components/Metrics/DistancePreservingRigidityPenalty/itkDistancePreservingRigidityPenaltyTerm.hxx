@@ -95,10 +95,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
   bSplineKnotSpacing[1] = fixedParameters[7];
   bSplineKnotSpacing[2] = fixedParameters[8];
 
-  typename FixedImageType::RegionType bSplineKnotRegion;
-  bSplineKnotRegion.SetSize(bSplineKnotSize);
-
-  this->m_BSplineKnotImage->SetRegions(bSplineKnotRegion);
+  this->m_BSplineKnotImage->SetRegions(bSplineKnotSize);
   this->m_BSplineKnotImage->SetSpacing(bSplineKnotSpacing);
   this->m_BSplineKnotImage->SetOrigin(bSplineKnotOrigin);
   this->m_BSplineKnotImage->SetDirection(this->m_FixedImage->GetDirection());
