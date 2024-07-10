@@ -292,8 +292,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   if (this->GetUseJacobianPreconditioning())
   {
     jacobianPreconditioner = DerivativeType(nzji.size());
-    preconditioningDivisor = DerivativeType(this->GetNumberOfParameters());
-    preconditioningDivisor.Fill(0.0);
+    preconditioningDivisor = DerivativeType(this->GetNumberOfParameters(), 0.0);
   }
 
   /** Get a handle to the sample container. */
@@ -431,8 +430,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   if (this->GetUseJacobianPreconditioning())
   {
     jacobianPreconditioner = DerivativeType(nzji.size());
-    preconditioningDivisor = DerivativeType(this->GetNumberOfParameters());
-    preconditioningDivisor.Fill(0.0);
+    preconditioningDivisor = DerivativeType(this->GetNumberOfParameters(), 0.0);
   }
 
   /** Get a handle to the sample container. */
