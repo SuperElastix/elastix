@@ -71,14 +71,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::MultiResolut
 
   this->m_Stop = false;
 
-  this->m_InitialTransformParameters = ParametersType(0);
-  this->m_InitialTransformParametersOfNextLevel = ParametersType(0);
-  this->m_LastTransformParameters = ParametersType(0);
-
-  this->m_InitialTransformParameters.Fill(0.0f);
-  this->m_InitialTransformParametersOfNextLevel.Fill(0.0f);
-  this->m_LastTransformParameters.Fill(0.0f);
-
   this->ProcessObject::SetNthOutput(0, TransformOutputType::New().GetPointer());
 
 } // end Constructor
