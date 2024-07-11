@@ -302,6 +302,11 @@ MainBase::SetMaximumNumberOfThreads() const
   {
     const int maximumNumberOfThreads = atoi(maximumNumberOfThreadsString.c_str());
     itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads(maximumNumberOfThreads);
+
+    // The following statement (getting and setting GlobalDefaultNumberOfThreads) may look redundant, but it's not
+    // (using ITK 5.4.0)! The Set function ensures that GlobalDefaultNumberOfThreads <= GlobalMaximumNumberOfThreads.
+    // (GlobalDefaultNumberOfThreads is important, as ITK uses this number when constructing the ThreadPool.)
+    itk::MultiThreaderBase::SetGlobalDefaultNumberOfThreads(itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads());
   }
 } // end SetMaximumNumberOfThreads()
 
