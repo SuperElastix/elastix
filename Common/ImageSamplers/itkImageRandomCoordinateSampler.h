@@ -148,8 +148,6 @@ protected:
 private:
   struct UserData
   {
-    ITK_DISALLOW_COPY_AND_MOVE(UserData);
-
     const std::vector<InputImageContinuousIndexType> & m_RandomCoordinates;
     const InputImageType &                             m_InputImage;
     const InterpolatorType &                           m_Interpolator;
