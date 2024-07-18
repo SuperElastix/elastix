@@ -32,12 +32,6 @@ The ParameterFileParser contains functionality to communicate options and parame
 Timer contains functionality to time (parts of) the registration.
 */
 
-/**
-\defgroup xout xout
-\ingroup Common
-xout contains functionality to print all output of the program to whatever.
-*/
-
 
 #
 # ############## COMPONENTS #####################
