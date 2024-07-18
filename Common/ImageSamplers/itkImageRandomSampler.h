@@ -89,8 +89,6 @@ protected:
 private:
   struct UserData
   {
-    ITK_DISALLOW_COPY_AND_MOVE(UserData);
-
     const std::vector<double> &    m_RandomNumberList;
     const InputImageType &         m_InputImage;
     InputImageIndexType            m_RegionIndex{};

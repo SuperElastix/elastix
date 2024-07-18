@@ -123,8 +123,6 @@ private:
 
   struct UserData
   {
-    ITK_DISALLOW_COPY_AND_MOVE(UserData);
-
     const InputImageType & InputImage;
     const MaskType * const Mask{};
     std::vector<WorkUnit>  WorkUnits{};
