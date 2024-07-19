@@ -951,7 +951,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = "@ELASTIX_DOXYGEN_DIR@/Modules.dox" \
+INPUT                  = "@ELASTIX_DOXYGEN_DIR@/Topics.dox" \
                          "@ELASTIX_HELP_DIR@/MainPage.dox" \
                          "@elastix_SOURCE_DIR@"
 
