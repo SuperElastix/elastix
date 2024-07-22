@@ -63,6 +63,11 @@ namespace elastix
  *    CheckNumberOfSamples. \n
  *    example: <tt>(RequiredRatioOfValidSamples 0.1)</tt> \n
  *    The default is 0.25.
+ * \parameter UseMultiThreadingForMetrics: Flag that can set to "true" or "false".
+ *    If "true" the metric may use multi-threading (at least if multi-threading is implemented for the selected
+ *    metric). If "false", it will run single-threaded. This flag will not affect the output of the metric.\n
+ *    example: <tt>(UseMultiThreadingForMetrics "false")</tt> \n
+ *    Default is "true".
  *
  * \ingroup Metrics
  * \ingroup ComponentBaseClasses
