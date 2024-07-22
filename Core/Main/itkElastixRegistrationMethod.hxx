@@ -39,6 +39,7 @@
 #include "itkElastixRegistrationMethod.h"
 
 #include <itkDeref.h>
+#include <itkThreadPool.h>
 #include "elxLibUtilities.h"
 #include "elxTransformIO.h"
 
@@ -374,6 +375,11 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
         ((i == 0) && !transformParameterMapVector.empty())
           ? elastixMain->RunWithInitialTransformParameterMaps(argumentMap, parameterMap, transformParameterMapVector)
           : elastixMain->Run(argumentMap, parameterMap);
+
+      elx::log::error("[error] Maximum number of threads in thread pool: " +
+                      std::to_string(itk::ThreadPool::GetInstance()->GetMaximumNumberOfThreads()));
+      elx::log::to_stdout("[stdout] Maximum number of threads in thread pool: " +
+                          std::to_string(itk::ThreadPool::GetInstance()->GetMaximumNumberOfThreads()));
     }
     catch (const itk::ExceptionObject & e)
     {
