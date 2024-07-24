@@ -67,7 +67,7 @@ ElastixMain::Run()
   try
   {
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
-    this->m_Elastix = this->CreateComponent("Elastix");
+    MainBase::m_Elastix = this->CreateComponent("Elastix");
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -107,8 +107,8 @@ ElastixMain::Run()
 
   /** Set some information in the ElastixBase. */
   elastixBase.SetConfiguration(MainBase::GetConfiguration());
-  elastixBase.SetTransformConfigurations(this->m_TransformConfigurations);
-  elastixBase.SetDBIndex(this->m_DBIndex);
+  elastixBase.SetTransformConfigurations(MainBase::m_TransformConfigurations);
+  elastixBase.SetDBIndex(MainBase::m_DBIndex);
 
   /** Populate the component containers. ImageSampler is not mandatory.
    * No defaults are specified for ImageSampler, Metric, Transform
@@ -259,15 +259,15 @@ ElastixMain::InitDBIndex()
   if (configuration.IsInitialized())
   {
     /** FixedImagePixelType. */
-    if (this->m_FixedImagePixelType.empty())
+    if (MainBase::m_FixedImagePixelType.empty())
     {
       /** Try to read it from the parameter file. */
-      this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-      configuration.ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
+      MainBase::m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
+      configuration.ReadParameter(MainBase::m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
     }
 
     /** FixedImageDimension. */
-    if (this->m_FixedImageDimension == 0)
+    if (MainBase::m_FixedImageDimension == 0)
     {
       if (!BaseComponent::IsElastixLibrary())
       {
@@ -289,7 +289,7 @@ ElastixMain::InitDBIndex()
         /** Read it from the fixed image header. */
         try
         {
-          this->GetImageInformationFromFile(fixedImageFileName, this->m_FixedImageDimension);
+          this->GetImageInformationFromFile(fixedImageFileName, MainBase::m_FixedImageDimension);
         }
         catch (const itk::ExceptionObject & err)
         {
@@ -307,12 +307,12 @@ ElastixMain::InitDBIndex()
         /** Check. */
         if (foundInParameterFile)
         {
-          if (fixDimParameterFile != this->m_FixedImageDimension)
+          if (fixDimParameterFile != MainBase::m_FixedImageDimension)
           {
             log::error(std::ostringstream{}
                        << "ERROR: problem defining fixed image dimension.\n"
                        << "  The parameter file says:     " << fixDimParameterFile << "\n"
-                       << "  The fixed image header says: " << this->m_FixedImageDimension << "\n"
+                       << "  The fixed image header says: " << MainBase::m_FixedImageDimension << "\n"
                        << "  Note that from elastix 4.6 the parameter file definition \"FixedImageDimension\" "
                           "is not needed anymore.\n  Please remove this entry from your parameter file.");
             return 1;
@@ -321,11 +321,11 @@ ElastixMain::InitDBIndex()
       }
       else
       {
-        configuration.ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0, false);
+        configuration.ReadParameter(MainBase::m_FixedImageDimension, "FixedImageDimension", 0, false);
       }
 
       /** Just a sanity check, probably not needed. */
-      if (this->m_FixedImageDimension == 0)
+      if (MainBase::m_FixedImageDimension == 0)
       {
         log::error("ERROR: The FixedImageDimension is not given.");
         return 1;
@@ -333,15 +333,15 @@ ElastixMain::InitDBIndex()
     }
 
     /** MovingImagePixelType. */
-    if (this->m_MovingImagePixelType.empty())
+    if (MainBase::m_MovingImagePixelType.empty())
     {
       /** Try to read it from the parameter file. */
-      this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-      configuration.ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
+      MainBase::m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
+      configuration.ReadParameter(MainBase::m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
     }
 
     /** MovingImageDimension. */
-    if (this->m_MovingImageDimension == 0)
+    if (MainBase::m_MovingImageDimension == 0)
     {
       if (!BaseComponent::IsElastixLibrary())
       {
@@ -363,7 +363,7 @@ ElastixMain::InitDBIndex()
         /** Read it from the moving image header. */
         try
         {
-          this->GetImageInformationFromFile(movingImageFileName, this->m_MovingImageDimension);
+          this->GetImageInformationFromFile(movingImageFileName, MainBase::m_MovingImageDimension);
         }
         catch (const itk::ExceptionObject & err)
         {
@@ -381,12 +381,12 @@ ElastixMain::InitDBIndex()
         /** Check. */
         if (foundInParameterFile)
         {
-          if (movDimParameterFile != this->m_MovingImageDimension)
+          if (movDimParameterFile != MainBase::m_MovingImageDimension)
           {
             log::error(std::ostringstream{}
                        << "ERROR: problem defining moving image dimension.\n"
                        << "  The parameter file says:      " << movDimParameterFile << "\n"
-                       << "  The moving image header says: " << this->m_MovingImageDimension << "\n"
+                       << "  The moving image header says: " << MainBase::m_MovingImageDimension << "\n"
                        << "  Note that from elastix 4.6 the parameter file definition \"MovingImageDimension\" "
                           "is not needed anymore.\n  Please remove this entry from your parameter file.");
             return 1;
@@ -395,11 +395,11 @@ ElastixMain::InitDBIndex()
       }
       else
       {
-        configuration.ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0, false);
+        configuration.ReadParameter(MainBase::m_MovingImageDimension, "MovingImageDimension", 0, false);
       }
 
       /** Just a sanity check, probably not needed. */
-      if (this->m_MovingImageDimension == 0)
+      if (MainBase::m_MovingImageDimension == 0)
       {
         log::error("ERROR: The MovingImageDimension is not given.");
         return 1;
@@ -407,11 +407,11 @@ ElastixMain::InitDBIndex()
     }
 
     /** Get the DBIndex from the ComponentDatabase. */
-    this->m_DBIndex = GetComponentDatabase().GetIndex(this->m_FixedImagePixelType,
-                                                      this->m_FixedImageDimension,
-                                                      this->m_MovingImagePixelType,
-                                                      this->m_MovingImageDimension);
-    if (this->m_DBIndex == 0)
+    MainBase::m_DBIndex = GetComponentDatabase().GetIndex(MainBase::m_FixedImagePixelType,
+                                                          MainBase::m_FixedImageDimension,
+                                                          MainBase::m_MovingImagePixelType,
+                                                          MainBase::m_MovingImageDimension);
+    if (MainBase::m_DBIndex == 0)
     {
       log::error("ERROR: Something went wrong in the ComponentDatabase");
       return 1;

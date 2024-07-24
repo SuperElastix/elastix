@@ -76,7 +76,7 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
   try
   {
     /** Key "Elastix", see elxComponentLoader::InstallSupportedImageTypes(). */
-    this->m_Elastix = this->CreateComponent("Elastix");
+    MainBase::m_Elastix = this->CreateComponent("Elastix");
   }
   catch (const itk::ExceptionObject & excp)
   {
@@ -116,8 +116,8 @@ TransformixMain::RunWithTransform(itk::TransformBase * const transform)
 
   /** Set some information in the ElastixBase. */
   elastixBase.SetConfiguration(MainBase::GetConfiguration());
-  elastixBase.SetTransformConfigurations(this->m_TransformConfigurations);
-  elastixBase.SetDBIndex(this->m_DBIndex);
+  elastixBase.SetTransformConfigurations(MainBase::m_TransformConfigurations);
+  elastixBase.SetDBIndex(MainBase::m_DBIndex);
 
   /** Populate the component containers. No default is specified for the Transform. */
   elastixBase.SetResampleInterpolatorContainer(
@@ -226,20 +226,20 @@ TransformixMain::InitDBIndex()
   if (configuration.IsInitialized())
   {
     /** Try to read MovingImagePixelType from the parameter file. */
-    this->m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-    configuration.ReadParameter(this->m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
+    MainBase::m_MovingImagePixelType = "float"; // \note: this assumes elastix was compiled for float
+    configuration.ReadParameter(MainBase::m_MovingImagePixelType, "MovingInternalImagePixelType", 0);
 
     /** Try to read FixedImagePixelType from the parameter file. */
-    this->m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
-    configuration.ReadParameter(this->m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
+    MainBase::m_FixedImagePixelType = "float"; // \note: this assumes elastix was compiled for float
+    configuration.ReadParameter(MainBase::m_FixedImagePixelType, "FixedInternalImagePixelType", 0);
 
     /** MovingImageDimension. */
-    if (this->m_MovingImageDimension == 0)
+    if (MainBase::m_MovingImageDimension == 0)
     {
       /** Try to read it from the transform parameter file. */
-      configuration.ReadParameter(this->m_MovingImageDimension, "MovingImageDimension", 0);
+      configuration.ReadParameter(MainBase::m_MovingImageDimension, "MovingImageDimension", 0);
 
-      if (this->m_MovingImageDimension == 0)
+      if (MainBase::m_MovingImageDimension == 0)
       {
         log::error("ERROR: The MovingImageDimension is not given.");
         return 1;
@@ -247,12 +247,12 @@ TransformixMain::InitDBIndex()
     }
 
     /** FixedImageDimension. */
-    if (this->m_FixedImageDimension == 0)
+    if (MainBase::m_FixedImageDimension == 0)
     {
       /** Try to read it from the transform parameter file. */
-      configuration.ReadParameter(this->m_FixedImageDimension, "FixedImageDimension", 0);
+      configuration.ReadParameter(MainBase::m_FixedImageDimension, "FixedImageDimension", 0);
 
-      if (this->m_FixedImageDimension == 0)
+      if (MainBase::m_FixedImageDimension == 0)
       {
         log::error("ERROR: The FixedImageDimension is not given.");
         return 1;
@@ -260,11 +260,11 @@ TransformixMain::InitDBIndex()
     }
 
     /** Get the DBIndex from the ComponentDatabase. */
-    this->m_DBIndex = this->GetComponentDatabase().GetIndex(this->m_FixedImagePixelType,
-                                                            this->m_FixedImageDimension,
-                                                            this->m_MovingImagePixelType,
-                                                            this->m_MovingImageDimension);
-    if (this->m_DBIndex == 0)
+    MainBase::m_DBIndex = this->GetComponentDatabase().GetIndex(MainBase::m_FixedImagePixelType,
+                                                                MainBase::m_FixedImageDimension,
+                                                                MainBase::m_MovingImagePixelType,
+                                                                MainBase::m_MovingImageDimension);
+    if (MainBase::m_DBIndex == 0)
     {
       log::error("ERROR: Something went wrong in the ComponentDatabase.");
       return 1;
