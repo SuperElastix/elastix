@@ -383,7 +383,7 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
     origin[i] = 0.0;
     this->m_Configuration->ReadParameter(origin[i], "Origin", i);
 
-    /** Read direction cosines. Default identity */
+    /** Read direction cosines. (The matrix elements must be specified in column-major order.) Default identity */
     for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       this->m_Configuration->ReadParameter(direction(j, i), "Direction", i * SpaceDimension + j);
