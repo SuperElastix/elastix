@@ -1076,7 +1076,8 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
   {
     const Configuration & configuration = itk::Deref(ElastixBase::GetConfiguration());
 
-    /** Try to read direction cosines from (transform-)parameter file. */
+    /** Try to read direction cosines from (transform-)parameter file. (The matrix elements must be specified in
+     * column-major order.) */
     FixedImageDirectionType directionRead = direction;
     for (unsigned int i = 0; i < FixedDimension; ++i)
     {
