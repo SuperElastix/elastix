@@ -125,7 +125,6 @@ main(int argc, char ** argv)
     using ElastixMainType = elx::ElastixMain;
     using ObjectPointer = ElastixMainType::ObjectPointer;
     using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
-    using FlatDirectionCosinesType = ElastixMainType::FlatDirectionCosinesType;
 
     using ArgumentMapType = ElastixMainType::ArgumentMapType;
     using ArgumentMapEntryType = ArgumentMapType::value_type;
@@ -269,12 +268,12 @@ main(int argc, char ** argv)
                                         << static_cast<unsigned int>(info.GetProcessorClockFrequency()) << " MHz.");
 
 
-    ObjectPointer              transform = nullptr;
-    DataObjectContainerPointer fixedImageContainer = nullptr;
-    DataObjectContainerPointer movingImageContainer = nullptr;
-    DataObjectContainerPointer fixedMaskContainer = nullptr;
-    DataObjectContainerPointer movingMaskContainer = nullptr;
-    FlatDirectionCosinesType   fixedImageOriginalDirection;
+    ObjectPointer                             transform = nullptr;
+    DataObjectContainerPointer                fixedImageContainer = nullptr;
+    DataObjectContainerPointer                movingImageContainer = nullptr;
+    DataObjectContainerPointer                fixedMaskContainer = nullptr;
+    DataObjectContainerPointer                movingMaskContainer = nullptr;
+    ElastixMainType::FlatDirectionCosinesType fixedImageOriginalDirection;
 
     /**
      * ********************* START REGISTRATION *********************

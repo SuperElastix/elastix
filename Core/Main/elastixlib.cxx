@@ -141,7 +141,6 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
   using ElastixMainType = elx::ElastixMain;
   using DataObjectContainerType = ElastixMainType::DataObjectContainerType;
   using DataObjectContainerPointer = ElastixMainType::DataObjectContainerPointer;
-  using FlatDirectionCosinesType = ElastixMainType::FlatDirectionCosinesType;
 
   using ArgumentMapType = ElastixMainType::ArgumentMapType;
   using ArgumentMapEntryType = ArgumentMapType::value_type;
@@ -216,10 +215,10 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
   fixedImageContainer->CreateElementAt(0) = fixedImage;
   movingImageContainer->CreateElementAt(0) = movingImage;
 
-  DataObjectContainerPointer fixedMaskContainer = nullptr;
-  DataObjectContainerPointer movingMaskContainer = nullptr;
-  DataObjectContainerPointer resultImageContainer = nullptr;
-  FlatDirectionCosinesType   fixedImageOriginalDirection;
+  DataObjectContainerPointer                fixedMaskContainer = nullptr;
+  DataObjectContainerPointer                movingMaskContainer = nullptr;
+  DataObjectContainerPointer                resultImageContainer = nullptr;
+  ElastixMainType::FlatDirectionCosinesType fixedImageOriginalDirection;
 
   /* Allocate and store masks in containers if available*/
   if (fixedMask)
