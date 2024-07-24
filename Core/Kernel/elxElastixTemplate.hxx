@@ -135,19 +135,17 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
    * or optimizer components are used simultaneously. We won't use this
    * in the near future anyway, probably.
    */
-  this->m_BeforeEachResolutionCommand = BeforeEachResolutionCommandType::New();
-  this->m_AfterEachResolutionCommand = AfterEachResolutionCommandType::New();
-  this->m_AfterEachIterationCommand = AfterEachIterationCommandType::New();
+  m_BeforeEachResolutionCommand = BeforeEachResolutionCommandType::New();
+  m_AfterEachResolutionCommand = AfterEachResolutionCommandType::New();
+  m_AfterEachIterationCommand = AfterEachIterationCommandType::New();
 
-  this->m_BeforeEachResolutionCommand->SetCallbackFunction(this, &Self::BeforeEachResolution);
-  this->m_AfterEachResolutionCommand->SetCallbackFunction(this, &Self::AfterEachResolution);
-  this->m_AfterEachIterationCommand->SetCallbackFunction(this, &Self::AfterEachIteration);
+  m_BeforeEachResolutionCommand->SetCallbackFunction(this, &Self::BeforeEachResolution);
+  m_AfterEachResolutionCommand->SetCallbackFunction(this, &Self::AfterEachResolution);
+  m_AfterEachIterationCommand->SetCallbackFunction(this, &Self::AfterEachIteration);
 
-  this->GetElxRegistrationBase()->GetAsITKBaseType()->AddObserver(itk::IterationEvent(),
-                                                                  this->m_BeforeEachResolutionCommand);
-  this->GetElxOptimizerBase()->GetAsITKBaseType()->AddObserver(itk::IterationEvent(),
-                                                               this->m_AfterEachIterationCommand);
-  this->GetElxOptimizerBase()->GetAsITKBaseType()->AddObserver(itk::EndEvent(), this->m_AfterEachResolutionCommand);
+  this->GetElxRegistrationBase()->GetAsITKBaseType()->AddObserver(itk::IterationEvent(), m_BeforeEachResolutionCommand);
+  this->GetElxOptimizerBase()->GetAsITKBaseType()->AddObserver(itk::IterationEvent(), m_AfterEachIterationCommand);
+  this->GetElxOptimizerBase()->GetAsITKBaseType()->AddObserver(itk::EndEvent(), m_AfterEachResolutionCommand);
 
   /** Start the timer for reading images. */
   this->m_Timer0.Start();
