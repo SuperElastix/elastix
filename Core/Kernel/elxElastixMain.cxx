@@ -493,7 +493,7 @@ ElastixMain::GetTotalNumberOfElastixLevels() const
 void
 ElastixMain::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg)
 {
-  this->m_OriginalFixedImageDirection = arg;
+  this->m_OriginalFixedImageDirectionFlat = arg;
 } // end SetOriginalFixedImageDirectionFlat()
 
 
@@ -504,7 +504,7 @@ ElastixMain::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType &
 const ElastixMain::FlatDirectionCosinesType &
 ElastixMain::GetOriginalFixedImageDirectionFlat() const
 {
-  return this->m_OriginalFixedImageDirection;
+  return this->m_OriginalFixedImageDirectionFlat;
 } // end GetOriginalFixedImageDirectionFlat()
 
 

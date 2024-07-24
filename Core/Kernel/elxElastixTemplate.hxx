@@ -1093,13 +1093,13 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
   }
 
   /** Only trust this when the fixed image exists. */
-  if (this->m_OriginalFixedImageDirection.size() == FixedDimension * FixedDimension)
+  if (this->m_OriginalFixedImageDirectionFlat.size() == FixedDimension * FixedDimension)
   {
     for (unsigned int i = 0; i < FixedDimension; ++i)
     {
       for (unsigned int j = 0; j < FixedDimension; ++j)
       {
-        direction(j, i) = this->m_OriginalFixedImageDirection[i * FixedDimension + j];
+        direction(j, i) = this->m_OriginalFixedImageDirectionFlat[i * FixedDimension + j];
       }
     }
     return true;
@@ -1120,12 +1120,12 @@ void
 ElastixTemplate<TFixedImage, TMovingImage>::SetOriginalFixedImageDirection(const FixedImageDirectionType & arg)
 {
   /** flatten to 1d array */
-  this->m_OriginalFixedImageDirection.resize(FixedDimension * FixedDimension);
+  this->m_OriginalFixedImageDirectionFlat.resize(FixedDimension * FixedDimension);
   for (unsigned int i = 0; i < FixedDimension; ++i)
   {
     for (unsigned int j = 0; j < FixedDimension; ++j)
     {
-      this->m_OriginalFixedImageDirection[i * FixedDimension + j] = arg(j, i);
+      this->m_OriginalFixedImageDirectionFlat[i * FixedDimension + j] = arg(j, i);
     }
   }
 

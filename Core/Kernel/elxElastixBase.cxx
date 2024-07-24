@@ -441,7 +441,7 @@ ElastixBase::GetUseDirectionCosines() const
 void
 ElastixBase::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg)
 {
-  m_OriginalFixedImageDirection = arg;
+  m_OriginalFixedImageDirectionFlat = arg;
 }
 
 
@@ -452,7 +452,7 @@ ElastixBase::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType &
 const ElastixBase::FlatDirectionCosinesType &
 ElastixBase::GetOriginalFixedImageDirectionFlat() const
 {
-  return m_OriginalFixedImageDirection;
+  return m_OriginalFixedImageDirectionFlat;
 }
 
 
