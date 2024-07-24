@@ -157,6 +157,18 @@ protected:
   ElastixMain();
   ~ElastixMain() override;
 
+  /** InitDBIndex sets m_DBIndex by asking the ImageTypes
+   * from the Configuration object and obtaining the corresponding
+   * DB index from the ComponentDatabase.
+   */
+  int
+  InitDBIndex() override;
+
+  /** Helper function to obtain information from images on disk. */
+  void
+  GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const;
+
+private:
   /** The fixed images and masks. */
   DataObjectContainerPointer m_FixedImageContainer{ nullptr };
   DataObjectContainerPointer m_FixedMaskContainer{ nullptr };
@@ -175,17 +187,6 @@ protected:
   ParameterMapType m_TransformParameterMap{};
 
   FlatDirectionCosinesType m_OriginalFixedImageDirectionFlat{};
-
-  /** InitDBIndex sets m_DBIndex by asking the ImageTypes
-   * from the Configuration object and obtaining the corresponding
-   * DB index from the ComponentDatabase.
-   */
-  int
-  InitDBIndex() override;
-
-  /** Helper function to obtain information from images on disk. */
-  void
-  GetImageInformationFromFile(const std::string & filename, ImageDimensionType & imageDimension) const;
 };
 
 } // end namespace elastix
