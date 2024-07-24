@@ -188,10 +188,10 @@ ElastixMain::Run()
   }
 
   /** Return the final transform. */
-  this->m_FinalTransform = elastixBase.GetFinalTransform();
+  m_FinalTransform = elastixBase.GetFinalTransform();
 
   /** Get the transformation parameter map */
-  this->m_TransformParameterMap = elastixBase.GetTransformParameterMap();
+  m_TransformParameterMap = elastixBase.GetTransformParameterMap();
 
   /** Store the images in ElastixMain. */
   this->SetFixedImageContainer(elastixBase.GetFixedImageContainer());
@@ -493,7 +493,7 @@ ElastixMain::GetTotalNumberOfElastixLevels() const
 void
 ElastixMain::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType & arg)
 {
-  this->m_OriginalFixedImageDirectionFlat = arg;
+  m_OriginalFixedImageDirectionFlat = arg;
 } // end SetOriginalFixedImageDirectionFlat()
 
 
@@ -504,7 +504,7 @@ ElastixMain::SetOriginalFixedImageDirectionFlat(const FlatDirectionCosinesType &
 const ElastixMain::FlatDirectionCosinesType &
 ElastixMain::GetOriginalFixedImageDirectionFlat() const
 {
-  return this->m_OriginalFixedImageDirectionFlat;
+  return m_OriginalFixedImageDirectionFlat;
 } // end GetOriginalFixedImageDirectionFlat()
 
 
@@ -515,7 +515,7 @@ ElastixMain::GetOriginalFixedImageDirectionFlat() const
 ElastixMain::ParameterMapType
 ElastixMain::GetTransformParameterMap() const
 {
-  return this->m_TransformParameterMap;
+  return m_TransformParameterMap;
 } // end GetTransformParameterMap()
 
 
