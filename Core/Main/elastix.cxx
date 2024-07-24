@@ -273,7 +273,7 @@ main(int argc, char ** argv)
     DataObjectContainerPointer                movingImageContainer = nullptr;
     DataObjectContainerPointer                fixedMaskContainer = nullptr;
     DataObjectContainerPointer                movingMaskContainer = nullptr;
-    ElastixMainType::FlatDirectionCosinesType fixedImageOriginalDirection;
+    ElastixMainType::FlatDirectionCosinesType fixedImageOriginalDirectionFlat;
 
     /**
      * ********************* START REGISTRATION *********************
@@ -295,7 +295,7 @@ main(int argc, char ** argv)
       elastixMain->SetMovingImageContainer(movingImageContainer);
       elastixMain->SetFixedMaskContainer(fixedMaskContainer);
       elastixMain->SetMovingMaskContainer(movingMaskContainer);
-      elastixMain->SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirection);
+      elastixMain->SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirectionFlat);
 
       /** Set the current elastix-level. */
       elastixMain->SetElastixLevel(i);
@@ -337,7 +337,7 @@ main(int argc, char ** argv)
       movingImageContainer = elastixMain->GetModifiableMovingImageContainer();
       fixedMaskContainer = elastixMain->GetModifiableFixedMaskContainer();
       movingMaskContainer = elastixMain->GetModifiableMovingMaskContainer();
-      fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
+      fixedImageOriginalDirectionFlat = elastixMain->GetOriginalFixedImageDirectionFlat();
 
       /** Print a finish message. */
       elx::log::info(std::ostringstream{} << "Running elastix with parameter file " << i << ": \"" << parameterFileName

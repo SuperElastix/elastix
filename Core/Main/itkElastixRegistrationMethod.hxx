@@ -90,7 +90,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     DataObjectContainerPointer movingMaskContainer{ nullptr };
     DataObjectContainerPointer resultImageContainer{ nullptr };
     ElastixMainObjectPointer   transform{ nullptr };
-    FlatDirectionCosinesType   fixedImageOriginalDirection{};
+    FlatDirectionCosinesType   fixedImageOriginalDirectionFlat{};
   };
 
   RegistrationData registrationData{};
@@ -364,7 +364,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
     elastixMain->SetFixedMaskContainer(registrationData.fixedMaskContainer);
     elastixMain->SetMovingMaskContainer(registrationData.movingMaskContainer);
     elastixMain->SetResultImageContainer(registrationData.resultImageContainer);
-    elastixMain->SetOriginalFixedImageDirectionFlat(registrationData.fixedImageOriginalDirection);
+    elastixMain->SetOriginalFixedImageDirectionFlat(registrationData.fixedImageOriginalDirectionFlat);
 
     // Start registration
     unsigned int isError = 0;
