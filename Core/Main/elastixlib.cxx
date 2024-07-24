@@ -218,7 +218,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
   DataObjectContainerPointer                fixedMaskContainer = nullptr;
   DataObjectContainerPointer                movingMaskContainer = nullptr;
   DataObjectContainerPointer                resultImageContainer = nullptr;
-  ElastixMainType::FlatDirectionCosinesType fixedImageOriginalDirection;
+  ElastixMainType::FlatDirectionCosinesType fixedImageOriginalDirectionFlat;
 
   /* Allocate and store masks in containers if available*/
   if (fixedMask)
@@ -256,7 +256,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     elastixMain->SetFixedMaskContainer(fixedMaskContainer);
     elastixMain->SetMovingMaskContainer(movingMaskContainer);
     elastixMain->SetResultImageContainer(resultImageContainer);
-    elastixMain->SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirection);
+    elastixMain->SetOriginalFixedImageDirectionFlat(fixedImageOriginalDirectionFlat);
 
     /** Set the current elastix-level. */
     elastixMain->SetElastixLevel(i);
@@ -291,7 +291,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     fixedMaskContainer = elastixMain->GetModifiableFixedMaskContainer();
     movingMaskContainer = elastixMain->GetModifiableMovingMaskContainer();
     resultImageContainer = elastixMain->GetModifiableResultImageContainer();
-    fixedImageOriginalDirection = elastixMain->GetOriginalFixedImageDirectionFlat();
+    fixedImageOriginalDirectionFlat = elastixMain->GetOriginalFixedImageDirectionFlat();
 
     /** Stop timer and print it. */
     timer.Stop();
