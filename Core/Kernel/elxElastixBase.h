@@ -389,7 +389,7 @@ protected:
 
   DBIndexType m_DBIndex{ 0 };
 
-  FlatDirectionCosinesType m_OriginalFixedImageDirection;
+  FlatDirectionCosinesType m_OriginalFixedImageDirectionFlat;
 
   /** Timers. */
   itk::TimeProbe m_Timer0{};

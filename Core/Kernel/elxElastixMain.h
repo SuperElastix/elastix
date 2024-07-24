@@ -174,7 +174,7 @@ protected:
    */
   ParameterMapType m_TransformParameterMap{};
 
-  FlatDirectionCosinesType m_OriginalFixedImageDirection{};
+  FlatDirectionCosinesType m_OriginalFixedImageDirectionFlat{};
 
   /** InitDBIndex sets m_DBIndex by asking the ImageTypes
    * from the Configuration object and obtaining the corresponding

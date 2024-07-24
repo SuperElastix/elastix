@@ -301,7 +301,7 @@ private:
   void
   ConfigureComponents(Self * This);
 
-  /** Set the direction in the superclass' m_OriginalFixedImageDirection variable */
+  /** Set the direction in the superclass' m_OriginalFixedImageDirectionFlat variable */
   void
   SetOriginalFixedImageDirection(const FixedImageDirectionType & arg);
 };
