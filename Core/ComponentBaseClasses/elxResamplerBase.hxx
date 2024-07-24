@@ -579,7 +579,7 @@ ResamplerBase<TElastix>::ReadFromFile()
     origin[i] = 0.0;
     configuration.ReadParameter(origin[i], "Origin", i);
 
-    /** Read direction cosines. Default identity */
+    /** Read direction cosines. (The matrix elements must be specified in column-major order.) Default identity */
     for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       configuration.ReadParameter(direction(j, i), "Direction", i * ImageDimension + j);
