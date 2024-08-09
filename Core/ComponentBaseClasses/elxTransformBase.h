@@ -96,6 +96,9 @@ namespace elastix
  * \transformparameter Direction: The direction cosines matrix of the fixed image
  * that was used during registration, and which is used for resampling the deformed moving image
  * if the UseDirectionCosines parameter is set to "true".\n
+ * Please note: The matrix elements must be specified in column-major order (Fortran-style).
+ * This is not the same as ITK's convention of using row-major order (C-style) for flattening
+ * direction matrix of an image into a list.\n
  * example: <tt>(Direction -1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.1)</tt>\n
  * Default: identity matrix. Elements are sorted as follows: [ d11 d21 d31 d12 d22 d32 d13 d23 d33] (in 3D).
  * \transformparameter TransformParameters: the transform parameter vector that defines the transformation.\n
