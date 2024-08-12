@@ -355,14 +355,8 @@ ElastixBase::BeforeAllTransformixBase()
     check = m_Configuration->GetCommandLineArgument("-tp");
     log::info(std::ostringstream{} << "-tp       " << check);
   }
-  /** Check the very important UseDirectionCosines parameter. */
-  bool retudc = m_Configuration->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
-  if (!retudc)
-  {
-    log::warn(std::ostringstream{} << "\nWARNING: From elastix 4.3 it is highly recommended to add\n"
-                                   << "the UseDirectionCosines option to your parameter file! See\n"
-                                   << "http://elastix.dev/whatsnew_04_3.php for more information.\n");
-  }
+  /** Retrieve the very important UseDirectionCosines parameter. */
+  m_Configuration->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
 
   return returndummy;
 
