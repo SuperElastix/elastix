@@ -66,51 +66,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
     }
   }
 
-  Superclass::m_InternalParametersBuffer = ParametersType(0);
-  // Make sure the parameters pointer is not NULL after construction.
-  Superclass::m_InputParametersPointer = &(Superclass::m_InternalParametersBuffer);
-
-  // Initialize coefficient images
-  for (unsigned int j = 0; j < SpaceDimension; ++j)
-  {
-    Superclass::m_WrappedImage[j] = ImageType::New();
-    Superclass::m_WrappedImage[j]->SetRegions(Superclass::m_GridRegion);
-    Superclass::m_WrappedImage[j]->SetOrigin(Superclass::m_GridOrigin.GetDataPointer());
-    Superclass::m_WrappedImage[j]->SetSpacing(Superclass::m_GridSpacing.GetDataPointer());
-    Superclass::m_WrappedImage[j]->SetDirection(Superclass::m_GridDirection);
-    Superclass::m_CoefficientImages[j] = nullptr;
-  }
-
   // Setup variables for computing interpolation
   Superclass::m_Offset = SplineOrder / 2;
-  Superclass::m_ValidRegion = Superclass::m_GridRegion;
-
-  /** Fixed Parameters store the following information:
-   *     Grid Size
-   *     Grid Origin
-   *     Grid Spacing
-   *     Grid Direction
-   *  The size of these is equal to the  NInputDimensions
-   */
-  Superclass::m_FixedParameters.SetSize(Superclass::NumberOfFixedParameters);
-  Superclass::m_FixedParameters.Fill(0.0);
-  for (unsigned int i = 0; i < NDimensions; ++i)
-  {
-    Superclass::m_FixedParameters[2 * NDimensions + i] = Superclass::m_GridSpacing[i];
-  }
-  for (unsigned int di = 0; di < NDimensions; ++di)
-  {
-    for (unsigned int dj = 0; dj < NDimensions; ++dj)
-    {
-      Superclass::m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = Superclass::m_GridDirection[di][dj];
-    }
-  }
-
-  Superclass::m_LastJacobianIndex = Superclass::m_ValidRegion.GetIndex();
-
-  // needed, there seems to be double functionality compared to base constructor
-  this->UpdatePointIndexConversions();
-
   Superclass::m_HasNonZeroSpatialHessian = true;
   Superclass::m_HasNonZeroJacobianOfSpatialHessian = true;
 
