@@ -304,11 +304,11 @@ protected:
    * For each direction we create a different weights function for thread-
    * safety.
    */
-  WeightsFunctionPointer                        m_WeightsFunction{};
-  std::vector<DerivativeWeightsFunctionPointer> m_DerivativeWeightsFunctions{};
+  WeightsFunctionPointer           m_WeightsFunction{};
+  DerivativeWeightsFunctionPointer m_DerivativeWeightsFunctions[NDimensions]{};
 
 private:
-  std::vector<std::vector<SODerivativeWeightsFunctionPointer>> m_SODerivativeWeightsFunctions{};
+  SODerivativeWeightsFunctionPointer m_SODerivativeWeightsFunctions[NDimensions][NDimensions]{};
 
   friend class MultiBSplineDeformableTransformWithNormal<ScalarType, Self::SpaceDimension, VSplineOrder>;
 };

@@ -56,13 +56,10 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
 {
   // Instantiate weights functions
   m_WeightsFunction = WeightsFunctionType::New();
-  m_DerivativeWeightsFunctions.resize(SpaceDimension);
-  m_SODerivativeWeightsFunctions.resize(SpaceDimension);
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     m_DerivativeWeightsFunctions[i] = DerivativeWeightsFunctionType::New();
     m_DerivativeWeightsFunctions[i]->SetDerivativeDirection(i);
-    m_SODerivativeWeightsFunctions[i].resize(SpaceDimension);
     for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       m_SODerivativeWeightsFunctions[i][j] = SODerivativeWeightsFunctionType::New();
