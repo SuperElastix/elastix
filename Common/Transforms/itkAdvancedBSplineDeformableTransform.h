@@ -284,11 +284,6 @@ protected:
   AdvancedBSplineDeformableTransform();
   ~AdvancedBSplineDeformableTransform() override = default;
 
-  /** Allow subclasses to access and manipulate the weights function. */
-  // Why??
-  itkSetObjectMacro(WeightsFunction, WeightsFunctionType);
-  itkGetModifiableObjectMacro(WeightsFunction, WeightsFunctionType);
-
   /** Wrap flat array into images of coefficients. */
   void
   WrapAsImages();
@@ -304,7 +299,7 @@ protected:
    * For each direction we create a different weights function for thread-
    * safety.
    */
-  WeightsFunctionPointer           m_WeightsFunction{};
+  const WeightsFunctionPointer     m_WeightsFunction{ WeightsFunctionType::New() };
   DerivativeWeightsFunctionPointer m_DerivativeWeightsFunctions[NDimensions]{};
 
 private:

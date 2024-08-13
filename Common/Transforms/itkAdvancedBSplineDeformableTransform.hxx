@@ -55,7 +55,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
   : Superclass(VSplineOrder)
 {
   // Instantiate weights functions
-  m_WeightsFunction = WeightsFunctionType::New();
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     m_DerivativeWeightsFunctions[i] = DerivativeWeightsFunctionType::New();
