@@ -67,7 +67,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
   }
 
   // Setup variables for computing interpolation
-  Superclass::m_Offset = SplineOrder / 2;
   Superclass::m_HasNonZeroSpatialHessian = true;
   Superclass::m_HasNonZeroJacobianOfSpatialHessian = true;
 
@@ -104,12 +103,14 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
     using CValueType = typename ContinuousIndexType::ValueType;
     for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
+      static constexpr unsigned int offset{ VSplineOrder / 2 };
+
       Superclass::m_ValidRegionBegin[j] =
         static_cast<CValueType>(index[j]) + (static_cast<CValueType>(SplineOrder) - 1.0) / 2.0;
       Superclass::m_ValidRegionEnd[j] = static_cast<CValueType>(index[j]) + static_cast<CValueType>(size[j] - 1) -
                                         (static_cast<CValueType>(SplineOrder) - 1.0) / 2.0;
-      index[j] += static_cast<typename RegionType::IndexValueType>(Superclass::m_Offset);
-      size[j] -= static_cast<typename RegionType::SizeValueType>(2 * Superclass::m_Offset);
+      index[j] += IndexValueType{ offset };
+      size[j] -= SizeValueType{ 2 * offset };
     }
 
     this->UpdateGridOffsetTable();

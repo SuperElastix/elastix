@@ -385,7 +385,6 @@ protected:
   bool                                              m_PointToIndexMatrixIsDiagonal{};
 
   /** Variables defining the interpolation support region. */
-  unsigned long       m_Offset{};
   ContinuousIndexType m_ValidRegionBegin{};
   ContinuousIndexType m_ValidRegionEnd{};
 
