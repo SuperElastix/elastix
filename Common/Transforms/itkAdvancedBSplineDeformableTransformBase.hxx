@@ -82,8 +82,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
   }
 
   this->UpdatePointIndexConversions();
-
-  this->m_LastJacobianIndex = this->m_ValidRegion.GetIndex();
 }
 
 
@@ -525,7 +523,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::PrintSelf(std:
 
   os << indent << "InputParametersPointer: " << this->m_InputParametersPointer << std::endl;
   os << indent << "ValidRegion: " << this->m_ValidRegion << std::endl;
-  os << indent << "LastJacobianIndex: " << this->m_LastJacobianIndex << std::endl;
 }
 
 
