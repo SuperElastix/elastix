@@ -403,11 +403,6 @@ protected:
 
   typename JacobianImageType::Pointer m_JacobianImage[NDimensions]{};
 
-  /** Keep track of last support region used in computing the Jacobian
-   * for fast resetting of Jacobian to zero.
-   */
-  mutable IndexType m_LastJacobianIndex{};
-
   /** Array holding images wrapped from the flat parameters. */
   ImagePointer m_WrappedImage[NDimensions]{};
 
