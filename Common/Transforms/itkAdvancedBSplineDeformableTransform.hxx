@@ -99,7 +99,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
     // Where offset = std::floor(spline / 2 ).
     // Note that the last pixel is not included in the valid region
     // with odd spline orders.
-    // For backward compatibility m_ValidRegion is still created.
     typename RegionType::SizeType  size = Superclass::m_GridRegion.GetSize();
     typename RegionType::IndexType index = Superclass::m_GridRegion.GetIndex();
     using CValueType = typename ContinuousIndexType::ValueType;
@@ -112,8 +111,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
       index[j] += static_cast<typename RegionType::IndexValueType>(Superclass::m_Offset);
       size[j] -= static_cast<typename RegionType::SizeValueType>(2 * Superclass::m_Offset);
     }
-    Superclass::m_ValidRegion.SetSize(size);
-    Superclass::m_ValidRegion.SetIndex(index);
 
     this->UpdateGridOffsetTable();
 
