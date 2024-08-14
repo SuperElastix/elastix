@@ -384,8 +384,6 @@ protected:
   DirectionType                                     m_IndexToPoint{};
   bool                                              m_PointToIndexMatrixIsDiagonal{};
 
-  RegionType m_ValidRegion{};
-
   /** Variables defining the interpolation support region. */
   unsigned long       m_Offset{};
   ContinuousIndexType m_ValidRegionBegin{};

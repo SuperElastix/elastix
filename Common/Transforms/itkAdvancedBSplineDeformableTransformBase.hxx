@@ -48,8 +48,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
     this->m_CoefficientImages[j] = nullptr;
   }
 
-  this->m_ValidRegion = this->m_GridRegion;
-
   // Initialize Jacobian images
   //   for ( unsigned int j = 0; j < SpaceDimension; j++ )
   //     {
@@ -522,7 +520,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::PrintSelf(std:
   os << " ]" << std::endl;
 
   os << indent << "InputParametersPointer: " << this->m_InputParametersPointer << std::endl;
-  os << indent << "ValidRegion: " << this->m_ValidRegion << std::endl;
 }
 
 
