@@ -105,10 +105,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
     {
       static constexpr unsigned int offset{ VSplineOrder / 2 };
 
-      Superclass::m_ValidRegionBegin[j] =
-        static_cast<CValueType>(index[j]) + (static_cast<CValueType>(SplineOrder) - 1.0) / 2.0;
+      Superclass::m_ValidRegionBegin[j] = static_cast<CValueType>(index[j]) + (CValueType{ VSplineOrder } - 1.0) / 2.0;
       Superclass::m_ValidRegionEnd[j] = static_cast<CValueType>(index[j]) + static_cast<CValueType>(size[j] - 1) -
-                                        (static_cast<CValueType>(SplineOrder) - 1.0) / 2.0;
+                                        (CValueType{ VSplineOrder } - 1) / 2.0;
       index[j] += IndexValueType{ offset };
       size[j] -= SizeValueType{ 2 * offset };
     }
