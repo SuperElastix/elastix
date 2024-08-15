@@ -482,6 +482,8 @@ BSplineStackTransform<TElastix>::ReadFromFile()
       dummy |= configuration.ReadParameter(gridindex[i], "GridIndex", i);
       dummy |= configuration.ReadParameter(gridspacing[i], "GridSpacing", i);
       dummy |= configuration.ReadParameter(gridorigin[i], "GridOrigin", i);
+
+      // Retrieve direction cosines. (The matrix elements must be specified in column-major order.)
       for (unsigned int j = 0; j < ReducedSpaceDimension; ++j)
       {
         configuration.ReadParameter(griddirection(j, i), "GridDirection", i * ReducedSpaceDimension + j);

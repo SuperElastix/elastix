@@ -447,6 +447,8 @@ RecursiveBSplineTransform<TElastix>::ReadFromFile()
       this->m_Configuration->ReadParameter(gridindex[i], "GridIndex", i);
       this->m_Configuration->ReadParameter(gridspacing[i], "GridSpacing", i);
       this->m_Configuration->ReadParameter(gridorigin[i], "GridOrigin", i);
+
+      // Retrieve grid direction cosines. (The matrix elements must be specified in column-major order.)
       for (unsigned int j = 0; j < SpaceDimension; ++j)
       {
         this->m_Configuration->ReadParameter(griddirection(j, i), "GridDirection", i * SpaceDimension + j);
