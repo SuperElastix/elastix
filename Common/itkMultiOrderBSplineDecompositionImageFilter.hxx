@@ -330,8 +330,6 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyImageT
   InputIterator  inIt(this->GetInput(), this->GetInput()->GetBufferedRegion());
   OutputIterator outIt(this->GetOutput(), this->GetOutput()->GetBufferedRegion());
 
-  inIt.GoToBegin();
-  outIt.GoToBegin();
   while (!outIt.IsAtEnd())
   {
     outIt.Set(static_cast<OutputPixelType>(inIt.Get()));

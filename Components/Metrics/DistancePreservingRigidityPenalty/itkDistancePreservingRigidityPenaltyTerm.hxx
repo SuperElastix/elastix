@@ -134,8 +134,6 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
 
   unsigned int PixelValue;
 
-  ki.GoToBegin();
-
   while (!ki.IsAtEnd())
   {
     penaltyGridIndex = ki.GetIndex();
@@ -202,7 +200,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
   /** Penalty term computation */
   if constexpr (MovingImageDimension == 3)
   {
-    for (pgi.GoToBegin(), ni.GoToBegin(); !pgi.IsAtEnd(); ++pgi, ++ni)
+    for (; !pgi.IsAtEnd(); ++pgi, ++ni)
     {
       penaltyGridIndex = pgi.GetIndex();
 
@@ -363,7 +361,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
   if constexpr (MovingImageDimension == 3)
   {
-    for (pgi.GoToBegin(), ni.GoToBegin(); !pgi.IsAtEnd(); ++pgi, ++ni)
+    for (; !pgi.IsAtEnd(); ++pgi, ++ni)
     {
       penaltyGridIndex = pgi.GetIndex();
 

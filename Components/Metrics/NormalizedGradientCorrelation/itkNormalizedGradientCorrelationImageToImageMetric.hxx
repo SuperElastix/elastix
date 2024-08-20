@@ -131,9 +131,6 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   FixedIteratorType fixedIteratorx(this->m_FixedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   FixedIteratorType fixedIteratory(this->m_FixedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());
 
-  fixedIteratorx.GoToBegin();
-  fixedIteratory.GoToBegin();
-
   bool                   sampleOK = false;
   FixedGradientPixelType fixedGradient[FixedImageDimension];
   for (int i = 0; i < FixedImageDimension; ++i)
@@ -204,9 +201,6 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 
   MovedIteratorType movedIteratorx(this->m_MovedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   MovedIteratorType movedIteratory(this->m_MovedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());
-
-  movedIteratorx.GoToBegin();
-  movedIteratory.GoToBegin();
 
   bool sampleOK = false;
 
@@ -297,16 +291,10 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
   FixedIteratorType fixedIteratorx(this->m_FixedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   FixedIteratorType fixedIteratory(this->m_FixedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());
 
-  fixedIteratorx.GoToBegin();
-  fixedIteratory.GoToBegin();
-
   using MovedIteratorType = itk::ImageRegionConstIteratorWithIndex<MovedGradientImageType>;
 
   MovedIteratorType movedIteratorx(this->m_MovedSobelFilters[0]->GetOutput(), this->GetFixedImageRegion());
   MovedIteratorType movedIteratory(this->m_MovedSobelFilters[1]->GetOutput(), this->GetFixedImageRegion());
-
-  movedIteratorx.GoToBegin();
-  movedIteratory.GoToBegin();
 
   Superclass::m_NumberOfPixelsCounted = 0;
   bool sampleOK = false;

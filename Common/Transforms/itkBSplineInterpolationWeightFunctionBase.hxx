@@ -56,7 +56,6 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 
   /** Create an iterator over the image. */
   ImageRegionConstIteratorWithIndex<CharImageType> it(tempImage, tempImage->GetBufferedRegion());
-  it.GoToBegin();
 
   /** Fill the OffsetToIndexTable. */
   this->m_OffsetToIndexTable.set_size(NumberOfWeights, SpaceDimension);

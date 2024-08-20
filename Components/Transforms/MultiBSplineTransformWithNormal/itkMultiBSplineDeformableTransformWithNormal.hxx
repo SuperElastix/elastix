@@ -212,7 +212,7 @@ struct UpdateLocalBases_impl<TScalarType, 2>
     vinterp->SetInputImage(normals);
 
     ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion());
-    for (it.GoToBegin(); !it.IsAtEnd(); ++it)
+    for (; !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
       typename ImageBaseType::PointType p;
@@ -272,7 +272,7 @@ struct UpdateLocalBases_impl<TScalarType, 3>
     vinterp->SetInputImage(normals);
 
     ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion());
-    for (it.GoToBegin(); !it.IsAtEnd(); ++it)
+    for (; !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
       typename ImageBaseType::PointType p;

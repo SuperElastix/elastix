@@ -710,10 +710,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeIncre
   IncMargIteratorType fixincit(fixedIncrementalMarginalPDF, fixedIncrementalMarginalPDF->GetLargestPossibleRegion());
   IncMargIteratorType movincit(movingIncrementalMarginalPDF, movingIncrementalMarginalPDF->GetLargestPossibleRegion());
 
-  incit.GoToBegin();
-  fixincit.GoToBegin();
-  movincit.GoToBegin();
-
   const auto numberOfParameters = this->GetNumberOfParameters();
 
   /** Loop over the incremental pdf and update the incremental marginal pdfs. */

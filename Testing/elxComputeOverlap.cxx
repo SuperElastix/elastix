@@ -123,7 +123,7 @@ main(int argc, char ** argv)
 
   /** Determine size of first object. */
   long long sumA = 0;
-  for (iteratorA.GoToBegin(); !iteratorA.IsAtEnd(); ++iteratorA)
+  for (; !iteratorA.IsAtEnd(); ++iteratorA)
   {
     if (iteratorA.Value())
     {
@@ -134,7 +134,7 @@ main(int argc, char ** argv)
 
   /** Determine size of second object. */
   long long sumB = 0;
-  for (iteratorB.GoToBegin(); !iteratorB.IsAtEnd(); ++iteratorB)
+  for (; !iteratorB.IsAtEnd(); ++iteratorB)
   {
     if (iteratorB.Value())
     {
@@ -145,7 +145,7 @@ main(int argc, char ** argv)
 
   /** Determine size of cross-section. */
   long long sumC = 0;
-  for (iteratorC.GoToBegin(); !iteratorC.IsAtEnd(); ++iteratorC)
+  for (; !iteratorC.IsAtEnd(); ++iteratorC)
   {
     if (iteratorC.Value())
     {

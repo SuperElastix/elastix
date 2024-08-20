@@ -97,7 +97,6 @@ TestInterpolators()
 
   // loop over image and fill with random values
   IteratorType it(image, image->GetLargestPossibleRegion());
-  it.GoToBegin();
 
   while (!it.IsAtEnd())
   {

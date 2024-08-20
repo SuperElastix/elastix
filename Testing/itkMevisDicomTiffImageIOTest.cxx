@@ -149,7 +149,7 @@ testMevis()
 
   PixelType     pixval = 0;
   unsigned long pixnr = 0;
-  for (it.GoToBegin(); !it.IsAtEnd(); ++it)
+  for (; !it.IsAtEnd(); ++it)
   {
     pixval = static_cast<PixelType>(itk::Math::Floor<double>(pixnr * factor));
     it.Set(pixval);

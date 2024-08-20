@@ -229,7 +229,6 @@ TransformToDeterminantOfSpatialJacobianSource<TOutputImage, TTransformPrecisionT
   // Create an iterator that will walk the output region for this thread.
   using OutputIteratorType = ImageRegionIteratorWithIndex<TOutputImage>;
   OutputIteratorType it(outputPtr, outputRegionForThread);
-  it.GoToBegin();
 
   // pixel coordinates
   PointType point;

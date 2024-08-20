@@ -818,14 +818,11 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   using DerivativeConstIteratorType = typename DerivativeType::const_iterator;
 
   JointPDFIteratorType jointPDFit(this->m_JointPDF, this->m_JointPDF->GetLargestPossibleRegion());
-  jointPDFit.GoToBegin();
 
   IncrementalJointPDFIteratorType jointIncPDFRightit(this->m_IncrementalJointPDFRight,
                                                      this->m_IncrementalJointPDFRight->GetLargestPossibleRegion());
   IncrementalJointPDFIteratorType jointIncPDFLeftit(this->m_IncrementalJointPDFLeft,
                                                     this->m_IncrementalJointPDFLeft->GetLargestPossibleRegion());
-  jointIncPDFRightit.GoToBegin();
-  jointIncPDFLeftit.GoToBegin();
 
   MarginalPDFIteratorType       fixedPDFit = this->m_FixedImageMarginalPDF.begin();
   const MarginalPDFIteratorType fixedPDFend = this->m_FixedImageMarginalPDF.end();
@@ -840,10 +837,6 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
     this->m_FixedIncrementalMarginalPDFLeft, this->m_FixedIncrementalMarginalPDFLeft->GetLargestPossibleRegion());
   IncrementalMarginalPDFIteratorType movingIncPDFLeftit(
     this->m_MovingIncrementalMarginalPDFLeft, this->m_MovingIncrementalMarginalPDFLeft->GetLargestPossibleRegion());
-  fixedIncPDFRightit.GoToBegin();
-  movingIncPDFRightit.GoToBegin();
-  fixedIncPDFLeftit.GoToBegin();
-  movingIncPDFLeftit.GoToBegin();
 
   DerivativeIteratorType       derivit = derivative.begin();
   const DerivativeIteratorType derivbegin = derivative.begin();
