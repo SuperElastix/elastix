@@ -789,8 +789,6 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGrad
   /** Create and reset iterators. */
   GradientIteratorType git(tempGradientImage, tempGradientImage->GetBufferedRegion());
   MovingIteratorType   mit(this->m_MovingImage, this->m_MovingImage->GetBufferedRegion());
-  git.GoToBegin();
-  mit.GoToBegin();
 
   /** Some temporary variables. */
   typename MovingImageType::IndexType   minusIndex, plusIndex, currIndex;

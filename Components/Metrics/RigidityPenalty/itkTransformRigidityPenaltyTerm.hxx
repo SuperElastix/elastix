@@ -341,7 +341,6 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FillRigidityCoefficientI
   /** Create and reset an iterator over m_RigidityCoefficientImage. */
   RigidityImageIteratorType it(this->m_RigidityCoefficientImage,
                                this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
-  it.GoToBegin();
 
   /** Fill m_RigidityCoefficientImage. */
   RigidityPixelType      fixedValue, movingValue, in;
@@ -500,8 +499,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   /** Create iterator over the rigidity coeficient image. */
   CoefficientImageIteratorType it_RCI(this->m_RigidityCoefficientImage,
                                       this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
-  it_RCI.GoToBegin();
-  ScalarType rigidityCoefficientSum{};
+  ScalarType                   rigidityCoefficientSum{};
 
   /** Add the rigidity coefficients together. */
   while (!it_RCI.IsAtEnd())
@@ -613,19 +611,6 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       itF[i] = CoefficientImageIteratorType(ui_FF[i], ui_FF[i]->GetLargestPossibleRegion());
       itH[i] = CoefficientImageIteratorType(ui_FH[i], ui_FH[i]->GetLargestPossibleRegion());
       itI[i] = CoefficientImageIteratorType(ui_FI[i], ui_FI[i]->GetLargestPossibleRegion());
-    }
-    /** Reset iterators. */
-    itA[i].GoToBegin();
-    itB[i].GoToBegin();
-    itD[i].GoToBegin();
-    itE[i].GoToBegin();
-    itG[i].GoToBegin();
-    if constexpr (ImageDimension == 3)
-    {
-      itC[i].GoToBegin();
-      itF[i].GoToBegin();
-      itH[i].GoToBegin();
-      itI[i].GoToBegin();
     }
   }
 
@@ -943,8 +928,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   /** Create iterator over the rigidity coeficient image. */
   CoefficientImageIteratorType it_RCI(this->m_RigidityCoefficientImage,
                                       this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
-  it_RCI.GoToBegin();
-  ScalarType rigidityCoefficientSum{};
+  ScalarType                   rigidityCoefficientSum{};
 
   /** Add the rigidity coefficients together. */
   while (!it_RCI.IsAtEnd())
@@ -1057,19 +1041,6 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       itH[i] = CoefficientImageIteratorType(ui_FH[i], ui_FH[i]->GetLargestPossibleRegion());
       itI[i] = CoefficientImageIteratorType(ui_FI[i], ui_FI[i]->GetLargestPossibleRegion());
     }
-    /** Reset iterators. */
-    itA[i].GoToBegin();
-    itB[i].GoToBegin();
-    itD[i].GoToBegin();
-    itE[i].GoToBegin();
-    itG[i].GoToBegin();
-    if constexpr (ImageDimension == 3)
-    {
-      itC[i].GoToBegin();
-      itF[i].GoToBegin();
-      itH[i].GoToBegin();
-      itI[i].GoToBegin();
-    }
   }
 
   /** Create orthonormality and properness parts. */
@@ -1116,14 +1087,11 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       itOCp[i][j] = CoefficientImageIteratorType(OCparts[i][j], OCparts[i][j]->GetLargestPossibleRegion());
-      itOCp[i][j].GoToBegin();
       itPCp[i][j] = CoefficientImageIteratorType(PCparts[i][j], PCparts[i][j]->GetLargestPossibleRegion());
-      itPCp[i][j].GoToBegin();
     }
     for (unsigned int j = 0; j < NofLParts; ++j)
     {
       itLCp[i][j] = CoefficientImageIteratorType(LCparts[i][j], LCparts[i][j]->GetLargestPossibleRegion());
-      itLCp[i][j].GoToBegin();
     }
   }
 
@@ -1597,14 +1565,11 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
     for (unsigned int j = 0; j < ImageDimension; ++j)
     {
       nitOCp[i][j] = NeighborhoodIteratorType(radius, OCparts[i][j], OCparts[i][j]->GetLargestPossibleRegion());
-      nitOCp[i][j].GoToBegin();
       nitPCp[i][j] = NeighborhoodIteratorType(radius, PCparts[i][j], PCparts[i][j]->GetLargestPossibleRegion());
-      nitPCp[i][j].GoToBegin();
     }
     for (unsigned int j = 0; j < NofLParts; ++j)
     {
       nitLCp[i][j] = NeighborhoodIteratorType(radius, LCparts[i][j], LCparts[i][j]->GetLargestPossibleRegion());
-      nitLCp[i][j].GoToBegin();
     }
   }
 
@@ -1615,17 +1580,13 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itOCpf[i] = CoefficientImageIteratorType(OCpartsF[i], OCpartsF[i]->GetLargestPossibleRegion());
-    itOCpf[i].GoToBegin();
     itPCpf[i] = CoefficientImageIteratorType(PCpartsF[i], PCpartsF[i]->GetLargestPossibleRegion());
-    itPCpf[i].GoToBegin();
     itLCpf[i] = CoefficientImageIteratorType(LCpartsF[i], LCpartsF[i]->GetLargestPossibleRegion());
-    itLCpf[i].GoToBegin();
   }
 
   /** Create a neigborhood iterator over the rigidity image. */
   NeighborhoodIteratorType nit_RCI(
     radius, this->m_RigidityCoefficientImage, this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
-  nit_RCI.GoToBegin();
   unsigned int neighborhoodSize = nit_RCI.Size();
 
   /** Create ND operators. */
@@ -1835,7 +1796,6 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     itDIs[i] = CoefficientImageIteratorType(derivativeImages[i], derivativeImages[i]->GetLargestPossibleRegion());
-    itDIs[i].GoToBegin();
     itOCpf[i].GoToBegin();
     itPCpf[i].GoToBegin();
     itLCpf[i].GoToBegin();
