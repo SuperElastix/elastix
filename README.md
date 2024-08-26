@@ -9,6 +9,7 @@
 [![GitHub Actions](https://github.com/SuperElastix/elastix/workflows/Elastix/badge.svg)](https://github.com/SuperElastix/elastix/actions)
 [![Model Zoo](https://img.shields.io/badge/open-Model%20Zoo-blue.svg)](https://elastix.dev/modelzoo/)
 [![Docker](https://img.shields.io/badge/open-docker%20image-blueviolet.svg)](https://hub.docker.com/repository/docker/superelastix/elastix)
+[![DOI](https://zenodo.org/badge/91586944.svg)](https://zenodo.org/doi/10.5281/zenodo.13366181)
 
 Welcome to elastix: a toolbox for rigid and nonrigid registration of images.
 
@@ -24,6 +25,7 @@ If you use this software anywhere we would appreciate if you cite the following 
 - D.P. Shamonin, E.E. Bron, B.P.F. Lelieveldt, M. Smits, S. Klein and M. Staring, "Fast Parallel Image Registration on CPU and GPU for Diagnostic Classification of Alzheimer’s Disease", Frontiers in Neuroinformatics, vol. 7, no. 50, pp. 1-15, January 2014. [download](https://elastix.dev/marius/publications/2014_j_FNI.php) [doi](http://dx.doi.org/10.3389/fninf.2013.00050)
 
 Specific components of elastix are made by many; The relevant citation can be found [here](https://github.com/SuperElastix/elastix/wiki/How-to-cite-elastix-(components)).
+In addition, you can use the elastix DOI identifiers from Zenodo to refer to specific software releases: https://zenodo.org/doi/10.5281/zenodo.13366181
 
 ## More information ##
 
