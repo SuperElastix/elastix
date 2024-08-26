@@ -176,8 +176,6 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
   using PenaltyGridIteratorType = itk::ImageRegionConstIteratorWithIndex<PenaltyGridImageType>;
   PenaltyGridImageRegionType penaltyGridImageRegion = this->m_PenaltyGridImage->GetBufferedRegion();
 
-  PenaltyGridIteratorType pgi(this->m_PenaltyGridImage, penaltyGridImageRegion);
-
   typename PenaltyGridImageType::IndexType penaltyGridIndex, neighborPenaltyGridIndex;
   typename PenaltyGridImageType::PointType penaltyGridPoint, neighborPenaltyGridPoint, xn, xf;
 
@@ -200,7 +198,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
   /** Penalty term computation */
   if constexpr (MovingImageDimension == 3)
   {
-    for (; !pgi.IsAtEnd(); ++pgi, ++ni)
+    for (PenaltyGridIteratorType pgi(this->m_PenaltyGridImage, penaltyGridImageRegion); !pgi.IsAtEnd(); ++pgi, ++ni)
     {
       penaltyGridIndex = pgi.GetIndex();
 
@@ -329,7 +327,6 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
   using PenaltyGridIteratorType = itk::ImageRegionConstIteratorWithIndex<PenaltyGridImageType>;
   PenaltyGridImageRegionType penaltyGridImageRegion = this->m_PenaltyGridImage->GetBufferedRegion();
-  PenaltyGridIteratorType    pgi(this->m_PenaltyGridImage, penaltyGridImageRegion);
 
   // neighborhood iterator
   using NeighborhoodIteratorType = itk::ConstNeighborhoodIterator<PenaltyGridImageType>;
@@ -361,7 +358,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
   if constexpr (MovingImageDimension == 3)
   {
-    for (; !pgi.IsAtEnd(); ++pgi, ++ni)
+    for (PenaltyGridIteratorType pgi(this->m_PenaltyGridImage, penaltyGridImageRegion); !pgi.IsAtEnd(); ++pgi, ++ni)
     {
       penaltyGridIndex = pgi.GetIndex();
 
