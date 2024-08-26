@@ -116,14 +116,11 @@ main(int argc, char ** argv)
 
   /** Now calculate the L1-norms. */
 
-  /** Create iterators. */
-  IteratorType iteratorA(ANDFilter->GetInput(1), ANDFilter->GetInput(1)->GetLargestPossibleRegion());
-  IteratorType iteratorB(ANDFilter->GetInput(0), ANDFilter->GetInput(0)->GetLargestPossibleRegion());
-  IteratorType iteratorC(ANDFilter->GetOutput(), ANDFilter->GetOutput()->GetLargestPossibleRegion());
-
   /** Determine size of first object. */
   long long sumA = 0;
-  for (; !iteratorA.IsAtEnd(); ++iteratorA)
+  for (IteratorType iteratorA(ANDFilter->GetInput(1), ANDFilter->GetInput(1)->GetLargestPossibleRegion());
+       !iteratorA.IsAtEnd();
+       ++iteratorA)
   {
     if (iteratorA.Value())
     {
@@ -134,7 +131,9 @@ main(int argc, char ** argv)
 
   /** Determine size of second object. */
   long long sumB = 0;
-  for (; !iteratorB.IsAtEnd(); ++iteratorB)
+  for (IteratorType iteratorB(ANDFilter->GetInput(0), ANDFilter->GetInput(0)->GetLargestPossibleRegion());
+       !iteratorB.IsAtEnd();
+       ++iteratorB)
   {
     if (iteratorB.Value())
     {
@@ -145,7 +144,9 @@ main(int argc, char ** argv)
 
   /** Determine size of cross-section. */
   long long sumC = 0;
-  for (; !iteratorC.IsAtEnd(); ++iteratorC)
+  for (IteratorType iteratorC(ANDFilter->GetOutput(), ANDFilter->GetOutput()->GetLargestPossibleRegion());
+       !iteratorC.IsAtEnd();
+       ++iteratorC)
   {
     if (iteratorC.Value())
     {

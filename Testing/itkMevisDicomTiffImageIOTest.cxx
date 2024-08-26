@@ -143,13 +143,12 @@ testMevis()
     return 1;
   }
 
-  IteratorType  it(inputImage, inputImage->GetLargestPossibleRegion());
   unsigned long nrPixels = inputImage->GetLargestPossibleRegion().GetNumberOfPixels();
   double        factor = itk::NumericTraits<PixelType>::max() / static_cast<double>(nrPixels);
 
   PixelType     pixval = 0;
   unsigned long pixnr = 0;
-  for (; !it.IsAtEnd(); ++it)
+  for (IteratorType it(inputImage, inputImage->GetLargestPossibleRegion()); !it.IsAtEnd(); ++it)
   {
     pixval = static_cast<PixelType>(itk::Math::Floor<double>(pixnr * factor));
     it.Set(pixval);

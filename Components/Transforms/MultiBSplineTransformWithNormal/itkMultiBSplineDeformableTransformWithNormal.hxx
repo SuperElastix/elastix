@@ -211,8 +211,7 @@ struct UpdateLocalBases_impl<TScalarType, 2>
     ImageVectorInterpolatorPointer vinterp = ImageVectorInterpolator::New();
     vinterp->SetInputImage(normals);
 
-    ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion());
-    for (; !it.IsAtEnd(); ++it)
+    for (ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion()); !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
       typename ImageBaseType::PointType p;
@@ -271,8 +270,7 @@ struct UpdateLocalBases_impl<TScalarType, 3>
     ImageVectorInterpolatorPointer vinterp = ImageVectorInterpolator::New();
     vinterp->SetInputImage(normals);
 
-    ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion());
-    for (; !it.IsAtEnd(); ++it)
+    for (ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion()); !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
       typename ImageBaseType::PointType p;
