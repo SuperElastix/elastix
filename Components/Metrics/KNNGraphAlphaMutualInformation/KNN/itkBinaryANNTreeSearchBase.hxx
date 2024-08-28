@@ -45,7 +45,7 @@ BinaryANNTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
   this->Superclass::SetBinaryTree(tree);
   if (tree)
   {
-    BinaryANNTreeType * testPtr = dynamic_cast<BinaryANNTreeType *>(tree);
+    auto * testPtr = dynamic_cast<BinaryANNTreeType *>(tree);
     if (testPtr)
     {
       if (testPtr != this->m_BinaryTreeAsITKANNType)

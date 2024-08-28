@@ -217,7 +217,7 @@ void
 ConjugateGradient<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Set the maximumNumberOfIterations.*/
   unsigned int maximumNumberOfIterations = 100;
@@ -511,8 +511,7 @@ ConjugateGradient<TElastix>::GetLineSearchStopCondition() const
 
   std::string stopcondition;
 
-  LineSearchStopConditionType lineSearchStopCondition =
-    static_cast<LineSearchStopConditionType>(this->m_LineOptimizer->GetStopCondition());
+  auto lineSearchStopCondition = static_cast<LineSearchStopConditionType>(this->m_LineOptimizer->GetStopCondition());
 
   switch (lineSearchStopCondition)
   {

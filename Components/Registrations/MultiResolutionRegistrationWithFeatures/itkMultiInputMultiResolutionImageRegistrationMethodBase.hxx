@@ -223,7 +223,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
 {
   this->Superclass::SetMetric(_arg);
 
-  MultiInputMetricType * testPointer = dynamic_cast<MultiInputMetricType *>(_arg);
+  auto * testPointer = dynamic_cast<MultiInputMetricType *>(_arg);
   if (testPointer)
   {
     this->m_MultiInputMetric = testPointer;
@@ -292,7 +292,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
   this->GetModifiableOptimizer()->SetInitialPosition(this->GetInitialTransformParametersOfNextLevel());
 
   /** Connect the transform to the Decorator. */
-  TransformOutputType * transformOutput = static_cast<TransformOutputType *>(this->ProcessObject::GetOutput(0));
+  auto * transformOutput = static_cast<TransformOutputType *>(this->ProcessObject::GetOutput(0));
 
   transformOutput->Set(this->GetTransform());
 

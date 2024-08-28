@@ -75,7 +75,7 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
   /** Get a list of all OpenCL devices. */
   std::list<itk::OpenCLDevice>       devicesByType;
   const std::list<itk::OpenCLDevice> allDevices = itk::OpenCLDevice::GetAllDevices();
-  for (std::list<itk::OpenCLDevice>::const_iterator device = allDevices.begin(); device != allDevices.end(); ++device)
+  for (auto device = allDevices.begin(); device != allDevices.end(); ++device)
   {
     if ((device->GetDeviceType() & deviceType) != 0)
     {

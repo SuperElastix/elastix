@@ -517,8 +517,8 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
   for (unsigned int i = 0; i < m_ParameterMaps.size(); ++i)
   {
     os << "ParameterMap " << i << ": " << std::endl;
-    ParameterMapConstIterator parameterMapIterator = m_ParameterMaps[i].begin();
-    ParameterMapConstIterator parameterMapIteratorEnd = m_ParameterMaps[i].end();
+    auto parameterMapIterator = m_ParameterMaps[i].begin();
+    auto parameterMapIteratorEnd = m_ParameterMaps[i].end();
     while (parameterMapIterator != parameterMapIteratorEnd)
     {
       os << "  (" << parameterMapIterator->first;

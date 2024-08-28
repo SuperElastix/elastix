@@ -84,7 +84,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetComponents()
    */
 
   /** Set the metric. */
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (testPtr)
   {
     this->SetMetric(testPtr);

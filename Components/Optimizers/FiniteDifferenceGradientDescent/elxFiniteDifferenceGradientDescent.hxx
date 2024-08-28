@@ -84,7 +84,7 @@ void
 FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 

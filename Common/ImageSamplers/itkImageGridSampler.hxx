@@ -426,14 +426,14 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
 
   /** Get the cropped image region volume in voxels. */
   this->CropInputImageRegion();
-  const double allvoxels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
+  const auto allvoxels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
 
   /** Compute the fraction in voxels. */
   const double fraction = allvoxels / static_cast<double>(nrofsamples);
 
   /** Compute the grid spacing. */
-  const double indimd = static_cast<double>(InputImageDimension);
-  int          gridSpacing = static_cast<int>( // no unsigned int version of rnd, max
+  const auto indimd = static_cast<double>(InputImageDimension);
+  int        gridSpacing = static_cast<int>( // no unsigned int version of rnd, max
     Math::Round<int64_t>(std::pow(fraction, 1.0 / indimd)));
   gridSpacing = std::max(1, gridSpacing);
 

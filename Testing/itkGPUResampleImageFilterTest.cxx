@@ -1061,7 +1061,7 @@ main(int argc, char * argv[])
     else
     {
       // Get CPU AdvancedCombinationTransform
-      const AdvancedCombinationTransformType * CPUAdvancedCombinationTransform =
+      const auto * CPUAdvancedCombinationTransform =
         dynamic_cast<const AdvancedCombinationTransformType *>(cpuTransform.GetPointer());
       if (CPUAdvancedCombinationTransform)
       {
@@ -1143,8 +1143,8 @@ main(int argc, char * argv[])
   }
 
   // Compute RMSE
-  double       RMSrelative = 0.0;
-  const double RMSerror = itk::ComputeRMSE<double, OutputImageType, OutputImageType>(
+  double     RMSrelative = 0.0;
+  const auto RMSerror = itk::ComputeRMSE<double, OutputImageType, OutputImageType>(
     cpuFilter->GetOutput(), gpuFilter->GetOutput(), RMSrelative);
   std::cout << " " << RMSerror << std::endl;
 

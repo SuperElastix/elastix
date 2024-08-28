@@ -97,7 +97,7 @@ GPURecursiveGaussianImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
 
   const typename GPUOutputImage::SizeType outSize = otPtr->GetLargestPossibleRegion().GetSize();
   const unsigned int                      ln = outSize[this->GetDirection()];
-  const unsigned int                      ImageDim = (unsigned int)(TInputImage::ImageDimension);
+  const auto                              ImageDim = (unsigned int)(TInputImage::ImageDimension);
 
   // Check if GPU filter are able to perform for this image
   if (ln > this->m_DeviceLocalMemorySize)

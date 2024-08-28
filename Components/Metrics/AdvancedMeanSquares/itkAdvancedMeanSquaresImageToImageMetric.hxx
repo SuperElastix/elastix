@@ -257,7 +257,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
@@ -298,7 +298,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
       /** The difference squared. */
       const RealType diff = movingImageValue - fixedImageValue;
@@ -554,7 +554,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
@@ -597,7 +597,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

@@ -240,7 +240,7 @@ public:
     if (default_entry_nr >= 0)
     {
       /** Try the default_entry_nr if the entry_nr is not found. */
-      unsigned int uintdefault = static_cast<unsigned int>(default_entry_nr);
+      auto uintdefault = static_cast<unsigned int>(default_entry_nr);
       found |= this->ReadParameter(parameterValue, parameterName, uintdefault, false, dummyString);
       found |= this->ReadParameter(parameterValue, parameterName, entry_nr, false, dummyString);
       found |= this->ReadParameter(parameterValue, fullname, uintdefault, false, dummyString);

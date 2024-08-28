@@ -124,7 +124,7 @@ ProgressCommand::DisconnectObserver(itk::ProcessObject * filter)
 void
 ProgressCommand::Execute(itk::Object * caller, const itk::EventObject & event)
 {
-  itk::ProcessObject * po = dynamic_cast<itk::ProcessObject *>(caller);
+  auto * po = dynamic_cast<itk::ProcessObject *>(caller);
   if (!po)
   {
     return;
@@ -145,7 +145,7 @@ ProgressCommand::Execute(itk::Object * caller, const itk::EventObject & event)
 void
 ProgressCommand::Execute(const itk::Object * caller, const itk::EventObject & event)
 {
-  const itk::ProcessObject * po = dynamic_cast<const itk::ProcessObject *>(caller);
+  const auto * po = dynamic_cast<const itk::ProcessObject *>(caller);
   if (!po)
   {
     return;
@@ -189,7 +189,7 @@ ProgressCommand::PrintProgress(const float progress) const
 void
 ProgressCommand::UpdateAndPrintProgress(const unsigned long currentVoxelNumber) const
 {
-  const unsigned long frac = static_cast<unsigned long>(m_NumberOfVoxels / m_NumberOfUpdates);
+  const auto frac = static_cast<unsigned long>(m_NumberOfVoxels / m_NumberOfUpdates);
   if (currentVoxelNumber % frac == 0)
   {
     this->PrintProgress(static_cast<float>(currentVoxelNumber) / static_cast<float>(m_NumberOfVoxels));

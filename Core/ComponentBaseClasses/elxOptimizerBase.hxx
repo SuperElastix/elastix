@@ -88,8 +88,8 @@ OptimizerBase<TElastix>::AfterRegistrationBase()
   }
 
   /** Compute the crc checksum using zlib crc32 function. */
-  const unsigned char * crcInputData = reinterpret_cast<const unsigned char *>(roundedTP.data_block());
-  uLong                 crc = crc32(0L, Z_NULL, 0);
+  const auto * crcInputData = reinterpret_cast<const unsigned char *>(roundedTP.data_block());
+  uLong        crc = crc32(0L, Z_NULL, 0);
   crc = crc32(crc, crcInputData, N * sizeof(ParametersValueType));
 
   log::info(std::ostringstream{} << "\nRegistration result checksum: " << crc);
@@ -201,8 +201,8 @@ OptimizerBase<TElastix>::SetSinusScales(double amplitude, double frequency, unsi
 {
   using ScalesType = typename ITKBaseType::ScalesType;
 
-  const double nrofpar = static_cast<double>(numberOfParameters);
-  ScalesType   scales(numberOfParameters);
+  const auto nrofpar = static_cast<double>(numberOfParameters);
+  ScalesType scales(numberOfParameters);
 
   for (unsigned long i = 0; i < numberOfParameters; ++i)
   {

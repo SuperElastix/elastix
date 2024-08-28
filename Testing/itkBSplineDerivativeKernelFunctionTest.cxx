@@ -37,7 +37,7 @@ main()
    * fast test results in Release mode.
    * Increase it for real time testing.
    */
-  unsigned int N = static_cast<unsigned int>(1e7);
+  auto         N = static_cast<unsigned int>(1e7);
   const double maxAllowedDistance = 1e-5; // the allowable distance
 
   /** Other typedefs. */

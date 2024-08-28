@@ -114,7 +114,7 @@ void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
@@ -319,7 +319,7 @@ void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachResolution()
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /**
    * enum StopConditionType{
@@ -779,7 +779,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
 
   /** Cast to advanced metric type. */
   using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
     itkExceptionMacro("ERROR: AdaptiveStochasticVarianceReducedGradient expects the metric to be of type "
@@ -919,7 +919,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
 
   /** Cast to advanced metric type. */
   using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
     itkExceptionMacro("ERROR: AdaptiveStochasticVarianceReducedGradient expects the metric to be of type "

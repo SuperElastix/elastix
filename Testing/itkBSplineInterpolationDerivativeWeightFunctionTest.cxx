@@ -38,7 +38,7 @@ main()
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
    */
-  unsigned int N = static_cast<unsigned int>(1e7);
+  auto N = static_cast<unsigned int>(1e7);
 
   /** Other typedefs. */
   using DerivativeWeightFunctionType =

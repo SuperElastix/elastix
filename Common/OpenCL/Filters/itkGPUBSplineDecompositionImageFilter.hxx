@@ -157,7 +157,7 @@ GPUBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // Solving warning "case label value exceeds maximum value for type"
   // by making a local copy of the input image dimension.
   // switch( InputImageDimension )
-  const unsigned int ImageDim = (unsigned int)(InputImageDimension);
+  const auto ImageDim = (unsigned int)(InputImageDimension);
   switch (ImageDim)
   {
     case 1:

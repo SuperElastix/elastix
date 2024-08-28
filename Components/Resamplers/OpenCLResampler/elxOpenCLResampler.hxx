@@ -87,8 +87,7 @@ OpenCLResampler<TElastix>::SetTransform(const TransformType * _arg)
   if (this->m_ContextCreated && this->m_GPUResamplerCreated)
   {
     // Cast to the AdvancedCombinationTransform
-    const AdvancedCombinationTransformType * advancedCombinationTransform =
-      dynamic_cast<const AdvancedCombinationTransformType *>(_arg);
+    const auto * advancedCombinationTransform = dynamic_cast<const AdvancedCombinationTransformType *>(_arg);
 
     // Set input for the transform copier
     this->m_TransformCopier->SetInputTransform(advancedCombinationTransform);

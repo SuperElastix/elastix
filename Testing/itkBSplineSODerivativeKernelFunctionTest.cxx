@@ -37,7 +37,7 @@ main()
   /** The number of calls to Evaluate(). This number gives reasonably
    * fast test results in Release mode.
    */
-  unsigned int N = static_cast<unsigned int>(1e8);
+  auto N = static_cast<unsigned int>(1e8);
 
   /** Other typedefs. */
   using BSplineSODerivativeKernelType = itk::BSplineSecondOrderDerivativeKernelFunction<SplineOrder>;

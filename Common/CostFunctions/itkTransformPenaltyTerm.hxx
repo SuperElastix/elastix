@@ -39,10 +39,8 @@ TransformPenaltyTerm<TFixedImage, TScalarType>::CheckForBSplineTransform2(BSplin
     return false;
 
   /** We will return the B-spline by reference, but only in case it is a third order B-spline. */
-  BSplineOrder3TransformType * testPtr1 =
-    dynamic_cast<BSplineOrder3TransformType *>(Superclass::m_AdvancedTransform.GetPointer());
-  CombinationTransformType * testPtr2a =
-    dynamic_cast<CombinationTransformType *>(Superclass::m_AdvancedTransform.GetPointer());
+  auto * testPtr1 = dynamic_cast<BSplineOrder3TransformType *>(Superclass::m_AdvancedTransform.GetPointer());
+  auto * testPtr2a = dynamic_cast<CombinationTransformType *>(Superclass::m_AdvancedTransform.GetPointer());
 
   if (testPtr1)
   {
@@ -52,8 +50,7 @@ TransformPenaltyTerm<TFixedImage, TScalarType>::CheckForBSplineTransform2(BSplin
   else if (testPtr2a)
   {
     /** The transform is of type AdvancedCombinationTransform. */
-    BSplineOrder3TransformType * testPtr2b =
-      dynamic_cast<BSplineOrder3TransformType *>((testPtr2a->GetModifiableCurrentTransform()));
+    auto * testPtr2b = dynamic_cast<BSplineOrder3TransformType *>((testPtr2a->GetModifiableCurrentTransform()));
     if (testPtr2b)
     {
       /** The current transform is of type AdvancedBSplineDeformableTransform. */

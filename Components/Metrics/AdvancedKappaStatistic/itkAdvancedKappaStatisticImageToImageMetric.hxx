@@ -352,9 +352,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
   this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** Compute the final metric value. */
-  std::size_t       areaSum = fixedForegroundArea + movingForegroundArea;
-  const MeasureType intersectionFloat = static_cast<MeasureType>(intersection);
-  const MeasureType areaSumFloat = static_cast<MeasureType>(areaSum);
+  std::size_t areaSum = fixedForegroundArea + movingForegroundArea;
+  const auto  intersectionFloat = static_cast<MeasureType>(intersection);
+  const auto  areaSumFloat = static_cast<MeasureType>(areaSum);
   if (areaSum > 0)
   {
     measure = 1.0 - 2.0 * intersectionFloat / areaSumFloat;
@@ -455,7 +455,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
@@ -501,7 +501,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */
@@ -647,7 +647,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
   Self & metric = *(userData.st_Metric);
 
   const unsigned int numPar = metric.GetNumberOfParameters();
-  const unsigned int subSize =
+  const auto         subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadId * subSize;
   const unsigned int jmax = std::min((threadId + 1) * subSize, numPar);
@@ -815,8 +815,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGrad
         /** Get the left, center and right values. */
         minusIndex[i] = currIndex[i] - 1;
         plusIndex[i] = currIndex[i] + 1;
-        const RealType minusVal = static_cast<RealType>(this->m_MovingImage->GetPixel(minusIndex));
-        const RealType plusVal = static_cast<RealType>(this->m_MovingImage->GetPixel(plusIndex));
+        const auto     minusVal = static_cast<RealType>(this->m_MovingImage->GetPixel(minusIndex));
+        const auto     plusVal = static_cast<RealType>(this->m_MovingImage->GetPixel(plusIndex));
         const RealType minusDiff = std::abs(minusVal - this->m_ForegroundValue);
         const RealType plusDiff = std::abs(plusVal - this->m_ForegroundValue);
 

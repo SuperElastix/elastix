@@ -532,8 +532,8 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
   }
   else
   {
-    typename ProposalDerivativeType::iterator proposalDerivativeIt = this->m_ProposalDerivative->begin();
-    typename ProposalDerivativeType::iterator proposalDerivativeEnd = this->m_ProposalDerivative->end();
+    auto proposalDerivativeIt = this->m_ProposalDerivative->begin();
+    auto proposalDerivativeEnd = this->m_ProposalDerivative->end();
     for (; proposalDerivativeIt != proposalDerivativeEnd; ++proposalDerivativeIt)
     {
       if (*proposalDerivativeIt != nullptr)
@@ -665,8 +665,8 @@ void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateCentroidAndAlignProposalDerivative(
   const unsigned int shapeLength) const
 {
-  typename ProposalDerivativeType::iterator proposalDerivativeIt = m_ProposalDerivative->begin();
-  typename ProposalDerivativeType::iterator proposalDerivativeEnd = m_ProposalDerivative->end();
+  auto proposalDerivativeIt = m_ProposalDerivative->begin();
+  auto proposalDerivativeEnd = m_ProposalDerivative->end();
   while (proposalDerivativeIt != proposalDerivativeEnd)
   {
     if (*proposalDerivativeIt != nullptr)
@@ -748,8 +748,8 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateL2AndNormal
 {
   double & l2norm = this->m_ProposalVector[shapeLength + Self::FixedPointSetDimension];
 
-  typename ProposalDerivativeType::iterator proposalDerivativeIt = this->m_ProposalDerivative->begin();
-  typename ProposalDerivativeType::iterator proposalDerivativeEnd = this->m_ProposalDerivative->end();
+  auto proposalDerivativeIt = this->m_ProposalDerivative->begin();
+  auto proposalDerivativeEnd = this->m_ProposalDerivative->end();
 
   while (proposalDerivativeIt != proposalDerivativeEnd)
   {
@@ -864,8 +864,8 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateDerivati
   const VnlVectorType & eigrot,
   const unsigned int    shapeLength) const
 {
-  typename ProposalDerivativeType::iterator proposalDerivativeIt = this->m_ProposalDerivative->begin();
-  typename ProposalDerivativeType::iterator proposalDerivativeEnd = this->m_ProposalDerivative->end();
+  auto proposalDerivativeIt = this->m_ProposalDerivative->begin();
+  auto proposalDerivativeEnd = this->m_ProposalDerivative->end();
 
   typename DerivativeType::iterator derivativeIt = derivative.begin();
 

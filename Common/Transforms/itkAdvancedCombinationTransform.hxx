@@ -118,8 +118,8 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetNthTransform(SizeValu
     {
       // Perform const_cast, we don't like it, but there is no other option
       // with current ITK4 itk::MultiTransform::GetNthTransform() const design
-      const TransformType * currentTransformCasted = dynamic_cast<const TransformType *>(currentTransform.GetPointer());
-      TransformType *       currentTransformConstCasted = const_cast<TransformType *>(currentTransformCasted);
+      const auto * currentTransformCasted = dynamic_cast<const TransformType *>(currentTransform.GetPointer());
+      auto *       currentTransformConstCasted = const_cast<TransformType *>(currentTransformCasted);
       nthTransform = currentTransformConstCasted;
     }
     else

@@ -109,15 +109,15 @@ void annPrintPt(						// print a point
 
 ANNpoint annAllocPt(int dim, ANNcoord c)		// allocate 1 point
 {
-	ANNpoint p = new ANNcoord[dim];
+	auto p = new ANNcoord[dim];
 	for (int i = 0; i < dim; i++) p[i] = c;
 	return p;
 }
    
 ANNpointArray annAllocPts(int n, int dim)		// allocate n pts in dim
 {
-	ANNpointArray pa = new ANNpoint[n];			// allocate points
-	ANNpoint	  p  = new ANNcoord[n*dim];		// allocate space for coords
+	auto pa = new ANNpoint[n];			// allocate points
+	auto	  p  = new ANNcoord[n*dim];		// allocate space for coords
 	for (int i = 0; i < n; i++) {
 		pa[i] = &(p[i*dim]);
 	}
@@ -139,7 +139,7 @@ void annDeallocPts(ANNpointArray &pa)			// deallocate points
    
 ANNpoint annCopyPt(int dim, ANNpoint source)	// copy point
 {
-	ANNpoint p = new ANNcoord[dim];
+	auto p = new ANNcoord[dim];
 	for (int i = 0; i < dim; i++) p[i] = source[i];
 	return p;
 }

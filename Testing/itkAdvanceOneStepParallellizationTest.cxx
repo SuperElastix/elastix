@@ -166,7 +166,7 @@ public:
   {
     /** Compute the range for this thread. */
     const unsigned int spaceDimension = m_NumberOfParameters;
-    const unsigned int subSize = static_cast<unsigned int>(
+    const auto         subSize = static_cast<unsigned int>(
       std::ceil(static_cast<double>(spaceDimension) / static_cast<double>(this->m_Threader->GetNumberOfWorkUnits())));
     const unsigned int jmin = threadId * subSize;
     const unsigned int jmax = std::min((threadId + 1) * subSize, spaceDimension);
@@ -191,7 +191,7 @@ public:
   {
     /** Compute the range for this thread. */
     const unsigned int spaceDimension = m_NumberOfParameters;
-    const unsigned int subSize = static_cast<unsigned int>(
+    const auto         subSize = static_cast<unsigned int>(
       std::ceil(static_cast<double>(spaceDimension) / static_cast<double>(this->m_Threader->GetNumberOfWorkUnits())));
     const unsigned int jmin = threadId * subSize;
     const unsigned int jmax = std::min((threadId + 1) * subSize, spaceDimension);

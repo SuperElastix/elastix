@@ -173,7 +173,7 @@ main(int argc, char * argv[])
    * Debug and Release mode.
    */
 #ifndef NDEBUG
-  unsigned int N = static_cast<unsigned int>(1e3);
+  auto N = static_cast<unsigned int>(1e3);
 #else
   unsigned int N = static_cast<unsigned int>(1e5);
 #endif

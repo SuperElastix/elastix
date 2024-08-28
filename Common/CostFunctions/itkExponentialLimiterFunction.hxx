@@ -56,14 +56,14 @@ auto
 ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const -> OutputType
 {
   /** Apply a soft limit if the input is larger than the UpperThreshold */
-  const double diffU = static_cast<double>(input - this->m_UpperThreshold);
+  const auto diffU = static_cast<double>(input - this->m_UpperThreshold);
   if (diffU > 1e-10)
   {
     return static_cast<OutputType>(this->m_UTminUB * std::exp(this->m_UTminUBinv * diffU) + this->m_UpperBound);
   }
 
   /** Apply a soft limit if the input is smaller than the LowerThreshold */
-  const double diffL = static_cast<double>(input - this->m_LowerThreshold);
+  const auto diffL = static_cast<double>(input - this->m_LowerThreshold);
   if (diffL < -1e-10)
   {
     return static_cast<OutputType>(this->m_LTminLB * std::exp(this->m_LTminLBinv * diffL) + this->m_LowerBound);
@@ -84,7 +84,7 @@ ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input
   -> OutputType
 {
   /** Apply a soft limit if the input is larger than the UpperThreshold */
-  const double diffU = static_cast<double>(input - this->m_UpperThreshold);
+  const auto diffU = static_cast<double>(input - this->m_UpperThreshold);
   if (diffU > 1e-10)
   {
     const double temp = this->m_UTminUB * std::exp(this->m_UTminUBinv * diffU);
@@ -97,7 +97,7 @@ ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input
   }
 
   /** Apply a soft limit if the input is smaller than the LowerThreshold */
-  const double diffL = static_cast<double>(input - this->m_LowerThreshold);
+  const auto diffL = static_cast<double>(input - this->m_LowerThreshold);
   if (diffL < -1e-10)
   {
     const double temp = this->m_LTminLB * std::exp(this->m_LTminLBinv * diffL);

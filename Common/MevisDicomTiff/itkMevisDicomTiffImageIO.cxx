@@ -846,13 +846,13 @@ MevisDicomTiffImageIO::Read(void * buffer)
     // buffer pointer is scanline based (one dimensional array)
     // tile is positioned on x,y,z; we read each tile, and fill
     // the corresponding positions in the onedimensional array
-    unsigned char * vol = reinterpret_cast<unsigned char *>(buffer);
+    auto * vol = reinterpret_cast<unsigned char *>(buffer);
 
     const unsigned int tilesize = TIFFTileSize(m_TIFFImage);
     const unsigned int tilerowbytes = TIFFTileRowSize(m_TIFFImage);
     const unsigned int bytespersample = m_BitsPerSample / 8;
 
-    unsigned char * tilebuf = static_cast<unsigned char *>(_TIFFmalloc(tilesize));
+    auto * tilebuf = static_cast<unsigned char *>(_TIFFmalloc(tilesize));
 
     //
     // special cases, if the tilexy is larger than or equal to the image
@@ -1975,8 +1975,8 @@ MevisDicomTiffImageIO ::Write(const void * buffer)
     const unsigned int tilerowbytes = TIFFTileRowSize(m_TIFFImage);
     const unsigned int bytespersample = m_BitsPerSample / 8;
 
-    const unsigned char * vol = reinterpret_cast<const unsigned char *>(buffer);
-    unsigned char *       tilebuf = static_cast<unsigned char *>(_TIFFmalloc(tilesize));
+    const auto * vol = reinterpret_cast<const unsigned char *>(buffer);
+    auto *       tilebuf = static_cast<unsigned char *>(_TIFFmalloc(tilesize));
 
     // is volume direction a multiple of tiledirection?
     const bool mx = (m_Width % m_TileWidth == 0) ? true : false;

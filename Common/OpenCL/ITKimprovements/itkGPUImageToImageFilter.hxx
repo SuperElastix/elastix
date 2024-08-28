@@ -95,7 +95,7 @@ GPUImageToImageFilter<TInputImage, TOutputImage, TParentImageFilter>::GenerateDa
     using GPUOutputImageType = GPUImage<OutputImagePixelType, OutputImageDimension>;
     for (OutputDataObjectIterator it(this); !it.IsAtEnd(); ++it)
     {
-      GPUOutputImageType * GPUOutput = dynamic_cast<GPUOutputImageType *>(it.GetOutput());
+      auto * GPUOutput = dynamic_cast<GPUOutputImageType *>(it.GetOutput());
       if (GPUOutput)
       {
         GPUOutput->UpdateCPUBuffer();

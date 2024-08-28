@@ -190,8 +190,7 @@ OpenCLPlatform::GetPlatform(const OpenCLPlatform::VendorType vendor)
 
   cl_platform_id platformID = 0;
 
-  for (std::list<itk::OpenCLPlatform>::const_iterator platform = platforms.begin(); platform != platforms.end();
-       ++platform)
+  for (auto platform = platforms.begin(); platform != platforms.end(); ++platform)
   {
     const std::string vendorName = opencl_simplified(platform->GetVendor());
 

@@ -59,7 +59,7 @@ ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
   this->m_RandomNumberList.reserve(this->m_NumberOfSamples);
 
   /** Fill the list with random numbers. */
-  const double numPixels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
+  const auto numPixels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
   localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
   for (unsigned long i = 0; i < this->m_NumberOfSamples; ++i)
   {

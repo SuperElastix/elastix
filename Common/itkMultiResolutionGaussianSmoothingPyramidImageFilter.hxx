@@ -250,7 +250,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
   using RegionType = typename OutputImageType::RegionType;
 
   /** \todo: shouldn't this be a dynamic_cast? */
-  TOutputImage * ptr = static_cast<TOutputImage *>(refOutput);
+  auto * ptr = static_cast<TOutputImage *>(refOutput);
   if (!ptr)
   {
     itkExceptionMacro("Could not cast refOutput to TOutputImage*.");
@@ -343,7 +343,7 @@ void
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::EnlargeOutputRequestedRegion(
   DataObject * output)
 {
-  TOutputImage * out = dynamic_cast<TOutputImage *>(output);
+  auto * out = dynamic_cast<TOutputImage *>(output);
 
   if (out)
   {

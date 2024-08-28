@@ -272,7 +272,7 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
   const ThreadIdType  numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfThreads)));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);

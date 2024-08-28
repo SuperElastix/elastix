@@ -112,7 +112,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   const SizeValueType nrofsamples = sampleContainer->Size();
 
   /** Get the number of parameters. */
-  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const auto numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   /** Get scales vector */
   const ScalesType & scales = this->GetScales();
@@ -198,7 +198,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   if (methods == "95percentile")
   {
     /** Compute the 95% percentile of the distribution of JGG_k */
-    unsigned int d = static_cast<unsigned int>(nrofsamples * 0.95);
+    auto d = static_cast<unsigned int>(nrofsamples * 0.95);
     std::sort(JGG_k.begin(), JGG_k.end());
     jacg = (JGG_k[d - 1] + JGG_k[d] + JGG_k[d + 1]) / 3.0;
   }
@@ -333,7 +333,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   const ScalesType & scales = this->GetScales();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfThreads)));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
@@ -481,7 +481,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   const SizeValueType nrofsamples = sampleContainer->Size();
 
   /** Get the number of parameters. */
-  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const auto numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   /** Get scales vector */
   const ScalesType & scales = this->GetScales();
@@ -555,7 +555,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   if (methods == "95percentile")
   {
     /** Compute the 95% percentile of the distribution of JGG_k */
-    unsigned int d = static_cast<unsigned int>(nrofsamples * 0.95);
+    auto d = static_cast<unsigned int>(nrofsamples * 0.95);
     std::sort(JGG_k.begin(), JGG_k.end());
     jacg = (JGG_k[d - 1] + JGG_k[d] + JGG_k[d + 1]) / 3.0;
   }

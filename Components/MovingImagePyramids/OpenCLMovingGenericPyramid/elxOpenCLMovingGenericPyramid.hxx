@@ -275,8 +275,7 @@ template <class TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::UnregisterFactories()
 {
-  for (std::vector<ObjectFactoryBasePointer>::iterator it = this->m_Factories.begin(); it != this->m_Factories.end();
-       ++it)
+  for (auto it = this->m_Factories.begin(); it != this->m_Factories.end(); ++it)
   {
     itk::ObjectFactoryBase::UnRegisterFactory(*it);
   }

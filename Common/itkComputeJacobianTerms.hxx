@@ -59,10 +59,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   ImageSampleContainerPointer sampleContainer; // default-constructed (null)
   SampleFixedImageForJacobianTerms(sampleContainer);
   const SizeValueType nrofsamples = sampleContainer->Size();
-  const double        n = static_cast<double>(nrofsamples);
+  const auto          n = static_cast<double>(nrofsamples);
 
   /** Get the number of parameters. */
-  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const auto numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   /** Get transform and set current position. */
   typename TransformType::Pointer transform = this->m_Transform;
@@ -166,7 +166,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
   std::sort(difHist2.begin(), difHist2.end());
 
   /** Determine the bands that are expected to be most dominant. */
-  DifHist2Type::iterator difHist2It = difHist2.end();
+  auto difHist2It = difHist2.end();
   for (unsigned int b = 0; b < bandcovsize; ++b)
   {
     --difHist2It;

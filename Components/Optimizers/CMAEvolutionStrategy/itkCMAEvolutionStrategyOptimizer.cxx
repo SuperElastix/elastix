@@ -262,11 +262,11 @@ CMAEvolutionStrategyOptimizer::InitializeConstants()
 
   /** Some casts/aliases: */
   const unsigned int N = numberOfParameters;
-  const double       Nd = static_cast<double>(N);
+  const auto         Nd = static_cast<double>(N);
   const unsigned int lambda = this->m_PopulationSize;
-  const double       lambdad = static_cast<double>(lambda);
+  const auto         lambdad = static_cast<double>(lambda);
   const unsigned int mu = this->m_NumberOfParents;
-  const double       mud = static_cast<double>(mu);
+  const auto         mud = static_cast<double>(mu);
 
   /** m_RecombinationWeights */
   this->m_RecombinationWeights.SetSize(mu);
@@ -628,7 +628,7 @@ CMAEvolutionStrategyOptimizer::UpdateHeaviside()
 
   /** Some casts/aliases: */
   const unsigned int N = numberOfParameters;
-  const double       Nd = static_cast<double>(N);
+  const auto         Nd = static_cast<double>(N);
   const double       c_sigma = this->m_ConjugateEvolutionPathConstant;
   const int          nextit = static_cast<int>(this->GetCurrentIteration() + 1);
   const double       chiN = this->m_ExpectationNormNormalDistribution;
@@ -748,7 +748,7 @@ CMAEvolutionStrategyOptimizer::UpdateSigma()
 
   if (this->GetUseDecayingSigma())
   {
-    const double it = static_cast<double>(this->GetCurrentIteration());
+    const auto   it = static_cast<double>(this->GetCurrentIteration());
     const double num = std::pow(this->m_SigmaDecayA + it, this->m_SigmaDecayAlpha);
     const double den = std::pow(this->m_SigmaDecayA + it + 1.0, this->m_SigmaDecayAlpha);
     this->m_CurrentSigma *= num / den;
@@ -979,8 +979,8 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors()
    * matlabcode: if all( xmean == xmean + 0.1*sigma*B*D(:,i) )
    * B*D(:,i) = i'th column of B times eigenvalue = i'th eigenvector * eigenvalue[i]
    * In the code below: colnr=i-1 (zero-based indexing). */
-  bool               numericalProblemsEncountered2 = false;
-  const unsigned int colnr = static_cast<unsigned int>(nextit % N);
+  bool       numericalProblemsEncountered2 = false;
+  const auto colnr = static_cast<unsigned int>(nextit % N);
   if (this->GetUseCovarianceMatrixAdaptation())
   {
     const double sigDcol = 0.1 * this->m_CurrentSigma * this->m_D[colnr];
@@ -1013,7 +1013,7 @@ CMAEvolutionStrategyOptimizer::FixNumericalErrors()
   /** The indices of the two population members whose cost function will
    * be compared */
   const unsigned int populationMemberA = 0;
-  const unsigned int populationMemberB =
+  const auto         populationMemberB =
     static_cast<unsigned int>(std::ceil(0.1 + static_cast<double>(this->m_PopulationSize) / 4.0));
   /** If they are the same: increase sigma with a magic factor */
   if (this->m_CostFunctionValues[populationMemberA].first == this->m_CostFunctionValues[populationMemberB].first)

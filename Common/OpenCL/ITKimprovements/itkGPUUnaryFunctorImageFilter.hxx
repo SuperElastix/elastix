@@ -75,7 +75,7 @@ GPUUnaryFunctorImageFilter<TInputImage, TOutputImage, TFunction, TParentImageFil
   int imgSize[3];
   imgSize[0] = imgSize[1] = imgSize[2] = 1;
 
-  const unsigned int ImageDim = (unsigned int)TInputImage::ImageDimension;
+  const auto ImageDim = (unsigned int)TInputImage::ImageDimension;
 
   for (std::size_t i = 0; i < ImageDim; ++i)
   {

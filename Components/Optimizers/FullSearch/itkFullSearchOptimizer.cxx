@@ -173,7 +173,7 @@ FullSearchOptimizer::UpdateCurrentPosition()
   itkDebugMacro("Current position updated.");
 
   /** Get the current parameters; const_cast, because we want to adapt it later. */
-  ParametersType & currentPosition = const_cast<ParametersType &>(this->GetCurrentPosition());
+  auto & currentPosition = const_cast<ParametersType &>(this->GetCurrentPosition());
 
   /** Get the dimension and sizes of the searchspace. */
   const unsigned int          searchSpaceDimension = this->GetNumberOfSearchSpaceDimensions();

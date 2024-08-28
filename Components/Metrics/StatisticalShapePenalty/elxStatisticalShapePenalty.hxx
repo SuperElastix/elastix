@@ -81,9 +81,9 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   // pointset.
 
   /** Read meanVector filename. */
-  std::string                meanVectorName = this->GetConfiguration()->GetCommandLineArgument("-mean");
-  std::ifstream              datafile;
-  vnl_vector<double> * const meanVector = new vnl_vector<double>();
+  std::string   meanVectorName = this->GetConfiguration()->GetCommandLineArgument("-mean");
+  std::ifstream datafile;
+  auto * const  meanVector = new vnl_vector<double>();
   datafile.open(meanVectorName);
   if (datafile.is_open())
   {
@@ -123,7 +123,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   /** Read covariance matrix filename. */
   std::string covarianceMatrixName = this->GetConfiguration()->GetCommandLineArgument("-covariance");
 
-  vnl_matrix<double> * const covarianceMatrix = new vnl_matrix<double>();
+  auto * const covarianceMatrix = new vnl_matrix<double>();
 
   datafile.open(covarianceMatrixName);
   if (datafile.is_open())
@@ -142,7 +142,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   /** Read eigenvector matrix filename. */
   std::string eigenVectorsName = this->GetConfiguration()->GetCommandLineArgument("-evectors");
 
-  vnl_matrix<double> * const eigenVectors = new vnl_matrix<double>();
+  auto * const eigenVectors = new vnl_matrix<double>();
 
   datafile.open(eigenVectorsName);
   if (datafile.is_open())
@@ -160,8 +160,8 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   this->SetEigenVectors(eigenVectors);
 
   /** Read eigenvalue vector filename. */
-  std::string                eigenValuesName = this->GetConfiguration()->GetCommandLineArgument("-evalues");
-  vnl_vector<double> * const eigenValues = new vnl_vector<double>();
+  std::string  eigenValuesName = this->GetConfiguration()->GetCommandLineArgument("-evalues");
+  auto * const eigenValues = new vnl_vector<double>();
   datafile.open(eigenValuesName);
   if (datafile.is_open())
   {

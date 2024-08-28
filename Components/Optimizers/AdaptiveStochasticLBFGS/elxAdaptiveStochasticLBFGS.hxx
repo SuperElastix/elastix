@@ -122,7 +122,7 @@ void
 AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
@@ -367,7 +367,7 @@ void
 AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution()
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /**
    * enum StopConditionType {
@@ -716,7 +716,7 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
         // this->m_SearchLengthScale = this->m_SearchDir.magnitude();
 
         /** Get the current resolution level. */
-        unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+        auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
         /** Set whether the Search Direction used for adaptive step size mechanism is desired. Default: false */
         bool useSearchDirForAdaptiveStepSize = false;
@@ -923,7 +923,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
 
   /** Cast to advanced metric type. */
   using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
     itkExceptionMacro("ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
@@ -1062,7 +1062,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
 
   /** Cast to advanced metric type. */
   using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
     itkExceptionMacro("ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");
@@ -1174,7 +1174,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
 
   /** Cast to advanced metric type. */
   using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
     itkExceptionMacro("ERROR: AdaptiveStochasticLBFGS expects the metric to be of type AdvancedImageToImageMetric!");

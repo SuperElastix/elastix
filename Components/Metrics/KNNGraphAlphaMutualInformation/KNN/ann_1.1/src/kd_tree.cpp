@@ -351,7 +351,7 @@ ANNkd_ptr rkd_tree(				// recursive construction of kd-tree
 		bnd_box.lo[cd] = lv;			// restore bounds
 
 										// create the splitting node
-		ANNkd_split *ptr = new ANNkd_split(cd, cv, lv, hv, lo, hi);
+		auto *ptr = new ANNkd_split(cd, cv, lv, hv, lo, hi);
 
 		return ptr;						// return pointer to this node
 	}

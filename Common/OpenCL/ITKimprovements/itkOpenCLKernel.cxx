@@ -584,7 +584,7 @@ OpenCLKernel::SetArg(const cl_uint index, const PointDouble1DType & value)
   }
   else
   {
-    const cl_float values = static_cast<float>(value[0]);
+    const auto values = static_cast<float>(value[0]);
     return this->SetArg(index, values);
   }
 }
@@ -760,7 +760,7 @@ OpenCLKernel::SetArg(const cl_uint index, const VectorDouble1DType & value)
   }
   else
   {
-    const cl_float values = static_cast<float>(value[0]);
+    const auto values = static_cast<float>(value[0]);
     return this->SetArg(index, values);
   }
 }
@@ -936,7 +936,7 @@ OpenCLKernel::SetArg(const cl_uint index, const CovariantVectorDouble1DType & va
   }
   else
   {
-    const cl_float values = static_cast<float>(value[0]);
+    const auto values = static_cast<float>(value[0]);
     return this->SetArg(index, values);
   }
 }
@@ -1103,7 +1103,7 @@ OpenCLKernel::SetArg(const cl_uint index, const MatrixDouble1x1Type & value)
   }
   else
   {
-    const cl_float values = static_cast<float>(value[0][0]);
+    const auto values = static_cast<float>(value[0][0]);
     return this->SetArg(index, values);
   }
 }

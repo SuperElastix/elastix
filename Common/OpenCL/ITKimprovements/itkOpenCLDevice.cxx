@@ -730,8 +730,7 @@ OpenCLDevice::GetAllDevices()
   const std::list<itk::OpenCLPlatform> platforms = OpenCLPlatform::GetAllPlatforms();
   std::list<OpenCLDevice>              devices;
 
-  for (std::list<itk::OpenCLPlatform>::const_iterator platform = platforms.begin(); platform != platforms.end();
-       ++platform)
+  for (auto platform = platforms.begin(); platform != platforms.end(); ++platform)
   {
     cl_uint size;
     if (clGetDeviceIDs(platform->GetPlatformId(), CL_DEVICE_TYPE_ALL, 0, 0, &size) != CL_SUCCESS)
@@ -740,7 +739,7 @@ OpenCLDevice::GetAllDevices()
     }
     std::vector<cl_device_id> buffer(size);
     clGetDeviceIDs(platform->GetPlatformId(), CL_DEVICE_TYPE_ALL, size, &buffer[0], &size);
-    for (std::vector<cl_device_id>::iterator device = buffer.begin(); device != buffer.end(); ++device)
+    for (auto device = buffer.begin(); device != buffer.end(); ++device)
     {
       devices.push_back(OpenCLDevice(*device));
     }
@@ -764,7 +763,7 @@ OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType types, const OpenCLPlatf
   {
     platforms.push_back(platform);
   }
-  for (std::list<itk::OpenCLPlatform>::iterator platform = platforms.begin(); platform != platforms.end(); ++platform)
+  for (auto platform = platforms.begin(); platform != platforms.end(); ++platform)
   {
     cl_uint size;
     if (clGetDeviceIDs(platform->GetPlatformId(), cl_device_type(types), 0, 0, &size) != CL_SUCCESS)
@@ -777,7 +776,7 @@ OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType types, const OpenCLPlatf
     }
     std::vector<cl_device_id> buffer(size);
     clGetDeviceIDs(platform->GetPlatformId(), cl_device_type(types), size, &buffer[0], &size);
-    for (std::vector<cl_device_id>::iterator device = buffer.begin(); device != buffer.end(); ++device)
+    for (auto device = buffer.begin(); device != buffer.end(); ++device)
     {
       devices.push_back(OpenCLDevice(*device));
     }
@@ -801,7 +800,7 @@ OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType type, const OpenCLPlatfo
   {
     const std::list<itk::OpenCLDevice> allDevices = itk::OpenCLDevice::GetDevices(type, platform);
     std::list<OpenCLDevice>            devices;
-    for (std::list<itk::OpenCLDevice>::const_iterator dev = allDevices.begin(); dev != allDevices.end(); ++dev)
+    for (auto dev = allDevices.begin(); dev != allDevices.end(); ++dev)
     {
       if ((dev->GetDeviceType() & type) != 0)
       {
@@ -825,7 +824,7 @@ OpenCLDevice::GetMaximumFlopsDevice(const std::list<OpenCLDevice> & devices, con
   // Find the device that has maximum Flops
   int          maxFlops = 0;
   cl_device_id id = 0;
-  for (std::list<OpenCLDevice>::const_iterator device = devices.begin(); device != devices.end(); ++device)
+  for (auto device = devices.begin(); device != devices.end(); ++device)
   {
     int deviceFlops = device->GetComputeUnits() * device->GetClockFrequency();
     if (deviceFlops > maxFlops && (device->GetDeviceType() == type))
@@ -885,7 +884,7 @@ OpenCLDevice::GetMaximumFlopsDevices(const OpenCLDevice::DeviceType type, const 
   using DeviceType = std::pair<std::size_t, cl_device_id>;
   using MaximumFlopsDevicesType = std::set<DeviceType>;
   MaximumFlopsDevicesType maximumFlopsDevices;
-  for (std::list<OpenCLDevice>::const_iterator device = allDevices.begin(); device != allDevices.end(); ++device)
+  for (auto device = allDevices.begin(); device != allDevices.end(); ++device)
   {
     int        deviceFlops = device->GetComputeUnits() * device->GetClockFrequency();
     DeviceType deviceWithFlops(deviceFlops, device->GetDeviceId());
@@ -894,9 +893,7 @@ OpenCLDevice::GetMaximumFlopsDevices(const OpenCLDevice::DeviceType type, const 
 
   // Combine result
   std::list<OpenCLDevice> devices;
-  for (MaximumFlopsDevicesType::const_reverse_iterator rit = maximumFlopsDevices.rbegin();
-       rit != maximumFlopsDevices.rend();
-       ++rit)
+  for (auto rit = maximumFlopsDevices.rbegin(); rit != maximumFlopsDevices.rend(); ++rit)
   {
     OpenCLDevice device(rit->second);
     devices.push_back(device);

@@ -123,7 +123,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::SetMetric(MetricType * _arg)
 {
-  CombinationMetricType * testPtr = dynamic_cast<CombinationMetricType *>(_arg);
+  auto * testPtr = dynamic_cast<CombinationMetricType *>(_arg);
   if (testPtr)
   {
     if (this->m_CombinationMetric != testPtr)
@@ -186,7 +186,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::In
   this->GetModifiableOptimizer()->SetInitialPosition(this->GetInitialTransformParametersOfNextLevel());
 
   /** Connect the transform to the Decorator. */
-  TransformOutputType * transformOutput = static_cast<TransformOutputType *>(this->ProcessObject::GetOutput(0));
+  auto * transformOutput = static_cast<TransformOutputType *>(this->ProcessObject::GetOutput(0));
 
   transformOutput->Set(this->GetTransform());
 
