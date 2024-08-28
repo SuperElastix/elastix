@@ -51,7 +51,7 @@ ANNPriorityTreeSearch<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
     if (ps)
     {
       // ANNkDTreeType * testPtr = dynamic_cast<ANNkDTreeType *>( this->m_BinaryTreeAsITKANNType->GetANNTree() );
-      ANNkDTreeType * testPtr = dynamic_cast<ANNkDTreeType *>(ps);
+      auto * testPtr = dynamic_cast<ANNkDTreeType *>(ps);
       if (testPtr)
       {
         if (testPtr != this->m_BinaryTreeAskDTree)

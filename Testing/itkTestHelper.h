@@ -223,7 +223,7 @@ ComputeRMSE(const CPUImageType * cpuImage, const GPUImageType * gpuImage, TScala
 
   for (cit.GoToBegin(), git.GoToBegin(); !cit.IsAtEnd(); ++cit, ++git)
   {
-    TScalarType cpu = static_cast<TScalarType>(cit.Get());
+    auto        cpu = static_cast<TScalarType>(cit.Get());
     TScalarType err = cpu - static_cast<TScalarType>(git.Get());
     rmse += err * err;
     sumCPUSquared += cpu * cpu;

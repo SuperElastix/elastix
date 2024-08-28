@@ -151,7 +151,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
                                    static_cast<double>(this->m_NumberOfFixedHistogramBins - 2 * movingPadding - 1);
 
   /** Compute binsizes. */
-  const double fixedHistogramWidth = static_cast<double>(
+  const auto fixedHistogramWidth = static_cast<double>(
     static_cast<OffsetValueType>(this->m_NumberOfFixedHistogramBins) // requires cast to signed type!
     - 2.0 * fixedPadding - 1.0);
   this->m_FixedImageBinSize =
@@ -162,7 +162,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
   this->m_FixedImageNormalizedMin = (Superclass::m_FixedImageMinLimit - smallNumberFixed) / this->m_FixedImageBinSize -
                                     static_cast<double>(fixedPadding);
 
-  const double movingHistogramWidth = static_cast<double>(
+  const auto movingHistogramWidth = static_cast<double>(
     static_cast<OffsetValueType>(this->m_NumberOfMovingHistogramBins) // requires cast to signed type!
     - 2.0 * movingPadding - 1.0);
   this->m_MovingImageBinSize =
@@ -484,9 +484,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
     movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
 
   /** The lowest bin numbers affected by this pixel: */
-  const OffsetValueType fixedImageParzenWindowIndex =
+  const auto fixedImageParzenWindowIndex =
     static_cast<OffsetValueType>(std::floor(fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset));
-  const OffsetValueType movingImageParzenWindowIndex =
+  const auto movingImageParzenWindowIndex =
     static_cast<OffsetValueType>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset));
 
   /** The Parzen values. */
@@ -539,7 +539,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
                                *m_DerivativeMovingKernel,
                                derivativeMovingParzenValues.data_block());
 
-    const double et = static_cast<double>(this->m_MovingImageBinSize);
+    const auto et = static_cast<double>(this->m_MovingImageBinSize);
 
     /** Loop over the Parzen window region and increment the values
      * Also update the pdf derivatives.
@@ -616,7 +616,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJoi
 {
   using JointPDFIteratorType = ImageScanlineIterator<JointPDFType>;
   JointPDFIteratorType it(pdf, pdf->GetBufferedRegion());
-  const PDFValueType   castfac = static_cast<PDFValueType>(factor);
+  const auto           castfac = static_cast<PDFValueType>(factor);
   while (!it.IsAtEnd())
   {
     while (!it.IsAtEndOfLine())
@@ -764,7 +764,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
     fixedImageValue / this->m_FixedImageBinSize - this->m_FixedImageNormalizedMin;
 
   /** The lowest bin numbers affected by this pixel: */
-  const OffsetValueType fixedImageParzenWindowIndex =
+  const auto fixedImageParzenWindowIndex =
     static_cast<OffsetValueType>(std::floor(fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset));
   Self::EvaluateParzenValues(
     fixedImageParzenWindowTerm, fixedImageParzenWindowIndex, *m_FixedKernel, fixedParzenValues.data_block());
@@ -774,7 +774,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
     /** Determine moving image Parzen window arguments (see eq. 6 of Mattes paper [2]). */
     const double movingImageParzenWindowTerm =
       movingImageValue / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
-    const OffsetValueType movingImageParzenWindowIndex =
+    const auto movingImageParzenWindowIndex =
       static_cast<OffsetValueType>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset));
     Self::EvaluateParzenValues(
       movingImageParzenWindowTerm, movingImageParzenWindowIndex, *m_MovingKernel, movingParzenValues.data_block());
@@ -795,12 +795,11 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
       const double fv_mask = fixedParzenValues[f] * movingMaskValue;
       for (unsigned int m = 0; m < movingParzenValues.GetSize(); ++m)
       {
-        const PDFValueType fv_mask_mv = static_cast<PDFValueType>(fv_mask * movingParzenValues[m]);
+        const auto fv_mask_mv = static_cast<PDFValueType>(fv_mask * movingParzenValues[m]);
         this->m_JointPDF->GetPixel(pdfIndex) += fv_mask_mv;
 
-        unsigned long offset =
-          static_cast<unsigned long>(pdfIndex[0] * this->m_IncrementalJointPDFRight->GetOffsetTable()[1] +
-                                     pdfIndex[1] * this->m_IncrementalJointPDFRight->GetOffsetTable()[2]);
+        auto offset = static_cast<unsigned long>(pdfIndex[0] * this->m_IncrementalJointPDFRight->GetOffsetTable()[1] +
+                                                 pdfIndex[1] * this->m_IncrementalJointPDFRight->GetOffsetTable()[2]);
 
         /** Get the pointer to the element with index [0, pdfIndex[0], pdfIndex[1]]. */
         PDFDerivativeValueType * incRightPtr = incRightBasePtr + offset;
@@ -847,7 +846,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
       /** Compute Parzen stuff; note: we reuse the movingParzenValues container. */
       const double movr = movingImageValuesRight[i];
       const double movParzenWindowTermRight = movr / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
-      const OffsetValueType movParzenWindowIndexRight =
+      const auto   movParzenWindowIndexRight =
         static_cast<OffsetValueType>(std::floor(movParzenWindowTermRight + this->m_MovingParzenTermToIndexOffset));
       Self::EvaluateParzenValues(
         movParzenWindowTermRight, movParzenWindowIndexRight, *m_MovingKernel, movingParzenValues.data_block());
@@ -863,7 +862,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
         const double fv_mask = fixedParzenValues[f] * maskr;
         for (unsigned int m = 0; m < movingParzenValues.GetSize(); ++m)
         {
-          const PDFValueType fv_mask_mv = static_cast<PDFValueType>(fv_mask * movingParzenValues[m]);
+          const auto fv_mask_mv = static_cast<PDFValueType>(fv_mask * movingParzenValues[m]);
           this->m_IncrementalJointPDFRight->GetPixel(rindex) += fv_mask_mv;
           ++(rindex[1]);
         } // end for m
@@ -879,7 +878,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
       /** Compute Parzen stuff; note: we reuse the movingParzenValues container. */
       const double movl = movingImageValuesLeft[i];
       const double movParzenWindowTermLeft = movl / this->m_MovingImageBinSize - this->m_MovingImageNormalizedMin;
-      const OffsetValueType movParzenWindowIndexLeft =
+      const auto   movParzenWindowIndexLeft =
         static_cast<OffsetValueType>(std::floor(movParzenWindowTermLeft + this->m_MovingParzenTermToIndexOffset));
       Self::EvaluateParzenValues(
         movParzenWindowTermLeft, movParzenWindowIndexLeft, *m_MovingKernel, movingParzenValues.data_block());
@@ -895,7 +894,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
         const double fv_mask = fixedParzenValues[f] * maskl;
         for (unsigned int m = 0; m < movingParzenValues.GetSize(); ++m)
         {
-          const PDFValueType fv_mask_mv = static_cast<PDFValueType>(fv_mask * movingParzenValues[m]);
+          const auto fv_mask_mv = static_cast<PDFValueType>(fv_mask * movingParzenValues[m]);
           this->m_IncrementalJointPDFLeft->GetPixel(lindex) += fv_mask_mv;
           ++(lindex[1]);
         } // end for m
@@ -1053,7 +1052,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
@@ -1093,7 +1092,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
+      auto fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
@@ -1374,8 +1373,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
 
       /** Check if the point is inside the moving mask. */
-      bool     sampleOk = this->IsInsideMovingMask(mappedPoint);
-      RealType movingMaskValue = static_cast<RealType>(static_cast<unsigned char>(sampleOk));
+      bool sampleOk = this->IsInsideMovingMask(mappedPoint);
+      auto movingMaskValue = static_cast<RealType>(static_cast<unsigned char>(sampleOk));
 
       /** Compute the moving image value M(T(x)) and check if
        * the point is inside the moving image buffer.
@@ -1434,7 +1433,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
 
         /** Compute the moving mask 'value' and moving image value at the right perturbed positions. */
         sampleOk = this->IsInsideMovingMask(mappedPointRight);
-        RealType movingMaskValueRight = static_cast<RealType>(static_cast<unsigned char>(sampleOk));
+        auto movingMaskValueRight = static_cast<RealType>(static_cast<unsigned char>(sampleOk));
         if (sampleOk)
         {
           RealType movingImageValueRight = 0.0;
@@ -1455,7 +1454,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
 
         /** Compute the moving mask and moving image value at the left perturbed positions. */
         sampleOk = this->IsInsideMovingMask(mappedPointLeft);
-        RealType movingMaskValueLeft = static_cast<RealType>(static_cast<unsigned char>(sampleOk));
+        auto movingMaskValueLeft = static_cast<RealType>(static_cast<unsigned char>(sampleOk));
         if (sampleOk)
         {
           RealType movingImageValueLeft = 0.0;

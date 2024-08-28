@@ -105,7 +105,7 @@ void
 AdaGrad<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   const unsigned int P = this->GetElastix()->GetElxTransformBase()->GetAsITKBaseType()->GetNumberOfParameters();
 
@@ -316,7 +316,7 @@ void
 AdaGrad<TElastix>::AfterEachResolution()
 {
   /** Get the current resolution level. */
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /**
    * enum StopConditionType {
@@ -514,7 +514,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
   this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(this->GetCurrentPosition());
 
   /** Get the number of parameters. */
-  unsigned int P =
+  auto P =
     static_cast<unsigned int>(this->GetRegistration()->GetAsITKBaseType()->GetTransform()->GetNumberOfParameters());
 
   this->m_SearchDirection = ParametersType(P);
@@ -522,7 +522,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
 
   /** Cast to advanced metric type. */
   using MetricType = typename ElastixType::MetricBaseType::AdvancedMetricType;
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (!testPtr)
   {
     itkExceptionMacro("ERROR: VoxelWiseASGD expects the metric to be of type AdvancedImageToImageMetric!");

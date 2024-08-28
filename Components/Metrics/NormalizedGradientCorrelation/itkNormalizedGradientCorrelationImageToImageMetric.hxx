@@ -61,7 +61,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   this->ComputeMeanFixedGradient();
 
   /** Resampling for 3D->2D */
-  RayCastInterpolatorType * rayCaster = dynamic_cast<RayCastInterpolatorType *>(this->GetInterpolator());
+  auto * rayCaster = dynamic_cast<RayCastInterpolatorType *>(this->GetInterpolator());
   if (rayCaster != nullptr)
   {
     this->m_TransformMovingImageFilter->SetTransform(rayCaster->GetTransform());

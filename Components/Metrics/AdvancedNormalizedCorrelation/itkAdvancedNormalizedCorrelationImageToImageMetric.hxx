@@ -200,7 +200,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
       Superclass::m_NumberOfPixelsCounted++;
 
       /** Get the fixed image value. */
-      const RealType fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
+      const auto fixedImageValue = static_cast<double>(fixedImageSample.m_ImageValue);
 
       /** Update some sums needed to calculate NC. */
       sff += fixedImageValue * fixedImageValue;
@@ -217,7 +217,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
 
   /** If NumberOfPixelsCounted > 0, then subtract things from sff, smm and sfm. */
-  const RealType N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
+  const auto N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
   if (Superclass::m_NumberOfPixelsCounted > 0)
   {
     sff -= (sf * sf / N);
@@ -375,7 +375,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** If NumberOfPixelsCounted > 0, then subtract things from sff, smm, sfm,
    * derivativeF and derivativeM.
    */
-  const RealType N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
+  const auto N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
   if (Superclass::m_NumberOfPixelsCounted > 0)
   {
     sff -= (sf * sf / N);
@@ -479,7 +479,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
@@ -526,7 +526,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */
@@ -615,7 +615,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   }
 
   /** Subtract things from sff, smm and sfm. */
-  const RealType N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
+  const auto N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
   sff -= (sf * sf / N);
   smm -= (sm * sm / N);
   sfm -= (sf * sm / N);
@@ -677,7 +677,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Accu
   const RealType       invertedDenominator = userData.st_InvertedDenominator;
 
   const unsigned int numPar = metric.GetNumberOfParameters();
-  const unsigned int subSize =
+  const auto         subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadId * subSize;
   const unsigned int jmax = std::min((threadId + 1) * subSize, numPar);

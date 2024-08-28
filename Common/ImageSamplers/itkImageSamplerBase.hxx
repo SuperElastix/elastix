@@ -325,8 +325,8 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
     const PointsContainerType *            cornersWorld = bb->GetPoints();
     auto                                   cornersIndex = PointsContainerType::New();
     cornersIndex->Reserve(cornersWorld->Size());
-    typename PointsContainerType::const_iterator itCW = cornersWorld->begin();
-    typename PointsContainerType::iterator       itCI = cornersIndex->begin();
+    auto itCW = cornersWorld->begin();
+    auto itCI = cornersIndex->begin();
     while (itCW != cornersWorld->end())
     {
       *itCI = inputImage->template TransformPhysicalPointToContinuousIndex<InputImagePointValueType>(*itCW);

@@ -141,8 +141,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::ComputeBSplineGrid(
       this->m_GridSpacings[res][dim] = gridSpacing;
 
       /** Compute the grid size without the extra grid points at the edges. */
-      const unsigned int bareGridSize =
-        static_cast<unsigned int>(std::ceil(size[dim] * imageSpacing[dim] / gridSpacing));
+      const auto bareGridSize = static_cast<unsigned int>(std::ceil(size[dim] * imageSpacing[dim] / gridSpacing));
 
       /** The number of B-spline grid nodes is the bareGridSize plus the
        * B-spline order more grid nodes. */
@@ -301,7 +300,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::ApplyInitialTransfo
     double oldLength_i = this->m_ImageSpacing[i] * static_cast<double>(this->m_ImageRegion.GetSize()[i] - 1);
 
     /** Compute the length of the bounding box (in mm) for dimension i. */
-    double newLength_i = static_cast<double>(maxPoint[i] - minPoint[i]);
+    auto newLength_i = static_cast<double>(maxPoint[i] - minPoint[i]);
 
     /** Scale the fixedImageSpacing by their ratio. */
     if (oldLength_i > smallnumber)

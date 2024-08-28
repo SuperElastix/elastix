@@ -157,7 +157,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   CPUSuperclass::SetInterpolator(_arg);
 
   /** Test for a supported GPU interpolator. */
-  const GPUInterpolatorBase * interpolatorBase = dynamic_cast<const GPUInterpolatorBase *>(_arg);
+  const auto * interpolatorBase = dynamic_cast<const GPUInterpolatorBase *>(_arg);
   if (!interpolatorBase)
   {
     itkExceptionMacro("Setting unsupported GPU interpolator to " << _arg);
@@ -165,7 +165,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   this->m_InterpolatorBase = (GPUInterpolatorBase *)interpolatorBase;
 
   // Test for a GPU B-spline interpolator
-  const GPUBSplineInterpolatorType * GPUBSplineInterpolator = dynamic_cast<const GPUBSplineInterpolatorType *>(_arg);
+  const auto * GPUBSplineInterpolator = dynamic_cast<const GPUBSplineInterpolatorType *>(_arg);
   this->m_InterpolatorIsBSpline = false;
   if (GPUBSplineInterpolator)
   {
@@ -249,7 +249,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   CPUSuperclass::SetTransform(_arg);
 
   /** Test for a supported GPU transform. */
-  const GPUTransformBase * transformBase = dynamic_cast<const GPUTransformBase *>(_arg);
+  const auto * transformBase = dynamic_cast<const GPUTransformBase *>(_arg);
   if (!transformBase)
   {
     itkExceptionMacro("Setting unsupported GPU transform to " << _arg);
@@ -261,7 +261,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
 
   // Test for a GPU combo transform
   using CompositeTransformType = GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension>;
-  const CompositeTransformType * compositeTransformBase = dynamic_cast<const CompositeTransformType *>(_arg);
+  const auto * compositeTransformBase = dynamic_cast<const CompositeTransformType *>(_arg);
 
   if (compositeTransformBase)
   {
@@ -642,8 +642,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     if (this->m_TransformIsCombo)
     {
       using CompositeTransformType = GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension>;
-      const CompositeTransformType * compositeTransform =
-        dynamic_cast<const CompositeTransformType *>(this->m_TransformBase);
+      const auto * compositeTransform = dynamic_cast<const CompositeTransformType *>(this->m_TransformBase);
 
       for (int i = compositeTransform->GetNumberOfTransforms() - 1; i >= 0; i--)
       {
@@ -922,8 +921,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   else
   {
     // Get a handle to the B-spline interpolator.
-    const GPUBSplineInterpolatorType * gpuBSplineInterpolator =
-      dynamic_cast<const GPUBSplineInterpolatorType *>(this->m_InterpolatorBase);
+    const auto * gpuBSplineInterpolator = dynamic_cast<const GPUBSplineInterpolatorType *>(this->m_InterpolatorBase);
 
     // Get a handle to the B-spline interpolator coefficient image.
     GPUBSplineInterpolatorCoefficientImagePointer coefficient = gpuBSplineInterpolator->GetGPUCoefficients();
@@ -973,8 +971,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
 {
   if (this->m_TransformIsCombo)
   {
-    const CompositeTransformBaseType * compositeTransform =
-      dynamic_cast<const CompositeTransformBaseType *>(this->m_TransformBase);
+    const auto * compositeTransform = dynamic_cast<const CompositeTransformBaseType *>(this->m_TransformBase);
 
     if (compositeTransform->IsIdentityTransform(transformIndex))
     {
@@ -1034,7 +1031,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     return false;
   }
 
-  typename TransformsHandle::const_iterator it = this->m_FilterLoopGPUKernelHandle.find(type);
+  auto it = this->m_FilterLoopGPUKernelHandle.find(type);
   if (it == this->m_FilterLoopGPUKernelHandle.end())
   {
     return false;
@@ -1061,7 +1058,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     return -1;
   }
 
-  typename TransformsHandle::const_iterator it = this->m_FilterLoopGPUKernelHandle.find(type);
+  auto it = this->m_FilterLoopGPUKernelHandle.find(type);
   if (it == this->m_FilterLoopGPUKernelHandle.end())
   {
     return -1;
@@ -1085,8 +1082,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
 {
   if (this->m_TransformIsCombo)
   {
-    const CompositeTransformBaseType * compositeTransform =
-      dynamic_cast<const CompositeTransformBaseType *>(this->m_TransformBase);
+    const auto * compositeTransform = dynamic_cast<const CompositeTransformBaseType *>(this->m_TransformBase);
 
     if (compositeTransform->IsIdentityTransform(transformIndex))
     {
@@ -1155,7 +1151,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   if (this->m_TransformIsCombo)
   {
     using CompositeTransformType = GPUCompositeTransformBase<InterpolatorPrecisionType, InputImageDimension>;
-    CompositeTransformType * compositeTransform = dynamic_cast<CompositeTransformType *>(this->m_TransformBase);
+    auto * compositeTransform = dynamic_cast<CompositeTransformType *>(this->m_TransformBase);
 
     GPUBSplineTransformBase =
       dynamic_cast<GPUBSplineBaseTransformType *>(compositeTransform->GetNthTransform(transformIndex).GetPointer());

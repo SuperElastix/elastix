@@ -90,8 +90,8 @@ ImageFileCastWriter<TInputImage>::GenerateData()
         this->GetImageIO()->GetComponentTypeAsString(this->GetImageIO()->GetComponentType()) &&
       numberOfComponents == 1)
   {
-    void *             convertedDataBuffer = nullptr;
-    const DataObject * inputAsDataObject = dynamic_cast<const DataObject *>(input);
+    void *       convertedDataBuffer = nullptr;
+    const auto * inputAsDataObject = dynamic_cast<const DataObject *>(input);
 
     /** convert the scalar image to a scalar image with another componenttype
      * The imageIO's PixelType is also changed */

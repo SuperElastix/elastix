@@ -189,7 +189,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetFixedImageRegion(co
   {
     this->Superclass::SetFixedImageRegion(_arg);
   }
-  ImageMetricType * testPtr = dynamic_cast<ImageMetricType *>(this->GetMetric(pos));
+  auto * testPtr = dynamic_cast<ImageMetricType *>(this->GetMetric(pos));
   if (testPtr)
   {
     testPtr->SetFixedImageRegion(_arg);
@@ -223,7 +223,7 @@ auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetFixedImageRegion(unsigned int pos) const
   -> const FixedImageRegionType &
 {
-  const ImageMetricType * testPtr = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));
+  const auto * testPtr = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));
   if (testPtr)
   {
     return testPtr->GetFixedImageRegion();
@@ -543,7 +543,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetNumberOfPixelsCount
   unsigned long sum = 0;
   for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)
   {
-    const ImageMetricType * testPtr = dynamic_cast<const ImageMetricType *>(this->GetMetric(i));
+    const auto * testPtr = dynamic_cast<const ImageMetricType *>(this->GetMetric(i));
     if (testPtr)
     {
       sum += testPtr->GetNumberOfPixelsCounted();
@@ -585,8 +585,8 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     {
       itkExceptionMacro("Metric " << i << " has not been set!");
     }
-    ImageMetricType *    testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(i));
-    PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(i));
+    auto * testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(i));
+    auto * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(i));
     if (testPtr1)
     {
       // The NumberOfThreadsPerMetric is changed after Initialize() so we save it before and then
@@ -788,8 +788,8 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
    */
   for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
-    ImageMetricType *    testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(i));
-    PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(i));
+    auto * testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(i));
+    auto * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(i));
     if (testPtr1)
     {
       testPtr1->SetUseMetricSingleThreaded(true);

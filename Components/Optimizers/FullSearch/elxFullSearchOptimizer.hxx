@@ -66,7 +66,7 @@ void
 FullSearch<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
@@ -199,7 +199,7 @@ FullSearch<TElastix>::AfterEachIteration()
 
   SearchSpacePointType currentPoint = this->GetCurrentPointInSearchSpace();
   unsigned int         nrOfSSDims = currentPoint.GetSize();
-  NameIteratorType     name_it = this->m_SearchSpaceDimensionNames.begin();
+  auto                 name_it = this->m_SearchSpaceDimensionNames.begin();
 
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
@@ -288,7 +288,7 @@ FullSearch<TElastix>::AfterEachResolution()
   log::info(outputStringStream.str());
 
   /** Remove the columns from IterationInfo. */
-  NameIteratorType name_it = this->m_SearchSpaceDimensionNames.begin();
+  auto name_it = this->m_SearchSpaceDimensionNames.begin();
   for (unsigned int dim = 0; dim < nrOfSSDims; ++dim)
   {
     this->RemoveTargetCellFromIterationInfo(name_it->second.c_str());

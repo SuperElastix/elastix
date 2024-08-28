@@ -95,7 +95,7 @@ CommandLineArgumentParser::ArgumentExists(const std::string & key) const
 void
 CommandLineArgumentParser::PrintAllArguments() const
 {
-  ArgumentMapType::const_iterator iter = this->m_ArgumentMap.begin();
+  auto iter = this->m_ArgumentMap.begin();
 
   for (; iter != this->m_ArgumentMap.end(); ++iter)
   {

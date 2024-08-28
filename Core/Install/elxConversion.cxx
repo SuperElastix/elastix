@@ -150,7 +150,7 @@ Conversion::SecondsToDHMS(const double totalSeconds, const unsigned int precisio
   const std::size_t secondsPerDay = 24 * secondsPerHour;
 
   /** Convert total seconds. */
-  std::size_t       iSeconds = static_cast<std::size_t>(totalSeconds);
+  auto              iSeconds = static_cast<std::size_t>(totalSeconds);
   const std::size_t days = iSeconds / secondsPerDay;
 
   iSeconds %= secondsPerDay;

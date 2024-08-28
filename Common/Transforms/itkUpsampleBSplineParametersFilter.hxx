@@ -75,8 +75,8 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayT
   parameters_out.SetSize(requiredNumberOfPixels * Dimension);
 
   /** Get the pointer to the data of the input parameters. */
-  PixelType * inputDataPointer = const_cast<PixelType *>(parameters_in.data_block());
-  PixelType * outputDataPointer = const_cast<PixelType *>(parameters_out.data_block());
+  auto * inputDataPointer = const_cast<PixelType *>(parameters_in.data_block());
+  auto * outputDataPointer = const_cast<PixelType *>(parameters_out.data_block());
 
   /** The input parameters are represented as a coefficient image. */
   ImagePointer coeffs_in = ImageType::New();

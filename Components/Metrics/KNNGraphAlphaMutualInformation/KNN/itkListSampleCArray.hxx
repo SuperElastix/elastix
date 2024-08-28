@@ -207,7 +207,7 @@ void
 ListSampleCArray<TMeasurementVector, TInternalValue>::AllocateInternalContainer(unsigned long size, unsigned int dim)
 {
   this->m_InternalContainer = new InternalDataType[size];
-  InternalDataType p = new InternalValueType[size * dim];
+  auto p = new InternalValueType[size * dim];
   for (unsigned long i = 0; i < size; ++i)
   {
     this->m_InternalContainer[i] = &(p[i * dim]);

@@ -193,8 +193,8 @@ main(int argc, char * argv[])
   }
 
   // Compute RMSE
-  double       RMSrelative = 0.0;
-  const double RMSerror =
+  double     RMSrelative = 0.0;
+  const auto RMSerror =
     itk::ComputeRMSE<double, ImageType, ImageType>(cpuFilter->GetOutput(), gpuFilter->GetOutput(), RMSrelative);
   std::cout << " " << RMSerror << std::endl;
 

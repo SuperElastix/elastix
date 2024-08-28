@@ -212,7 +212,7 @@ OpenCLContext::Create(const std::list<OpenCLDevice> & devices)
     return false;
   }
   std::vector<cl_device_id> devs;
-  for (std::list<OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
+  for (auto dev = devices.begin(); dev != devices.end(); ++dev)
   {
     devs.push_back(dev->GetDeviceId());
   }
@@ -495,7 +495,7 @@ OpenCLContext::CreateContext(const std::list<OpenCLDevice> & devices, OpenCLCont
   if (!devices.empty())
   {
     std::vector<cl_device_id> devs;
-    for (std::list<OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
+    for (auto dev = devices.begin(); dev != devices.end(); ++dev)
 
     {
       devs.push_back(dev->GetDeviceId());

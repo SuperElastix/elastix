@@ -438,7 +438,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nrOfSamplesPerThreads = static_cast<unsigned long>(
+  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
@@ -475,7 +475,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      RealType fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
+      auto fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
@@ -737,7 +737,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Upda
                                    derivativeMovingParzenValues);
 
   /** Get the moving image bin size. */
-  const double et = static_cast<double>(this->m_MovingImageBinSize);
+  const auto et = static_cast<double>(this->m_MovingImageBinSize);
 
   /** Loop over the Parzen window region and increment sum. */
   PDFValueType sum = 0.0;

@@ -124,7 +124,7 @@ MultiResolutionRegistration<TElastix>::SetComponents()
 
   this->SetInterpolator(this->GetElastix()->GetElxInterpolatorBase()->GetAsITKBaseType());
 
-  MetricType * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
+  auto * testPtr = dynamic_cast<MetricType *>(this->GetElastix()->GetElxMetricBase()->GetAsITKBaseType());
   if (testPtr)
   {
     this->SetMetric(testPtr);

@@ -246,7 +246,7 @@ StochasticGradientDescentOptimizer::ThreadedAdvanceOneStep(ThreadIdType threadId
 {
   /** Compute the range for this thread. */
   const unsigned int spaceDimension = this->GetScaledCostFunction()->GetNumberOfParameters();
-  const unsigned int subSize = static_cast<unsigned int>(
+  const auto         subSize = static_cast<unsigned int>(
     std::ceil(static_cast<double>(spaceDimension) / static_cast<double>(this->m_Threader->GetNumberOfWorkUnits())));
   const unsigned int jmin = threadId * subSize;
   const unsigned int jmax = std::min((threadId + 1) * subSize, spaceDimension);

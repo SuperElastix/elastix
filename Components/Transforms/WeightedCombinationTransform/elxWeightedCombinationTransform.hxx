@@ -72,7 +72,7 @@ WeightedCombinationTransformElastix<TElastix>::InitializeTransform()
 
   /** Some helper variables */
   const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
-  const double                 Nd = static_cast<double>(numberOfParameters);
+  const auto                   Nd = static_cast<double>(numberOfParameters);
 
   /** Equal weights */
   ParametersType parameters(numberOfParameters);
@@ -243,14 +243,14 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
       if (const itk::Object::Pointer subTransform = creator())
       {
         /** Cast to TransformBase and Call the ReadFromFile method of the elx_subTransform. */
-        if (Superclass2 * elx_subTransform = dynamic_cast<Superclass2 *>(subTransform.GetPointer()))
+        if (auto * elx_subTransform = dynamic_cast<Superclass2 *>(subTransform.GetPointer()))
         {
           elx_subTransform->SetElastix(this->GetElastix());
           elx_subTransform->SetConfiguration(configurationSubTransform);
           elx_subTransform->ReadFromFile();
 
           /** Set in vector of subTransforms. */
-          SubTransformType * testPointer = dynamic_cast<SubTransformType *>(subTransform.GetPointer());
+          auto * testPointer = dynamic_cast<SubTransformType *>(subTransform.GetPointer());
           subTransforms[i] = testPointer;
         }
       }

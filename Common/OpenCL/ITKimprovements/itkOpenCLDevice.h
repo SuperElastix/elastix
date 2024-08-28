@@ -863,7 +863,7 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLDevice & device
   else
   {
     strm << std::endl;
-    for (std::list<std::string>::const_iterator it = extensions.begin(); it != extensions.end(); ++it)
+    for (auto it = extensions.begin(); it != extensions.end(); ++it)
     {
       strm << indent << indent << "- " << *it << std::endl;
     }

@@ -158,7 +158,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
     shrinkfactors[i] = factorSize[i];
   }
 
-  const unsigned int ImageDim = static_cast<unsigned int>(InputImageDimension);
+  const auto ImageDim = static_cast<unsigned int>(InputImageDimension);
   switch (ImageDim)
   {
     case 1:

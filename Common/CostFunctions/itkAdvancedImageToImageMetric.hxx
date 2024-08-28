@@ -356,12 +356,12 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform() const
 {
   /** Check if this transform is a combo transform. */
-  CombinationTransformType * testPtr_combo = dynamic_cast<CombinationTransformType *>(m_AdvancedTransform.GetPointer());
+  auto * testPtr_combo = dynamic_cast<CombinationTransformType *>(m_AdvancedTransform.GetPointer());
 
   /** Check if this transform is a B-spline transform. */
-  BSplineOrder1TransformType * testPtr_1 = dynamic_cast<BSplineOrder1TransformType *>(m_AdvancedTransform.GetPointer());
-  BSplineOrder2TransformType * testPtr_2 = dynamic_cast<BSplineOrder2TransformType *>(m_AdvancedTransform.GetPointer());
-  BSplineOrder3TransformType * testPtr_3 = dynamic_cast<BSplineOrder3TransformType *>(m_AdvancedTransform.GetPointer());
+  auto * testPtr_1 = dynamic_cast<BSplineOrder1TransformType *>(m_AdvancedTransform.GetPointer());
+  auto * testPtr_2 = dynamic_cast<BSplineOrder2TransformType *>(m_AdvancedTransform.GetPointer());
+  auto * testPtr_3 = dynamic_cast<BSplineOrder3TransformType *>(m_AdvancedTransform.GetPointer());
 
   bool transformIsBSpline = false;
   if (testPtr_1 || testPtr_2 || testPtr_3)
@@ -371,12 +371,9 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform(
   else if (testPtr_combo)
   {
     /** Check if the current transform is a B-spline transform. */
-    const BSplineOrder1TransformType * testPtr_1b =
-      dynamic_cast<const BSplineOrder1TransformType *>(testPtr_combo->GetCurrentTransform());
-    const BSplineOrder2TransformType * testPtr_2b =
-      dynamic_cast<const BSplineOrder2TransformType *>(testPtr_combo->GetCurrentTransform());
-    const BSplineOrder3TransformType * testPtr_3b =
-      dynamic_cast<const BSplineOrder3TransformType *>(testPtr_combo->GetCurrentTransform());
+    const auto * testPtr_1b = dynamic_cast<const BSplineOrder1TransformType *>(testPtr_combo->GetCurrentTransform());
+    const auto * testPtr_2b = dynamic_cast<const BSplineOrder2TransformType *>(testPtr_combo->GetCurrentTransform());
+    const auto * testPtr_3b = dynamic_cast<const BSplineOrder3TransformType *>(testPtr_combo->GetCurrentTransform());
     if (testPtr_1b || testPtr_2b || testPtr_3b)
     {
       transformIsBSpline = true;
@@ -719,7 +716,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
   Self & metric = *(userData.st_Metric);
 
   const unsigned int numPar = metric.GetNumberOfParameters();
-  const unsigned int subSize =
+  const auto         subSize =
     static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
   const unsigned int jmin = threadID * subSize;
   const unsigned int jmax = std::min((threadID + 1) * subSize, numPar);

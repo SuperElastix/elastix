@@ -427,7 +427,7 @@ static ANNkd_ptr annReadTree(
 
 		in >> n_bnds;							// number of bounding sides
 												// allocate bounds array
-		ANNorthHSArray bds = new ANNorthHalfSpace[n_bnds];
+		auto bds = new ANNorthHalfSpace[n_bnds];
 		for (int i = 0; i < n_bnds; i++) {
 			in >> cd >> cv >> sd;				// input bounding halfspace
 												// copy to array

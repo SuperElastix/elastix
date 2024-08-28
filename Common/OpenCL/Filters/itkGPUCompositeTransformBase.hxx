@@ -43,8 +43,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::GetParametersDataManager(co
   }
   else
   {
-    const GPUTransformBase * transformBase =
-      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
+    const auto * transformBase = dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
 
     if (transformBase)
     {
@@ -188,8 +187,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsIdentityTransform(const s
 
   // Perform specific check
   using IdentityTransformType = GPUIdentityTransform<ScalarType, NDimensions>;
-  const IdentityTransformType * identity =
-    dynamic_cast<const IdentityTransformType *>(this->GetNthTransform(index).GetPointer());
+  const auto * identity = dynamic_cast<const IdentityTransformType *>(this->GetNthTransform(index).GetPointer());
   if (!identity)
   {
     return false;
@@ -214,7 +212,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsMatrixOffsetTransform(con
   // Perform specific check
   using MatrixOffsetTransformBaseType =
     GPUMatrixOffsetTransformBase<ScalarType, InputSpaceDimension, OutputSpaceDimension>;
-  const MatrixOffsetTransformBaseType * matrixoffset =
+  const auto * matrixoffset =
     dynamic_cast<const MatrixOffsetTransformBaseType *>(this->GetNthTransform(index).GetPointer());
   if (!matrixoffset)
   {
@@ -239,7 +237,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsTranslationTransform(cons
 
   // Perform specific check
   using TranslationTransformBaseType = GPUTranslationTransformBase<ScalarType, InputSpaceDimension>;
-  const TranslationTransformBaseType * translation =
+  const auto * translation =
     dynamic_cast<const TranslationTransformBaseType *>(this->GetNthTransform(index).GetPointer());
   if (!translation)
   {
@@ -273,8 +271,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsIdentityTransform(const s
                                                                          std::string &     source) const
 {
   using IdentityTransformType = GPUIdentityTransform<ScalarType, NDimensions>;
-  const IdentityTransformType * identity =
-    dynamic_cast<const IdentityTransformType *>(this->GetNthTransform(index).GetPointer());
+  const auto * identity = dynamic_cast<const IdentityTransformType *>(this->GetNthTransform(index).GetPointer());
 
   if (!identity)
   {
@@ -283,8 +280,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsIdentityTransform(const s
 
   if (loadSource)
   {
-    const GPUTransformBase * transformBase =
-      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
+    const auto * transformBase = dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
     transformBase->GetSourceCode(source);
   }
 
@@ -301,7 +297,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsMatrixOffsetTransform(con
 {
   using MatrixOffsetTransformBaseType =
     GPUMatrixOffsetTransformBase<ScalarType, InputSpaceDimension, OutputSpaceDimension>;
-  const MatrixOffsetTransformBaseType * matrixoffset =
+  const auto * matrixoffset =
     dynamic_cast<const MatrixOffsetTransformBaseType *>(this->GetNthTransform(index).GetPointer());
 
   if (!matrixoffset)
@@ -311,8 +307,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsMatrixOffsetTransform(con
 
   if (loadSource)
   {
-    const GPUTransformBase * transformBase =
-      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
+    const auto * transformBase = dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
     transformBase->GetSourceCode(source);
   }
 
@@ -328,7 +323,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsTranslationTransform(cons
                                                                             std::string &     source) const
 {
   using TranslationTransformBaseType = GPUTranslationTransformBase<ScalarType, InputSpaceDimension>;
-  const TranslationTransformBaseType * translation =
+  const auto * translation =
     dynamic_cast<const TranslationTransformBaseType *>(this->GetNthTransform(index).GetPointer());
 
   if (!translation)
@@ -338,8 +333,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsTranslationTransform(cons
 
   if (loadSource)
   {
-    const GPUTransformBase * transformBase =
-      dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
+    const auto * transformBase = dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(index).GetPointer());
     transformBase->GetSourceCode(source);
   }
 
@@ -359,8 +353,7 @@ GPUCompositeTransformBase<TScalarType, NDimensions>::IsBSplineTransform(const st
   {
     if (loadSource)
     {
-      const GPUTransformBase * transformBase =
-        dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(_index).GetPointer());
+      const auto * transformBase = dynamic_cast<const GPUTransformBase *>(this->GetNthTransform(_index).GetPointer());
       transformBase->GetSourceCode(source);
     }
     return true;

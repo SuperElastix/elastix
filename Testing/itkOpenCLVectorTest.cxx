@@ -25,7 +25,7 @@ template <class type>
 bool
 std_all_of(const typename std::vector<type> & v, const type value)
 {
-  for (typename std::vector<type>::const_iterator it = v.begin(); it != v.end(); ++it)
+  for (auto it = v.begin(); it != v.end(); ++it)
   {
     if (*it != value)
     {

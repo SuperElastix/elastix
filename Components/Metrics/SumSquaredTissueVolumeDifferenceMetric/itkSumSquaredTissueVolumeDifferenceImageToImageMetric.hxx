@@ -109,7 +109,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
-      const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
+      const auto detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
 
       /** Get the fixed image value. */
       const auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
@@ -203,7 +203,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nSamplesPerThread = static_cast<unsigned long>(
+  const auto nSamplesPerThread = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nSamplesPerThread * threadId, sampleContainerSize);
@@ -240,13 +240,13 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
       /** Get the SpatialJacobian dT/dx. */
       Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
-      const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
+      const auto detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
 
       /** The difference squared. */
       const RealType diff = ((fixedImageValue - this->m_AirValue) - detjac * (movingImageValue - this->m_AirValue)) /
@@ -402,7 +402,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
       Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
-      const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
+      const auto detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
 
       /** Compute the inverse spatialJacobian. */
       inverseSpatialJacobian = spatialJac.GetInverse();
@@ -511,7 +511,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
   const unsigned long         sampleContainerSize = sampleContainer->Size();
 
   /** Get the samples for this thread. */
-  const unsigned long nSamplesPerThread = static_cast<unsigned long>(
+  const auto nSamplesPerThread = static_cast<unsigned long>(
     std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
 
   const auto pos_begin = std::min<size_t>(nSamplesPerThread * threadId, sampleContainerSize);
@@ -550,7 +550,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const RealType fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
@@ -562,7 +562,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
       Superclass::m_AdvancedTransform->GetSpatialJacobian(fixedPoint, spatialJac);
 
       /** Compute the determinant of the Transform Jacobian |dT/dx|. */
-      const RealType detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
+      const auto detjac = static_cast<RealType>(vnl_det(spatialJac.GetVnlMatrix()));
 
       /** Compute the inverse spatialJacobian. */
       inverseSpatialJacobian = spatialJac.GetInverse();
@@ -746,8 +746,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::
 
   jacobianOfSpatialJacobianDeterminant.Fill(0.0);
 
-  JacobianOfSpatialJacobianIteratorType jsjit = jacobianOfSpatialJacobian.begin();
-  DerivativeIteratorType                jsjdit = jacobianOfSpatialJacobianDeterminant.begin();
+  auto                   jsjit = jacobianOfSpatialJacobian.begin();
+  DerivativeIteratorType jsjdit = jacobianOfSpatialJacobianDeterminant.begin();
 
   const unsigned int sizejacobianOfSpatialJacobianDeterminant = jacobianOfSpatialJacobianDeterminant.GetSize();
 

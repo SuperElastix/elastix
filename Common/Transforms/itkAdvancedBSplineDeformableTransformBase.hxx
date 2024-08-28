@@ -375,7 +375,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::WrapAsImages()
    * NOTE: For efficiency, parameters are not copied locally. The parameters
    * are assumed to be maintained by the caller.
    */
-  PixelType *  dataPointer = const_cast<PixelType *>((this->m_InputParametersPointer->data_block()));
+  auto *       dataPointer = const_cast<PixelType *>((this->m_InputParametersPointer->data_block()));
   unsigned int numberOfPixels = this->m_GridRegion.GetNumberOfPixels();
 
   for (unsigned int j = 0; j < SpaceDimension; ++j)

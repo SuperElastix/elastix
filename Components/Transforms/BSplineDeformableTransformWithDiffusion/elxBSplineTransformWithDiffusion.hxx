@@ -722,7 +722,7 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
   ParametersType latestParameters = this->m_Registration->GetAsITKBaseType()->GetLastTransformParameters();
 
   /** Get the pointer to the data in latestParameters. */
-  PixelType * dataPointer = static_cast<PixelType *>(latestParameters.data_block());
+  auto * dataPointer = static_cast<PixelType *>(latestParameters.data_block());
   /** Get the number of pixels that should go into one coefficient image. */
   unsigned int numberOfPixels = (this->m_BSplineTransform->GetGridRegion()).GetNumberOfPixels();
 
@@ -958,7 +958,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
   /** Convert 'this' to a pointer to a CombinationTransformType and set how
    * to combine the current transform with the initial transform */
   /** Cast to transform grouper. */
-  CombinationTransformType * thisAsGrouper = dynamic_cast<CombinationTransformType *>(this);
+  auto * thisAsGrouper = dynamic_cast<CombinationTransformType *>(this);
   if (thisAsGrouper)
   {
     if (howToCombineTransforms == "Compose")

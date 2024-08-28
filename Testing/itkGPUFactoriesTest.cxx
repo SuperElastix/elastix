@@ -64,7 +64,7 @@ PrintAllRegisteredFactories()
   std::list<itk::ObjectFactoryBase *> factories = itk::ObjectFactoryBase::GetRegisteredFactories();
 
   std::cout << "----- Registered factories -----" << std::endl;
-  for (std::list<itk::ObjectFactoryBase *>::iterator f = factories.begin(); f != factories.end(); ++f)
+  for (auto f = factories.begin(); f != factories.end(); ++f)
   {
     std::cout << "  Factory version: " << (*f)->GetITKSourceVersion() << '\n'
               << "  Factory description: " << (*f)->GetDescription() << std::endl;

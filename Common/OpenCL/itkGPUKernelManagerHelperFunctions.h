@@ -76,7 +76,7 @@ SetKernelWithDirection(const typename ImageType::DirectionType & dir,
                        cl_float4 &                               direction2d,
                        cl_float16 &                              direction3d)
 {
-  const unsigned int ImageDim = (unsigned int)(ImageType::ImageDimension);
+  const auto ImageDim = (unsigned int)(ImageType::ImageDimension);
 
   if (ImageDim == 1)
   {
@@ -161,10 +161,10 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
   // Set ITK image base to the kernelManager
   if (copyImageBase)
   {
-    const unsigned int ImageDim = (unsigned int)(ImageType::ImageDimension);
-    GPUImageBase1D     imageBase1D;
-    GPUImageBase2D     imageBase2D;
-    GPUImageBase3D     imageBase3D;
+    const auto     ImageDim = (unsigned int)(ImageType::ImageDimension);
+    GPUImageBase1D imageBase1D;
+    GPUImageBase2D imageBase2D;
+    GPUImageBase3D imageBase3D;
 
     // Set size
     typename ImageType::RegionType largestPossibleRegion;

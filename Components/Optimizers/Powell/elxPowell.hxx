@@ -57,7 +57,7 @@ void
 Powell<TElastix>::BeforeEachResolution()
 {
   /** Get the current resolution level.*/
-  unsigned int level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
+  auto level = static_cast<unsigned int>(this->m_Registration->GetAsITKBaseType()->GetCurrentLevel());
 
   /** Set the value tolerance.*/
   double valueTolerance = 1e-8;

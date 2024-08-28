@@ -162,7 +162,7 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
   const ParameterValuesType & vec = this->m_ParameterMap.find(parameterName)->second;
 
   /** Copy all parameters at once. */
-  std::vector<std::string>::const_iterator it = vec.begin();
+  auto it = vec.begin();
   parameterValues.clear();
   parameterValues.assign(it + entry_nr_start, it + entry_nr_end + 1);
 

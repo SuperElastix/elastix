@@ -558,7 +558,7 @@ RecursiveBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeW
     const unsigned long baseOffset = coeff->ComputeOffset(index);
     for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
-      const unsigned int scalesIndex = static_cast<unsigned int>(baseOffset + i * offset);
+      const auto scalesIndex = static_cast<unsigned int>(baseOffset + i * offset);
       newScales[scalesIndex] = infScale;
     }
     ++cIt;

@@ -39,7 +39,7 @@ main()
    * fast test results in Release mode. In 3D half of this number calls are
    * made.
    */
-  unsigned int N = static_cast<unsigned int>(1e6);
+  auto N = static_cast<unsigned int>(1e6);
 
   /** Other typedefs. */
   using WeightFunctionType2D = itk::BSplineInterpolationWeightFunction<CoordinateRepresentationType, 2, SplineOrder>;

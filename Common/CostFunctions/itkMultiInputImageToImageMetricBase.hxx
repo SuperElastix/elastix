@@ -172,8 +172,7 @@ MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::CheckForBSplineInte
 
   for (unsigned int i = 0; i < this->m_NumberOfMovingImages; ++i)
   {
-    BSplineInterpolatorType * testPtr =
-      dynamic_cast<BSplineInterpolatorType *>(this->m_InterpolatorVector[i].GetPointer());
+    auto * testPtr = dynamic_cast<BSplineInterpolatorType *>(this->m_InterpolatorVector[i].GetPointer());
 
     if (testPtr)
     {

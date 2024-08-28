@@ -78,7 +78,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   maxJJ = 0.0;
 
   /** Get the number of parameters. */
-  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const auto numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   // Replace by a general check later.
   bool transformIsBSpline = false;
@@ -304,7 +304,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   maxJJ = 0.0;
 
   /** Get the number of parameters. */
-  const unsigned int numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
+  const auto numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
   // Replace by a general check later.
   bool transformIsBSpline = false;
@@ -416,7 +416,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
   using PadImageFilterType = ZeroFluxNeumannPadImageFilter<CoefficientImageType, CoefficientImageType>;
   using SmoothingFilterType = SmoothingRecursiveGaussianImageFilter<CoefficientImageType, CoefficientImageType>;
 
-  CombinationTransformType * testPtr_combo = dynamic_cast<CombinationTransformType *>(this->m_Transform.GetPointer());
+  auto * testPtr_combo = dynamic_cast<CombinationTransformType *>(this->m_Transform.GetPointer());
   if (!testPtr_combo)
     return; // throw an error?
   const auto testPtr_bspline = dynamic_cast<const BSplineTransformType *>(testPtr_combo->GetCurrentTransform());

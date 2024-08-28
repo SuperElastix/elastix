@@ -80,7 +80,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase()
   }
 
   /** Cast this to AdvancedMetricType. */
-  AdvancedMetricType * thisAsAdvanced = dynamic_cast<AdvancedMetricType *>(this);
+  auto * thisAsAdvanced = dynamic_cast<AdvancedMetricType *>(this);
 
   /** For advanced metrics several other things can be set. */
   if (thisAsAdvanced != nullptr)
@@ -228,7 +228,7 @@ MetricBase<TElastix>::GetExactValue(const ParametersType & parameters) -> Measur
   }
 
   /** Try to cast the current Sampler to a FullSampler. */
-  ExactMetricImageSamplerType * testPointer = dynamic_cast<ExactMetricImageSamplerType *>(currentSampler.GetPointer());
+  auto * testPointer = dynamic_cast<ExactMetricImageSamplerType *>(currentSampler.GetPointer());
   if (testPointer != nullptr)
   {
     /** GetValue gives us the exact value! */
@@ -271,7 +271,7 @@ bool
 MetricBase<TElastix>::GetAdvancedMetricUseImageSampler() const
 {
   /** Cast this to AdvancedMetricType. */
-  const AdvancedMetricType * thisAsMetricWithSampler = dynamic_cast<const AdvancedMetricType *>(this);
+  const auto * thisAsMetricWithSampler = dynamic_cast<const AdvancedMetricType *>(this);
 
   /** If no AdvancedMetricType, return false. */
   if (thisAsMetricWithSampler == nullptr)
@@ -293,7 +293,7 @@ void
 MetricBase<TElastix>::SetAdvancedMetricImageSampler(ImageSamplerBaseType * sampler)
 {
   /** Cast this to AdvancedMetricType. */
-  AdvancedMetricType * thisAsMetricWithSampler = dynamic_cast<AdvancedMetricType *>(this);
+  auto * thisAsMetricWithSampler = dynamic_cast<AdvancedMetricType *>(this);
 
   /** If no AdvancedMetricType, or if the MetricWithSampler does not
    * utilize the sampler, return.
@@ -322,7 +322,7 @@ auto
 MetricBase<TElastix>::GetAdvancedMetricImageSampler() const -> ImageSamplerBaseType *
 {
   /** Cast this to AdvancedMetricType. */
-  const AdvancedMetricType * thisAsMetricWithSampler = dynamic_cast<const AdvancedMetricType *>(this);
+  const auto * thisAsMetricWithSampler = dynamic_cast<const AdvancedMetricType *>(this);
 
   /** If no AdvancedMetricType, or if the MetricWithSampler does not
    * utilize the sampler, return 0.

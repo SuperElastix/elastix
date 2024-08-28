@@ -133,7 +133,7 @@ public:
     Self & metric = *(userData.st_Metric);
 
     const unsigned int numPar = metric.m_NumberOfParameters;
-    const unsigned int subSize =
+    const auto         subSize =
       static_cast<unsigned int>(std::ceil(static_cast<double>(numPar) / static_cast<double>(nrOfThreads)));
     const unsigned int jmin = threadID * subSize;
     const unsigned int jmax = std::min((threadID + 1) * subSize, numPar);
