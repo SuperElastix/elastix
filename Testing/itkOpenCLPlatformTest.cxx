@@ -36,9 +36,9 @@ main()
 
   // Get all platforms and print it
   const std::list<itk::OpenCLPlatform> platforms = itk::OpenCLPlatform::GetAllPlatforms();
-  for (auto it = platforms.begin(); it != platforms.end(); ++it)
+  for (const auto & platform : platforms)
   {
-    std::cout << *it;
+    std::cout << platform;
   }
 
   return EXIT_SUCCESS;
