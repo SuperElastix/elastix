@@ -189,7 +189,7 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT AdaptiveStochasticGradientDescent
   : public itk::AdaptiveStochasticGradientDescentOptimizer
   , public OptimizerBase<TElastix>

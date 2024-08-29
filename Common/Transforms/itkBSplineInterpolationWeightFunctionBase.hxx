@@ -30,7 +30,7 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::
   BSplineInterpolationWeightFunctionBase()
 {
@@ -44,7 +44,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
  * ******************* InitializeOffsetToIndexTable *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::InitializeOffsetToIndexTable()
 {
@@ -79,7 +79,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
  * ******************* PrintSelf *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::PrintSelf(std::ostream & os,
                                                                                             Indent         indent) const
@@ -95,7 +95,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
  * ******************* ComputeStartIndex *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::ComputeStartIndex(
   const ContinuousIndexType & cindex,
@@ -115,7 +115,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
  * ******************* Evaluate *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 auto
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
   const ContinuousIndexType & cindex) const -> WeightsType
@@ -137,7 +137,7 @@ BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
  * ******************* Evaluate *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
   const ContinuousIndexType & cindex,

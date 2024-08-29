@@ -27,7 +27,7 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::
   BSplineInterpolationDerivativeWeightFunction()
 {
@@ -41,7 +41,7 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
  * ******************* SetDerivativeDirection *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::SetDerivativeDirection(
   unsigned int dir)
@@ -63,7 +63,7 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
  * ******************* PrintSelf *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::PrintSelf(std::ostream & os,
                                                                                                   Indent indent) const
@@ -77,7 +77,7 @@ BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSpline
  * ******************* Compute1DWeights *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::Compute1DWeights(
   const ContinuousIndexType & cindex,

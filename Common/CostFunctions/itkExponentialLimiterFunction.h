@@ -39,7 +39,7 @@ namespace itk
  * \sa LimiterFunctionBase, HardLimiterFunction
  *
  */
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 class ITK_TEMPLATE_EXPORT ExponentialLimiterFunction : public LimiterFunctionBase<TInput, NDimension>
 {
 public:

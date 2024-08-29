@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 ANNFixedRadiusTreeSearch<TBinaryTree>::ANNFixedRadiusTreeSearch()
 {
   this->m_ErrorBound = 0.0;
@@ -39,7 +39,7 @@ ANNFixedRadiusTreeSearch<TBinaryTree>::ANNFixedRadiusTreeSearch()
  * ************************ Search *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 void
 ANNFixedRadiusTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
                                               IndexArrayType &              ind,
@@ -88,7 +88,7 @@ ANNFixedRadiusTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
  * ************************ Search *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 void
 ANNFixedRadiusTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
                                               IndexArrayType &              ind,

@@ -30,7 +30,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 EulerTransformElastix<TElastix>::EulerTransformElastix()
 {
   this->SetCurrentTransform(this->m_EulerTransform);
@@ -42,7 +42,7 @@ EulerTransformElastix<TElastix>::EulerTransformElastix()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerTransformElastix<TElastix>::BeforeRegistration()
 {
@@ -59,7 +59,7 @@ EulerTransformElastix<TElastix>::BeforeRegistration()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerTransformElastix<TElastix>::ReadFromFile()
 {
@@ -108,7 +108,7 @@ EulerTransformElastix<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 EulerTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -130,7 +130,7 @@ EulerTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> P
  * ************************* InitializeTransform *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerTransformElastix<TElastix>::InitializeTransform()
 {
@@ -284,7 +284,7 @@ EulerTransformElastix<TElastix>::InitializeTransform()
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerTransformElastix<TElastix>::SetScales()
 {
@@ -402,7 +402,7 @@ EulerTransformElastix<TElastix>::SetScales()
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 EulerTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {

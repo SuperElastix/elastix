@@ -29,7 +29,7 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistration<TElastix>::BeforeRegistration()
 {
@@ -89,7 +89,7 @@ MultiResolutionRegistration<TElastix>::BeforeRegistration()
  * ******************* BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistration<TElastix>::BeforeEachResolution()
 {
@@ -108,7 +108,7 @@ MultiResolutionRegistration<TElastix>::BeforeEachResolution()
  * *********************** SetComponents ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistration<TElastix>::SetComponents()
 {
@@ -161,7 +161,7 @@ MultiResolutionRegistration<TElastix>::SetComponents()
  * ************************* UpdateMasks ************************
  **/
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistration<TElastix>::UpdateMasks(unsigned int level)
 {

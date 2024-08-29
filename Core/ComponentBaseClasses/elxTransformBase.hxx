@@ -55,7 +55,7 @@ namespace elastix
  * ******************** BeforeAllBase ***************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 TransformBase<TElastix>::BeforeAllBase()
 {
@@ -87,7 +87,7 @@ TransformBase<TElastix>::BeforeAllBase()
  * ******************** BeforeAllTransformix ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 TransformBase<TElastix>::BeforeAllTransformix()
 {
@@ -151,7 +151,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
  * ******************* BeforeRegistrationBase *******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::BeforeRegistrationBase()
 {
@@ -217,7 +217,7 @@ TransformBase<TElastix>::BeforeRegistrationBase()
  * ******************* GetInitialTransform **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 TransformBase<TElastix>::GetInitialTransform() const -> const InitialTransformType *
 {
@@ -230,7 +230,7 @@ TransformBase<TElastix>::GetInitialTransform() const -> const InitialTransformTy
  * ******************* SetInitialTransform **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::SetInitialTransform(InitialTransformType * _arg)
 {
@@ -246,7 +246,7 @@ TransformBase<TElastix>::SetInitialTransform(InitialTransformType * _arg)
  * ******************* SetFinalParameters ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::SetFinalParameters()
 {
@@ -265,7 +265,7 @@ TransformBase<TElastix>::SetFinalParameters()
  * ******************* AfterRegistrationBase ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::AfterRegistrationBase()
 {
@@ -279,7 +279,7 @@ TransformBase<TElastix>::AfterRegistrationBase()
  * ******************* ReadFromFile *****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::ReadFromFile()
 {
@@ -450,7 +450,7 @@ TransformBase<TElastix>::ReadFromFile()
  * ******************* ReadInitialTransformFromFile *************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transformParameterFileName)
 {
@@ -472,7 +472,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transf
  * ******************* ReadInitialTransformFromConfiguration *****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
   const Configuration::ConstPointer configurationInitialTransform)
@@ -510,7 +510,7 @@ TransformBase<TElastix>::ReadInitialTransformFromConfiguration(
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo, const ParametersType & param) const
 {
@@ -580,7 +580,7 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
  * ******************* CreateTransformParameterMap ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::CreateTransformParameterMap(const ParametersType & param,
                                                      ParameterMapType &     parameterMap,
@@ -655,7 +655,7 @@ TransformBase<TElastix>::CreateTransformParameterMap(const ParametersType & para
  * coordinates.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::TransformPoints() const
 {
@@ -719,7 +719,7 @@ TransformBase<TElastix>::TransformPoints() const
  * the input point. Save the results.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename) const
 {
@@ -920,7 +920,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
  * Computes the transformed points, save as outputpoints.vtk.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filename) const
 {
@@ -994,7 +994,7 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
  * stored in an image of vectors (of floats).
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::TransformPointsAllPoints() const
 {
@@ -1020,7 +1020,7 @@ TransformBase<TElastix>::TransformPointsAllPoints() const
  * stored in an image of vectors (of floats).
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename DeformationFieldImageType::Pointer
 {
@@ -1075,7 +1075,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
  * ************** WriteDeformationFieldImage **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::WriteDeformationFieldImage(
   typename TransformBase<TElastix>::DeformationFieldImageType::Pointer deformationfield) const
@@ -1112,7 +1112,7 @@ TransformBase<TElastix>::WriteDeformationFieldImage(
  * ************** ComputeSpatialJacobianDeterminantImage **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 TransformBase<TElastix>::ComputeSpatialJacobianDeterminantImage() const ->
   typename SpatialJacobianDeterminantImageType::Pointer
@@ -1129,7 +1129,7 @@ TransformBase<TElastix>::ComputeSpatialJacobianDeterminantImage() const ->
  * ************** ComputeSpatialJacobianMatrixImage **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 TransformBase<TElastix>::ComputeSpatialJacobianMatrixImage() const -> typename SpatialJacobianMatrixImageType::Pointer
 {
@@ -1144,7 +1144,7 @@ TransformBase<TElastix>::ComputeSpatialJacobianMatrixImage() const -> typename S
  * ************** ComputeAndWriteSpatialJacobianDeterminantImage **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
 {
@@ -1210,7 +1210,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
  * ************** ComputeAndWriteSpatialJacobianMatrixImage **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
 {
@@ -1320,7 +1320,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
  * ************** SetTransformParameterFileName ****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::SetTransformParameterFileName(const std::string & filename)
 {
@@ -1339,7 +1339,7 @@ TransformBase<TElastix>::SetTransformParameterFileName(const std::string & filen
  * ************** SetReadWriteTransformParameters ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::SetReadWriteTransformParameters(const bool _arg)
 {
@@ -1357,7 +1357,7 @@ TransformBase<TElastix>::SetReadWriteTransformParameters(const bool _arg)
  * ************** AutomaticScalesEstimation ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
 {
@@ -1419,7 +1419,7 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
  * ************** AutomaticScalesEstimationStackTransform ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned int numberOfSubTransforms,
                                                                  ScalesType &       scales) const

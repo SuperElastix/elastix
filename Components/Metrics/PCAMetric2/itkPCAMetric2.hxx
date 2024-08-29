@@ -35,7 +35,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 PCAMetric2<TFixedImage, TMovingImage>::PCAMetric2()
 {
   this->SetUseImageSampler(true);
@@ -48,7 +48,7 @@ PCAMetric2<TFixedImage, TMovingImage>::PCAMetric2()
  * ******************* Initialize *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric2<TFixedImage, TMovingImage>::Initialize()
 {
@@ -66,7 +66,7 @@ PCAMetric2<TFixedImage, TMovingImage>::Initialize()
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric2<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -78,7 +78,7 @@ PCAMetric2<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent inden
  * ******************* SampleRandom *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric2<TFixedImage, TMovingImage>::SampleRandom(const int n, const int m, std::vector<int> & numbers) const
 {
@@ -113,7 +113,7 @@ PCAMetric2<TFixedImage, TMovingImage>::SampleRandom(const int n, const int m, st
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric2<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const TransformJacobianType &     jacobian,
@@ -128,7 +128,7 @@ PCAMetric2<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & parameters) const -> MeasureType
 {
@@ -294,7 +294,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & 
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric2<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersType & parameters,
                                                      DerivativeType &                derivative) const
@@ -314,7 +314,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTy
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParametersType & parameters,
                                                              MeasureType &                   value,

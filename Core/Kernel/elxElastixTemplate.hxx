@@ -43,7 +43,7 @@ namespace elastix
  * ********************** GetFixedImage *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 ElastixTemplate<TFixedImage, TMovingImage>::GetFixedImage(unsigned int idx) const -> FixedImageType *
 {
@@ -60,7 +60,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetFixedImage(unsigned int idx) cons
  * ********************** GetMovingImage *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 ElastixTemplate<TFixedImage, TMovingImage>::GetMovingImage(unsigned int idx) const -> MovingImageType *
 {
@@ -77,7 +77,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetMovingImage(unsigned int idx) con
  * ********************** GetFixedMask *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 ElastixTemplate<TFixedImage, TMovingImage>::GetFixedMask(unsigned int idx) const -> FixedMaskType *
 {
@@ -94,7 +94,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetFixedMask(unsigned int idx) const
  * ********************** GetMovingMask *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 ElastixTemplate<TFixedImage, TMovingImage>::GetMovingMask(unsigned int idx) const -> MovingMaskType *
 {
@@ -112,7 +112,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetMovingMask(unsigned int idx) cons
  * **************************** Run *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 int
 ElastixTemplate<TFixedImage, TMovingImage>::Run()
 {
@@ -252,7 +252,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
  * ************************ ApplyTransform **********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 int
 ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTransform)
 {
@@ -418,7 +418,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ApplyTransform(const bool doReadTran
  * ************************ BeforeAll ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 int
 ElastixTemplate<TFixedImage, TMovingImage>::BeforeAll()
 {
@@ -440,7 +440,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeAll()
  * ******************** BeforeAllTransformix ********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 int
 ElastixTemplate<TFixedImage, TMovingImage>::BeforeAllTransformix()
 {
@@ -480,7 +480,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeAllTransformix()
  * **************** BeforeRegistration *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration()
 {
@@ -518,7 +518,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration()
  * ************** BeforeEachResolution *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
 {
@@ -577,7 +577,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
  * ************** AfterEachResolution *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
 {
@@ -630,7 +630,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachResolution()
  * ************** AfterEachIteration *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
 {
@@ -712,7 +712,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterEachIteration()
  * ************** AfterRegistration *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
 {
@@ -770,7 +770,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
  * contain the final transform parameters.
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const std::string & fileName, const bool toLog)
 {
@@ -823,7 +823,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterFile(const s
  * ************** CreateTransformParameterMap ******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterMap()
 {
@@ -839,7 +839,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CreateTransformParameterMap()
  * ****************** CallInEachComponent ***********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::CallInEachComponent(PtrToMemberFunction func)
 {
@@ -894,7 +894,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CallInEachComponent(PtrToMemberFunct
  * ****************** CallInEachComponentInt ********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 int
 ElastixTemplate<TFixedImage, TMovingImage>::CallInEachComponentInt(PtrToMemberFunction2 func)
 {
@@ -955,7 +955,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::CallInEachComponentInt(PtrToMemberFu
  * ****************** ConfigureComponents *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::ConfigureComponents(Self * This)
 {
@@ -1021,7 +1021,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::ConfigureComponents(Self * This)
  * which will contain the iteration info table.
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
 {
@@ -1067,7 +1067,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::OpenIterationInfoFile()
  * This function retrieves the true direction cosines.
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 bool
 ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(FixedImageDirectionType & direction) const
 {
@@ -1115,7 +1115,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetOriginalFixedImageDirection(Fixed
  * ************** SetOriginalFixedImageDirection *********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ElastixTemplate<TFixedImage, TMovingImage>::SetOriginalFixedImageDirection(const FixedImageDirectionType & arg)
 {

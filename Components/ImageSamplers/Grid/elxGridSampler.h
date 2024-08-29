@@ -45,7 +45,7 @@ namespace elastix
  * \ingroup ImageSamplers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT GridSampler
   : public itk::ImageGridSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
   , public elx::ImageSamplerBase<TElastix>

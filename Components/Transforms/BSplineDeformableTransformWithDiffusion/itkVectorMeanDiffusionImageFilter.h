@@ -45,7 +45,7 @@ namespace itk
  * \ingroup IntensityImageFilters
  */
 
-template <class TInputImage, class TGrayValueImage>
+template <typename TInputImage, typename TGrayValueImage>
 class ITK_TEMPLATE_EXPORT VectorMeanDiffusionImageFilter : public ImageToImageFilter<TInputImage, TInputImage>
 {
 public:

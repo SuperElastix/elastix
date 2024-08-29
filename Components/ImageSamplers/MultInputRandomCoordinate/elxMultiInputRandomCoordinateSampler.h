@@ -80,7 +80,7 @@ namespace elastix
  * \sa MultiResolutionRegistrationWithFeatures
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT MultiInputRandomCoordinateSampler
   : public itk::MultiInputImageRandomCoordinateSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
   , public elx::ImageSamplerBase<TElastix>

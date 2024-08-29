@@ -28,7 +28,7 @@ namespace elastix
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineInterpolatorFloat<TElastix>::BeforeEachResolution()
 {

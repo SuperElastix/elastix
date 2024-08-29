@@ -31,7 +31,7 @@ namespace elastix
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Simplex<TElastix>::BeforeRegistration()
 {
@@ -52,7 +52,7 @@ Simplex<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Simplex<TElastix>::BeforeEachResolution()
 {
@@ -98,7 +98,7 @@ Simplex<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Simplex<TElastix>::AfterEachIteration()
 {
@@ -113,7 +113,7 @@ Simplex<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Simplex<TElastix>::AfterEachResolution()
 {
@@ -133,7 +133,7 @@ Simplex<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Simplex<TElastix>::AfterRegistration()
 {
@@ -149,7 +149,7 @@ Simplex<TElastix>::AfterRegistration()
  * ******************* SetInitialPosition ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Simplex<TElastix>::SetInitialPosition(const ParametersType & param)
 {

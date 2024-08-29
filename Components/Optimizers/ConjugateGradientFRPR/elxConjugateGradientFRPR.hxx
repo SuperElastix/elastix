@@ -32,7 +32,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 ConjugateGradientFRPR<TElastix>::ConjugateGradientFRPR()
 {
   this->m_LineBracketing = false;
@@ -51,7 +51,7 @@ ConjugateGradientFRPR<TElastix>::ConjugateGradientFRPR()
  * during iterating
  */
 
-template <class TElastix>
+template <typename TElastix>
 const char *
 ConjugateGradientFRPR<TElastix>::DeterminePhase() const
 {
@@ -74,7 +74,7 @@ ConjugateGradientFRPR<TElastix>::DeterminePhase() const
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::BeforeRegistration()
 {
@@ -103,7 +103,7 @@ ConjugateGradientFRPR<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::BeforeEachResolution()
 {
@@ -153,7 +153,7 @@ ConjugateGradientFRPR<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::AfterEachIteration()
 {
@@ -192,7 +192,7 @@ ConjugateGradientFRPR<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::AfterEachResolution()
 {
@@ -233,7 +233,7 @@ ConjugateGradientFRPR<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::AfterRegistration()
 {
@@ -249,7 +249,7 @@ ConjugateGradientFRPR<TElastix>::AfterRegistration()
  * ******************* SetInitialPosition ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::SetInitialPosition(const ParametersType & param)
 {
@@ -280,7 +280,7 @@ ConjugateGradientFRPR<TElastix>::SetInitialPosition(const ParametersType & param
  * *************** GetValueAndDerivative ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::GetValueAndDerivative(ParametersType & p, double * val, ParametersType * xi)
 {
@@ -304,7 +304,7 @@ ConjugateGradientFRPR<TElastix>::GetValueAndDerivative(ParametersType & p, doubl
  * *************** LineBracket ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::LineBracket(double *         ax,
                                              double *         bx,
@@ -331,7 +331,7 @@ ConjugateGradientFRPR<TElastix>::LineBracket(double *         ax,
  * *************** BracketedLineOptimize *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::BracketedLineOptimize(double           ax,
                                                        double           bx,
@@ -360,7 +360,7 @@ ConjugateGradientFRPR<TElastix>::BracketedLineOptimize(double           ax,
  * store the line search direction's (xi) magnitude and call the superclass'
  * implementation.
  */
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradientFRPR<TElastix>::LineOptimize(ParametersType * p,
                                               ParametersType & xi,

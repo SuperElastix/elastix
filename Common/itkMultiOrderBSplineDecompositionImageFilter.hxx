@@ -48,7 +48,7 @@ namespace itk
 /**
  * Constructor
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::MultiOrderBSplineDecompositionImageFilter()
 {
   int splineOrder = 3;
@@ -61,7 +61,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::MultiOrder
 /**
  * Standard "PrintSelf" method
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -79,7 +79,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::PrintSelf(
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 bool
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::DataToCoefficients1D()
 {
@@ -130,7 +130,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::DataToCoef
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetSplineOrder(unsigned int order)
 {
@@ -152,7 +152,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetSplineO
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetSplineOrder(unsigned int dimension,
                                                                                      unsigned int order)
@@ -167,7 +167,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetSplineO
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetPoles(unsigned int dimension)
 {
@@ -211,7 +211,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetPoles(u
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetInitialCausalCoefficient(double z)
 {
@@ -257,7 +257,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetInitial
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetInitialAntiCausalCoefficient(double z)
 {
@@ -270,7 +270,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetInitial
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::DataToCoefficientsND()
 {
@@ -319,7 +319,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::DataToCoef
 /**
  * Copy the input image into the output image
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyImageToImage()
 {
@@ -342,7 +342,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyImageT
 /**
  * Copy the scratch to one line of the output image
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyScratchToCoefficients(
   OutputLinearIterator & Iter)
@@ -361,7 +361,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyScratc
 /**
  * Copy one line of the output image to the scratch
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyCoefficientsToScratch(
   OutputLinearIterator & Iter)
@@ -379,7 +379,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::CopyCoeffi
 /**
  * GenerateInputRequestedRegion method.
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
 {
@@ -396,7 +396,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GenerateIn
 /**
  * EnlargeOutputRequestedRegion method.
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::EnlargeOutputRequestedRegion(DataObject * output)
 {
@@ -415,7 +415,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::EnlargeOut
 /**
  * Generate data
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::GenerateData()
 {

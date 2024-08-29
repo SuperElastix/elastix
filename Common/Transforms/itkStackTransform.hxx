@@ -27,7 +27,7 @@ namespace itk
  * ************************ SetParameters ***********************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(const ParametersType & param)
 {
@@ -57,7 +57,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(
  * ************************ GetParameters ***********************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters() const -> const ParametersType &
 {
@@ -84,7 +84,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters(
  * ********************* TransformPoint ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
   const InputPointType & inputPoint) const -> OutputPointType
@@ -121,7 +121,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(const InputPointType &       inputPoint,
                                                                               JacobianType &               jac,
@@ -166,7 +166,7 @@ StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(co
  * ********************* GetNumberOfNonZeroJacobianIndices ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 StackTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetNumberOfNonZeroJacobianIndices() const
   -> NumberOfParametersType

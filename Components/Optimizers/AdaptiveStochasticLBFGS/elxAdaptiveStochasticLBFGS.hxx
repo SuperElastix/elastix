@@ -46,7 +46,7 @@ namespace elastix
  * ********************** Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 AdaptiveStochasticLBFGS<TElastix>::AdaptiveStochasticLBFGS()
 {
   this->m_MaximumNumberOfSamplingAttempts = 0;
@@ -90,7 +90,7 @@ AdaptiveStochasticLBFGS<TElastix>::AdaptiveStochasticLBFGS()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::BeforeRegistration()
 {
@@ -117,7 +117,7 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
 {
@@ -338,7 +338,7 @@ AdaptiveStochasticLBFGS<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AfterEachIteration()
 {
@@ -362,7 +362,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution()
 {
@@ -431,7 +431,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AfterRegistration()
 {
@@ -451,7 +451,7 @@ AdaptiveStochasticLBFGS<TElastix>::AfterRegistration()
  * ****************** StartOptimization *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::StartOptimization()
 {
@@ -509,7 +509,7 @@ AdaptiveStochasticLBFGS<TElastix>::StartOptimization()
  * ********************** LBFGSUpdate **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::LBFGSUpdate()
 {
@@ -539,7 +539,7 @@ AdaptiveStochasticLBFGS<TElastix>::LBFGSUpdate()
  * ********************** AdvanceOneStep **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AdvanceOneStep()
 {
@@ -570,7 +570,7 @@ AdaptiveStochasticLBFGS<TElastix>::AdvanceOneStep()
  * ********************** StopOptimization **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::StopOptimization()
 {
@@ -585,7 +585,7 @@ AdaptiveStochasticLBFGS<TElastix>::StopOptimization()
  * ********************** ResumeOptimization **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
 {
@@ -821,7 +821,7 @@ AdaptiveStochasticLBFGS<TElastix>::ResumeOptimization()
  * ****************** MetricErrorResponse *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
 {
@@ -853,7 +853,7 @@ AdaptiveStochasticLBFGS<TElastix>::MetricErrorResponse(itk::ExceptionObject & er
  * ******************* AutomaticParameterEstimation **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation()
 {
@@ -903,7 +903,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimation()
  * ******************* AutomaticParameterEstimationOriginal **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
 {
@@ -1047,7 +1047,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
  * *************** AutomaticParameterEstimationUsingDisplacementDistribution *****
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacementDistribution()
 {
@@ -1161,7 +1161,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
  * *************** AutomaticLBFGSStepsizeEstimation *****
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
 {
@@ -1247,7 +1247,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
  * ******************** SampleGradients **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::SampleGradients(const ParametersType & mu0,
                                                    double                 perturbationSigma,
@@ -1424,7 +1424,7 @@ AdaptiveStochasticLBFGS<TElastix>::SampleGradients(const ParametersType & mu0,
  * *************** GetScaledDerivativeWithExceptionHandling ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::GetScaledDerivativeWithExceptionHandling(const ParametersType & parameters,
                                                                             DerivativeType &       derivative)
@@ -1448,7 +1448,7 @@ AdaptiveStochasticLBFGS<TElastix>::GetScaledDerivativeWithExceptionHandling(cons
  * *************** AddRandomPerturbation ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::AddRandomPerturbation(ParametersType & parameters, double sigma)
 {
@@ -1465,7 +1465,7 @@ AdaptiveStochasticLBFGS<TElastix>::AddRandomPerturbation(ParametersType & parame
  * ********************* StoreCurrentPoint ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::StoreCurrentPoint(const ParametersType & step, const DerivativeType & grad_dif)
 {
@@ -1503,7 +1503,7 @@ AdaptiveStochasticLBFGS<TElastix>::StoreCurrentPoint(const ParametersType & step
  * ********************* ComputeDiagonalMatrix ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::ComputeDiagonalMatrix(DiagonalMatrixType & diag_H0)
 {
@@ -1525,7 +1525,7 @@ AdaptiveStochasticLBFGS<TElastix>::ComputeDiagonalMatrix(DiagonalMatrixType & di
  * *********************** ComputeSearchDirection ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticLBFGS<TElastix>::ComputeSearchDirection(const DerivativeType & gradient, DerivativeType & searchDir)
 {

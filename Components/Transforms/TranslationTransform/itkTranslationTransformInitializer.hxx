@@ -29,7 +29,7 @@ namespace itk
  * ************************* Constructor *********************
  */
 
-template <class TTransform, class TFixedImage, class TMovingImage>
+template <typename TTransform, typename TFixedImage, typename TMovingImage>
 TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::TranslationTransformInitializer()
 {
   this->m_FixedCalculator = FixedImageCalculatorType::New();
@@ -41,7 +41,7 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Translat
  * ************************* InitializeTransform *********************
  */
 
-template <class TTransform, class TFixedImage, class TMovingImage>
+template <typename TTransform, typename TFixedImage, typename TMovingImage>
 void
 TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::InitializeTransform() const
 {
@@ -168,7 +168,7 @@ TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::Initiali
  * ************************* PrintSelf *********************
  */
 
-template <class TTransform, class TFixedImage, class TMovingImage>
+template <typename TTransform, typename TFixedImage, typename TMovingImage>
 void
 TranslationTransformInitializer<TTransform, TFixedImage, TMovingImage>::PrintSelf(std::ostream & os,
                                                                                   Indent         indent) const

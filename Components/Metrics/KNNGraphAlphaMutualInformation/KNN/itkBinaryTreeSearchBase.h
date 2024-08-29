@@ -35,7 +35,7 @@ namespace itk
  * \ingroup ANNwrap
  */
 
-template <class TListSample>
+template <typename TListSample>
 class ITK_TEMPLATE_EXPORT BinaryTreeSearchBase : public Object
 {
 public:

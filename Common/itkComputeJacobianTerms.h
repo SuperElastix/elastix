@@ -33,7 +33,7 @@ namespace itk
  * Details can be found in the paper.
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 class ITK_TEMPLATE_EXPORT ComputeJacobianTerms : public Object
 {
 public:

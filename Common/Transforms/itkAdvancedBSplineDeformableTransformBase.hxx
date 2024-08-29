@@ -27,7 +27,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplineDeformableTransformBase(
   const unsigned splineOrder)
   : Superclass(SpaceDimension)
@@ -84,7 +84,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
 
 
 // Get the number of parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParameters() const
   -> NumberOfParametersType
@@ -98,7 +98,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfPar
 
 
 // Get the number of parameters per dimension
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfParametersPerDimension() const
   -> NumberOfParametersType
@@ -110,7 +110,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfPar
 
 
 // Set the grid spacing
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdatePointIndexConversions()
 {
@@ -151,7 +151,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdatePointInd
 
 
 //
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdateGridOffsetTable()
 {
@@ -166,7 +166,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::UpdateGridOffs
 
 
 // Set the grid spacing
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridSpacing(const SpacingType & spacing)
 {
@@ -188,7 +188,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridSpacing
 
 
 // Set the grid direction
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridDirection(const DirectionType & direction)
 {
@@ -210,7 +210,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridDirecti
 
 
 // Set the grid origin
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridOrigin(const OriginType & origin)
 {
@@ -230,7 +230,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetGridOrigin(
 
 
 // Set the parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetIdentity()
 {
@@ -249,7 +249,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetIdentity()
 
 
 // Set the parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParameters(const ParametersType & parameters)
 {
@@ -278,7 +278,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParameters(
 
 
 // Set the Fixed Parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParameters(
   const FixedParametersType & passedParameters)
@@ -366,7 +366,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetFixedParame
 
 
 // Wrap flat parameters as images
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::WrapAsImages()
 {
@@ -388,7 +388,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::WrapAsImages()
 
 
 // Set the parameters by value
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParametersByValue(
   const ParametersType & parameters)
@@ -415,7 +415,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetParametersB
 
 
 // Get the parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters() const -> const ParametersType &
 {
@@ -432,7 +432,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(
 }
 
 // Get the parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetFixedParameters() const
   -> const FixedParametersType &
@@ -463,7 +463,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetFixedParame
 }
 
 // Set the B-Spline coefficients using input images
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetCoefficientImages(ImagePointer images[])
 {
@@ -488,7 +488,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::SetCoefficient
 
 
 // Print self
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -524,7 +524,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::PrintSelf(std:
 
 
 // Transform a point
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 bool
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::InsideValidRegion(
   const ContinuousIndexType & index) const
@@ -545,7 +545,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::InsideValidReg
 }
 
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::TransformPointToContinuousGridIndex(
   const InputPointType & point) const -> ContinuousIndexType

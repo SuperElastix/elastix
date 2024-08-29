@@ -39,7 +39,7 @@ namespace itk
 {
 
 /** Constructor with default arguments */
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedVersorTransform<TScalarType>::AdvancedVersorTransform()
   : Superclass(ParametersDimension)
 {
@@ -48,7 +48,7 @@ AdvancedVersorTransform<TScalarType>::AdvancedVersorTransform()
 
 
 /** Constructor with default arguments */
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedVersorTransform<TScalarType>::AdvancedVersorTransform(unsigned int parametersDimension)
   : Superclass(parametersDimension)
 {
@@ -57,7 +57,7 @@ AdvancedVersorTransform<TScalarType>::AdvancedVersorTransform(unsigned int param
 
 
 /** Constructor with default arguments */
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedVersorTransform<TScalarType>::AdvancedVersorTransform(const MatrixType &       matrix,
                                                               const OutputVectorType & offset)
   : Superclass(matrix, offset)
@@ -67,7 +67,7 @@ AdvancedVersorTransform<TScalarType>::AdvancedVersorTransform(const MatrixType &
 
 
 /** Set Parameters */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -96,7 +96,7 @@ AdvancedVersorTransform<TScalarType>::SetParameters(const ParametersType & param
 
 
 /** Set Parameters */
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AdvancedVersorTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -108,7 +108,7 @@ AdvancedVersorTransform<TScalarType>::GetParameters() const -> const ParametersT
 }
 
 /** Set Rotational Part */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::SetRotation(const VersorType & versor)
 {
@@ -119,7 +119,7 @@ AdvancedVersorTransform<TScalarType>::SetRotation(const VersorType & versor)
 
 
 /** Set Rotational Part */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::SetRotation(const AxisType & axis, AngleType angle)
 {
@@ -130,7 +130,7 @@ AdvancedVersorTransform<TScalarType>::SetRotation(const AxisType & axis, AngleTy
 
 
 /** Set Identity */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::SetIdentity()
 {
@@ -143,7 +143,7 @@ AdvancedVersorTransform<TScalarType>::SetIdentity()
 
 
 /** Compute the matrix */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::ComputeMatrix()
 {
@@ -178,7 +178,7 @@ AdvancedVersorTransform<TScalarType>::ComputeMatrix()
 
 
 /** Compute the matrix */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::ComputeMatrixParameters()
 {
@@ -187,7 +187,7 @@ AdvancedVersorTransform<TScalarType>::ComputeMatrixParameters()
 
 
 /** Get the Jacobian */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                   JacobianType &               j,
@@ -244,7 +244,7 @@ AdvancedVersorTransform<TScalarType>::GetJacobian(const InputPointType &       p
 
 
 /** Print self */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {

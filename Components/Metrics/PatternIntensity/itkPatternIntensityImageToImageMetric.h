@@ -41,7 +41,7 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT PatternIntensityImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {

@@ -30,7 +30,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 ImageRandomSamplerBase<TInputImage>::ImageRandomSamplerBase()
 {
   this->m_NumberOfSamples = 1000;
@@ -42,7 +42,7 @@ ImageRandomSamplerBase<TInputImage>::ImageRandomSamplerBase()
  * ******************* GenerateRandomNumberList *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 {
@@ -72,7 +72,7 @@ ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
  * ******************* PrintSelf *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomSamplerBase<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

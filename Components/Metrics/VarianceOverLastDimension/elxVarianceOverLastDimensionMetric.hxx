@@ -29,7 +29,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 VarianceOverLastDimensionMetric<TElastix>::Initialize()
 {
@@ -58,7 +58,7 @@ VarianceOverLastDimensionMetric<TElastix>::Initialize()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration()
 {
@@ -122,7 +122,7 @@ VarianceOverLastDimensionMetric<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 VarianceOverLastDimensionMetric<TElastix>::BeforeEachResolution()
 {

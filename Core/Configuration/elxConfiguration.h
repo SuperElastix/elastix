@@ -145,7 +145,7 @@ public:
 
 
   /** Read a parameter from the parameter file. */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
@@ -165,7 +165,7 @@ public:
 
 
   /** Read a parameter from the parameter file. */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T & parameterValue, const std::string & parameterName, const unsigned int entry_nr) const
   {
@@ -181,7 +181,7 @@ public:
 
 
   /** Read a parameter from the parameter file. */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
@@ -203,7 +203,7 @@ public:
 
 
   /** Read a parameter from the parameter file. */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
@@ -279,7 +279,7 @@ public:
 
 
   /** Read a range of parameters from the parameter file. */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(std::vector<T> &    parameterValues,
                 const std::string & parameterName,

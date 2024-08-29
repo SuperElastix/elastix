@@ -41,7 +41,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedSimilarity3DTransform<TScalarType>::AdvancedSimilarity3DTransform()
   : Superclass(ParametersDimension)
 {
@@ -51,21 +51,21 @@ AdvancedSimilarity3DTransform<TScalarType>::AdvancedSimilarity3DTransform()
 
 
 // Constructor with arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedSimilarity3DTransform<TScalarType>::AdvancedSimilarity3DTransform(unsigned int outputSpaceDim,
                                                                           unsigned int paramDim)
   : Superclass(outputSpaceDim, paramDim)
 {}
 
 // Constructor with arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedSimilarity3DTransform<TScalarType>::AdvancedSimilarity3DTransform(const MatrixType &       matrix,
                                                                           const OutputVectorType & offset)
   : Superclass(matrix, offset)
 {}
 
 // Set the scale factor
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::SetScale(ScaleType scale)
 {
@@ -76,7 +76,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetScale(ScaleType scale)
 
 
 // Directly set the matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 {
@@ -124,7 +124,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 
 
 // Set Parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -185,7 +185,7 @@ AdvancedSimilarity3DTransform<TScalarType>::SetParameters(const ParametersType &
 // p[6:6} = scaling factor (isotropic)
 //
 
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AdvancedSimilarity3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -208,7 +208,7 @@ AdvancedSimilarity3DTransform<TScalarType>::GetParameters() const -> const Param
 }
 
 // Set parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                         JacobianType &               j,
@@ -252,7 +252,7 @@ AdvancedSimilarity3DTransform<TScalarType>::GetJacobian(const InputPointType &  
 
 
 // Set the scale factor
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrix()
 {
@@ -265,7 +265,7 @@ AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrix()
 
 
 /** Compute the matrix */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrixParameters()
 {
@@ -283,7 +283,7 @@ AdvancedSimilarity3DTransform<TScalarType>::ComputeMatrixParameters()
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
@@ -360,7 +360,7 @@ AdvancedSimilarity3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian(
 
 
 // Print self
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity3DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {

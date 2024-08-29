@@ -42,7 +42,7 @@ namespace itk
  * should be read.
  **/
 
-template <class TOutputMesh>
+template <typename TOutputMesh>
 class ITK_TEMPLATE_EXPORT TransformixInputPointFileReader : public MeshFileReaderBase<TOutputMesh>
 {
 public:

@@ -99,7 +99,7 @@ namespace elastix
  * \ingroup Kernel
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT ElastixTemplate final : public ElastixBase
 {
 public:

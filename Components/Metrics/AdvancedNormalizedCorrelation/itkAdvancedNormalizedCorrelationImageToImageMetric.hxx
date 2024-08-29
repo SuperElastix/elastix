@@ -30,7 +30,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::AdvancedNormalizedCorrelationImageToImageMetric()
 {
@@ -45,7 +45,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage,
  * ******************* InitializeThreadingParameters *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
@@ -86,7 +86,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
  * *************** UpdateDerivativeTerms ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::UpdateDerivativeTerms(
   const RealType                     fixedImageValue,
@@ -139,7 +139,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Upda
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -248,7 +248,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -269,7 +269,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetD
  * ******************* GetValueAndDerivativeSingleThreaded *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(
   const TransformParametersType & parameters,
@@ -414,7 +414,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,
@@ -455,7 +455,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ******************* ThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValueAndDerivative(
   ThreadIdType threadId) const
@@ -571,7 +571,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Thre
  * ******************* AfterThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedGetValueAndDerivative(
   MeasureType &    value,
@@ -655,7 +655,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
  *********** AccumulateDerivativesThreaderCallback *************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThreaderCallback(
   void * arg)

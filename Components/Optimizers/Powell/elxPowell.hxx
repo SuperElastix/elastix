@@ -31,7 +31,7 @@ namespace elastix
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Powell<TElastix>::BeforeRegistration()
 {
@@ -52,7 +52,7 @@ Powell<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Powell<TElastix>::BeforeEachResolution()
 {
@@ -87,7 +87,7 @@ Powell<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Powell<TElastix>::AfterEachIteration()
 {
@@ -101,7 +101,7 @@ Powell<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Powell<TElastix>::AfterEachResolution()
 {
@@ -121,7 +121,7 @@ Powell<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Powell<TElastix>::AfterRegistration()
 {
@@ -136,7 +136,7 @@ Powell<TElastix>::AfterRegistration()
  * ******************* SetInitialPosition ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 Powell<TElastix>::SetInitialPosition(const ParametersType & param)
 {

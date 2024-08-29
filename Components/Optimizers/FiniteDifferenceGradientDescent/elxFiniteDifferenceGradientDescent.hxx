@@ -32,7 +32,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 FiniteDifferenceGradientDescent<TElastix>::FiniteDifferenceGradientDescent()
 {
   this->m_ShowMetricValues = false;
@@ -43,7 +43,7 @@ FiniteDifferenceGradientDescent<TElastix>::FiniteDifferenceGradientDescent()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration()
 {
@@ -79,7 +79,7 @@ FiniteDifferenceGradientDescent<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution()
 {
@@ -120,7 +120,7 @@ FiniteDifferenceGradientDescent<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FiniteDifferenceGradientDescent<TElastix>::AfterEachIteration()
 {
@@ -152,7 +152,7 @@ FiniteDifferenceGradientDescent<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution()
 {
@@ -188,7 +188,7 @@ FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FiniteDifferenceGradientDescent<TElastix>::AfterRegistration()
 {
@@ -214,7 +214,7 @@ FiniteDifferenceGradientDescent<TElastix>::AfterRegistration()
  * ******************* StartOptimization ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FiniteDifferenceGradientDescent<TElastix>::StartOptimization()
 {

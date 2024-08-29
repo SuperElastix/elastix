@@ -36,7 +36,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StatisticalShapePenalty<TElastix>::Initialize()
 {
@@ -54,7 +54,7 @@ StatisticalShapePenalty<TElastix>::Initialize()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StatisticalShapePenalty<TElastix>::BeforeRegistration()
 {
@@ -183,7 +183,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StatisticalShapePenalty<TElastix>::BeforeEachResolution()
 {
@@ -268,7 +268,7 @@ StatisticalShapePenalty<TElastix>::BeforeEachResolution()
  * ***************** ReadLandmarks ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &                    landmarkFileName,
                                                  typename PointSetType::Pointer &       pointSet,
@@ -345,7 +345,7 @@ StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &            
  * ************** TransformPointsSomePointsVTK *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 StatisticalShapePenalty<TElastix>::ReadShape(const std::string &              ShapeFileName,
                                              typename PointSetType::Pointer & pointSet)

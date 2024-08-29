@@ -28,7 +28,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::MissingVolumeMeshPenalty()
 {
   this->m_MappedMeshContainer = MappedMeshContainerType::New();
@@ -39,7 +39,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::MissingVolumeMeshPena
  * *********************** Initialize *****************************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 {
@@ -88,7 +88,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
  * ******************* GetValue *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 auto
 MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParametersType & parameters) const
   -> MeasureType
@@ -121,7 +121,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const Transf
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const TransformParametersType & parameters,
                                                                          DerivativeType & derivative) const
@@ -141,7 +141,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const T
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(
   const TransformParametersType & parameters,
@@ -327,7 +327,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative
  * ******************* SubVector *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::SubVector(const VectorType & fullVector,
                                                                      SubVectorType &    subVector,

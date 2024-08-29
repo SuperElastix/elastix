@@ -28,7 +28,7 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::DisplacementMagnitudePenaltyTerm()
 {
   /** Initialize member variables. */
@@ -43,7 +43,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::DisplacementMagnitud
  * ****************** PrintSelf *******************************
  *
 
-template< class TFixedImage, class TScalarType >
+template< class TFixedImage, typename TScalarType >
 void
 DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
 ::PrintSelf( std::ostream & os, Indent indent ) const
@@ -60,7 +60,7 @@ DisplacementMagnitudePenaltyTerm< TFixedImage, TScalarType >
  * ****************** GetValue *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 auto
 DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const
   -> MeasureType
@@ -119,7 +119,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const Param
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const ParametersType & parameters,
                                                                           DerivativeType &       derivative) const
@@ -135,7 +135,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const 
  * ****************** GetValueAndDerivative *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(const ParametersType & parameters,
                                                                                   MeasureType &          value,

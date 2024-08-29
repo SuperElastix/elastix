@@ -38,7 +38,7 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
+template <typename TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
 class ITK_TEMPLATE_EXPORT WeightedCombinationTransform
   : public AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>
 {

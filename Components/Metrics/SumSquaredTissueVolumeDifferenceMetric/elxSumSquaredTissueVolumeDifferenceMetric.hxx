@@ -29,7 +29,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SumSquaredTissueVolumeDifferenceMetric<TElastix>::Initialize()
 {
@@ -47,7 +47,7 @@ SumSquaredTissueVolumeDifferenceMetric<TElastix>::Initialize()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SumSquaredTissueVolumeDifferenceMetric<TElastix>::BeforeEachResolution()
 {

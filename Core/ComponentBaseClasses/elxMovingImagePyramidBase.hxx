@@ -30,7 +30,7 @@ namespace elastix
  * ******************* BeforeRegistrationBase *******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MovingImagePyramidBase<TElastix>::BeforeRegistrationBase()
 {
@@ -44,7 +44,7 @@ MovingImagePyramidBase<TElastix>::BeforeRegistrationBase()
  * ******************* BeforeEachResolutionBase *******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
 {
@@ -92,7 +92,7 @@ MovingImagePyramidBase<TElastix>::BeforeEachResolutionBase()
  * ********************** SetMovingSchedule **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MovingImagePyramidBase<TElastix>::SetMovingSchedule()
 {
@@ -154,7 +154,7 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
  * ******************* WritePyramidImage ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename,
                                                     const unsigned int  level) // const

@@ -32,7 +32,7 @@ namespace itk
  * Its constructors, assignment operators, and destructor are implicitly defaulted, following the C++ "Rule of Zero".
  */
 
-template <class TImage>
+template <typename TImage>
 class ITK_TEMPLATE_EXPORT ImageSample
 {
 public:

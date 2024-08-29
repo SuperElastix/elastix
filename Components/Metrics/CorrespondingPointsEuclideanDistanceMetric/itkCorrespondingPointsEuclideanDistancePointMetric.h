@@ -35,7 +35,7 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 class ITK_TEMPLATE_EXPORT CorrespondingPointsEuclideanDistancePointMetric
   : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {

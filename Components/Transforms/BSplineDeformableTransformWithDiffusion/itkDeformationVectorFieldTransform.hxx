@@ -30,7 +30,7 @@ namespace itk
  * *********************** Constructor **************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 DeformationVectorFieldTransform<TScalarType, NDimensions>::DeformationVectorFieldTransform()
 {
   /** Initialize m_Images. */
@@ -46,7 +46,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::DeformationVectorFiel
  * *********************** Destructor ***************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 DeformationVectorFieldTransform<TScalarType, NDimensions>::~DeformationVectorFieldTransform()
 {
   /** Initialize m_Images. */
@@ -65,7 +65,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::~DeformationVectorFie
  * image as input.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 DeformationVectorFieldTransform<TScalarType, NDimensions>::SetCoefficientVectorImage(
   const CoefficientVectorImageType * vecImage)
@@ -122,7 +122,7 @@ DeformationVectorFieldTransform<TScalarType, NDimensions>::SetCoefficientVectorI
  *
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 DeformationVectorFieldTransform<TScalarType, NDimensions>::GetCoefficientVectorImage(
   CoefficientVectorImagePointer & vecImage) const

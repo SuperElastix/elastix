@@ -53,7 +53,7 @@ namespace itk
  *
  **/
 
-template <class TImage>
+template <typename TImage>
 class ITK_TEMPLATE_EXPORT ErodeMaskImageFilter : public ImageToImageFilter<TImage, TImage>
 {
 public:

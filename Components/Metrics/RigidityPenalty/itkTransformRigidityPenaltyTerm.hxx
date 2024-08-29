@@ -29,7 +29,7 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::TransformRigidityPenaltyTerm()
 {
   /** Weights. */
@@ -93,7 +93,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::TransformRigidityPenalty
  * *********************** CheckUseAndCalculationBooleans *****************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CheckUseAndCalculationBooleans()
 {
@@ -117,7 +117,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CheckUseAndCalculationBo
  * *********************** Initialize *****************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
 {
@@ -171,7 +171,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
  * **************** DilateRigidityImages *****************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages()
 {
@@ -318,7 +318,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::DilateRigidityImages()
  * **************** FillRigidityCoefficientImage *****************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FillRigidityCoefficientImage(
   const ParametersType & parameters) const
@@ -457,7 +457,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FillRigidityCoefficientI
  * *********************** GetValue *****************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 auto
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const -> MeasureType
 {
@@ -829,7 +829,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
  * *********************** GetDerivative ************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const ParametersType & parameters,
                                                                       DerivativeType &       derivative) const
@@ -849,7 +849,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const Para
  * *********************** BeforeThreadedGetValueAndDerivative ***********************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::BeforeThreadedGetValueAndDerivative(
   const TransformParametersType & parameters) const
@@ -869,7 +869,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::BeforeThreadedGetValueAn
  * *********************** GetValueAndDerivative ****************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(const ParametersType & parameters,
                                                                               MeasureType &          value,
@@ -1873,7 +1873,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
  * ********************* PrintSelf ******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -1908,7 +1908,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::PrintSelf(std::ostream &
  * ************************ Create1DOperator *********************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Create1DOperator(
   NeighborhoodType &                  F,
@@ -2120,7 +2120,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Create1DOperator(
  * ************************** FilterSeparable ********************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 auto
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FilterSeparable(
   const CoefficientImageType *          image,
@@ -2154,7 +2154,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FilterSeparable(
  * ************************ CreateNDOperator *********************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   NeighborhoodType &                  F,

@@ -29,7 +29,7 @@ namespace itk
  * ********************* Constructor ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::WeightedCombinationTransform()
   : Superclass(OutputSpaceDimension)
 {
@@ -44,7 +44,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
  * ************************ SetParameters ***********************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(
   const ParametersType & param)
@@ -79,7 +79,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
  * ********************* TransformPoint ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
   const InputPointType & inputPoint) const -> OutputPointType
@@ -127,7 +127,7 @@ WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 WeightedCombinationTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(
   const InputPointType &       inputPoint,

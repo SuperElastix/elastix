@@ -41,7 +41,7 @@ namespace elastix
  *
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT AdvancedNormalizedCorrelationMetric
   : public itk::AdvancedNormalizedCorrelationImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                                 typename MetricBase<TElastix>::MovingImageType>

@@ -37,7 +37,7 @@ namespace itk
  * a itk::CastImageFilter (to save memory for example).
  *
  */
-template <class TInputImage>
+template <typename TInputImage>
 class ITK_TEMPLATE_EXPORT ImageFileCastWriter : public ImageFileWriter<TInputImage>
 {
 public:
@@ -86,7 +86,7 @@ private:
    * a pointer to the PixelBuffer. Assumes scalar singlecomponent images
    * The buffer data is valid until this->m_Caster is destroyed or assigned
    * a new caster. The ImageIO's PixelType is also adapted by this function */
-  template <class OutputComponentType>
+  template <typename OutputComponentType>
   void *
   ConvertScalarImage(const DataObject * inputImage)
   {

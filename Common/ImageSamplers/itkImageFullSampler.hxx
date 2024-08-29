@@ -33,7 +33,7 @@ namespace itk
  * ******************* GenerateWorkUnits *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageFullSampler<TInputImage>::GenerateWorkUnits(const ThreadIdType             numberOfWorkUnits,
                                                  const InputImageRegionType &   croppedInputImageRegion,
@@ -63,7 +63,7 @@ ImageFullSampler<TInputImage>::GenerateWorkUnits(const ThreadIdType             
  * ******************* SingleThreadedGenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageFullSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &            inputImage,
                                                           const MaskType * const         mask,
@@ -97,7 +97,7 @@ ImageFullSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
  * ******************* MultiThreadedGenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageFullSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &            multiThreader,
                                                          const ThreadIdType             numberOfWorkUnits,
@@ -146,7 +146,7 @@ ImageFullSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
  * ******************* GenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageFullSampler<TInputImage>::GenerateData()
 {
@@ -187,7 +187,7 @@ ImageFullSampler<TInputImage>::GenerateData()
 } // end GenerateData()
 
 
-template <class TInputImage>
+template <typename TInputImage>
 template <elastix::MaskCondition VMaskCondition>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageFullSampler<TInputImage>::ThreaderCallback(void * const arg)
@@ -205,7 +205,7 @@ ImageFullSampler<TInputImage>::ThreaderCallback(void * const arg)
 }
 
 
-template <class TInputImage>
+template <typename TInputImage>
 template <elastix::MaskCondition VMaskCondition>
 void
 ImageFullSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &             workUnit,

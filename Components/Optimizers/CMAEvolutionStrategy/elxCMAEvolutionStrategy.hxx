@@ -31,7 +31,7 @@ namespace elastix
  * ***************** StartOptimization ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CMAEvolutionStrategy<TElastix>::StartOptimization()
 {
@@ -58,7 +58,7 @@ CMAEvolutionStrategy<TElastix>::StartOptimization()
  * ***************** InitializeProgressVariables ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CMAEvolutionStrategy<TElastix>::InitializeProgressVariables()
 {
@@ -79,7 +79,7 @@ CMAEvolutionStrategy<TElastix>::InitializeProgressVariables()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CMAEvolutionStrategy<TElastix>::BeforeRegistration()
 {
@@ -106,7 +106,7 @@ CMAEvolutionStrategy<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CMAEvolutionStrategy<TElastix>::BeforeEachResolution()
 {
@@ -200,7 +200,7 @@ CMAEvolutionStrategy<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CMAEvolutionStrategy<TElastix>::AfterEachIteration()
 {
@@ -226,7 +226,7 @@ CMAEvolutionStrategy<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CMAEvolutionStrategy<TElastix>::AfterEachResolution()
 {
@@ -283,7 +283,7 @@ CMAEvolutionStrategy<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CMAEvolutionStrategy<TElastix>::AfterRegistration()
 {

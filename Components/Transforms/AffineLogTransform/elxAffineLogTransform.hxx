@@ -28,7 +28,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 AffineLogTransformElastix<TElastix>::AffineLogTransformElastix()
 {
   log::info("Constructor");
@@ -41,7 +41,7 @@ AffineLogTransformElastix<TElastix>::AffineLogTransformElastix()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogTransformElastix<TElastix>::BeforeRegistration()
 {
@@ -59,7 +59,7 @@ AffineLogTransformElastix<TElastix>::BeforeRegistration()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogTransformElastix<TElastix>::ReadFromFile()
 {
@@ -95,7 +95,7 @@ AffineLogTransformElastix<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 AffineLogTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -113,7 +113,7 @@ AffineLogTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const 
  * ************************* InitializeTransform *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogTransformElastix<TElastix>::InitializeTransform()
 {
@@ -268,7 +268,7 @@ AffineLogTransformElastix<TElastix>::InitializeTransform()
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogTransformElastix<TElastix>::SetScales()
 {
@@ -318,7 +318,7 @@ AffineLogTransformElastix<TElastix>::SetScales()
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 AffineLogTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {

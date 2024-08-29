@@ -46,7 +46,7 @@ namespace itk
  * \ingroup Functions
  *
  */
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 class ITK_TEMPLATE_EXPORT LimiterFunctionBase : public FunctionBase<TInput, typename NumericTraits<TInput>::RealType>
 {
 public:

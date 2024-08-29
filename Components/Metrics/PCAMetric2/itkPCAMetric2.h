@@ -27,7 +27,7 @@
 
 namespace itk
 {
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT PCAMetric2 : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:

@@ -42,7 +42,7 @@ namespace itk
  * \ingroup ITKTransform
  */
 
-template <unsigned int OutputDimension, unsigned int SpaceDimension, unsigned int SplineOrder, class TScalar>
+template <unsigned int OutputDimension, unsigned int SpaceDimension, unsigned int SplineOrder, typename TScalar>
 class ITK_TEMPLATE_EXPORT RecursiveBSplineTransformImplementation
 {
 public:
@@ -353,7 +353,7 @@ public:
  * \brief Define the end case for SpaceDimension = 0.
  */
 
-template <unsigned int OutputDimension, unsigned int SplineOrder, class TScalar>
+template <unsigned int OutputDimension, unsigned int SplineOrder, typename TScalar>
 class ITK_TEMPLATE_EXPORT RecursiveBSplineTransformImplementation<OutputDimension, 0, SplineOrder, TScalar>
 {
 public:

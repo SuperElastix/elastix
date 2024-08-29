@@ -40,7 +40,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform()
   : Superclass(ParametersDimension)
 {
@@ -53,7 +53,7 @@ AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform()
 
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform(const MatrixType & matrix, const OutputPointType & offset)
 {
   this->SetMatrix(matrix);
@@ -70,7 +70,7 @@ AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform(const MatrixType & matri
 
 
 // Constructor with arguments
-template <class TScalarType>
+template <typename TScalarType>
 AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform(unsigned int spaceDimension, unsigned int parametersDimension)
   : Superclass(spaceDimension, parametersDimension)
 {
@@ -82,7 +82,7 @@ AffineDTI3DTransform<TScalarType>::AffineDTI3DTransform(unsigned int spaceDimens
 
 
 // Set Angles etc
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::SetVarAngleScaleShear(ScalarArrayType angle,
                                                          ScalarArrayType shear,
@@ -95,7 +95,7 @@ AffineDTI3DTransform<TScalarType>::SetVarAngleScaleShear(ScalarArrayType angle,
 
 
 // Set Parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -129,7 +129,7 @@ AffineDTI3DTransform<TScalarType>::SetParameters(const ParametersType & paramete
 
 
 // Get Parameters
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AffineDTI3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -150,7 +150,7 @@ AffineDTI3DTransform<TScalarType>::GetParameters() const -> const ParametersType
 }
 
 // SetIdentity()
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::SetIdentity()
 {
@@ -163,7 +163,7 @@ AffineDTI3DTransform<TScalarType>::SetIdentity()
 
 
 // Compute angles from the rotation matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::ComputeMatrixParameters()
 {
@@ -174,7 +174,7 @@ AffineDTI3DTransform<TScalarType>::ComputeMatrixParameters()
 
 
 // Compute the matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::ComputeMatrix()
 {
@@ -277,7 +277,7 @@ AffineDTI3DTransform<TScalarType>::ComputeMatrix()
 
 
 // Set parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                JacobianType &               j,
@@ -310,7 +310,7 @@ AffineDTI3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
@@ -561,7 +561,7 @@ AffineDTI3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 
 
 // Print self
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI3DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {

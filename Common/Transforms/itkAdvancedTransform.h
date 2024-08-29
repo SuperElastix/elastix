@@ -79,7 +79,7 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template <class TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
+template <typename TScalarType, unsigned int NInputDimensions = 3, unsigned int NOutputDimensions = 3>
 class ITK_TEMPLATE_EXPORT AdvancedTransform : public Transform<TScalarType, NInputDimensions, NOutputDimensions>
 {
 public:
@@ -307,7 +307,7 @@ protected:
 namespace ImplementationDetails
 {
 /** Multiplies the input matrix and the input vector. */
-template <class TScalarType, unsigned int VInputVectorSize>
+template <typename TScalarType, unsigned int VInputVectorSize>
 void
 EvaluateInnerProduct(const vnl_matrix<TScalarType> &                        inputMatrix,
                      const CovariantVector<TScalarType, VInputVectorSize> & inputVector,

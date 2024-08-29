@@ -34,7 +34,7 @@ namespace itk
  * ********************* Constructor ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ParzenWindowHistogramImageToImageMetric()
 {
   this->SetUseImageSampler(true);
@@ -51,7 +51,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ParzenWindow
  * ********************* PrintSelf ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -84,7 +84,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(st
  * ********************* Initialize *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -118,7 +118,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
  * ****************** InitializeHistograms *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHistograms()
 {
@@ -284,7 +284,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
  * ****************** InitializeKernels *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKernels()
 {
@@ -363,7 +363,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKe
  * ********************* InitializeThreadingParameters ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
@@ -410,7 +410,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeTh
  * ******************** GetDerivative ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
                                                                                   DerivativeType & derivative) const
@@ -428,7 +428,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::GetDerivativ
  * ******************** GetValueAndDerivative ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const ParametersType & parameters,
@@ -450,7 +450,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndD
  * ********************** EvaluateParzenValues ***************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::EvaluateParzenValues(
   double                     parzenWindowTerm,
@@ -466,7 +466,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::EvaluateParz
  * ********************** UpdateJointPDFAndDerivatives ***************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointPDFAndDerivatives(
   const RealType                     fixedImageValue,
@@ -565,7 +565,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
  * *************** UpdateJointPDFDerivatives ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointPDFDerivatives(
   const JointPDFIndexType &          pdfIndex,
@@ -609,7 +609,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
  * *********************** NormalizeJointPDF ***********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDF(JointPDFType * pdf,
                                                                                       const double   factor) const
@@ -634,7 +634,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJoi
  * *********************** NormalizeJointPDFDerivatives ***********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDFDerivatives(
   JointPDFDerivativesType * pdf,
@@ -660,7 +660,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJoi
  * ************************ ComputeMarginalPDF ***********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeMarginalPDF(
   const JointPDFType * itkNotUsed(jointPDF),
@@ -693,7 +693,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeMargi
  * ******************** ComputeIncrementalMarginalPDFs *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeIncrementalMarginalPDFs(
   const JointPDFDerivativesType * incrementalPDF,
@@ -739,7 +739,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputeIncre
  * ******************* UpdateJointPDFAndIncrementalPDFs *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointPDFAndIncrementalPDFs(
   RealType                           fixedImageValue,
@@ -917,7 +917,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
  * ************************ ComputePDFsSingleThreaded **************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsSingleThreaded(
   const ParametersType & parameters) const
@@ -997,7 +997,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
  * ************************ ComputePDFs **************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFs(const ParametersType & parameters) const
 {
@@ -1035,7 +1035,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFs(
  * ******************* ThreadedComputePDFs *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComputePDFs(ThreadIdType threadId)
 {
@@ -1114,7 +1114,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
  * ******************* AfterThreadedComputePDFs *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedComputePDFs() const
 {
@@ -1175,7 +1175,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreade
  * **************** ComputePDFsThreaderCallback *******
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsThreaderCallback(void * arg)
 {
@@ -1197,7 +1197,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsT
  * *********************** LaunchComputePDFsThreaderCallback***************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComputePDFsThreaderCallback() const
 {
@@ -1213,7 +1213,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComput
  * ************************ ComputePDFsAndPDFDerivatives *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsAndPDFDerivatives(
   const ParametersType & parameters) const
@@ -1311,7 +1311,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
  * ************************ ComputePDFsAndIncrementalPDFs *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsAndIncrementalPDFs(
   const ParametersType & parameters) const

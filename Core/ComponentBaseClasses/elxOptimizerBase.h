@@ -49,7 +49,7 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT OptimizerBase : public BaseComponentSE<TElastix>
 {
 public:

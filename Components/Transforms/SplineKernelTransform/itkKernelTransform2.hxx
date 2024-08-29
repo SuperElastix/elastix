@@ -45,7 +45,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 KernelTransform2<TScalarType, NDimensions>::KernelTransform2()
   : Superclass(NDimensions)
 // the 0 is provided as
@@ -83,7 +83,7 @@ KernelTransform2<TScalarType, NDimensions>::KernelTransform2()
  * ******************* Destructor *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 KernelTransform2<TScalarType, NDimensions>::~KernelTransform2()
 {
   delete m_LMatrixDecompositionSVD;
@@ -96,7 +96,7 @@ KernelTransform2<TScalarType, NDimensions>::~KernelTransform2()
  * ******************* SetSourceLandmarks *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::SetSourceLandmarks(PointSetType * landmarks)
 {
@@ -129,7 +129,7 @@ KernelTransform2<TScalarType, NDimensions>::SetSourceLandmarks(PointSetType * la
  * ******************* SetTargetLandmarks *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::SetTargetLandmarks(PointSetType * landmarks)
 {
@@ -152,7 +152,7 @@ KernelTransform2<TScalarType, NDimensions>::SetTargetLandmarks(PointSetType * la
  * **************** ComputeG ***********************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeG(const InputVectorType &, GMatrixType &) const
 {
@@ -164,7 +164,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeG(const InputVectorType &, GM
  * ******************* ComputeReflexiveG *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeReflexiveG(PointsIterator, GMatrixType & GMatrix) const
 {
@@ -181,7 +181,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeReflexiveG(PointsIterator, GM
  * in transforms whose kernel produce diagonal G matrices.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeDeformationContribution(const InputPointType & thisPoint,
                                                                            OutputPointType &      opp) const
@@ -211,7 +211,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeDeformationContribution(const
  * ******************* ComputeD *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeD()
 {
@@ -238,7 +238,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeD()
  * ******************* ComputeWMatrix *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeWMatrix()
 {
@@ -296,7 +296,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeWMatrix()
  * ******************* ComputeLInverse *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeLInverse()
 {
@@ -328,7 +328,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeLInverse()
  * ******************* ComputeL *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeL()
 {
@@ -355,7 +355,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeL()
  * ******************* ComputeK *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeK()
 {
@@ -406,7 +406,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeK()
  * ******************* ComputeP *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeP()
 {
@@ -440,7 +440,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeP()
  * ******************* ComputeY *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ComputeY()
 {
@@ -474,7 +474,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeY()
  * ******************* ReorganizeW *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::ReorganizeW()
 {
@@ -518,7 +518,7 @@ KernelTransform2<TScalarType, NDimensions>::ReorganizeW()
  * ******************* TransformPoint *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 KernelTransform2<TScalarType, NDimensions>::TransformPoint(const InputPointType & thisPoint) const -> OutputPointType
 {
@@ -553,7 +553,7 @@ KernelTransform2<TScalarType, NDimensions>::TransformPoint(const InputPointType 
  * and target landmarks the same.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::SetIdentity()
 {
@@ -571,7 +571,7 @@ KernelTransform2<TScalarType, NDimensions>::SetIdentity()
  * registration.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::SetParameters(const ParametersType & parameters)
 {
@@ -617,7 +617,7 @@ KernelTransform2<TScalarType, NDimensions>::SetParameters(const ParametersType &
  * I/O mechanism to be supported.
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::SetFixedParameters(const ParametersType & parameters)
 {
@@ -659,7 +659,7 @@ KernelTransform2<TScalarType, NDimensions>::SetFixedParameters(const ParametersT
  * ******************* UpdateParameters *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::UpdateParameters()
 {
@@ -687,7 +687,7 @@ KernelTransform2<TScalarType, NDimensions>::UpdateParameters()
  * ******************* GetParameters *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 KernelTransform2<TScalarType, NDimensions>::GetParameters() const -> const ParametersType &
 {
@@ -698,7 +698,7 @@ KernelTransform2<TScalarType, NDimensions>::GetParameters() const -> const Param
  * ******************* GetFixedParameters *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 KernelTransform2<TScalarType, NDimensions>::GetFixedParameters() const -> const ParametersType &
 {
@@ -726,7 +726,7 @@ KernelTransform2<TScalarType, NDimensions>::GetFixedParameters() const -> const 
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &       p,
                                                         JacobianType &               jac,
@@ -870,7 +870,7 @@ KernelTransform2<TScalarType, NDimensions>::GetJacobian(const InputPointType &  
  * ******************* PrintSelf *******************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 KernelTransform2<TScalarType, NDimensions>::PrintSelf(std::ostream & os, Indent indent) const
 {

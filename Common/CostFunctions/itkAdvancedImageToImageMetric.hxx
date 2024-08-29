@@ -34,7 +34,7 @@ namespace itk
  * ********************* Constructor ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AdvancedImageToImageMetric()
 {
   /** Don't use the default gradient image as implemented by ITK.
@@ -55,7 +55,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AdvancedImageToImageMetri
  * ********************* Initialize ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -99,7 +99,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
  * ********************* InitializeThreadingParameters ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
@@ -138,7 +138,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
  * ****************** InitializeLimiters *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
 {
@@ -207,7 +207,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
  * ********************* InitializeImageSampler ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
 {
@@ -232,7 +232,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
  * ****************** CheckForBSplineInterpolator **********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolator()
 {
@@ -328,7 +328,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
  * ****************** CheckForAdvancedTransform **********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform()
 {
@@ -351,7 +351,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForAdvancedTransform
  * ****************** CheckForBSplineTransform **********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform() const
 {
@@ -390,7 +390,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineTransform(
  * ******************* EvaluateMovingImageValueAndDerivativeWithOptionalThreadId ******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 template <typename... TOptionalThreadId>
 bool
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueAndDerivativeWithOptionalThreadId(
@@ -502,7 +502,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const TransformJacobianType &     jacobian,
@@ -544,7 +544,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
  * ********************** TransformPoint ************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::TransformPoint(const FixedImagePointType & fixedImagePoint) const
   -> MovingImagePointType
@@ -558,7 +558,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::TransformPoint(const Fixe
  * *************** EvaluateTransformJacobian ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 bool
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian(
   const FixedImagePointType &  fixedImagePoint,
@@ -579,7 +579,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobian
  * ************************** IsInsideMovingMask *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 bool
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::IsInsideMovingMask(const MovingImagePointType & point) const
 {
@@ -599,7 +599,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::IsInsideMovingMask(const 
  * *********************** BeforeThreadedGetValueAndDerivative ***********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::BeforeThreadedGetValueAndDerivative(
   const TransformParametersType & parameters) const
@@ -621,7 +621,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::BeforeThreadedGetValueAnd
  * **************** GetValueThreaderCallback *******
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_TYPE
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(void * arg)
 {
@@ -646,7 +646,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueThreaderCallback(
  * *********************** LaunchGetValueThreaderCallback***************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCallback() const
 {
@@ -660,7 +660,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueThreaderCal
  * **************** GetValueAndDerivativeThreaderCallback *******
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThreaderCallback(void * arg)
 {
@@ -685,7 +685,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeThre
  * *********************** LaunchGetValueAndDerivativeThreaderCallback***************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivativeThreaderCallback() const
 {
@@ -700,7 +700,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::LaunchGetValueAndDerivati
  *********** AccumulateDerivativesThreaderCallback *************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThreaderCallback(void * arg)
 {
@@ -747,7 +747,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
  * *********************** CheckNumberOfSamples ***********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsigned long wanted,
                                                                             unsigned long found) const
@@ -765,7 +765,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsi
  * ********************* PrintSelf ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

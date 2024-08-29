@@ -33,7 +33,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 NormalizedMutualInformationMetric<TElastix>::Initialize()
 {
@@ -51,7 +51,7 @@ NormalizedMutualInformationMetric<TElastix>::Initialize()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 NormalizedMutualInformationMetric<TElastix>::BeforeEachResolution()
 {

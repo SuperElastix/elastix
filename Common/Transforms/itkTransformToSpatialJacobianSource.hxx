@@ -31,7 +31,7 @@ namespace itk
 /**
  * Constructor
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::TransformToSpatialJacobianSource()
 {
   // Check if the output pixel type is valid
@@ -56,7 +56,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Transfo
  *
  * \todo Add details about this class
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::PrintSelf(std::ostream & os,
                                                                                    Indent         indent) const
@@ -75,7 +75,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::PrintSe
 /**
  * Set the output image size.
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutputSize(const SizeType & size)
 {
@@ -86,7 +86,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
 /**
  * Get the output image size.
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 auto
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutputSize() -> const SizeType &
 {
@@ -96,7 +96,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutp
 /**
  * Set the output image index.
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutputIndex(const IndexType & index)
 {
@@ -107,7 +107,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
 /**
  * Get the output image index.
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 auto
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutputIndex() -> const IndexType &
 {
@@ -117,7 +117,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetOutp
 /**
  * Set the output image spacing.
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutputSpacing(const double * spacing)
 {
@@ -130,7 +130,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
 /**
  * Set the output image origin.
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutputOrigin(const double * origin)
 {
@@ -140,7 +140,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
 
 
 /** Helper method to set the output parameters based on this image */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutputParametersFromImage(
   const ImageBaseType * image)
@@ -163,7 +163,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::SetOutp
  * InterpolatorType::SetInputImage is not thread-safe and hence
  * has to be set up before ThreadedGenerateData
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::BeforeThreadedGenerateData()
 {
@@ -186,7 +186,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::BeforeT
 /**
  * ThreadedGenerateData
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::ThreadedGenerateData(
   const OutputImageRegionType & outputRegionForThread,
@@ -206,7 +206,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Threade
 } // end ThreadedGenerateData()
 
 
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::NonlinearThreadedGenerateData(
   const OutputImageRegionType & outputRegionForThread,
@@ -251,7 +251,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Nonline
 } // end NonlinearThreadedGenerateData()
 
 
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::LinearGenerateData()
 {
@@ -284,7 +284,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::LinearG
 /**
  * Inform pipeline of required output region
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 void
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GenerateOutputInformation()
 {
@@ -310,7 +310,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::Generat
 /**
  * Verify if any of the components has been modified.
  */
-template <class TOutputImage, class TTransformPrecisionType>
+template <typename TOutputImage, typename TTransformPrecisionType>
 ModifiedTimeType
 TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::GetMTime() const
 {

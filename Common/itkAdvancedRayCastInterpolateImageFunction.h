@@ -52,7 +52,7 @@ namespace itk
  *
  * \ingroup ImageFunctions
  */
-template <class TInputImage, class TCoordRep = double>
+template <typename TInputImage, typename TCoordRep = double>
 class ITK_TEMPLATE_EXPORT AdvancedRayCastInterpolateImageFunction
   : public InterpolateImageFunction<TInputImage, TCoordRep>
 {

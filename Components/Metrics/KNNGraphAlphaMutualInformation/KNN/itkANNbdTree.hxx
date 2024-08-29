@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 ANNbdTree<TListSample>::ANNbdTree()
 {
   this->m_ShrinkingRule = ANN_BD_SIMPLE;
@@ -39,7 +39,7 @@ ANNbdTree<TListSample>::ANNbdTree()
  * ************************ SetShrinkingRule *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 ANNbdTree<TListSample>::SetShrinkingRule(const std::string & rule)
 {
@@ -71,7 +71,7 @@ ANNbdTree<TListSample>::SetShrinkingRule(const std::string & rule)
  * ************************ GetShrinkingRule *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 std::string
 ANNbdTree<TListSample>::GetShrinkingRule()
 {
@@ -94,7 +94,7 @@ ANNbdTree<TListSample>::GetShrinkingRule()
  * ************************ GenerateTree *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 ANNbdTree<TListSample>::GenerateTree()
 {
@@ -114,7 +114,7 @@ ANNbdTree<TListSample>::GenerateTree()
  * ************************ PrintSelf *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 ANNbdTree<TListSample>::PrintSelf(std::ostream & os, Indent indent) const
 {

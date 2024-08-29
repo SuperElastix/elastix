@@ -31,7 +31,7 @@ namespace elastix
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RSGDEachParameterApart<TElastix>::BeforeRegistration()
 {
@@ -52,7 +52,7 @@ RSGDEachParameterApart<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RSGDEachParameterApart<TElastix>::BeforeEachResolution()
 {
@@ -100,7 +100,7 @@ RSGDEachParameterApart<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RSGDEachParameterApart<TElastix>::AfterEachIteration()
 {
@@ -116,7 +116,7 @@ RSGDEachParameterApart<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RSGDEachParameterApart<TElastix>::AfterEachResolution()
 {
@@ -169,7 +169,7 @@ RSGDEachParameterApart<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RSGDEachParameterApart<TElastix>::AfterRegistration()
 {
@@ -184,7 +184,7 @@ RSGDEachParameterApart<TElastix>::AfterRegistration()
  * ******************* SetInitialPosition ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RSGDEachParameterApart<TElastix>::SetInitialPosition(const ParametersType & param)
 {

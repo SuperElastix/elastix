@@ -28,7 +28,7 @@ namespace itk
  * ***************GenerateOutputInformation ***********
  */
 
-template <class TOutputMesh>
+template <typename TOutputMesh>
 void
 TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation()
 {
@@ -75,7 +75,7 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation()
  * ***************GenerateData ***********
  */
 
-template <class TOutputMesh>
+template <typename TOutputMesh>
 void
 TransformixInputPointFileReader<TOutputMesh>::GenerateData()
 {

@@ -68,7 +68,7 @@ namespace itk
  * \ingroup Transforms
  *
  */
-template <class TScalarType, unsigned int NDimensions = 3>
+template <typename TScalarType, unsigned int NDimensions = 3>
 class ITK_TEMPLATE_EXPORT AdvancedIdentityTransform : public AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {
 public:

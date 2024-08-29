@@ -39,26 +39,26 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedVersorRigid3DTransform<TScalarType>::AdvancedVersorRigid3DTransform()
   : Superclass(ParametersDimension)
 {}
 
 // Constructor with arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedVersorRigid3DTransform<TScalarType>::AdvancedVersorRigid3DTransform(unsigned int paramDim)
   : Superclass(paramDim)
 {}
 
 // Constructor with arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedVersorRigid3DTransform<TScalarType>::AdvancedVersorRigid3DTransform(const MatrixType &       matrix,
                                                                             const OutputVectorType & offset)
   : Superclass(matrix, offset)
 {}
 
 // Set Parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorRigid3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -117,7 +117,7 @@ AdvancedVersorRigid3DTransform<TScalarType>::SetParameters(const ParametersType 
 // p[3:5} = translation components
 //
 
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AdvancedVersorRigid3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -138,7 +138,7 @@ AdvancedVersorRigid3DTransform<TScalarType>::GetParameters() const -> const Para
 }
 
 // Set parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedVersorRigid3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                          JacobianType &               j,

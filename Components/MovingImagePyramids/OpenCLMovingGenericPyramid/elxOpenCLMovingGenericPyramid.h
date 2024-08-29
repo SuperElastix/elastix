@@ -44,7 +44,7 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT OpenCLMovingGenericPyramid : public MovingGenericPyramid<TElastix>
 {
 public:

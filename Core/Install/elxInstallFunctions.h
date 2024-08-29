@@ -42,7 +42,7 @@ namespace elastix
  * \ingroup Install
  */
 
-template <class TAnyItkObject>
+template <typename TAnyItkObject>
 class ITK_TEMPLATE_EXPORT InstallFunctions
 {
 public:

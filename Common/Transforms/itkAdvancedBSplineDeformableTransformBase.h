@@ -35,7 +35,7 @@ namespace itk
  * different spline orders more convenient in subsequent code.
  *
  */
-template <class TScalarType = double, // Data type for scalars
+template <typename TScalarType = double, // Data type for scalars
           unsigned int NDimensions = 3>
 // Number of dimensions
 class ITK_TEMPLATE_EXPORT AdvancedBSplineDeformableTransformBase

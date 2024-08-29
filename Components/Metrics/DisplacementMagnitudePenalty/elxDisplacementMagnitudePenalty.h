@@ -41,7 +41,7 @@ namespace elastix
  * \sa DisplacementEnergyPenaltyTerm
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT DisplacementMagnitudePenalty
   : public itk::DisplacementMagnitudePenaltyTerm<typename MetricBase<TElastix>::FixedImageType, double>
   , public MetricBase<TElastix>

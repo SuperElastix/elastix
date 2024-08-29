@@ -42,7 +42,7 @@ namespace itk
  * ********************* EvaluateJacobianWithImageGradientProduct ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJacobianWithImageGradientProduct(
   const InputPointType &          inputPoint,
@@ -65,7 +65,7 @@ AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::EvaluateJac
  * ********************* GetNumberOfNonZeroJacobianIndices ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 AdvancedTransform<TScalarType, NInputDimensions, NOutputDimensions>::GetNumberOfNonZeroJacobianIndices() const
   -> NumberOfParametersType

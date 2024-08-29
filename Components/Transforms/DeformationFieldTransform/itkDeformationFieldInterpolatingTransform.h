@@ -39,9 +39,9 @@ namespace itk
  * \ingroup Transforms
  */
 
-template <class TScalarType = double,   // Data type for scalars (float or double)
-          unsigned int NDimensions = 3, // Number of input dimensions
-          class TComponentType = double>
+template <typename TScalarType = double, // Data type for scalars (float or double)
+          unsigned int NDimensions = 3,  // Number of input dimensions
+          typename TComponentType = double>
 // ComponentType of the deformation field
 class ITK_TEMPLATE_EXPORT DeformationFieldInterpolatingTransform
   : public AdvancedTransform<TScalarType, NDimensions, NDimensions>

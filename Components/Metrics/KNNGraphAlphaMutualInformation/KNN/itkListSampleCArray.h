@@ -41,7 +41,7 @@ namespace Statistics
  * \ingroup Miscellaneous
  */
 
-template <class TMeasurementVector, class TInternalValue = typename TMeasurementVector::ValueType>
+template <typename TMeasurementVector, typename TInternalValue = typename TMeasurementVector::ValueType>
 class ITK_TEMPLATE_EXPORT ListSampleCArray : public Sample<TMeasurementVector>
 {
 public:

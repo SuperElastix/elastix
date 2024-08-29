@@ -30,7 +30,7 @@ namespace itk
  * ******************* GenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomCoordinateSampler<TInputImage>::GenerateData()
 {
@@ -150,7 +150,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
  * ******************* ThreaderCallback *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageRandomCoordinateSampler<TInputImage>::ThreaderCallback(void * const arg)
 {
@@ -200,7 +200,7 @@ ImageRandomCoordinateSampler<TInputImage>::ThreaderCallback(void * const arg)
  * ******************* GenerateRandomCoordinate *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomCoordinateSampler<TInputImage>::GenerateRandomCoordinate(
   const InputImageContinuousIndexType & smallestContIndex,
@@ -219,7 +219,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateRandomCoordinate(
  * ******************* GenerateSampleRegion *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
   const InputImageContinuousIndexType & smallestImageContIndex,
@@ -261,7 +261,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
  * ******************* PrintSelf *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomCoordinateSampler<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

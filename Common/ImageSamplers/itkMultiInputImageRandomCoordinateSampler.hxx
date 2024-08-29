@@ -30,7 +30,7 @@ namespace itk
  * ******************* GenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
 {
@@ -128,7 +128,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
  * ******************* GenerateSampleRegion *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
   InputImageContinuousIndexType & smallestContIndex,
@@ -225,7 +225,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
  * ******************* GenerateRandomCoordinate *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateRandomCoordinate(
   const InputImageContinuousIndexType & smallestContIndex,
@@ -244,7 +244,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateRandomCoordinate(
  * ******************* PrintSelf *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 MultiInputImageRandomCoordinateSampler<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

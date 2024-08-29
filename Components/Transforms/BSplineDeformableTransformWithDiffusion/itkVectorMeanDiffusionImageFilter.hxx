@@ -34,7 +34,7 @@ namespace itk
  * *********************** Constructor **************************
  */
 
-template <class TInputImage, class TGrayValueImage>
+template <typename TInputImage, typename TGrayValueImage>
 VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::VectorMeanDiffusionImageFilter()
 {
   /** Initialize things for the filter. */
@@ -51,7 +51,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::VectorMeanDiffusio
  * *************** GenerateInputRequestedRegion *****************
  */
 
-template <class TInputImage, class TGrayValueImage>
+template <typename TInputImage, typename TGrayValueImage>
 void
 VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateInputRequestedRegion()
 {
@@ -106,7 +106,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateInputReque
  * ********************** GenerateData **************************
  */
 
-template <class TInputImage, class TGrayValueImage>
+template <typename TInputImage, typename TGrayValueImage>
 void
 VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData()
 {
@@ -302,7 +302,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::GenerateData()
  * ********************* PrintSelf ******************************
  */
 
-template <class TInputImage, class TGrayValueImage>
+template <typename TInputImage, typename TGrayValueImage>
 void
 VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -317,7 +317,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::PrintSelf(std::ost
  * ******************** SetGrayValueImage ***********************
  */
 
-template <class TInputImage, class TGrayValueImage>
+template <typename TInputImage, typename TGrayValueImage>
 void
 VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::SetGrayValueImage(GrayValueImageType * _arg)
 {
@@ -337,7 +337,7 @@ VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::SetGrayValueImage(
  * the coefficient image or not.
  */
 
-template <class TInputImage, class TGrayValueImage>
+template <typename TInputImage, typename TGrayValueImage>
 void
 VectorMeanDiffusionImageFilter<TInputImage, TGrayValueImage>::FilterGrayValueImage()
 {

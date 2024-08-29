@@ -29,7 +29,7 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 MultiMetricMultiResolutionRegistration<TElastix>::MultiMetricMultiResolutionRegistration()
 {
   this->m_ShowExactMetricValue = false;
@@ -40,7 +40,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::MultiMetricMultiResolutionRegi
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration()
 {
@@ -126,7 +126,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration()
  * ******************* AfterEachIteration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration()
 {
@@ -179,7 +179,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration()
  * ******************* BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
 {
@@ -270,7 +270,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
  * *********************** SetComponents ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
 {
@@ -359,7 +359,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
  * ************************* UpdateFixedMasks ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int level)
 {
@@ -447,7 +447,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int 
  * ************************* UpdateMovingMasks ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int level)
 {

@@ -61,7 +61,7 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template <class TScalarType = double>
+template <typename TScalarType = double>
 // type for scalars (float or double)
 class ITK_TEMPLATE_EXPORT AdvancedRigid3DTransform : public AdvancedMatrixOffsetTransformBase<TScalarType, 3, 3>
 {

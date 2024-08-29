@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 ANNPriorityTreeSearch<TBinaryTree>::ANNPriorityTreeSearch()
 {
   this->m_ErrorBound = 0.0;
@@ -40,7 +40,7 @@ ANNPriorityTreeSearch<TBinaryTree>::ANNPriorityTreeSearch()
  *
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 void
 ANNPriorityTreeSearch<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
 {
@@ -84,7 +84,7 @@ ANNPriorityTreeSearch<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
  * The error bound eps is ignored.
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 void
 ANNPriorityTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
                                            IndexArrayType &              ind,

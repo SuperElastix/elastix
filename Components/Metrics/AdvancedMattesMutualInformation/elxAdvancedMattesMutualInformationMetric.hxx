@@ -34,7 +34,7 @@ namespace elastix
  * ****************** Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 AdvancedMattesMutualInformationMetric<TElastix>::AdvancedMattesMutualInformationMetric()
 {
   this->m_CurrentIteration = 0.0;
@@ -49,7 +49,7 @@ AdvancedMattesMutualInformationMetric<TElastix>::AdvancedMattesMutualInformation
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedMattesMutualInformationMetric<TElastix>::Initialize()
 {
@@ -67,7 +67,7 @@ AdvancedMattesMutualInformationMetric<TElastix>::Initialize()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution()
 {
@@ -147,7 +147,7 @@ AdvancedMattesMutualInformationMetric<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedMattesMutualInformationMetric<TElastix>::AfterEachIteration()
 {
@@ -163,7 +163,7 @@ AdvancedMattesMutualInformationMetric<TElastix>::AfterEachIteration()
  * ************************** Compute_c *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 double
 AdvancedMattesMutualInformationMetric<TElastix>::Compute_c(unsigned long k) const
 {

@@ -68,7 +68,7 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT RSGDEachParameterApart
   : public itk::RSGDEachParameterApartOptimizer
   , public OptimizerBase<TElastix>

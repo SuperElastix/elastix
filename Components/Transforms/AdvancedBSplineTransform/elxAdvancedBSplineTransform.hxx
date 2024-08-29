@@ -31,7 +31,7 @@ namespace elastix
  * ************ InitializeBSplineTransform ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 AdvancedBSplineTransform<TElastix>::InitializeBSplineTransform()
 {
@@ -63,7 +63,7 @@ AdvancedBSplineTransform<TElastix>::InitializeBSplineTransform()
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 AdvancedBSplineTransform<TElastix>::BeforeAll()
 {
@@ -82,7 +82,7 @@ AdvancedBSplineTransform<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedBSplineTransform<TElastix>::BeforeRegistration()
 {
@@ -121,7 +121,7 @@ AdvancedBSplineTransform<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedBSplineTransform<TElastix>::BeforeEachResolution()
 {
@@ -152,7 +152,7 @@ AdvancedBSplineTransform<TElastix>::BeforeEachResolution()
  * ******************** PreComputeGridInformation ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedBSplineTransform<TElastix>::PreComputeGridInformation()
 {
@@ -305,7 +305,7 @@ AdvancedBSplineTransform<TElastix>::PreComputeGridInformation()
  * ******************** InitializeTransform ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedBSplineTransform<TElastix>::InitializeTransform()
 {
@@ -333,7 +333,7 @@ AdvancedBSplineTransform<TElastix>::InitializeTransform()
  * *********************** IncreaseScale ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedBSplineTransform<TElastix>::IncreaseScale()
 {
@@ -392,7 +392,7 @@ AdvancedBSplineTransform<TElastix>::IncreaseScale()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedBSplineTransform<TElastix>::ReadFromFile()
 {
@@ -448,7 +448,7 @@ AdvancedBSplineTransform<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 AdvancedBSplineTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -469,7 +469,7 @@ AdvancedBSplineTransform<TElastix>::CreateDerivedTransformParameterMap() const -
  * *********************** SetOptimizerScales ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth)
 {

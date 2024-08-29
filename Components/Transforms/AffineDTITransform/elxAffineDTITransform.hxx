@@ -28,7 +28,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 AffineDTITransformElastix<TElastix>::AffineDTITransformElastix()
 {
   this->SetCurrentTransform(this->m_AffineDTITransform);
@@ -40,7 +40,7 @@ AffineDTITransformElastix<TElastix>::AffineDTITransformElastix()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineDTITransformElastix<TElastix>::BeforeRegistration()
 {
@@ -62,7 +62,7 @@ AffineDTITransformElastix<TElastix>::BeforeRegistration()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineDTITransformElastix<TElastix>::ReadFromFile()
 {
@@ -97,7 +97,7 @@ AffineDTITransformElastix<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 AffineDTITransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -115,7 +115,7 @@ AffineDTITransformElastix<TElastix>::CreateDerivedTransformParameterMap() const 
  * ************************* InitializeTransform *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineDTITransformElastix<TElastix>::InitializeTransform()
 {
@@ -269,7 +269,7 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineDTITransformElastix<TElastix>::SetScales()
 {
@@ -318,7 +318,7 @@ AffineDTITransformElastix<TElastix>::SetScales()
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 AffineDTITransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {

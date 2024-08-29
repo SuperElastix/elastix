@@ -48,7 +48,7 @@ namespace elastix
  * ********************** Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AdaptiveStochasticVarianceReducedGradient()
 {
   this->m_MaximumNumberOfSamplingAttempts = 0;
@@ -84,7 +84,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AdaptiveStochasticVarianceR
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeRegistration()
 {
@@ -109,7 +109,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
 {
@@ -283,7 +283,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachIteration()
 {
@@ -314,7 +314,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachResolution()
 {
@@ -371,7 +371,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterRegistration()
 {
@@ -391,7 +391,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AfterRegistration()
  * ****************** StartOptimization *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::StartOptimization()
 {
@@ -432,7 +432,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::StartOptimization()
  * ********************** AdvanceOneStep **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AdvanceOneStep()
 {
@@ -462,7 +462,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AdvanceOneStep()
  * ********************** StopOptimization **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::StopOptimization()
 {
@@ -477,7 +477,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::StopOptimization()
  * ********************** ResumeOptimization **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization()
 {
@@ -677,7 +677,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::ResumeOptimization()
  * ****************** MetricErrorResponse *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
 {
@@ -709,7 +709,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::MetricErrorResponse(itk::Ex
  * ******************* AutomaticParameterEstimation **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimation()
 {
@@ -759,7 +759,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
  * ******************* AutomaticParameterEstimationOriginal **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimationOriginal()
 {
@@ -904,7 +904,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
  * *************** AutomaticParameterEstimationUsingDisplacementDistribution *****
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimationUsingDisplacementDistribution()
 {
@@ -1019,7 +1019,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AutomaticParameterEstimatio
  * ******************** SampleGradients **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const ParametersType & mu0,
                                                                      double                 perturbationSigma,
@@ -1218,7 +1218,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const Param
  * *************** GetScaledDerivativeWithExceptionHandling ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::GetScaledDerivativeWithExceptionHandling(
   const ParametersType & parameters,
@@ -1243,7 +1243,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::GetScaledDerivativeWithExce
  * *************** AddRandomPerturbation ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AddRandomPerturbation(ParametersType & parameters, double sigma)
 {

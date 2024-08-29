@@ -23,7 +23,7 @@
 #include "itkProgressReporter.h"
 namespace itk
 {
-template <class LineBufferType, class RealType, class TInputPixel, bool doDilate>
+template <typename LineBufferType, typename RealType, typename TInputPixel, bool doDilate>
 void
 DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType magnitude)
 {
@@ -72,7 +72,12 @@ DoLine(LineBufferType & LineBuf, LineBufferType & tmpLineBuf, const RealType mag
 }
 
 
-template <class TInIter, class TOutIter, class RealType, class TInputPixel, class OutputPixelType, bool doDilate>
+template <typename TInIter,
+          typename TOutIter,
+          typename RealType,
+          typename TInputPixel,
+          typename OutputPixelType,
+          bool doDilate>
 void
 doOneDimension(TInIter &          inputIterator,
                TOutIter &         outputIterator,

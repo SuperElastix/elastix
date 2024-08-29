@@ -28,7 +28,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,
                                                    TMovingImage>::SumSquaredTissueVolumeDifferenceImageToImageMetric()
 {
@@ -42,7 +42,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage,
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os,
                                                                                          Indent         indent) const
@@ -59,7 +59,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::P
  * ******************* GetValueSingleThreaded *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(
   const TransformParametersType & parameters) const -> MeasureType
@@ -144,7 +144,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -186,7 +186,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
  * ******************* ThreadedGetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValue(
   ThreadIdType threadId) const
@@ -268,7 +268,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
  * ******************* AfterThreadedGetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedGetValue(
   MeasureType & value) const
@@ -306,7 +306,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -324,7 +324,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 
 
 /** Get value and derivatives single-threaded */
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(
   const TransformParametersType & parameters,
@@ -450,7 +450,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,
@@ -480,7 +480,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
  * ******************* ThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValueAndDerivative(
   ThreadIdType threadId) const
@@ -599,7 +599,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::T
  * *************** AfterThreadedGetValueAndDerivative ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedGetValueAndDerivative(
   MeasureType &    value,
@@ -647,7 +647,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const TransformJacobianType &     jacobian,
@@ -675,7 +675,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::E
  * *************** UpdateValueAndDerivativeTerms ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::UpdateValueAndDerivativeTerms(
   const RealType                     fixedImageValue,
@@ -733,7 +733,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::U
  * ********** EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct ******
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::
   EvaluateJacobianOfSpatialJacobianDeterminantInnerProduct(

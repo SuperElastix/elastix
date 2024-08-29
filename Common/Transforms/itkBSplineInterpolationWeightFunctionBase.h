@@ -46,7 +46,7 @@ namespace itk
  *
  * \ingroup Functions ImageInterpolators
  */
-template <class TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+template <typename TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunctionBase
   : public FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>,
                         FixedArray<double, Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension)>>

@@ -30,7 +30,7 @@ namespace elastix
  * ***************** Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 StandardGradientDescent<TElastix>::StandardGradientDescent()
 {
   this->m_MaximumNumberOfSamplingAttempts = 0;
@@ -44,7 +44,7 @@ StandardGradientDescent<TElastix>::StandardGradientDescent()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StandardGradientDescent<TElastix>::BeforeRegistration()
 {
@@ -65,7 +65,7 @@ StandardGradientDescent<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StandardGradientDescent<TElastix>::BeforeEachResolution()
 {
@@ -115,7 +115,7 @@ StandardGradientDescent<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StandardGradientDescent<TElastix>::AfterEachIteration()
 {
@@ -137,7 +137,7 @@ StandardGradientDescent<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StandardGradientDescent<TElastix>::AfterEachResolution()
 {
@@ -171,7 +171,7 @@ StandardGradientDescent<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StandardGradientDescent<TElastix>::AfterRegistration()
 {
@@ -186,7 +186,7 @@ StandardGradientDescent<TElastix>::AfterRegistration()
  * ****************** StartOptimization *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StandardGradientDescent<TElastix>::StartOptimization()
 {
@@ -217,7 +217,7 @@ StandardGradientDescent<TElastix>::StartOptimization()
  * ****************** MetricErrorResponse *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 StandardGradientDescent<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
 {

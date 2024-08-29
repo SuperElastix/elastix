@@ -26,7 +26,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 AffineLogTransform<TScalarType, Dimension>::AffineLogTransform()
   : Superclass(ParametersDimension)
 {
@@ -36,7 +36,7 @@ AffineLogTransform<TScalarType, Dimension>::AffineLogTransform()
 
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 AffineLogTransform<TScalarType, Dimension>::AffineLogTransform(const MatrixType &      matrix,
                                                                const OutputPointType & offset)
 {
@@ -54,7 +54,7 @@ AffineLogTransform<TScalarType, Dimension>::AffineLogTransform(const MatrixType 
 
 
 // Constructor with arguments
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 AffineLogTransform<TScalarType, Dimension>::AffineLogTransform(unsigned int spaceDimension,
                                                                unsigned int parametersDimension)
   : Superclass(spaceDimension, parametersDimension)
@@ -65,7 +65,7 @@ AffineLogTransform<TScalarType, Dimension>::AffineLogTransform(unsigned int spac
 
 
 // Set Parameters
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 void
 AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType & parameters)
 {
@@ -109,7 +109,7 @@ AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType &
 
 
 // Get Parameters
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 auto
 AffineLogTransform<TScalarType, Dimension>::GetParameters() const -> const ParametersType &
 {
@@ -134,7 +134,7 @@ AffineLogTransform<TScalarType, Dimension>::GetParameters() const -> const Param
 }
 
 // SetIdentity
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 void
 AffineLogTransform<TScalarType, Dimension>::SetIdentity()
 {
@@ -145,7 +145,7 @@ AffineLogTransform<TScalarType, Dimension>::SetIdentity()
 
 
 // Get Jacobian
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 void
 AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &       p,
                                                         JacobianType &               j,
@@ -179,7 +179,7 @@ AffineLogTransform<TScalarType, Dimension>::GetJacobian(const InputPointType &  
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 void
 AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian()
 {
@@ -256,7 +256,7 @@ AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(
 
 
 // Print self
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 void
 AffineLogTransform<TScalarType, Dimension>::PrintSelf(std::ostream & os, Indent indent) const
 {

@@ -31,7 +31,7 @@
 
 /** For setting objects, implement two methods */
 #define itkImplementationSetObjectMacro2(_name, _type1, _type2)                                                        \
-  template <class TFixedImage, class TMovingImage>                                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                               \
   void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg, unsigned int pos)    \
   {                                                                                                                    \
     if (pos == 0)                                                                                                      \
@@ -49,7 +49,7 @@
       testPtr2->Set##_name(_arg);                                                                                      \
     }                                                                                                                  \
   }                                                                                                                    \
-  template <class TFixedImage, class TMovingImage>                                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                               \
   void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                      \
   {                                                                                                                    \
     for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                      \
@@ -59,7 +59,7 @@
   } // comments for allowing ; after calling the macro
 
 #define itkImplementationSetObjectMacro1(_name, _type1, _type2)                                                        \
-  template <class TFixedImage, class TMovingImage>                                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                               \
   void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg, unsigned int pos)    \
   {                                                                                                                    \
     if (pos == 0)                                                                                                      \
@@ -72,7 +72,7 @@
       testPtr1->Set##_name(_arg);                                                                                      \
     }                                                                                                                  \
   }                                                                                                                    \
-  template <class TFixedImage, class TMovingImage>                                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                               \
   void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                      \
   {                                                                                                                    \
     for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                      \
@@ -83,7 +83,7 @@
 
 /** for getting const object, implement one method */
 #define itkImplementationGetConstObjectMacro1(_name, _type)                                                            \
-  template <class TFixedImage, class TMovingImage>                                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                               \
   auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type *     \
   {                                                                                                                    \
     const ImageMetricType * testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));                    \
@@ -98,7 +98,7 @@
   } // comments for allowing ; after calling the macro
 
 #define itkImplementationGetConstObjectMacro2(_name, _type)                                                            \
-  template <class TFixedImage, class TMovingImage>                                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                               \
   auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type *     \
   {                                                                                                                    \
     const ImageMetricType *    testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));                 \
@@ -139,7 +139,7 @@ itkImplementationGetConstObjectMacro1(MovingImage, MovingImageType);
  * ********************* Constructor ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::CombinationImageToImageMetric()
 {
   this->ComputeGradientOff();
@@ -151,7 +151,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::CombinationImageToImag
  * ********************* PrintSelf ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -180,7 +180,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream
  * ******************** SetFixedImageRegion ************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetFixedImageRegion(const FixedImageRegionType _arg,
                                                                               unsigned int               pos)
@@ -202,7 +202,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetFixedImageRegion(co
  * ******************** SetFixedImageRegion ************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetFixedImageRegion(const FixedImageRegionType _arg)
 {
@@ -218,7 +218,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetFixedImageRegion(co
  * ******************** GetFixedImageRegion ************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetFixedImageRegion(unsigned int pos) const
   -> const FixedImageRegionType &
@@ -240,7 +240,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetFixedImageRegion(un
  * ********************* SetNumberOfMetrics ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetNumberOfMetrics(unsigned int count)
 {
@@ -265,7 +265,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetNumberOfMetrics(uns
  * ********************* SetMetric ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValuedCostFunctionType * metric,
                                                                     unsigned int                   pos)
@@ -288,7 +288,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
  * ********************* GetMetric ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetric(unsigned int pos) const
   -> SingleValuedCostFunctionType *
@@ -309,7 +309,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetric(unsigned int
  * ********************* SetMetricWeight ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetricWeight(double weight, unsigned int pos)
 {
@@ -331,7 +331,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetricWeight(double
  * ********************* GetMetricWeight ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 double
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricWeight(unsigned int pos) const
 {
@@ -351,7 +351,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricWeight(unsign
  * ********************* SetMetricRelativeWeight ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetricRelativeWeight(double weight, unsigned int pos)
 {
@@ -373,7 +373,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetricRelativeWeigh
  * ********************* GetMetricRelativeWeight ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 double
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricRelativeWeight(unsigned int pos) const
 {
@@ -393,7 +393,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricRelativeWeigh
  * ********************* SetUseMetric ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetUseMetric(const bool use, const unsigned int pos)
 {
@@ -415,7 +415,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetUseMetric(const boo
  * ********************* SetUseAllMetrics ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetUseAllMetrics()
 {
@@ -435,7 +435,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetUseAllMetrics()
  * ********************* GetUseMetric ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 bool
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetUseMetric(unsigned int pos) const
 {
@@ -455,7 +455,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetUseMetric(unsigned 
  * ********************* GetMetricValue ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricValue(unsigned int pos) const -> MeasureType
 {
@@ -475,7 +475,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricValue(unsigne
  * ********************* GetMetricDerivative ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricDerivative(unsigned int pos) const
   -> const DerivativeType &
@@ -496,7 +496,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricDerivative(un
  * ********************* GetMetricDerivativeMagnitude ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 double
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricDerivativeMagnitude(unsigned int pos) const
 {
@@ -516,7 +516,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricDerivativeMag
  * ********************* GetMetricComputationTime ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 double
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricComputationTime(unsigned int pos) const
 {
@@ -536,7 +536,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMetricComputationTi
  * **************** GetNumberOfPixelsCounted ************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 const SizeValueType &
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetNumberOfPixelsCounted() const
 {
@@ -560,7 +560,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetNumberOfPixelsCount
  * ********************* Initialize ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -608,7 +608,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
  * ******************* InitializeThreadingParameters *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
@@ -624,7 +624,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingPar
  * ******************* GetFinalMetricWeight *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 double
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetFinalMetricWeight(unsigned int pos) const
 {
@@ -656,7 +656,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetFinalMetricWeight(u
  * ********************* GetValue ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
   -> MeasureType
@@ -714,7 +714,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const Paramet
  * ********************* GetDerivative ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
                                                                         DerivativeType &       derivative) const
@@ -774,7 +774,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const Pa
  * ********************* GetValueAndDerivative ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const ParametersType & parameters,
                                                                                 MeasureType &          value,
@@ -865,7 +865,7 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
  * ********************* GetMTime ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ModifiedTimeType
 CombinationImageToImageMetric<TFixedImage, TMovingImage>::GetMTime() const
 {

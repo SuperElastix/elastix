@@ -40,7 +40,7 @@ namespace itk
 {
 
 // Default-constructor
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform()
   : Superclass(ParametersDimension)
 {
@@ -50,7 +50,7 @@ AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform()
 
 
 // Constructor with arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform(unsigned int parametersDimension)
   : Superclass(parametersDimension)
 {
@@ -60,7 +60,7 @@ AdvancedRigid2DTransform<TScalarType>::AdvancedRigid2DTransform(unsigned int par
 
 
 // Print self
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -70,7 +70,7 @@ AdvancedRigid2DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent inden
 
 
 // Set the rotation matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 {
@@ -94,7 +94,7 @@ AdvancedRigid2DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 
 
 /** Compute the Angle from the Rotation Matrix */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::ComputeMatrixParameters()
 {
@@ -122,7 +122,7 @@ AdvancedRigid2DTransform<TScalarType>::ComputeMatrixParameters()
 
 
 // Reset the transform to an identity transform
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::SetIdentity()
 {
@@ -134,7 +134,7 @@ AdvancedRigid2DTransform<TScalarType>::SetIdentity()
 
 
 // Set the angle of rotation
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::SetAngle(TScalarType angle)
 {
@@ -146,7 +146,7 @@ AdvancedRigid2DTransform<TScalarType>::SetAngle(TScalarType angle)
 
 
 // Compute the matrix from the angle
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::ComputeMatrix()
 {
@@ -165,7 +165,7 @@ AdvancedRigid2DTransform<TScalarType>::ComputeMatrix()
 
 
 // Set Parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -195,7 +195,7 @@ AdvancedRigid2DTransform<TScalarType>::SetParameters(const ParametersType & para
 
 
 // Get Parameters
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AdvancedRigid2DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -216,7 +216,7 @@ AdvancedRigid2DTransform<TScalarType>::GetParameters() const -> const Parameters
 }
 
 // Compute transformation Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                    JacobianType &               j,
@@ -251,7 +251,7 @@ AdvancedRigid2DTransform<TScalarType>::GetJacobian(const InputPointType &       
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {

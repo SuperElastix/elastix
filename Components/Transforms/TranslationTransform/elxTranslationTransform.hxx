@@ -27,7 +27,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 TranslationTransformElastix<TElastix>::TranslationTransformElastix()
 {
   this->SetCurrentTransform(this->m_TranslationTransform);
@@ -38,7 +38,7 @@ TranslationTransformElastix<TElastix>::TranslationTransformElastix()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TranslationTransformElastix<TElastix>::BeforeRegistration()
 {
@@ -51,7 +51,7 @@ TranslationTransformElastix<TElastix>::BeforeRegistration()
  * ************************* InitializeTransform *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TranslationTransformElastix<TElastix>::InitializeTransform()
 {
@@ -107,7 +107,7 @@ TranslationTransformElastix<TElastix>::InitializeTransform()
  * ************************* CustomizeTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 TranslationTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

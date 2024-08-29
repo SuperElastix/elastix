@@ -34,10 +34,10 @@ namespace itk
  *
  */
 
-template <class TFixedImage,
-          class TMovingImage,
-          class TFixedFeatureImage = TFixedImage,
-          class TMovingFeatureImage = TMovingImage>
+template <typename TFixedImage,
+          typename TMovingImage,
+          typename TFixedFeatureImage = TFixedImage,
+          typename TMovingFeatureImage = TMovingImage>
 class ITK_TEMPLATE_EXPORT ImageToImageMetricWithFeatures : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
 public:

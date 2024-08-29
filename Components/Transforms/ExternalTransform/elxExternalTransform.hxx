@@ -28,7 +28,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 ExternalTransform<TElastix>::ExternalTransform()
 {
   Superclass1::SetCurrentTransform(m_AdvancedTransformAdapter);
@@ -38,7 +38,7 @@ ExternalTransform<TElastix>::ExternalTransform()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ExternalTransform<TElastix>::ReadFromFile()
 {
@@ -69,7 +69,7 @@ ExternalTransform<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 ExternalTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

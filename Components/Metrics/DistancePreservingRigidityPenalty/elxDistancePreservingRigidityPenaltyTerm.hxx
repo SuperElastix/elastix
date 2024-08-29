@@ -31,7 +31,7 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
 {
@@ -117,7 +117,7 @@ DistancePreservingRigidityPenalty<TElastix>::BeforeRegistration()
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 DistancePreservingRigidityPenalty<TElastix>::Initialize()
 {

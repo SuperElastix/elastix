@@ -65,7 +65,7 @@ namespace elastix
  * \ingroup Metrics
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT VarianceOverLastDimensionMetric
   : public itk::VarianceOverLastDimensionImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                      typename MetricBase<TElastix>::MovingImageType>

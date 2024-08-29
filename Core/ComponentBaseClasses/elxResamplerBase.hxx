@@ -36,7 +36,7 @@ namespace elastix
  * ******************* BeforeRegistrationBase *******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::BeforeRegistrationBase()
 {
@@ -77,7 +77,7 @@ ResamplerBase<TElastix>::BeforeRegistrationBase()
  * ******************* AfterEachResolutionBase ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::AfterEachResolutionBase()
 {
@@ -135,7 +135,7 @@ ResamplerBase<TElastix>::AfterEachResolutionBase()
  * ******************* AfterEachIterationBase ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::AfterEachIterationBase()
 {
@@ -186,7 +186,7 @@ ResamplerBase<TElastix>::AfterEachIterationBase()
  * ******************* AfterRegistrationBase ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::AfterRegistrationBase()
 {
@@ -275,7 +275,7 @@ ResamplerBase<TElastix>::AfterRegistrationBase()
  * *********************** SetComponents ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::SetComponents()
 {
@@ -297,7 +297,7 @@ ResamplerBase<TElastix>::SetComponents()
  * ******************* ResampleAndWriteResultImage ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::ResampleAndWriteResultImage(const std::string & filename, const bool showProgress)
 {
@@ -346,7 +346,7 @@ ResamplerBase<TElastix>::ResampleAndWriteResultImage(const std::string & filenam
  * ******************* WriteResultImage ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
                                           const std::string & filename,
@@ -421,7 +421,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
  * \todo: avoid code duplication with WriteResultImage function
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::CreateItkResultImage()
 {
@@ -547,7 +547,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
  * ************************* ReadFromFile ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::ReadFromFile()
 {
@@ -637,7 +637,7 @@ ResamplerBase<TElastix>::ReadFromFile()
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
@@ -654,7 +654,7 @@ ResamplerBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo)
  * ******************* CreateTransformParameterMap ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::CreateTransformParameterMap(ParameterMapType & parameterMap) const
 {
@@ -696,7 +696,7 @@ ResamplerBase<TElastix>::CreateTransformParameterMap(ParameterMapType & paramete
  * ******************* ReleaseMemory ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResamplerBase<TElastix>::ReleaseMemory()
 {

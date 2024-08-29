@@ -74,7 +74,7 @@ namespace elastix
  * \ingroup ImageSamplers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT RandomCoordinateSampler
   : public itk::ImageRandomCoordinateSampler<typename elx::ImageSamplerBase<TElastix>::InputImageType>
   , public elx::ImageSamplerBase<TElastix>

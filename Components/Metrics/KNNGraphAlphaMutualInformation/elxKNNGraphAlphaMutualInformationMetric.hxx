@@ -32,7 +32,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 KNNGraphAlphaMutualInformationMetric<TElastix>::Initialize()
 {
@@ -50,7 +50,7 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::Initialize()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeRegistration()
 {
@@ -73,7 +73,7 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
 {

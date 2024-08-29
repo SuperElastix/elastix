@@ -38,7 +38,7 @@
 namespace itk
 {
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 class KernelTransformPublic : public ThinPlateSplineKernelTransform2<TScalarType, NDimensions>
 {
 public:

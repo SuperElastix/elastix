@@ -27,7 +27,7 @@ namespace itk
  * ******************* Compute1DWeights *******************
  */
 
-template <class TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
 BSplineInterpolationWeightFunction2<TCoordRep, VSpaceDimension, VSplineOrder>::Compute1DWeights(
   const ContinuousIndexType & index,

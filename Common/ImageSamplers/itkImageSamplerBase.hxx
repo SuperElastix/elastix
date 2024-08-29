@@ -32,7 +32,7 @@ namespace itk
  * ******************* SetMask *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::SetMask(const MaskType * _arg, unsigned int pos)
 {
@@ -65,7 +65,7 @@ ImageSamplerBase<TInputImage>::SetMask(const MaskType * _arg, unsigned int pos)
  * ******************* GetMask *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageSamplerBase<TInputImage>::GetMask(unsigned int pos) const -> const MaskType *
 {
@@ -81,7 +81,7 @@ ImageSamplerBase<TInputImage>::GetMask(unsigned int pos) const -> const MaskType
  * ******************* SetNumberOfMasks *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::SetNumberOfMasks(const unsigned int _arg)
 {
@@ -99,7 +99,7 @@ ImageSamplerBase<TInputImage>::SetNumberOfMasks(const unsigned int _arg)
  * ******************* SetInputImageRegion *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::SetInputImageRegion(const InputImageRegionType _arg, unsigned int pos)
 {
@@ -125,7 +125,7 @@ ImageSamplerBase<TInputImage>::SetInputImageRegion(const InputImageRegionType _a
  * ******************* GetInputImageRegion *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageSamplerBase<TInputImage>::GetInputImageRegion(unsigned int pos) const -> const InputImageRegionType &
 {
@@ -141,7 +141,7 @@ ImageSamplerBase<TInputImage>::GetInputImageRegion(unsigned int pos) const -> co
  * ******************* SetNumberOfInputImageRegions *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::SetNumberOfInputImageRegions(const unsigned int _arg)
 {
@@ -159,7 +159,7 @@ ImageSamplerBase<TInputImage>::SetNumberOfInputImageRegions(const unsigned int _
  * ******************* GenerateInputRequestedRegion *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
 {
@@ -216,7 +216,7 @@ ImageSamplerBase<TInputImage>::GenerateInputRequestedRegion()
  * ******************* SelectNewSamplesOnUpdate *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 bool
 ImageSamplerBase<TInputImage>::SelectNewSamplesOnUpdate()
 {
@@ -235,7 +235,7 @@ ImageSamplerBase<TInputImage>::SelectNewSamplesOnUpdate()
  * ******************* IsInsideAllMasks *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 bool
 ImageSamplerBase<TInputImage>::IsInsideAllMasks(const InputImagePointType & point) const
 {
@@ -254,7 +254,7 @@ ImageSamplerBase<TInputImage>::IsInsideAllMasks(const InputImagePointType & poin
  * ******************* UpdateAllMasks *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::UpdateAllMasks()
 {
@@ -271,7 +271,7 @@ ImageSamplerBase<TInputImage>::UpdateAllMasks()
  * ******************* CheckInputImageRegions *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 bool
 ImageSamplerBase<TInputImage>::CheckInputImageRegions()
 {
@@ -289,7 +289,7 @@ ImageSamplerBase<TInputImage>::CheckInputImageRegions()
  * ******************* CropInputImageRegion *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::CropInputImageRegion()
 {
@@ -371,7 +371,7 @@ ImageSamplerBase<TInputImage>::CropInputImageRegion()
  * ******************* PrintSelf *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -401,7 +401,7 @@ ImageSamplerBase<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
  * ******************* Constructor *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 ImageSamplerBase<TInputImage>::ImageSamplerBase()
 {
   this->ProcessObject::SetNumberOfRequiredInputs(1);
@@ -415,7 +415,7 @@ ImageSamplerBase<TInputImage>::ImageSamplerBase()
  * ******************* MakeOutput *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 DataObject::Pointer
 ImageSamplerBase<TInputImage>::MakeOutput(ProcessObject::DataObjectPointerArraySizeType itkNotUsed(idx))
 {
@@ -428,7 +428,7 @@ ImageSamplerBase<TInputImage>::MakeOutput(ProcessObject::DataObjectPointerArrayS
  * ******************* SetInput *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::SetInput(unsigned int idx, const InputImageType * input)
 {
@@ -442,7 +442,7 @@ ImageSamplerBase<TInputImage>::SetInput(unsigned int idx, const InputImageType *
  * ******************* SetInput *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageSamplerBase<TInputImage>::SetInput(const InputImageType * input)
 {
@@ -454,7 +454,7 @@ ImageSamplerBase<TInputImage>::SetInput(const InputImageType * input)
  * ******************* GetInput *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageSamplerBase<TInputImage>::GetInput() -> const InputImageType *
 {
@@ -465,7 +465,7 @@ ImageSamplerBase<TInputImage>::GetInput() -> const InputImageType *
  * ******************* GetInput *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageSamplerBase<TInputImage>::GetInput(unsigned int idx) -> const InputImageType *
 {
@@ -476,7 +476,7 @@ ImageSamplerBase<TInputImage>::GetInput(unsigned int idx) -> const InputImageTyp
  * ******************* GetOutput *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageSamplerBase<TInputImage>::GetOutput() -> OutputVectorContainerType *
 {
@@ -484,7 +484,7 @@ ImageSamplerBase<TInputImage>::GetOutput() -> OutputVectorContainerType *
 } // end GetOutput()
 
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageSamplerBase<TInputImage>::SplitRegion(const InputImageRegionType & inputRegion,
                                            const size_t                 requestedNumberOfSubregions)

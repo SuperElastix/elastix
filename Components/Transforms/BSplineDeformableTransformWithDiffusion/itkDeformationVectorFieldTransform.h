@@ -42,7 +42,7 @@ namespace itk
  * the spline order.
  */
 
-template <class TScalarType = double, unsigned int NDimensions = 3>
+template <typename TScalarType = double, unsigned int NDimensions = 3>
 class ITK_TEMPLATE_EXPORT DeformationVectorFieldTransform
   : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, 0>
 {

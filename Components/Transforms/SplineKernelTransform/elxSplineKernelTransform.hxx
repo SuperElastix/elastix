@@ -31,7 +31,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 SplineKernelTransform<TElastix>::SplineKernelTransform()
 {
   this->SetKernelType("unknown");
@@ -42,7 +42,7 @@ SplineKernelTransform<TElastix>::SplineKernelTransform()
  * ******************* SetKernelType ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 SplineKernelTransform<TElastix>::SetKernelType(const std::string & kernelType)
 {
@@ -100,7 +100,7 @@ SplineKernelTransform<TElastix>::SetKernelType(const std::string & kernelType)
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 SplineKernelTransform<TElastix>::BeforeAll()
 {
@@ -155,7 +155,7 @@ SplineKernelTransform<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SplineKernelTransform<TElastix>::BeforeRegistration()
 {
@@ -212,7 +212,7 @@ SplineKernelTransform<TElastix>::BeforeRegistration()
  * ************************* DetermineSourceLandmarks *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
 {
@@ -246,7 +246,7 @@ SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
  * ************************* DetermineTargetLandmarks *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 SplineKernelTransform<TElastix>::DetermineTargetLandmarks()
 {
@@ -282,7 +282,7 @@ SplineKernelTransform<TElastix>::DetermineTargetLandmarks()
  * ************************* ReadLandmarkFile *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
                                                   PointSetPointer &   landmarkPointSet,
@@ -376,7 +376,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SplineKernelTransform<TElastix>::ReadFromFile()
 {
@@ -440,7 +440,7 @@ SplineKernelTransform<TElastix>::ReadFromFile()
  * ************************* CustomizeTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 SplineKernelTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

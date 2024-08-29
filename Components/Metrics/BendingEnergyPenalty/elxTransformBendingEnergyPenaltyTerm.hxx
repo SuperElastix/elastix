@@ -28,7 +28,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformBendingEnergyPenalty<TElastix>::Initialize()
 {

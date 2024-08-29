@@ -26,13 +26,13 @@ namespace itk
 {
 
 /** Constructor with default arguments. */
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::CyclicBSplineDeformableTransform()
   : Superclass()
 {}
 
 /** Set the grid region. */
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetGridRegion(const RegionType & region)
 {
@@ -56,7 +56,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetGri
 
 
 /** Check if the point lies inside a valid region. */
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 bool
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::InsideValidRegion(
   const ContinuousIndexType & index) const
@@ -82,7 +82,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Inside
  * 2) The part that reaches from 0 in the last dimension to the end of the
  * inRegion.
  */
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SplitRegion(const RegionType & imageRegion,
                                                                                       const RegionType & inRegion,
@@ -136,7 +136,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SplitR
 
 
 // Transform a point
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
   const InputPointType & point) const -> OutputPointType
@@ -215,7 +215,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
 
 
 /** Compute the Jacobian in one position. */
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobian(
   const InputPointType &    point,
@@ -272,7 +272,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
  * ********************* GetSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
   const InputPointType & inputPoint,
@@ -367,7 +367,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
  * ********************* ComputeNonZeroJacobianIndices ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::ComputeNonZeroJacobianIndices(
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,

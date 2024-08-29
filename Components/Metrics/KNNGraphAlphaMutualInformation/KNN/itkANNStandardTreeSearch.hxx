@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 ANNStandardTreeSearch<TBinaryTree>::ANNStandardTreeSearch()
 {
   this->m_ErrorBound = 0.0;
@@ -38,7 +38,7 @@ ANNStandardTreeSearch<TBinaryTree>::ANNStandardTreeSearch()
  * ************************ Search *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 void
 ANNStandardTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
                                            IndexArrayType &              ind,

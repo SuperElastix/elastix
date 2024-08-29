@@ -67,7 +67,7 @@ namespace itk
  * \ingroup Metrics
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 class ITK_TEMPLATE_EXPORT TransformRigidityPenaltyTerm : public TransformPenaltyTerm<TFixedImage, TScalarType>
 {
 public:

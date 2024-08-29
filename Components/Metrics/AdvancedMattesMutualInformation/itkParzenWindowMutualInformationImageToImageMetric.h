@@ -71,7 +71,7 @@ namespace itk
  * \sa ParzenWindowHistogramImageToImageMetric
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT ParzenWindowMutualInformationImageToImageMetric
   : public ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>
 {

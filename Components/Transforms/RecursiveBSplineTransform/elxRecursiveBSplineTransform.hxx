@@ -33,7 +33,7 @@ namespace elastix
  * ************ InitializeBSplineTransform ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 RecursiveBSplineTransform<TElastix>::InitializeBSplineTransform()
 {
@@ -64,7 +64,7 @@ RecursiveBSplineTransform<TElastix>::InitializeBSplineTransform()
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 RecursiveBSplineTransform<TElastix>::BeforeAll()
 {
@@ -83,7 +83,7 @@ RecursiveBSplineTransform<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RecursiveBSplineTransform<TElastix>::BeforeRegistration()
 {
@@ -122,7 +122,7 @@ RecursiveBSplineTransform<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RecursiveBSplineTransform<TElastix>::BeforeEachResolution()
 {
@@ -153,7 +153,7 @@ RecursiveBSplineTransform<TElastix>::BeforeEachResolution()
  * ******************** PreComputeGridInformation ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RecursiveBSplineTransform<TElastix>::PreComputeGridInformation()
 {
@@ -306,7 +306,7 @@ RecursiveBSplineTransform<TElastix>::PreComputeGridInformation()
  * ******************** InitializeTransform ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RecursiveBSplineTransform<TElastix>::InitializeTransform()
 {
@@ -334,7 +334,7 @@ RecursiveBSplineTransform<TElastix>::InitializeTransform()
  * *********************** IncreaseScale ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RecursiveBSplineTransform<TElastix>::IncreaseScale()
 {
@@ -393,7 +393,7 @@ RecursiveBSplineTransform<TElastix>::IncreaseScale()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RecursiveBSplineTransform<TElastix>::ReadFromFile()
 {
@@ -476,7 +476,7 @@ RecursiveBSplineTransform<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 RecursiveBSplineTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -497,7 +497,7 @@ RecursiveBSplineTransform<TElastix>::CreateDerivedTransformParameterMap() const 
  * *********************** SetOptimizerScales ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RecursiveBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth)
 {

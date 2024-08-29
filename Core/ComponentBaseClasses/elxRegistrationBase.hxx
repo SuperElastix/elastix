@@ -28,7 +28,7 @@ namespace elastix
  * ********************* ReadMaskParameters ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 RegistrationBase<TElastix>::ReadMaskParameters(UseMaskErosionArrayType & useMaskErosionArray,
                                                const unsigned int        nrOfMasks,
@@ -97,7 +97,7 @@ RegistrationBase<TElastix>::ReadMaskParameters(UseMaskErosionArrayType & useMask
  * ******************* GenerateFixedMaskSpatialObject **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 RegistrationBase<TElastix>::GenerateFixedMaskSpatialObject(const FixedMaskImageType *    maskImage,
                                                            bool                          useMaskErosion,
@@ -159,7 +159,7 @@ RegistrationBase<TElastix>::GenerateFixedMaskSpatialObject(const FixedMaskImageT
  * ******************* GenerateMovingMaskSpatialObject **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 RegistrationBase<TElastix>::GenerateMovingMaskSpatialObject(const MovingMaskImageType *    maskImage,
                                                             bool                           useMaskErosion,

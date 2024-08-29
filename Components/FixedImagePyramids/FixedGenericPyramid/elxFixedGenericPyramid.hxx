@@ -28,7 +28,7 @@ namespace elastix
  * ******************* SetFixedSchedule ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FixedGenericPyramid<TElastix>::SetFixedSchedule()
 {
@@ -41,7 +41,7 @@ FixedGenericPyramid<TElastix>::SetFixedSchedule()
  * ******************* BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FixedGenericPyramid<TElastix>::BeforeEachResolution()
 {

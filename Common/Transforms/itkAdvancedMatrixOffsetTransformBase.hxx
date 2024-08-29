@@ -41,7 +41,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::AdvancedMatrixOffsetTransformBase(
   unsigned int paramDims)
   : Superclass(paramDims)
@@ -56,7 +56,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Print self
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::PrecomputeJacobians(
   unsigned int paramDims)
@@ -112,7 +112,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Print self
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::PrintSelf(std::ostream & os,
                                                                                                Indent indent) const
@@ -151,7 +151,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Constructor with explicit arguments
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::SetIdentity()
 {
@@ -168,7 +168,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Transform a point
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformPoint(
   const InputPointType & point) const -> OutputPointType
@@ -178,7 +178,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Transform a vector
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformVector(
   const InputVectorType & vect) const -> OutputVectorType
@@ -188,7 +188,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Transform a vnl_vector_fixed
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformVector(
   const InputVnlVectorType & vect) const -> OutputVnlVectorType
@@ -198,7 +198,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Transform a CovariantVector
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::TransformCovariantVector(
   const InputCovariantVectorType & vec) const -> OutputCovariantVectorType
@@ -218,7 +218,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Recompute the inverse matrix (internal)
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetInverseMatrix() const
   -> const InverseMatrixType &
@@ -243,7 +243,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Get fixed parameters
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::SetFixedParameters(
   const FixedParametersType & fp)
@@ -259,7 +259,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 /** Get the Fixed Parameters. */
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::
   FixedParametersType &
   AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetFixedParameters() const
@@ -273,7 +273,7 @@ const typename AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, 
 }
 
 // Get parameters
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 auto
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetParameters() const
   -> const ParametersType &
@@ -301,7 +301,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 }
 
 // Set parameters
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::SetParameters(
   const ParametersType & parameters)
@@ -348,7 +348,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Computes offset based on center, matrix, and translation variables
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::ComputeOffset()
 {
@@ -369,7 +369,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 
 // Computes translation based on offset, matrix, and center
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::ComputeTranslation()
 {
@@ -391,7 +391,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 // Computes matrix - base class does nothing.  In derived classes is
 //    used to convert, for example, versor into a matrix
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::ComputeMatrix()
 {
@@ -403,7 +403,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
 
 // Computes parameters - base class does nothing.  In derived classes is
 //    used to convert, for example, matrix into a versor
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::ComputeMatrixParameters()
 {
@@ -418,7 +418,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobian(
   const InputPointType &       p,
@@ -462,7 +462,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  * ********************* GetSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetSpatialJacobian(
   const InputPointType &,
@@ -477,7 +477,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  * ********************* GetSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetSpatialHessian(
   const InputPointType &,
@@ -493,7 +493,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobianOfSpatialJacobian(
   const InputPointType &,
@@ -510,7 +510,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobianOfSpatialJacobian(
   const InputPointType &,
@@ -529,7 +529,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobianOfSpatialHessian(
   const InputPointType &,
@@ -547,7 +547,7 @@ AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensio
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
+template <typename TScalarType, unsigned int NInputDimensions, unsigned int NOutputDimensions>
 void
 AdvancedMatrixOffsetTransformBase<TScalarType, NInputDimensions, NOutputDimensions>::GetJacobianOfSpatialHessian(
   const InputPointType &,
