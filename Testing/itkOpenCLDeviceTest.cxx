@@ -30,14 +30,13 @@ main()
   }
 
   // Get all devices
-  std::list<itk::OpenCLDevice>       gpus;
-  const std::list<itk::OpenCLDevice> devices = itk::OpenCLDevice::GetAllDevices();
-  for (auto dev = devices.begin(); dev != devices.end(); ++dev)
+  std::list<itk::OpenCLDevice> gpus;
+  for (const itk::OpenCLDevice & device : itk::OpenCLDevice::GetAllDevices())
   {
-    if ((dev->GetDeviceType() & itk::OpenCLDevice::GPU) != 0)
+    if ((device.GetDeviceType() & itk::OpenCLDevice::GPU) != 0)
     {
-      gpus.push_back(*dev);
-      std::cout << (*dev);
+      gpus.push_back(device);
+      std::cout << device;
     }
   }
 

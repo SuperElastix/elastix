@@ -191,9 +191,9 @@ DefineAffineParameters(typename AffineTransformType::ParametersType & parameters
       0.0, 0.0, // translation
     };
 
-    for (std::size_t i = 0; i < 6; ++i)
+    for (const double matrixElement : matrix)
     {
-      parameters[par++] = matrix[i];
+      parameters[par++] = matrixElement;
     }
   }
   else if constexpr (Dimension == 3)
@@ -205,9 +205,9 @@ DefineAffineParameters(typename AffineTransformType::ParametersType & parameters
       -3.02,  1.3,    -0.045 // translation
     };
 
-    for (std::size_t i = 0; i < 12; ++i)
+    for (const double matrixElement : matrix)
     {
-      parameters[par++] = matrix[i];
+      parameters[par++] = matrixElement;
     }
   }
 }
@@ -678,9 +678,8 @@ main(int argc, char * argv[])
   }
 
   // check for supported transforms
-  for (std::size_t i = 0; i < transforms.size(); ++i)
+  for (const std::string & transformName : transforms)
   {
-    const std::string transformName = transforms[i];
     if (transformName != "Affine" && transformName != "Translation" && transformName != "BSpline" &&
         transformName != "Euler" && transformName != "Similarity")
     {
@@ -693,9 +692,9 @@ main(int argc, char * argv[])
 
   unsigned int runTimes = 1;
   std::string  parametersFileName = "";
-  for (std::size_t i = 0; i < transforms.size(); ++i)
+  for (const std::string & transformName : transforms)
   {
-    if (transforms[i] == "BSpline")
+    if (transformName == "BSpline")
     {
       const bool retp = parser->GetCommandLineArgument("-p", parametersFileName);
       if (!retp)

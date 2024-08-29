@@ -47,10 +47,9 @@ main()
     return EXIT_FAILURE;
   }
 
-  std::list<itk::OpenCLDevice> devices = context->GetDevices();
-  for (std::list<itk::OpenCLDevice>::const_iterator dev = devices.begin(); dev != devices.end(); ++dev)
+  for (const itk::OpenCLDevice & device : context->GetDevices())
   {
-    std::cout << (*dev) << std::endl;
+    std::cout << device << std::endl;
   }
 
   // Release and exit
