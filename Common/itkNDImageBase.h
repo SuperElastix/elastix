@@ -54,7 +54,7 @@ namespace itk
  * \ingroup Miscellaneous
  */
 
-template <class TPixel>
+template <typename TPixel>
 class ITK_TEMPLATE_EXPORT NDImageBase : public Object
 {
 public:
@@ -256,7 +256,7 @@ protected:
 namespace itk
 {
 
-template <class TPixel>
+template <typename TPixel>
 auto
 NDImageBase<TPixel>::NewNDImage(unsigned int dim) -> Pointer
 {

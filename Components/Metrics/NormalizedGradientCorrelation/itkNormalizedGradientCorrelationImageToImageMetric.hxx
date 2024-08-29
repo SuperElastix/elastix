@@ -34,7 +34,7 @@ namespace itk
  * ***************** Initialize *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -101,7 +101,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
  * ***************** PrintSelf *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os,
                                                                                       Indent         indent) const
@@ -115,7 +115,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Prin
  * ***************** ComputeMeanFixedGradient *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeanFixedGradient() const
 {
@@ -185,7 +185,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  * ***************** ComputeMeanMovedGradient *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeanMovedGradient() const
 {
@@ -258,7 +258,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  * ***************** ComputeMeasure *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
   const TransformParametersType & parameters) const -> MeasureType
@@ -351,7 +351,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  * ***************** GetValue *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -393,7 +393,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ***************** SetTransformParameters *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::SetTransformParameters(
   const TransformParametersType & parameters) const
@@ -411,7 +411,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::SetT
  * ***************** GetDerivative *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -439,7 +439,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetD
  * ***************** GetValueAndDerivative *****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,

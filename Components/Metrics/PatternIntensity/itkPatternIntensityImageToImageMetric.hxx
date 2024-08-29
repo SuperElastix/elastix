@@ -35,7 +35,7 @@ namespace itk
  * ********************* Initialize ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -88,7 +88,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
  * ********************* PrintSelf ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -102,7 +102,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::os
  * ********************* ComputePIFixed ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() const -> MeasureType
 {
@@ -193,7 +193,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() 
  * ********************* ComputePIDiff ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(const TransformParametersType & parameters,
                                                                              float scalingfactor) const -> MeasureType
@@ -302,7 +302,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(con
  * ********************* GetValue ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -364,7 +364,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
  * ********************* GetDerivative ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersType & parameters,
                                                                              DerivativeType & derivative) const
@@ -391,7 +391,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(con
  * ********************* GetValueAndDerivative ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,

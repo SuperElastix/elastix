@@ -41,7 +41,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeDisplacementDistribution()
 {
   this->m_FixedImage = nullptr;
@@ -65,7 +65,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeDisplacementDis
  * ************************* InitializeThreadingParameters ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::InitializeThreadingParameters()
 {
@@ -90,7 +90,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::InitializeThreadingPar
  * ************************* ComputeSingleThreaded ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(const ParametersType & mu,
                                                                                 double &               jacg,
@@ -222,7 +222,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
  * ************************* Compute ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::Compute(const ParametersType & mu,
                                                                   double &               jacg,
@@ -255,7 +255,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::Compute(const Paramete
  * *********************** BeforeThreadedCompute***************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::BeforeThreadedCompute(const ParametersType & mu)
 {
@@ -282,7 +282,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::BeforeThreadedCompute(
  * *********************** LaunchComputeThreaderCallback***************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::LaunchComputeThreaderCallback() const
 {
@@ -296,7 +296,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::LaunchComputeThreaderC
  * ************ ComputeThreaderCallback ****************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeThreaderCallback(void * arg)
 {
@@ -320,7 +320,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeThreaderCallbac
  * ************************* ThreadedCompute ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(ThreadIdType threadId)
 {
@@ -425,7 +425,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
  * *********************** AfterThreadedCompute***************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::AfterThreadedCompute(double & jacg, double & maxJJ)
 {
@@ -459,7 +459,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::AfterThreadedCompute(d
  * ************************* ComputeUsingSearchDirection ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDirection(const ParametersType & mu,
                                                                                       double &               jacg,
@@ -578,7 +578,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
  * ************************* SampleFixedImageForJacobianTerms ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
   ImageSampleContainerPointer & sampleContainer)

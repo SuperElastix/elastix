@@ -77,7 +77,7 @@ namespace itk
  * \ingroup SingleThreaded
  * \ingroup CannotBeStreamed
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 class ITK_TEMPLATE_EXPORT MultiOrderBSplineDecompositionImageFilter
   : public ImageToImageFilter<TInputImage, TOutputImage>
 {

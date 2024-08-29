@@ -28,7 +28,7 @@ namespace elastix
  * ******************* SetMovingSchedule ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MovingGenericPyramid<TElastix>::SetMovingSchedule()
 {
@@ -41,7 +41,7 @@ MovingGenericPyramid<TElastix>::SetMovingSchedule()
  * ******************* BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MovingGenericPyramid<TElastix>::BeforeEachResolution()
 {

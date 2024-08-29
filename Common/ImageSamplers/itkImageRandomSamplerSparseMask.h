@@ -34,7 +34,7 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 class ITK_TEMPLATE_EXPORT ImageRandomSamplerSparseMask : public ImageRandomSamplerBase<TInputImage>
 {
 public:

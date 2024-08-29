@@ -41,7 +41,7 @@ namespace elastix
  *
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT AdvancedMeanSquaresMetric
   : public itk::AdvancedMeanSquaresImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
                                                       typename MetricBase<TElastix>::MovingImageType>

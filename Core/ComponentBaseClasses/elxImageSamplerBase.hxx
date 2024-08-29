@@ -29,7 +29,7 @@ namespace elastix
  * ******************* BeforeRegistrationBase ******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ImageSamplerBase<TElastix>::BeforeRegistrationBase()
 {
@@ -42,7 +42,7 @@ ImageSamplerBase<TElastix>::BeforeRegistrationBase()
  * ******************* BeforeEachResolutionBase ******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
 {

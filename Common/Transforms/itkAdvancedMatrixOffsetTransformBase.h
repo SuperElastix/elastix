@@ -88,7 +88,7 @@ namespace itk
  *
  */
 
-template <class TScalarType = double,        // Data type for scalars
+template <typename TScalarType = double,     // Data type for scalars
           unsigned int NInputDimensions = 3, // Number of dimensions in the input space
           unsigned int NOutputDimensions = 3>
 // Number of dimensions in the output space

@@ -44,7 +44,7 @@ namespace itk
  *
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 class ITK_TEMPLATE_EXPORT ComputeDisplacementDistribution : public ScaledSingleValuedNonLinearOptimizer
 {
 public:

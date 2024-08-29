@@ -28,7 +28,7 @@ namespace elastix
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution()
 {
@@ -62,7 +62,7 @@ AdvancedNormalizedCorrelationMetric<TElastix>::BeforeEachResolution()
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedNormalizedCorrelationMetric<TElastix>::Initialize()
 {

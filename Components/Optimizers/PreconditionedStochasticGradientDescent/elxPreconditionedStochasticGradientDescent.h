@@ -174,7 +174,7 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT PreconditionedStochasticGradientDescent
   : public itk::PreconditionedASGDOptimizer
   , public OptimizerBase<TElastix>

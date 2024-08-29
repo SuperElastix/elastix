@@ -79,7 +79,7 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT SimultaneousPerturbation
   : public itk::SPSAOptimizer
   , public OptimizerBase<TElastix>

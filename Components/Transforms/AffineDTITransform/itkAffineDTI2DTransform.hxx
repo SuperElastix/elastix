@@ -25,7 +25,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AffineDTI2DTransform<TScalarType>::AffineDTI2DTransform()
   : Superclass(ParametersDimension)
 {
@@ -38,7 +38,7 @@ AffineDTI2DTransform<TScalarType>::AffineDTI2DTransform()
 
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AffineDTI2DTransform<TScalarType>::AffineDTI2DTransform(const MatrixType & matrix, const OutputPointType & offset)
 {
   this->SetMatrix(matrix);
@@ -55,7 +55,7 @@ AffineDTI2DTransform<TScalarType>::AffineDTI2DTransform(const MatrixType & matri
 
 
 // Constructor with arguments
-template <class TScalarType>
+template <typename TScalarType>
 AffineDTI2DTransform<TScalarType>::AffineDTI2DTransform(unsigned int spaceDimension, unsigned int parametersDimension)
   : Superclass(spaceDimension, parametersDimension)
 {
@@ -67,7 +67,7 @@ AffineDTI2DTransform<TScalarType>::AffineDTI2DTransform(unsigned int spaceDimens
 
 
 // Set Angles etc
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::SetVarAngleScaleShear(ScalarArrayType angle,
                                                          ScalarArrayType shear,
@@ -80,7 +80,7 @@ AffineDTI2DTransform<TScalarType>::SetVarAngleScaleShear(ScalarArrayType angle,
 
 
 // Set Parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -109,7 +109,7 @@ AffineDTI2DTransform<TScalarType>::SetParameters(const ParametersType & paramete
 
 
 // Get Parameters
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AffineDTI2DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -125,7 +125,7 @@ AffineDTI2DTransform<TScalarType>::GetParameters() const -> const ParametersType
 }
 
 // SetIdentity()
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::SetIdentity()
 {
@@ -138,7 +138,7 @@ AffineDTI2DTransform<TScalarType>::SetIdentity()
 
 
 // Compute angles from the rotation matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::ComputeMatrixParameters()
 {
@@ -149,7 +149,7 @@ AffineDTI2DTransform<TScalarType>::ComputeMatrixParameters()
 
 
 // Compute the matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::ComputeMatrix()
 {
@@ -194,7 +194,7 @@ AffineDTI2DTransform<TScalarType>::ComputeMatrix()
 
 
 // Set parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                JacobianType &               j,
@@ -227,7 +227,7 @@ AffineDTI2DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
@@ -326,7 +326,7 @@ AffineDTI2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 
 
 // Print self
-template <class TScalarType>
+template <typename TScalarType>
 void
 AffineDTI2DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {

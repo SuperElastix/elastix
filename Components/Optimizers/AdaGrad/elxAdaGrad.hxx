@@ -38,7 +38,7 @@ namespace elastix
  * ********************** Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 AdaGrad<TElastix>::AdaGrad()
 {
   this->m_MaximumNumberOfSamplingAttempts = 0;
@@ -73,7 +73,7 @@ AdaGrad<TElastix>::AdaGrad()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::BeforeRegistration()
 {
@@ -100,7 +100,7 @@ AdaGrad<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::BeforeEachResolution()
 {
@@ -277,7 +277,7 @@ AdaGrad<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::AfterEachIteration()
 {
@@ -311,7 +311,7 @@ AdaGrad<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::AfterEachResolution()
 {
@@ -371,7 +371,7 @@ AdaGrad<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::AfterRegistration()
 {
@@ -390,7 +390,7 @@ AdaGrad<TElastix>::AfterRegistration()
  * ****************** StartOptimization *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::StartOptimization()
 {
@@ -407,7 +407,7 @@ AdaGrad<TElastix>::StartOptimization()
  * ********************** AdvanceOneStep **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::AdvanceOneStep()
 {
@@ -447,7 +447,7 @@ AdaGrad<TElastix>::AdvanceOneStep()
  * ********************** ResumeOptimization **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::ResumeOptimization()
 {
@@ -469,7 +469,7 @@ AdaGrad<TElastix>::ResumeOptimization()
  * ****************** MetricErrorResponse *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
 {
@@ -501,7 +501,7 @@ AdaGrad<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
  * ******************* AutomaticPreconditionerEstimation **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
 {
@@ -692,7 +692,7 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
  * ******************** SampleGradients **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::SampleGradients(const ParametersType & mu0, double perturbationSigma, double & gg, double & ee)
 {
@@ -884,7 +884,7 @@ AdaGrad<TElastix>::SampleGradients(const ParametersType & mu0, double perturbati
  * *************** GetScaledDerivativeWithExceptionHandling ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::GetScaledDerivativeWithExceptionHandling(const ParametersType & parameters,
                                                             DerivativeType &       derivative)
@@ -908,7 +908,7 @@ AdaGrad<TElastix>::GetScaledDerivativeWithExceptionHandling(const ParametersType
  * *************** AddRandomPerturbation ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdaGrad<TElastix>::AddRandomPerturbation(ParametersType & parameters, double sigma)
 {

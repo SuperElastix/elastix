@@ -40,7 +40,7 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 OpenCLMovingGenericPyramid<TElastix>::OpenCLMovingGenericPyramid()
   : m_GPUPyramidReady(true)
   , m_GPUPyramidCreated(true)
@@ -87,7 +87,7 @@ OpenCLMovingGenericPyramid<TElastix>::OpenCLMovingGenericPyramid()
  * ******************* BeforeGenerateData ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::BeforeGenerateData()
 {
@@ -143,7 +143,7 @@ OpenCLMovingGenericPyramid<TElastix>::BeforeGenerateData()
  * ******************* GenerateData ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::GenerateData()
 {
@@ -221,7 +221,7 @@ OpenCLMovingGenericPyramid<TElastix>::GenerateData()
  * ******************* RegisterFactories ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::RegisterFactories()
 {
@@ -271,7 +271,7 @@ OpenCLMovingGenericPyramid<TElastix>::RegisterFactories()
  * ******************* UnregisterFactories ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::UnregisterFactories()
 {
@@ -287,7 +287,7 @@ OpenCLMovingGenericPyramid<TElastix>::UnregisterFactories()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::BeforeRegistration()
 {
@@ -302,7 +302,7 @@ OpenCLMovingGenericPyramid<TElastix>::BeforeRegistration()
  * ******************* ReadFromFile  ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::ReadFromFile()
 {
@@ -317,7 +317,7 @@ OpenCLMovingGenericPyramid<TElastix>::ReadFromFile()
  * ************************* SwitchingToCPUAndReport ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::SwitchingToCPUAndReport(const bool configError)
 {
@@ -340,7 +340,7 @@ OpenCLMovingGenericPyramid<TElastix>::SwitchingToCPUAndReport(const bool configE
  * ************************* ReportToLog ************************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLMovingGenericPyramid<TElastix>::ReportToLog()
 {

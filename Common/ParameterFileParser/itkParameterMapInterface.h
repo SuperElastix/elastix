@@ -133,7 +133,7 @@ public:
    * 4) -> Throw exception: there is an error in the parameter file
    *
    */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
@@ -206,7 +206,7 @@ public:
   /** A shorter version of ReadParameter() that does not require the boolean
    * produceWarningMessage. Instead the default value true is used.
    */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
@@ -222,7 +222,7 @@ public:
    * This function tries to read parameterName, but also prefix+parameterName.
    * Also, multiple entries are tried, entry_nr as well as default_entry_nr.
    */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
@@ -268,7 +268,7 @@ public:
   /** A shorter version of the extended ReadParameter() that does not require
    * the boolean produceWarningMessage. Instead the default value true is used.
    */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(T &                 parameterValue,
                 const std::string & parameterName,
@@ -282,7 +282,7 @@ public:
 
 
   /** An extended version that reads all parameters in a range at once. */
-  template <class T>
+  template <typename T>
   bool
   ReadParameter(std::vector<T> &    parameterValues,
                 const std::string & parameterName,

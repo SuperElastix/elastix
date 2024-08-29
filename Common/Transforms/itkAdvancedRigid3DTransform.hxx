@@ -39,20 +39,20 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedRigid3DTransform<TScalarType>::AdvancedRigid3DTransform()
   : Superclass(ParametersDimension)
 {}
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedRigid3DTransform<TScalarType>::AdvancedRigid3DTransform(unsigned int paramDim)
   : Superclass(paramDim)
 {}
 
 
 // Check if input matrix is orthogonal to within tolerance
-template <class TScalarType>
+template <typename TScalarType>
 bool
 AdvancedRigid3DTransform<TScalarType>::MatrixIsOrthogonal(const MatrixType & matrix, double tolerance)
 {
@@ -68,7 +68,7 @@ AdvancedRigid3DTransform<TScalarType>::MatrixIsOrthogonal(const MatrixType & mat
 
 
 // Directly set the rotation matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 {
@@ -83,7 +83,7 @@ AdvancedRigid3DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 
 
 // Set optimizable parameters from array
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedRigid3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {

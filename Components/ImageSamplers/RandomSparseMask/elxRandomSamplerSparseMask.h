@@ -50,7 +50,7 @@ namespace elastix
  * \ingroup ImageSamplers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT RandomSamplerSparseMask
   : public itk::ImageRandomSamplerSparseMask<typename elx::ImageSamplerBase<TElastix>::InputImageType>
   , public elx::ImageSamplerBase<TElastix>

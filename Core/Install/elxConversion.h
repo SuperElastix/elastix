@@ -169,7 +169,7 @@ public:
    * Returns true when casting was successful and false otherwise.
    * We make use of the casting functionality of string streams.
    */
-  template <class T>
+  template <typename T>
   static bool
   StringToValue(const std::string & str, T & value)
   {

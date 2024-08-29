@@ -29,7 +29,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PCAMetric2<TElastix>::Initialize()
 {
@@ -58,7 +58,7 @@ PCAMetric2<TElastix>::Initialize()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PCAMetric2<TElastix>::BeforeRegistration()
 {
@@ -95,7 +95,7 @@ PCAMetric2<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PCAMetric2<TElastix>::BeforeEachResolution()
 {

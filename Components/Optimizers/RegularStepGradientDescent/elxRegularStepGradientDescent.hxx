@@ -31,7 +31,7 @@ namespace elastix
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RegularStepGradientDescent<TElastix>::BeforeRegistration()
 {
@@ -52,7 +52,7 @@ RegularStepGradientDescent<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RegularStepGradientDescent<TElastix>::BeforeEachResolution()
 {
@@ -96,7 +96,7 @@ RegularStepGradientDescent<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RegularStepGradientDescent<TElastix>::AfterEachIteration()
 {
@@ -111,7 +111,7 @@ RegularStepGradientDescent<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RegularStepGradientDescent<TElastix>::AfterEachResolution()
 {
@@ -160,7 +160,7 @@ RegularStepGradientDescent<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RegularStepGradientDescent<TElastix>::AfterRegistration()
 {
@@ -175,7 +175,7 @@ RegularStepGradientDescent<TElastix>::AfterRegistration()
  * ******************* SetInitialPosition ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RegularStepGradientDescent<TElastix>::SetInitialPosition(const ParametersType & param)
 {

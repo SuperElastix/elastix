@@ -40,7 +40,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedSimilarity2DTransform<TScalarType>::AdvancedSimilarity2DTransform()
   : Superclass(ParametersDimension)
 {
@@ -50,7 +50,7 @@ AdvancedSimilarity2DTransform<TScalarType>::AdvancedSimilarity2DTransform()
 
 
 // Set Parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -82,7 +82,7 @@ AdvancedSimilarity2DTransform<TScalarType>::SetParameters(const ParametersType &
 
 
 // Get Parameters
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AdvancedSimilarity2DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -104,7 +104,7 @@ AdvancedSimilarity2DTransform<TScalarType>::GetParameters() const -> const Param
 }
 
 // Set Scale Part
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::SetScale(ScaleType scale)
 {
@@ -115,7 +115,7 @@ AdvancedSimilarity2DTransform<TScalarType>::SetScale(ScaleType scale)
 
 
 // Compute the matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::ComputeMatrix()
 {
@@ -140,7 +140,7 @@ AdvancedSimilarity2DTransform<TScalarType>::ComputeMatrix()
 
 
 /** Compute the Angle from the Rotation Matrix */
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::ComputeMatrixParameters()
 {
@@ -163,7 +163,7 @@ AdvancedSimilarity2DTransform<TScalarType>::ComputeMatrixParameters()
 
 
 // Compute the transformation Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                         JacobianType &               j,
@@ -205,7 +205,7 @@ AdvancedSimilarity2DTransform<TScalarType>::GetJacobian(const InputPointType &  
 
 
 // Set Identity
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::SetIdentity()
 {
@@ -216,7 +216,7 @@ AdvancedSimilarity2DTransform<TScalarType>::SetIdentity()
 
 
 // Print self
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -226,7 +226,7 @@ AdvancedSimilarity2DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent 
 
 
 // Set the similarity matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 {
@@ -251,7 +251,7 @@ AdvancedSimilarity2DTransform<TScalarType>::SetMatrix(const MatrixType & matrix)
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedSimilarity2DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {

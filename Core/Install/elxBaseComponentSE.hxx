@@ -29,7 +29,7 @@ namespace elastix
  * *********************** SetElastix ***************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BaseComponentSE<TElastix>::SetElastix(TElastix * const _arg)
 {
@@ -55,7 +55,7 @@ BaseComponentSE<TElastix>::SetElastix(TElastix * const _arg)
  * Added for transformix.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BaseComponentSE<TElastix>::SetConfiguration(const Configuration * const _arg)
 {

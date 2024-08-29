@@ -31,7 +31,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CorrespondingPointsEuclideanDistanceMetric<TElastix>::Initialize()
 {
@@ -49,7 +49,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::Initialize()
  * ***************** BeforeAllBase ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
 {
@@ -109,7 +109,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
 {
@@ -144,7 +144,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
  * ***************** ReadLandmarks ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::string &              landmarkFileName,
                                                                     typename PointSetType::Pointer & pointSet,

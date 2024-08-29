@@ -30,7 +30,7 @@ namespace elastix
 /**
  * ************ InitializeBSplineTransform ***************
  */
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 BSplineStackTransform<TElastix>::InitializeBSplineTransform()
 {
@@ -59,7 +59,7 @@ BSplineStackTransform<TElastix>::InitializeBSplineTransform()
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 BSplineStackTransform<TElastix>::BeforeAll()
 {
@@ -77,7 +77,7 @@ BSplineStackTransform<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineStackTransform<TElastix>::BeforeRegistration()
 {
@@ -132,7 +132,7 @@ BSplineStackTransform<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineStackTransform<TElastix>::BeforeEachResolution()
 {
@@ -163,7 +163,7 @@ BSplineStackTransform<TElastix>::BeforeEachResolution()
  * ******************** PreComputeGridInformation ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineStackTransform<TElastix>::PreComputeGridInformation()
 {
@@ -339,7 +339,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
  * ******************** InitializeTransform ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineStackTransform<TElastix>::InitializeTransform()
 {
@@ -370,7 +370,7 @@ BSplineStackTransform<TElastix>::InitializeTransform()
  * *********************** IncreaseScale ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineStackTransform<TElastix>::IncreaseScale()
 {
@@ -440,7 +440,7 @@ BSplineStackTransform<TElastix>::IncreaseScale()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineStackTransform<TElastix>::ReadFromFile()
 {
@@ -521,7 +521,7 @@ BSplineStackTransform<TElastix>::ReadFromFile()
  * *********************** SetOptimizerScales ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineStackTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth)
 {
@@ -600,7 +600,7 @@ BSplineStackTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWidth
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 BSplineStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

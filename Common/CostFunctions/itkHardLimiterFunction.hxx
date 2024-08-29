@@ -24,7 +24,7 @@
 namespace itk
 {
 
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 auto
 HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const -> OutputType
 {
@@ -33,7 +33,7 @@ HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const
 } // end Evaluate()
 
 
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 auto
 HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input, DerivativeType & derivative) const
   -> OutputType

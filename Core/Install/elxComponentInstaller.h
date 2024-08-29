@@ -28,7 +28,7 @@ namespace elastix
 /** Installs the component specified by its first argument. Note that `TComponent` is a "template template parameter".
  * It has a `TElastix` as template parameter, for example `elastix::TranslationTransformElastix` or
  * `elastix::FixedSmoothingPyramid`. */
-template <template <class TElastix> class TComponent, unsigned VIndex = 1>
+template <template <typename TElastix> class TComponent, unsigned VIndex = 1>
 class ComponentInstaller
 {
 public:
@@ -47,7 +47,7 @@ public:
 };
 
 
-template <template <class TElastix> class TComponent>
+template <template <typename TElastix> class TComponent>
 class ComponentInstaller<TComponent, NrOfSupportedImageTypes + 1>
 {
 public:

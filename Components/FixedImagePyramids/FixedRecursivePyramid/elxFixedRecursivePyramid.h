@@ -35,7 +35,7 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT FixedRecursivePyramid
   : public itk::RecursiveMultiResolutionPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
                                                            typename FixedImagePyramidBase<TElastix>::OutputImageType>

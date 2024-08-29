@@ -30,7 +30,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::VarianceOverLastDimensionImageMetric()
 {
   this->SetUseImageSampler(true);
@@ -44,7 +44,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::VarianceOverLas
  * ******************* Initialize *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -109,7 +109,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::Initialize()
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -121,7 +121,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::
  * ******************* SampleRandom *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::SampleRandom(const int          n,
                                                                               const int          m,
@@ -158,7 +158,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::SampleRandom(co
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const TransformJacobianType &     jacobian,
@@ -174,7 +174,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::EvaluateTransfo
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -306,7 +306,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -327,7 +327,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetDerivative(
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,

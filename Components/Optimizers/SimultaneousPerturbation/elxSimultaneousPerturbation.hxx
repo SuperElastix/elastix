@@ -32,7 +32,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 SimultaneousPerturbation<TElastix>::SimultaneousPerturbation()
 {
   this->m_ShowMetricValues = false;
@@ -43,7 +43,7 @@ SimultaneousPerturbation<TElastix>::SimultaneousPerturbation()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimultaneousPerturbation<TElastix>::BeforeRegistration()
 {
@@ -77,7 +77,7 @@ SimultaneousPerturbation<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimultaneousPerturbation<TElastix>::BeforeEachResolution()
 {
@@ -126,7 +126,7 @@ SimultaneousPerturbation<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimultaneousPerturbation<TElastix>::AfterEachIteration()
 {
@@ -160,7 +160,7 @@ SimultaneousPerturbation<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimultaneousPerturbation<TElastix>::AfterEachResolution()
 {
@@ -197,7 +197,7 @@ SimultaneousPerturbation<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimultaneousPerturbation<TElastix>::AfterRegistration()
 {
@@ -214,7 +214,7 @@ SimultaneousPerturbation<TElastix>::AfterRegistration()
  * ******************* SetInitialPosition ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimultaneousPerturbation<TElastix>::SetInitialPosition(const ParametersType & param)
 {

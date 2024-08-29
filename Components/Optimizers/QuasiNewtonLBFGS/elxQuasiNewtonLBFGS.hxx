@@ -31,7 +31,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 QuasiNewtonLBFGS<TElastix>::QuasiNewtonLBFGS()
 {
   this->m_LineOptimizer = LineOptimizerType::New();
@@ -54,7 +54,7 @@ QuasiNewtonLBFGS<TElastix>::QuasiNewtonLBFGS()
  * ***************** InvokeIterationEvent ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::InvokeIterationEvent(const itk::EventObject & event)
 {
@@ -81,7 +81,7 @@ QuasiNewtonLBFGS<TElastix>::InvokeIterationEvent(const itk::EventObject & event)
  * ***************** StartOptimization ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::StartOptimization()
 {
@@ -109,7 +109,7 @@ QuasiNewtonLBFGS<TElastix>::StartOptimization()
  * ***************** LineSearch ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::LineSearch(const ParametersType searchDir,
                                        double &             step,
@@ -152,7 +152,7 @@ QuasiNewtonLBFGS<TElastix>::LineSearch(const ParametersType searchDir,
  * during iterating
  */
 
-template <class TElastix>
+template <typename TElastix>
 std::string
 QuasiNewtonLBFGS<TElastix>::DeterminePhase() const
 {
@@ -171,7 +171,7 @@ QuasiNewtonLBFGS<TElastix>::DeterminePhase() const
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::BeforeRegistration()
 {
@@ -212,7 +212,7 @@ QuasiNewtonLBFGS<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::BeforeEachResolution()
 {
@@ -280,7 +280,7 @@ QuasiNewtonLBFGS<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::AfterEachIteration()
 {
@@ -368,7 +368,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::AfterEachResolution()
 {
@@ -434,7 +434,7 @@ QuasiNewtonLBFGS<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 QuasiNewtonLBFGS<TElastix>::AfterRegistration()
 {
@@ -450,7 +450,7 @@ QuasiNewtonLBFGS<TElastix>::AfterRegistration()
  * *********************** TestConvergence *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 QuasiNewtonLBFGS<TElastix>::TestConvergence(bool firstLineSearchDone)
 {
@@ -478,7 +478,7 @@ QuasiNewtonLBFGS<TElastix>::TestConvergence(bool firstLineSearchDone)
  * ***************** GetLineSearchStopCondition *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 std::string
 QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition() const
 {

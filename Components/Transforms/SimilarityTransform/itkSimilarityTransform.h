@@ -36,7 +36,7 @@ template <unsigned int Dimension>
 class ITK_TEMPLATE_EXPORT SimilarityGroup
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>;
 };
 
@@ -50,7 +50,7 @@ template <>
 class ITK_TEMPLATE_EXPORT SimilarityGroup<2>
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AdvancedSimilarity2DTransform<TScalarType>;
 };
 
@@ -64,7 +64,7 @@ template <>
 class ITK_TEMPLATE_EXPORT SimilarityGroup<3>
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AdvancedSimilarity3DTransform<TScalarType>;
 };
 
@@ -72,7 +72,7 @@ public:
 /**
  * This alias templates the SimilarityGroup over its dimension.
  */
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 using SimilarityGroupTemplate = typename SimilarityGroup<Dimension>::template TransformAlias<TScalarType>;
 
 
@@ -85,7 +85,7 @@ using SimilarityGroupTemplate = typename SimilarityGroup<Dimension>::template Tr
  * \ingroup Transforms
  */
 
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 class ITK_TEMPLATE_EXPORT SimilarityTransform : public SimilarityGroupTemplate<TScalarType, Dimension>
 {
 public:

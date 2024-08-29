@@ -30,7 +30,7 @@ namespace elastix
 /**
  * ********************* InitializeAffineTransform ****************************
  */
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 AffineLogStackTransform<TElastix>::InitializeAffineLogTransform()
 {
@@ -45,7 +45,7 @@ AffineLogStackTransform<TElastix>::InitializeAffineLogTransform()
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 AffineLogStackTransform<TElastix>::BeforeAll()
 {
@@ -58,7 +58,7 @@ AffineLogStackTransform<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogStackTransform<TElastix>::BeforeRegistration()
 {
@@ -95,7 +95,7 @@ AffineLogStackTransform<TElastix>::BeforeRegistration()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogStackTransform<TElastix>::ReadFromFile()
 {
@@ -145,7 +145,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 AffineLogStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -163,7 +163,7 @@ AffineLogStackTransform<TElastix>::CreateDerivedTransformParameterMap() const ->
  * ********************* InitializeTransform ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogStackTransform<TElastix>::InitializeTransform()
 {
@@ -270,7 +270,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AffineLogStackTransform<TElastix>::SetScales()
 {
@@ -411,7 +411,7 @@ AffineLogStackTransform<TElastix>::SetScales()
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 AffineLogStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPointType & rotationPoint) const
 {

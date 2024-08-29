@@ -28,7 +28,7 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistrationWithFeatures<TElastix>::BeforeRegistration()
 {
@@ -57,7 +57,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::BeforeRegistration()
  * ******************* BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistrationWithFeatures<TElastix>::BeforeEachResolution()
 {
@@ -75,7 +75,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::BeforeEachResolution()
  * *********************** GetAndSetComponents ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetComponents()
 {
@@ -153,7 +153,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetComponents()
  * *********************** GetAndSetFixedImageRegions ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageRegions()
 {
@@ -186,7 +186,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageRegions()
  * *********************** GetAndSetFixedImageInterpolators ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageInterpolators()
 {
@@ -217,7 +217,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::GetAndSetFixedImageInterpolat
  * ************************* UpdateFixedMasks ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistrationWithFeatures<TElastix>::UpdateFixedMasks(unsigned int level)
 {
@@ -256,7 +256,7 @@ MultiResolutionRegistrationWithFeatures<TElastix>::UpdateFixedMasks(unsigned int
  * ************************* UpdateMovingMasks ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiResolutionRegistrationWithFeatures<TElastix>::UpdateMovingMasks(unsigned int level)
 {

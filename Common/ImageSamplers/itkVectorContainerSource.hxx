@@ -27,7 +27,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 VectorContainerSource<TOutputVectorContainer>::VectorContainerSource()
 {
   this->ProcessObject::SetNumberOfRequiredOutputs(1);
@@ -43,7 +43,7 @@ VectorContainerSource<TOutputVectorContainer>::VectorContainerSource()
  * ******************* MakeOutput *******************
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 auto
 VectorContainerSource<TOutputVectorContainer>::MakeOutput(ProcessObject::DataObjectPointerArraySizeType itkNotUsed(idx))
   -> DataObjectPointer
@@ -56,7 +56,7 @@ VectorContainerSource<TOutputVectorContainer>::MakeOutput(ProcessObject::DataObj
  * ******************* GetOutput *******************
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 auto
 VectorContainerSource<TOutputVectorContainer>::GetOutput() -> OutputVectorContainerType *
 {
@@ -72,7 +72,7 @@ VectorContainerSource<TOutputVectorContainer>::GetOutput() -> OutputVectorContai
  * ******************* GetOutput *******************
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 auto
 VectorContainerSource<TOutputVectorContainer>::GetOutput(unsigned int idx) -> OutputVectorContainerType *
 {
@@ -83,7 +83,7 @@ VectorContainerSource<TOutputVectorContainer>::GetOutput(unsigned int idx) -> Ou
  * ******************* GraftOutput *******************
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 void
 VectorContainerSource<TOutputVectorContainer>::GraftOutput(DataObject * graft)
 {
@@ -95,7 +95,7 @@ VectorContainerSource<TOutputVectorContainer>::GraftOutput(DataObject * graft)
  * ******************* GraftNthOutput *******************
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 void
 VectorContainerSource<TOutputVectorContainer>::GraftNthOutput(unsigned int idx, DataObject * graft)
 {
@@ -126,7 +126,7 @@ VectorContainerSource<TOutputVectorContainer>::GraftNthOutput(unsigned int idx, 
  * ******************* PrintSelf *******************
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 void
 VectorContainerSource<TOutputVectorContainer>::PrintSelf(std::ostream & os, Indent indent) const
 {

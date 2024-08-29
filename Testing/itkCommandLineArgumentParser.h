@@ -139,7 +139,7 @@ public:
   itkGetConstMacro(ProgramHelpText, std::string);
 
   /** Get command line argument if arg is a vector type. */
-  template <class T>
+  template <typename T>
   bool
   GetCommandLineArgument(const std::string & key, std::vector<T> & arg)
   {
@@ -212,7 +212,7 @@ public:
    * We do this by creating a 1D vector, using the GetCommandLineArgument
    * for vector types, and then returning the first element.
    */
-  template <class T>
+  template <typename T>
   bool
   GetCommandLineArgument(const std::string & key, T & arg)
   {
@@ -244,7 +244,7 @@ protected:
    * Returns true when casting was successful and false otherwise.
    * We make use of the casting functionality of string streams.
    */
-  template <class T>
+  template <typename T>
   bool
   StringCast(const std::string & parameterValue, T & casted) const
   {

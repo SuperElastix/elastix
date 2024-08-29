@@ -28,7 +28,7 @@ namespace elastix
  * ***************** BeforeAll *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 RayCastInterpolator<TElastix>::BeforeAll()
 {
@@ -52,7 +52,7 @@ RayCastInterpolator<TElastix>::BeforeAll()
  * ***************** BeforeRegistration *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RayCastInterpolator<TElastix>::BeforeRegistration()
 {
@@ -100,7 +100,7 @@ RayCastInterpolator<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RayCastInterpolator<TElastix>::BeforeEachResolution()
 {

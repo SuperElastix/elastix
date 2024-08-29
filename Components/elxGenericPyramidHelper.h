@@ -26,10 +26,10 @@
 
 namespace elastix
 {
-template <class TElastix>
+template <typename TElastix>
 class FixedGenericPyramid;
 
-template <class TElastix>
+template <typename TElastix>
 class MovingGenericPyramid;
 
 /** Internal helper class for FixedGenericPyramid and MovingGenericPyramid. */

@@ -36,7 +36,7 @@ namespace itk
  * http://dx.doi.org/10.1109/TMI.2015.2476354
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 class ITK_TEMPLATE_EXPORT ComputePreconditionerUsingDisplacementDistribution
   : public ComputeDisplacementDistribution<TFixedImage, TTransform>
 {

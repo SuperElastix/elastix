@@ -36,7 +36,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 PCAMetric<TFixedImage, TMovingImage>::PCAMetric()
 {
   this->SetUseImageSampler(true);
@@ -52,7 +52,7 @@ PCAMetric<TFixedImage, TMovingImage>::PCAMetric()
  * ******************* Initialize *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -75,7 +75,7 @@ PCAMetric<TFixedImage, TMovingImage>::Initialize()
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -88,7 +88,7 @@ PCAMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent
  * ********************* InitializeThreadingParameters ****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
@@ -120,7 +120,7 @@ PCAMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const TransformJacobianType &     jacobian,
@@ -134,7 +134,7 @@ PCAMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & parameters) const -> MeasureType
 {
@@ -279,7 +279,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersType & parameters,
                                                     DerivativeType &                derivative) const
@@ -299,7 +299,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTyp
  * ******************* GetValueAndDerivativeSingleThreaded *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
                                                                           MeasureType &                   value,
@@ -593,7 +593,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParametersType & parameters,
                                                             MeasureType &                   value,
@@ -641,7 +641,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParam
  * ******************* ThreadedGetSamples *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::ThreadedGetSamples(ThreadIdType threadId)
 {
@@ -727,7 +727,7 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedGetSamples(ThreadIdType threadId)
  * ******************* AfterThreadedGetSamples *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & value) const
 {
@@ -826,7 +826,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
  * **************** GetSamplesThreaderCallback *******
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_TYPE
 PCAMetric<TFixedImage, TMovingImage>::GetSamplesThreaderCallback(void * arg)
 {
@@ -848,7 +848,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetSamplesThreaderCallback(void * arg)
  * *********************** LaunchGetSamplesThreaderCallback***************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::LaunchGetSamplesThreaderCallback() const
 {
@@ -867,7 +867,7 @@ PCAMetric<TFixedImage, TMovingImage>::LaunchGetSamplesThreaderCallback() const
  * ******************* ThreadedComputeDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivative(ThreadIdType threadId)
 {
@@ -938,7 +938,7 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivative(ThreadIdType thr
  * ******************* AfterThreadedComputeDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::AfterThreadedComputeDerivative(DerivativeType & derivative) const
 {
@@ -1021,7 +1021,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedComputeDerivative(DerivativeT
  * **************** ComputeDerivativeThreaderCallback *******
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_TYPE
 PCAMetric<TFixedImage, TMovingImage>::ComputeDerivativeThreaderCallback(void * arg)
 {
@@ -1043,7 +1043,7 @@ PCAMetric<TFixedImage, TMovingImage>::ComputeDerivativeThreaderCallback(void * a
  * ************** LaunchComputeDerivativeThreaderCallback **********
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::LaunchComputeDerivativeThreaderCallback() const
 {

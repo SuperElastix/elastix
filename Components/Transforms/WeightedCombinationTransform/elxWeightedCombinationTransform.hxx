@@ -28,7 +28,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 WeightedCombinationTransformElastix<TElastix>::WeightedCombinationTransformElastix()
 {
   this->SetCurrentTransform(this->m_WeightedCombinationTransform);
@@ -39,7 +39,7 @@ WeightedCombinationTransformElastix<TElastix>::WeightedCombinationTransformElast
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 WeightedCombinationTransformElastix<TElastix>::BeforeRegistration()
 {
@@ -63,7 +63,7 @@ WeightedCombinationTransformElastix<TElastix>::BeforeRegistration()
  * Initialize transform to prepare it for registration.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 WeightedCombinationTransformElastix<TElastix>::InitializeTransform()
 {
@@ -96,7 +96,7 @@ WeightedCombinationTransformElastix<TElastix>::InitializeTransform()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 WeightedCombinationTransformElastix<TElastix>::ReadFromFile()
 {
@@ -118,7 +118,7 @@ WeightedCombinationTransformElastix<TElastix>::ReadFromFile()
  * ************************* CustomizeTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -134,7 +134,7 @@ WeightedCombinationTransformElastix<TElastix>::CreateDerivedTransformParameterMa
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 WeightedCombinationTransformElastix<TElastix>::SetScales()
 {
@@ -188,7 +188,7 @@ WeightedCombinationTransformElastix<TElastix>::SetScales()
  * ************************* LoadSubTransforms *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
 {

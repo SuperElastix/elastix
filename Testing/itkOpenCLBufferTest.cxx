@@ -21,7 +21,7 @@
 #include <algorithm>
 
 //------------------------------------------------------------------------------
-template <class type>
+template <typename type>
 bool
 std_all_of(const std::vector<type> & v, const type value)
 {

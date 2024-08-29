@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 BinaryTreeSearchBase<TBinaryTree>::BinaryTreeSearchBase()
 {
   this->m_BinaryTree = nullptr;
@@ -39,7 +39,7 @@ BinaryTreeSearchBase<TBinaryTree>::BinaryTreeSearchBase()
  * ************************ SetBinaryTree *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 void
 BinaryTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
 {
@@ -59,7 +59,7 @@ BinaryTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
  * ************************ GetBinaryTree *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 auto
 BinaryTreeSearchBase<TBinaryTree>::GetBinaryTree() const -> const BinaryTreeType *
 {

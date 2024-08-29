@@ -35,7 +35,7 @@ template <unsigned int Dimension>
 class ITK_TEMPLATE_EXPORT EulerGroup
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>;
 };
 
@@ -49,7 +49,7 @@ template <>
 class ITK_TEMPLATE_EXPORT EulerGroup<2>
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AdvancedRigid2DTransform<TScalarType>;
 };
 
@@ -63,7 +63,7 @@ template <>
 class ITK_TEMPLATE_EXPORT EulerGroup<3>
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AdvancedEuler3DTransform<TScalarType>;
 };
 
@@ -71,7 +71,7 @@ public:
 /**
  * This alias templates the EulerGroup over its dimension.
  */
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 using EulerGroupTemplate = typename EulerGroup<Dimension>::template TransformAlias<TScalarType>;
 
 
@@ -84,7 +84,7 @@ using EulerGroupTemplate = typename EulerGroup<Dimension>::template TransformAli
  * \ingroup Transforms
  */
 
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 class ITK_TEMPLATE_EXPORT EulerTransform : public EulerGroupTemplate<TScalarType, Dimension>
 {
 public:
@@ -155,7 +155,7 @@ protected:
   ~EulerTransform() override = default;
 };
 
-template <class TScalarType>
+template <typename TScalarType>
 class ITK_TEMPLATE_EXPORT EulerTransform<TScalarType, 3> : public EulerGroupTemplate<TScalarType, 3>
 {
 public:

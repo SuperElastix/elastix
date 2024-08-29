@@ -76,7 +76,7 @@ namespace elastix
  * \sa FiniteDifferenceGradientDescentOptimizer
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT FiniteDifferenceGradientDescent
   : public itk::FiniteDifferenceGradientDescentOptimizer
   , public OptimizerBase<TElastix>

@@ -36,7 +36,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::
   MultiBSplineDeformableTransformWithNormal()
   : Superclass(SpaceDimension)
@@ -58,7 +58,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 // Get the number of parameters
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParameters() const
   -> NumberOfParametersType
@@ -76,7 +76,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 // Get the number of parameters per dimension
 // FIXME :  Do we need to declare this function ?
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetNumberOfParametersPerDimension()
   const -> NumberOfParametersType
@@ -100,7 +100,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
 #define SET_ALL_LABELS(FUNC, TYPE)                                                                                     \
-  template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                                    \
+  template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                                 \
   void MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Set##FUNC(const TYPE _arg)   \
   {                                                                                                                    \
     if (_arg != this->Get##FUNC())                                                                                     \
@@ -111,7 +111,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
 #define GET_FIRST_LABEL(FUNC, TYPE)                                                                                    \
-  template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                                    \
+  template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                                 \
   auto MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Get##FUNC() const->TYPE      \
   {                                                                                                                    \
     return m_Trans[0]->Get##FUNC();                                                                                    \
@@ -144,7 +144,7 @@ GET_FIRST_LABEL(GridOrigin, OriginType);
 #undef SET_ALL_LABELS
 #undef GET_FIRST_LABEL
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetLabels(ImageLabelType * labels)
 {
@@ -172,7 +172,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 struct UpdateLocalBases_impl
 {
   using VectorType = itk::Vector<TScalarType, NDimensions>;
@@ -189,7 +189,7 @@ struct UpdateLocalBases_impl
   }
 };
 
-template <class TScalarType>
+template <typename TScalarType>
 struct UpdateLocalBases_impl<TScalarType, 2>
 {
   static const unsigned NDimensions = 2;
@@ -247,7 +247,7 @@ struct UpdateLocalBases_impl<TScalarType, 2>
   }
 };
 
-template <class TScalarType>
+template <typename TScalarType>
 struct UpdateLocalBases_impl<TScalarType, 3>
 {
   static const unsigned NDimensions = 3;
@@ -339,7 +339,7 @@ struct UpdateLocalBases_impl<TScalarType, 3>
   }
 };
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::UpdateLocalBases()
 {
@@ -443,7 +443,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 // Set the parameters
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetIdentity()
 {
@@ -462,7 +462,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::DispatchParameters(
   const ParametersType & parameters)
@@ -510,7 +510,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 // Set the parameters
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetParameters(
   const ParametersType & parameters)
@@ -538,7 +538,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 // Set the Fixed Parameters
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetFixedParameters(
   const ParametersType & passedParameters)
@@ -549,7 +549,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 // Set the parameters by value
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetParametersByValue(
   const ParametersType & parameters)
@@ -575,7 +575,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 
 // Get the parameters
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetParameters() const
   -> const ParametersType &
@@ -593,7 +593,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 // Get the parameters
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetFixedParameters() const
   -> const ParametersType &
@@ -602,7 +602,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 // Print self
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::PrintSelf(std::ostream & os,
                                                                                              Indent indent) const
@@ -624,7 +624,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
 #undef LOOP_ON_LABELS
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::PointToLabel(
   const InputPointType & p,
@@ -641,7 +641,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
   const InputPointType & point) const -> OutputPointType
@@ -678,7 +678,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobian(
   const InputPointType &       inputPoint,
@@ -778,7 +778,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 } // end GetJacobian()
 
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
   const InputPointType & inputPoint,
@@ -811,7 +811,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetSpatialHessian(
   const InputPointType & inputPoint,
@@ -860,7 +860,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
   const InputPointType &,
@@ -872,7 +872,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 } // end GetJacobianOfSpatialJacobian()
 
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
   const InputPointType &          inputPoint,
@@ -969,7 +969,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHessian(
   const InputPointType &         inputPoint,

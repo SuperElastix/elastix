@@ -87,7 +87,7 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT ConjugateGradient
   : public itk::GenericConjugateGradientOptimizer
   , public OptimizerBase<TElastix>

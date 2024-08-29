@@ -33,7 +33,7 @@ namespace itk
  * ******************* SetSampleGridSpacing *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageGridSampler<TInputImage>::SetSampleGridSpacing(const SampleGridSpacingType & arg)
 {
@@ -50,7 +50,7 @@ ImageGridSampler<TInputImage>::SetSampleGridSpacing(const SampleGridSpacingType 
  * ******************* DetermineGridIndexAndSize *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageGridSampler<TInputImage>::DetermineGridIndexAndSize(const InputImageRegionType &  croppedInputImageRegion,
                                                          const SampleGridSpacingType & gridSpacing)
@@ -77,7 +77,7 @@ ImageGridSampler<TInputImage>::DetermineGridIndexAndSize(const InputImageRegionT
  * ******************* GenerateWorkUnits *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 auto
 ImageGridSampler<TInputImage>::GenerateWorkUnits(const ThreadIdType             numberOfWorkUnits,
                                                  const InputImageRegionType &   croppedInputImageRegion,
@@ -154,7 +154,7 @@ ImageGridSampler<TInputImage>::GenerateWorkUnits(const ThreadIdType             
  * ******************* SingleThreadedGenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &            inputImage,
                                                           const MaskType * const         mask,
@@ -193,7 +193,7 @@ ImageGridSampler<TInputImage>::SingleThreadedGenerateData(const TInputImage &   
  * ******************* MultiThreadedGenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageGridSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &            multiThreader,
                                                          const ThreadIdType             numberOfWorkUnits,
@@ -248,7 +248,7 @@ ImageGridSampler<TInputImage>::MultiThreadedGenerateData(MultiThreaderBase &    
  * ******************* GenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageGridSampler<TInputImage>::GenerateData()
 {
@@ -293,7 +293,7 @@ ImageGridSampler<TInputImage>::GenerateData()
 } // end GenerateData()
 
 
-template <class TInputImage>
+template <typename TInputImage>
 template <elastix::MaskCondition VMaskCondition>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
@@ -315,7 +315,7 @@ ImageGridSampler<TInputImage>::ThreaderCallback(void * const arg)
 }
 
 
-template <class TInputImage>
+template <typename TInputImage>
 template <elastix::MaskCondition VMaskCondition>
 void
 ImageGridSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &                    workUnit,
@@ -395,7 +395,7 @@ ImageGridSampler<TInputImage>::GenerateDataForWorkUnit(WorkUnit &               
  * ******************* SetNumberOfSamples *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
 {
@@ -456,7 +456,7 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
  * ******************* PrintSelf *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageGridSampler<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

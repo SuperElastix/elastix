@@ -28,7 +28,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TAnyITKTransform>
+template <typename TAnyITKTransform>
 DeformationFieldRegulizer<TAnyITKTransform>::DeformationFieldRegulizer()
 {
   /** Initialize. */
@@ -42,7 +42,7 @@ DeformationFieldRegulizer<TAnyITKTransform>::DeformationFieldRegulizer()
  * ********* InitializeIntermediaryDeformationField **************
  */
 
-template <class TAnyITKTransform>
+template <typename TAnyITKTransform>
 void
 DeformationFieldRegulizer<TAnyITKTransform>::InitializeDeformationFields()
 {
@@ -91,7 +91,7 @@ DeformationFieldRegulizer<TAnyITKTransform>::InitializeDeformationFields()
  * *********************** TransformPoint ***********************
  */
 
-template <class TAnyITKTransform>
+template <typename TAnyITKTransform>
 auto
 DeformationFieldRegulizer<TAnyITKTransform>::TransformPoint(const InputPointType & inputPoint) const -> OutputPointType
 {
@@ -116,7 +116,7 @@ DeformationFieldRegulizer<TAnyITKTransform>::TransformPoint(const InputPointType
  * ******** UpdateIntermediaryDeformationFieldTransform *********
  */
 
-template <class TAnyITKTransform>
+template <typename TAnyITKTransform>
 void
 DeformationFieldRegulizer<TAnyITKTransform>::UpdateIntermediaryDeformationFieldTransform(
   typename VectorImageType::Pointer vecImage)

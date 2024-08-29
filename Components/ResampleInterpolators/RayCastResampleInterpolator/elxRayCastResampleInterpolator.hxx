@@ -29,7 +29,7 @@ namespace elastix
  * ***************** BeforeAll *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator()
 {
@@ -91,7 +91,7 @@ RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator()
  * ***************** BeforeAll *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 RayCastResampleInterpolator<TElastix>::BeforeAll()
 {
@@ -117,7 +117,7 @@ RayCastResampleInterpolator<TElastix>::BeforeAll()
  * ***************** BeforeRegistration *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RayCastResampleInterpolator<TElastix>::BeforeRegistration()
 {
@@ -131,7 +131,7 @@ RayCastResampleInterpolator<TElastix>::BeforeRegistration()
  * ***************** ReadFromFile *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 RayCastResampleInterpolator<TElastix>::ReadFromFile()
 {
@@ -147,7 +147,7 @@ RayCastResampleInterpolator<TElastix>::ReadFromFile()
  * ******************* CreateDerivedTransformParameterMap ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 RayCastResampleInterpolator<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

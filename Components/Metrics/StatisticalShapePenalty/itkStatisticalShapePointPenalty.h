@@ -52,7 +52,7 @@ namespace itk
  * \ingroup RegistrationMetrics
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 class ITK_TEMPLATE_EXPORT StatisticalShapePointPenalty
   : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {

@@ -49,7 +49,7 @@ namespace itk
 /*
  * Set the multi-resolution schedule
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::SetSchedule(
   const ScheduleType & schedule)
@@ -80,7 +80,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::S
 /*
  * GenerateData for non downward divisible schedules
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::GenerateData()
 {
@@ -198,7 +198,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
 /*
  * GenerateOutputInformation
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::GenerateOutputInformation()
 {
@@ -234,7 +234,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
 /*
  * GenerateOutputRequestedRegion
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::GenerateOutputRequestedRegion(
   DataObject * refOutput)
@@ -309,7 +309,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
 /*
  * GenerateInputRequestedRegion
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
 {
@@ -338,7 +338,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
  * EnlargeOutputRequestedRegion
  */
 
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::EnlargeOutputRequestedRegion(
   DataObject * output)

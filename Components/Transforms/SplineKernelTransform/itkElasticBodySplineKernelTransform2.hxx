@@ -38,14 +38,14 @@
 namespace itk
 {
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::ElasticBodySplineKernelTransform2()
 {
   this->m_Alpha = 12.0 * (1.0 - .25) - 1.0;
 }
 
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::ComputeG(const InputVectorType & x,
                                                                       GMatrixType &           GMatrix) const
@@ -69,7 +69,7 @@ ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::ComputeG(const Inpu
 } // end ComputeG()
 
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 ElasticBodySplineKernelTransform2<TScalarType, NDimensions>::PrintSelf(std::ostream & os, Indent indent) const
 {

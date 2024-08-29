@@ -31,7 +31,7 @@ namespace elastix
  * ******************* InitializeTranslationTransform ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 TranslationStackTransform<TElastix>::InitializeTranslationTransform()
 {
@@ -46,7 +46,7 @@ TranslationStackTransform<TElastix>::InitializeTranslationTransform()
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 TranslationStackTransform<TElastix>::BeforeAll()
 {
@@ -61,7 +61,7 @@ TranslationStackTransform<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TranslationStackTransform<TElastix>::BeforeRegistration()
 {
@@ -94,7 +94,7 @@ TranslationStackTransform<TElastix>::BeforeRegistration()
  * ********************* InitializeTransform ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TranslationStackTransform<TElastix>::InitializeTransform()
 {
@@ -117,7 +117,7 @@ TranslationStackTransform<TElastix>::InitializeTransform()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TranslationStackTransform<TElastix>::ReadFromFile()
 {
@@ -154,7 +154,7 @@ TranslationStackTransform<TElastix>::ReadFromFile()
  * ************************* CustomizeTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 TranslationStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

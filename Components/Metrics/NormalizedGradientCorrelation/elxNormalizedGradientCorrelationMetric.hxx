@@ -28,7 +28,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 NormalizedGradientCorrelationMetric<TElastix>::Initialize()
 {
@@ -46,7 +46,7 @@ NormalizedGradientCorrelationMetric<TElastix>::Initialize()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 NormalizedGradientCorrelationMetric<TElastix>::BeforeRegistration()
 {
@@ -69,7 +69,7 @@ NormalizedGradientCorrelationMetric<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 NormalizedGradientCorrelationMetric<TElastix>::BeforeEachResolution()
 {

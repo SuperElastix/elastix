@@ -29,7 +29,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PatternIntensityMetric<TElastix>::Initialize()
 {
@@ -47,7 +47,7 @@ PatternIntensityMetric<TElastix>::Initialize()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PatternIntensityMetric<TElastix>::BeforeRegistration()
 {
@@ -70,7 +70,7 @@ PatternIntensityMetric<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PatternIntensityMetric<TElastix>::BeforeEachResolution()
 {

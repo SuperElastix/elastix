@@ -30,7 +30,7 @@ namespace itk
  * ***************GenerateOutputInformation ***********
  */
 
-template <class TOutputMesh>
+template <typename TOutputMesh>
 void
 MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation()
 {
@@ -64,7 +64,7 @@ MeshFileReaderBase<TOutputMesh>::GenerateOutputInformation()
  * *************TestFileExistanceAndReadability ***********
  */
 
-template <class TOutputMesh>
+template <typename TOutputMesh>
 void
 MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability()
 {
@@ -92,7 +92,7 @@ MeshFileReaderBase<TOutputMesh>::TestFileExistanceAndReadability()
  * **************EnlargeOutputRequestedRegion***********
  */
 
-template <class TOutputMesh>
+template <typename TOutputMesh>
 void
 MeshFileReaderBase<TOutputMesh>::EnlargeOutputRequestedRegion(DataObject * output)
 {

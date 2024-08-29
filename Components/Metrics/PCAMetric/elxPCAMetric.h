@@ -61,7 +61,7 @@ namespace elastix
  * \ingroup Metrics
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT PCAMetric
   : public itk::PCAMetric<typename MetricBase<TElastix>::FixedImageType, typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>

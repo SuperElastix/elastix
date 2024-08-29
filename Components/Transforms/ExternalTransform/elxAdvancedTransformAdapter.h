@@ -34,7 +34,7 @@ namespace elastix
  * \ingroup Transforms
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 class ITK_TEMPLATE_EXPORT AdvancedTransformAdapter
   : public itk::AdvancedTransform<TScalarType, NDimensions, NDimensions>
 {

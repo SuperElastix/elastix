@@ -28,7 +28,7 @@ namespace elastix
  * ******************* Constructor *******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 MissingStructurePenalty<TElastix>::MissingStructurePenalty()
 {
   this->m_NumberOfMeshes = 0;
@@ -39,7 +39,7 @@ MissingStructurePenalty<TElastix>::MissingStructurePenalty()
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MissingStructurePenalty<TElastix>::Initialize()
 {
@@ -56,7 +56,7 @@ MissingStructurePenalty<TElastix>::Initialize()
  * ***************** BeforeAllBase ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 MissingStructurePenalty<TElastix>::BeforeAllBase()
 {
@@ -125,7 +125,7 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MissingStructurePenalty<TElastix>::BeforeRegistration()
 {
@@ -175,7 +175,7 @@ MissingStructurePenalty<TElastix>::BeforeRegistration()
  * ***************** AfterEachIteration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MissingStructurePenalty<TElastix>::AfterEachIteration()
 {
@@ -228,7 +228,7 @@ MissingStructurePenalty<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MissingStructurePenalty<TElastix>::AfterEachResolution()
 {
@@ -277,7 +277,7 @@ MissingStructurePenalty<TElastix>::AfterEachResolution()
  * ************** ReadMesh *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
@@ -307,7 +307,7 @@ MissingStructurePenalty<TElastix>::ReadMesh(const std::string & meshFileName, ty
  * ******************* WriteResultMesh ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MissingStructurePenalty<TElastix>::WriteResultMesh(const std::string & filename, MeshIdType meshId)
 {
@@ -384,7 +384,7 @@ MissingStructurePenalty<TElastix>::WriteResultMesh(const std::string & filename,
  * ******************* ReadTransformixPoints ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 MissingStructurePenalty<TElastix>::ReadTransformixPoints(const std::string &          filename,
                                                          typename MeshType::Pointer & mesh) // const

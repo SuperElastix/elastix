@@ -32,7 +32,7 @@ namespace itk
  * ******************* GenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomSampler<TInputImage>::GenerateData()
 {
@@ -136,7 +136,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
 } // end GenerateData()
 
 
-template <class TInputImage>
+template <typename TInputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageRandomSampler<TInputImage>::ThreaderCallback(void * const arg)
 {

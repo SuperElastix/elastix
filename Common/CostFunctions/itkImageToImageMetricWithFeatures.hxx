@@ -27,7 +27,7 @@ namespace itk
  * ********************* Initialize *****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::Initialize()
 {
@@ -78,7 +78,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* SetNumberOfFixedFeatureImages ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   SetNumberOfFixedFeatureImages(unsigned int arg)
@@ -98,7 +98,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* SetFixedFeatureImage ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   SetFixedFeatureImage(unsigned int i, FixedFeatureImageType * im)
@@ -126,7 +126,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* GetFixedFeatureImage ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   FixedFeatureImageType *
   ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
@@ -139,7 +139,7 @@ const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedF
  * ********************* SetFixedFeatureInterpolator ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   SetFixedFeatureInterpolator(unsigned int i, FixedFeatureInterpolatorType * interpolator)
@@ -167,7 +167,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* GetFixedFeatureInterpolator ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   FixedFeatureInterpolatorType *
   ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
@@ -180,7 +180,7 @@ const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedF
  * ********************* SetNumberOfMovingFeatureImages ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   SetNumberOfMovingFeatureImages(unsigned int arg)
@@ -200,7 +200,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* SetMovingFeatureImage ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   SetMovingFeatureImage(unsigned int i, MovingFeatureImageType * im)
@@ -228,7 +228,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* GetMovingFeatureImage ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   MovingFeatureImageType *
   ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
@@ -241,7 +241,7 @@ const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedF
  * ********************* SetMovingFeatureInterpolator ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   SetMovingFeatureInterpolator(unsigned int i, MovingFeatureInterpolatorType * interpolator)
@@ -269,7 +269,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* GetMovingFeatureInterpolator ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   MovingFeatureInterpolatorType *
   ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
@@ -282,7 +282,7 @@ const typename ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedF
  * ****************** CheckForBSplineFeatureInterpolators **********************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::
   CheckForBSplineFeatureInterpolators()
@@ -318,7 +318,7 @@ ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TM
  * ********************* PrintSelf ****************************
  */
 
-template <class TFixedImage, class TMovingImage, class TFixedFeatureImage, class TMovingFeatureImage>
+template <typename TFixedImage, typename TMovingImage, typename TFixedFeatureImage, typename TMovingFeatureImage>
 void
 ImageToImageMetricWithFeatures<TFixedImage, TMovingImage, TFixedFeatureImage, TMovingFeatureImage>::PrintSelf(
   std::ostream & os,

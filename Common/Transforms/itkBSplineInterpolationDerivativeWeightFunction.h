@@ -40,7 +40,7 @@ namespace itk
  * \ingroup Functions ImageInterpolators
  */
 
-template <class TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+template <typename TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineInterpolationDerivativeWeightFunction
   : public BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
 {

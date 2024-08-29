@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,
                                                  TMovingImage>::KNNGraphAlphaMutualInformationImageToImageMetric()
 {
@@ -41,7 +41,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage,
  * ************************ SetANNkDTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNkDTree(unsigned int bucketSize,
                                                                                           std::string  splittingRule)
@@ -55,7 +55,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ************************ SetANNkDTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNkDTree(
   unsigned int bucketSize,
@@ -86,7 +86,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ************************ SetANNbdTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNbdTree(unsigned int bucketSize,
                                                                                           std::string  splittingRule,
@@ -102,7 +102,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ************************ SetANNbdTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNbdTree(
   unsigned int bucketSize,
@@ -140,7 +140,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ************************ SetANNBruteForceTree *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNBruteForceTree()
 {
@@ -155,7 +155,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ************************ SetANNStandardTreeSearch *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNStandardTreeSearch(
   unsigned int kNearestNeighbors,
@@ -184,7 +184,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ************************ SetANNFixedRadiusTreeSearch *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNFixedRadiusTreeSearch(
   unsigned int kNearestNeighbors,
@@ -218,7 +218,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ************************ SetANNPriorityTreeSearch *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::SetANNPriorityTreeSearch(
   unsigned int kNearestNeighbors,
@@ -247,7 +247,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Set
  * ********************* Initialize *****************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -273,7 +273,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Ini
  * ************************ GetValue *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -460,7 +460,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
  * ************************ GetDerivative *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -481,7 +481,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
  * ************************ GetValueAndDerivative *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,
@@ -717,7 +717,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
  * ************************ ComputeListSampleValuesAndDerivativePlusJacobian *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
   ComputeListSampleValuesAndDerivativePlusJacobian(const ListSamplePointer &               listSampleFixed,
@@ -879,7 +879,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
  * ************************ EvaluateMovingFeatureImageDerivatives *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingFeatureImageDerivatives(
   const MovingImagePointType & mappedPoint,
@@ -940,7 +940,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Eva
  * ************************ UpdateDerivativeOfGammas *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::UpdateDerivativeOfGammas(
   const SpatialDerivativeType &      D1sparse,
@@ -1024,7 +1024,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Upd
  * ************************ PrintSelf *************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os,
                                                                                        Indent         indent) const

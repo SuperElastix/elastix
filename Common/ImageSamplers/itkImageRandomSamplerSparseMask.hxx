@@ -29,7 +29,7 @@ namespace itk
  * ******************* GenerateData *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 {
@@ -111,7 +111,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 } // end GenerateData()
 
 
-template <class TInputImage>
+template <typename TInputImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ImageRandomSamplerSparseMask<TInputImage>::ThreaderCallback(void * const arg)
 {
@@ -150,7 +150,7 @@ ImageRandomSamplerSparseMask<TInputImage>::ThreaderCallback(void * const arg)
  * ******************* PrintSelf *******************
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageRandomSamplerSparseMask<TInputImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

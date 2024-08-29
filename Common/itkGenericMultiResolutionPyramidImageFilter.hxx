@@ -30,7 +30,7 @@ namespace itk
  * ******************* Constructor ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::
   GenericMultiResolutionPyramidImageFilter()
 {
@@ -45,7 +45,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetNumberOfLevels ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetNumberOfLevels(unsigned int num)
 {
@@ -66,7 +66,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetCurrentLevel ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetCurrentLevel(unsigned int level)
 {
@@ -95,7 +95,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetComputeOnlyForCurrentLevel ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetComputeOnlyForCurrentLevel(
   const bool _arg)
@@ -114,7 +114,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetSchedule ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetSchedule(
   const ScheduleType & schedule)
@@ -135,7 +135,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetRescaleSchedule ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetRescaleSchedule(
   const RescaleScheduleType & schedule)
@@ -153,7 +153,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetRescaleScheduleToUnity ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetRescaleScheduleToUnity()
 {
@@ -167,7 +167,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetSmoothingSchedule ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetSmoothingSchedule(
   const SmoothingScheduleType & schedule)
@@ -213,7 +213,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetSmoothingScheduleToZero ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetSmoothingScheduleToZero()
 {
@@ -225,7 +225,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* GenerateData ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GenerateData()
 {
@@ -357,7 +357,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetupSmoother ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetupSmoother(
   const unsigned int               level,
@@ -388,7 +388,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetupShrinkerOrResampler ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 int
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetupShrinkerOrResampler(
   const unsigned int                                   level,
@@ -432,7 +432,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* DefineShrinkerOrResampler ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::DefineShrinkerOrResampler(
   const bool                                           sameType,
@@ -567,7 +567,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* GenerateOutputInformation ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GenerateOutputInformation()
 {
@@ -587,7 +587,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* GenerateOutputRequestedRegion ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GenerateOutputRequestedRegion(
   DataObject * refOutput)
@@ -614,7 +614,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* GenerateInputRequestedRegion ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GenerateInputRequestedRegion()
 {
@@ -654,7 +654,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* ReleaseOutputs ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::ReleaseOutputs()
 {
@@ -673,7 +673,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* ComputeForCurrentLevel ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::ComputeForCurrentLevel(
   const unsigned int level) const
@@ -693,7 +693,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* GetDefaultSigma ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 double
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GetDefaultSigma(
   const unsigned int   level,
@@ -719,7 +719,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* SetSmoothingScheduleToDefault ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetSmoothingScheduleToDefault()
 {
@@ -745,7 +745,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* GetSigma ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GetSigma(
   const unsigned int level,
@@ -763,7 +763,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* GetShrinkFactors ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GetShrinkFactors(
   const unsigned int       level,
@@ -786,7 +786,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* AreSigmasAllZeros ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::AreSigmasAllZeros(
   const SigmaArrayType & sigmaArray) const
@@ -807,7 +807,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* AreRescaleFactorsAllOnes ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::AreRescaleFactorsAllOnes(
   const RescaleFactorArrayType & rescaleFactors) const
@@ -829,7 +829,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* IsSmoothingUsed ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::IsSmoothingUsed() const
 {
@@ -851,7 +851,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* IsRescaleUsed ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::IsRescaleUsed() const
 {
@@ -873,7 +873,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  * ******************* PrintSelf ***********************
  */
 
-template <class TInputImage, class TOutputImage, class TPrecisionType>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::PrintSelf(std::ostream & os,
                                                                                                Indent indent) const

@@ -40,7 +40,7 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT InterpolatorBase : public BaseComponentSE<TElastix>
 {
 public:

@@ -29,7 +29,7 @@ namespace itk
  * ************* GenerateData *******************
  */
 
-template <class TImage>
+template <typename TImage>
 void
 ErodeMaskImageFilter<TImage>::GenerateData()
 {

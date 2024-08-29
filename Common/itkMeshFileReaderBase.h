@@ -33,7 +33,7 @@ namespace itk
  * a mesh or a pointset.
  */
 
-template <class TOutputMesh>
+template <typename TOutputMesh>
 class ITK_TEMPLATE_EXPORT MeshFileReaderBase : public MeshSource<TOutputMesh>
 {
 public:

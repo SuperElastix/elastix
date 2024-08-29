@@ -99,7 +99,7 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT AdaptiveStochasticLBFGS
   : public itk::AdaptiveStochasticLBFGSOptimizer
   , public OptimizerBase<TElastix>

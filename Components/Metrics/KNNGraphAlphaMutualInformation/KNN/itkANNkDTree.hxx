@@ -28,7 +28,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 ANNkDTree<TListSample>::ANNkDTree()
 {
   this->m_ANNTree = nullptr;
@@ -42,7 +42,7 @@ ANNkDTree<TListSample>::ANNkDTree()
  * ************************ Destructor *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 ANNkDTree<TListSample>::~ANNkDTree()
 {
   ANNBinaryTreeCreator::DeleteANNkDTree(this->m_ANNTree);
@@ -54,7 +54,7 @@ ANNkDTree<TListSample>::~ANNkDTree()
  * ************************ SetSplittingRule *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 ANNkDTree<TListSample>::SetSplittingRule(const std::string & rule)
 {
@@ -94,7 +94,7 @@ ANNkDTree<TListSample>::SetSplittingRule(const std::string & rule)
  * ************************ GetSplittingRule *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 std::string
 ANNkDTree<TListSample>::GetSplittingRule()
 {
@@ -121,7 +121,7 @@ ANNkDTree<TListSample>::GetSplittingRule()
  * ************************ GenerateTree *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 ANNkDTree<TListSample>::GenerateTree()
 {
@@ -141,7 +141,7 @@ ANNkDTree<TListSample>::GenerateTree()
  * ************************ PrintSelf *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 ANNkDTree<TListSample>::PrintSelf(std::ostream & os, Indent indent) const
 {

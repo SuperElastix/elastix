@@ -41,7 +41,7 @@ namespace itk
  * \ingroup Metrics
  */
 
-template <class TFixedImage, class TScalarType = double>
+template <typename TFixedImage, typename TScalarType = double>
 class ITK_TEMPLATE_EXPORT TransformPenaltyTerm : public AdvancedImageToImageMetric<TFixedImage, TFixedImage>
 {
 public:

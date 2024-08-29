@@ -59,7 +59,7 @@ namespace itk
  * \wikiexample{ImageProcessing/LinearInterpolateImageFunction,Linearly interpolate a position in an image}
  * \endwiki
  */
-template <class TInputImage, class TCoordRep = double>
+template <typename TInputImage, typename TCoordRep = double>
 class ITK_TEMPLATE_EXPORT AdvancedLinearInterpolateImageFunction
   : public LinearInterpolateImageFunction<TInputImage, TCoordRep>
 {

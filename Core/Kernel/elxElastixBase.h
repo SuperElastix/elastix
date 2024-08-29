@@ -419,7 +419,7 @@ protected:
    * cosines. Set it to false to force the direction cosines to identity.
    * The original direction cosines are returned separately.
    */
-  template <class TImage>
+  template <typename TImage>
   class ITK_TEMPLATE_EXPORT MultipleImageLoader
   {
   public:

@@ -40,7 +40,7 @@ namespace itk
  *
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT NormalizedGradientCorrelationImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {

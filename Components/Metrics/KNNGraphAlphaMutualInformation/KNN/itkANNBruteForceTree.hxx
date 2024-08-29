@@ -28,7 +28,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 ANNBruteForceTree<TListSample>::ANNBruteForceTree()
 {
   this->m_ANNTree = nullptr;
@@ -39,7 +39,7 @@ ANNBruteForceTree<TListSample>::ANNBruteForceTree()
  * ************************ Destructor *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 ANNBruteForceTree<TListSample>::~ANNBruteForceTree()
 {
   ANNBinaryTreeCreator::DeleteANNBruteForceTree(this->m_ANNTree);
@@ -50,7 +50,7 @@ ANNBruteForceTree<TListSample>::~ANNBruteForceTree()
  * ************************ GenerateTree *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 ANNBruteForceTree<TListSample>::GenerateTree()
 {

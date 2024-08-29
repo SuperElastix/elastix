@@ -29,7 +29,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::Initialize()
 {
@@ -59,7 +59,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::Initialize()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeRegistration()
 {
@@ -96,7 +96,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
 {

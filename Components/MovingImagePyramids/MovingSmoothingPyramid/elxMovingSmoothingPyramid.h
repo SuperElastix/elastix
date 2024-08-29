@@ -35,7 +35,7 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT MovingSmoothingPyramid
   : public itk::MultiResolutionGaussianSmoothingPyramidImageFilter<
       typename MovingImagePyramidBase<TElastix>::InputImageType,

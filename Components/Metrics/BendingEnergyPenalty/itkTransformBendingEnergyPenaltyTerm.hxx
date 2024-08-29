@@ -27,7 +27,7 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::TransformBendingEnergyPenaltyTerm()
 {
   /** Initialize member variables. */
@@ -42,7 +42,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::TransformBendingEne
  * ****************** GetValue *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 auto
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const
   -> MeasureType
@@ -123,7 +123,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const ParametersType & parameters,
                                                                            DerivativeType &       derivative) const
@@ -139,7 +139,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const
  * ****************** GetValueAndDerivativeSingleThreaded *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativeSingleThreaded(
   const ParametersType & parameters,
@@ -325,7 +325,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(const ParametersType & parameters,
                                                                                    MeasureType &          value,
@@ -365,7 +365,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
  * ******************* ThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAndDerivative(ThreadIdType threadId) const
 {
@@ -533,7 +533,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
  * ******************* AfterThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetValueAndDerivative(
   MeasureType &    value,

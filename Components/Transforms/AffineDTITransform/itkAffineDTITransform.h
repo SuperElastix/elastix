@@ -35,7 +35,7 @@ template <unsigned int Dimension>
 class AffineDTIGroup
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AdvancedMatrixOffsetTransformBase<TScalarType, Dimension, Dimension>;
 };
 
@@ -49,7 +49,7 @@ template <>
 class AffineDTIGroup<2>
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AffineDTI2DTransform<TScalarType>;
 };
 
@@ -63,7 +63,7 @@ template <>
 class AffineDTIGroup<3>
 {
 public:
-  template <class TScalarType>
+  template <typename TScalarType>
   using TransformAlias = AffineDTI3DTransform<TScalarType>;
 };
 
@@ -71,7 +71,7 @@ public:
 /**
  * This alias templates the AffineDTIGroup over its dimension.
  */
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 using AffineDTIGroupTemplate = typename AffineDTIGroup<Dimension>::template TransformAlias<TScalarType>;
 
 
@@ -84,7 +84,7 @@ using AffineDTIGroupTemplate = typename AffineDTIGroup<Dimension>::template Tran
  * \ingroup Transforms
  */
 
-template <class TScalarType, unsigned int Dimension>
+template <typename TScalarType, unsigned int Dimension>
 class AffineDTITransform : public AffineDTIGroupTemplate<TScalarType, Dimension>
 {
 public:

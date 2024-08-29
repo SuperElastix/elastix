@@ -24,7 +24,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template <typename TScalarType, unsigned int NDimensions, typename TComponentType>
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::
   DeformationFieldInterpolatingTransform()
   : Superclass(OutputSpaceDimension)
@@ -40,7 +40,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 
 
 // Transform a point
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template <typename TScalarType, unsigned int NDimensions, typename TComponentType>
 auto
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::TransformPoint(
   const InputPointType & point) const -> OutputPointType
@@ -66,7 +66,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 
 
 // Set the deformation field
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template <typename TScalarType, unsigned int NDimensions, typename TComponentType>
 void
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::SetDeformationField(
   DeformationFieldType * _arg)
@@ -85,7 +85,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 
 
 // Set the deformation field interpolator
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template <typename TScalarType, unsigned int NDimensions, typename TComponentType>
 void
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::SetDeformationFieldInterpolator(
   DeformationFieldInterpolatorType * _arg)
@@ -104,7 +104,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 
 
 // Print self
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template <typename TScalarType, unsigned int NDimensions, typename TComponentType>
 void
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::PrintSelf(std::ostream & os,
                                                                                             Indent         indent) const
@@ -118,7 +118,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 
 
 // Set the parameters for an Identity transform of this class
-template <class TScalarType, unsigned int NDimensions, class TComponentType>
+template <typename TScalarType, unsigned int NDimensions, typename TComponentType>
 void
 DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>::SetIdentity()
 {

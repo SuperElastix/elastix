@@ -29,7 +29,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 SimilarityTransformElastix<TElastix>::SimilarityTransformElastix()
 {
   this->SetCurrentTransform(this->m_SimilarityTransform);
@@ -41,7 +41,7 @@ SimilarityTransformElastix<TElastix>::SimilarityTransformElastix()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimilarityTransformElastix<TElastix>::BeforeRegistration()
 {
@@ -58,7 +58,7 @@ SimilarityTransformElastix<TElastix>::BeforeRegistration()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimilarityTransformElastix<TElastix>::ReadFromFile()
 {
@@ -106,7 +106,7 @@ SimilarityTransformElastix<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 SimilarityTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -119,7 +119,7 @@ SimilarityTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const
  * ************************* InitializeTransform *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimilarityTransformElastix<TElastix>::InitializeTransform()
 {
@@ -269,7 +269,7 @@ SimilarityTransformElastix<TElastix>::InitializeTransform()
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 SimilarityTransformElastix<TElastix>::SetScales()
 {
@@ -330,7 +330,7 @@ SimilarityTransformElastix<TElastix>::SetScales()
  * ******************** ReadCenterOfRotationIndex *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType & rotationPoint) const
 {
@@ -432,7 +432,7 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 SimilarityTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {

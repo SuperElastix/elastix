@@ -27,7 +27,7 @@ namespace elastix
  * ******************* Constructor *******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 PolydataDummyPenalty<TElastix>::PolydataDummyPenalty()
 {
   this->m_NumberOfMeshes = 0;
@@ -38,7 +38,7 @@ PolydataDummyPenalty<TElastix>::PolydataDummyPenalty()
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PolydataDummyPenalty<TElastix>::Initialize()
 {
@@ -56,7 +56,7 @@ PolydataDummyPenalty<TElastix>::Initialize()
  * ***************** BeforeAllBase ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 PolydataDummyPenalty<TElastix>::BeforeAllBase()
 {
@@ -114,7 +114,7 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PolydataDummyPenalty<TElastix>::BeforeRegistration()
 {
@@ -164,7 +164,7 @@ PolydataDummyPenalty<TElastix>::BeforeRegistration()
  * ***************** AfterEachIteration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PolydataDummyPenalty<TElastix>::AfterEachIteration()
 {
@@ -217,7 +217,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PolydataDummyPenalty<TElastix>::AfterEachResolution()
 {
@@ -266,7 +266,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
  * ************** ReadMesh *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typename FixedMeshType::Pointer & mesh)
 {
@@ -298,7 +298,7 @@ PolydataDummyPenalty<TElastix>::ReadMesh(const std::string & meshFileName, typen
  * ******************* WriteResultMesh ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PolydataDummyPenalty<TElastix>::WriteResultMesh(const std::string & filename, MeshIdType meshId)
 {
@@ -368,7 +368,7 @@ PolydataDummyPenalty<TElastix>::WriteResultMesh(const std::string & filename, Me
  * ******************* ReadTransformixPoints ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &          filename,
                                                       typename MeshType::Pointer & mesh) // const

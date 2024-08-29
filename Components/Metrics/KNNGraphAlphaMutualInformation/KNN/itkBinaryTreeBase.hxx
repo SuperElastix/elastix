@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 BinaryTreeBase<TListSample>::BinaryTreeBase()
 {
   this->m_Sample = nullptr;
@@ -38,7 +38,7 @@ BinaryTreeBase<TListSample>::BinaryTreeBase()
  * ************************ GetNumberOfDataPoints *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 auto
 BinaryTreeBase<TListSample>::GetNumberOfDataPoints() const -> TotalAbsoluteFrequencyType
 {
@@ -55,7 +55,7 @@ BinaryTreeBase<TListSample>::GetNumberOfDataPoints() const -> TotalAbsoluteFrequ
  * ************************ GetActualNumberOfDataPoints *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 auto
 BinaryTreeBase<TListSample>::GetActualNumberOfDataPoints() const -> TotalAbsoluteFrequencyType
 {
@@ -72,7 +72,7 @@ BinaryTreeBase<TListSample>::GetActualNumberOfDataPoints() const -> TotalAbsolut
  * ************************ GetDataDimension *************************
  */
 
-template <class TListSample>
+template <typename TListSample>
 auto
 BinaryTreeBase<TListSample>::GetDataDimension() const -> MeasurementVectorSizeType
 {
@@ -89,7 +89,7 @@ BinaryTreeBase<TListSample>::GetDataDimension() const -> MeasurementVectorSizeTy
  * ****************** PrintSelf ******************
  */
 
-template <class TListSample>
+template <typename TListSample>
 void
 BinaryTreeBase<TListSample>::PrintSelf(std::ostream & os, Indent indent) const
 {

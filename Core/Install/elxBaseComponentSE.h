@@ -43,7 +43,7 @@ namespace elastix
  * \ingroup Install
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT BaseComponentSE : public BaseComponent
 {
 public:

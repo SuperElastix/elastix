@@ -40,7 +40,7 @@ namespace elastix
  * \ingroup Interpolators
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT RayCastInterpolator
   : public itk::AdvancedRayCastInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
                                                         typename InterpolatorBase<TElastix>::CoordRepType>

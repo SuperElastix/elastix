@@ -31,7 +31,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TArray, class TImage>
+template <typename TArray, typename TImage>
 UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleBSplineParametersFilter()
 {
   this->m_BSplineOrder = 3;
@@ -50,7 +50,7 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleBSplineParametersFilter
  * ******************* UpsampleParameters *******************
  */
 
-template <class TArray, class TImage>
+template <typename TArray, typename TImage>
 void
 UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayType & parameters_in,
                                                                     ArrayType &       parameters_out)
@@ -154,7 +154,7 @@ UpsampleBSplineParametersFilter<TArray, TImage>::UpsampleParameters(const ArrayT
  * ******************* DoUpsampling *******************
  */
 
-template <class TArray, class TImage>
+template <typename TArray, typename TImage>
 bool
 UpsampleBSplineParametersFilter<TArray, TImage>::DoUpsampling()
 {
@@ -172,7 +172,7 @@ UpsampleBSplineParametersFilter<TArray, TImage>::DoUpsampling()
  * ******************* PrintSelf *******************
  */
 
-template <class TArray, class TImage>
+template <typename TArray, typename TImage>
 void
 UpsampleBSplineParametersFilter<TArray, TImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

@@ -35,7 +35,7 @@ namespace itk
  * ********************* Constructor ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::ParzenWindowMutualInformationImageToImageMetric()
 {
@@ -49,7 +49,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
  * ********************* InitializeHistograms ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::InitializeHistograms()
 {
@@ -69,7 +69,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Init
  * ************************** GetValue **************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const ParametersType & parameters) const -> MeasureType
@@ -133,7 +133,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ******************** GetValueAndAnalyticDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndAnalyticDerivative(
   const ParametersType & parameters,
@@ -231,7 +231,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ******************** GetValueAndAnalyticDerivativeLowMemory *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndAnalyticDerivativeLowMemory(
   const ParametersType & parameters,
@@ -275,7 +275,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ******************** ComputeDerivativeLowMemorySingleThreaded *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeDerivativeLowMemorySingleThreaded(
   DerivativeType & derivative) const
@@ -384,7 +384,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  * ******************** ComputeDerivativeLowMemory *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeDerivativeLowMemory(
   DerivativeType & derivative) const
@@ -408,7 +408,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  * ******************* ThreadedComputeDerivativeLowMemory *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComputeDerivativeLowMemory(
   ThreadIdType threadId)
@@ -545,7 +545,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
  * ******************* AfterThreadedComputeDerivativeLowMemory *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedComputeDerivativeLowMemory(
   DerivativeType & derivative) const
@@ -567,7 +567,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Afte
  * **************** ComputeDerivativeLowMemoryThreaderCallback *******
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeDerivativeLowMemoryThreaderCallback(
   void * arg)
@@ -590,7 +590,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  * *********************** LaunchComputeDerivativeLowMemoryThreaderCallback***************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
                                                 TMovingImage>::LaunchComputeDerivativeLowMemoryThreaderCallback() const
@@ -607,7 +607,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage,
  * ******************* ComputeValueAndPRatioArray *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndPRatioArray(
   double & MI) const
@@ -682,7 +682,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
  * ******************* UpdateDerivativeLowMemory *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::UpdateDerivativeLowMemory(
   const RealType                     fixedImageValue,
@@ -779,7 +779,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Upda
  * ******************** GetValueAndFiniteDifferenceDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndFiniteDifferenceDerivative(
   const ParametersType & parameters,
@@ -967,7 +967,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
  * ******************** ComputeJacobianPreconditioner *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeJacobianPreconditioner(
   const TransformJacobianType &      jac,

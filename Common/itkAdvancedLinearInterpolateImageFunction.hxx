@@ -29,7 +29,7 @@ namespace itk
  * ***************** EvaluateDerivativeAtContinuousIndex ***********************
  */
 
-// template< class TInputImage, class TCoordRep >
+// template< class TInputImage, typename TCoordRep >
 // typename AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
 //::CovariantVectorType
 // AdvancedLinearInterpolateImageFunction< TInputImage, TCoordRep >
@@ -66,7 +66,7 @@ namespace itk
  * ***************** EvaluateValueAndDerivativeOptimized ***********************
  */
 
-template <class TInputImage, class TCoordRep>
+template <typename TInputImage, typename TCoordRep>
 void
 AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAndDerivativeOptimized(
   const Dispatch<2> &,
@@ -146,7 +146,7 @@ AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAnd
  * ***************** EvaluateValueAndDerivativeOptimized ***********************
  */
 
-template <class TInputImage, class TCoordRep>
+template <typename TInputImage, typename TCoordRep>
 void
 AdvancedLinearInterpolateImageFunction<TInputImage, TCoordRep>::EvaluateValueAndDerivativeOptimized(
   const Dispatch<3> &,

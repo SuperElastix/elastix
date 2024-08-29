@@ -186,7 +186,7 @@ namespace elastix
  * \ingroup Optimizers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT AdaGrad
   : public itk::AdaptiveStepsizeOptimizer
   , public OptimizerBase<TElastix>

@@ -29,7 +29,7 @@ namespace elastix
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedMeanSquaresMetric<TElastix>::Initialize()
 {
@@ -47,7 +47,7 @@ AdvancedMeanSquaresMetric<TElastix>::Initialize()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedMeanSquaresMetric<TElastix>::BeforeEachResolution()
 {

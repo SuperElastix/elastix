@@ -69,7 +69,7 @@ namespace elastix
  * \ingroup Metrics
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT NormalizedMutualInformationMetric
   : public itk::ParzenWindowNormalizedMutualInformationImageToImageMetric<
       typename MetricBase<TElastix>::FixedImageType,

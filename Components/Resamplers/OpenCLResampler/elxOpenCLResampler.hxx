@@ -28,7 +28,7 @@ namespace elastix
  * ******************* Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 elastix::OpenCLResampler<TElastix>::OpenCLResampler()
 {
   // Check if the OpenCL context has been created.
@@ -78,7 +78,7 @@ elastix::OpenCLResampler<TElastix>::OpenCLResampler()
  * ******************* SetTransform ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::SetTransform(const TransformType * _arg)
 {
@@ -99,7 +99,7 @@ OpenCLResampler<TElastix>::SetTransform(const TransformType * _arg)
  * ******************* SetInterpolator ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::SetInterpolator(InterpolatorType * _arg)
 {
@@ -121,7 +121,7 @@ OpenCLResampler<TElastix>::SetInterpolator(InterpolatorType * _arg)
  * ******************* BeforeGenerateData ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::BeforeGenerateData()
 {
@@ -223,7 +223,7 @@ OpenCLResampler<TElastix>::BeforeGenerateData()
  * ******************* GenerateData ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::GenerateData()
 {
@@ -261,7 +261,7 @@ OpenCLResampler<TElastix>::GenerateData()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::BeforeRegistration()
 {
@@ -276,7 +276,7 @@ OpenCLResampler<TElastix>::BeforeRegistration()
  * ******************* ReadFromFile  ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::ReadFromFile()
 {
@@ -294,7 +294,7 @@ OpenCLResampler<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 OpenCLResampler<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -307,7 +307,7 @@ OpenCLResampler<TElastix>::CreateDerivedTransformParameterMap() const -> Paramet
  * ************************* SwitchingToCPUAndReport ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::SwitchingToCPUAndReport(const bool configError)
 {
@@ -330,7 +330,7 @@ OpenCLResampler<TElastix>::SwitchingToCPUAndReport(const bool configError)
  * ************************* ReportToLog ************************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OpenCLResampler<TElastix>::ReportToLog()
 {

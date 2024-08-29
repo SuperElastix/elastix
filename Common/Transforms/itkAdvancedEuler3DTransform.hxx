@@ -39,7 +39,7 @@ namespace itk
 {
 
 // Default-constructor
-template <class TScalarType>
+template <typename TScalarType>
 AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform()
   : Superclass(ParametersDimension)
 {
@@ -52,7 +52,7 @@ AdvancedEuler3DTransform<TScalarType>::AdvancedEuler3DTransform()
 
 
 // Set Parameters
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::SetParameters(const ParametersType & parameters)
 {
@@ -81,7 +81,7 @@ AdvancedEuler3DTransform<TScalarType>::SetParameters(const ParametersType & para
 
 
 // Get Parameters
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AdvancedEuler3DTransform<TScalarType>::GetParameters() const -> const ParametersType &
 {
@@ -96,7 +96,7 @@ AdvancedEuler3DTransform<TScalarType>::GetParameters() const -> const Parameters
 }
 
 
-template <class TScalarType>
+template <typename TScalarType>
 auto
 AdvancedEuler3DTransform<TScalarType>::GetFixedParameters() const -> const FixedParametersType &
 {
@@ -119,7 +119,7 @@ AdvancedEuler3DTransform<TScalarType>::GetFixedParameters() const -> const Fixed
 }
 
 
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::SetFixedParameters(const FixedParametersType & parameters)
 {
@@ -149,7 +149,7 @@ AdvancedEuler3DTransform<TScalarType>::SetFixedParameters(const FixedParametersT
 
 
 // Set Rotational Part
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::SetRotation(ScalarType angleX, ScalarType angleY, ScalarType angleZ)
 {
@@ -162,7 +162,7 @@ AdvancedEuler3DTransform<TScalarType>::SetRotation(ScalarType angleX, ScalarType
 
 
 // Compose
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::SetIdentity()
 {
@@ -175,7 +175,7 @@ AdvancedEuler3DTransform<TScalarType>::SetIdentity()
 
 
 // Compute angles from the rotation matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::ComputeMatrixParameters()
 {
@@ -227,7 +227,7 @@ AdvancedEuler3DTransform<TScalarType>::ComputeMatrixParameters()
 
 
 // Compute the matrix
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::ComputeMatrix()
 {
@@ -288,7 +288,7 @@ AdvancedEuler3DTransform<TScalarType>::ComputeMatrix()
 
 
 // Get Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::GetJacobian(const InputPointType &       p,
                                                    JacobianType &               j,
@@ -325,7 +325,7 @@ AdvancedEuler3DTransform<TScalarType>::GetJacobian(const InputPointType &       
 
 
 // Precompute Jacobian of Spatial Jacobian
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 {
@@ -440,7 +440,7 @@ AdvancedEuler3DTransform<TScalarType>::PrecomputeJacobianOfSpatialJacobian()
 }
 
 
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::SetComputeZYX(const bool flag)
 {
@@ -457,7 +457,7 @@ AdvancedEuler3DTransform<TScalarType>::SetComputeZYX(const bool flag)
 
 
 // Print self
-template <class TScalarType>
+template <typename TScalarType>
 void
 AdvancedEuler3DTransform<TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {

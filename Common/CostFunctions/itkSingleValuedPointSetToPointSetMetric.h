@@ -57,7 +57,7 @@ namespace itk
  *
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 class ITK_TEMPLATE_EXPORT SingleValuedPointSetToPointSetMetric : public SingleValuedCostFunction
 {
 public:

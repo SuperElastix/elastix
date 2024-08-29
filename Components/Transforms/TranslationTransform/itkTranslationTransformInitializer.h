@@ -57,7 +57,7 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template <class TTransform, class TFixedImage, class TMovingImage>
+template <typename TTransform, typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT TranslationTransformInitializer : public Object
 {
 public:

@@ -50,7 +50,7 @@ namespace itk
  *
  * \ingroup Transforms
  */
-template <class TScalarType = double, // Data type for scalars (float or double)
+template <typename TScalarType = double, // Data type for scalars (float or double)
           unsigned int NDimensions = 3>
 // Number of dimensions
 class ITK_TEMPLATE_EXPORT ElasticBodyReciprocalSplineKernelTransform2

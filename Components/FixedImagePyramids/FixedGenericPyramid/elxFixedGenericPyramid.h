@@ -64,7 +64,7 @@ namespace elastix
  * \ingroup ImagePyramids
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT FixedGenericPyramid
   : public itk::GenericMultiResolutionPyramidImageFilter<typename FixedImagePyramidBase<TElastix>::InputImageType,
                                                          typename FixedImagePyramidBase<TElastix>::OutputImageType>

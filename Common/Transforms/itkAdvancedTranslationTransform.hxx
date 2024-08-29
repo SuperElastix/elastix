@@ -41,7 +41,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 AdvancedTranslationTransform<TScalarType, NDimensions>::AdvancedTranslationTransform()
   : Superclass(ParametersDimension)
 {
@@ -55,7 +55,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::AdvancedTranslationTrans
 
 
 // Destructor
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 AdvancedTranslationTransform<TScalarType, NDimensions>::~AdvancedTranslationTransform()
 {
   return;
@@ -63,7 +63,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::~AdvancedTranslationTran
 
 
 // Set the parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::SetParameters(const ParametersType & parameters)
 {
@@ -84,7 +84,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::SetParameters(const Para
 
 
 // Get the parameters
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters() const -> const ParametersType &
 {
@@ -96,7 +96,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetParameters() const ->
 }
 
 // Print self
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -107,7 +107,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::PrintSelf(std::ostream &
 
 
 // Transform a point
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformPoint(const InputPointType & point) const
   -> OutputPointType
@@ -117,7 +117,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformPoint(const Inp
 
 
 // Transform a vector
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const InputVectorType & vect) const
   -> OutputVectorType
@@ -127,7 +127,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const In
 
 
 // Transform a vnl_vector_fixed
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const InputVnlVectorType & vect) const
   -> OutputVnlVectorType
@@ -137,7 +137,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformVector(const In
 
 
 // Transform a CovariantVector
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 auto
 AdvancedTranslationTransform<TScalarType, NDimensions>::TransformCovariantVector(
   const InputCovariantVectorType & vect) const -> OutputCovariantVectorType
@@ -150,7 +150,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::TransformCovariantVector
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobian(
   const InputPointType &       itkNotUsed(p),
@@ -166,7 +166,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobian(
  * ********************* GetSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const InputPointType & itkNotUsed(p),
                                                                            SpatialJacobianType &  sj) const
@@ -180,7 +180,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetSpatialJacobian(const
  * ********************* GetSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetSpatialHessian(const InputPointType & itkNotUsed(p),
                                                                           SpatialHessianType &   sh) const
@@ -194,7 +194,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetSpatialHessian(const 
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobian(
   const InputPointType &          itkNotUsed(p),
@@ -210,7 +210,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJacobian(
   const InputPointType &          itkNotUsed(p),
@@ -228,7 +228,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialJaco
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessian(
   const InputPointType &         itkNotUsed(p),
@@ -245,7 +245,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHessian(
   const InputPointType &         itkNotUsed(p),
@@ -262,7 +262,7 @@ AdvancedTranslationTransform<TScalarType, NDimensions>::GetJacobianOfSpatialHess
 
 
 // Set the parameters for an Identity transform of this class
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 AdvancedTranslationTransform<TScalarType, NDimensions>::SetIdentity()
 {

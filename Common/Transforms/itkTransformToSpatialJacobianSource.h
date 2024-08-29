@@ -63,7 +63,7 @@ namespace itk
  *
  * \ingroup GeometricTransforms
  */
-template <class TOutputImage, class TTransformPrecisionType = double>
+template <typename TOutputImage, typename TTransformPrecisionType = double>
 class ITK_TEMPLATE_EXPORT TransformToSpatialJacobianSource : public ImageSource<TOutputImage>
 {
 public:

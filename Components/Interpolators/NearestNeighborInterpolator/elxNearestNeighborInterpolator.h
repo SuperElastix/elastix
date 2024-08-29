@@ -38,7 +38,7 @@ namespace elastix
  * \ingroup Interpolators
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT NearestNeighborInterpolator
   : public itk::NearestNeighborInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
                                                         typename InterpolatorBase<TElastix>::CoordRepType>

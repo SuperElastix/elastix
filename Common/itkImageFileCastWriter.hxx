@@ -32,7 +32,7 @@ namespace itk
 {
 
 //---------------------------------------------------------
-template <class TInputImage>
+template <typename TInputImage>
 std::string
 ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType()
 {
@@ -50,7 +50,7 @@ ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType()
 
 
 //---------------------------------------------------------
-template <class TInputImage>
+template <typename TInputImage>
 void
 ImageFileCastWriter<TInputImage>::GenerateData()
 {

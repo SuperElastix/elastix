@@ -34,7 +34,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 AdvancedAffineTransformElastix<TElastix>::AdvancedAffineTransformElastix()
 {
   this->SetCurrentTransform(this->m_AffineTransform);
@@ -46,7 +46,7 @@ AdvancedAffineTransformElastix<TElastix>::AdvancedAffineTransformElastix()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::BeforeRegistration()
 {
@@ -71,7 +71,7 @@ AdvancedAffineTransformElastix<TElastix>::BeforeRegistration()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
 {
@@ -124,7 +124,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -137,7 +137,7 @@ AdvancedAffineTransformElastix<TElastix>::CreateDerivedTransformParameterMap() c
  * ************************* InitializeTransform *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
 {
@@ -323,7 +323,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::SetScales()
 {
@@ -435,7 +435,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 AdvancedAffineTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {

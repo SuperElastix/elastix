@@ -32,7 +32,7 @@ namespace elastix
  * ****************** SetCurrentPositionPublic ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** param */)
 {
@@ -51,7 +51,7 @@ OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** par
  * ****************** BeforeEachResolutionBase **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OptimizerBase<TElastix>::BeforeEachResolutionBase()
 {
@@ -72,7 +72,7 @@ OptimizerBase<TElastix>::BeforeEachResolutionBase()
  * ****************** AfterRegistrationBase **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OptimizerBase<TElastix>::AfterRegistrationBase()
 {
@@ -101,7 +101,7 @@ OptimizerBase<TElastix>::AfterRegistrationBase()
  * ****************** SelectNewSamples ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OptimizerBase<TElastix>::SelectNewSamples()
 {
@@ -120,7 +120,7 @@ OptimizerBase<TElastix>::SelectNewSamples()
  * ****************** GetNewSamplesEveryIteration ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 OptimizerBase<TElastix>::GetNewSamplesEveryIteration() const
 {
@@ -134,7 +134,7 @@ OptimizerBase<TElastix>::GetNewSamplesEveryIteration() const
  * **************** PrintSettingsVector **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OptimizerBase<TElastix>::PrintSettingsVector(const SettingsVectorType & settings)
 {
@@ -195,7 +195,7 @@ OptimizerBase<TElastix>::PrintSettingsVector(const SettingsVectorType & settings
  * ****************** SetSinusScales ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 OptimizerBase<TElastix>::SetSinusScales(double amplitude, double frequency, unsigned long numberOfParameters)
 {

@@ -42,7 +42,7 @@ namespace itk
  * ******************* SetTransformParameters ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::SetTransformParameters(
   const ParametersType & parameters) const
@@ -60,7 +60,7 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::SetTransf
  * ******************* Initialize ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::Initialize()
 {
@@ -92,7 +92,7 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::Initializ
  * *********************** BeforeThreadedGetValueAndDerivative ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::BeforeThreadedGetValueAndDerivative(
   const TransformParametersType & parameters) const
@@ -110,7 +110,7 @@ SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::BeforeThr
  * ******************* PrintSelf ***********************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>::PrintSelf(std::ostream & os, Indent indent) const
 {

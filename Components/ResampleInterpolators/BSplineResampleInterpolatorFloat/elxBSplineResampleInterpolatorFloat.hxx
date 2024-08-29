@@ -28,7 +28,7 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineResampleInterpolatorFloat<TElastix>::BeforeRegistration()
 {
@@ -50,7 +50,7 @@ BSplineResampleInterpolatorFloat<TElastix>::BeforeRegistration()
  * ******************* ReadFromFile  ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineResampleInterpolatorFloat<TElastix>::ReadFromFile()
 {
@@ -75,7 +75,7 @@ BSplineResampleInterpolatorFloat<TElastix>::ReadFromFile()
  * ******************* CreateDerivedTransformParameterMap ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 BSplineResampleInterpolatorFloat<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

@@ -29,7 +29,7 @@ namespace itk
 /*
  * GenerateData
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData()
 {
@@ -68,7 +68,7 @@ MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateData
 /**
  * GenerateInputRequestedRegion
  */
-template <class TInputImage, class TOutputImage>
+template <typename TInputImage, typename TOutputImage>
 void
 MultiResolutionShrinkPyramidImageFilter<TInputImage, TOutputImage>::GenerateInputRequestedRegion()
 {

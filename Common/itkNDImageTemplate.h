@@ -41,7 +41,7 @@ namespace itk
  * \ingroup Miscellaneous
  */
 
-template <class TPixel, unsigned int VDimension>
+template <typename TPixel, unsigned int VDimension>
 class ITK_TEMPLATE_EXPORT NDImageTemplate : public NDImageBase<TPixel>
 {
 public:
@@ -234,7 +234,7 @@ protected:
   WriterPointer m_Writer{ nullptr };
   ReaderPointer m_Reader{ nullptr };
 
-  template <class TIn, class TOut>
+  template <typename TIn, typename TOut>
   class ITK_TEMPLATE_EXPORT ConvertToDynamicArray
   {
   public:
@@ -251,7 +251,7 @@ protected:
     }
   };
 
-  template <class TIn, class TOut>
+  template <typename TIn, typename TOut>
   class ITK_TEMPLATE_EXPORT ConvertToStaticArray
   {
   public:

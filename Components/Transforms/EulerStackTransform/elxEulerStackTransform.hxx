@@ -27,7 +27,7 @@ namespace elastix
 /**
  * ********************* InitializeAffineTransform ****************************
  */
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 EulerStackTransform<TElastix>::InitializeEulerTransform()
 {
@@ -41,7 +41,7 @@ EulerStackTransform<TElastix>::InitializeEulerTransform()
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 EulerStackTransform<TElastix>::BeforeAll()
 {
@@ -54,7 +54,7 @@ EulerStackTransform<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerStackTransform<TElastix>::BeforeRegistration()
 {
@@ -91,7 +91,7 @@ EulerStackTransform<TElastix>::BeforeRegistration()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerStackTransform<TElastix>::ReadFromFile()
 {
@@ -150,7 +150,7 @@ EulerStackTransform<TElastix>::ReadFromFile()
  * ************************* CreateDerivedTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 EulerStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -177,7 +177,7 @@ EulerStackTransform<TElastix>::CreateDerivedTransformParameterMap() const -> Par
  * ********************* InitializeTransform ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerStackTransform<TElastix>::InitializeTransform()
 {
@@ -285,7 +285,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
 } // end InitializeTransform()
 
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPointType & point)
 {
@@ -346,7 +346,7 @@ EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPoint
  * ************************* SetScales *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 EulerStackTransform<TElastix>::SetScales()
 {
@@ -492,7 +492,7 @@ EulerStackTransform<TElastix>::SetScales()
  * ******************** ReadCenterOfRotationPoint *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 EulerStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPointType & rotationPoint) const
 {

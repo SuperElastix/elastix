@@ -28,7 +28,7 @@ namespace itk
  * \brief A base class for creating an ImageToVectorContainerFilter.
  */
 
-template <class TOutputVectorContainer>
+template <typename TOutputVectorContainer>
 class ITK_TEMPLATE_EXPORT VectorContainerSource : public ProcessObject
 {
 public:

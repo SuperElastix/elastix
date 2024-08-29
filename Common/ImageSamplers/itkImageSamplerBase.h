@@ -38,7 +38,7 @@ namespace itk
  * \ingroup ImageSamplers
  */
 
-template <class TInputImage>
+template <typename TInputImage>
 class ITK_TEMPLATE_EXPORT ImageSamplerBase
   : public VectorContainerSource<VectorDataContainer<std::size_t, ImageSample<TInputImage>>>
 {

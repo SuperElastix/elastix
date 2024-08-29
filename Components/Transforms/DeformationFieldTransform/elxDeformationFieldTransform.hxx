@@ -35,7 +35,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 DeformationFieldTransform<TElastix>::DeformationFieldTransform()
 {
   /** Initialize. */
@@ -55,7 +55,7 @@ DeformationFieldTransform<TElastix>::DeformationFieldTransform()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 DeformationFieldTransform<TElastix>::ReadFromFile()
 {
@@ -137,7 +137,7 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
  * also as a deformation field.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
 {
@@ -176,7 +176,7 @@ DeformationFieldTransform<TElastix>::WriteDerivedTransformDataToFile() const
  * ************************* CustomizeTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 DeformationFieldTransform<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

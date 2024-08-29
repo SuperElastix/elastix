@@ -33,7 +33,7 @@ namespace itk
  * Print out internal information about this class.
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os,
                                                                                                 Indent indent) const
@@ -50,7 +50,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
  * ********************** ComputeLogMarginalPDF***********************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::ComputeLogMarginalPDF(
   MarginalPDFType & pdf) const
@@ -85,7 +85,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
  * Returns the normalized mutual information, so not its negative...
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
   ComputeNormalizedMutualInformation(MeasureType & jointEntropy) const -> MeasureType
@@ -137,7 +137,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
  * Get the match Measure.
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const ParametersType & parameters) const -> MeasureType
@@ -170,7 +170,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
  * Get both the Value and the Derivative of the Measure.
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const ParametersType & parameters,

@@ -211,7 +211,7 @@ GetLogFileName()
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE
-template <class TScalarType, class CPUImageType, class GPUImageType>
+template <typename TScalarType, typename CPUImageType, typename GPUImageType>
 TScalarType
 ComputeRMSE(const CPUImageType * cpuImage, const GPUImageType * gpuImage, TScalarType & rmsRelative)
 {
@@ -238,7 +238,7 @@ ComputeRMSE(const CPUImageType * cpuImage, const GPUImageType * gpuImage, TScala
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE
-template <class TScalarType, class CPUImageType, class GPUImageType>
+template <typename TScalarType, typename CPUImageType, typename GPUImageType>
 TScalarType
 ComputeRMSE2(const CPUImageType * cpuImage, const GPUImageType * gpuImage, const float & threshold)
 {
@@ -262,7 +262,7 @@ ComputeRMSE2(const CPUImageType * cpuImage, const GPUImageType * gpuImage, const
 
 //------------------------------------------------------------------------------
 // Helper function to get test result from output images
-template <class TScalarType, class CPUImageType, class GPUImageType>
+template <typename TScalarType, typename CPUImageType, typename GPUImageType>
 void
 GetTestOutputResult(const CPUImageType *           cpuImage,
                     const GPUImageType *           gpuImage,
@@ -304,7 +304,7 @@ GetTestOutputResult(const CPUImageType *           cpuImage,
 
 //------------------------------------------------------------------------------
 // Helper function to get test result from filters
-template <class TScalarType, class ImageToImageFilterType, class OutputImage>
+template <typename TScalarType, typename ImageToImageFilterType, typename OutputImage>
 void
 GetTestFilterResult(typename ImageToImageFilterType::Pointer & cpuFilter,
                     typename ImageToImageFilterType::Pointer & gpuFilter,
@@ -355,7 +355,7 @@ GetTestFilterResult(typename ImageToImageFilterType::Pointer & cpuFilter,
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE with masks
-template <class TScalarType, class CPUImageType, class GPUImageType, class MaskImageType>
+template <typename TScalarType, typename CPUImageType, typename GPUImageType, typename MaskImageType>
 TScalarType
 ComputeRMSE(const CPUImageType *  cpuImage,
             const GPUImageType *  gpuImage,
@@ -400,7 +400,7 @@ ComputeRMSE(const CPUImageType *  cpuImage,
 
 //------------------------------------------------------------------------------
 // Helper function to compute RMSE with masks and threshold
-template <class TScalarType, class CPUImageType, class GPUImageType, class MaskImageType>
+template <typename TScalarType, typename CPUImageType, typename GPUImageType, typename MaskImageType>
 TScalarType
 ComputeRMSE2(const CPUImageType *  cpuImage,
              const GPUImageType *  gpuImage,
@@ -449,7 +449,7 @@ ComputeRMSE2(const CPUImageType *  cpuImage,
 
 //----------------------------------------------------------------------------
 // Write log file in Microsoft Excel semicolon separated format.
-template <class ImageType>
+template <typename ImageType>
 void
 WriteLog(const std::string &                  filename,
          const unsigned int                   dim,

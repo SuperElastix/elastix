@@ -31,7 +31,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::SumOfPairwiseCorrelationCoefficientsMetric()
 {
   this->SetUseImageSampler(true);
@@ -44,7 +44,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::SumOfPair
  * ******************* Initialize *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -57,7 +57,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::Initializ
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -69,7 +69,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::PrintSelf
  * ******************* SampleRandom *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::SampleRandom(const int          n,
                                                                                     const int          m,
@@ -107,7 +107,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::SampleRan
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
   const TransformJacobianType &     jacobian,
@@ -121,7 +121,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::EvaluateT
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -255,7 +255,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -277,7 +277,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetDeriva
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,

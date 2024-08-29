@@ -27,7 +27,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::StatisticalShapePointPenalty()
 {
   this->m_MeanVector = nullptr;
@@ -48,7 +48,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::StatisticalShapeP
  * ******************* Destructor *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::~StatisticalShapePointPenalty()
 {
   if (this->m_MeanVector != nullptr)
@@ -94,7 +94,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::~StatisticalShape
  * *********************** Initialize *****************************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 {
@@ -341,7 +341,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
  * ******************* GetValue *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 auto
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -419,7 +419,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const TransformParametersType & parameters,
                                                                              DerivativeType & derivative) const
@@ -439,7 +439,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(con
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(
   const TransformParametersType & parameters,
@@ -554,7 +554,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
  * ******************* FillProposalVector *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::FillProposalVector(const OutputPointType & fixedPoint,
                                                                                   const unsigned int vertexindex) const
@@ -575,7 +575,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::FillProposalVecto
  * ******************* FillProposalDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::FillProposalDerivative(
   const OutputPointType & fixedPoint,
@@ -624,7 +624,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::FillProposalDeriv
  * ******************* UpdateCentroidAndAlignProposalVector *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateCentroidAndAlignProposalVector(
   const unsigned int shapeLength) const
@@ -660,7 +660,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateCentroidAnd
  * ******************* UpdateCentroidAndAlignProposalDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateCentroidAndAlignProposalDerivative(
   const unsigned int shapeLength) const
@@ -698,7 +698,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateCentroidAnd
  * ******************* UpdateL2 *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateL2(const unsigned int shapeLength) const
 {
@@ -720,7 +720,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateL2(const un
  * ******************* NormalizeProposalVector *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::NormalizeProposalVector(
   const unsigned int shapeLength) const
@@ -741,7 +741,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::NormalizeProposal
  * ******************* UpdateL2AndNormalizeProposalDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateL2AndNormalizeProposalDerivative(
   const unsigned int shapeLength) const
@@ -782,7 +782,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::UpdateL2AndNormal
  * ******************* CalculateValue *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateValue(MeasureType &   value,
                                                                               VnlVectorType & differenceVector,
@@ -855,7 +855,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateValue(Me
  * ******************* CalculateDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateDerivative(
   DerivativeType &      derivative,
@@ -952,7 +952,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateDerivati
  * ******************* CalculateCutOffValue *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateCutOffValue(MeasureType & value) const
 {
@@ -969,7 +969,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateCutOffVa
  * ******************* CalculateCutOffDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateCutOffDerivative(
   typename DerivativeType::element_type & derivativeElement,
@@ -986,7 +986,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateCutOffDe
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::PrintSelf(std::ostream & os, Indent indent) const
 {

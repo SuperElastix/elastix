@@ -27,7 +27,7 @@ namespace itk
  * ******************* GetValue *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 auto
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -104,7 +104,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetDerivative(
   const TransformParametersType & parameters,
@@ -125,7 +125,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(
   const TransformParametersType & parameters,

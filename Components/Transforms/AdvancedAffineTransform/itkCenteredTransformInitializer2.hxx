@@ -39,7 +39,7 @@
 namespace itk
 {
 
-template <class TTransform, class TFixedImage, class TMovingImage>
+template <typename TTransform, typename TFixedImage, typename TMovingImage>
 CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::CenteredTransformInitializer2()
 {
   m_FixedCalculator = FixedImageCalculatorType::New();
@@ -55,7 +55,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::CenteredTr
 
 
 /** Initialize the transform using data from the images */
-template <class TTransform, class TFixedImage, class TMovingImage>
+template <typename TTransform, typename TFixedImage, typename TMovingImage>
 void
 CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::InitializeTransform()
 {
@@ -339,7 +339,7 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
 }
 
 
-template <class TTransform, class TFixedImage, class TMovingImage>
+template <typename TTransform, typename TFixedImage, typename TMovingImage>
 void
 CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {

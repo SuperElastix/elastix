@@ -71,7 +71,7 @@ namespace elastix
  * \ingroup ComponentBaseClasses
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT RegistrationBase : public BaseComponentSE<TElastix>
 {
 public:

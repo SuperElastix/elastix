@@ -113,7 +113,7 @@ namespace itk
  * \ingroup PyramidImageFilter MultiThreaded Streamed
  * \ingroup ITKRegistrationCommon
  */
-template <class TInputImage, class TOutputImage, class TPrecisionType = double>
+template <typename TInputImage, typename TOutputImage, typename TPrecisionType = double>
 class ITK_TEMPLATE_EXPORT GenericMultiResolutionPyramidImageFilter
   : public MultiResolutionPyramidImageFilter<TInputImage, TOutputImage>
 {

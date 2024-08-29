@@ -208,16 +208,16 @@ struct Length<NullType>
  * error
  *
  */
-template <class TTypeList, unsigned int index>
+template <typename TTypeList, unsigned int index>
 struct TypeAt;
 
-template <class Head, class Tail>
+template <typename Head, typename Tail>
 struct TypeAt<TypeList<Head, Tail>, 0>
 {
   using Type = Head;
 };
 
-template <class Head, class Tail, unsigned int i>
+template <typename Head, typename Tail, unsigned int i>
 struct TypeAt<TypeList<Head, Tail>, i>
 {
   using Type = typename TypeAt<Tail, i - 1>::Type;
@@ -229,7 +229,7 @@ struct TypeAt<NullType, i>
   using Type = NullType;
 };
 
-template <class TTypeList1, class TTypeList2>
+template <typename TTypeList1, typename TTypeList2>
 struct Append;
 /**\class Append
  * \brief Appends a type or a typelist to another
@@ -252,7 +252,7 @@ struct Append;
  *  single type.
  *
  */
-template <class Head, class Tail, class T>
+template <typename Head, typename Tail, typename T>
 struct Append<TypeList<Head, Tail>, T>
 {
   using Type = TypeList<Head, typename Append<Tail, T>::Type>;
@@ -264,22 +264,22 @@ struct Append<NullType, NullType>
 {
   using Type = NullType;
 };
-template <class T>
+template <typename T>
 struct Append<NullType, T>
 {
   using Type = TypeList<T, NullType>;
 };
-template <class T>
+template <typename T>
 struct Append<T, NullType>
 {
   using Type = TypeList<T, NullType>;
 };
-template <class Head, class Tail>
+template <typename Head, typename Tail>
 struct Append<NullType, TypeList<Head, Tail>>
 {
   using Type = TypeList<Head, Tail>;
 };
-template <class Head, class Tail>
+template <typename Head, typename Tail>
 struct Append<TypeList<Head, Tail>, NullType>
 {
   using Type = TypeList<Head, Tail>;
@@ -288,22 +288,22 @@ struct Append<TypeList<Head, Tail>, NullType>
 /**\class Erase
  * \brief
  */
-template <class TList, class T>
+template <typename TList, typename T>
 struct Erase;
 
-template <class T>
+template <typename T>
 struct Erase<NullType, T>
 {
   using Type = NullType;
 };
 
-template <class T, class Tail>
+template <typename T, typename Tail>
 struct Erase<TypeList<T, Tail>, T>
 {
   using Type = Tail;
 };
 
-template <class Head, class Tail, class T>
+template <typename Head, typename Tail, typename T>
 struct Erase<TypeList<Head, Tail>, T>
 {
   using Type = TypeList<Head, typename Erase<Tail, T>::Type>;
@@ -312,19 +312,19 @@ struct Erase<TypeList<Head, Tail>, T>
 /**\class EraseAll
  * \brief
  */
-template <class TList, class T>
+template <typename TList, typename T>
 struct EraseAll;
-template <class T>
+template <typename T>
 struct EraseAll<NullType, T>
 {
   using Type = NullType;
 };
-template <class T, class Tail>
+template <typename T, typename Tail>
 struct EraseAll<TypeList<T, Tail>, T>
 {
   using Type = typename EraseAll<Tail, T>::Type;
 };
-template <class Head, class Tail, class T>
+template <typename Head, typename Tail, typename T>
 struct EraseAll<TypeList<Head, Tail>, T>
 {
   using Type = TypeList<Head, typename EraseAll<Tail, T>::Type>;
@@ -333,7 +333,7 @@ struct EraseAll<TypeList<Head, Tail>, T>
 /**\class NoDuplicates
  * \brief
  */
-template <class TList>
+template <typename TList>
 struct NoDuplicates;
 
 template <>
@@ -342,7 +342,7 @@ struct NoDuplicates<NullType>
   using Type = NullType;
 };
 
-template <class Head, class Tail>
+template <typename Head, typename Tail>
 struct NoDuplicates<TypeList<Head, Tail>>
 {
 private:
@@ -356,22 +356,22 @@ public:
 /**\class Replace
  * \brief
  */
-template <class TList, class T, class U>
+template <typename TList, typename T, typename U>
 struct Replace;
 
-template <class T, class U>
+template <typename T, typename U>
 struct Replace<NullType, T, U>
 {
   using Type = NullType;
 };
 
-template <class T, class Tail, class U>
+template <typename T, typename Tail, typename U>
 struct Replace<TypeList<T, Tail>, T, U>
 {
   using Type = TypeList<U, Tail>;
 };
 
-template <class Head, class Tail, class T, class U>
+template <typename Head, typename Tail, typename T, typename U>
 struct Replace<TypeList<Head, Tail>, T, U>
 {
   using Type = TypeList<Head, typename Replace<Tail, T, U>::Type>;
@@ -380,22 +380,22 @@ struct Replace<TypeList<Head, Tail>, T, U>
 /**\class ReplaceAll
  * \brief
  */
-template <class TList, class T, class U>
+template <typename TList, typename T, typename U>
 struct ReplaceAll;
 
-template <class T, class U>
+template <typename T, typename U>
 struct ReplaceAll<NullType, T, U>
 {
   using Type = NullType;
 };
 
-template <class T, class Tail, class U>
+template <typename T, typename Tail, typename U>
 struct ReplaceAll<TypeList<T, Tail>, T, U>
 {
   using Type = TypeList<U, typename ReplaceAll<Tail, T, U>::Type>;
 };
 
-template <class Head, class Tail, class T, class U>
+template <typename Head, typename Tail, typename T, typename U>
 struct ReplaceAll<TypeList<Head, Tail>, T, U>
 {
   using Type = TypeList<Head, typename ReplaceAll<Tail, T, U>::Type>;
@@ -404,7 +404,7 @@ struct ReplaceAll<TypeList<Head, Tail>, T, U>
 /**\class Reverse
  * \brief
  */
-template <class TList>
+template <typename TList>
 struct Reverse;
 
 template <>
@@ -413,7 +413,7 @@ struct Reverse<NullType>
   using Type = NullType;
 };
 
-template <class Head, class Tail>
+template <typename Head, typename Tail>
 struct Reverse<TypeList<Head, Tail>>
 {
   using Type = typename Append<typename Reverse<Tail>::Type, Head>::Type;
@@ -433,9 +433,9 @@ struct Reverse<TypeList<Head, Tail>>
  * IndexOf<TTypeList, T>::Type
  * returns the position of T in TList, or NullType if T is not found in TList
  */
-template <class TTypeList, class TType>
+template <typename TTypeList, typename TType>
 struct IndexOf;
-template <class TType>
+template <typename TType>
 struct IndexOf<NullType, TType>
 {
   enum
@@ -443,7 +443,7 @@ struct IndexOf<NullType, TType>
     Type = -1
   };
 };
-template <class TType, class TTail>
+template <typename TType, typename TTail>
 struct IndexOf<TypeList<TType, TTail>, TType>
 {
   enum
@@ -451,7 +451,7 @@ struct IndexOf<TypeList<TType, TTail>, TType>
     Type = 0
   };
 };
-template <class Head, class TTail, class TType>
+template <typename Head, typename TTail, typename TType>
 struct IndexOf<TypeList<Head, TTail>, TType>
 {
 private:
@@ -479,9 +479,9 @@ public:
  * HasType<TList, T>::Type
  * evaluates to true if TList contains T, false otherwise.
  */
-template <class TTypeList, class TType>
+template <typename TTypeList, typename TType>
 struct HasType;
-template <class TType>
+template <typename TType>
 struct HasType<NullType, TType>
 {
   enum
@@ -489,7 +489,7 @@ struct HasType<NullType, TType>
     Type = false
   };
 };
-template <class TType, class TTail>
+template <typename TType, typename TTail>
 struct HasType<TypeList<TType, TTail>, TType>
 {
   enum
@@ -497,7 +497,7 @@ struct HasType<TypeList<TType, TTail>, TType>
     Type = true
   };
 };
-template <class Head, class TTail, class TType>
+template <typename Head, typename TTail, typename TType>
 struct HasType<TypeList<Head, TTail>, TType>
 {
   enum
@@ -524,10 +524,10 @@ struct HasType<TypeList<Head, TTail>, TType>
  *
  *
  */
-template <class TTypeList>
+template <typename TTypeList>
 struct Visit
 {
-  template <class Predicate>
+  template <typename Predicate>
   void
   operator()(Predicate & visitor)
   {
@@ -539,7 +539,7 @@ struct Visit
   }
 
 
-  template <class Predicate>
+  template <typename Predicate>
   void
   operator()(const Predicate & visitor)
   {
@@ -554,7 +554,7 @@ struct Visit
 template <>
 struct Visit<NullType>
 {
-  template <class Predicate>
+  template <typename Predicate>
   void
   operator()(const Predicate &)
   {}
@@ -576,10 +576,10 @@ struct Visit<NullType>
  *
  * \endcode
  */
-template <class TTypeList, unsigned int Dimension>
+template <typename TTypeList, unsigned int Dimension>
 struct VisitDimension
 {
-  template <class Predicate>
+  template <typename Predicate>
   void
   operator()(Predicate & visitor)
   {
@@ -591,7 +591,7 @@ struct VisitDimension
   }
 
 
-  template <class Predicate>
+  template <typename Predicate>
   void
   operator()(const Predicate & visitor)
   {
@@ -606,7 +606,7 @@ struct VisitDimension
 template <unsigned int Dimension>
 struct VisitDimension<NullType, Dimension>
 {
-  template <class Predicate>
+  template <typename Predicate>
   void
   operator()(const Predicate &)
   {}
@@ -619,7 +619,7 @@ struct VisitDimension<NullType, Dimension>
  * \code
  * struct Predicate
  * {
- *   template<class TType1, class TType2>
+ *   template<class TType1, typename TType2>
  *     void operator()() const
  *     { std::cout << typeid(TType1).name() << " " << typeid(TType2).name() << std::endl; }
  * };
@@ -767,7 +767,7 @@ struct DualVisitImpl<typelist::NullType, typelist::NullType>
  * \code
  * struct Predicate
  * {
- *   template<class TType1, class TType2, unsigned int Dimension>
+ *   template<class TType1, typename TType2, unsigned int Dimension>
  *     void operator()() const
  *     { std::cout << typeid(TType1).name()
             << " " << typeid(TType2).name() " "

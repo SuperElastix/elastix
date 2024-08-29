@@ -33,7 +33,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 BSplineTransformWithDiffusion<TElastix>::BSplineTransformWithDiffusion()
 {
   /** Set up CombinationTransform */
@@ -77,7 +77,7 @@ BSplineTransformWithDiffusion<TElastix>::BSplineTransformWithDiffusion()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
 {
@@ -396,7 +396,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::BeforeEachResolution()
 {
@@ -444,7 +444,7 @@ BSplineTransformWithDiffusion<TElastix>::BeforeEachResolution()
  * ********************* AfterEachIteration *********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::AfterEachIteration()
 {
@@ -551,7 +551,7 @@ BSplineTransformWithDiffusion<TElastix>::AfterEachIteration()
  * ******************* AfterRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::AfterRegistration()
 {
@@ -598,7 +598,7 @@ BSplineTransformWithDiffusion<TElastix>::AfterRegistration()
  * to take into account the support region of the B-splines.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::SetInitialGrid(bool upsampleGridOption)
 {
@@ -675,7 +675,7 @@ BSplineTransformWithDiffusion<TElastix>::SetInitialGrid(bool upsampleGridOption)
  * Upsample the grid of control points.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
 {
@@ -828,7 +828,7 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
 {
@@ -987,7 +987,7 @@ BSplineTransformWithDiffusion<TElastix>::ReadFromFile()
  * also as a deformation field.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile() const
 {
@@ -1014,7 +1014,7 @@ BSplineTransformWithDiffusion<TElastix>::WriteDerivedTransformDataToFile() const
  * ************************* CustomizeTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -1037,7 +1037,7 @@ BSplineTransformWithDiffusion<TElastix>::CreateDerivedTransformParameterMap() co
  * ******************* DiffuseDeformationField ******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
 {
@@ -1352,7 +1352,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
  * ******************* TransformPoint ******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 BSplineTransformWithDiffusion<TElastix>::TransformPoint(const InputPointType & point) const -> OutputPointType
 {

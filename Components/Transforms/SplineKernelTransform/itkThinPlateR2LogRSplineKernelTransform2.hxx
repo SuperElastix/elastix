@@ -38,7 +38,7 @@
 namespace itk
 {
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 ThinPlateR2LogRSplineKernelTransform2<TScalarType, NDimensions>::ComputeG(const InputVectorType & x,
                                                                           GMatrixType &           GMatrix) const
@@ -51,7 +51,7 @@ ThinPlateR2LogRSplineKernelTransform2<TScalarType, NDimensions>::ComputeG(const 
 }
 
 
-template <class TScalarType, unsigned int NDimensions>
+template <typename TScalarType, unsigned int NDimensions>
 void
 ThinPlateR2LogRSplineKernelTransform2<TScalarType, NDimensions>::ComputeDeformationContribution(
   const InputPointType & thisPoint,

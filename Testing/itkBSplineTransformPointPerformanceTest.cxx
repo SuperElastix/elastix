@@ -30,7 +30,7 @@
 // and adds the previous un-optimized TransformPoint function.
 namespace itk
 {
-template <class TScalarType = double, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3>
+template <typename TScalarType = double, unsigned int NDimensions = 3, unsigned int VSplineOrder = 3>
 class BSplineTransform_TEST : public AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>
 {
 public:

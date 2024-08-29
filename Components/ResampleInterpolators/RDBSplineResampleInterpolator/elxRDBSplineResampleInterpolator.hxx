@@ -27,7 +27,7 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ReducedDimensionBSplineResampleInterpolator<TElastix>::BeforeRegistration()
 {
@@ -57,7 +57,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::BeforeRegistration()
  * ******************* ReadFromFile  ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile()
 {
@@ -90,7 +90,7 @@ ReducedDimensionBSplineResampleInterpolator<TElastix>::ReadFromFile()
  * ******************* CreateDerivedTransformParameterMap ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 ReducedDimensionBSplineResampleInterpolator<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {

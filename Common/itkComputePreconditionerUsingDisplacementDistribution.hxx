@@ -39,7 +39,7 @@ namespace itk
  * ************************* Constructor ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 ComputePreconditionerUsingDisplacementDistribution<TFixedImage,
                                                    TTransform>::ComputePreconditionerUsingDisplacementDistribution()
 {
@@ -53,7 +53,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage,
  * ************************* Compute ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Compute(const ParametersType &,
                                                                                      double &,
@@ -68,7 +68,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
  * ************************* Compute ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Compute(const ParametersType & mu,
                                                                                      double &               maxJJ,
@@ -294,7 +294,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
  * ************************* ComputeJacobiTypePreconditioner ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::ComputeJacobiTypePreconditioner(
   double &         maxJJ,
@@ -389,7 +389,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
  * ************************* PreconditionerInterpolation ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::PreconditionerInterpolation(
   ParametersType & preconditioner)

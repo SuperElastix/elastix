@@ -27,7 +27,7 @@ namespace itk
  * ****************** CheckForBSplineTransform *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 bool
 TransformPenaltyTerm<TFixedImage, TScalarType>::CheckForBSplineTransform2(BSplineOrder3TransformPointer & bspline) const
 {

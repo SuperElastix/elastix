@@ -35,7 +35,7 @@ namespace elastix
  * \ingroup Resamplers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT DefaultResampler
   : public ResamplerBase<TElastix>::ITKBaseType
   , public ResamplerBase<TElastix>

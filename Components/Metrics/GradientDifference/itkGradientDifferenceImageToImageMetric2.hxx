@@ -52,7 +52,7 @@ namespace itk
  * ********************* Initialize ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
@@ -128,7 +128,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
  * ********************* PrintSelf ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -141,7 +141,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::
  * ******************** ComputeMovedGradientRange ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMovedGradientRange() const
 {
@@ -181,7 +181,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMovedGra
 /**
  * ******************** ComputeVariance ******************************
  */
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance() const
 {
@@ -301,7 +301,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance
  * ******************** ComputeMeasure ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
   const TransformParametersType & parameters,
@@ -409,7 +409,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
  * ******************** GetValue ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -448,7 +448,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
  * ******************** GetDerivative ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -476,7 +476,7 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
  * ******************** GetValueAndDerivative ******************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,

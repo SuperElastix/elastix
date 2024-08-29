@@ -21,7 +21,7 @@
 #include <algorithm>
 
 //------------------------------------------------------------------------------
-template <class type>
+template <typename type>
 bool
 std_all_of(const typename std::vector<type> & v, const type value)
 {
@@ -37,7 +37,7 @@ std_all_of(const typename std::vector<type> & v, const type value)
 
 
 //------------------------------------------------------------------------------
-template <class type>
+template <typename type>
 bool
 std_first_of(const typename std::vector<type> & v, const std::size_t n, const type value)
 {

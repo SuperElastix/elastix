@@ -46,7 +46,7 @@ namespace elastix
  * \ingroup Resamplers
  */
 
-template <class TElastix>
+template <typename TElastix>
 class OpenCLResampler
   : public itk::ResampleImageFilter<typename ResamplerBase<TElastix>::InputImageType,
                                     typename ResamplerBase<TElastix>::OutputImageType,

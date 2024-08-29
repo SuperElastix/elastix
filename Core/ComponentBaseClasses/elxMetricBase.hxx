@@ -27,7 +27,7 @@ namespace elastix
  * ******************* BeforeEachResolutionBase ******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MetricBase<TElastix>::BeforeEachResolutionBase()
 {
@@ -158,7 +158,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase()
  * ******************* AfterEachIterationBase ******************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MetricBase<TElastix>::AfterEachIterationBase()
 {
@@ -185,7 +185,7 @@ MetricBase<TElastix>::AfterEachIterationBase()
  * ********************* SelectNewSamples ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MetricBase<TElastix>::SelectNewSamples()
 {
@@ -211,7 +211,7 @@ MetricBase<TElastix>::SelectNewSamples()
  * ********************* GetExactValue ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 MetricBase<TElastix>::GetExactValue(const ParametersType & parameters) -> MeasureType
 {
@@ -266,7 +266,7 @@ MetricBase<TElastix>::GetExactValue(const ParametersType & parameters) -> Measur
  * ******************* GetAdvancedMetricUseImageSampler ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 MetricBase<TElastix>::GetAdvancedMetricUseImageSampler() const
 {
@@ -288,7 +288,7 @@ MetricBase<TElastix>::GetAdvancedMetricUseImageSampler() const
  * ******************* SetAdvancedMetricImageSampler ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MetricBase<TElastix>::SetAdvancedMetricImageSampler(ImageSamplerBaseType * sampler)
 {
@@ -317,7 +317,7 @@ MetricBase<TElastix>::SetAdvancedMetricImageSampler(ImageSamplerBaseType * sampl
  * ******************* GetAdvancedMetricImageSampler ********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 MetricBase<TElastix>::GetAdvancedMetricImageSampler() const -> ImageSamplerBaseType *
 {

@@ -40,7 +40,7 @@ namespace itk
  * http://stacks.iop.org/0031-9155/59/4033
  * \ingroup RegistrationMetrics
  */
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 class ITK_TEMPLATE_EXPORT MissingVolumeMeshPenalty
   : public SingleValuedPointSetToPointSetMetric<TFixedPointSet, TMovingPointSet>
 {

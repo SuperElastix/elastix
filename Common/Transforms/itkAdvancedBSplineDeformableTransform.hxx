@@ -50,7 +50,7 @@ namespace itk
 {
 
 // Constructor with default arguments
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::AdvancedBSplineDeformableTransform()
   : Superclass(VSplineOrder)
 {
@@ -74,7 +74,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Adva
 
 
 // Set the grid region
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetGridRegion(const RegionType & region)
 {
@@ -136,7 +136,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::SetG
 
 
 // Transform a point
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::TransformPoint(
   const InputPointType & point) const -> OutputPointType
@@ -214,7 +214,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
  * ********************* GetNumberOfAffectedWeights ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 unsigned int
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetNumberOfAffectedWeights() const
 {
@@ -226,7 +226,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetN
  * ********************* GetNumberOfNonZeroJacobianIndices ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 auto
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetNumberOfNonZeroJacobianIndices() const
   -> NumberOfParametersType
@@ -239,7 +239,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetN
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobian(
   const InputPointType &       inputPoint,
@@ -310,7 +310,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
  * ********************* EvaluateJacobianAndImageGradientProduct ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::EvaluateJacobianWithImageGradientProduct(
   const InputPointType &          inputPoint,
@@ -375,7 +375,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
  * ********************* GetSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialJacobian(
   const InputPointType & inputPoint,
@@ -471,7 +471,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
  * ********************* GetSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpatialHessian(
   const InputPointType & inputPoint,
@@ -579,7 +579,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
   const InputPointType &          inputPoint,
@@ -671,7 +671,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
   const InputPointType &          inputPoint,
@@ -821,7 +821,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHessian(
   const InputPointType &         inputPoint,
@@ -931,7 +931,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJacobianOfSpatialHessian(
   const InputPointType &         inputPoint,
@@ -1121,7 +1121,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
  * ********************* ComputeNonZeroJacobianIndices ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::ComputeNonZeroJacobianIndices(
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,
@@ -1244,7 +1244,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Comp
  * ********************* PrintSelf ****************************
  */
 
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::PrintSelf(std::ostream & os,
                                                                                       Indent         indent) const

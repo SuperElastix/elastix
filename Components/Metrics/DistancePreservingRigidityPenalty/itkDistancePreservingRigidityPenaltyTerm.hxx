@@ -30,7 +30,7 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::DistancePreservingRigidityPenaltyTerm()
 {
   /** Values. */
@@ -54,7 +54,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::DistancePreserv
 /**
  * *********************** Initialize *****************************
  */
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
 {
@@ -155,7 +155,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
  * *********************** GetValue *****************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 auto
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const ParametersType & parameters) const
   -> MeasureType
@@ -273,7 +273,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
  * *********************** GetDerivative ************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const ParametersType & parameters,
                                                                                DerivativeType &       derivative) const
@@ -287,7 +287,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(c
  * *********************** GetValueAndDerivative ****************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(
   const ParametersType & parameters,
@@ -503,7 +503,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
  * ********************* PrintSelf ******************************
  */
 
-template <class TFixedImage, class TScalarType>
+template <typename TFixedImage, typename TScalarType>
 void
 DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::PrintSelf(std::ostream & os, Indent indent) const
 {

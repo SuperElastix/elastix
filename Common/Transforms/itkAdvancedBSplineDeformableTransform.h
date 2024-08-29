@@ -45,7 +45,7 @@ namespace itk
 {
 
 // Forward declarations for friendship
-template <class TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>
 class ITK_TEMPLATE_EXPORT MultiBSplineDeformableTransformWithNormal;
 
 /** \class AdvancedBSplineDeformableTransform
@@ -125,8 +125,8 @@ class ITK_TEMPLATE_EXPORT MultiBSplineDeformableTransformWithNormal;
  *
  * \ingroup Transforms
  */
-template <class TScalarType = double,   // Data type for scalars
-          unsigned int NDimensions = 3, // Number of dimensions
+template <typename TScalarType = double, // Data type for scalars
+          unsigned int NDimensions = 3,  // Number of dimensions
           unsigned int VSplineOrder = 3>
 // Spline order
 class ITK_TEMPLATE_EXPORT AdvancedBSplineDeformableTransform

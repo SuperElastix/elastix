@@ -32,7 +32,7 @@ namespace itk
  * ************************* Compute ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & TrCC, double & maxJJ, double & maxJCJ)
 {
@@ -475,7 +475,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
  * ************************* SampleFixedImageForJacobianTerms ************************
  */
 
-template <class TFixedImage, class TTransform>
+template <typename TFixedImage, typename TTransform>
 void
 ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
   ImageSampleContainerPointer & sampleContainer)

@@ -38,7 +38,7 @@ namespace elastix
  * ********************** Constructor ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 PreconditionedStochasticGradientDescent<TElastix>::PreconditionedStochasticGradientDescent()
 {
   this->m_MaximumNumberOfSamplingAttempts = 0;
@@ -73,7 +73,7 @@ PreconditionedStochasticGradientDescent<TElastix>::PreconditionedStochasticGradi
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::BeforeRegistration()
 {
@@ -100,7 +100,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
 {
@@ -282,7 +282,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::AfterEachIteration()
 {
@@ -316,7 +316,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution()
 {
@@ -376,7 +376,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::AfterRegistration()
 {
@@ -395,7 +395,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AfterRegistration()
  * ****************** StartOptimization *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::StartOptimization()
 {
@@ -412,7 +412,7 @@ PreconditionedStochasticGradientDescent<TElastix>::StartOptimization()
  * ********************** AdvanceOneStep **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::AdvanceOneStep()
 {
@@ -449,7 +449,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AdvanceOneStep()
  * ********************** ResumeOptimization **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::ResumeOptimization()
 {
@@ -471,7 +471,7 @@ PreconditionedStochasticGradientDescent<TElastix>::ResumeOptimization()
  * ****************** MetricErrorResponse *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::MetricErrorResponse(itk::ExceptionObject & err)
 {
@@ -503,7 +503,7 @@ PreconditionedStochasticGradientDescent<TElastix>::MetricErrorResponse(itk::Exce
  * ******************* AutomaticPreconditionerEstimation **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstimation()
 {
@@ -697,7 +697,7 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
  * ******************** SampleGradients **********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const ParametersType & mu0,
                                                                    double                 perturbationSigma,
@@ -901,7 +901,7 @@ PreconditionedStochasticGradientDescent<TElastix>::SampleGradients(const Paramet
  * *************** GetScaledDerivativeWithExceptionHandling ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::GetScaledDerivativeWithExceptionHandling(
   const ParametersType & parameters,
@@ -926,7 +926,7 @@ PreconditionedStochasticGradientDescent<TElastix>::GetScaledDerivativeWithExcept
  * *************** AddRandomPerturbation ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 PreconditionedStochasticGradientDescent<TElastix>::AddRandomPerturbation(ParametersType & parameters, double sigma)
 {

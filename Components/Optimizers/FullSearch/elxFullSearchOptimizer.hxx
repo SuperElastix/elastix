@@ -32,7 +32,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 FullSearch<TElastix>::FullSearch()
 {
   this->m_OptimizationSurface = nullptr;
@@ -44,7 +44,7 @@ FullSearch<TElastix>::FullSearch()
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FullSearch<TElastix>::BeforeRegistration()
 {
@@ -61,7 +61,7 @@ FullSearch<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FullSearch<TElastix>::BeforeEachResolution()
 {
@@ -188,7 +188,7 @@ FullSearch<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FullSearch<TElastix>::AfterEachIteration()
 {
@@ -214,7 +214,7 @@ FullSearch<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 FullSearch<TElastix>::AfterEachResolution()
 {
@@ -307,7 +307,7 @@ FullSearch<TElastix>::AfterEachResolution()
 /**
  * ******************* AfterRegistration ************************
  */
-template <class TElastix>
+template <typename TElastix>
 void
 FullSearch<TElastix>::AfterRegistration()
 {
@@ -322,7 +322,7 @@ FullSearch<TElastix>::AfterRegistration()
  * ************ CheckSearchSpaceRangeDefinition *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 FullSearch<TElastix>::CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
                                                       const bool          found,

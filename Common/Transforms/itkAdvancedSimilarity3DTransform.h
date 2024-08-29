@@ -58,7 +58,7 @@ namespace itk
  *
  * \sa VersorRigid3DTransform
  */
-template <class TScalarType = double>
+template <typename TScalarType = double>
 // Data type for scalars (float or double)
 class ITK_TEMPLATE_EXPORT AdvancedSimilarity3DTransform : public AdvancedVersorRigid3DTransform<TScalarType>
 {

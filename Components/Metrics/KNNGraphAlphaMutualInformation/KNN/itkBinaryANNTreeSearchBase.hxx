@@ -27,7 +27,7 @@ namespace itk
  * ************************ Constructor *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 BinaryANNTreeSearchBase<TBinaryTree>::BinaryANNTreeSearchBase()
 {
   this->m_BinaryTreeAsITKANNType = nullptr;
@@ -38,7 +38,7 @@ BinaryANNTreeSearchBase<TBinaryTree>::BinaryANNTreeSearchBase()
  * ************************ SetBinaryTree *************************
  */
 
-template <class TBinaryTree>
+template <typename TBinaryTree>
 void
 BinaryANNTreeSearchBase<TBinaryTree>::SetBinaryTree(BinaryTreeType * tree)
 {

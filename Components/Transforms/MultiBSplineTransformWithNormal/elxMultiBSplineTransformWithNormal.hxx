@@ -34,7 +34,7 @@ namespace elastix
  * ************ InitializeBSplineTransform ***************
  */
 
-template <class TElastix>
+template <typename TElastix>
 unsigned int
 MultiBSplineTransformWithNormal<TElastix>::InitializeBSplineTransform()
 {
@@ -74,7 +74,7 @@ MultiBSplineTransformWithNormal<TElastix>::InitializeBSplineTransform()
  * ******************* BeforeAll ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 int
 MultiBSplineTransformWithNormal<TElastix>::BeforeAll()
 {
@@ -104,7 +104,7 @@ MultiBSplineTransformWithNormal<TElastix>::BeforeAll()
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiBSplineTransformWithNormal<TElastix>::BeforeRegistration()
 {
@@ -143,7 +143,7 @@ MultiBSplineTransformWithNormal<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiBSplineTransformWithNormal<TElastix>::BeforeEachResolution()
 {
@@ -168,7 +168,7 @@ MultiBSplineTransformWithNormal<TElastix>::BeforeEachResolution()
  * ******************** PreComputeGridInformation ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiBSplineTransformWithNormal<TElastix>::PreComputeGridInformation()
 {
@@ -325,7 +325,7 @@ MultiBSplineTransformWithNormal<TElastix>::PreComputeGridInformation()
  * the parameters to 0.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiBSplineTransformWithNormal<TElastix>::InitializeTransform()
 {
@@ -357,7 +357,7 @@ MultiBSplineTransformWithNormal<TElastix>::InitializeTransform()
  * Upsample the grid of control points.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiBSplineTransformWithNormal<TElastix>::IncreaseScale()
 {
@@ -519,7 +519,7 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale()
  * ************************* ReadFromFile ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiBSplineTransformWithNormal<TElastix>::ReadFromFile()
 {
@@ -583,7 +583,7 @@ MultiBSplineTransformWithNormal<TElastix>::ReadFromFile()
  * ************************* CustomizeTransformParameterMap ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 auto
 MultiBSplineTransformWithNormal<TElastix>::CreateDerivedTransformParameterMap() const -> ParameterMapType
 {
@@ -607,7 +607,7 @@ MultiBSplineTransformWithNormal<TElastix>::CreateDerivedTransformParameterMap() 
  * Set the optimizer scales of the edge coefficients to infinity.
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 MultiBSplineTransformWithNormal<TElastix>::SetOptimizerScales(const unsigned int edgeWidth)
 {

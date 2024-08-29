@@ -27,7 +27,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 MeshPenalty<TFixedPointSet, TMovingPointSet>::MeshPenalty()
 {
   this->m_MappedMeshContainer = MappedMeshContainerType::New();
@@ -38,7 +38,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::MeshPenalty()
  * *********************** Initialize *****************************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 {
@@ -102,7 +102,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
  * ******************* GetValue *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 auto
 MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParametersType & parameters) const -> MeasureType
 {
@@ -137,7 +137,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParameters
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const TransformParametersType & parameters,
                                                             DerivativeType &                derivative) const
@@ -157,7 +157,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const TransformParam
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(const TransformParametersType & parameters,
                                                                     MeasureType &                   value,
@@ -225,7 +225,7 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(const Transf
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedPointSet, class TMovingPointSet>
+template <typename TFixedPointSet, typename TMovingPointSet>
 void
 MeshPenalty<TFixedPointSet, TMovingPointSet>::PrintSelf(std::ostream & os, Indent indent) const
 {

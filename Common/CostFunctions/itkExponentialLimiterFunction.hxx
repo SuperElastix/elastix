@@ -28,7 +28,7 @@ namespace itk
  * *************** Constructor ********************
  */
 
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 ExponentialLimiterFunction<TInput, NDimension>::ExponentialLimiterFunction()
 {
   this->ComputeLimiterSettings();
@@ -39,7 +39,7 @@ ExponentialLimiterFunction<TInput, NDimension>::ExponentialLimiterFunction()
  * **************** Initialize ***********************
  */
 
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 void
 ExponentialLimiterFunction<TInput, NDimension>::Initialize()
 {
@@ -51,7 +51,7 @@ ExponentialLimiterFunction<TInput, NDimension>::Initialize()
  * ******************** Evaluate ***********************
  */
 
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 auto
 ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const -> OutputType
 {
@@ -78,7 +78,7 @@ ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input
  * *********************** Evaluate *************************
  */
 
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 auto
 ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input, DerivativeType & derivative) const
   -> OutputType
@@ -118,7 +118,7 @@ ExponentialLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input
  * ******************** ComputeLimiterSettings ********************
  */
 
-template <class TInput, unsigned int NDimension>
+template <typename TInput, unsigned int NDimension>
 void
 ExponentialLimiterFunction<TInput, NDimension>::ComputeLimiterSettings()
 {

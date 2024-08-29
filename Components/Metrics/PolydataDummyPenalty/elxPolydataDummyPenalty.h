@@ -54,13 +54,13 @@ namespace elastix
 // typedef itk::Mesh<BinaryPixelType,FixedImageDimension> FixedMeshType;
 // typedef itk::Mesh <DummyPixelType, MetricBase<TElastix>::FixedImageDimension>  FixedMeshType; //pixeltype is unused,
 // but necessary for the declaration, so a type with the smallest memory footprint is used.
-//  template <class TElastix >
+//  template <typename TElastix >
 // class PolydataDummyPenalty
 //  : public
 //  itk::MeshPenalty < itk::Mesh<DummyPixelType, MetricBase <TElastix>::FixedImageDimension > >,
 //  public MetricBase<TElastix>
 //
-template <class TElastix>
+template <typename TElastix>
 class ITK_TEMPLATE_EXPORT PolydataDummyPenalty
   : public itk::MeshPenalty<typename MetricBase<TElastix>::FixedPointSetType,
                             typename MetricBase<TElastix>::MovingPointSetType>

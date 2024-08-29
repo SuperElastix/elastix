@@ -31,7 +31,7 @@ namespace itk
  * ******************* Constructor *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AdvancedKappaStatisticImageToImageMetric()
 {
   this->SetComputeGradient(true);
@@ -46,7 +46,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AdvancedKap
  * ******************* InitializeThreadingParameters *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
@@ -81,7 +81,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeT
  * ******************* PrintSelf *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent indent) const
 {
@@ -99,7 +99,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(s
  * ******************* GetValue *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 auto
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
@@ -228,7 +228,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
  * ******************* GetDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
   const TransformParametersType & parameters,
@@ -249,7 +249,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivati
  * ******************* GetValueAndDerivativeSingleThreaded *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(
   const TransformParametersType & parameters,
@@ -391,7 +391,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
  * ******************* GetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
   const TransformParametersType & parameters,
@@ -432,7 +432,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
  * ******************* ThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValueAndDerivative(
   ThreadIdType threadId) const
@@ -544,7 +544,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
  * ******************* AfterThreadedGetValueAndDerivative *******************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedGetValueAndDerivative(
   MeasureType &    value,
@@ -631,7 +631,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
  *********** AccumulateDerivativesThreaderCallback *************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThreaderCallback(void * arg)
 {
@@ -678,7 +678,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AccumulateD
  * *************** UpdateValueAndDerivativeTerms ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::UpdateValueAndDerivativeTerms(
   const RealType                     fixedImageValue,
@@ -773,7 +773,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::UpdateValue
  * *************** ComputeGradient ***************************
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ComputeGradient()
 {

@@ -31,7 +31,7 @@ namespace elastix
  * ******************* ReadFromFile *****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResampleInterpolatorBase<TElastix>::ReadFromFile()
 {
@@ -44,7 +44,7 @@ ResampleInterpolatorBase<TElastix>::ReadFromFile()
  * ******************* WriteToFile ******************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResampleInterpolatorBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
@@ -62,7 +62,7 @@ ResampleInterpolatorBase<TElastix>::WriteToFile(std::ostream & transformationPar
  * ******************* CreateTransformParameterMap ****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ResampleInterpolatorBase<TElastix>::CreateTransformParameterMap(ParameterMapType & parameterMap) const
 {

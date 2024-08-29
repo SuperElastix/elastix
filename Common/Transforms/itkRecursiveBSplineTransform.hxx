@@ -89,7 +89,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
  * ********************* GetJacobian ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
   const InputPointType &       inputPoint,
@@ -146,7 +146,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobian(
  * ********************* EvaluateJacobianAndImageGradientProduct ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianWithImageGradientProduct(
   const InputPointType &          inputPoint,
@@ -204,7 +204,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::EvaluateJacobianW
  * ********************* GetSpatialJacobian ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobian(const InputPointType & inputPoint,
                                                                                   SpatialJacobianType &  sj) const
@@ -279,7 +279,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
  * ********************* GetSpatialHessian ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian(const InputPointType & inputPoint,
                                                                                  SpatialHessianType &   sh) const
@@ -373,7 +373,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
   const InputPointType &          inputPoint,
@@ -439,7 +439,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
  * ********************* GetJacobianOfSpatialJacobian ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpatialJacobian(
   const InputPointType &          inputPoint,
@@ -456,7 +456,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpatialHessian(
   const InputPointType &         inputPoint,
@@ -529,7 +529,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
  * ********************* GetJacobianOfSpatialHessian ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpatialHessian(
   const InputPointType &         inputPoint,
@@ -546,7 +546,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
  * ********************* ComputeNonZeroJacobianIndices ****************************
  */
 
-template <class TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
+template <typename TScalar, unsigned int NDimensions, unsigned int VSplineOrder>
 void
 RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::ComputeNonZeroJacobianIndices(
   NonZeroJacobianIndicesType & nonZeroJacobianIndices,

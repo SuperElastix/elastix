@@ -30,7 +30,7 @@ namespace Statistics
  * ************************ Constructor *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 ListSampleCArray<TMeasurementVector, TInternalValue>::ListSampleCArray()
 {
   this->m_InternalContainer = nullptr;
@@ -42,7 +42,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::ListSampleCArray()
 /**
  * ************************ Destructor *************************
  */
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 ListSampleCArray<TMeasurementVector, TInternalValue>::~ListSampleCArray()
 {
   this->DeallocateInternalContainer();
@@ -53,7 +53,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::~ListSampleCArray()
  * ************************ GetMeasurementVector *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(InstanceIdentifier      id,
                                                                            MeasurementVectorType & mv) const
@@ -72,7 +72,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(Insta
  * ************************ GetMeasurementVector *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 auto
 ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(InstanceIdentifier id) const
   -> const MeasurementVectorType &
@@ -94,7 +94,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetMeasurementVector(Insta
  * ************************ SetMeasurement *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::SetMeasurement(InstanceIdentifier      id,
                                                                      unsigned int            dim,
@@ -111,7 +111,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::SetMeasurement(InstanceIde
  * ************************ SetMeasurementVector *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::SetMeasurementVector(InstanceIdentifier            id,
                                                                            const MeasurementVectorType & mv)
@@ -132,7 +132,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::SetMeasurementVector(Insta
  * ************************ Resize *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::Resize(unsigned long size)
 {
@@ -162,7 +162,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::Resize(unsigned long size)
  * ************************ SetActualSize *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::SetActualSize(unsigned long size)
 {
@@ -178,7 +178,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::SetActualSize(unsigned lon
  * ************************ GetActualSize *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 unsigned long
 ListSampleCArray<TMeasurementVector, TInternalValue>::GetActualSize()
 {
@@ -190,7 +190,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetActualSize()
  * ************************ Clear *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::Clear()
 {
@@ -202,7 +202,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::Clear()
  * ************************ AllocateInternalContainer *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::AllocateInternalContainer(unsigned long size, unsigned int dim)
 {
@@ -219,7 +219,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::AllocateInternalContainer(
  * ************************ DeallocateInternalContainer *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::DeallocateInternalContainer()
 {
@@ -236,7 +236,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::DeallocateInternalContaine
  * ************************ GetFrequency *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 auto
 ListSampleCArray<TMeasurementVector, TInternalValue>::GetFrequency(InstanceIdentifier id) const -> AbsoluteFrequencyType
 {
@@ -255,7 +255,7 @@ ListSampleCArray<TMeasurementVector, TInternalValue>::GetFrequency(InstanceIdent
  * ************************ PrintSelf *************************
  */
 
-template <class TMeasurementVector, class TInternalValue>
+template <typename TMeasurementVector, typename TInternalValue>
 void
 ListSampleCArray<TMeasurementVector, TInternalValue>::PrintSelf(std::ostream & os, Indent indent) const
 {

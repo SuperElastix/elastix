@@ -31,7 +31,7 @@ namespace elastix
  * ********************* Constructor ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 ConjugateGradient<TElastix>::ConjugateGradient()
 {
   this->m_LineOptimizer = LineOptimizerType::New();
@@ -54,7 +54,7 @@ ConjugateGradient<TElastix>::ConjugateGradient()
  * ***************** InvokeIterationEvent ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::InvokeIterationEvent(const itk::EventObject & event)
 {
@@ -81,7 +81,7 @@ ConjugateGradient<TElastix>::InvokeIterationEvent(const itk::EventObject & event
  * ***************** StartOptimization ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::StartOptimization()
 {
@@ -109,7 +109,7 @@ ConjugateGradient<TElastix>::StartOptimization()
  * ***************** LineSearch ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::LineSearch(const ParametersType searchDir,
                                         double &             step,
@@ -152,7 +152,7 @@ ConjugateGradient<TElastix>::LineSearch(const ParametersType searchDir,
  * during iterating
  */
 
-template <class TElastix>
+template <typename TElastix>
 std::string
 ConjugateGradient<TElastix>::DeterminePhase() const
 {
@@ -171,7 +171,7 @@ ConjugateGradient<TElastix>::DeterminePhase() const
  * ***************** BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::BeforeRegistration()
 {
@@ -212,7 +212,7 @@ ConjugateGradient<TElastix>::BeforeRegistration()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::BeforeEachResolution()
 {
@@ -288,7 +288,7 @@ ConjugateGradient<TElastix>::BeforeEachResolution()
  * ***************** AfterEachIteration *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::AfterEachIteration()
 {
@@ -380,7 +380,7 @@ ConjugateGradient<TElastix>::AfterEachIteration()
  * ***************** AfterEachResolution *************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::AfterEachResolution()
 {
@@ -445,7 +445,7 @@ ConjugateGradient<TElastix>::AfterEachResolution()
  * ******************* AfterRegistration ************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 ConjugateGradient<TElastix>::AfterRegistration()
 {
@@ -461,7 +461,7 @@ ConjugateGradient<TElastix>::AfterRegistration()
  * *********************** TestConvergence *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 bool
 ConjugateGradient<TElastix>::TestConvergence(bool firstLineSearchDone)
 {
@@ -489,7 +489,7 @@ ConjugateGradient<TElastix>::TestConvergence(bool firstLineSearchDone)
  * ***************** GetLineSearchStopCondition *****************
  */
 
-template <class TElastix>
+template <typename TElastix>
 std::string
 ConjugateGradient<TElastix>::GetLineSearchStopCondition() const
 {

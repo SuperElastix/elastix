@@ -53,7 +53,7 @@ namespace itk
  * \ingroup Metrics
  */
 
-template <class TFixedImage, class TMovingImage>
+template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT AdvancedKappaStatisticImageToImageMetric
   : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {

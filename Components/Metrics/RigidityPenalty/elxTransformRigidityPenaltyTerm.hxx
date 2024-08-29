@@ -30,7 +30,7 @@ namespace elastix
  * ******************* BeforeRegistration ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformRigidityPenalty<TElastix>::BeforeRegistration()
 {
@@ -146,7 +146,7 @@ TransformRigidityPenalty<TElastix>::BeforeRegistration()
  * ******************* Initialize ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformRigidityPenalty<TElastix>::Initialize()
 {
@@ -167,7 +167,7 @@ TransformRigidityPenalty<TElastix>::Initialize()
  * ***************** BeforeEachResolution ***********************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformRigidityPenalty<TElastix>::BeforeEachResolution()
 {
@@ -247,7 +247,7 @@ TransformRigidityPenalty<TElastix>::BeforeEachResolution()
  * ***************AfterEachIteration ****************************
  */
 
-template <class TElastix>
+template <typename TElastix>
 void
 TransformRigidityPenalty<TElastix>::AfterEachIteration()
 {
