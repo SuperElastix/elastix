@@ -177,7 +177,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   OutputPointType outputPoint{};
 
   unsigned long counter = 0;
-  for (unsigned int r = 0; r < 2; ++r)
+  for (const auto & region : supportRegions)
   {
     /** Create iterators over the coefficient images
      * (for both supportRegion1 and supportRegion2.
@@ -187,7 +187,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
 
     for (unsigned int j = 0; j < SpaceDimension - 1; ++j)
     {
-      iterators[j] = IteratorType(this->m_CoefficientImages[j], supportRegions[r]);
+      iterators[j] = IteratorType(this->m_CoefficientImages[j], region);
     }
 
     /** Loop over this support region. */
@@ -252,9 +252,9 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
 
   /** For each dimension, copy the weight to the support region. */
   unsigned long counter = 0;
-  for (unsigned int r = 0; r < 2; ++r)
+  for (const auto & region : supportRegions)
   {
-    ImageRegionIterator<JacobianImageType> iterator(this->m_CoefficientImages[0], supportRegions[r]);
+    ImageRegionIterator<JacobianImageType> iterator(this->m_CoefficientImages[0], region);
 
     while (!iterator.IsAtEnd())
     {
@@ -331,12 +331,12 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
 
       typename WeightsType::const_iterator itWeights = weights.begin();
 
-      for (unsigned int r = 0; r < 2; ++r)
+      for (const auto & region : supportRegions)
       {
         /** Create an iterator over the correct part of the coefficient
          * image. Create an iterator over the weights vector.
          */
-        ImageRegionConstIterator<ImageType> itCoef(this->m_CoefficientImages[dim], supportRegions[r]);
+        ImageRegionConstIterator<ImageType> itCoef(this->m_CoefficientImages[dim], region);
 
         while (!itCoef.IsAtEnd())
         {
@@ -385,10 +385,10 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Comput
   const SizeValueType parametersPerDim = this->GetNumberOfParametersPerDimension();
   unsigned long       mu = 0;
 
-  for (unsigned int r = 0; r < 2; ++r)
+  for (const auto & region : supportRegions)
   {
     /** Create iterator over the coefficient image (for current supportRegion). */
-    ImageRegionConstIteratorWithIndex<ImageType> iterator(this->m_CoefficientImages[0], supportRegions[r]);
+    ImageRegionConstIteratorWithIndex<ImageType> iterator(this->m_CoefficientImages[0], region);
 
     /** For all control points in the support region, set which of the
      * indices in the parameter array are non-zero.
