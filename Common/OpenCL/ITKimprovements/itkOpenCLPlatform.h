@@ -231,9 +231,9 @@ operator<<(std::basic_ostream<charT, traits> & strm, const OpenCLPlatform & plat
   else
   {
     strm << std::endl;
-    for (auto it = extensions.begin(); it != extensions.end(); ++it)
+    for (const std::string & extension : extensions)
     {
-      strm << indent << indent << "- " << *it << std::endl;
+      strm << indent << indent << "- " << extension << std::endl;
     }
   }
 

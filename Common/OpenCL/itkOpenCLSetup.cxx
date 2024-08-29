@@ -73,13 +73,12 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
   }
 
   /** Get a list of all OpenCL devices. */
-  std::list<itk::OpenCLDevice>       devicesByType;
-  const std::list<itk::OpenCLDevice> allDevices = itk::OpenCLDevice::GetAllDevices();
-  for (auto device = allDevices.begin(); device != allDevices.end(); ++device)
+  std::list<itk::OpenCLDevice> devicesByType;
+  for (const OpenCLDevice & device : OpenCLDevice::GetAllDevices())
   {
-    if ((device->GetDeviceType() & deviceType) != 0)
+    if ((device.GetDeviceType() & deviceType) != 0)
     {
-      devicesByType.push_back(*device);
+      devicesByType.push_back(device);
     }
   }
 
@@ -94,16 +93,15 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
                        << " OpenCL-enabled device" << s << " present on this system:" << std::endl;
 
     unsigned int deviceID = 0;
-    for (std::list<itk::OpenCLDevice>::const_iterator device = devicesByType.begin(); device != devicesByType.end();
-         ++device)
+    for (const OpenCLDevice & device : devicesByType)
     {
       errorMessageStream << indent << "OpenCL device ID: " << deviceID << std::endl;
-      errorMessageStream << indent << indent << "Name: " << device->GetName() << std::endl;
-      errorMessageStream << indent << indent << "Vendor: " << device->GetVendor() << std::endl;
-      errorMessageStream << indent << indent << "Has double support: " << (device->HasDouble() ? "Yes" : "No")
+      errorMessageStream << indent << indent << "Name: " << device.GetName() << std::endl;
+      errorMessageStream << indent << indent << "Vendor: " << device.GetVendor() << std::endl;
+      errorMessageStream << indent << indent << "Has double support: " << (device.HasDouble() ? "Yes" : "No")
                          << std::endl;
       errorMessageStream << indent << indent << "Device type: ";
-      switch (device->GetDeviceType())
+      switch (device.GetDeviceType())
       {
         case OpenCLDevice::Default:
           errorMessageStream << "Default";
@@ -140,12 +138,12 @@ CreateOpenCLContext(std::string & errorMessage, const std::string openCLDeviceTy
    * We have to loop over devicesByType and select it. */
   std::list<itk::OpenCLDevice> selected;
   int                          deviceID = 0;
-  for (std::list<OpenCLDevice>::const_iterator device = devicesByType.begin(); device != devicesByType.end(); ++device)
+  for (const OpenCLDevice & device : devicesByType)
   {
     {
       if (deviceID == openCLDeviceID)
       {
-        selected.push_back(*device);
+        selected.push_back(device);
         break;
       }
       ++deviceID;

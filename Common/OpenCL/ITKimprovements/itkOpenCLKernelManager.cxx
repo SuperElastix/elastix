@@ -390,9 +390,9 @@ OpenCLKernelManager::SetGlobalWorkSizeForAllKernels(const OpenCLSize & size)
     return;
   }
 
-  for (auto kernel = this->m_Kernels.begin(); kernel != this->m_Kernels.end(); ++kernel)
+  for (OpenCLKernel & kernel : this->m_Kernels)
   {
-    kernel->SetGlobalWorkSize(size);
+    kernel.SetGlobalWorkSize(size);
   }
 }
 
@@ -406,9 +406,9 @@ OpenCLKernelManager::SetLocalWorkSizeForAllKernels(const OpenCLSize & size)
     return;
   }
 
-  for (auto kernel = this->m_Kernels.begin(); kernel != this->m_Kernels.end(); ++kernel)
+  for (OpenCLKernel & kernel : this->m_Kernels)
   {
-    kernel->SetLocalWorkSize(size);
+    kernel.SetLocalWorkSize(size);
   }
 }
 
@@ -422,9 +422,9 @@ OpenCLKernelManager::SetGlobalWorkOffsetForAllKernels(const OpenCLSize & offset)
     return;
   }
 
-  for (auto kernel = this->m_Kernels.begin(); kernel != this->m_Kernels.end(); ++kernel)
+  for (OpenCLKernel & kernel : this->m_Kernels)
   {
-    kernel->SetGlobalWorkOffset(offset);
+    kernel.SetGlobalWorkOffset(offset);
   }
 }
 

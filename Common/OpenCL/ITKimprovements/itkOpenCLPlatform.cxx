@@ -169,9 +169,9 @@ OpenCLPlatform::GetAllPlatforms()
   std::vector<cl_platform_id> buffer(size);
   clGetPlatformIDs(size, &buffer[0], &size);
   std::list<OpenCLPlatform> platforms;
-  for (std::size_t index = 0; index < buffer.size(); ++index)
+  for (const cl_platform_id platformId : buffer)
   {
-    platforms.push_back(OpenCLPlatform(buffer[index]));
+    platforms.push_back(OpenCLPlatform(platformId));
   }
   return platforms;
 }
@@ -190,28 +190,28 @@ OpenCLPlatform::GetPlatform(const OpenCLPlatform::VendorType vendor)
 
   cl_platform_id platformID = 0;
 
-  for (auto platform = platforms.begin(); platform != platforms.end(); ++platform)
+  for (const OpenCLPlatform & platform : platforms)
   {
-    const std::string vendorName = opencl_simplified(platform->GetVendor());
+    const std::string vendorName = opencl_simplified(platform.GetVendor());
 
     if ((vendorName.compare(0, 20, "Intel(R) Corporation") == 0) && (vendor == OpenCLPlatform::Intel))
     {
-      platformID = platform->GetPlatformId();
+      platformID = platform.GetPlatformId();
       break;
     }
     else if ((vendorName.compare(0, 18, "NVIDIA Corporation") == 0) && (vendor == OpenCLPlatform::NVidia))
     {
-      platformID = platform->GetPlatformId();
+      platformID = platform.GetPlatformId();
       break;
     }
     else if ((vendorName.compare(0, 28, "Advanced Micro Devices, Inc.") == 0) && (vendor == OpenCLPlatform::AMD))
     {
-      platformID = platform->GetPlatformId();
+      platformID = platform.GetPlatformId();
       break;
     }
     else if ((vendorName.compare(0, 3, "IBM") == 0) && (vendor == OpenCLPlatform::IBM))
     {
-      platformID = platform->GetPlatformId();
+      platformID = platform.GetPlatformId();
       break;
     }
   }

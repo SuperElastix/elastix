@@ -212,9 +212,9 @@ OpenCLContext::Create(const std::list<OpenCLDevice> & devices)
     return false;
   }
   std::vector<cl_device_id> devs;
-  for (auto dev = devices.begin(); dev != devices.end(); ++dev)
+  for (const OpenCLDevice & device : devices)
   {
-    devs.push_back(dev->GetDeviceId());
+    devs.push_back(device.GetDeviceId());
   }
 
   cl_platform_id        platform = devices.front().GetPlatform().GetPlatformId();
@@ -495,10 +495,10 @@ OpenCLContext::CreateContext(const std::list<OpenCLDevice> & devices, OpenCLCont
   if (!devices.empty())
   {
     std::vector<cl_device_id> devs;
-    for (auto dev = devices.begin(); dev != devices.end(); ++dev)
+    for (const OpenCLDevice & device : devices)
 
     {
-      devs.push_back(dev->GetDeviceId());
+      devs.push_back(device.GetDeviceId());
     }
 
     cl_context_properties props[] = { CL_CONTEXT_PLATFORM,
@@ -1425,12 +1425,11 @@ OpenCLContext::GetSupportedImageFormats(const OpenCLImageFormat::ImageType image
 
   // Compose the final list
   std::list<OpenCLImageFormat> list;
-  for (std::list<OpenCLImageFormat>::const_iterator it = list_image_formats.begin(); it != list_image_formats.end();
-       ++it)
+  for (const OpenCLImageFormat & format : list_image_formats)
   {
     list.push_back(OpenCLImageFormat(OpenCLImageFormat::ImageType(image_type),
-                                     OpenCLImageFormat::ChannelOrder(it->GetChannelOrder()),
-                                     OpenCLImageFormat::ChannelType(it->GetChannelType())));
+                                     OpenCLImageFormat::ChannelOrder(format.GetChannelOrder()),
+                                     OpenCLImageFormat::ChannelType(format.GetChannelType())));
   }
 
   return list;
