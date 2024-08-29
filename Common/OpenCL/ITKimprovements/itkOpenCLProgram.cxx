@@ -246,11 +246,11 @@ OpenCLProgram::Build(const std::list<OpenCLDevice> & devices, const std::string 
 {
   std::vector<cl_device_id> devs;
 
-  for (auto dev = devices.begin(); dev != devices.end(); ++dev)
+  for (const OpenCLDevice & device : devices)
   {
-    if (dev->GetDeviceId())
+    if (device.GetDeviceId())
     {
-      devs.push_back(dev->GetDeviceId());
+      devs.push_back(device.GetDeviceId());
     }
   }
 
@@ -339,19 +339,18 @@ OpenCLProgram::GetLog() const
     return std::string();
   }
 
-  const std::list<OpenCLDevice> devs = ctx->GetDevices();
-
   // Retrieve the device GetLogs and concatenate them.
   std::string log;
-  for (auto dev = devs.begin(); dev != devs.end(); ++dev)
+  for (const OpenCLDevice & device : ctx->GetDevices())
   {
     std::size_t size = 0;
-    if (clGetProgramBuildInfo(this->m_Id, dev->GetDeviceId(), CL_PROGRAM_BUILD_LOG, 0, 0, &size) != CL_SUCCESS || !size)
+    if (clGetProgramBuildInfo(this->m_Id, device.GetDeviceId(), CL_PROGRAM_BUILD_LOG, 0, 0, &size) != CL_SUCCESS ||
+        !size)
     {
       continue;
     }
     std::string buffer(size, '\0');
-    if (clGetProgramBuildInfo(this->m_Id, dev->GetDeviceId(), CL_PROGRAM_BUILD_LOG, size, &buffer[0], 0) !=
+    if (clGetProgramBuildInfo(this->m_Id, device.GetDeviceId(), CL_PROGRAM_BUILD_LOG, size, &buffer[0], 0) !=
           CL_SUCCESS ||
         !size)
     {
@@ -380,9 +379,9 @@ OpenCLProgram::GetDevices() const
     return list;
   }
 
-  for (std::vector<cl_device_id>::const_iterator dev = buffer.begin(); dev != buffer.end(); ++dev)
+  for (const cl_device_id deviceId : buffer)
   {
-    list.push_back(OpenCLDevice(*dev));
+    list.push_back(OpenCLDevice(deviceId));
   }
   return list;
 }
@@ -422,9 +421,9 @@ OpenCLProgram::CreateKernels() const
   {
     return list;
   }
-  for (std::vector<cl_kernel>::const_iterator kernel = kernels.begin(); kernel != kernels.end(); ++kernel)
+  for (const cl_kernel kernelId : kernels)
   {
-    list.push_back(OpenCLKernel(this->m_Context, *kernel));
+    list.push_back(OpenCLKernel(this->m_Context, kernelId));
   }
   return list;
 }

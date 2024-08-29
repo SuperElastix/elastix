@@ -37,9 +37,9 @@ OpenCLEventList::OpenCLEventList(const OpenCLEvent & event)
 OpenCLEventList::OpenCLEventList(const OpenCLEventList & other)
   : m_Events(other.m_Events)
 {
-  for (std::size_t index = 0; index < this->m_Events.size(); ++index)
+  for (const cl_event eventId : this->m_Events)
   {
-    clRetainEvent(this->m_Events[index]);
+    clRetainEvent(eventId);
   }
 }
 
@@ -47,9 +47,9 @@ OpenCLEventList::OpenCLEventList(const OpenCLEventList & other)
 //------------------------------------------------------------------------------
 OpenCLEventList::~OpenCLEventList()
 {
-  for (std::size_t index = 0; index < this->m_Events.size(); ++index)
+  for (const cl_event eventId : this->m_Events)
   {
-    clReleaseEvent(this->m_Events[index]);
+    clReleaseEvent(eventId);
   }
 }
 
@@ -60,14 +60,14 @@ OpenCLEventList::operator=(const OpenCLEventList & other)
 {
   if (this != &other)
   {
-    for (std::size_t index = 0; index < this->m_Events.size(); ++index)
+    for (const cl_event eventId : this->m_Events)
     {
-      clReleaseEvent(this->m_Events[index]);
+      clReleaseEvent(eventId);
     }
     this->m_Events = other.m_Events;
-    for (std::size_t index = 0; index < this->m_Events.size(); ++index)
+    for (const cl_event eventId : this->m_Events)
     {
-      clRetainEvent(this->m_Events[index]);
+      clRetainEvent(eventId);
     }
   }
   return *this;
@@ -92,11 +92,10 @@ OpenCLEventList::Append(const OpenCLEvent & event)
 void
 OpenCLEventList::Append(const OpenCLEventList & other)
 {
-  for (std::size_t index = 0; index < other.m_Events.size(); ++index)
+  for (const cl_event eventId : other.m_Events)
   {
-    cl_event id = other.m_Events[index];
-    clRetainEvent(id);
-    this->m_Events.push_back(id);
+    clRetainEvent(eventId);
+    this->m_Events.push_back(eventId);
   }
 }
 

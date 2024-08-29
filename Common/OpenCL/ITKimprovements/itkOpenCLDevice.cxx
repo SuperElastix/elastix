@@ -727,21 +727,20 @@ OpenCLDevice::HasExtension(const std::string & name) const
 std::list<OpenCLDevice>
 OpenCLDevice::GetAllDevices()
 {
-  const std::list<itk::OpenCLPlatform> platforms = OpenCLPlatform::GetAllPlatforms();
-  std::list<OpenCLDevice>              devices;
+  std::list<OpenCLDevice> devices;
 
-  for (auto platform = platforms.begin(); platform != platforms.end(); ++platform)
+  for (const OpenCLPlatform & platform : OpenCLPlatform::GetAllPlatforms())
   {
     cl_uint size;
-    if (clGetDeviceIDs(platform->GetPlatformId(), CL_DEVICE_TYPE_ALL, 0, 0, &size) != CL_SUCCESS)
+    if (clGetDeviceIDs(platform.GetPlatformId(), CL_DEVICE_TYPE_ALL, 0, 0, &size) != CL_SUCCESS)
     {
       continue;
     }
     std::vector<cl_device_id> buffer(size);
-    clGetDeviceIDs(platform->GetPlatformId(), CL_DEVICE_TYPE_ALL, size, &buffer[0], &size);
-    for (auto device = buffer.begin(); device != buffer.end(); ++device)
+    clGetDeviceIDs(platform.GetPlatformId(), CL_DEVICE_TYPE_ALL, size, &buffer[0], &size);
+    for (const cl_device_id deviceId : buffer)
     {
-      devices.push_back(OpenCLDevice(*device));
+      devices.push_back(OpenCLDevice(deviceId));
     }
   }
   return devices;
@@ -763,10 +762,10 @@ OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType types, const OpenCLPlatf
   {
     platforms.push_back(platform);
   }
-  for (auto platform = platforms.begin(); platform != platforms.end(); ++platform)
+  for (const OpenCLPlatform & platform : platforms)
   {
     cl_uint size;
-    if (clGetDeviceIDs(platform->GetPlatformId(), cl_device_type(types), 0, 0, &size) != CL_SUCCESS)
+    if (clGetDeviceIDs(platform.GetPlatformId(), cl_device_type(types), 0, 0, &size) != CL_SUCCESS)
     {
       continue;
     }
@@ -775,10 +774,10 @@ OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType types, const OpenCLPlatf
       continue;
     }
     std::vector<cl_device_id> buffer(size);
-    clGetDeviceIDs(platform->GetPlatformId(), cl_device_type(types), size, &buffer[0], &size);
-    for (auto device = buffer.begin(); device != buffer.end(); ++device)
+    clGetDeviceIDs(platform.GetPlatformId(), cl_device_type(types), size, &buffer[0], &size);
+    for (const cl_device_id deviceId : buffer)
     {
-      devices.push_back(OpenCLDevice(*device));
+      devices.push_back(OpenCLDevice(deviceId));
     }
     break;
   }
@@ -798,13 +797,12 @@ OpenCLDevice::GetDevices(const OpenCLDevice::DeviceType type, const OpenCLPlatfo
   }
   else
   {
-    const std::list<itk::OpenCLDevice> allDevices = itk::OpenCLDevice::GetDevices(type, platform);
-    std::list<OpenCLDevice>            devices;
-    for (auto dev = allDevices.begin(); dev != allDevices.end(); ++dev)
+    std::list<OpenCLDevice> devices;
+    for (const OpenCLDevice & device : OpenCLDevice::GetDevices(type, platform))
     {
-      if ((dev->GetDeviceType() & type) != 0)
+      if ((device.GetDeviceType() & type) != 0)
       {
-        devices.push_back(*dev);
+        devices.push_back(device);
       }
     }
     return devices;
@@ -824,13 +822,13 @@ OpenCLDevice::GetMaximumFlopsDevice(const std::list<OpenCLDevice> & devices, con
   // Find the device that has maximum Flops
   int          maxFlops = 0;
   cl_device_id id = 0;
-  for (auto device = devices.begin(); device != devices.end(); ++device)
+  for (const OpenCLDevice & device : devices)
   {
-    int deviceFlops = device->GetComputeUnits() * device->GetClockFrequency();
-    if (deviceFlops > maxFlops && (device->GetDeviceType() == type))
+    int deviceFlops = device.GetComputeUnits() * device.GetClockFrequency();
+    if (deviceFlops > maxFlops && (device.GetDeviceType() == type))
     {
       maxFlops = deviceFlops;
-      id = device->GetDeviceId();
+      id = device.GetDeviceId();
     }
   }
 
@@ -884,10 +882,10 @@ OpenCLDevice::GetMaximumFlopsDevices(const OpenCLDevice::DeviceType type, const 
   using DeviceType = std::pair<std::size_t, cl_device_id>;
   using MaximumFlopsDevicesType = std::set<DeviceType>;
   MaximumFlopsDevicesType maximumFlopsDevices;
-  for (auto device = allDevices.begin(); device != allDevices.end(); ++device)
+  for (const OpenCLDevice & device : allDevices)
   {
-    int        deviceFlops = device->GetComputeUnits() * device->GetClockFrequency();
-    DeviceType deviceWithFlops(deviceFlops, device->GetDeviceId());
+    int        deviceFlops = device.GetComputeUnits() * device.GetClockFrequency();
+    DeviceType deviceWithFlops(deviceFlops, device.GetDeviceId());
     maximumFlopsDevices.insert(deviceWithFlops);
   }
 
