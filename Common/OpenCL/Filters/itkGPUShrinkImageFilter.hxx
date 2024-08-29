@@ -95,7 +95,6 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // Define a few indices that will be used to transform from an input pixel
   // to an output pixel
   OutputIndexType  outputIndex;
-  InputIndexType   inputIndex;
   OutputOffsetType offsetIndex;
 
   typename TOutputImage::PointType tempPoint;
@@ -106,7 +105,7 @@ GPUShrinkImageFilter<TInputImage, TOutputImage>::GPUGenerateData()
   // We wish to perform the following mapping of outputIndex to
   // inputIndex on all points in our region
   otPtr->TransformIndexToPhysicalPoint(outputIndex, tempPoint);
-  inPtr->TransformPhysicalPointToIndex(tempPoint, inputIndex);
+  const InputIndexType inputIndex = inPtr->TransformPhysicalPointToIndex(tempPoint);
 
   // Given that the size is scaled by a constant factor eq:
   // inputIndex = outputIndex * factorSize
