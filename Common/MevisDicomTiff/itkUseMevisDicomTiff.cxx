@@ -32,6 +32,6 @@ RegisterMevisDicomTiff()
 {
 #ifdef _ELASTIX_USE_MEVISDICOMTIFF
   itk::ObjectFactoryBase::RegisterFactory(itk::MevisDicomTiffImageIOFactory::New(),
-                                          itk::ObjectFactoryBase::INSERT_AT_FRONT);
+                                          itk::ObjectFactoryBase::InsertionPositionEnum::INSERT_AT_FRONT);
 #endif
 }
