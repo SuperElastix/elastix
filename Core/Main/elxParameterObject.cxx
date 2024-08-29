@@ -524,14 +524,14 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
       os << "  (" << parameterMapIterator->first;
       ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
 
-      for (unsigned int j = 0; j < parameterMapValueVector.size(); ++j)
+      for (const std::string & value : parameterMapValueVector)
       {
-        std::istringstream stream(parameterMapValueVector[j]);
+        std::istringstream stream(value);
         float              number;
         stream >> number;
         if (stream.fail())
         {
-          os << " \"" << parameterMapValueVector[j] << "\"";
+          os << " \"" << value << "\"";
         }
         else
         {

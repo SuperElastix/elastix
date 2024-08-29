@@ -254,10 +254,8 @@ TransformixFilter<TImage>::GenerateData()
   const auto movingImagePixelTypeString = elx::PixelTypeToString<typename TImage::PixelType>();
 
   // Set pixel types from input image, override user settings
-  for (unsigned int i = 0; i < transformParameterMapVector.size(); ++i)
+  for (auto & transformParameterMap : transformParameterMapVector)
   {
-    auto & transformParameterMap = transformParameterMapVector[i];
-
     SetParameterValueAndWarnOnOverride(transformParameterMap, "FixedImageDimension", movingImageDimensionString);
     SetParameterValueAndWarnOnOverride(transformParameterMap, "MovingImageDimension", movingImageDimensionString);
     SetParameterValueAndWarnOnOverride(transformParameterMap, "ResultImagePixelType", movingImagePixelTypeString);
