@@ -123,9 +123,9 @@ OpenCLVector<T>::Read(T * data, const std::size_t count, const std::size_t offse
 {
   itkAssertOrThrowMacro(((offset + count) <= this->m_Size),
                         "OpenCLVector<T>::Read(data, " << count << ", " << offset
-                                                       << ") (offset + count) is out of range")
+                                                       << ") (offset + count) is out of range");
 
-    OpenCLVectorBase::Read(data, count * sizeof(T), offset * sizeof(T));
+  OpenCLVectorBase::Read(data, count * sizeof(T), offset * sizeof(T));
 }
 
 
