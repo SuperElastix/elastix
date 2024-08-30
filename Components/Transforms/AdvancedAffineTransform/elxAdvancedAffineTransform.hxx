@@ -107,7 +107,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
     if (itkFixedParameterValues == nullptr)
     {
       log::error("ERROR: No center of rotation is specified in the transform parameter file");
-      itkExceptionMacro("Transform parameter file is corrupt.")
+      itkExceptionMacro("Transform parameter file is corrupt.");
     }
   }
 

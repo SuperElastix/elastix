@@ -229,7 +229,7 @@ ParameterObject::ReadParameterFiles(const ParameterFileNameVectorType & paramete
   {
     if (!itksys::SystemTools::FileExists(parameterFileName))
     {
-      itkExceptionMacro("Parameter file \"" << parameterFileName << "\" does not exist.")
+      itkExceptionMacro("Parameter file \"" << parameterFileName << "\" does not exist.");
     }
 
     this->AddParameterFile(parameterFileName);
