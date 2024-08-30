@@ -82,7 +82,7 @@ TransformixFilter<TImage>::GenerateData()
   if (m_ComputeDeformationField && !m_FixedPointSetFileName.empty())
   {
     itkExceptionMacro("For backwards compatibility, only one of ComputeDeformationFieldOn() or "
-                      "SetFixedPointSetFileName() can be active at any one time.")
+                      "SetFixedPointSetFileName() can be active at any one time.");
   }
 
   // Setup argument map which transformix uses internally ito figure out what needs to be done
@@ -124,7 +124,7 @@ TransformixFilter<TImage>::GenerateData()
 
   if (!m_OutputDirectory.empty() && !itksys::SystemTools::FileExists(m_OutputDirectory))
   {
-    itkExceptionMacro("Output directory \"" << m_OutputDirectory << "\" does not exist.")
+    itkExceptionMacro("Output directory \"" << m_OutputDirectory << "\" does not exist.");
   }
 
   if (!m_OutputDirectory.empty())

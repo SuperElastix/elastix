@@ -111,16 +111,16 @@ public:
    *   GradientMagnitudeTolerance * \max(1, \|CurrentPosition\| ) \f$
    */
   itkGetConstMacro(GradientMagnitudeTolerance, double);
-  itkSetMacro(GradientMagnitudeTolerance, double)
+  itkSetMacro(GradientMagnitudeTolerance, double);
 
-    /** Setting: a stopping criterion, the value tolerance. By default 1e-5.
-     *
-     * The optimizer stops when
-     * \f[ 2.0 * | f_k - f_{k-1} | \le
-     *   ValueTolerance * ( |f_k| + |f_{k-1}| + 1e-20 ) \f]
-     * is satisfied MaxNrOfItWithoutImprovement times in a row.
-     */
-    itkGetConstMacro(ValueTolerance, double);
+  /** Setting: a stopping criterion, the value tolerance. By default 1e-5.
+   *
+   * The optimizer stops when
+   * \f[ 2.0 * | f_k - f_{k-1} | \le
+   *   ValueTolerance * ( |f_k| + |f_{k-1}| + 1e-20 ) \f]
+   * is satisfied MaxNrOfItWithoutImprovement times in a row.
+   */
+  itkGetConstMacro(ValueTolerance, double);
   itkSetMacro(ValueTolerance, double);
 
   /** Setting: the maximum number of iterations in a row that
