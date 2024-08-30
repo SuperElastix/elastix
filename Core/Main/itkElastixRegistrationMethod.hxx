@@ -150,7 +150,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   {
     if (m_LogToFile)
     {
-      itkExceptionMacro("LogToFileOn() requires an output directory to be specified.")
+      itkExceptionMacro("LogToFileOn() requires an output directory to be specified.");
     }
   }
   else
