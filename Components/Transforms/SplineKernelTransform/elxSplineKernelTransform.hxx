@@ -119,7 +119,11 @@ SplineKernelTransform<TElastix>::BeforeAll()
   if (!ipp.empty())
   {
     log::warn("WARNING: -ipp is deprecated, use -fp instead.");
-    fp = ipp;
+
+    if (fp.empty())
+    {
+      fp = ipp;
+    }
   }
 
   /** Is the fixed landmark file specified? */
