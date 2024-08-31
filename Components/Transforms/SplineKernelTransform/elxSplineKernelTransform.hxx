@@ -226,12 +226,12 @@ SplineKernelTransform<TElastix>::DetermineSourceLandmarks()
   log::info(std::ostringstream{} << "Loading fixed image landmarks for " << this->GetComponentLabel() << ":"
                                  << this->elxGetClassName() << ".");
 
-  // fp used to be ipp
-  std::string ipp = configuration.GetCommandLineArgument("-ipp");
   std::string fp = configuration.GetCommandLineArgument("-fp");
   if (fp.empty())
   {
-    fp = ipp; // backwards compatibility, added in elastix 4.5
+    // backwards compatibility, added in elastix 4.5
+    // fp used to be ipp
+    fp = configuration.GetCommandLineArgument("-ipp");
   }
   PointSetPointer landmarkPointSet; // default-constructed (null)
   this->ReadLandmarkFile(fp, landmarkPointSet, true);
