@@ -178,7 +178,6 @@ ElastixBase::BeforeAllBase()
 
   /** Check Command line options and print them to the logfile. */
   log::info("ELASTIX version: " ELASTIX_VERSION_STRING "\nCommand line options from ElastixBase:");
-  std::string check = "";
 
   if (!BaseComponent::IsElastixLibrary())
   {
@@ -210,10 +209,8 @@ ElastixBase::BeforeAllBase()
     }
   }
 
-  /** Check for appearance of "-out".
-   */
-  check = m_Configuration->GetCommandLineArgument("-out");
-  if (!check.empty())
+  /** Check for appearance of "-out". */
+  if (const std::string check = m_Configuration->GetCommandLineArgument("-out"); !check.empty())
   {
     /** Make sure that last character of the output folder equals a '/' or '\'. */
     std::string folder(check);
@@ -235,8 +232,8 @@ ElastixBase::BeforeAllBase()
   {
     std::ostringstream tempPname;
     tempPname << "-p(" << i << ")";
-    check = m_Configuration->GetCommandLineArgument(tempPname.str());
-    if (check.empty())
+
+    if (const std::string check = m_Configuration->GetCommandLineArgument(tempPname.str()); check.empty())
     {
       loop = false;
     }
@@ -249,8 +246,7 @@ ElastixBase::BeforeAllBase()
 
   /** Check for appearance of "-priority", if this is a Windows station. */
 #ifdef _WIN32
-  check = m_Configuration->GetCommandLineArgument("-priority");
-  if (check.empty())
+  if (const std::string check = m_Configuration->GetCommandLineArgument("-priority"); check.empty())
   {
     log::info("-priority unspecified, so NORMAL process priority");
   }
@@ -261,8 +257,7 @@ ElastixBase::BeforeAllBase()
 #endif
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  check = m_Configuration->GetCommandLineArgument("-threads");
-  if (check.empty())
+  if (const std::string check = m_Configuration->GetCommandLineArgument("-threads"); check.empty())
   {
     log::info("-threads  unspecified, so all available threads are used");
   }
@@ -328,8 +323,7 @@ ElastixBase::BeforeAllTransformixBase()
     }
   }
   /** Check for appearance of "-out". */
-  std::string check = m_Configuration->GetCommandLineArgument("-out");
-  if (!check.empty())
+  if (const std::string check = m_Configuration->GetCommandLineArgument("-out"); !check.empty())
   {
     /** Make sure that last character of -out equals a '/'. */
     if (check.back() != '/')
@@ -340,8 +334,7 @@ ElastixBase::BeforeAllTransformixBase()
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  check = m_Configuration->GetCommandLineArgument("-threads");
-  if (check.empty())
+  if (const std::string check = m_Configuration->GetCommandLineArgument("-threads"); check.empty())
   {
     log::info("-threads  unspecified, so all available threads are used");
   }
@@ -352,7 +345,7 @@ ElastixBase::BeforeAllTransformixBase()
   if (!BaseComponent::IsElastixLibrary())
   {
     /** Print "-tp". */
-    check = m_Configuration->GetCommandLineArgument("-tp");
+    const std::string check = m_Configuration->GetCommandLineArgument("-tp");
     log::info(std::ostringstream{} << "-tp       " << check);
   }
   /** Retrieve the very important UseDirectionCosines parameter. */
