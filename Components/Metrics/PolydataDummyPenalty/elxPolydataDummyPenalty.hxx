@@ -84,8 +84,6 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase()
   /** Check Command line options and print them to the log file. */
   log::info(std::ostringstream{} << "Command line options from " << this->elxGetClassName() << ": (" << componentLabel
                                  << "):");
-  std::string check("");
-
   this->m_NumberOfMeshes = 0;
 
   for (char ch = 'A'; ch <= 'Z'; ++ch)
@@ -93,8 +91,8 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase()
     std::ostringstream fmeshArgument("-fmesh", std::ios_base::ate);
     /** Check for appearance of "-fmesh<[A-Z]><Metric>". */
     fmeshArgument << ch << metricNumber;
-    check = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str());
-    if (check.empty())
+
+    if (const std::string check = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str()); check.empty())
     {
       break;
     }

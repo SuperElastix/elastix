@@ -64,11 +64,8 @@ TransformBase<TElastix>::BeforeAllBase()
   /** Check Command line options and print them to the logfile. */
   log::info("Command line options from TransformBase:");
 
-  std::string check("");
-
   /** Check for appearance of "-t0". */
-  check = configuration.GetCommandLineArgument("-t0");
-  if (check.empty())
+  if (const std::string check = configuration.GetCommandLineArgument("-t0"); check.empty())
   {
     log::info("-t0       unspecified, so no initial transform used");
   }
@@ -96,12 +93,8 @@ TransformBase<TElastix>::BeforeAllTransformix()
   /** Declare the return value and initialize it. */
   int returndummy = 0;
 
-  /** Declare check. */
-  std::string check = "";
-
   /** Check for appearance of "-ipp". */
-  check = configuration.GetCommandLineArgument("-ipp");
-  if (!check.empty())
+  if (const std::string check = configuration.GetCommandLineArgument("-ipp"); !check.empty())
   {
     log::info(std::ostringstream{} << "-ipp      " << check);
     // Deprecated since elastix 4.3
@@ -109,8 +102,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
 
   /** Check for appearance of "-def". */
-  check = configuration.GetCommandLineArgument("-def");
-  if (check.empty())
+  if (const std::string check = configuration.GetCommandLineArgument("-def"); check.empty())
   {
     log::info("-def      unspecified, so no input points transformed");
   }
@@ -120,8 +112,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
 
   /** Check for appearance of "-jac". */
-  check = configuration.GetCommandLineArgument("-jac");
-  if (check.empty())
+  if (const std::string check = configuration.GetCommandLineArgument("-jac"); check.empty())
   {
     log::info("-jac      unspecified, so no det(dT/dx) computed");
   }
@@ -131,8 +122,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
 
   /** Check for appearance of "-jacmat". */
-  check = configuration.GetCommandLineArgument("-jacmat");
-  if (check.empty())
+  if (const std::string check = configuration.GetCommandLineArgument("-jacmat"); check.empty())
   {
     log::info("-jacmat   unspecified, so no dT/dx computed");
   }

@@ -96,7 +96,6 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
 
   /** Check Command line options and print them to the log file. */
   log::info(std::ostringstream{} << "Command line options from MissingStructurePenalty (" << componentLabel << "):");
-  std::string check("");
 
   this->m_NumberOfMeshes = 0;
 
@@ -104,8 +103,8 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
   {
     std::ostringstream fmeshArgument("-fmesh", std::ios_base::ate);
     fmeshArgument << ch << metricNumber;
-    check = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str());
-    if (check.empty())
+
+    if (const std::string check = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str()); check.empty())
     {
       break;
     }

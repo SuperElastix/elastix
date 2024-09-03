@@ -75,11 +75,9 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
 
   /** Check Command line options and print them to the log file. */
   log::info("Command line options from CorrespondingPointsEuclideanDistanceMetric:");
-  std::string check("");
 
   /** Check for appearance of "-fp". */
-  check = configuration.GetCommandLineArgument("-fp");
-  if (check.empty())
+  if (const std::string check = configuration.GetCommandLineArgument("-fp"); check.empty())
   {
     log::info("-fp       unspecified");
   }
@@ -89,8 +87,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   }
 
   /** Check for appearance of "-mp". */
-  check = configuration.GetCommandLineArgument("-mp");
-  if (check.empty())
+  if (const std::string check = configuration.GetCommandLineArgument("-mp"); check.empty())
   {
     log::info("-mp       unspecified");
   }
