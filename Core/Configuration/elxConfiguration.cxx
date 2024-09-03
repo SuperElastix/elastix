@@ -177,7 +177,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   else
   {
     /** Both "p" and "tp" are used, which is prohibited. */
-    log::error(std::ostringstream{} << "ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited.");
+    log::error("ERROR: Both \"-p\" and \"-tp\" are used, which is prohibited.");
     return 1;
   }
 

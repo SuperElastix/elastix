@@ -99,7 +99,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   {
     log::info(std::ostringstream{} << "-ipp      " << commandLineArgument);
     // Deprecated since elastix 4.3
-    log::warn(std::ostringstream{} << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!");
+    log::warn("WARNING: \"-ipp\" is deprecated, use \"-def\" instead!");
   }
 
   /** Check for appearance of "-def". */
@@ -692,7 +692,7 @@ TransformBase<TElastix>::TransformPoints() const
   else
   {
     // just a message
-    log::info(std::ostringstream{} << "  The command-line option \"-def\" is not used, so no points are transformed");
+    log::info("  The command-line option \"-def\" is not used, so no points are transformed");
   }
 
 } // end TransformPoints()
@@ -1148,7 +1148,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianDeterminantImage() const
   std::string jac = configuration.GetCommandLineArgument("-jac");
   if (jac.empty())
   {
-    log::info(std::ostringstream{} << "  The command-line option \"-jac\" is not used, so no det(dT/dx) computed.");
+    log::info("  The command-line option \"-jac\" is not used, so no det(dT/dx) computed.");
     return;
   }
   else if (jac != "all")
@@ -1214,7 +1214,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
   std::string jac = configuration.GetCommandLineArgument("-jacmat");
   if (jac != "all")
   {
-    log::info(std::ostringstream{} << "  The command-line option \"-jacmat\" is not used, so no dT/dx computed.");
+    log::info("  The command-line option \"-jacmat\" is not used, so no dT/dx computed.");
     return;
   }
 
