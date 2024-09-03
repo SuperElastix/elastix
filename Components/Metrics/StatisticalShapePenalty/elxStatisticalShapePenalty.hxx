@@ -19,7 +19,6 @@
 #define elxStatisticalShapePenalty_hxx
 
 #include "elxStatisticalShapePenalty.h"
-#include "itkTransformixInputPointFileReader.h"
 
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
@@ -262,83 +261,6 @@ StatisticalShapePenalty<TElastix>::BeforeEachResolution()
   this->SetCutOffSharpness(cutOffSharpness);
 
 } // end BeforeEachResolution()
-
-
-/**
- * ***************** ReadLandmarks ***********************
- */
-
-template <typename TElastix>
-unsigned int
-StatisticalShapePenalty<TElastix>::ReadLandmarks(const std::string &                    landmarkFileName,
-                                                 typename PointSetType::Pointer &       pointSet,
-                                                 const typename ImageType::ConstPointer image)
-{
-  /** Typedefs. */
-  using IndexType = typename ImageType::IndexType;
-  using IndexValueType = typename ImageType::IndexValueType;
-  using PointType = typename ImageType::PointType;
-
-  log::info(std::ostringstream{} << "Loading landmarks for " << this->GetComponentLabel() << ":"
-                                 << this->elxGetClassName() << ".");
-
-  /** Read the landmarks. */
-  auto reader = itk::TransformixInputPointFileReader<PointSetType>::New();
-  reader->SetFileName(landmarkFileName);
-  log::info(std::ostringstream{} << "  Reading landmark file: " << landmarkFileName);
-  try
-  {
-    reader->Update();
-  }
-  catch (const itk::ExceptionObject & err)
-  {
-    log::error(std::ostringstream{} << "  Error while opening " << landmarkFileName << '\n' << err);
-    itkExceptionMacro("ERROR: unable to configure " << this->GetComponentLabel());
-  }
-
-  /** Some user-feedback. */
-  const unsigned int nrofpoints = reader->GetNumberOfPoints();
-  if (reader->GetPointsAreIndices())
-  {
-    log::info("  Landmarks are specified as image indices.");
-  }
-  else
-  {
-    log::info("  Landmarks are specified in world coordinates.");
-  }
-  log::info(std::ostringstream{} << "  Number of specified points: " << nrofpoints);
-
-  /** Get the pointset. */
-  pointSet = reader->GetOutput();
-
-  /** Convert from index to point if necessary */
-  pointSet->DisconnectPipeline();
-  if (reader->GetPointsAreIndices())
-  {
-    /** Convert to world coordinates */
-    for (unsigned int j = 0; j < nrofpoints; ++j)
-    {
-      /** The landmarks from the pointSet are indices. We first cast to the
-       * proper type, and then convert it to world coordinates.
-       */
-      PointType point;
-      IndexType index;
-      pointSet->GetPoint(j, &point);
-      for (unsigned int d = 0; d < FixedImageDimension; ++d)
-      {
-        index[d] = static_cast<IndexValueType>(vnl_math::rnd(point[d]));
-      }
-
-      /** Compute the input point in physical coordinates. */
-      image->TransformIndexToPhysicalPoint(index, point);
-      pointSet->SetPoint(j, point);
-
-    } // end for all points
-  }   // end for points are indices
-
-  return nrofpoints;
-
-} // end ReadLandmarks()
 
 
 /**

@@ -153,12 +153,6 @@ public:
   void
   BeforeEachResolution() override;
 
-  /** Function to read the corresponding points. */
-  unsigned int
-  ReadLandmarks(const std::string &                    landmarkFileName,
-                typename PointSetType::Pointer &       pointSet,
-                const typename ImageType::ConstPointer image);
-
   unsigned int
   ReadShape(const std::string & ShapeFileName, typename PointSetType::Pointer & pointSet);
 
