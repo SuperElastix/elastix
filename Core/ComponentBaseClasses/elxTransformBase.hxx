@@ -65,13 +65,13 @@ TransformBase<TElastix>::BeforeAllBase()
   log::info("Command line options from TransformBase:");
 
   /** Check for appearance of "-t0". */
-  if (const std::string check = configuration.GetCommandLineArgument("-t0"); check.empty())
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-t0"); commandLineArgument.empty())
   {
     log::info("-t0       unspecified, so no initial transform used");
   }
   else
   {
-    log::info(std::ostringstream{} << "-t0       " << check);
+    log::info(std::ostringstream{} << "-t0       " << commandLineArgument);
   }
 
   /** Return a value. */
@@ -94,41 +94,43 @@ TransformBase<TElastix>::BeforeAllTransformix()
   int returndummy = 0;
 
   /** Check for appearance of "-ipp". */
-  if (const std::string check = configuration.GetCommandLineArgument("-ipp"); !check.empty())
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-ipp");
+      !commandLineArgument.empty())
   {
-    log::info(std::ostringstream{} << "-ipp      " << check);
+    log::info(std::ostringstream{} << "-ipp      " << commandLineArgument);
     // Deprecated since elastix 4.3
     log::warn(std::ostringstream{} << "WARNING: \"-ipp\" is deprecated, use \"-def\" instead!");
   }
 
   /** Check for appearance of "-def". */
-  if (const std::string check = configuration.GetCommandLineArgument("-def"); check.empty())
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-def"); commandLineArgument.empty())
   {
     log::info("-def      unspecified, so no input points transformed");
   }
   else
   {
-    log::info(std::ostringstream{} << "-def      " << check);
+    log::info(std::ostringstream{} << "-def      " << commandLineArgument);
   }
 
   /** Check for appearance of "-jac". */
-  if (const std::string check = configuration.GetCommandLineArgument("-jac"); check.empty())
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-jac"); commandLineArgument.empty())
   {
     log::info("-jac      unspecified, so no det(dT/dx) computed");
   }
   else
   {
-    log::info(std::ostringstream{} << "-jac      " << check);
+    log::info(std::ostringstream{} << "-jac      " << commandLineArgument);
   }
 
   /** Check for appearance of "-jacmat". */
-  if (const std::string check = configuration.GetCommandLineArgument("-jacmat"); check.empty())
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-jacmat");
+      commandLineArgument.empty())
   {
     log::info("-jacmat   unspecified, so no dT/dx computed");
   }
   else
   {
-    log::info(std::ostringstream{} << "-jacmat   " << check);
+    log::info(std::ostringstream{} << "-jacmat   " << commandLineArgument);
   }
 
   /** Return a value. */

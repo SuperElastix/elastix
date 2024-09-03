@@ -104,13 +104,14 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
     std::ostringstream fmeshArgument("-fmesh", std::ios_base::ate);
     fmeshArgument << ch << metricNumber;
 
-    if (const std::string check = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str()); check.empty())
+    if (const std::string commandLineArgument = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str());
+        commandLineArgument.empty())
     {
       break;
     }
     else
     {
-      log::info(std::ostringstream{} << fmeshArgument.str() << "\t" << check);
+      log::info(std::ostringstream{} << fmeshArgument.str() << "\t" << commandLineArgument);
       this->m_NumberOfMeshes++;
     }
   }

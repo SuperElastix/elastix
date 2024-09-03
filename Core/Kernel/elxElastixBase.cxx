@@ -51,15 +51,15 @@ GenerateFileNameContainer(const Configuration & configuration,
   std::ostringstream argusedss;
   argusedss << optionkey << 0;
   std::string argused = argusedss.str();
-  std::string check = configuration.GetCommandLineArgument(argused);
-  if (check.empty())
+  std::string commandLineArgument = configuration.GetCommandLineArgument(argused);
+  if (commandLineArgument.empty())
   {
     /** Try optionkey. */
     std::ostringstream argusedss2;
     argusedss2 << optionkey;
     argused = argusedss2.str();
-    check = configuration.GetCommandLineArgument(argused);
-    if (check.empty())
+    commandLineArgument = configuration.GetCommandLineArgument(argused);
+    if (commandLineArgument.empty())
     {
       /** Both failed; return an error message, if desired. */
       if (printerrors)
@@ -74,7 +74,7 @@ GenerateFileNameContainer(const Configuration & configuration,
   }
 
   /** Optionkey or optionkey0 is found. */
-  if (!check.empty())
+  if (!commandLineArgument.empty())
   {
     /** Print info, if desired. */
     if (printinfo)
@@ -84,9 +84,9 @@ GenerateFileNameContainer(const Configuration & configuration,
       unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
       std::string  spaces = "";
       spaces.resize(nrSpaces, ' ');
-      log::info(std::ostringstream{} << argused << spaces << check);
+      log::info(std::ostringstream{} << argused << spaces << commandLineArgument);
     }
-    fileNameContainer->CreateElementAt(0) = check;
+    fileNameContainer->CreateElementAt(0) = commandLineArgument;
 
     /** Loop over all optionkey<i> options given with i > 0. */
     unsigned int i = 1;
@@ -96,8 +96,8 @@ GenerateFileNameContainer(const Configuration & configuration,
       std::ostringstream argusedss2;
       argusedss2 << optionkey << i;
       argused = argusedss2.str();
-      check = configuration.GetCommandLineArgument(argused);
-      if (check.empty())
+      commandLineArgument = configuration.GetCommandLineArgument(argused);
+      if (commandLineArgument.empty())
       {
         readsuccess = false;
       }
@@ -110,9 +110,9 @@ GenerateFileNameContainer(const Configuration & configuration,
           unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
           std::string  spaces = "";
           spaces.resize(nrSpaces, ' ');
-          log::info(std::ostringstream{} << argused << spaces << check);
+          log::info(std::ostringstream{} << argused << spaces << commandLineArgument);
         }
-        fileNameContainer->CreateElementAt(i) = check;
+        fileNameContainer->CreateElementAt(i) = commandLineArgument;
         ++i;
       }
     } // end while
@@ -210,10 +210,11 @@ ElastixBase::BeforeAllBase()
   }
 
   /** Check for appearance of "-out". */
-  if (const std::string check = m_Configuration->GetCommandLineArgument("-out"); !check.empty())
+  if (const std::string commandLineArgument = m_Configuration->GetCommandLineArgument("-out");
+      !commandLineArgument.empty())
   {
     /** Make sure that last character of the output folder equals a '/' or '\'. */
-    std::string folder(check);
+    std::string folder(commandLineArgument);
     const char  last = folder.back();
     if (last != '/' && last != '\\')
     {
@@ -222,7 +223,7 @@ ElastixBase::BeforeAllBase()
 
       m_Configuration->SetCommandLineArgument("-out", folder);
     }
-    log::info(std::ostringstream{} << "-out      " << check);
+    log::info(std::ostringstream{} << "-out      " << commandLineArgument);
   }
 
   /** Print all "-p". */
@@ -246,24 +247,26 @@ ElastixBase::BeforeAllBase()
 
   /** Check for appearance of "-priority", if this is a Windows station. */
 #ifdef _WIN32
-  if (const std::string check = m_Configuration->GetCommandLineArgument("-priority"); check.empty())
+  if (const std::string commandLineArgument = m_Configuration->GetCommandLineArgument("-priority");
+      commandLineArgument.empty())
   {
     log::info("-priority unspecified, so NORMAL process priority");
   }
   else
   {
-    log::info(std::ostringstream{} << "-priority " << check);
+    log::info(std::ostringstream{} << "-priority " << commandLineArgument);
   }
 #endif
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  if (const std::string check = m_Configuration->GetCommandLineArgument("-threads"); check.empty())
+  if (const std::string commandLineArgument = m_Configuration->GetCommandLineArgument("-threads");
+      commandLineArgument.empty())
   {
     log::info("-threads  unspecified, so all available threads are used");
   }
   else
   {
-    log::info(std::ostringstream{} << "-threads  " << check);
+    log::info(std::ostringstream{} << "-threads  " << commandLineArgument);
   }
 
   /** Check the very important UseDirectionCosines parameter. */
@@ -323,30 +326,32 @@ ElastixBase::BeforeAllTransformixBase()
     }
   }
   /** Check for appearance of "-out". */
-  if (const std::string check = m_Configuration->GetCommandLineArgument("-out"); !check.empty())
+  if (const std::string commandLineArgument = m_Configuration->GetCommandLineArgument("-out");
+      !commandLineArgument.empty())
   {
     /** Make sure that last character of -out equals a '/'. */
-    if (check.back() != '/')
+    if (commandLineArgument.back() != '/')
     {
-      m_Configuration->SetCommandLineArgument("-out", check + '/');
+      m_Configuration->SetCommandLineArgument("-out", commandLineArgument + '/');
     }
-    log::info(std::ostringstream{} << "-out      " << check);
+    log::info(std::ostringstream{} << "-out      " << commandLineArgument);
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
-  if (const std::string check = m_Configuration->GetCommandLineArgument("-threads"); check.empty())
+  if (const std::string commandLineArgument = m_Configuration->GetCommandLineArgument("-threads");
+      commandLineArgument.empty())
   {
     log::info("-threads  unspecified, so all available threads are used");
   }
   else
   {
-    log::info(std::ostringstream{} << "-threads  " << check);
+    log::info(std::ostringstream{} << "-threads  " << commandLineArgument);
   }
   if (!BaseComponent::IsElastixLibrary())
   {
     /** Print "-tp". */
-    const std::string check = m_Configuration->GetCommandLineArgument("-tp");
-    log::info(std::ostringstream{} << "-tp       " << check);
+    const std::string commandLineArgument = m_Configuration->GetCommandLineArgument("-tp");
+    log::info(std::ostringstream{} << "-tp       " << commandLineArgument);
   }
   /** Retrieve the very important UseDirectionCosines parameter. */
   m_Configuration->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
