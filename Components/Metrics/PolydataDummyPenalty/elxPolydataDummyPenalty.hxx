@@ -92,13 +92,14 @@ PolydataDummyPenalty<TElastix>::BeforeAllBase()
     /** Check for appearance of "-fmesh<[A-Z]><Metric>". */
     fmeshArgument << ch << metricNumber;
 
-    if (const std::string check = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str()); check.empty())
+    if (const std::string commandLineArgument = this->m_Configuration->GetCommandLineArgument(fmeshArgument.str());
+        commandLineArgument.empty())
     {
       break;
     }
     else
     {
-      log::info(std::ostringstream{} << fmeshArgument.str() << "\t" << check);
+      log::info(std::ostringstream{} << fmeshArgument.str() << "\t" << commandLineArgument);
       this->m_NumberOfMeshes++;
     }
   }

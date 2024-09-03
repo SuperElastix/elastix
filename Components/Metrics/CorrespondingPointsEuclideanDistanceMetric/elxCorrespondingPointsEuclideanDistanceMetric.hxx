@@ -77,23 +77,23 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   log::info("Command line options from CorrespondingPointsEuclideanDistanceMetric:");
 
   /** Check for appearance of "-fp". */
-  if (const std::string check = configuration.GetCommandLineArgument("-fp"); check.empty())
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-fp"); commandLineArgument.empty())
   {
     log::info("-fp       unspecified");
   }
   else
   {
-    log::info(std::ostringstream{} << "-fp       " << check);
+    log::info(std::ostringstream{} << "-fp       " << commandLineArgument);
   }
 
   /** Check for appearance of "-mp". */
-  if (const std::string check = configuration.GetCommandLineArgument("-mp"); check.empty())
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-mp"); commandLineArgument.empty())
   {
     log::info("-mp       unspecified");
   }
   else
   {
-    log::info(std::ostringstream{} << "-mp       " << check);
+    log::info(std::ostringstream{} << "-mp       " << commandLineArgument);
   }
 
   /** Return a value. */
