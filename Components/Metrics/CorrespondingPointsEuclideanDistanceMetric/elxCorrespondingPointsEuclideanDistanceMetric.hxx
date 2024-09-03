@@ -83,7 +83,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   }
   else
   {
-    log::info(std::ostringstream{} << "-fp       " << commandLineArgument);
+    log::info("-fp       " + commandLineArgument);
   }
 
   /** Check for appearance of "-mp". */
@@ -93,7 +93,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeAllBase()
   }
   else
   {
-    log::info(std::ostringstream{} << "-mp       " << commandLineArgument);
+    log::info("-mp       " + commandLineArgument);
   }
 
   /** Return a value. */

@@ -111,7 +111,7 @@ MissingStructurePenalty<TElastix>::BeforeAllBase()
     }
     else
     {
-      log::info(std::ostringstream{} << fmeshArgument.str() << "\t" << commandLineArgument);
+      log::info(fmeshArgument.str() + "\t" + commandLineArgument);
       this->m_NumberOfMeshes++;
     }
   }
