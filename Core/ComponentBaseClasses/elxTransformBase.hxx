@@ -71,7 +71,7 @@ TransformBase<TElastix>::BeforeAllBase()
   }
   else
   {
-    log::info(std::ostringstream{} << "-t0       " << commandLineArgument);
+    log::info("-t0       " + commandLineArgument);
   }
 
   /** Return a value. */
@@ -97,7 +97,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-ipp");
       !commandLineArgument.empty())
   {
-    log::info(std::ostringstream{} << "-ipp      " << commandLineArgument);
+    log::info("-ipp      " + commandLineArgument);
     // Deprecated since elastix 4.3
     log::warn("WARNING: \"-ipp\" is deprecated, use \"-def\" instead!");
   }
@@ -109,7 +109,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
   else
   {
-    log::info(std::ostringstream{} << "-def      " << commandLineArgument);
+    log::info("-def      " + commandLineArgument);
   }
 
   /** Check for appearance of "-jac". */
@@ -119,7 +119,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
   else
   {
-    log::info(std::ostringstream{} << "-jac      " << commandLineArgument);
+    log::info("-jac      " + commandLineArgument);
   }
 
   /** Check for appearance of "-jacmat". */
@@ -130,7 +130,7 @@ TransformBase<TElastix>::BeforeAllTransformix()
   }
   else
   {
-    log::info(std::ostringstream{} << "-jacmat   " << commandLineArgument);
+    log::info("-jacmat   " + commandLineArgument);
   }
 
   /** Return a value. */

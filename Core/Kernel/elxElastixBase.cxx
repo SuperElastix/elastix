@@ -84,7 +84,7 @@ GenerateFileNameContainer(const Configuration & configuration,
       unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
       std::string  spaces = "";
       spaces.resize(nrSpaces, ' ');
-      log::info(std::ostringstream{} << argused << spaces << commandLineArgument);
+      log::info(argused + spaces + commandLineArgument);
     }
     fileNameContainer->CreateElementAt(0) = commandLineArgument;
 
@@ -110,7 +110,7 @@ GenerateFileNameContainer(const Configuration & configuration,
           unsigned int nrSpaces = nrSpaces0 > 1 ? nrSpaces0 : 1;
           std::string  spaces = "";
           spaces.resize(nrSpaces, ' ');
-          log::info(std::ostringstream{} << argused << spaces << commandLineArgument);
+          log::info(argused + spaces + commandLineArgument);
         }
         fileNameContainer->CreateElementAt(i) = commandLineArgument;
         ++i;
@@ -223,7 +223,7 @@ ElastixBase::BeforeAllBase()
 
       m_Configuration->SetCommandLineArgument("-out", folder);
     }
-    log::info(std::ostringstream{} << "-out      " << commandLineArgument);
+    log::info("-out      " + commandLineArgument);
   }
 
   /** Print all "-p". */
@@ -254,7 +254,7 @@ ElastixBase::BeforeAllBase()
   }
   else
   {
-    log::info(std::ostringstream{} << "-priority " << commandLineArgument);
+    log::info("-priority " + commandLineArgument);
   }
 #endif
 
@@ -266,7 +266,7 @@ ElastixBase::BeforeAllBase()
   }
   else
   {
-    log::info(std::ostringstream{} << "-threads  " << commandLineArgument);
+    log::info("-threads  " + commandLineArgument);
   }
 
   /** Check the very important UseDirectionCosines parameter. */
@@ -334,7 +334,7 @@ ElastixBase::BeforeAllTransformixBase()
     {
       m_Configuration->SetCommandLineArgument("-out", commandLineArgument + '/');
     }
-    log::info(std::ostringstream{} << "-out      " << commandLineArgument);
+    log::info("-out      " + commandLineArgument);
   }
 
   /** Check for appearance of -threads, which specifies the maximum number of threads. */
@@ -345,13 +345,13 @@ ElastixBase::BeforeAllTransformixBase()
   }
   else
   {
-    log::info(std::ostringstream{} << "-threads  " << commandLineArgument);
+    log::info("-threads  " + commandLineArgument);
   }
   if (!BaseComponent::IsElastixLibrary())
   {
     /** Print "-tp". */
     const std::string commandLineArgument = m_Configuration->GetCommandLineArgument("-tp");
-    log::info(std::ostringstream{} << "-tp       " << commandLineArgument);
+    log::info("-tp       " + commandLineArgument);
   }
   /** Retrieve the very important UseDirectionCosines parameter. */
   m_Configuration->ReadParameter(m_UseDirectionCosines, "UseDirectionCosines", 0);
