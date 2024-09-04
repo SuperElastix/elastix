@@ -129,12 +129,6 @@ public:
   void
   BeforeRegistration() override;
 
-  /** Function to read the corresponding points. */
-  unsigned int
-  ReadLandmarks(const std::string &                    landmarkFileName,
-                typename PointSetType::Pointer &       pointSet,
-                const typename ImageType::ConstPointer image);
-
   /** Overwrite to silence warning. */
   void
   SelectNewSamples() override
@@ -148,6 +142,12 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
+
+  /** Function to read the corresponding points. */
+  unsigned int
+  ReadLandmarks(const std::string &                    landmarkFileName,
+                typename PointSetType::Pointer &       pointSet,
+                const typename ImageType::ConstPointer image);
 };
 
 } // end namespace elastix
