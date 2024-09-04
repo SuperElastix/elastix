@@ -39,6 +39,7 @@
 #include "itkMacro.h"
 #include "itkImageMaskSpatialObject.h"
 #include "itkPointSet.h"
+#include "itkDeref.h"
 
 namespace itk
 {
@@ -178,6 +179,30 @@ protected:
   /** PrintSelf. */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
+
+  /** Returns a reference to the STL container of fixed points. */
+  const auto &
+  GetFixedPoints() const
+  {
+    // Sanity check.
+    if (!m_FixedPointSet)
+    {
+      itkExceptionMacro("Fixed point set has not been assigned");
+    }
+    return Deref(m_FixedPointSet->GetPoints()).CastToSTLConstContainer();
+  }
+
+  /** Returns a reference to the STL container of moving points. */
+  const auto &
+  GetMovingPoints() const
+  {
+    // Sanity check.
+    if (!m_MovingPointSet)
+    {
+      itkExceptionMacro("Moving point set has not been assigned");
+    }
+    return Deref(m_MovingPointSet->GetPoints()).CastToSTLConstContainer();
+  }
 
   /** Member variables. */
   FixedPointSetConstPointer   m_FixedPointSet{ nullptr };
