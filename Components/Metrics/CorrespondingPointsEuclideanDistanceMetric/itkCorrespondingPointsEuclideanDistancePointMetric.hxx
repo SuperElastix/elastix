@@ -57,17 +57,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
     mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
 
     /** Check if the point is inside the moving mask. */
-    bool sampleOk = true;
-    if (sampleOk)
-    {
-      // sampleOk = this->IsInsideMovingMask( mappedPoint );
-      if (Superclass::m_MovingImageMask.IsNotNull())
-      {
-        sampleOk = Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint);
-      }
-    }
-
-    if (sampleOk)
+    if ((Superclass::m_MovingImageMask == nullptr) || Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint))
     {
       Superclass::m_NumberOfPointsCounted++;
 
@@ -158,17 +148,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
     mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
 
     /** Check if the point is inside the moving mask. */
-    bool sampleOk = true;
-    if (sampleOk)
-    {
-      // sampleOk = this->IsInsideMovingMask( mappedPoint );
-      if (Superclass::m_MovingImageMask.IsNotNull())
-      {
-        sampleOk = Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint);
-      }
-    }
-
-    if (sampleOk)
+    if ((Superclass::m_MovingImageMask == nullptr) || Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint))
     {
       Superclass::m_NumberOfPointsCounted++;
 
