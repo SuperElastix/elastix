@@ -36,7 +36,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   const auto & movingPoints = this->Superclass::GetMovingPoints();
 
   /** Initialize some variables. */
-  this->m_NumberOfPointsCounted = 0;
+  Superclass::m_NumberOfPointsCounted = 0;
   MeasureType     measure{};
   OutputPointType mappedPoint;
 
@@ -54,22 +54,22 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
     /** Transform point and check if it is inside the B-spline support region. */
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-    mappedPoint = this->m_Transform->TransformPoint(fixedPoint);
+    mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
 
     /** Check if the point is inside the moving mask. */
     bool sampleOk = true;
     if (sampleOk)
     {
       // sampleOk = this->IsInsideMovingMask( mappedPoint );
-      if (this->m_MovingImageMask.IsNotNull())
+      if (Superclass::m_MovingImageMask.IsNotNull())
       {
-        sampleOk = this->m_MovingImageMask->IsInsideInWorldSpace(mappedPoint);
+        sampleOk = Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint);
       }
     }
 
     if (sampleOk)
     {
-      this->m_NumberOfPointsCounted++;
+      Superclass::m_NumberOfPointsCounted++;
 
       VnlVectorType diffPoint = (movingPoint - mappedPoint).GetVnlVector();
       measure += diffPoint.magnitude();
@@ -80,7 +80,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
   } // end loop over all corresponding points
 
-  return measure / this->m_NumberOfPointsCounted;
+  return measure / Superclass::m_NumberOfPointsCounted;
 
 } // end GetValue()
 
@@ -121,11 +121,11 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   const auto & movingPoints = this->Superclass::GetMovingPoints();
 
   /** Initialize some variables */
-  this->m_NumberOfPointsCounted = 0;
+  Superclass::m_NumberOfPointsCounted = 0;
   MeasureType measure{};
   derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
-  NonZeroJacobianIndicesType nzji(this->m_Transform->GetNumberOfNonZeroJacobianIndices());
+  NonZeroJacobianIndicesType nzji(Superclass::m_Transform->GetNumberOfNonZeroJacobianIndices());
   TransformJacobianType      jacobian;
 
   OutputPointType mappedPoint;
@@ -155,26 +155,26 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
     /** Transform point and check if it is inside the B-spline support region. */
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-    mappedPoint = this->m_Transform->TransformPoint(fixedPoint);
+    mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
 
     /** Check if the point is inside the moving mask. */
     bool sampleOk = true;
     if (sampleOk)
     {
       // sampleOk = this->IsInsideMovingMask( mappedPoint );
-      if (this->m_MovingImageMask.IsNotNull())
+      if (Superclass::m_MovingImageMask.IsNotNull())
       {
-        sampleOk = this->m_MovingImageMask->IsInsideInWorldSpace(mappedPoint);
+        sampleOk = Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint);
       }
     }
 
     if (sampleOk)
     {
-      this->m_NumberOfPointsCounted++;
+      Superclass::m_NumberOfPointsCounted++;
 
       /** Get the TransformJacobian dT/dmu. */
       // this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
-      this->m_Transform->GetJacobian(fixedPoint, jacobian, nzji);
+      Superclass::m_Transform->GetJacobian(fixedPoint, jacobian, nzji);
 
       VnlVectorType diffPoint = (movingPoint - mappedPoint).GetVnlVector();
       MeasureType   distance = diffPoint.magnitude();
@@ -209,14 +209,14 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
   /** Check if enough samples were valid. */
   //   this->CheckNumberOfSamples(
-  //     fixedPointSet->GetNumberOfPoints(), this->m_NumberOfPointsCounted );
+  //     fixedPointSet->GetNumberOfPoints(), Superclass::m_NumberOfPointsCounted );
 
   /** Copy the measure to value. */
   value = measure;
-  if (this->m_NumberOfPointsCounted > 0)
+  if (Superclass::m_NumberOfPointsCounted > 0)
   {
-    derivative /= this->m_NumberOfPointsCounted;
-    value = measure / this->m_NumberOfPointsCounted;
+    derivative /= Superclass::m_NumberOfPointsCounted;
+    value = measure / Superclass::m_NumberOfPointsCounted;
   }
 
 } // end GetValueAndDerivative()
