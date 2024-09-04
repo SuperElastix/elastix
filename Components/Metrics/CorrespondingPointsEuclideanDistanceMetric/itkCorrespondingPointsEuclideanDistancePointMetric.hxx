@@ -32,39 +32,25 @@ auto
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
 {
-  /** Sanity checks. */
-  FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
-  if (!fixedPointSet)
-  {
-    itkExceptionMacro("Fixed point set has not been assigned");
-  }
-
-  MovingPointSetConstPointer movingPointSet = this->GetMovingPointSet();
-  if (!movingPointSet)
-  {
-    itkExceptionMacro("Moving point set has not been assigned");
-  }
+  const auto & fixedPoints = this->Superclass::GetFixedPoints();
+  const auto & movingPoints = this->Superclass::GetMovingPoints();
 
   /** Initialize some variables. */
   this->m_NumberOfPointsCounted = 0;
   MeasureType     measure{};
-  InputPointType  movingPoint;
-  OutputPointType fixedPoint, mappedPoint;
+  OutputPointType mappedPoint;
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
 
-  /** Create iterators. */
-  PointIterator pointItFixed = fixedPointSet->GetPoints()->Begin();
-  PointIterator pointItMoving = movingPointSet->GetPoints()->Begin();
-  PointIterator pointEnd = fixedPointSet->GetPoints()->End();
+  /** Create iterator. */
+  auto pointItMoving = movingPoints.cbegin();
 
   /** Loop over the corresponding points. */
-  while (pointItFixed != pointEnd)
+  for (const OutputPointType & fixedPoint : fixedPoints)
   {
-    /** Get the current corresponding points. */
-    fixedPoint = pointItFixed.Value();
-    movingPoint = pointItMoving.Value();
+    /** Get the current corresponding moving point. */
+    const InputPointType & movingPoint = *pointItMoving;
 
     /** Transform point and check if it is inside the B-spline support region. */
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
@@ -90,7 +76,6 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
     } // end if sampleOk
 
-    ++pointItFixed;
     ++pointItMoving;
 
   } // end loop over all corresponding points
@@ -132,18 +117,8 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   MeasureType &                   value,
   DerivativeType &                derivative) const
 {
-  /** Sanity checks. */
-  FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
-  if (!fixedPointSet)
-  {
-    itkExceptionMacro("Fixed point set has not been assigned");
-  }
-
-  MovingPointSetConstPointer movingPointSet = this->GetMovingPointSet();
-  if (!movingPointSet)
-  {
-    itkExceptionMacro("Moving point set has not been assigned");
-  }
+  const auto & fixedPoints = this->Superclass::GetFixedPoints();
+  const auto & movingPoints = this->Superclass::GetMovingPoints();
 
   /** Initialize some variables */
   this->m_NumberOfPointsCounted = 0;
@@ -153,9 +128,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   NonZeroJacobianIndicesType nzji(this->m_Transform->GetNumberOfNonZeroJacobianIndices());
   TransformJacobianType      jacobian;
 
-  InputPointType  movingPoint;
-  OutputPointType fixedPoint, mappedPoint;
-
+  OutputPointType mappedPoint;
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
    *   this->GetImageSampler()->Update();
@@ -171,17 +144,14 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
    */
   this->BeforeThreadedGetValueAndDerivative(parameters);
 
-  /** Create iterators. */
-  PointIterator pointItFixed = fixedPointSet->GetPoints()->Begin();
-  PointIterator pointItMoving = movingPointSet->GetPoints()->Begin();
-  PointIterator pointEnd = fixedPointSet->GetPoints()->End();
+  /** Create iterator. */
+  auto pointItMoving = movingPoints.cbegin();
 
   /** Loop over the corresponding points. */
-  while (pointItFixed != pointEnd)
+  for (const OutputPointType & fixedPoint : fixedPoints)
   {
-    /** Get the current corresponding points. */
-    fixedPoint = pointItFixed.Value();
-    movingPoint = pointItMoving.Value();
+    /** Get the current corresponding moving point. */
+    const InputPointType & movingPoint = *pointItMoving;
 
     /** Transform point and check if it is inside the B-spline support region. */
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
@@ -233,7 +203,6 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
     } // end if sampleOk
 
-    ++pointItFixed;
     ++pointItMoving;
 
   } // end loop over all corresponding points
