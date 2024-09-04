@@ -37,8 +37,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
   /** Initialize some variables. */
   Superclass::m_NumberOfPointsCounted = 0;
-  MeasureType     measure{};
-  OutputPointType mappedPoint;
+  MeasureType measure{};
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
@@ -54,7 +53,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
     /** Transform point and check if it is inside the B-spline support region. */
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-    mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
+    const OutputPointType mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
 
     /** Check if the point is inside the moving mask. */
     if ((Superclass::m_MovingImageMask == nullptr) || Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint))
@@ -118,7 +117,6 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   NonZeroJacobianIndicesType nzji(Superclass::m_Transform->GetNumberOfNonZeroJacobianIndices());
   TransformJacobianType      jacobian;
 
-  OutputPointType mappedPoint;
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
    *   this->GetImageSampler()->Update();
@@ -145,7 +143,7 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 
     /** Transform point and check if it is inside the B-spline support region. */
     // bool sampleOk = this->TransformPoint( fixedPoint, mappedPoint );
-    mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
+    const OutputPointType mappedPoint = Superclass::m_Transform->TransformPoint(fixedPoint);
 
     /** Check if the point is inside the moving mask. */
     if ((Superclass::m_MovingImageMask == nullptr) || Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint))
