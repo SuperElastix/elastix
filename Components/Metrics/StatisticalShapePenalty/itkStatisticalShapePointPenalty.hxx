@@ -346,45 +346,31 @@ auto
 StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
   const TransformParametersType & parameters) const -> MeasureType
 {
-  /** Sanity checks. */
-  FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
-  if (!fixedPointSet)
-  {
-    itkExceptionMacro("Fixed point set has not been assigned");
-  }
+  const auto & fixedPoints = this->Superclass::GetFixedPoints();
 
   /** Initialize some variables */
   // this->m_NumberOfPointsCounted = 0;
   MeasureType value{};
 
-  // InputPointType movingPoint;
-  OutputPointType fixedPoint;
-
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
 
-  const unsigned int shapeLength = Self::FixedPointSetDimension * (fixedPointSet->GetNumberOfPoints());
+  const unsigned int shapeLength = Self::FixedPointSetDimension * fixedPoints.size();
   this->m_ProposalVector.set_size(this->m_ProposalLength);
 
   /** Part 1:
    * - Copy point positions in proposal vector
    */
 
-  /** Create iterators. */
-  PointIterator pointItFixed = fixedPointSet->GetPoints()->Begin();
-  PointIterator pointEnd = fixedPointSet->GetPoints()->End();
-
   unsigned int vertexindex = 0;
-  /** Loop over the corresponding points. */
-  while (pointItFixed != pointEnd)
+  /** Loop over the points. */
+  for (const OutputPointType & fixedPoint : fixedPoints)
   {
-    fixedPoint = pointItFixed.Value();
     this->FillProposalVector(fixedPoint, vertexindex);
 
     this->m_NumberOfPointsCounted++;
-    ++pointItFixed;
     vertexindex += Self::FixedPointSetDimension;
-  } // end loop over all corresponding points
+  }
 
   if (this->m_NormalizedShapeModel)
   {
@@ -446,12 +432,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
   MeasureType &                   value,
   DerivativeType &                derivative) const
 {
-  /** Sanity checks. */
-  FixedPointSetConstPointer fixedPointSet = this->GetFixedPointSet();
-  if (!fixedPointSet)
-  {
-    itkExceptionMacro("Fixed point set has not been assigned");
-  }
+  const auto & fixedPoints = this->Superclass::GetFixedPoints();
 
   /** Initialize some variables */
   // this->m_NumberOfPointsCounted = 0;
@@ -459,13 +440,10 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
   derivative.set_size(this->GetNumberOfParameters());
   derivative.Fill(DerivativeValueType{});
 
-  // InputPointType movingPoint;
-  OutputPointType fixedPoint;
-
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
 
-  const unsigned int shapeLength = Self::FixedPointSetDimension * fixedPointSet->GetNumberOfPoints();
+  const unsigned int shapeLength = Self::FixedPointSetDimension * fixedPoints.size();
 
   this->m_ProposalVector.set_size(this->m_ProposalLength);
   this->m_ProposalDerivative = new ProposalDerivativeType(this->GetNumberOfParameters(), nullptr);
@@ -475,22 +453,16 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
    * - Copy point derivatives in proposal derivative vector
    */
 
-  /** Create iterators. */
-  PointIterator pointItFixed = fixedPointSet->GetPoints()->Begin();
-  PointIterator pointEnd = fixedPointSet->GetPoints()->End();
-
   unsigned int vertexindex = 0;
-  /** Loop over the corresponding points. */
-  while (pointItFixed != pointEnd)
+  /** Loop over the points. */
+  for (const OutputPointType & fixedPoint : fixedPoints)
   {
-    fixedPoint = pointItFixed.Value();
     this->FillProposalVector(fixedPoint, vertexindex);
     this->FillProposalDerivative(fixedPoint, vertexindex);
 
     this->m_NumberOfPointsCounted++;
-    ++pointItFixed;
     vertexindex += Self::FixedPointSetDimension;
-  } // end loop over all corresponding points
+  }
 
   if (this->m_NormalizedShapeModel)
   {
