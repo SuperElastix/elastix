@@ -18,6 +18,7 @@
 
 // First include the header file to be tested:
 #include "CorrespondingPointsEuclideanDistanceMetric/itkCorrespondingPointsEuclideanDistancePointMetric.h"
+#include "itkAdvancedTranslationTransform.h"
 #include "elxDefaultConstruct.h"
 #include <itkPointSet.h>
 #include <gtest/gtest.h>
@@ -43,4 +44,30 @@ GTEST_TEST(CorrespondingPointsEuclideanDistancePointMetric, DefaultConstruct)
 
   // Note: `pointSetToPointSetMetric.m_NumberOfPointsCounted` is not public, and does not have a Get member function to
   // test its value.
+}
+
+
+// Checks if CorrespondingPointsEuclideanDistancePointMetric has the expected result on a minimal point set pair.
+GTEST_TEST(CorrespondingPointsEuclideanDistancePointMetric, MinimalPointSets)
+{
+  using PointSetType = itk::PointSet<double>;
+  using PointsVectorContainerType = PointSetType::PointsVectorContainer;
+  using MetricType = CorrespondingPointsEuclideanDistancePointMetric<PointSetType, PointSetType>;
+
+  elastix::DefaultConstruct<itk::AdvancedTranslationTransform<double, PointSetType::PointDimension>> transform{};
+  elastix::DefaultConstruct<PointsVectorContainerType> fixedPointsVectorContainer{};
+
+  fixedPointsVectorContainer.resize(PointSetType::PointDimension);
+  elastix::DefaultConstruct<PointsVectorContainerType> movingPointsVectorContainer{};
+  movingPointsVectorContainer.CastToSTLContainer() = fixedPointsVectorContainer.CastToSTLConstContainer();
+  elastix::DefaultConstruct<PointSetType> fixedPointSet{};
+  fixedPointSet.SetPoints(&fixedPointsVectorContainer);
+  elastix::DefaultConstruct<PointSetType> movingPointSet{};
+  movingPointSet.SetPoints(&movingPointsVectorContainer);
+  elastix::DefaultConstruct<MetricType> metric{};
+  metric.SetFixedPointSet(&fixedPointSet);
+  metric.SetMovingPointSet(&movingPointSet);
+  metric.SetTransform(&transform);
+  metric.Initialize();
+  EXPECT_EQ(metric.GetValue(transform.GetParameters()), 0);
 }
