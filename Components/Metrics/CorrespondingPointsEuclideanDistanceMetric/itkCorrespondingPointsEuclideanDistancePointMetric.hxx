@@ -59,9 +59,8 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
     if ((Superclass::m_MovingImageMask == nullptr) || Superclass::m_MovingImageMask->IsInsideInWorldSpace(mappedPoint))
     {
       Superclass::m_NumberOfPointsCounted++;
-
-      VnlVectorType diffPoint = (movingPoint - mappedPoint).GetVnlVector();
-      measure += diffPoint.magnitude();
+      const auto diffVector = movingPoint - mappedPoint;
+      measure += diffVector.GetNorm();
 
     } // end if sampleOk
 
@@ -154,14 +153,14 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
       // this->EvaluateTransformJacobian( fixedPoint, jacobian, nzji );
       Superclass::m_Transform->GetJacobian(fixedPoint, jacobian, nzji);
 
-      VnlVectorType diffPoint = (movingPoint - mappedPoint).GetVnlVector();
-      MeasureType   distance = diffPoint.magnitude();
+      const auto  diffVector = movingPoint - mappedPoint;
+      MeasureType distance = diffVector.GetNorm();
       measure += distance;
 
       /** Calculate the contributions to the derivatives with respect to each parameter. */
       if (distance > std::numeric_limits<MeasureType>::epsilon())
       {
-        VnlVectorType diff_2 = diffPoint / distance;
+        VnlVectorType diff_2 = (diffVector / distance).GetVnlVector();
         if (nzji.size() == this->GetNumberOfParameters())
         {
           /** Loop over all Jacobians. */
