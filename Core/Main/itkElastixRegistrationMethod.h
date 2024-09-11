@@ -99,6 +99,10 @@ public:
   static constexpr unsigned int FixedImageDimension = TFixedImage::ImageDimension;
   static constexpr unsigned int MovingImageDimension = TMovingImage::ImageDimension;
 
+  static_assert(FixedImageDimension == MovingImageDimension,
+                "ElastixRegistrationMethod assumes that fixed and moving image have the same number of dimensions.");
+  static constexpr unsigned int ImageDimension = TFixedImage::ImageDimension;
+
   using FixedMaskType = Image<unsigned char, FixedImageDimension>;
   using MovingMaskType = Image<unsigned char, MovingImageDimension>;
   using TransformType = Transform<double, FixedImageDimension, MovingImageDimension>;
