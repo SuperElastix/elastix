@@ -146,7 +146,7 @@ private:
   /** Function to read the corresponding points. */
   void
   ReadLandmarks(const std::string &                    landmarkFileName,
-                typename PointSetType::Pointer &       pointSet,
+                typename PointSetType::ConstPointer &  pointSet,
                 const typename ImageType::ConstPointer image);
 };
 

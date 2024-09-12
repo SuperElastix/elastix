@@ -113,8 +113,8 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
   const TElastix &      elastixObject = itk::Deref(Superclass2::GetElastix());
 
-  itk::SmartPointer<PointSetType> fixedPointSet;
-  itk::SmartPointer<PointSetType> movingPointSet;
+  itk::SmartPointer<const PointSetType> fixedPointSet;
+  itk::SmartPointer<const PointSetType> movingPointSet;
 
   if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-fp"); !commandLineArgument.empty())
   {
@@ -166,8 +166,8 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
 
 template <typename TElastix>
 void
-CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::string &              landmarkFileName,
-                                                                    typename PointSetType::Pointer & pointSet,
+CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::string & landmarkFileName,
+                                                                    typename PointSetType::ConstPointer &  pointSet,
                                                                     const typename ImageType::ConstPointer image)
 {
   /** Typedefs. */
@@ -205,10 +205,10 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   log::info(std::ostringstream{} << "  Number of specified points: " << nrofpoints);
 
   /** Get the pointset. */
-  pointSet = reader->GetOutput();
+  const itk::SmartPointer<PointSetType> readerOutput = reader->GetOutput();
 
   /** Convert from index to point if necessary */
-  pointSet->DisconnectPipeline();
+  readerOutput->DisconnectPipeline();
   if (reader->GetPointsAreIndices())
   {
     /** Convert to world coordinates */
@@ -219,7 +219,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
        */
       PointType point;
       IndexType index;
-      pointSet->GetPoint(j, &point);
+      readerOutput->GetPoint(j, &point);
       for (unsigned int d = 0; d < FixedImageDimension; ++d)
       {
         index[d] = static_cast<IndexValueType>(itk::Math::Round<std::int64_t>(point[d]));
@@ -227,10 +227,12 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
 
       /** Compute the input point in physical coordinates. */
       image->TransformIndexToPhysicalPoint(index, point);
-      pointSet->SetPoint(j, point);
+      readerOutput->SetPoint(j, point);
 
     } // end for all points
   }   // end for points are indices
+
+  pointSet = readerOutput;
 
 } // end ReadLandmarks()
 
