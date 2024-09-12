@@ -113,19 +113,19 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
   const TElastix &      elastixObject = itk::Deref(Superclass2::GetElastix());
 
-  itk::SmartPointer<PointSetType> fixedPointSet;
-  itk::SmartPointer<PointSetType> movingPointSet;
+  itk::SmartPointer<const PointSetType> fixedPointSet;
+  itk::SmartPointer<const PointSetType> movingPointSet;
 
   if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-fp"); !commandLineArgument.empty())
   {
     /** Read and set the fixed pointset. */
-    ReadLandmarks(commandLineArgument, fixedPointSet, elastixObject.GetFixedImage());
+    fixedPointSet = ReadLandmarks(commandLineArgument, elastixObject.GetFixedImage());
   }
 
   if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-mp"); !commandLineArgument.empty())
   {
     /** Read and set the moving pointset. */
-    ReadLandmarks(commandLineArgument, movingPointSet, elastixObject.GetMovingImage());
+    movingPointSet = ReadLandmarks(commandLineArgument, elastixObject.GetMovingImage());
   }
 
   if (fixedPointSet)
@@ -165,10 +165,10 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
  */
 
 template <typename TElastix>
-void
-CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::string &              landmarkFileName,
-                                                                    typename PointSetType::Pointer & pointSet,
+auto
+CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::string & landmarkFileName,
                                                                     const typename ImageType::ConstPointer image)
+  -> itk::SmartPointer<PointSetType>
 {
   /** Typedefs. */
   using IndexType = typename ImageType::IndexType;
@@ -205,7 +205,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   log::info(std::ostringstream{} << "  Number of specified points: " << nrofpoints);
 
   /** Get the pointset. */
-  pointSet = reader->GetOutput();
+  const itk::SmartPointer<PointSetType> pointSet = reader->GetOutput();
 
   /** Convert from index to point if necessary */
   pointSet->DisconnectPipeline();
@@ -231,6 +231,8 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
 
     } // end for all points
   }   // end for points are indices
+
+  return pointSet;
 
 } // end ReadLandmarks()
 
