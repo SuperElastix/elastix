@@ -231,6 +231,12 @@ public:
   elxSetObjectMacro(FixedMaskContainer, DataObjectContainerType);
   elxSetObjectMacro(MovingMaskContainer, DataObjectContainerType);
 
+  /** Set/Get the fixed/moving points (landmarks, used by the CorrespondingPointsEuclideanDistance metric). */
+  elxGetObjectMacro(FixedPoints, const itk::Object);
+  elxGetObjectMacro(MovingPoints, const itk::Object);
+  elxSetObjectMacro(FixedPoints, const itk::Object);
+  elxSetObjectMacro(MovingPoints, const itk::Object);
+
   /** Set/Get the result image container. */
   elxGetObjectMacro(ResultImageContainer, DataObjectContainerType);
   elxSetObjectMacro(ResultImageContainer, DataObjectContainerType);
@@ -509,6 +515,10 @@ private:
   DataObjectContainerPointer m_MovingImageContainer{ DataObjectContainerType::New() };
   DataObjectContainerPointer m_FixedMaskContainer{ DataObjectContainerType::New() };
   DataObjectContainerPointer m_MovingMaskContainer{ DataObjectContainerType::New() };
+
+  /** The fixed and moving points (landmarks, used by the CorrespondingPointsEuclideanDistance metric). */
+  itk::SmartPointer<const itk::Object> m_FixedPoints{ nullptr };
+  itk::SmartPointer<const itk::Object> m_MovingPoints{ nullptr };
 
   /** The result image container. These are stored as pointers to itk::DataObject. */
   DataObjectContainerPointer m_ResultImageContainer{ DataObjectContainerType::New() };

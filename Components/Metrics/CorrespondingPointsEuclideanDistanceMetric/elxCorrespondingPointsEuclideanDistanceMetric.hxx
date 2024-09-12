@@ -113,8 +113,21 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
   const TElastix &      elastixObject = itk::Deref(Superclass2::GetElastix());
 
-  itk::SmartPointer<const PointSetType> fixedPointSet;
-  itk::SmartPointer<const PointSetType> movingPointSet;
+  const auto makeConstPointSet = [](const itk::Object * object) -> itk::SmartPointer<const PointSetType> {
+    using ContainerType = typename PointSetType::PointsContainer;
+
+    if (const auto * const points = dynamic_cast<const ContainerType *>(object))
+    {
+      const auto pointSet = PointSetType::New();
+      // Note: This const_cast should be safe, because the returned point set is "const".
+      pointSet->SetPoints(const_cast<ContainerType *>(points));
+      return pointSet;
+    }
+    return nullptr;
+  };
+
+  itk::SmartPointer<const PointSetType> fixedPointSet = makeConstPointSet(elastixObject.GetFixedPoints());
+  itk::SmartPointer<const PointSetType> movingPointSet = makeConstPointSet(elastixObject.GetMovingPoints());
 
   if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-fp"); !commandLineArgument.empty())
   {

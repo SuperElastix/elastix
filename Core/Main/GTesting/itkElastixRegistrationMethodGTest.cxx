@@ -513,6 +513,16 @@ GetNumberOfTransforms(const itk::Transform<TParametersValueType, VInputDimension
   return 1;
 };
 
+
+template <typename T>
+auto
+MakeVectorContainer(std::vector<T> stdVector)
+{
+  const auto vectorContainer = itk::VectorContainer<itk::SizeValueType, T>::New();
+  vectorContainer->CastToSTLContainer() = std::move(stdVector);
+  return vectorContainer;
+}
+
 } // namespace
 
 
@@ -2433,4 +2443,49 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerStackTransformComputeZYX)
 
   // Expect that the result is different that, when running with computeZYX = false.
   EXPECT_NE(transformParameters, doRegistration(false));
+}
+
+
+GTEST_TEST(itkElastixRegistrationMethod, EuclideanDistancePointMetric)
+{
+  static constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const OffsetType translationOffset{ { 1, -2 } };
+  const SizeType   imageSize{ { 5, 6 } };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+
+  using PointType = itk::Point<double, ImageDimension>;
+
+  const PointType fixedPoint{};
+  PointType       movingPoint = fixedPoint;
+
+  for (unsigned int i{}; i < ImageDimension; ++i)
+  {
+    movingPoint[i] += translationOffset[i];
+  }
+
+  registration.SetFixedImage(fixedImage);
+  registration.SetMovingImage(movingImage);
+  registration.SetFixedPoints(MakeVectorContainer(std::vector<PointType>{ fixedPoint }));
+  registration.SetMovingPoints(MakeVectorContainer(std::vector<PointType>{ movingPoint }));
+  registration.SetParameterObject(CreateParameterObject(
+    ParameterMapType{ // Parameters in alphabetic order:
+                      { "ImageSampler", { "Full" } },
+                      { "MaximumNumberOfIterations", { "2" } },
+                      { "Metric", { "AdvancedNormalizedCorrelation", "CorrespondingPointsEuclideanDistanceMetric" } },
+                      { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                      { "Registration", { "MultiMetricMultiResolutionRegistration" } },
+                      { "Transform", { "TranslationTransform" } } }));
+  registration.Update();
+
+  const auto transformParameters = GetTransformParametersFromFilter(registration);
+  EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
 }

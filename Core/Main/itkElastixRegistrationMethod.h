@@ -103,6 +103,9 @@ public:
                 "ElastixRegistrationMethod assumes that fixed and moving image have the same number of dimensions.");
   static constexpr unsigned int ImageDimension = TFixedImage::ImageDimension;
 
+  using PointType = Point<double, ImageDimension>;
+  using PointVectorContainerType = VectorContainer<IdentifierType, PointType>;
+
   using FixedMaskType = Image<unsigned char, FixedImageDimension>;
   using MovingMaskType = Image<unsigned char, MovingImageDimension>;
   using TransformType = Transform<double, FixedImageDimension, MovingImageDimension>;
@@ -162,6 +165,9 @@ public:
   RemoveMovingMask();
   unsigned int
   GetNumberOfMovingMasks() const;
+
+  itkSetConstObjectMacro(FixedPoints, PointVectorContainerType);
+  itkSetConstObjectMacro(MovingPoints, PointVectorContainerType);
 
   /** Set/Get parameter object.*/
   virtual void
@@ -394,6 +400,9 @@ private:
 
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};
+
+  SmartPointer<const PointVectorContainerType> m_FixedPoints{};
+  SmartPointer<const PointVectorContainerType> m_MovingPoints{};
 
   std::string m_OutputDirectory{};
   std::string m_LogFileName{};
