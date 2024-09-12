@@ -98,6 +98,9 @@ public:
   itkGetModifiableObjectMacro(FixedMaskContainer, DataObjectContainerType);
   itkGetModifiableObjectMacro(MovingMaskContainer, DataObjectContainerType);
 
+  itkSetConstObjectMacro(FixedPoints, itk::Object);
+  itkSetConstObjectMacro(MovingPoints, itk::Object);
+
   /** Get the final transform (the result of running elastix).
    * You may pass this as an InitialTransform in an other instantiation
    * of ElastixMain.
@@ -174,6 +177,10 @@ private:
   DataObjectContainerPointer m_FixedMaskContainer{ nullptr };
   DataObjectContainerPointer m_MovingMaskContainer{ nullptr };
   DataObjectContainerPointer m_ResultImageContainer{ nullptr };
+
+  itk::SmartPointer<const itk::Object> m_FixedPoints{ nullptr };
+  itk::SmartPointer<const itk::Object> m_MovingPoints{ nullptr };
+
 
   /** A transform that is the result of registration. */
   ObjectPointer m_FinalTransform{ nullptr };
