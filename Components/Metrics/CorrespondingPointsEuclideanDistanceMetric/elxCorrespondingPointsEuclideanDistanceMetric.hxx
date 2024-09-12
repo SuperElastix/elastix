@@ -111,20 +111,43 @@ void
 CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
 {
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+  const TElastix &      elastixObject = itk::Deref(Superclass2::GetElastix());
 
-  /** Read and set the fixed pointset. */
-  std::string                            fixedName = configuration.GetCommandLineArgument("-fp");
-  typename PointSetType::Pointer         fixedPointSet; // default-constructed (null)
-  const typename ImageType::ConstPointer fixedImage = this->GetElastix()->GetFixedImage();
-  const unsigned int                     nrOfFixedPoints = this->ReadLandmarks(fixedName, fixedPointSet, fixedImage);
-  this->SetFixedPointSet(fixedPointSet);
+  itk::SmartPointer<PointSetType> fixedPointSet;
+  itk::SmartPointer<PointSetType> movingPointSet;
 
-  /** Read and set the moving pointset. */
-  std::string                            movingName = configuration.GetCommandLineArgument("-mp");
-  typename PointSetType::Pointer         movingPointSet; // default-constructed (null)
-  const typename ImageType::ConstPointer movingImage = this->GetElastix()->GetMovingImage();
-  const unsigned int nrOfMovingPoints = this->ReadLandmarks(movingName, movingPointSet, movingImage);
-  this->SetMovingPointSet(movingPointSet);
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-fp"); !commandLineArgument.empty())
+  {
+    /** Read and set the fixed pointset. */
+    ReadLandmarks(commandLineArgument, fixedPointSet, elastixObject.GetFixedImage());
+  }
+
+  if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-mp"); !commandLineArgument.empty())
+  {
+    /** Read and set the moving pointset. */
+    ReadLandmarks(commandLineArgument, movingPointSet, elastixObject.GetMovingImage());
+  }
+
+  if (fixedPointSet)
+  {
+    this->SetFixedPointSet(fixedPointSet);
+  }
+  else
+  {
+    itkExceptionMacro("ERROR: the fixed pointset is not specified!");
+  }
+
+  if (movingPointSet)
+  {
+    this->SetMovingPointSet(movingPointSet);
+  }
+  else
+  {
+    itkExceptionMacro("ERROR: the moving pointset is not specified!");
+  }
+
+  const itk::SizeValueType nrOfFixedPoints = fixedPointSet->GetNumberOfPoints();
+  const itk::SizeValueType nrOfMovingPoints = movingPointSet->GetNumberOfPoints();
 
   /** Check. */
   if (nrOfFixedPoints != nrOfMovingPoints)
@@ -142,7 +165,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::BeforeRegistration()
  */
 
 template <typename TElastix>
-unsigned int
+void
 CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::string &              landmarkFileName,
                                                                     typename PointSetType::Pointer & pointSet,
                                                                     const typename ImageType::ConstPointer image)
@@ -208,8 +231,6 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
 
     } // end for all points
   }   // end for points are indices
-
-  return nrofpoints;
 
 } // end ReadLandmarks()
 

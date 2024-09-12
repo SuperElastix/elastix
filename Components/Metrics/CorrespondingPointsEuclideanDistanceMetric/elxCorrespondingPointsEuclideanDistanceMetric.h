@@ -144,7 +144,7 @@ private:
   elxOverrideGetSelfMacro;
 
   /** Function to read the corresponding points. */
-  unsigned int
+  void
   ReadLandmarks(const std::string &                    landmarkFileName,
                 typename PointSetType::Pointer &       pointSet,
                 const typename ImageType::ConstPointer image);
