@@ -144,10 +144,8 @@ private:
   elxOverrideGetSelfMacro;
 
   /** Function to read the corresponding points. */
-  void
-  ReadLandmarks(const std::string &                    landmarkFileName,
-                typename PointSetType::Pointer &       pointSet,
-                const typename ImageType::ConstPointer image);
+  itk::SmartPointer<PointSetType>
+  ReadLandmarks(const std::string & landmarkFileName, const typename ImageType::ConstPointer image);
 };
 
 } // end namespace elastix
