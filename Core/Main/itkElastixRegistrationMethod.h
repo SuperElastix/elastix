@@ -169,6 +169,14 @@ public:
   itkSetConstObjectMacro(FixedPoints, PointVectorContainerType);
   itkSetConstObjectMacro(MovingPoints, PointVectorContainerType);
 
+  void
+  SetMovingPointsByVector(std::vector<PointType> stdVector)
+  {
+    auto pointVectorContainer = PointVectorContainerType::New();
+    pointVectorContainer->CastToSTLContainer() = std::move(stdVector);
+    m_MovingPoints = std::move(pointVectorContainer);
+  }
+
   /** Set/Get parameter object.*/
   virtual void
   SetParameterObject(ParameterObjectType * parameterObject);
