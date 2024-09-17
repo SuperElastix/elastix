@@ -55,10 +55,7 @@ namespace itk
  * This is a full-fleged Object, so there is modification time, debug,
  * and reference count information.
  *
- * Template parameters for VectorDataContainer:
- *
- * TElementIdentifier =
- *   An INTEGRAL type for use in indexing the vector.
+ * Template parameter for VectorDataContainer:
  *
  * TElement =
  *   The element type stored in the container.
@@ -69,7 +66,7 @@ namespace itk
  *
  * \ingroup DataRepresentation
  */
-template <typename TElementIdentifier, typename TElement>
+template <typename TElement>
 class ITK_TEMPLATE_EXPORT VectorDataContainer
   : public DataObject
   , private std::vector<TElement>
@@ -82,7 +79,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Save the template parameters. */
-  using ElementIdentifier = TElementIdentifier;
+  using ElementIdentifier = SizeValueType;
   using Element = TElement;
 
 private:
@@ -189,8 +186,8 @@ public:
   using typename STLContainerType::reverse_iterator;
   using typename STLContainerType::const_reverse_iterator;
 
-  using Iterator = typename VectorContainer<TElementIdentifier, TElement>::Iterator;
-  using ConstIterator = typename VectorContainer<TElementIdentifier, TElement>::ConstIterator;
+  using Iterator = typename VectorContainer<ElementIdentifier, TElement>::Iterator;
+  using ConstIterator = typename VectorContainer<ElementIdentifier, TElement>::ConstIterator;
 
   /* Declare the public interface routines. */
 

@@ -39,15 +39,14 @@ namespace itk
  */
 
 template <typename TInputImage>
-class ITK_TEMPLATE_EXPORT ImageSamplerBase
-  : public VectorContainerSource<VectorDataContainer<std::size_t, ImageSample<TInputImage>>>
+class ITK_TEMPLATE_EXPORT ImageSamplerBase : public VectorContainerSource<VectorDataContainer<ImageSample<TInputImage>>>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ImageSamplerBase);
 
   /** Standard ITK-stuff. */
   using Self = ImageSamplerBase;
-  using Superclass = VectorContainerSource<VectorDataContainer<std::size_t, ImageSample<TInputImage>>>;
+  using Superclass = VectorContainerSource<VectorDataContainer<ImageSample<TInputImage>>>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -74,7 +73,7 @@ public:
 
   /** Other typdefs. */
   using ImageSampleType = ImageSample<InputImageType>;
-  using ImageSampleContainerType = VectorDataContainer<std::size_t, ImageSampleType>;
+  using ImageSampleContainerType = VectorDataContainer<ImageSampleType>;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
   using InputImageSizeType = typename InputImageType::SizeType;
   using InputImageIndexType = typename InputImageType::IndexType;
