@@ -2475,7 +2475,7 @@ GTEST_TEST(itkElastixRegistrationMethod, EuclideanDistancePointMetric)
   registration.SetFixedImage(fixedImage);
   registration.SetMovingImage(movingImage);
   registration.SetFixedPoints(MakeVectorContainer(std::vector<PointType>{ fixedPoint }));
-  registration.SetMovingPointsByVector({ movingPoint });
+  registration.SetMovingPointsByVectorOfCoordinates({ movingPoint[0], movingPoint[1] });
   registration.SetParameterObject(CreateParameterObject(
     ParameterMapType{ // Parameters in alphabetic order:
                       { "ImageSampler", { "Full" } },

@@ -177,6 +177,31 @@ public:
     m_MovingPoints = std::move(pointVectorContainer);
   }
 
+  void
+  SetMovingPointsByVectorOfCoordinates(const std::vector<double> & coordinates)
+  {
+    auto pointVectorContainer = PointVectorContainerType::New();
+
+    std::vector<PointType> points(coordinates.size() / ImageDimension);
+
+    auto coordinateIterator = coordinates.cbegin();
+
+    for (auto & point : points)
+    {
+      std::copy_n(coordinateIterator, ImageDimension, point.begin());
+      coordinateIterator += ImageDimension;
+    }
+
+    pointVectorContainer->CastToSTLContainer() = std::move(points);
+    m_MovingPoints = std::move(pointVectorContainer);
+  }
+
+  void
+  SetMovingPointsByVectorOfCoordinatesByValue(std::vector<double> coordinates)
+  {
+    SetMovingPointsByVectorOfCoordinates(coordinates);
+  }
+
   /** Set/Get parameter object.*/
   virtual void
   SetParameterObject(ParameterObjectType * parameterObject);
