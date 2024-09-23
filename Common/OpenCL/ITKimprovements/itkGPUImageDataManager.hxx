@@ -43,7 +43,7 @@ namespace itk
 {
 template <typename ImageType>
 void
-GPUImageDataManager<ImageType>::SetImagePointer(typename ImageType::Pointer img)
+GPUImageDataManager<ImageType>::SetImagePointer(ImageType * img)
 {
   m_Image = img;
 }

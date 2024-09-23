@@ -81,7 +81,7 @@ public:
   itkTypeMacro(GPUImageDataManager, GPUDataManager);
 
   void
-  SetImagePointer(typename ImageType::Pointer img);
+  SetImagePointer(ImageType * img);
 
   /** actual GPU->CPU memory copy takes place here */
   void
@@ -100,7 +100,8 @@ protected:
   ~GPUImageDataManager() override = default;
 
 private:
-  typename ImageType::Pointer m_Image{};
+  WeakPointer<ImageType> m_Image; // WeakPointer has to be used here
+                                  // to avoid SmartPointer loop
 };
 
 } // namespace itk
