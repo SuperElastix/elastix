@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 
-__kernel void SetDirection( float4 input, __global __write_only float *output )
+__kernel void SetDirection( float4 input, __global float *output )
 {
   output[0] = input.x;
   output[1] = input.y;

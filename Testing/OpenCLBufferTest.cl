@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 
-__kernel void SetFloat( __global __write_only float *output, float input )
+__kernel void SetFloat( __global float *output, float input )
 {
   uint index = get_global_id( 0 );
 
