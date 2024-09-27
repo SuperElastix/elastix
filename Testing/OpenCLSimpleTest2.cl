@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 
-__kernel void SimpleKernel2( __global __write_only float *output, float input )
+__kernel void SimpleKernel2( __global float *output, float input )
 {
   output[0] = input;
 }

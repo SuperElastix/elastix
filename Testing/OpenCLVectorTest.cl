@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 
-__kernel void SetUChar( __global __write_only uchar *output, uchar input )
+__kernel void SetUChar( __global uchar *output, uchar input )
 {
   uint index = get_global_id( 0 );
 
@@ -24,7 +24,7 @@ __kernel void SetUChar( __global __write_only uchar *output, uchar input )
 }
 
 
-__kernel void SetFloat( __global __write_only float *output, float input )
+__kernel void SetFloat( __global float *output, float input )
 {
   uint index = get_global_id( 0 );
 
