@@ -110,9 +110,9 @@ OpenCLVector<T>::Write(const T * data, const std::size_t count, const std::size_
 {
   itkAssertOrThrowMacro(((offset + count) <= this->m_Size),
                         "OpenCLVector<T>::Write(data, " << count << ", " << offset
-                                                        << ") (offset + count) is out of range")
+                                                        << ") (offset + count) is out of range");
 
-    OpenCLVectorBase::Write(data, count * sizeof(T), offset * sizeof(T));
+  OpenCLVectorBase::Write(data, count * sizeof(T), offset * sizeof(T));
 }
 
 
