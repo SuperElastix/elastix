@@ -154,6 +154,9 @@ ElastixMain::Run()
   elastixBase.SetMovingMaskContainer(this->GetModifiableMovingMaskContainer());
   elastixBase.SetResultImageContainer(this->GetModifiableResultImageContainer());
 
+  elastixBase.SetFixedPoints(m_FixedPoints);
+  elastixBase.SetMovingPoints(m_MovingPoints);
+
   /** Set the initial transform, if it happens to be there. */
   elastixBase.SetInitialTransform(this->GetModifiableInitialTransform());
 
