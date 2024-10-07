@@ -395,7 +395,7 @@ ParameterObject::WriteParameterFiles(const ParameterFileNameVectorType & paramet
  * ********************* GetDefaultParameterMap *********************
  */
 
-const ParameterObject::ParameterMapType
+ParameterObject::ParameterMapType
 ParameterObject::GetDefaultParameterMap(const std::string & transformName,
                                         const unsigned int  numberOfResolutions,
                                         const double        finalGridSpacingInPhysicalUnits)

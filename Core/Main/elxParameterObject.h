@@ -141,7 +141,7 @@ public:
                       const ParameterFileNameVectorType & parameterFileNameVector);
 
   /* Get preconfigured parameter maps. */
-  static const ParameterMapType
+  static ParameterMapType
   GetDefaultParameterMap(const std::string & transformName,
                          const unsigned int  numberOfResolutions = 4u,
                          const double        finalGridSpacingInPhysicalUnits = 10.0);
