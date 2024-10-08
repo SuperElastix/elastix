@@ -102,42 +102,32 @@ auto
 AdvancedCombinationTransform<TScalarType, NDimensions>::GetNthTransform(SizeValueType n) const
   -> const TransformTypePointer
 {
-  const SizeValueType numTransforms = GetNumberOfTransforms();
-  if (n > numTransforms - 1)
+  if (const SizeValueType numTransforms = GetNumberOfTransforms(); n >= numTransforms)
   {
     itkExceptionMacro("The AdvancedCombinationTransform contains "
                       << numTransforms << " transforms. Unable to retrieve Nth current transform with index " << n);
   }
 
-  TransformTypePointer               nthTransform;
-  const CurrentTransformConstPointer currentTransform = GetCurrentTransform();
-
-  if (currentTransform.IsNotNull())
+  if (const CurrentTransformConstPointer currentTransform = GetCurrentTransform())
   {
     if (n == 0)
     {
       // Perform const_cast, we don't like it, but there is no other option
       // with current ITK4 itk::MultiTransform::GetNthTransform() const design
       const auto * currentTransformCasted = dynamic_cast<const TransformType *>(currentTransform.GetPointer());
-      auto *       currentTransformConstCasted = const_cast<TransformType *>(currentTransformCasted);
-      nthTransform = currentTransformConstCasted;
+      return const_cast<TransformType *>(currentTransformCasted);
     }
-    else
+
+    if (const InitialTransformConstPointer initialTransform = GetInitialTransform())
     {
-      const InitialTransformConstPointer initialTransform = GetInitialTransform();
-      if (initialTransform.IsNotNull())
+      if (const auto * const initialTransformCasted = dynamic_cast<const Self *>(initialTransform.GetPointer()))
       {
-        const Self * initialTransformCasted = dynamic_cast<const Self *>(initialTransform.GetPointer());
-        if (initialTransformCasted)
-        {
-          const SizeValueType id = n - 1;
-          nthTransform = initialTransformCasted->GetNthTransform(id);
-        }
+        return initialTransformCasted->GetNthTransform(n - 1);
       }
     }
   }
 
-  return nthTransform;
+  return nullptr;
 } // end GetNthTransform()
 
 
