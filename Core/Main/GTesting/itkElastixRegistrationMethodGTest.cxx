@@ -2048,10 +2048,8 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
     const auto transformParameters = GetTransformParametersFromFilter(registration);
     ASSERT_EQ(transformParameters.size(), 3);
 
-    // The detected rotation angle is expected to be close to zero.
-    // (Absolute angle values of up to 3.77027e-06 were encountered, which seems acceptable.)
-    const auto rotationAngle = transformParameters[0];
-    EXPECT_LT(std::abs(rotationAngle), 1e-5);
+    // Absolute errors of ~3.8e-06 were encountered, which seems acceptable.
+    EXPECT_LT(std::abs(transformParameters[0]), 1e-5) << "The estimated rotation angle should be near zero radians";
 
     for (unsigned i{}; i <= 1; ++i)
     {
