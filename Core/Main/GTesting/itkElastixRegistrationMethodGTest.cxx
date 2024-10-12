@@ -2062,6 +2062,79 @@ GTEST_TEST(itkElastixRegistrationMethod, SimilarityTranslation2D)
 }
 
 
+// Tests registering two small images, which are rescaled with respect to each other.
+GTEST_TEST(itkElastixRegistrationMethod, SimilarityScaling2D)
+{
+  using PixelType = float;
+  static constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+
+  // Sets the pixels of a square object at the specified index, having the specified size.
+  const auto setPixelsOfObject =
+    [](ImageType & image, const itk::IndexValueType & indexValue, const itk::SizeValueType sizeValueType) {
+      const itk::ImageRegionRange<ImageType> imageRegionRange{
+        image, { IndexType::Filled(indexValue), SizeType::Filled(sizeValueType) }
+      };
+      std::fill(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
+    };
+
+  for (const itk::SizeValueType fixedObjectSizeValue : { 32, 40 })
+  {
+    for (const itk::SizeValueType movingObjectSizeValue : { 32, 40 })
+    {
+      const itk::IndexValueType fixedObjectIndexValue = fixedObjectSizeValue;
+      const itk::SizeValueType  fixedImageSizeValue = 4 * fixedObjectSizeValue;
+
+      const itk::IndexValueType movingObjectIndexValue = movingObjectSizeValue;
+      const itk::SizeValueType  movingImageSizeValue = 4 * movingObjectSizeValue;
+
+      const auto fixedImage = CreateImage<PixelType>(SizeType::Filled(fixedImageSizeValue));
+      setPixelsOfObject(*fixedImage, fixedObjectIndexValue, fixedObjectSizeValue);
+
+      elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+      registration.SetFixedImage(fixedImage);
+      registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                              { "ImageSampler", "Full" },
+                                                              { "MaximumNumberOfIterations", "50" },
+                                                              { "Metric", "AdvancedNormalizedCorrelation" },
+                                                              { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                              { "Transform", "SimilarityTransform" } }));
+
+      const auto movingImage = CreateImage<PixelType>(SizeType::Filled(movingImageSizeValue));
+      setPixelsOfObject(*movingImage, movingObjectIndexValue, movingObjectSizeValue);
+      registration.SetMovingImage(movingImage);
+      registration.Update();
+      const auto & resultImage = itk::Deref(registration.GetOutput());
+
+      ASSERT_EQ(resultImage.GetBufferedRegion(), fixedImage->GetBufferedRegion());
+
+      const itk::ImageBufferRange resultImageBufferRange(resultImage);
+      const itk::ImageBufferRange fixedImageBufferRange(*fixedImage);
+      const auto                  numberOfPixels = fixedImageBufferRange.size();
+
+      for (std::size_t i{}; i < numberOfPixels; ++i)
+      {
+        EXPECT_EQ(std::round(resultImageBufferRange[i]), fixedImageBufferRange[i]);
+      }
+
+      const auto transformParameters = GetTransformParametersFromFilter(registration);
+      ASSERT_EQ(transformParameters.size(), 4);
+
+      // An error of ~0.013 was observed.
+      EXPECT_NEAR(transformParameters[0],
+                  static_cast<double>(movingObjectSizeValue) / static_cast<double>(fixedObjectSizeValue),
+                  0.05)
+        << "The estimated scaling factor";
+
+      // Absolute errors of ~3.8e-06 were encountered, which seems acceptable.
+      EXPECT_LT(std::abs(transformParameters[1]), 1e-5) << "The estimated rotation angle should be near zero radians";
+    }
+  }
+}
+
+
 // Tests registering two small (8x8) images, which are translated with respect to each other.
 GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
 {
