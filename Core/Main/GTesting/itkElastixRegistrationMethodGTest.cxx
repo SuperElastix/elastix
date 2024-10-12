@@ -2000,7 +2000,69 @@ GTEST_TEST(itkElastixRegistrationMethod, WriteBSplineTransformToItkFileFormat)
 }
 
 
-// Tests registering two small (8x8) binary images, which are translated with respect to each other.
+// Tests registering two small (8x8) images, which are translated with respect to each other.
+GTEST_TEST(itkElastixRegistrationMethod, SimilarityTranslation2D)
+{
+  using PixelType = float;
+  static constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const auto imageSizeValue = 8;
+  const auto imageSize = SizeType::Filled(imageSizeValue);
+  const auto fixedImageRegionIndex = IndexType::Filled(imageSizeValue / 2 - 1);
+
+  const auto setPixelsOfSquareRegion = [](ImageType & image, const IndexType & regionIndex) {
+    // Set a different value to each of the pixels of a little square region, to ensure that no rotation is assumed.
+    const itk::ImageRegionRange<ImageType> imageRegionRange{ image, { regionIndex, SizeType::Filled(2) } };
+    std::iota(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
+  };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  setPixelsOfSquareRegion(*fixedImage, fixedImageRegionIndex);
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  registration.SetFixedImage(fixedImage);
+  registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                          { "AutomaticTransformInitialization", "false" },
+                                                          { "ImageSampler", "Full" },
+                                                          { "MaximumNumberOfIterations", "2" },
+                                                          { "Metric", "AdvancedNormalizedCorrelation" },
+                                                          { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                          { "Transform", "SimilarityTransform" } }));
+
+  const auto movingImage = CreateImage<PixelType>(imageSize);
+
+  // Test translation for each direction from (-1, -1) to (1, 1).
+  for (const auto & index : itk::ZeroBasedIndexRange<ImageDimension>(SizeType::Filled(3)))
+  {
+    movingImage->FillBuffer(0);
+    const OffsetType translation = index - IndexType::Filled(1);
+    setPixelsOfSquareRegion(*movingImage, fixedImageRegionIndex + translation);
+
+    registration.SetMovingImage(movingImage);
+    registration.Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
+    ASSERT_EQ(transformParameters.size(), 4);
+
+    // An absolute error of ~0.00022 was encountered, which seems acceptable.
+    EXPECT_NEAR(transformParameters[0], 1.0, 0.001) << "The scale should be near one";
+
+    // Absolute errors of ~3.8e-06 were encountered, which seems acceptable.
+    EXPECT_LT(std::abs(transformParameters[1]), 1e-5) << "The estimated rotation angle should be near zero radians";
+
+    for (unsigned i{}; i <= 1; ++i)
+    {
+      EXPECT_EQ(std::round(transformParameters[i + 2]), translation[i]);
+    }
+  }
+}
+
+
+// Tests registering two small (8x8) images, which are translated with respect to each other.
 GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
 {
   using PixelType = float;
