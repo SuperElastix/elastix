@@ -967,7 +967,16 @@ TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filena
 
     try
     {
-      itk::WriteMesh(outputMesh, outputPointsFileName);
+      const auto writer = itk::MeshFileWriter<MeshType>::New();
+      writer->SetInput(outputMesh);
+      writer->SetFileName(outputPointsFileName);
+
+      if (itk::Deref(meshReader->GetModifiableMeshIO()).GetFileType() == itk::IOFileEnum::Binary)
+      {
+        writer->SetFileTypeAsBINARY();
+      }
+
+      writer->Update();
     }
     catch (const itk::ExceptionObject & err)
     {
