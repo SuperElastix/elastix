@@ -916,72 +916,95 @@ template <typename TElastix>
 void
 TransformBase<TElastix>::TransformPointsSomePointsVTK(const std::string & filename) const
 {
-  /** Typedef's. \todo test DummyIPPPixelType=bool. */
-  using DummyIPPPixelType = float;
-  using MeshTraitsType =
-    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
-  using MeshType = itk::Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  const itk::CommonEnums::IOComponent pointComponentType = [&filename] {
+    const itk::SmartPointer<itk::MeshIOBase> meshIO =
+      itk::MeshIOFactory::CreateMeshIO(filename.c_str(), itk::IOFileModeEnum::ReadMode);
+    meshIO->SetFileName(filename);
+    meshIO->ReadMeshInformation();
+    return meshIO->GetPointComponentType();
+  }();
 
-  /** Read the input points. */
-  const auto meshReader = itk::MeshFileReader<MeshType>::New();
-  meshReader->SetFileName(filename);
-  log::info(std::ostringstream{} << "  Reading input point file: " << filename);
-  try
-  {
-    meshReader->Update();
-  }
-  catch (const itk::ExceptionObject & err)
-  {
-    log::error(std::ostringstream{} << "  Error while opening input point file.\n" << err);
-  }
+  // Reads a mesh from a VTK file, transforms the mesh, and writes the transformed mesh.
+  const auto ReadAndTransformAndWriteMesh = [&filename, this](auto coordinate) {
+    // The `coordinate` parameter just specifies the requested coordinate type.
+    (void)coordinate;
 
-  const auto & inputMesh = *(meshReader->GetOutput());
+    using DummyIPPPixelType = unsigned char;
+    using MeshType = itk::Mesh<
+      DummyIPPPixelType,
+      FixedImageDimension,
+      itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, decltype(coordinate)>>;
 
-  /** Some user-feedback. */
-  log::info("  Input points are specified in world coordinates.");
-  const unsigned long nrofpoints = inputMesh.GetNumberOfPoints();
-  log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
-
-  /** Apply the transform. */
-  log::info("  The input points are transformed.");
-
-  typename MeshType::ConstPointer outputMesh;
-
-  try
-  {
-    outputMesh = Self::TransformMesh(inputMesh);
-  }
-  catch (const itk::ExceptionObject & err)
-  {
-    log::error(std::ostringstream{} << "  Error while transforming points.\n" << err);
-  }
-
-  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
-
-  if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
-      !outputDirectoryPath.empty())
-  {
-    /** Create filename and file stream. */
-    const std::string outputPointsFileName = configuration.GetCommandLineArgument("-out") + "outputpoints.vtk";
-    log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
-
+    /** Read the input points. */
+    const auto meshReader = itk::MeshFileReader<MeshType>::New();
+    meshReader->SetFileName(filename);
+    log::info(std::ostringstream{} << "  Reading input point file: " << filename);
     try
     {
-      const auto writer = itk::MeshFileWriter<MeshType>::New();
-      writer->SetInput(outputMesh);
-      writer->SetFileName(outputPointsFileName);
-
-      if (itk::Deref(meshReader->GetModifiableMeshIO()).GetFileType() == itk::IOFileEnum::Binary)
-      {
-        writer->SetFileTypeAsBINARY();
-      }
-
-      writer->Update();
+      meshReader->Update();
     }
     catch (const itk::ExceptionObject & err)
     {
-      log::error(std::ostringstream{} << "  Error while saving points.\n" << err);
+      log::error(std::ostringstream{} << "  Error while opening input point file.\n" << err);
     }
+
+    const auto & inputMesh = *(meshReader->GetOutput());
+
+    /** Some user-feedback. */
+    log::info("  Input points are specified in world coordinates.");
+    const unsigned long nrofpoints = inputMesh.GetNumberOfPoints();
+    log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
+
+    /** Apply the transform. */
+    log::info("  The input points are transformed.");
+
+    typename MeshType::ConstPointer outputMesh;
+
+    try
+    {
+      outputMesh = Self::TransformMesh(inputMesh);
+    }
+    catch (const itk::ExceptionObject & err)
+    {
+      log::error(std::ostringstream{} << "  Error while transforming points.\n" << err);
+    }
+
+    const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
+
+    if (const std::string outputDirectoryPath = configuration.GetCommandLineArgument("-out");
+        !outputDirectoryPath.empty())
+    {
+      /** Create filename and file stream. */
+      const std::string outputPointsFileName = configuration.GetCommandLineArgument("-out") + "outputpoints.vtk";
+      log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
+
+      try
+      {
+        const auto writer = itk::MeshFileWriter<MeshType>::New();
+        writer->SetInput(outputMesh);
+        writer->SetFileName(outputPointsFileName);
+
+        if (itk::Deref(meshReader->GetModifiableMeshIO()).GetFileType() == itk::IOFileEnum::Binary)
+        {
+          writer->SetFileTypeAsBINARY();
+        }
+
+        writer->Update();
+      }
+      catch (const itk::ExceptionObject & err)
+      {
+        log::error(std::ostringstream{} << "  Error while saving points.\n" << err);
+      }
+    }
+  };
+
+  if (pointComponentType == itk::CommonEnums::IOComponent::FLOAT)
+  {
+    ReadAndTransformAndWriteMesh(float());
+  }
+  else
+  {
+    ReadAndTransformAndWriteMesh(double());
   }
 
 } // end TransformPointsSomePointsVTK()
