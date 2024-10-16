@@ -541,6 +541,50 @@ class TransformixTestCase(unittest.TestCase):
         output_mesh = reader.GetOutput()
         self.assert_equal_mesh(output_mesh, input_mesh)
 
+    def test_zero_translation_of_vtk_2d_points_binary(self) -> None:
+        """Tests zero-translation of VTK points in 2D"""
+
+        source_directory_path = pathlib.Path(__file__).resolve().parent
+        output_directory_path = self.create_test_function_output_directory()
+
+        parameter_directory_path = source_directory_path / "TransformParameters"
+
+        input_mesh = itk.Mesh[itk.D, 2].New()
+        for i in range(4):
+            input_mesh.SetPoint(
+                i, (self.random_finite_float32(), self.random_finite_float32())
+            )
+
+        writer = itk.MeshFileWriter[itk.Mesh[itk.D, 2]].New()
+        writer.SetInput(input_mesh)
+        writer.SetFileTypeAsBINARY()
+        writer.SetFileName(str(output_directory_path / "inputpoints.vtk"))
+        writer.Write()
+
+        subprocess.run(
+            [
+                str(self.transformix_exe_file_path),
+                "-def",
+                str(output_directory_path / "inputpoints.vtk"),
+                "-tp",
+                str(parameter_directory_path / "Translation(0,0).txt"),
+                "-out",
+                str(output_directory_path),
+            ],
+            capture_output=True,
+            check=True,
+        )
+
+        # Note that itk.meshread does not work, as the following produces a 3D mesh, instead of a 2D
+        # mesh.
+        #
+        # output_mesh = itk.meshread(str(output_directory_path / "outputpoints.vtk"))
+        reader = itk.MeshFileReader[itk.Mesh[itk.D, 2]].New()
+        reader.SetFileName(str(output_directory_path / "outputpoints.vtk"))
+        reader.Update()
+        output_mesh = reader.GetOutput()
+        self.assert_equal_mesh(output_mesh, input_mesh)
+
     def test_translation_deformation_field(self) -> None:
         """Tests zero-translation of VTK points in 2D"""
 
