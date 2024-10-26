@@ -522,8 +522,7 @@ template <typename TScalarType, unsigned int NDimensions>
 auto
 KernelTransform2<TScalarType, NDimensions>::TransformPoint(const InputPointType & thisPoint) const -> OutputPointType
 {
-  OutputPointType opp;
-  opp.Fill(typename OutputPointType::ValueType{});
+  OutputPointType opp{};
   this->ComputeDeformationContribution(thisPoint, opp);
 
   // Add the rotational part of the Affine component

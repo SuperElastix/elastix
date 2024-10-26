@@ -51,8 +51,7 @@ RayCastResampleInterpolator<TElastix>::InitializeRayCastInterpolator()
     }
   }
 
-  typename EulerTransformType::InputPointType centerofrotation;
-  centerofrotation.Fill(0.0);
+  typename EulerTransformType::InputPointType centerofrotation{};
 
   for (unsigned int i = 0; i < TElastix::MovingDimension; ++i)
   {

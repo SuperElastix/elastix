@@ -286,8 +286,7 @@ SetKernelWithITKImage(OpenCLKernelManager::Pointer &      kernelManager,
     }
     else
     {
-      typename ImageType::DirectionType dir_null;
-      dir_null.Fill(0);
+      typename ImageType::DirectionType dir_null{};
       SetKernelWithDirection<ImageType>(dir_null, imageBase1D.Direction, imageBase2D.Direction, imageBase3D.Direction);
 
       SetKernelWithDirection<ImageType>(
