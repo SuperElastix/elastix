@@ -79,8 +79,7 @@ RayCastInterpolator<TElastix>::BeforeRegistration()
 
   this->SetTransform(this->m_CombinationTransform);
 
-  PointType focalPoint;
-  focalPoint.Fill(0.);
+  PointType focalPoint{};
 
   for (unsigned int i = 0; i < TElastix::FixedDimension; ++i)
   {

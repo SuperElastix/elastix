@@ -31,8 +31,7 @@ DeformationFieldInterpolatingTransform<TScalarType, NDimensions, TComponentType>
 {
   this->m_DeformationField = nullptr;
   this->m_ZeroDeformationField = DeformationFieldType::New();
-  typename DeformationFieldType::SizeType dummySize;
-  dummySize.Fill(0);
+  typename DeformationFieldType::SizeType dummySize{};
   this->m_ZeroDeformationField->SetRegions(dummySize);
   this->SetIdentity();
 

@@ -70,8 +70,7 @@ DeformationFieldRegulizer<TAnyITKTransform>::InitializeDeformationFields()
 
   /** Set everything to zero. */
   IteratorType    it(intermediaryDeformationField, intermediaryDeformationField->GetLargestPossibleRegion());
-  VectorPixelType vec;
-  vec.Fill(ScalarType{});
+  VectorPixelType vec{};
   while (!it.IsAtEnd())
   {
     it.Set(vec);
