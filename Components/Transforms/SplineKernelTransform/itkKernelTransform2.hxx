@@ -416,8 +416,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeP()
   IMatrixType    temp;
   const auto     temp_ref = temp.as_ref();
   const auto     I_ref = I.as_ref();
-  InputPointType p;
-  p.Fill(0.0f);
+  InputPointType p{};
 
   this->m_PMatrix.set_size(NDimensions * numberOfLandmarks, NDimensions * (NDimensions + 1));
   this->m_PMatrix.fill(0.0f);

@@ -338,9 +338,8 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
     typename FixedImageType::Pointer  fixedImage = this->GetElastix()->GetFixedImage();
     typename MovingImageType::Pointer movingImage = this->GetElastix()->GetMovingImage();
 
-    InputPointType landmarkPoint;
-    landmarkPoint.Fill(0.0f);
-    IndexType landmarkIndex;
+    InputPointType landmarkPoint{};
+    IndexType      landmarkIndex;
     for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       /** The read point from the inputPointSet is actually an index
@@ -369,8 +368,7 @@ SplineKernelTransform<TElastix>::ReadLandmarkFile(const std::string & filename,
   if (const auto * const initialTransform = this->Superclass1::GetInitialTransform();
       initialTransform != nullptr && landmarksInFixedImage && this->GetUseComposition())
   {
-    InputPointType inputPoint;
-    inputPoint.Fill(0.0f);
+    InputPointType inputPoint{};
     for (unsigned int j = 0; j < nrofpoints; ++j)
     {
       landmarkPointSet->GetPoint(j, &inputPoint);
