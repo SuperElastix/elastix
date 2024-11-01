@@ -1,5 +1,5 @@
 variables:
-  ITKv5_VERSION: v5.4.0
+  ITK_REVISION: d29cca5b2e6421181c27e84051bb9a2cf813a024
   ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
@@ -28,13 +28,11 @@ jobs:
   timeoutInMinutes: 0
   pool:
     vmImage: 'windows-2022'
-  strategy:
-    matrix:
-      ITKv5:
-        itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+      git clone $(ITK_GIT_URL) "$(ITK_SOURCE_DIR)"
+      cd "$(ITK_SOURCE_DIR)"
+      git checkout $(ITK_REVISION)
     displayName: Clone ITK
   - script: |
       mkdir "$(ITK_BINARY_DIR)"
@@ -83,13 +81,11 @@ jobs:
   timeoutInMinutes: 0
   pool:
     vmImage: 'ubuntu-20.04'
-  strategy:
-    matrix:
-      ITKv5:
-        itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+      git clone $(ITK_GIT_URL) "$(ITK_SOURCE_DIR)"
+      cd "$(ITK_SOURCE_DIR)"
+      git checkout $(ITK_REVISION)
   - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
@@ -136,13 +132,11 @@ jobs:
   timeoutInMinutes: 0
   pool:
     vmImage: 'macOS-12'
-  strategy:
-    matrix:
-      ITKv5:
-        itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+      git clone $(ITK_GIT_URL) "$(ITK_SOURCE_DIR)"
+      cd "$(ITK_SOURCE_DIR)"
+      git checkout $(ITK_REVISION)
     displayName: Clone ITK
   - script: |
       mkdir $(ITK_BINARY_DIR)
