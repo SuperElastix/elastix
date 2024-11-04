@@ -49,7 +49,7 @@ public:
   using RealType = TRealValueType;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(KernelFunctionBase2, KernelFunctionBase);
+  itkOverrideGetNameOfClassMacro(KernelFunctionBase2);
 
   /** Evaluate the function. Subclasses must implement this. */
   TRealValueType

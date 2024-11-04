@@ -44,7 +44,7 @@ public:
   using ConstPointer = itk::SmartPointer<const Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(TestMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(TestMetric);
 
   void
   ExpectProtectedData() const

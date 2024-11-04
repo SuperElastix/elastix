@@ -57,7 +57,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(NDImageTemplate, NDImageBase);
+  itkOverrideGetNameOfClassMacro(NDImageTemplate);
 
   /**
    * Typedefs inherited from Superclass.

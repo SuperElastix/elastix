@@ -90,7 +90,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ParameterFileParser, Object);
+  itkOverrideGetNameOfClassMacro(ParameterFileParser);
 
   /** Typedefs. */
   using ParameterValuesType = std::vector<std::string>;

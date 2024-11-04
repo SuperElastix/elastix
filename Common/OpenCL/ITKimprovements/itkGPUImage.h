@@ -73,7 +73,7 @@ public:
 
   itkNewMacro(Self);
 
-  itkTypeMacro(GPUImage, Image);
+  itkOverrideGetNameOfClassMacro(GPUImage);
 
   itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
 

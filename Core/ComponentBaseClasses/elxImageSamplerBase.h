@@ -58,7 +58,7 @@ public:
   using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageSamplerBase, BaseComponentSE);
+  itkOverrideGetNameOfClassMacro(ImageSamplerBase);
 
   /** Typedefs inherited from Elastix. */
   using typename Superclass::ElastixType;

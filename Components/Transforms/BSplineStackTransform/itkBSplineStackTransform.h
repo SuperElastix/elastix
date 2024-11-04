@@ -39,7 +39,7 @@ public:
   using Pointer = itk::SmartPointer<BSplineStackTransform>;
   using typename Superclass::FixedParametersType;
   itkNewMacro(Self);
-  itkTypeMacro(BSplineStackTransform, Superclass);
+  itkOverrideGetNameOfClassMacro(BSplineStackTransform);
 
 private:
   using Superclass::NumberOfGeneralFixedParametersOfStack;

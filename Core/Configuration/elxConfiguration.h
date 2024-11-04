@@ -65,7 +65,7 @@ public:
   itkNewMacro(Self);
 
   /** Standard part of all itk objects. */
-  itkTypeMacro(Configuration, itk::Object);
+  itkOverrideGetNameOfClassMacro(Configuration);
 
   /** Typedefs for the command line arguments. */
   using CommandLineArgumentMapType = std::map<std::string, std::string>;

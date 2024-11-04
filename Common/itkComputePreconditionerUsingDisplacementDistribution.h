@@ -53,7 +53,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ComputePreconditionerUsingDisplacementDistribution, ComputeDisplacementDistribution);
+  itkOverrideGetNameOfClassMacro(ComputePreconditionerUsingDisplacementDistribution);
 
   /** typedef  */
   using typename Superclass::FixedImageType;

@@ -52,7 +52,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ExponentialLimiterFunction, LimiterFunctionBase);
+  itkOverrideGetNameOfClassMacro(ExponentialLimiterFunction);
 
   /** Define the New() function, for creation via the ObjectFactory */
   itkNewMacro(Self);

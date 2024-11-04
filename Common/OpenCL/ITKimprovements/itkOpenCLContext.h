@@ -83,7 +83,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLContext, LightObject);
+  itkOverrideGetNameOfClassMacro(OpenCLContext);
 
   /** This is a singleton pattern New. There will only be ONE
    * reference to a OpenCLContext object per process. Clients that

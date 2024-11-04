@@ -74,7 +74,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUTransformCopier, Object);
+  itkOverrideGetNameOfClassMacro(GPUTransformCopier);
 
   /** Type CPU definitions for the transform. */
   using CPUTransformType = TTransform;

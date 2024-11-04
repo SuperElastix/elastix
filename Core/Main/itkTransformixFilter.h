@@ -71,7 +71,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(TransformixFilter, ImageSource);
+  itkOverrideGetNameOfClassMacro(TransformixFilter);
 
   /** Typedefs. */
   using TransformixMainType = elx::TransformixMain;

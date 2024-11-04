@@ -49,7 +49,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(StackTransform, AdvancedTransform);
+  itkOverrideGetNameOfClassMacro(StackTransform);
 
   /** (Reduced) dimension of the domain space. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, NInputDimensions);

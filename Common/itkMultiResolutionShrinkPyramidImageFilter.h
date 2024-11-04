@@ -52,7 +52,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiResolutionShrinkPyramidImageFilter, MultiResolutionPyramidImageFilter);
+  itkOverrideGetNameOfClassMacro(MultiResolutionShrinkPyramidImageFilter);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);

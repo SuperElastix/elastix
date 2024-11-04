@@ -44,7 +44,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLLogger, Object);
+  itkOverrideGetNameOfClassMacro(OpenCLLogger);
 
   /** This is a singleton pattern New. There will only be ONE
    * reference to a OpenCLLogger object per process. Clients that

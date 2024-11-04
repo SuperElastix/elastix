@@ -77,7 +77,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUImageToImageFilter, TParentImageFilter);
+  itkOverrideGetNameOfClassMacro(GPUImageToImageFilter);
 
   /** Superclass typedefs. */
   using typename Superclass::DataObjectIdentifierType;

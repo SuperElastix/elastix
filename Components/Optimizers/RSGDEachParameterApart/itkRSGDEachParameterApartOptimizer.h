@@ -65,7 +65,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RSGDEachParameterApartOptimizer, RSGDEachParameterApartBaseOptimizer);
+  itkOverrideGetNameOfClassMacro(RSGDEachParameterApartOptimizer);
 
   /** Cost function typedefs. */
   using Superclass::CostFunctionType;

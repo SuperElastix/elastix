@@ -45,7 +45,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AffineLogTransform, AdvancedMatrixOffsetTransformBase);
+  itkOverrideGetNameOfClassMacro(AffineLogTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);

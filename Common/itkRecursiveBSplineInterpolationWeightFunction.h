@@ -61,7 +61,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RecursiveBSplineInterpolationWeightFunction, FunctionBase);
+  itkOverrideGetNameOfClassMacro(RecursiveBSplineInterpolationWeightFunction);
 
   /** Space dimension. */
   itkStaticConstMacro(SpaceDimension, unsigned int, VSpaceDimension);

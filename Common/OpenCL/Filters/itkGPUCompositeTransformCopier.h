@@ -79,7 +79,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUCompositeTransformCopier, Object);
+  itkOverrideGetNameOfClassMacro(GPUCompositeTransformCopier);
 
   /** Type CPU definitions for the transform. */
   using CPUCompositeTransformType = TCompositeTransform;

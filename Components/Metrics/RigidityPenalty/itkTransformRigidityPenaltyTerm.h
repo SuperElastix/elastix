@@ -83,7 +83,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(TransformRigidityPenaltyTerm, TransformPenaltyTerm);
+  itkOverrideGetNameOfClassMacro(TransformRigidityPenaltyTerm);
 
   /** Typedefs inherited from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

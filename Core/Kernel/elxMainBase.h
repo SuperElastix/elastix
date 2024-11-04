@@ -53,7 +53,7 @@ public:
   using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MainBase, Object);
+  itkOverrideGetNameOfClassMacro(MainBase);
 
   /** Typedef's.*/
 

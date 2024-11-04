@@ -81,7 +81,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdaptiveStochasticLBFGSOptimizer, StandardStochasticGradientOptimizer);
+  itkOverrideGetNameOfClassMacro(AdaptiveStochasticLBFGSOptimizer);
 
   /** Typedefs inherited from the superclass. */
   using Superclass::MeasureType;

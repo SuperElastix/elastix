@@ -57,7 +57,7 @@ public:
   itkNewMacro(Self);
 
   /** ITK type info */
-  itkTypeMacro(ListSampleCArray, Sample);
+  itkOverrideGetNameOfClassMacro(ListSampleCArray);
 
   /** Typedef's from Superclass. */
   using typename Superclass::MeasurementVectorType;

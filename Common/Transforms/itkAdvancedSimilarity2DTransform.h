@@ -90,7 +90,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedSimilarity2DTransform, AdvancedRigid2DTransform);
+  itkOverrideGetNameOfClassMacro(AdvancedSimilarity2DTransform);
 
   /** Dimension of parameters. */
   itkStaticConstMacro(SpaceDimension, unsigned int, 2);

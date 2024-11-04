@@ -49,7 +49,7 @@ public:
   using GPUSuperclass = GPUTransformBase;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUMatrixOffsetTransformBase, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUMatrixOffsetTransformBase);
 
   /**  */
   bool

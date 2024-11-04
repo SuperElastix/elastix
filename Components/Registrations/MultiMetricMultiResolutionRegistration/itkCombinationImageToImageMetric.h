@@ -68,7 +68,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(CombinationImageToImageMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(CombinationImageToImageMetric);
 
   /** Define the New() method */
   itkNewMacro(Self);

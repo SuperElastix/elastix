@@ -46,7 +46,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(PCAMetric2, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(PCAMetric2);
 
   /** Set functions. */
   itkSetMacro(NumAdditionalSamplesFixed, unsigned int);

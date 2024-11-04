@@ -78,7 +78,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(GPUImageDataManager, GPUDataManager);
+  itkOverrideGetNameOfClassMacro(GPUImageDataManager);
 
   void
   SetImagePointer(ImageType * img);

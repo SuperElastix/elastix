@@ -82,7 +82,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(PCAMetric2, itk::PCAMetric2);
+  itkOverrideGetNameOfClassMacro(PCAMetric2);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n

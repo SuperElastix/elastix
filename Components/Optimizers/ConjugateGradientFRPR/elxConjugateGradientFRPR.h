@@ -89,7 +89,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ConjugateGradientFRPR, itk::FRPROptimizer);
+  itkOverrideGetNameOfClassMacro(ConjugateGradientFRPR);
 
   /** Name of this class.*/
   elxClassNameMacro("ConjugateGradientFRPR");

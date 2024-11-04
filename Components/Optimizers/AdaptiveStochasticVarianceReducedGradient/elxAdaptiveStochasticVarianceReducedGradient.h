@@ -208,7 +208,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdaptiveStochasticVarianceReducedGradient, AdaptiveStochasticVarianceReducedGradientOptimizer);
+  itkOverrideGetNameOfClassMacro(AdaptiveStochasticVarianceReducedGradient);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific optimizer.

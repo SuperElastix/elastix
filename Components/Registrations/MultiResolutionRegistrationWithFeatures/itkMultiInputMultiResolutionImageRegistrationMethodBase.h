@@ -86,7 +86,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MultiInputMultiResolutionImageRegistrationMethodBase, MultiResolutionImageRegistrationMethod2);
+  itkOverrideGetNameOfClassMacro(MultiInputMultiResolutionImageRegistrationMethodBase);
 
   /**  Superclass types */
   using typename Superclass::FixedImageType;

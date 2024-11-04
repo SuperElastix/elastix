@@ -55,7 +55,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineDecompositionImageFilter, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUBSplineDecompositionImageFilter);
 
   /** Superclass typedefs. */
   using OutputImageRegionType = typename GPUSuperclass::OutputImageRegionType;

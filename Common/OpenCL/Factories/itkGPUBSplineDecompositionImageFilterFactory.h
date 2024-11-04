@@ -55,7 +55,7 @@ public:
   itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineDecompositionImageFilterFactory2, GPUObjectFactoryBase);
+  itkOverrideGetNameOfClassMacro(GPUBSplineDecompositionImageFilterFactory2);
 
   /** Register one factory of this type. */
   static void

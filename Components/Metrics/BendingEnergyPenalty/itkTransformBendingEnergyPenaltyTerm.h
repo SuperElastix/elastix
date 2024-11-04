@@ -62,7 +62,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(TransformBendingEnergyPenaltyTerm, TransformPenaltyTerm);
+  itkOverrideGetNameOfClassMacro(TransformBendingEnergyPenaltyTerm);
 
   /** Typedefs inherited from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

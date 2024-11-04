@@ -114,7 +114,7 @@ public:
   using Pointer = SmartPointer<Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(MevisDicomTiffImageIO, Superclass);
+  itkOverrideGetNameOfClassMacro(MevisDicomTiffImageIO);
   itkGetConstMacro(RescaleSlope, double);
   itkGetConstMacro(RescaleIntercept, double);
   itkGetConstMacro(GantryTilt, double);

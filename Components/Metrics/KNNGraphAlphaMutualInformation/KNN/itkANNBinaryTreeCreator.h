@@ -50,7 +50,7 @@ public:
   itkNewMacro(Self);
 
   /** ITK type info. */
-  itkTypeMacro(ANNBinaryTreeCreator, Object);
+  itkOverrideGetNameOfClassMacro(ANNBinaryTreeCreator);
 
   /** ANN typedef's. */
   // typedef ANNpointSet     ANNTreeBaseType;

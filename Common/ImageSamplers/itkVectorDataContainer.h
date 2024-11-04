@@ -123,7 +123,7 @@ public:
   itkNewMacro(Self);
 
   /** Standard part of every itk Object. */
-  itkTypeMacro(VectorDataContainer, DataObject);
+  itkOverrideGetNameOfClassMacro(VectorDataContainer);
 
   /** Cast the container to a STL container type */
   STLContainerType &

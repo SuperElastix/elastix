@@ -46,7 +46,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** ITK type info. */
-  itkTypeMacro(BinaryANNTreeBase, BinaryTreeBase);
+  itkOverrideGetNameOfClassMacro(BinaryANNTreeBase);
 
   /** Typedefs from Superclass. */
   using typename Superclass::SampleType;

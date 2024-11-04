@@ -65,7 +65,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineInterpolateImageFunction, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUBSplineInterpolateImageFunction);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

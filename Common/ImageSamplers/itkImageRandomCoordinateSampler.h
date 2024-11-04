@@ -52,7 +52,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageRandomCoordinateSampler, ImageRandomSamplerBase);
+  itkOverrideGetNameOfClassMacro(ImageRandomCoordinateSampler);
 
   /** Typedefs inherited from the superclass. */
   using typename Superclass::DataObjectPointer;

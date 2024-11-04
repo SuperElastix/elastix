@@ -48,7 +48,7 @@ public:
   itkNewMacro(Self);
 
   /** ITK type info. */
-  itkTypeMacro(ANNPriorityTreeSearch, BinaryANNTreeSearchBase);
+  itkOverrideGetNameOfClassMacro(ANNPriorityTreeSearch);
 
   /** Typedef's from Superclass. */
   using typename Superclass::ListSampleType;

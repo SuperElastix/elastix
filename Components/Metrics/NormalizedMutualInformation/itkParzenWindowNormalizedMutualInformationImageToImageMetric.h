@@ -85,7 +85,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ParzenWindowNormalizedMutualInformationImageToImageMetric, ParzenWindowHistogramImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(ParzenWindowNormalizedMutualInformationImageToImageMetric);
 
   /** Typedefs from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

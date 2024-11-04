@@ -77,7 +77,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AffineDTI2DTransform, AdvancedMatrixOffsetTransformBase);
+  itkOverrideGetNameOfClassMacro(AffineDTI2DTransform);
 
   /** Dimension of the space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, 2);

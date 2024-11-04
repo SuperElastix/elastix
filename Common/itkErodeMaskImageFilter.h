@@ -66,7 +66,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ErodeMaskImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(ErodeMaskImageFilter);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

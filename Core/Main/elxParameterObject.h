@@ -36,7 +36,7 @@ public:
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
   itkNewMacro(Self);
-  itkTypeMacro(ParameterObject, itk::DataObject);
+  itkOverrideGetNameOfClassMacro(ParameterObject);
 
   using ParameterKeyType = std::string;
   using ParameterValueType = std::string;

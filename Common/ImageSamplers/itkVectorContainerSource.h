@@ -44,7 +44,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(VectorContainerSource, ProcessObject);
+  itkOverrideGetNameOfClassMacro(VectorContainerSource);
 
   /** Some convenient typedefs. */
   using typename Superclass::DataObjectPointer;

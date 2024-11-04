@@ -71,7 +71,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ElastixRegistrationMethod, ImageSource);
+  itkOverrideGetNameOfClassMacro(ElastixRegistrationMethod);
 
   /** Typedefs. */
   using ElastixMainType = elx::ElastixMain;

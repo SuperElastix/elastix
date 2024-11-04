@@ -65,7 +65,7 @@ public:
   using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(FixedImagePyramidBase, BaseComponentSE);
+  itkOverrideGetNameOfClassMacro(FixedImagePyramidBase);
 
   /** Typedefs inherited from the superclass. */
   using typename Superclass::ElastixType;

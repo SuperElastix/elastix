@@ -62,7 +62,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BSplineInterpolationWeightFunctionBase, FunctionBase);
+  itkOverrideGetNameOfClassMacro(BSplineInterpolationWeightFunctionBase);
 
   /** Space dimension. */
   itkStaticConstMacro(SpaceDimension, unsigned int, VSpaceDimension);

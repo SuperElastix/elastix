@@ -38,7 +38,7 @@ public:
   using Superclass = itk::StackTransform<CoordRepType, NDimension, NDimension>;
   using Pointer = itk::SmartPointer<AffineLogStackTransform>;
   itkNewMacro(Self);
-  itkTypeMacro(AffineLogStackTransform, Superclass);
+  itkOverrideGetNameOfClassMacro(AffineLogStackTransform);
 
 protected:
   /** Default-constructor */

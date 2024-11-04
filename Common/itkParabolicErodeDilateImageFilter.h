@@ -75,7 +75,7 @@ public:
   itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro(ParabolicErodeDilateImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(ParabolicErodeDilateImageFilter);
 
   /** Pixel Type of the input image */
   using InputImageType = TInputImage;

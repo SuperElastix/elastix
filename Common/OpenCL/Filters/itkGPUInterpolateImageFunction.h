@@ -52,7 +52,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUInterpolateImageFunction, TParentInterpolateImageFunction);
+  itkOverrideGetNameOfClassMacro(GPUInterpolateImageFunction);
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);

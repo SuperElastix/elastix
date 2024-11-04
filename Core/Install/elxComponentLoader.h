@@ -51,7 +51,7 @@ public:
 
   /** Standard ITK stuff. */
   itkNewMacro(Self);
-  itkTypeMacro(ComponentLoader, Object);
+  itkOverrideGetNameOfClassMacro(ComponentLoader);
 
   /** Typedef's. */
   using ComponentDatabasePointer = ComponentDatabase::Pointer;

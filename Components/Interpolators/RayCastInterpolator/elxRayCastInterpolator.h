@@ -61,7 +61,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RayCastInterpolator, AdvancedRayCastInterpolateImageFunction);
+  itkOverrideGetNameOfClassMacro(RayCastInterpolator);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n

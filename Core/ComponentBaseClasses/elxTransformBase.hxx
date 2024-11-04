@@ -1284,7 +1284,7 @@ TransformBase<TElastix>::ComputeAndWriteSpatialJacobianMatrixImage() const
       using Pointer = itk::SmartPointer<Self>;
 
       /** Run-time type information (and related methods). */
-      itkTypeMacro(PixelTypeChangeCommand, Command);
+      itkOverrideGetNameOfClassMacro(PixelTypeChangeCommand);
 
       /** Method for creation through the object factory. */
       itkNewMacro(Self);

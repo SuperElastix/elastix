@@ -74,7 +74,7 @@ public:
   using CoordinateRepresentationType = Superclass::ParametersValueType;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SingleValuedPointSetToPointSetMetric, SingleValuedCostFunction);
+  itkOverrideGetNameOfClassMacro(SingleValuedPointSetToPointSetMetric);
 
   /** Typedefs. */
   using FixedPointSetType = TFixedPointSet;

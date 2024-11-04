@@ -51,7 +51,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedBSplineDeformableTransformBase, AdvancedTransform);
+  itkOverrideGetNameOfClassMacro(AdvancedBSplineDeformableTransformBase);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);

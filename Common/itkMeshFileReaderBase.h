@@ -49,7 +49,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(MeshFileReaderBase, MeshSource);
+  itkOverrideGetNameOfClassMacro(MeshFileReaderBase);
 
   /** Some convenient typedefs. */
   using typename Superclass::DataObjectPointer;

@@ -90,7 +90,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ParameterMapInterface, Object);
+  itkOverrideGetNameOfClassMacro(ParameterMapInterface);
 
   /** Typedefs. */
   using ParameterValuesType = ParameterFileParser::ParameterValuesType;

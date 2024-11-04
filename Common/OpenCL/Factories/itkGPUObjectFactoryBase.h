@@ -55,7 +55,7 @@ public:
   }
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUObjectFactoryBase, ObjectFactoryBase);
+  itkOverrideGetNameOfClassMacro(GPUObjectFactoryBase);
 
   /** Supported dimensions. */
   itkStaticConstMacro(Support1D, bool, NDimensions::Support1D);

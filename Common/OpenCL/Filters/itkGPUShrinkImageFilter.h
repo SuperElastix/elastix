@@ -58,7 +58,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUShrinkImageFilter, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUShrinkImageFilter);
 
   /** Superclass typedefs. */
   using OutputImageRegionType = typename GPUSuperclass::OutputImageRegionType;

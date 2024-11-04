@@ -46,7 +46,7 @@ public:
   using Self = GPUBSplineBaseTransform;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUBSplineBaseTransform, GPUTransformBase);
+  itkOverrideGetNameOfClassMacro(GPUBSplineBaseTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);

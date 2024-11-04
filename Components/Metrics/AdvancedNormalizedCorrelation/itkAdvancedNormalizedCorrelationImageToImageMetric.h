@@ -104,7 +104,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedNormalizedCorrelationImageToImageMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(AdvancedNormalizedCorrelationImageToImageMetric);
 
   /** Typedefs from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

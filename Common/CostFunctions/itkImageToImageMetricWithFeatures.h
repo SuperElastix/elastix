@@ -50,7 +50,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageToImageMetricWithFeatures, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(ImageToImageMetricWithFeatures);
 
   /** Typedefs from the superclass. */
   using typename Superclass::CoordinateRepresentationType;
