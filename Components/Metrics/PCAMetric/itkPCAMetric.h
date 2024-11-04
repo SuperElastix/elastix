@@ -47,7 +47,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(PCAMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(PCAMetric);
 
   /** Set functions. */
   itkSetMacro(UseZeroAverageDisplacementConstraint, bool);

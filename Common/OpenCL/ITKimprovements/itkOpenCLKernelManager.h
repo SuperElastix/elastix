@@ -79,7 +79,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(OpenCLKernelManager, LightObject);
+  itkOverrideGetNameOfClassMacro(OpenCLKernelManager);
 
   /** Returns the OpenCL context that this kernel manager was created within. */
   OpenCLContext *

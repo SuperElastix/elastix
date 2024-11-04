@@ -68,7 +68,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUResampleImageFilter, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUResampleImageFilter);
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);

@@ -59,7 +59,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(NearestNeighborInterpolator, itk::NearestNeighborInterpolateImageFunction);
+  itkOverrideGetNameOfClassMacro(NearestNeighborInterpolator);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific interpolator. \n

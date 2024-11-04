@@ -64,7 +64,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(StochasticVarianceReducedGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(StochasticVarianceReducedGradientDescentOptimizer);
 
   /** Typedefs inherited from the superclass. */
   using Superclass::MeasureType;

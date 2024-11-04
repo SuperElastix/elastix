@@ -51,7 +51,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedEuler2DTransform, CPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUAdvancedEuler2DTransform);
 
   /** Typedefs from GPUSuperclass. */
   using CPUMatrixType = typename GPUSuperclass::CPUMatrixType;

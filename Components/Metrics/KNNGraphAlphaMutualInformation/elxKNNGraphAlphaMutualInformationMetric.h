@@ -100,7 +100,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(KNNGraphAlphaMutualInformationMetric, itk::KNNGraphAlphaMutualInformationImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(KNNGraphAlphaMutualInformationMetric);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific metric. \n

@@ -45,7 +45,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** ITK type info. */
-  itkTypeMacro(BinaryTreeBase, DataObject);
+  itkOverrideGetNameOfClassMacro(BinaryTreeBase);
 
   /** Typedef's. */
   using SampleType = TListSample;

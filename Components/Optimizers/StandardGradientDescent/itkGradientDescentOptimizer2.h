@@ -66,7 +66,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GradientDescentOptimizer2, ScaledSingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(GradientDescentOptimizer2);
 
   /** Typedefs inherited from the superclass. */
   using Superclass::MeasureType;

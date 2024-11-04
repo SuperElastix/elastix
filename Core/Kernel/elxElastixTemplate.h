@@ -115,7 +115,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ElastixTemplate, ElastixBase);
+  itkOverrideGetNameOfClassMacro(ElastixTemplate);
 
   /** Typedef's for this class. */
   using FixedImageType = TFixedImage;

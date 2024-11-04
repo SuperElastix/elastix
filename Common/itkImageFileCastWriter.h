@@ -53,7 +53,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ImageFileCastWriter, ImageFileWriter);
+  itkOverrideGetNameOfClassMacro(ImageFileCastWriter);
 
   /** Some convenient typedefs. */
   using typename Superclass::InputImageType;

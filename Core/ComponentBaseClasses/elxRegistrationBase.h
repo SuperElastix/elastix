@@ -82,7 +82,7 @@ public:
   using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RegistrationBase, BaseComponentSE);
+  itkOverrideGetNameOfClassMacro(RegistrationBase);
 
   /** Typedef's from Elastix. */
   using typename Superclass::ElastixType;

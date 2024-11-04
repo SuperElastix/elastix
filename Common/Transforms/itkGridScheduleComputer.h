@@ -52,7 +52,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GridScheduleComputer, Object);
+  itkOverrideGetNameOfClassMacro(GridScheduleComputer);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(Dimension, unsigned int, VImageDimension);

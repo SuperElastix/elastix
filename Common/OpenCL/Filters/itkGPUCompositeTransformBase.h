@@ -43,7 +43,7 @@ public:
   using GPUSuperclass = GPUTransformBase;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUCompositeTransformBase, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUCompositeTransformBase);
 
   /** Sub transform types. */
   using ScalarType = TScalarType;

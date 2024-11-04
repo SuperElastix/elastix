@@ -60,7 +60,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUNearestNeighborInterpolateImageFunction, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUNearestNeighborInterpolateImageFunction);
 
 protected:
   GPUNearestNeighborInterpolateImageFunction();

@@ -100,7 +100,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AffineDTITransform, AffineDTIGroupTemplate);
+  itkOverrideGetNameOfClassMacro(AffineDTITransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);

@@ -57,7 +57,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(CMAEvolutionStrategyOptimizer, ScaledSingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(CMAEvolutionStrategyOptimizer);
 
   using Superclass::ParametersType;
   using Superclass::DerivativeType;

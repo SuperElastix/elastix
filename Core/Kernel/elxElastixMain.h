@@ -80,7 +80,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ElastixMain, MainBase);
+  itkOverrideGetNameOfClassMacro(ElastixMain);
 
   /** Set/Get functions for the fixed images
    * (if these are not used, elastix tries to read them from disk,

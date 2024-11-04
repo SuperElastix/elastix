@@ -45,7 +45,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   // itkNewMacro(Self); because this is an abstract base class.
-  itkTypeMacro(LineSearchOptimizer, SingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(LineSearchOptimizer);
 
   using Superclass::MeasureType;
   using Superclass::ParametersType;

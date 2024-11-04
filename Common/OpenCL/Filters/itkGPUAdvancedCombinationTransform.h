@@ -53,7 +53,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedCombinationTransform, TParentTransform);
+  itkOverrideGetNameOfClassMacro(GPUAdvancedCombinationTransform);
 
   /** Sub transform types. */
   using GPUTransformType = typename GPUSuperclass::TransformType;

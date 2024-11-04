@@ -91,7 +91,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedImageToImageMetric, ImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(AdvancedImageToImageMetric);
 
   /** Constants for the image dimensions. */
   itkStaticConstMacro(MovingImageDimension, unsigned int, TMovingImage::ImageDimension);

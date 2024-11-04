@@ -77,7 +77,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUInterpolatorCopier, Object);
+  itkOverrideGetNameOfClassMacro(GPUInterpolatorCopier);
 
   /** Type CPU definitions for the interpolator. */
   using CPUInterpolatorType = TInterpolator;

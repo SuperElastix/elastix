@@ -60,7 +60,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ComputeDisplacementDistribution, ScaledSingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(ComputeDisplacementDistribution);
 
   /** typedef  */
   using FixedImageType = TFixedImage;

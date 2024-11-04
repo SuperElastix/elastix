@@ -91,7 +91,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(TransformToDeterminantOfSpatialJacobianSource, ImageSource);
+  itkOverrideGetNameOfClassMacro(TransformToDeterminantOfSpatialJacobianSource);
 
   /** Number of dimensions. */
   itkStaticConstMacro(ImageDimension, unsigned int, TOutputImage::ImageDimension);

@@ -61,7 +61,7 @@ public:
   using ConstPointer = itk::SmartPointer<const Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(ComponentDatabase, Object);
+  itkOverrideGetNameOfClassMacro(ComponentDatabase);
 
   /** The Index is the number of the ElastixTypedef<number>::ElastixType.*/
   using IndexType = unsigned int;

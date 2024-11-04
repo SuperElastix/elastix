@@ -59,7 +59,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(DeformationVectorFieldTransform, AdvancedBSplineDeformableTransform);
+  itkOverrideGetNameOfClassMacro(DeformationVectorFieldTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);

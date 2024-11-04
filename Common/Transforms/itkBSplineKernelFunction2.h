@@ -69,7 +69,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BSplineKernelFunction2, KernelFunctionBase2);
+  itkOverrideGetNameOfClassMacro(BSplineKernelFunction2);
 
   /** Enum of for spline order. */
   itkStaticConstMacro(SplineOrder, unsigned int, VSplineOrder);

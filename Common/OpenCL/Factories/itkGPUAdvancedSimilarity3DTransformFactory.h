@@ -55,7 +55,7 @@ public:
   itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedSimilarity3DTransformFactory2, GPUObjectFactoryBase);
+  itkOverrideGetNameOfClassMacro(GPUAdvancedSimilarity3DTransformFactory2);
 
   /** Register one factory of this type. */
   static void

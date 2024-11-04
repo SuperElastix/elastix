@@ -46,7 +46,7 @@ public:
   using Superclass = ThinPlateSplineKernelTransform2<TScalarType, NDimensions>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
-  itkTypeMacro(KernelTransformPublic, ThinPlateSplineKernelTransform2);
+  itkOverrideGetNameOfClassMacro(KernelTransformPublic);
   itkNewMacro(Self);
 
   using typename Superclass::PointSetType;

@@ -53,7 +53,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(DeformationFieldRegulizer, TAnyITKTransform);
+  itkOverrideGetNameOfClassMacro(DeformationFieldRegulizer);
 
   /** Input space dimension. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension);

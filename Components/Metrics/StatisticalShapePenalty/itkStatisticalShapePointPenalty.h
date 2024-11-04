@@ -69,7 +69,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(StatisticalShapePointPenalty, SingleValuedPointSetToPointSetMetric);
+  itkOverrideGetNameOfClassMacro(StatisticalShapePointPenalty);
 
   /** Types transferred from the base class */
   using typename Superclass::TransformType;

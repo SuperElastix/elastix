@@ -131,7 +131,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GenericMultiResolutionPyramidImageFilter, MultiResolutionPyramidImageFilter);
+  itkOverrideGetNameOfClassMacro(GenericMultiResolutionPyramidImageFilter);
 
   /** ImageDimension enumeration. */
   itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension);

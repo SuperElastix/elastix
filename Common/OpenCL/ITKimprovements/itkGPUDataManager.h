@@ -78,7 +78,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUDataManager, Object);
+  itkOverrideGetNameOfClassMacro(GPUDataManager);
 
   using MutexHolderType = std::lock_guard<std::mutex>;
 

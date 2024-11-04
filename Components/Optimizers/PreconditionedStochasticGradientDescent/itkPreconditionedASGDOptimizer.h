@@ -82,7 +82,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(PreconditionedASGDOptimizer, StandardGradientDescentOptimizer);
+  itkOverrideGetNameOfClassMacro(PreconditionedASGDOptimizer);
 
   /** Typedefs inherited from the superclass. */
   using Superclass::MeasureType;

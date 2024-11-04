@@ -58,7 +58,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPULinearInterpolateImageFunction, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPULinearInterpolateImageFunction);
 
 protected:
   GPULinearInterpolateImageFunction();

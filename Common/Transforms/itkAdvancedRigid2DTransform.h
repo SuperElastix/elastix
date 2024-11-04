@@ -85,7 +85,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedRigid2DTransform, AdvancedMatrixOffsetTransformBase);
+  itkOverrideGetNameOfClassMacro(AdvancedRigid2DTransform);
 
   /** New macro for creation of through a Smart Pointer */
   itkNewMacro(Self);

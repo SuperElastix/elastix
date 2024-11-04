@@ -56,7 +56,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPURecursiveGaussianImageFilter, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPURecursiveGaussianImageFilter);
 
   /** Superclass typedefs. */
   using OutputImageRegionType = typename GPUSuperclass::OutputImageRegionType;

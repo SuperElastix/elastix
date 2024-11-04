@@ -48,7 +48,7 @@ public:
   itkNewMacro(Self);
 
   /** ITK type info. */
-  itkTypeMacro(ANNBruteForceTree, BinaryANNTreeBase);
+  itkOverrideGetNameOfClassMacro(ANNBruteForceTree);
 
   /** Typedef's from Superclass. */
   using typename Superclass::SampleType;

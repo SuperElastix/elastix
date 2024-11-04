@@ -47,7 +47,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SumOfPairwiseCorrelationCoefficientsMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(SumOfPairwiseCorrelationCoefficientsMetric);
 
   /** Set functions. */
   itkSetMacro(NumAdditionalSamplesFixed, unsigned int);

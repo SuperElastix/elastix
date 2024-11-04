@@ -48,7 +48,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(GenericConjugateGradientOptimizer, ScaledSingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(GenericConjugateGradientOptimizer);
 
   using Superclass::ParametersType;
   using Superclass::DerivativeType;

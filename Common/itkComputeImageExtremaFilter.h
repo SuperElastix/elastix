@@ -45,7 +45,7 @@ public:
   itkNewMacro(Self);
 
   /** Runtime information support. */
-  itkTypeMacro(ComputeImageExtremaFilter, StatisticsImageFilter);
+  itkOverrideGetNameOfClassMacro(ComputeImageExtremaFilter);
 
   /** Image related typedefs. */
   using InputImagePointer = typename TInputImage::Pointer;

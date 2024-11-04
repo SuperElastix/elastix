@@ -74,7 +74,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SumSquaredTissueVolumeDifferenceImageToImageMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(SumSquaredTissueVolumeDifferenceImageToImageMetric);
 
   /** Typedefs from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

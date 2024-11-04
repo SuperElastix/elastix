@@ -58,7 +58,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(TransformixInputPointFileReader, MeshFileReaderBase);
+  itkOverrideGetNameOfClassMacro(TransformixInputPointFileReader);
 
   /** Some convenient typedefs. */
   using typename Superclass::DataObjectPointer;

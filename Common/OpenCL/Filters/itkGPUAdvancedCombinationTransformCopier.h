@@ -78,7 +78,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedCombinationTransformCopier, Object);
+  itkOverrideGetNameOfClassMacro(GPUAdvancedCombinationTransformCopier);
 
   /** Type CPU definitions for the transform. */
   using CPUComboTransformType = TAdvancedCombinationTransform;

@@ -68,7 +68,7 @@ public:
   itkNewMacro(Self);
 
   /** ITK Type info. */
-  itkTypeMacro(AdvancedCombinationTransform, AdvancedTransform);
+  itkOverrideGetNameOfClassMacro(AdvancedCombinationTransform);
 
   /** Input and Output space dimension. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);

@@ -97,7 +97,7 @@ public:
   using ConstPointer = itk::SmartPointer<const Self>;
 
   /** Standard ITK stuff. */
-  itkTypeMacro(ProgressCommand, Command);
+  itkOverrideGetNameOfClassMacro(ProgressCommand);
   itkNewMacro(Self);
 
   /** Typedef's. */

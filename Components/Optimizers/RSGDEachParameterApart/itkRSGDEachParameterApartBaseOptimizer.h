@@ -48,7 +48,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RSGDEachParameterApartBaseOptimizer, SingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(RSGDEachParameterApartBaseOptimizer);
 
   /** Codes of stopping conditions. */
   enum StopConditionType

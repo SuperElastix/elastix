@@ -55,7 +55,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(WeightedCombinationTransform, AdvancedTransform);
+  itkOverrideGetNameOfClassMacro(WeightedCombinationTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, NInputDimensions);

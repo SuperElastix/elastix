@@ -102,7 +102,7 @@ public:
 
   /** Run-time type information (and related methods). */
   // itkTypeMacro( EulerTransformElastix, EulerTransform );
-  itkTypeMacro(EulerTransformElastix, itk::AdvancedCombinationTransform);
+  itkOverrideGetNameOfClassMacro(EulerTransformElastix);
 
   /** Name of this class.
    * Use this name in the parameter file to select this specific transform. \n

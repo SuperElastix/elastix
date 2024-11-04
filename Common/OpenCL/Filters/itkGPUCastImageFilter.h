@@ -90,7 +90,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUCastImageFilter, GPUUnaryFunctorImageFilter);
+  itkOverrideGetNameOfClassMacro(GPUCastImageFilter);
 
   /** Pixel types. */
   using InputPixelType = typename TInputImage::PixelType;

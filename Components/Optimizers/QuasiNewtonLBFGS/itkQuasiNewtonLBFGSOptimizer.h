@@ -66,7 +66,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(QuasiNewtonLBFGSOptimizer, ScaledSingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(QuasiNewtonLBFGSOptimizer);
 
   using Superclass::ParametersType;
   using Superclass::DerivativeType;

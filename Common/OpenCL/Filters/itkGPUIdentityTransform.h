@@ -58,7 +58,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUIdentityTransform, TParentTransform);
+  itkOverrideGetNameOfClassMacro(GPUIdentityTransform);
 
   /** Returns true if the derived transform is identity transform,
    * false otherwise. */

@@ -148,7 +148,7 @@ public:
   using Superclass = BaseComponentSE<TElastix>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(TransformBase, BaseComponentSE);
+  itkOverrideGetNameOfClassMacro(TransformBase);
 
   /** Typedef from Superclass. */
   using typename Superclass::RegistrationType;

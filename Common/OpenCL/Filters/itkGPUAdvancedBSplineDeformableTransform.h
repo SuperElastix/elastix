@@ -59,7 +59,7 @@ public:
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedBSplineDeformableTransform, TParentTransform);
+  itkOverrideGetNameOfClassMacro(GPUAdvancedBSplineDeformableTransform);
 
   /** This method sets the parameters of the transform. */
   void

@@ -58,7 +58,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(FullSearchOptimizer, SingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(FullSearchOptimizer);
 
   /** Codes of stopping conditions */
   enum StopConditionType

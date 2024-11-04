@@ -87,7 +87,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(KNNGraphAlphaMutualInformationImageToImageMetric, MultiInputImageToImageMetricBase);
+  itkOverrideGetNameOfClassMacro(KNNGraphAlphaMutualInformationImageToImageMetric);
 
   /** Typedefs from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

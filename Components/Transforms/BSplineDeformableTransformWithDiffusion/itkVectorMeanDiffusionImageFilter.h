@@ -69,7 +69,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(VectorMeanDiffusionImageFilter, ImageToImageFilter);
+  itkOverrideGetNameOfClassMacro(VectorMeanDiffusionImageFilter);
 
   /** Image typedef support. */
   using InputPixelType = typename InputImageType::PixelType;

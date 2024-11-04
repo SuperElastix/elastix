@@ -46,7 +46,7 @@ public:
   using GPUSuperclass = GPUTransformBase;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUTranslationTransformBase, GPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUTranslationTransformBase);
 
   /** Returns true, the transform is translation transform. */
   bool

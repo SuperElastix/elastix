@@ -55,7 +55,7 @@ public:
   itkFactorylessNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedBSplineDeformableTransformFactory2, GPUObjectFactoryBase);
+  itkOverrideGetNameOfClassMacro(GPUAdvancedBSplineDeformableTransformFactory2);
 
   /** Register one factory of this type. */
   static void

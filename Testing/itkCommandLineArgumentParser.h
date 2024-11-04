@@ -96,7 +96,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(CommandLineArgumentParser, Object);
+  itkOverrideGetNameOfClassMacro(CommandLineArgumentParser);
 
   /** Set the command line arguments in a vector of strings. */
   void

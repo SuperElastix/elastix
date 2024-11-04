@@ -48,7 +48,7 @@ public:
   itkNewMacro(Self);
 
   /** ITK type info. */
-  itkTypeMacro(ANNbdTree, ANNkDTree);
+  itkOverrideGetNameOfClassMacro(ANNbdTree);
 
   /** Typedef's from Superclass. */
   using typename Superclass::SampleType;

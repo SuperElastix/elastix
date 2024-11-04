@@ -53,7 +53,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUTranslationTransform, CPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUTranslationTransform);
 
   /** Typedefs from GPUSuperclass. */
   using CPUOutputVectorType = typename GPUSuperclass::CPUOutputVectorType;

@@ -53,7 +53,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GPUAdvancedMatrixOffsetTransformBase, CPUSuperclass);
+  itkOverrideGetNameOfClassMacro(GPUAdvancedMatrixOffsetTransformBase);
 
   /** Typedefs from GPUSuperclass. */
   using CPUMatrixType = typename GPUSuperclass::CPUMatrixType;

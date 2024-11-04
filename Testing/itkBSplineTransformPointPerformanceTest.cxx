@@ -42,7 +42,7 @@ public:
 
   /** Some stuff that is needed to get this class functional. */
   itkNewMacro(Self);
-  itkTypeMacro(BSplineTransform_TEST, AdvancedBSplineDeformableTransform);
+  itkOverrideGetNameOfClassMacro(BSplineTransform_TEST);
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;

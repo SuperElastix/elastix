@@ -75,7 +75,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedSimilarity3DTransform, AdvancedVersorRigid3DTransform);
+  itkOverrideGetNameOfClassMacro(AdvancedSimilarity3DTransform);
 
   /** Dimension of parameters. */
   itkStaticConstMacro(SpaceDimension, unsigned int, 3);

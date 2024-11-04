@@ -92,7 +92,7 @@ public:
   using InterpolatorPointer = typename InterpolatorType::Pointer;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedRayCastInterpolateImageFunction, InterpolateImageFunction);
+  itkOverrideGetNameOfClassMacro(AdvancedRayCastInterpolateImageFunction);
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);

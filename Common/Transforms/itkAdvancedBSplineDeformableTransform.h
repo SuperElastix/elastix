@@ -145,7 +145,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedBSplineDeformableTransform, AdvancedBSplineDeformableTransformBase);
+  itkOverrideGetNameOfClassMacro(AdvancedBSplineDeformableTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);

@@ -57,7 +57,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(NormalizedGradientCorrelationImageToImageMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(NormalizedGradientCorrelationImageToImageMetric);
 
 /** Types transferred from the base class */
 /** Work around a Visual Studio .NET bug */

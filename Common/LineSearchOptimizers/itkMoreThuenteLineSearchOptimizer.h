@@ -79,7 +79,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   itkNewMacro(Self);
-  itkTypeMacro(MoreThuenteLineSearchOptimizer, LineSearchOptimizer);
+  itkOverrideGetNameOfClassMacro(MoreThuenteLineSearchOptimizer);
 
   using Superclass::MeasureType;
   using Superclass::ParametersType;

@@ -49,7 +49,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ComputeJacobianTerms, Object);
+  itkOverrideGetNameOfClassMacro(ComputeJacobianTerms);
 
   /** typedef  */
   using FixedImageType = TFixedImage;

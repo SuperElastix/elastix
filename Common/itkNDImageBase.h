@@ -72,7 +72,7 @@ public:
   // (abstract) type makes no sense.
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(NDImageBase, Object);
+  itkOverrideGetNameOfClassMacro(NDImageBase);
 
   using DataObjectPointer = DataObject::Pointer;
 

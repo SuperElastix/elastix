@@ -67,7 +67,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(FiniteDifferenceGradientDescentOptimizer, ScaledSingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(FiniteDifferenceGradientDescentOptimizer);
 
   /** Codes of stopping conditions */
   enum StopConditionType

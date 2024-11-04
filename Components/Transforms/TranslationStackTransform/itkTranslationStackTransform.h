@@ -38,7 +38,7 @@ public:
   using Superclass = itk::StackTransform<CoordRepType, NDimension, NDimension>;
   using Pointer = itk::SmartPointer<TranslationStackTransform>;
   itkNewMacro(Self);
-  itkTypeMacro(TranslationStackTransform, Superclass);
+  itkOverrideGetNameOfClassMacro(TranslationStackTransform);
 
 protected:
   /** Default-constructor */

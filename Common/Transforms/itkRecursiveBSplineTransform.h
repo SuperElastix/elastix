@@ -52,7 +52,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(RecursiveBSplineTransform, AdvancedBSplineDeformableTransform);
+  itkOverrideGetNameOfClassMacro(RecursiveBSplineTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, NDimensions);

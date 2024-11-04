@@ -74,7 +74,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(ScaledSingleValuedNonLinearOptimizer, SingleValuedNonLinearOptimizer);
+  itkOverrideGetNameOfClassMacro(ScaledSingleValuedNonLinearOptimizer);
 
   /** Typedefs inherited from the superclass. */
   using Superclass::MeasureType;

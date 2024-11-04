@@ -100,7 +100,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(EulerTransform, EulerGroupTemplate);
+  itkOverrideGetNameOfClassMacro(EulerTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
@@ -171,7 +171,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(EulerTransform, EulerGroupTemplate);
+  itkOverrideGetNameOfClassMacro(EulerTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, 3);

@@ -70,7 +70,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedKappaStatisticImageToImageMetric, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(AdvancedKappaStatisticImageToImageMetric);
 
   /** Typedefs from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

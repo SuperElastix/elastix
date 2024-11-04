@@ -54,7 +54,7 @@ public:
   using ConstPointer = SmartPointer<const Self>;
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(TransformPenaltyTerm, AdvancedImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(TransformPenaltyTerm);
 
   /** Typedef's inherited from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

@@ -46,7 +46,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(DisplacementMagnitudePenaltyTerm, TransformPenaltyTerm);
+  itkOverrideGetNameOfClassMacro(DisplacementMagnitudePenaltyTerm);
 
   /** Typedefs inherited from the superclass. */
   using typename Superclass::CoordinateRepresentationType;

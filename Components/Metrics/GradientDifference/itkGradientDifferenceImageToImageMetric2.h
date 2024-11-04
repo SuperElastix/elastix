@@ -88,7 +88,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(GradientDifferenceImageToImageMetric, ImageToImageMetric);
+  itkOverrideGetNameOfClassMacro(GradientDifferenceImageToImageMetric);
 
 /** Types transferred from the base class */
 /** Work around a Visual Studio .NET bug */

@@ -51,7 +51,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(AdvancedTransformAdapter, AdvancedTransform);
+  itkOverrideGetNameOfClassMacro(AdvancedTransformAdapter);
 
   /** Dimension of the domain spaces. */
   itkStaticConstMacro(InputSpaceDimension, unsigned int, Superclass::InputSpaceDimension);

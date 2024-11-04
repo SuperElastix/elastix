@@ -101,7 +101,7 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(SimilarityTransform, SimilarityGroupTemplate);
+  itkOverrideGetNameOfClassMacro(SimilarityTransform);
 
   /** Dimension of the domain space. */
   itkStaticConstMacro(SpaceDimension, unsigned int, Dimension);
