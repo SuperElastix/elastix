@@ -204,8 +204,8 @@ MeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(const Transf
     MeshPointsContainerIteratorType      mappedPointIt = mappedPoints->Begin();
     MeshPointsContainerConstIteratorType fixedPointEnd = fixedPoints->End();
 
-    // MeshPointDataContainerConstIteratorType fixedPointDataIt =fixedNormals->Begin();
-    // MeshPointDataContainerIteratorType mappedPointDataIt = mappedNormals->Begin();
+    // auto fixedPointDataIt =fixedNormals->Begin();
+    // auto mappedPointDataIt = mappedNormals->Begin();
 
     /* Transform all points and their normals by current transformation*/
     for (; fixedPointIt != fixedPointEnd; ++fixedPointIt, ++mappedPointIt) //,++fixedPointDataIt,++mappedPointDataIt)

@@ -102,9 +102,7 @@ public:
   using MeshPointDataContainerType = typename FixedMeshType::PointDataContainer;
   using MeshPointDataContainerConstPointer = typename FixedMeshType::PointDataContainerConstPointer;
   using MeshPointDataContainerPointer = typename FixedMeshType::PointDataContainerPointer;
-  // typedef typename FixedMeshType::PointDataContainerConstIterator     MeshPointDataContainerConstIteratorType;
   using MeshPointDataContainerConstIteratorType = typename FixedMeshType::PointDataContainerIterator;
-  using MeshPointDataContainerIteratorType = typename MeshPointDataContainerType::Iterator;
 
   using MeshIdType = unsigned int;
   using FixedMeshContainerType = VectorContainer<MeshIdType, FixedMeshConstPointer>;
