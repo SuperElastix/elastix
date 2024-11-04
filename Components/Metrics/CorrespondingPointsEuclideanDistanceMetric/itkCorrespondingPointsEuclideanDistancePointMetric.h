@@ -69,7 +69,6 @@ public:
   using typename Superclass::MovingPointSetConstPointer;
 
   using typename Superclass::PointIterator;
-  using typename Superclass::PointDataIterator;
 
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
