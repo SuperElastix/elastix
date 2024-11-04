@@ -78,10 +78,8 @@ public:
 
   /** Typedefs. */
   using FixedPointSetType = TFixedPointSet;
-  using FixedPointSetPixelType = typename FixedPointSetType::PixelType;
   using FixedPointSetConstPointer = typename FixedPointSetType::ConstPointer;
   using MovingPointSetType = TMovingPointSet;
-  using MovingPointSetPixelType = typename MovingPointSetType::PixelType;
   using MovingPointSetConstPointer = typename MovingPointSetType::ConstPointer;
   using PointIterator = typename FixedPointSetType::PointsContainer::ConstIterator;
 
