@@ -84,7 +84,6 @@ public:
   using MovingPointSetPixelType = typename MovingPointSetType::PixelType;
   using MovingPointSetConstPointer = typename MovingPointSetType::ConstPointer;
   using PointIterator = typename FixedPointSetType::PointsContainer::ConstIterator;
-  using PointDataIterator = typename FixedPointSetType::PointDataContainer::ConstIterator;
 
   /** Constants for the pointset dimensions. */
   itkStaticConstMacro(FixedPointSetDimension, unsigned int, TFixedPointSet::PointDimension);
