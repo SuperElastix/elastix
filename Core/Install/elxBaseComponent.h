@@ -28,7 +28,7 @@
  * The namespace alias elx is defined in this file.
  */
 
-#include "itkMacro.h" // itkTypeMacroNoParent
+#include "itkMacro.h" // itkVirtualGetNameOfClassMacro
 #include <string>
 
 /** All elastix components should be in namespace elastix. */
@@ -124,7 +124,7 @@ public:
   virtual const char *
   elxGetClassName() const;
 
-  itkTypeMacroNoParent(BaseComponent);
+  itkVirtualGetNameOfClassMacro(BaseComponent);
 
   /** Set the component label, which consists of a label
    * ( "Metric", "Transform") and an index number. In case
