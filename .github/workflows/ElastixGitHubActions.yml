@@ -212,7 +212,7 @@ jobs:
         mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
   
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.4.3
       with: 
         name: "${{ matrix.os }}"
         path: uploads
