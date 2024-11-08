@@ -65,9 +65,6 @@ public:
   using typename Superclass::OutputPointType;
   using typename Superclass::NonZeroJacobianIndicesType;
 
-  using CoordRepType = typename OutputPointType::CoordRepType;
-  using VnlVectorType = vnl_vector<CoordRepType>;
-
   /**  Get the value for single valued optimizers. */
   MeasureType
   GetValue(const TransformParametersType & parameters) const override;
