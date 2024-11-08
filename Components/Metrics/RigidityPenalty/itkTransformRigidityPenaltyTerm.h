@@ -99,7 +99,6 @@ public:
   using typename Superclass::TransformPointer;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::InterpolatorType;
   using typename Superclass::InterpolatorPointer;
@@ -188,7 +187,7 @@ public:
 
   /** Contains calls from GetValueAndDerivative that are thread-unsafe. */
   void
-  BeforeThreadedGetValueAndDerivative(const TransformParametersType & parameters) const override;
+  BeforeThreadedGetValueAndDerivative(const ParametersType & parameters) const override;
 
   /** The GetValueAndDerivative()-method returns the rigid penalty value and its derivative. */
   void

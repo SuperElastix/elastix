@@ -343,8 +343,8 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 
 template <typename TFixedPointSet, typename TMovingPointSet>
 auto
-StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   const auto & fixedPoints = this->Superclass::GetFixedPoints();
 
@@ -407,8 +407,8 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValue(
 
 template <typename TFixedPointSet, typename TMovingPointSet>
 void
-StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const TransformParametersType & parameters,
-                                                                             DerivativeType & derivative) const
+StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const ParametersType & parameters,
+                                                                             DerivativeType &       derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -427,10 +427,9 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(con
 
 template <typename TFixedPointSet, typename TMovingPointSet>
 void
-StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(const ParametersType & parameters,
+                                                                                     MeasureType &          value,
+                                                                                     DerivativeType & derivative) const
 {
   const auto & fixedPoints = this->Superclass::GetFixedPoints();
 

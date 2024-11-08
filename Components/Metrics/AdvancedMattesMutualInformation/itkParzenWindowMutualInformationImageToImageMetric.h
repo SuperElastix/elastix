@@ -102,7 +102,6 @@ public:
   using typename Superclass::TransformPointer;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::NumberOfParametersType;
   using typename Superclass::InterpolatorType;

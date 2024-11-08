@@ -101,8 +101,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(s
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
@@ -230,9 +230,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
 
 template <typename TFixedImage, typename TMovingImage>
 void
-AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
+                                                                                   DerivativeType & derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -252,9 +251,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetDerivati
 template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -394,9 +393,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
 template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   /** Option for now to still use the single threaded code. */
   if (!Superclass::m_UseMultiThread)

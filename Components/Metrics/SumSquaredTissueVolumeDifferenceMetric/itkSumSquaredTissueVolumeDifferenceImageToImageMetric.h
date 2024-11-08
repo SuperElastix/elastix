@@ -86,7 +86,6 @@ public:
   using typename Superclass::FixedImageRegionType;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::InterpolatorType;
   using typename Superclass::InterpolatorPointer;
@@ -130,26 +129,26 @@ public:
 
   /** Get the value for single valued optimizers. */
   virtual MeasureType
-  GetValueSingleThreaded(const TransformParametersType & parameters) const;
+  GetValueSingleThreaded(const ParametersType & parameters) const;
 
   MeasureType
-  GetValue(const TransformParametersType & parameters) const override;
+  GetValue(const ParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
   void
-  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const override;
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
   void
-  GetValueAndDerivative(const TransformParametersType & parameters,
-                        MeasureType &                   Value,
-                        DerivativeType &                Derivative) const override;
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          Value,
+                        DerivativeType &       Derivative) const override;
 
   /** Get value and derivatives single-threaded */
   void
-  GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
-                                      MeasureType &                   measure,
-                                      DerivativeType &                derivative) const;
+  GetValueAndDerivativeSingleThreaded(const ParametersType & parameters,
+                                      MeasureType &          measure,
+                                      DerivativeType &       derivative) const;
 
   /** Set/get the air intensity value */
   itkSetMacro(AirValue, RealType);

@@ -84,7 +84,6 @@ public:
   using typename Superclass::TransformPointer;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::NumberOfParametersType;
   using typename Superclass::InterpolatorType;
@@ -122,22 +121,22 @@ public:
 
   /** Get the value for single valued optimizers. */
   MeasureType
-  GetValue(const TransformParametersType & parameters) const override;
+  GetValue(const ParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
   void
-  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const override;
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
   virtual void
-  GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
-                                      MeasureType &                   Value,
-                                      DerivativeType &                Derivative) const;
+  GetValueAndDerivativeSingleThreaded(const ParametersType & parameters,
+                                      MeasureType &          Value,
+                                      DerivativeType &       Derivative) const;
 
   void
-  GetValueAndDerivative(const TransformParametersType & parameters,
-                        MeasureType &                   Value,
-                        DerivativeType &                Derivative) const override;
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          Value,
+                        DerivativeType &       Derivative) const override;
 
   /** Computes the moving gradient image dM/dx. */
   void

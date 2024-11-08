@@ -176,8 +176,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::EvaluateTransfo
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
@@ -308,9 +308,8 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(
 
 template <typename TFixedImage, typename TMovingImage>
 void
-VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
+                                                                               DerivativeType &       derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -330,9 +329,9 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetDerivative(
 template <typename TFixedImage, typename TMovingImage>
 void
 VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 

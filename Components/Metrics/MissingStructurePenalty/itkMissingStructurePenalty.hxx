@@ -90,7 +90,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
 
 template <typename TFixedPointSet, typename TMovingPointSet>
 auto
-MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const TransformParametersType & parameters) const
+MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const ParametersType & parameters) const
   -> MeasureType
 {
   /** Sanity checks. */
@@ -123,8 +123,8 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValue(const Transf
 
 template <typename TFixedPointSet, typename TMovingPointSet>
 void
-MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const TransformParametersType & parameters,
-                                                                         DerivativeType & derivative) const
+MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const ParametersType & parameters,
+                                                                         DerivativeType &       derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -143,10 +143,9 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetDerivative(const T
 
 template <typename TFixedPointSet, typename TMovingPointSet>
 void
-MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(const ParametersType & parameters,
+                                                                                 MeasureType &          value,
+                                                                                 DerivativeType & derivative) const
 {
   /** Sanity checks. */
   FixedMeshContainerConstPointer fixedMeshContainer = this->GetFixedMeshContainer();

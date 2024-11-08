@@ -101,7 +101,6 @@ public:
   using typename Superclass::TransformPointer;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::InterpolatorType;
   using typename Superclass::InterpolatorPointer;
@@ -228,17 +227,17 @@ public:
 
   /** Get the derivatives of the match measure. */
   void
-  GetDerivative(const TransformParametersType & parameters, DerivativeType & Derivative) const override;
+  GetDerivative(const ParametersType & parameters, DerivativeType & Derivative) const override;
 
   /** Get the value for single valued optimizers. */
   MeasureType
-  GetValue(const TransformParametersType & parameters) const override;
+  GetValue(const ParametersType & parameters) const override;
 
   /** Get value and derivatives for multiple valued optimizers. */
   void
-  GetValueAndDerivative(const TransformParametersType & parameters,
-                        MeasureType &                   Value,
-                        DerivativeType &                Derivative) const override;
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          Value,
+                        DerivativeType &       Derivative) const override;
 
   /** Set alpha from alpha - mutual information. */
   itkSetClampMacro(Alpha, double, 0.0, 1.0);

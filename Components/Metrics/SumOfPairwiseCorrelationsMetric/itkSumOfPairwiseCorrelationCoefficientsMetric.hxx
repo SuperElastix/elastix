@@ -123,8 +123,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::EvaluateT
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
@@ -257,9 +257,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
 
 template <typename TFixedImage, typename TMovingImage>
 void
-SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
+                                                                                     DerivativeType & derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -280,9 +279,9 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetDeriva
 template <typename TFixedImage, typename TMovingImage>
 void
 SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 

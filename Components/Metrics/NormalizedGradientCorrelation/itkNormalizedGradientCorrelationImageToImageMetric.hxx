@@ -261,7 +261,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 template <typename TFixedImage, typename TMovingImage>
 auto
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
-  const TransformParametersType & parameters) const -> MeasureType
+  const ParametersType & parameters) const -> MeasureType
 {
   this->SetTransformParameters(parameters);
   this->m_TransformMovingImageFilter->Modified();
@@ -354,7 +354,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Comp
 template <typename TFixedImage, typename TMovingImage>
 auto
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+  const ParametersType & parameters) const -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -396,7 +396,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
 template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::SetTransformParameters(
-  const TransformParametersType & parameters) const
+  const ParametersType & parameters) const
 {
   if (!this->m_Transform)
   {
@@ -414,10 +414,10 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::SetT
 template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  DerivativeType &       derivative) const
 {
-  TransformParametersType testPoint;
+  ParametersType testPoint;
   testPoint = parameters;
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   derivative.set_size(numberOfParameters);
@@ -442,9 +442,9 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetD
 template <typename TFixedImage, typename TMovingImage>
 void
 NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   value = this->GetValue(parameters);
   this->GetDerivative(parameters, derivative);

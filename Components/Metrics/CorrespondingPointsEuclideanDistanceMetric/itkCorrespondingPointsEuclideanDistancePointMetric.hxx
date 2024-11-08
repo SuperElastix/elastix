@@ -30,7 +30,7 @@ namespace itk
 template <typename TFixedPointSet, typename TMovingPointSet>
 auto
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+  const ParametersType & parameters) const -> MeasureType
 {
   const auto & fixedPoints = this->Superclass::GetFixedPoints();
   const auto & movingPoints = this->Superclass::GetMovingPoints();
@@ -80,8 +80,8 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 template <typename TFixedPointSet, typename TMovingPointSet>
 void
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  DerivativeType &       derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -101,9 +101,9 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
 template <typename TFixedPointSet, typename TMovingPointSet>
 void
 CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   using VnlVectorType = vnl_vector<typename OutputPointType::CoordRepType>;
 

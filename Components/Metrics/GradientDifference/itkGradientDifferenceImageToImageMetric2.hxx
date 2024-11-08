@@ -303,9 +303,9 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeVariance
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
-  const TransformParametersType & parameters,
-  const double *                  subtractionFactor) const -> MeasureType
+GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(const ParametersType & parameters,
+                                                                                const double * subtractionFactor) const
+  -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -411,8 +411,8 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::ComputeMeasure(
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   unsigned int iFilter;
   unsigned int iDimension;
@@ -450,11 +450,10 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
 
 template <typename TFixedImage, typename TMovingImage>
 void
-GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
+                                                                               DerivativeType &       derivative) const
 {
-  TransformParametersType testPoint;
+  ParametersType testPoint;
   testPoint = parameters;
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   derivative.set_size(numberOfParameters);
@@ -479,9 +478,9 @@ GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
 template <typename TFixedImage, typename TMovingImage>
 void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   Value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          Value,
+  DerivativeType &       derivative) const
 {
   Value = this->GetValue(parameters);
   this->GetDerivative(parameters, derivative);

@@ -79,7 +79,6 @@ public:
   using typename Superclass::TransformPointer;
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::NumberOfParametersType;
   using typename Superclass::InterpolatorType;
@@ -117,25 +116,25 @@ public:
 
   /** Get the value for single valued optimizers. */
   virtual MeasureType
-  GetValueSingleThreaded(const TransformParametersType & parameters) const;
+  GetValueSingleThreaded(const ParametersType & parameters) const;
 
   MeasureType
-  GetValue(const TransformParametersType & parameters) const override;
+  GetValue(const ParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
   void
-  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const override;
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /** Get value and derivative. */
   void
-  GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
-                                      MeasureType &                   value,
-                                      DerivativeType &                derivative) const;
+  GetValueAndDerivativeSingleThreaded(const ParametersType & parameters,
+                                      MeasureType &          value,
+                                      DerivativeType &       derivative) const;
 
   void
-  GetValueAndDerivative(const TransformParametersType & parameters,
-                        MeasureType &                   value,
-                        DerivativeType &                derivative) const override;
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          value,
+                        DerivativeType &       derivative) const override;
 
   /** Initialize the Metric by making sure that all the components
    *  are present and plugged together correctly.
