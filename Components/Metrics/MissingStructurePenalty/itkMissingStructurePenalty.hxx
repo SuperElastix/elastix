@@ -162,7 +162,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative
   this->SetTransformParameters(parameters);
 
   derivative.set_size(this->GetNumberOfParameters());
-  derivative.Fill(DerivativeValueType{});
+  derivative.Fill(0.0);
 
   NonZeroJacobianIndicesType nzji(this->m_Transform->GetNumberOfNonZeroJacobianIndices());
   TransformJacobianType      jacobian;

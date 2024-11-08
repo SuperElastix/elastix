@@ -340,7 +340,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative.set_size(this->GetNumberOfParameters());
-  derivative.Fill(DerivativeValueType{});
+  derivative.Fill(0.0);
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -461,7 +461,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
       else
       {
         dMTdmu[d] = DerivativeType(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
-        dMTdmu[d].Fill(DerivativeValueType{});
+        dMTdmu[d].Fill(0.0);
         nzjis[d] = NonZeroJacobianIndicesType(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices(), 0);
       } // end if sampleOk
     }

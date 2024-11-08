@@ -294,8 +294,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
 
   DerivativeType vecSum1(this->GetNumberOfParameters());
   DerivativeType vecSum2(this->GetNumberOfParameters());
-  vecSum1.Fill(DerivativeValueType{});
-  vecSum2.Fill(DerivativeValueType{});
+  vecSum1.Fill(0.0);
+  vecSum2.Fill(0.0);
 
   /** Loop over the fixed image to calculate the kappa statistic. */
   for (const auto & fixedImageSample : *sampleContainer)

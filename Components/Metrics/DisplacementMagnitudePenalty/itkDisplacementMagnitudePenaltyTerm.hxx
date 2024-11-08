@@ -147,7 +147,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
   Superclass::m_NumberOfPixelsCounted = 0;
   RealType measure{};
   derivative.set_size(this->GetNumberOfParameters());
-  derivative.Fill(DerivativeValueType{});
+  derivative.Fill(0.0);
 
   /** Array that stores sparse jacobian+indices. */
   NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());

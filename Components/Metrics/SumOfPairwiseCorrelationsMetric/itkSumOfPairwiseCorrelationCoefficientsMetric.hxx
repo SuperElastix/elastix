@@ -291,7 +291,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative.set_size(numberOfParameters);
-  derivative.Fill(DerivativeValueType{});
+  derivative.Fill(0.0);
 
   /** Make sure the transform parameters are up to date. */
   this->SetTransformParameters(parameters);
@@ -417,7 +417,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   DerivativeType dMTdmu;
 
   /** Sub components of metric derivative */
-  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(G, DerivativeValueType{});
+  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(G, 0.0);
 
   for (unsigned int d = 0; d < G; ++d)
   {
