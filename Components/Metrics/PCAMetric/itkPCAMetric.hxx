@@ -311,7 +311,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   Superclass::m_NumberOfPixelsCounted = 0;
   MeasureType measure{};
   derivative.set_size(this->GetNumberOfParameters());
-  derivative.Fill(DerivativeValueType{});
+  derivative.Fill(0.0);
 
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -455,7 +455,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   std::vector<NonZeroJacobianIndicesType> nzjis(m_G, NonZeroJacobianIndicesType());
 
   /** Sub components of metric derivative */
-  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(m_G, DerivativeValueType{});
+  vnl_diag_matrix<DerivativeValueType> dSdmu_part1(m_G, 0.0);
 
   for (unsigned int d = 0; d < m_G; ++d)
   {

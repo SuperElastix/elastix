@@ -128,7 +128,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParame
     m_GetValueAndDerivativePerThreadVariables[i].st_NumberOfPixelsCounted = SizeValueType{};
     m_GetValueAndDerivativePerThreadVariables[i].st_Value = MeasureType{};
     m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.SetSize(this->GetNumberOfParameters());
-    m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.Fill(DerivativeValueType{});
+    m_GetValueAndDerivativePerThreadVariables[i].st_Derivative.Fill(0.0);
   }
 
 } // end InitializeThreadingParameters()

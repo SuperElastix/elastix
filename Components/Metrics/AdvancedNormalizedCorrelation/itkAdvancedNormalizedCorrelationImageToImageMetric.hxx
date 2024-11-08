@@ -281,10 +281,10 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   /** Initialize some variables. */
   Superclass::m_NumberOfPixelsCounted = 0;
   derivative.set_size(this->GetNumberOfParameters());
-  derivative.Fill(DerivativeValueType{});
-  DerivativeType derivativeF(this->GetNumberOfParameters(), DerivativeValueType{});
-  DerivativeType derivativeM(this->GetNumberOfParameters(), DerivativeValueType{});
-  DerivativeType differential(this->GetNumberOfParameters(), DerivativeValueType{});
+  derivative.Fill(0.0);
+  DerivativeType derivativeF(this->GetNumberOfParameters(), 0.0);
+  DerivativeType derivativeM(this->GetNumberOfParameters(), 0.0);
+  DerivativeType differential(this->GetNumberOfParameters(), 0.0);
 
   /** Array that stores dM(x)/dmu, and the sparse Jacobian + indices. */
   NonZeroJacobianIndicesType nzji(Superclass::m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices());
@@ -404,7 +404,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   else
   {
     value = MeasureType{};
-    derivative.Fill(DerivativeValueType{});
+    derivative.Fill(0.0);
   }
 
 } // end GetValueAndDerivativeSingleThreaded()
@@ -627,7 +627,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
   if (denom > -1e-14)
   {
     value = MeasureType{};
-    derivative.Fill(DerivativeValueType{});
+    derivative.Fill(0.0);
     return;
   }
 
