@@ -136,7 +136,7 @@ PCAMetric<TFixedImage, TMovingImage>::EvaluateTransformJacobianInnerProduct(
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & parameters) const -> MeasureType
+PCAMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
@@ -281,8 +281,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const TransformParametersType & p
 
 template <typename TFixedImage, typename TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersType & parameters,
-                                                    DerivativeType &                derivative) const
+PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
+                                                    DerivativeType &       derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -301,9 +301,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersTyp
 
 template <typename TFixedImage, typename TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const TransformParametersType & parameters,
-                                                                          MeasureType &                   value,
-                                                                          DerivativeType & derivative) const
+PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const ParametersType & parameters,
+                                                                          MeasureType &          value,
+                                                                          DerivativeType &       derivative) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -595,9 +595,9 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
 
 template <typename TFixedImage, typename TMovingImage>
 void
-PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const TransformParametersType & parameters,
-                                                            MeasureType &                   value,
-                                                            DerivativeType &                derivative) const
+PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const ParametersType & parameters,
+                                                            MeasureType &          value,
+                                                            DerivativeType &       derivative) const
 {
   /** Option for now to still use the single threaded code. */
   if (!Superclass::m_UseMultiThread)

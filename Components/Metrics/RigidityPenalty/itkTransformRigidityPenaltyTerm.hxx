@@ -852,7 +852,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetDerivative(const Para
 template <typename TFixedImage, typename TScalarType>
 void
 TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::BeforeThreadedGetValueAndDerivative(
-  const TransformParametersType & parameters) const
+  const ParametersType & parameters) const
 {
   /** In this function do all stuff that cannot be multi-threaded.
    * Meant for use in the combo-metric. So, I did not think about general usage yet.

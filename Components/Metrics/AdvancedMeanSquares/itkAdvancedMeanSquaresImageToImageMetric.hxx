@@ -126,7 +126,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std:
 template <typename TFixedImage, typename TMovingImage>
 auto
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(
-  const TransformParametersType & parameters) const -> MeasureType
+  const ParametersType & parameters) const -> MeasureType
 {
   /** Initialize some variables. */
   Superclass::m_NumberOfPixelsCounted = 0;
@@ -209,8 +209,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   /** Option for now to still use the single threaded code. */
   if (!Superclass::m_UseMultiThread)
@@ -362,9 +362,8 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
 
 template <typename TFixedImage, typename TMovingImage>
 void
-AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
+                                                                                DerivativeType &       derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -384,9 +383,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
 template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -494,9 +493,9 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
 template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   /** Option for now to still use the single threaded code. */
   if (!Superclass::m_UseMultiThread)

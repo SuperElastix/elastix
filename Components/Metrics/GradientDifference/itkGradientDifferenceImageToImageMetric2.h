@@ -101,7 +101,7 @@ public:
   using typename Superclass::TransformType;
   using ScalarType = typename TransformType::ScalarType;
   using typename Superclass::TransformPointer;
-  using typename Superclass::TransformParametersType;
+  using typename Superclass::ParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::InterpolatorType;
   using InterpolatorPointer = typename InterpolatorType::Pointer;
@@ -136,17 +136,17 @@ public:
 
   /** Get the derivatives of the match measure. */
   void
-  GetDerivative(const TransformParametersType & parameters, DerivativeType & derivative) const override;
+  GetDerivative(const ParametersType & parameters, DerivativeType & derivative) const override;
 
   /**  Get the value for single valued optimizers. */
   MeasureType
-  GetValue(const TransformParametersType & parameters) const override;
+  GetValue(const ParametersType & parameters) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void
-  GetValueAndDerivative(const TransformParametersType & parameters,
-                        MeasureType &                   Value,
-                        DerivativeType &                derivative) const override;
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          Value,
+                        DerivativeType &       derivative) const override;
 
   void
   Initialize() override;
@@ -180,7 +180,7 @@ protected:
 
   /** Compute the similarity measure using a specified subtraction factor. */
   MeasureType
-  ComputeMeasure(const TransformParametersType & parameters, const double * subtractionFactor) const;
+  ComputeMeasure(const ParametersType & parameters, const double * subtractionFactor) const;
 
   using FixedSobelFilter = NeighborhoodOperatorImageFilter<FixedGradientImageType, FixedGradientImageType>;
 

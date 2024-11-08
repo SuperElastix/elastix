@@ -195,7 +195,7 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIFixed() 
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(const TransformParametersType & parameters,
+PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(const ParametersType & parameters,
                                                                              float scalingfactor) const -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
@@ -304,8 +304,8 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::ComputePIDiff(con
 
 template <typename TFixedImage, typename TMovingImage>
 auto
-PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters) const
+  -> MeasureType
 {
   /** Call non-thread-safe stuff, such as:
    *   this->SetTransformParameters( parameters );
@@ -366,10 +366,10 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
 
 template <typename TFixedImage, typename TMovingImage>
 void
-PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const TransformParametersType & parameters,
-                                                                             DerivativeType & derivative) const
+PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
+                                                                             DerivativeType &       derivative) const
 {
-  TransformParametersType testPoint;
+  ParametersType testPoint;
   testPoint = parameters;
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   derivative.set_size(numberOfParameters);
@@ -393,10 +393,9 @@ PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(con
 
 template <typename TFixedImage, typename TMovingImage>
 void
-PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   Value,
-  DerivativeType &                derivative) const
+PatternIntensityImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(const ParametersType & parameters,
+                                                                                     MeasureType &          Value,
+                                                                                     DerivativeType & derivative) const
 {
   Value = this->GetValue(parameters);
   this->GetDerivative(parameters, derivative);

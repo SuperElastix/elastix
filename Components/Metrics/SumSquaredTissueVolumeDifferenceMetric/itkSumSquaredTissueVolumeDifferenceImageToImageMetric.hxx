@@ -62,7 +62,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::P
 template <typename TFixedImage, typename TMovingImage>
 auto
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(
-  const TransformParametersType & parameters) const -> MeasureType
+  const ParametersType & parameters) const -> MeasureType
 {
   itkDebugMacro("GetValue( " << parameters << " ) ");
 
@@ -147,7 +147,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 template <typename TFixedImage, typename TMovingImage>
 auto
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValue(
-  const TransformParametersType & parameters) const -> MeasureType
+  const ParametersType & parameters) const -> MeasureType
 {
 
   /** Option for now to still use the single threaded code. */
@@ -309,8 +309,8 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::A
 template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(
-  const TransformParametersType & parameters,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  DerivativeType &       derivative) const
 {
   /** When the derivative is calculated, all information for calculating
    * the metric value is available. It does not cost anything to calculate
@@ -327,9 +327,9 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   itkDebugMacro("GetValueAndDerivative( " << parameters << " ) ");
 
@@ -453,9 +453,9 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::G
 template <typename TFixedImage, typename TMovingImage>
 void
 SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivative(
-  const TransformParametersType & parameters,
-  MeasureType &                   value,
-  DerivativeType &                derivative) const
+  const ParametersType & parameters,
+  MeasureType &          value,
+  DerivativeType &       derivative) const
 {
   /** Option for now to still use the single threaded code. */
   if (!Superclass::m_UseMultiThread)

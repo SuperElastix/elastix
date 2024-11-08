@@ -55,7 +55,7 @@ public:
   itkOverrideGetNameOfClassMacro(CorrespondingPointsEuclideanDistancePointMetric);
 
   /** Types transferred from the base class */
-  using typename Superclass::TransformParametersType;
+  using typename Superclass::ParametersType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
@@ -67,17 +67,17 @@ public:
 
   /**  Get the value for single valued optimizers. */
   MeasureType
-  GetValue(const TransformParametersType & parameters) const override;
+  GetValue(const ParametersType & parameters) const override;
 
   /** Get the derivatives of the match measure. */
   void
-  GetDerivative(const TransformParametersType & parameters, DerivativeType & Derivative) const override;
+  GetDerivative(const ParametersType & parameters, DerivativeType & Derivative) const override;
 
   /**  Get value and derivatives for multiple valued optimizers. */
   void
-  GetValueAndDerivative(const TransformParametersType & parameters,
-                        MeasureType &                   Value,
-                        DerivativeType &                Derivative) const override;
+  GetValueAndDerivative(const ParametersType & parameters,
+                        MeasureType &          Value,
+                        DerivativeType &       Derivative) const override;
 
 protected:
   CorrespondingPointsEuclideanDistancePointMetric() = default;
