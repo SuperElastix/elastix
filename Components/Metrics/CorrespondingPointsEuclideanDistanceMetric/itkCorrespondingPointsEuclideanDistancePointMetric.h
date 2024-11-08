@@ -55,27 +55,18 @@ public:
   itkOverrideGetNameOfClassMacro(CorrespondingPointsEuclideanDistancePointMetric);
 
   /** Types transferred from the base class */
-  using typename Superclass::TransformType;
-  using typename Superclass::TransformPointer;
   using typename Superclass::TransformParametersType;
   using typename Superclass::TransformJacobianType;
-
   using typename Superclass::MeasureType;
   using typename Superclass::DerivativeType;
-  using typename Superclass::DerivativeValueType;
   using typename Superclass::FixedPointSetType;
   using typename Superclass::MovingPointSetType;
-  using typename Superclass::FixedPointSetConstPointer;
-  using typename Superclass::MovingPointSetConstPointer;
-
-  using typename Superclass::PointIterator;
-
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
+  using typename Superclass::NonZeroJacobianIndicesType;
+
   using CoordRepType = typename OutputPointType::CoordRepType;
   using VnlVectorType = vnl_vector<CoordRepType>;
-
-  using typename Superclass::NonZeroJacobianIndicesType;
 
   /**  Get the value for single valued optimizers. */
   MeasureType
