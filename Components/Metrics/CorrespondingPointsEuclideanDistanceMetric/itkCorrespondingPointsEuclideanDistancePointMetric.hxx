@@ -105,6 +105,8 @@ CorrespondingPointsEuclideanDistancePointMetric<TFixedPointSet, TMovingPointSet>
   MeasureType &                   value,
   DerivativeType &                derivative) const
 {
+  using VnlVectorType = vnl_vector<typename OutputPointType::CoordRepType>;
+
   const auto & fixedPoints = this->Superclass::GetFixedPoints();
   const auto & movingPoints = this->Superclass::GetMovingPoints();
 
