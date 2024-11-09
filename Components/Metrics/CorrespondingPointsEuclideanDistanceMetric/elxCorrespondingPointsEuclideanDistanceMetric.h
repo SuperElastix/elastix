@@ -67,31 +67,10 @@ public:
   elxClassNameMacro("CorrespondingPointsEuclideanDistanceMetric");
 
   /** Typedefs from the superclass. */
-  using typename Superclass1::CoordinateRepresentationType;
   using typename Superclass1::FixedPointSetType;
-  using typename Superclass1::FixedPointSetConstPointer;
   using typename Superclass1::MovingPointSetType;
-  using typename Superclass1::MovingPointSetConstPointer;
-
-  //  using typename Superclass1::FixedImageRegionType;
-  using typename Superclass1::TransformType;
-  using typename Superclass1::TransformPointer;
-  using typename Superclass1::InputPointType;
-  using typename Superclass1::OutputPointType;
-  using typename Superclass1::TransformJacobianType;
-  //  using typename Superclass1::RealType;
-  using typename Superclass1::FixedImageMaskType;
-  using typename Superclass1::FixedImageMaskPointer;
-  using typename Superclass1::MovingImageMaskType;
-  using typename Superclass1::MovingImageMaskPointer;
-  using typename Superclass1::MeasureType;
-  using typename Superclass1::DerivativeType;
-  using typename Superclass1::ParametersType;
 
   /** Typedefs inherited from elastix. */
-  using typename Superclass2::ElastixType;
-  using typename Superclass2::RegistrationType;
-  using ITKBaseType = typename Superclass2::ITKBaseType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
 
