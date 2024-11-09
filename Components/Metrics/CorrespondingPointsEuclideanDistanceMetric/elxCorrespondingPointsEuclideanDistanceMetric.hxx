@@ -173,7 +173,7 @@ CorrespondingPointsEuclideanDistanceMetric<TElastix>::ReadLandmarks(const std::s
   /** Typedefs. */
   using IndexType = typename ImageType::IndexType;
   using IndexValueType = typename ImageType::IndexValueType;
-  using PointType = typename ImageType::PointType;
+  using PointType = typename PointSetType::PointType;
 
   log::info(std::ostringstream{} << "Loading landmarks for " << this->GetComponentLabel() << ":"
                                  << this->elxGetClassName() << ".");

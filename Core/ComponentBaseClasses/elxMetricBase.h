@@ -105,22 +105,8 @@ public:
 
   /** Typedefs for point sets. */
   using CoordinateRepresentationType = typename ITKBaseType::ParametersValueType;
-  using FixedPointSetType = itk::PointSet<CoordinateRepresentationType,
-                                          FixedImageDimension,
-                                          itk::DefaultStaticMeshTraits<CoordinateRepresentationType,
-                                                                       FixedImageDimension,
-                                                                       FixedImageDimension,
-                                                                       CoordinateRepresentationType,
-                                                                       CoordinateRepresentationType,
-                                                                       CoordinateRepresentationType>>;
-  using MovingPointSetType = itk::PointSet<CoordinateRepresentationType,
-                                           MovingImageDimension,
-                                           itk::DefaultStaticMeshTraits<CoordinateRepresentationType,
-                                                                        MovingImageDimension,
-                                                                        MovingImageDimension,
-                                                                        CoordinateRepresentationType,
-                                                                        CoordinateRepresentationType,
-                                                                        CoordinateRepresentationType>>;
+  using FixedPointSetType = itk::PointSet<typename FixedImageType::PixelType, FixedImageDimension>;
+  using MovingPointSetType = itk::PointSet<typename MovingImageType::PixelType, MovingImageDimension>;
 
   /** Typedefs for sampler support. */
   using ImageSamplerBaseType = typename AdvancedMetricType::ImageSamplerType;

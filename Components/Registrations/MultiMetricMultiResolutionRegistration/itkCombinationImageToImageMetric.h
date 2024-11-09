@@ -132,22 +132,8 @@ public:
   using MovingImageDerivativeScalesType = FixedArray<double, Self::MovingImageDimension>;
 
   /** Typedef for the PointSetMetric. */
-  using FixedPointSetType = PointSet<CoordinateRepresentationType,
-                                     TFixedImage::ImageDimension,
-                                     DefaultStaticMeshTraits<CoordinateRepresentationType,
-                                                             TFixedImage::ImageDimension,
-                                                             TFixedImage::ImageDimension,
-                                                             CoordinateRepresentationType,
-                                                             CoordinateRepresentationType,
-                                                             CoordinateRepresentationType>>;
-  using MovingPointSetType = PointSet<CoordinateRepresentationType,
-                                      TMovingImage::ImageDimension,
-                                      DefaultStaticMeshTraits<CoordinateRepresentationType,
-                                                              TMovingImage::ImageDimension,
-                                                              TMovingImage::ImageDimension,
-                                                              CoordinateRepresentationType,
-                                                              CoordinateRepresentationType,
-                                                              CoordinateRepresentationType>>;
+  using FixedPointSetType = PointSet<typename FixedImageType::PixelType, FixedImageDimension>;
+  using MovingPointSetType = PointSet<typename MovingImageType::PixelType, MovingImageDimension>;
   using PointSetMetricType = SingleValuedPointSetToPointSetMetric<FixedPointSetType, MovingPointSetType>;
 
   /** Typedef for multi-threading. */

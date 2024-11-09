@@ -274,9 +274,7 @@ StatisticalShapePenalty<TElastix>::ReadShape(const std::string &              Sh
 {
   /** Typedef's. \todo test DummyIPPPixelType=bool. */
   using DummyIPPPixelType = double;
-  using MeshTraitsType =
-    DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
-  using MeshType = Mesh<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
+  using MeshType = Mesh<DummyIPPPixelType, FixedImageDimension>;
 
   /** Read the input points. */
   auto meshReader = MeshFileReader<MeshType>::New();
