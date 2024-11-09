@@ -145,7 +145,6 @@ public:
   using typename Superclass1::TransformPointer;
   using typename Superclass1::InputPointType;
   using typename Superclass1::OutputPointType;
-  using typename Superclass1::TransformParametersType;
   using typename Superclass1::TransformJacobianType;
   using typename Superclass1::InterpolatorType;
   using typename Superclass1::InterpolatorPointer;
