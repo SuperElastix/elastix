@@ -157,7 +157,7 @@ template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
 void
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::SetRescaleScheduleToUnity()
 {
-  RescaleScheduleType schedule;
+  RescaleScheduleType schedule(this->GetNumberOfLevels(), ImageDimension);
   schedule.Fill(NumericTraits<ScalarRealType>::OneValue());
   Superclass::SetSchedule(schedule);
 } // end SetRescaleScheduleToUnity()
