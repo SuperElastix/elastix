@@ -63,8 +63,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::SetDefaultSchedule(
   this->SetUpsamplingFactor(upsamplingFactor);
 
   /** Initialize the schedule. */
-  GridSpacingFactorType factors;
-  factors.Fill(1.0);
+  auto factors = MakeFilled<GridSpacingFactorType>(1.0);
   this->m_GridSpacingFactors.clear();
   this->m_GridSpacingFactors.resize(levels, factors);
 

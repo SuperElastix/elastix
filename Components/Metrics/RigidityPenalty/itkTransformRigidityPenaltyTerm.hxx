@@ -1555,8 +1555,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   std::vector<std::vector<NeighborhoodIteratorType>> nitOCp(ImageDimension);
   std::vector<std::vector<NeighborhoodIteratorType>> nitPCp(ImageDimension);
   std::vector<std::vector<NeighborhoodIteratorType>> nitLCp(ImageDimension);
-  RadiusType                                         radius;
-  radius.Fill(1);
+  auto                                               radius = MakeFilled<RadiusType>(1);
   for (unsigned int i = 0; i < ImageDimension; ++i)
   {
     nitOCp[i].resize(ImageDimension);
