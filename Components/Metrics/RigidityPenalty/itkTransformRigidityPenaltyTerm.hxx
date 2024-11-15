@@ -2161,8 +2161,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::CreateNDOperator(
   const CoefficientImageSpacingType & spacing) const
 {
   /** Create an operator size and set it in the operator. */
-  NeighborhoodSizeType r;
-  r.Fill(1);
+  auto r = NeighborhoodSizeType::Filled(1);
   F.SetRadius(r);
 
   /** Get the image spacing factors that we are going to use. */

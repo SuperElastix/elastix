@@ -206,8 +206,7 @@ main(int argc, char ** argv)
     config->ReadParameter(dimension, "FixedImageDimension", 0, true, dummyErrorMessage);
 
     /** Get coefficient image information. */
-    SizeType gridSize;
-    gridSize.Fill(1);
+    auto        gridSize = SizeType::Filled(1);
     IndexType   gridIndex{};
     SpacingType gridSpacing;
     gridSpacing.Fill(1.0);

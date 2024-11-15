@@ -159,8 +159,7 @@ main()
     return 1;
   }
 
-  DerivativeWeightFunctionType::SizeType trueSize;
-  trueSize.Fill(SplineOrder + 1);
+  auto trueSize = DerivativeWeightFunctionType::SizeType::Filled(SplineOrder + 1);
   if (DerivativeWeightFunctionType::SupportSize != trueSize)
   {
     std::cerr << "ERROR: wrong support size was computed." << std::endl;

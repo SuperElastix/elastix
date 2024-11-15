@@ -245,8 +245,7 @@ main()
     return EXIT_FAILURE;
   }
 
-  WeightFunction2Type2D::SizeType trueSize;
-  trueSize.Fill(SplineOrder + 1);
+  auto trueSize = WeightFunction2Type2D::SizeType::Filled(SplineOrder + 1);
   if (WeightFunction2Type2D::SupportSize != trueSize)
   {
     std::cerr << "ERROR: wrong support size was computed." << std::endl;

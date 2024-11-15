@@ -441,8 +441,7 @@ SetTransform(const std::size_t                                            transf
     const typename InputImageType::SizeType      inputSize = inputRegion.GetSize();
 
     using MeshSizeType = typename BSplineTransformType::MeshSizeType;
-    MeshSizeType gridSize;
-    gridSize.Fill(4);
+    auto gridSize = MeshSizeType::Filled(4);
 
     using PhysicalDimensionsType = typename BSplineTransformType::PhysicalDimensionsType;
     PhysicalDimensionsType gridSpacing;
