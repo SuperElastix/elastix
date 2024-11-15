@@ -236,8 +236,7 @@ main()
 
   /** Just call all available public functions. */
   WeightFunction2Type2D::IndexType startIndex;
-  WeightFunction2Type2D::IndexType trueStartIndex;
-  trueStartIndex.Fill(-1);
+  auto                             trueStartIndex = WeightFunction2Type2D::IndexType::Filled(-1);
   weight2Function2D->ComputeStartIndex(cindex, startIndex);
   if (startIndex != trueStartIndex)
   {

@@ -263,8 +263,7 @@ TransformToSpatialJacobianSource<TOutputImage, TTransformPrecisionType>::LinearG
 
   // For linear transformation the spatial derivative is a constant,
   // i.e. it is independent of the spatial position.
-  IndexType index;
-  index.Fill(1);
+  auto      index = IndexType::Filled(1);
   PointType point;
   outputPtr->TransformIndexToPhysicalPoint(index, point);
 
