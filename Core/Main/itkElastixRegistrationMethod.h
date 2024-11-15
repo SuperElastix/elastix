@@ -103,8 +103,8 @@ public:
                 "ElastixRegistrationMethod assumes that fixed and moving image have the same number of dimensions.");
   static constexpr unsigned int ImageDimension = TFixedImage::ImageDimension;
 
-  using PointType = Point<double, ImageDimension>;
-  using PointVectorContainerType = VectorContainer<IdentifierType, PointType>;
+  template <typename TCoordinate>
+  using PointContainerType = VectorContainer<IdentifierType, Point<TCoordinate, ImageDimension>>;
 
   using FixedMaskType = Image<unsigned char, FixedImageDimension>;
   using MovingMaskType = Image<unsigned char, MovingImageDimension>;
@@ -166,8 +166,20 @@ public:
   unsigned int
   GetNumberOfMovingMasks() const;
 
-  itkSetConstObjectMacro(FixedPoints, PointVectorContainerType);
-  itkSetConstObjectMacro(MovingPoints, PointVectorContainerType);
+  itkSetConstObjectMacro(FixedPoints, PointContainerType<double>);
+  itkSetConstObjectMacro(MovingPoints, PointContainerType<double>);
+
+  void
+  SetFixedPoints(const PointContainerType<float> * const points)
+  {
+    SetFixedPoints(ConvertToPointContainerOfDoubleCoordinates(points));
+  }
+
+  void
+  SetMovingPoints(const PointContainerType<float> * const points)
+  {
+    SetMovingPoints(ConvertToPointContainerOfDoubleCoordinates(points));
+  }
 
   /** Set/Get parameter object.*/
   virtual void
@@ -329,6 +341,21 @@ protected:
   MakeOutput(DataObjectPointerArraySizeType idx) override;
 
 private:
+  static SmartPointer<PointContainerType<double>>
+  ConvertToPointContainerOfDoubleCoordinates(const PointContainerType<float> * const floatPointContainer)
+  {
+    if (floatPointContainer)
+    {
+      const auto result = PointContainerType<double>::New();
+      result->assign(floatPointContainer->cbegin(), floatPointContainer->cend());
+      return result;
+    }
+    else
+    {
+      return nullptr;
+    }
+  }
+
   /** MakeUniqueName. */
   std::string
   MakeUniqueName(const DataObjectIdentifierType & key);
@@ -401,8 +428,8 @@ private:
   std::string m_FixedPointSetFileName{};
   std::string m_MovingPointSetFileName{};
 
-  SmartPointer<const PointVectorContainerType> m_FixedPoints{};
-  SmartPointer<const PointVectorContainerType> m_MovingPoints{};
+  SmartPointer<const PointContainerType<double>> m_FixedPoints{};
+  SmartPointer<const PointContainerType<double>> m_MovingPoints{};
 
   std::string m_OutputDirectory{};
   std::string m_LogFileName{};
