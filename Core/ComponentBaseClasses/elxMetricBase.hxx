@@ -115,8 +115,7 @@ MetricBase<TElastix>::BeforeEachResolutionBase()
       thisAsAdvanced->SetUseMovingImageDerivativeScales(true);
 
       /** Read the scales from the parameter file. */
-      MovingImageDerivativeScalesType movingImageDerivativeScales;
-      movingImageDerivativeScales.Fill(1.0);
+      auto movingImageDerivativeScales = itk::MakeFilled<MovingImageDerivativeScalesType>(1.0);
       for (unsigned int i = 0; i < MovingImageDimension; ++i)
       {
         configuration.ReadParameter(

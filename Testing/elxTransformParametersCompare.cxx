@@ -206,10 +206,9 @@ main(int argc, char ** argv)
     config->ReadParameter(dimension, "FixedImageDimension", 0, true, dummyErrorMessage);
 
     /** Get coefficient image information. */
-    auto        gridSize = SizeType::Filled(1);
-    IndexType   gridIndex{};
-    SpacingType gridSpacing;
-    gridSpacing.Fill(1.0);
+    auto       gridSize = SizeType::Filled(1);
+    IndexType  gridIndex{};
+    auto       gridSpacing = itk::MakeFilled<SpacingType>(1.0);
     OriginType gridOrigin{};
     auto       gridDirection = DirectionType::GetIdentity();
     for (unsigned int i = 0; i < dimension; ++i)

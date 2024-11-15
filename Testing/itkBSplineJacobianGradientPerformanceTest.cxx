@@ -133,8 +133,7 @@ main(int argc, char * argv[])
   recursiveTransform->SetParameters(parameters);
 
   /** Declare variables. */
-  InputPointType inputPoint;
-  inputPoint.Fill(4.1);
+  auto                    inputPoint = itk::MakeFilled<InputPointType>(4.1);
   MovingImageGradientType movingImageGradient;
   movingImageGradient[0] = 29.43;
   movingImageGradient[1] = 18.21;

@@ -250,8 +250,7 @@ main(int argc, char * argv[])
   transform->SetParameters(parameters);
 
   /** Declare variables. */
-  InputPointType inputPoint;
-  inputPoint.Fill(4.1);
+  auto            inputPoint = itk::MakeFilled<InputPointType>(4.1);
   OutputPointType outputPoint;
   double          sum = 0.0;
   itk::TimeProbe  timeProbeOLD, timeProbeNEW;

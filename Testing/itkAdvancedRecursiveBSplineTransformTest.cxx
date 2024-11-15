@@ -181,8 +181,7 @@ main(int argc, char * argv[])
   const NumberOfParametersType nonzji = transform->GetNumberOfNonZeroJacobianIndices();
 
   /** Declare variables. */
-  InputPointType inputPoint;
-  inputPoint.Fill(4.1);
+  auto                          inputPoint = itk::MakeFilled<InputPointType>(4.1);
   JacobianType                  jacobian;
   SpatialJacobianType           spatialJacobian;
   SpatialHessianType            spatialHessian;

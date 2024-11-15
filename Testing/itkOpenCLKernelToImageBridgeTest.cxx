@@ -51,10 +51,8 @@ main()
     size[0] = 64;
     size[1] = 64;
 
-    ImageType::SpacingType spacing;
-    spacing.Fill(1.1);
-    ImageType::PointType origin;
-    origin.Fill(3.2);
+    auto                     spacing = itk::MakeFilled<ImageType::SpacingType>(1.1);
+    auto                     origin = itk::MakeFilled<ImageType::PointType>(3.2);
     ImageType::DirectionType direction;
     direction[0][0] = .5;
     direction[0][1] = .7;
