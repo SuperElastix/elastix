@@ -62,8 +62,7 @@ main()
   auto weight2Function2D = WeightFunction2Type2D::New();
 
   /** Create and fill a continuous index. */
-  ContinuousIndexType2D cindex;
-  cindex.Fill(0.1f);
+  auto cindex = itk::MakeFilled<ContinuousIndexType2D>(0.1f);
 
   /** Run evaluate for the original ITK implementation. */
   WeightsType2D weights2D = weightFunction2D->Evaluate(cindex);
@@ -149,8 +148,7 @@ main()
   auto weight2Function3D = WeightFunction2Type3D::New();
 
   /** Create and fill a continuous index. */
-  ContinuousIndexType3D cindex3D;
-  cindex3D.Fill(0.1f);
+  auto cindex3D = itk::MakeFilled<ContinuousIndexType3D>(0.1f);
 
   /** Run evaluate for the original ITK implementation. */
   WeightsType3D weights3D = weightFunction3D->Evaluate(cindex3D);

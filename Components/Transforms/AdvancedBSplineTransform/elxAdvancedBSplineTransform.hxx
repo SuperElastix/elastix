@@ -347,9 +347,8 @@ AdvancedBSplineTransform<TElastix>::IncreaseScale()
   DirectionType currentGridDirection = this->m_BSplineTransform->GetGridDirection();
 
   /** The new required grid. */
-  OriginType  requiredGridOrigin{};
-  SpacingType requiredGridSpacing;
-  requiredGridSpacing.Fill(1.0);
+  OriginType    requiredGridOrigin{};
+  auto          requiredGridSpacing = itk::MakeFilled<SpacingType>(1.0);
   RegionType    requiredGridRegion;
   DirectionType requiredGridDirection;
   this->m_GridScheduleComputer->GetBSplineGrid(
