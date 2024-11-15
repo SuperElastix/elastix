@@ -2595,7 +2595,7 @@ GTEST_TEST(itkElastixRegistrationMethod, EuclideanDistancePointMetric)
 
   elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
 
-  using PointType = itk::Point<double, ImageDimension>;
+  using PointType = itk::Point<float, ImageDimension>;
 
   const PointType fixedPoint{};
   PointType       movingPoint = fixedPoint;
@@ -2607,8 +2607,8 @@ GTEST_TEST(itkElastixRegistrationMethod, EuclideanDistancePointMetric)
 
   registration.SetFixedImage(fixedImage);
   registration.SetMovingImage(movingImage);
-  registration.SetFixedPoints(MakeVectorContainer(std::vector<PointType>{ fixedPoint }));
-  registration.SetMovingPoints(MakeVectorContainer(std::vector<PointType>{ movingPoint }));
+  registration.SetFixedPoints(::MakeVectorContainer(std::vector<PointType>{ fixedPoint }));
+  registration.SetMovingPoints(::MakeVectorContainer(std::vector<PointType>{ movingPoint }));
   registration.SetParameterObject(CreateParameterObject(
     ParameterMapType{ // Parameters in alphabetic order:
                       { "ImageSampler", { "Full" } },
