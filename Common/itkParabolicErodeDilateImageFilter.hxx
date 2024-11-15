@@ -114,8 +114,7 @@ template <typename TInputImage, bool doDilate, typename TOutputImage>
 void
 ParabolicErodeDilateImageFilter<TInputImage, doDilate, TOutputImage>::SetScale(ScalarRealType scale)
 {
-  RadiusType s;
-  s.Fill(scale);
+  auto s = MakeFilled<RadiusType>(scale);
   this->SetScale(s);
 }
 

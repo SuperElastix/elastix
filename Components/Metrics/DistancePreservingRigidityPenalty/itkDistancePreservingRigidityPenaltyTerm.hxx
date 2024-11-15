@@ -180,8 +180,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
   typename PenaltyGridImageType::PointType penaltyGridPoint, neighborPenaltyGridPoint, xn, xf;
 
   using NeighborhoodIteratorType = itk::ConstNeighborhoodIterator<PenaltyGridImageType>;
-  typename NeighborhoodIteratorType::RadiusType radius;
-  radius.Fill(1);
+  auto                     radius = MakeFilled<typename NeighborhoodIteratorType::RadiusType>(1);
   NeighborhoodIteratorType ni(radius, this->m_PenaltyGridImage, penaltyGridImageRegion);
   unsigned int             numberOfNeighborhood = ni.Size();
 
@@ -330,8 +329,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
 
   // neighborhood iterator
   using NeighborhoodIteratorType = itk::ConstNeighborhoodIterator<PenaltyGridImageType>;
-  typename NeighborhoodIteratorType::RadiusType radius;
-  radius.Fill(1);
+  auto                     radius = MakeFilled<typename NeighborhoodIteratorType::RadiusType>(1);
   NeighborhoodIteratorType ni(radius, this->m_PenaltyGridImage, penaltyGridImageRegion);
   unsigned int             numberOfNeighborhood = ni.Size();
 

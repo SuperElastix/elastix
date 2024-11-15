@@ -441,8 +441,7 @@ ImageGridSampler<TInputImage>::SetNumberOfSamples(unsigned long nrofsamples)
    * Do not use the SetSampleGridSpacing function because it calls
    * SetNumberOfSamples(0) internally.
    */
-  SampleGridSpacingType gridSpacings;
-  gridSpacings.Fill(gridSpacing);
+  auto gridSpacings = MakeFilled<SampleGridSpacingType>(gridSpacing);
   if (m_SampleGridSpacing != gridSpacings)
   {
     m_SampleGridSpacing = gridSpacings;
