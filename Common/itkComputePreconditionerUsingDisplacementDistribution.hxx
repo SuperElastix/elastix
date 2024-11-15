@@ -596,8 +596,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
     // average over the neighborhood using only the non -1 entries
     // we should repeat this a couple of times, until no -1's are left
     double tmp = 0.0;
-    GridSizeType radius;
-    radius.Fill(1);
+    auto radius = GridSizeType::Filled(1);
     NeighborhoodIterator<CoefficientImageType> nit(radius, coefImage, region2);
     while (!nit.IsAtEnd())
     {
