@@ -403,8 +403,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::EnlargeOut
 
   // this filter requires the all of the output image to be in
   // the buffer
-  TOutputImage * imgData;
-  imgData = dynamic_cast<TOutputImage *>(output);
+  TOutputImage * imgData = dynamic_cast<TOutputImage *>(output);
   if (imgData)
   {
     imgData->SetRequestedRegionToLargestPossibleRegion();

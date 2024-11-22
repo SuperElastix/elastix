@@ -96,11 +96,9 @@ ANNPriorityTreeSearch<TBinaryTree>::Search(const MeasurementVectorType & qp,
   double eps = this->m_ErrorBound;
 
   /** Allocate memory for ANN indices and distances arrays. */
-  ANNIndexArrayType ANNIndices;
-  ANNIndices = new ANNIndexType[k];
+  ANNIndexArrayType ANNIndices = new ANNIndexType[k];
 
-  ANNDistanceArrayType ANNDistances;
-  ANNDistances = new ANNDistanceType[k];
+  ANNDistanceArrayType ANNDistances = new ANNDistanceType[k];
 
   /** Alocate memory for ANN query point and copy qp to it. */
   ANNPointType ANNQueryPoint = annAllocPt(dim);

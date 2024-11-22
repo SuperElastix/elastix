@@ -352,8 +352,7 @@ OpenCLContext::Create(const OpenCLContext::CreateMethod method)
   }
   else if (method == OpenCLContext::MultipleMaximumFlopsDevices)
   {
-    std::list<OpenCLDevice> devices;
-    devices = OpenCLDevice::GetMaximumFlopsDevices(OpenCLDevice::GPU);
+    std::list<OpenCLDevice> devices = OpenCLDevice::GetMaximumFlopsDevices(OpenCLDevice::GPU);
     if (!devices.empty())
     {
       this->CreateContext(devices, d);
