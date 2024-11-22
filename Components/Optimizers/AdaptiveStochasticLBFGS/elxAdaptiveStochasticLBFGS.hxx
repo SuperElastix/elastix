@@ -1069,8 +1069,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationUsingDisplacement
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
-  typename ComputeDisplacementDistributionType::Pointer computeDisplacementDistribution =
-    ComputeDisplacementDistributionType::New();
+  auto computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
   computeDisplacementDistribution->SetFixedImage(testPtr->GetFixedImage());
   computeDisplacementDistribution->SetFixedImageRegion(testPtr->GetFixedImageRegion());
   computeDisplacementDistribution->SetFixedImageMask(testPtr->GetFixedImageMask());
@@ -1181,8 +1180,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticLBFGSStepsizeEstimation()
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
-  typename ComputeDisplacementDistributionType::Pointer computeDisplacementDistribution =
-    ComputeDisplacementDistributionType::New();
+  auto computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
   computeDisplacementDistribution->SetFixedImage(testPtr->GetFixedImage());
   computeDisplacementDistribution->SetFixedImageRegion(testPtr->GetFixedImageRegion());
   computeDisplacementDistribution->SetFixedImageMask(testPtr->GetFixedImageMask());

@@ -28,7 +28,7 @@ main()
     return EXIT_FAILURE;
   }
 
-  itk::OpenCLKernelManager::Pointer kernelManager = itk::OpenCLKernelManager::New();
+  auto kernelManager = itk::OpenCLKernelManager::New();
   if (kernelManager.IsNull())
   {
     return EXIT_FAILURE;

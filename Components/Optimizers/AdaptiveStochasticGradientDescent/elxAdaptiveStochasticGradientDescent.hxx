@@ -671,8 +671,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDi
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
-  typename ComputeDisplacementDistributionType::Pointer computeDisplacementDistribution =
-    ComputeDisplacementDistributionType::New();
+  auto computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
   computeDisplacementDistribution->SetFixedImage(testPtr->GetFixedImage());
   computeDisplacementDistribution->SetFixedImageRegion(testPtr->GetFixedImageRegion());
   computeDisplacementDistribution->SetFixedImageMask(testPtr->GetFixedImageMask());

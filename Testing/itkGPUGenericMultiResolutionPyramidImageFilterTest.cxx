@@ -241,7 +241,7 @@ main(int argc, char * argv[])
   gpuFilter->SetComputeOnlyForCurrentLevel(computeOnlyForCurrentLevel);
 
   // GPU input image
-  GPUInputImageType::Pointer gpuInputImage = GPUInputImageType::New();
+  auto gpuInputImage = GPUInputImageType::New();
   gpuInputImage->GraftITKImage(inputImage);
   gpuInputImage->AllocateGPU();
   gpuInputImage->GetGPUDataManager()->SetCPUBufferLock(true);

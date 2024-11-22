@@ -74,7 +74,7 @@ main(int argc, char ** argv)
   using MaskIteratorType = itk::ImageRegionIteratorWithIndex<MaskImageType>;
 
   /** Create command line argument parser. */
-  itk::CommandLineArgumentParser::Pointer parser = itk::CommandLineArgumentParser::New();
+  auto parser = itk::CommandLineArgumentParser::New();
   parser->SetCommandLineArguments(argc, argv);
   parser->SetProgramHelpText(GetHelpString());
 

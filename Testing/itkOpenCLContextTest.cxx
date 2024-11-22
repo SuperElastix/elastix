@@ -21,7 +21,7 @@
 int
 main()
 {
-  itk::OpenCLContext::Pointer contextNull = itk::OpenCLContext::New();
+  auto contextNull = itk::OpenCLContext::New();
 
   if (contextNull->IsCreated())
   {
