@@ -57,7 +57,7 @@ static const unsigned int ITK_TEST_DIMENSION_MAX = 4;
 int
 main(int argc, char ** argv)
 {
-  itk::CommandLineArgumentParser::Pointer parser = itk::CommandLineArgumentParser::New();
+  auto parser = itk::CommandLineArgumentParser::New();
   parser->SetCommandLineArguments(argc, argv);
   parser->SetProgramHelpText(GetHelpString());
 

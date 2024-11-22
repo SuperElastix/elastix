@@ -52,7 +52,7 @@ int
 main(int argc, char * argv[])
 {
   /** Read the command line arguments. */
-  itk::CommandLineArgumentParser::Pointer clParser = itk::CommandLineArgumentParser::New();
+  auto clParser = itk::CommandLineArgumentParser::New();
   clParser->SetCommandLineArguments(argc, argv);
   clParser->SetProgramHelpText(GetHelpString());
 

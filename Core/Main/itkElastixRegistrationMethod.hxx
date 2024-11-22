@@ -422,7 +422,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
   }
 
   // Save parameter map
-  elx::ParameterObject::Pointer transformParameterObject = elx::ParameterObject::New();
+  auto transformParameterObject = elx::ParameterObject::New();
   transformParameterObject->SetParameterMaps(transformParameterMapVector);
   this->SetNthOutput(1, transformParameterObject);
 }
@@ -506,7 +506,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::MakeOutput(DataObjectPoint
 {
   if (idx == 1)
   {
-    elx::ParameterObject::Pointer transformParameterObject = elx::ParameterObject::New();
+    auto transformParameterObject = elx::ParameterObject::New();
     return transformParameterObject.GetPointer();
   }
   return Superclass::MakeOutput(idx);

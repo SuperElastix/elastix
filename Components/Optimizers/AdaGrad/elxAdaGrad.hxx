@@ -616,10 +616,9 @@ AdaGrad<TElastix>::AutomaticPreconditionerEstimation()
   }
 #endif
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
-  double                                                jacg = 0.0;
-  double                                                maxJJ = 0.0;
-  typename ComputeDisplacementDistributionType::Pointer computeDisplacementDistribution =
-    ComputeDisplacementDistributionType::New();
+  double jacg = 0.0;
+  double maxJJ = 0.0;
+  auto   computeDisplacementDistribution = ComputeDisplacementDistributionType::New();
   computeDisplacementDistribution->SetFixedImage(testPtr->GetFixedImage());
   computeDisplacementDistribution->SetFixedImageRegion(testPtr->GetFixedImageRegion());
   computeDisplacementDistribution->SetFixedImageMask(testPtr->GetFixedImageMask());

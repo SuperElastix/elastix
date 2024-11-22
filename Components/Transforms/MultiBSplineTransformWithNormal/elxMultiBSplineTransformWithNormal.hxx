@@ -426,8 +426,7 @@ MultiBSplineTransformWithNormal<TElastix>::IncreaseScale()
   const BaseContainer & new_bases = *new_Bases->GetPixelContainer();
 
   typename ImageLabelType::Pointer labels1 = this->m_MultiBSplineTransformWithNormal->GetLabels();
-  typename itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::Pointer filter =
-    itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();
+  auto                             filter = itk::ResampleImageFilter<ImageLabelType, ImageLabelType>::New();
   filter->SetInterpolator(itk::NearestNeighborInterpolateImageFunction<ImageLabelType, double>::New());
   filter->SetInput(labels1);
   filter->SetOutputParametersFromImage(new_Bases);
