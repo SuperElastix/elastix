@@ -588,13 +588,12 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationOrigina
   }
 
   /** Measure square magnitude of exact gradient and approximation error. */
-  const double sigma4factor = 1.0;
-  double       sigma4 = 0.0;
-  double       gg = 0.0;
-  double       ee = 0.0;
+  double sigma4 = 0.0;
+  double gg = 0.0;
+  double ee = 0.0;
   if (maxJJ > 1e-14)
   {
-    sigma4 = sigma4factor * delta / std::sqrt(maxJJ);
+    sigma4 = delta / std::sqrt(maxJJ);
   }
   this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
   timer3.Stop();
@@ -723,7 +722,6 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDi
     double sigma4 = 0.0;
     double gg = 0.0;
     double ee = 0.0;
-    double sigma4factor = 1.0;
 
     /** Sample the grid and random sampler container to estimate the noise factor. */
     if (this->m_NumberOfGradientMeasurements == 0)
@@ -736,7 +734,7 @@ AdaptiveStochasticGradientDescent<TElastix>::AutomaticParameterEstimationUsingDi
     timer5.Start();
     if (maxJJ > 1e-14)
     {
-      sigma4 = sigma4factor * delta / std::sqrt(maxJJ);
+      sigma4 = delta / std::sqrt(maxJJ);
     }
     this->SampleGradients(this->GetScaledCurrentPosition(), sigma4, gg, ee);
 

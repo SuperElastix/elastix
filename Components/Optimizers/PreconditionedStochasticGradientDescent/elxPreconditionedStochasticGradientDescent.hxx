@@ -645,12 +645,11 @@ PreconditionedStochasticGradientDescent<TElastix>::AutomaticPreconditionerEstima
   /** Sample the fixed image to estimate the noise factor. */
   itk::TimeProbe timer_noise;
   timer_noise.Start();
-  double sigma4factor = 1.0;
   double sigma4 = 0.0;
   log::info(std::ostringstream{} << "  The estimated MaxJJ is: " << maxJJ);
   if (maxJJ > 1e-14)
   {
-    sigma4 = sigma4factor * this->m_MaximumStepLength / std::sqrt(maxJJ);
+    sigma4 = this->m_MaximumStepLength / std::sqrt(maxJJ);
   }
   double gg = 0.0;
   double ee = 0.0;
