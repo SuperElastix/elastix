@@ -77,8 +77,7 @@ OpenCLEvent::GetStatus() const
     return CL_INVALID_EVENT;
   }
 
-  cl_int st, error;
-  error = clGetEventInfo(m_Id, CL_EVENT_COMMAND_EXECUTION_STATUS, sizeof(st), &st, 0);
+  cl_int st, error = clGetEventInfo(m_Id, CL_EVENT_COMMAND_EXECUTION_STATUS, sizeof(st), &st, 0);
   if (error != CL_SUCCESS)
   {
     return error;

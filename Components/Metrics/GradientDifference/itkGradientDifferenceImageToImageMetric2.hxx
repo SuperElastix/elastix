@@ -453,8 +453,7 @@ void
 GradientDifferenceImageToImageMetric<TFixedImage, TMovingImage>::GetDerivative(const ParametersType & parameters,
                                                                                DerivativeType &       derivative) const
 {
-  ParametersType testPoint;
-  testPoint = parameters;
+  ParametersType     testPoint = parameters;
   const unsigned int numberOfParameters = this->GetNumberOfParameters();
   derivative.set_size(numberOfParameters);
 

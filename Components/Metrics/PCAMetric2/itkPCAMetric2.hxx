@@ -470,8 +470,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const ParametersTyp
   /** Sub components of metric derivative */
   vnl_diag_matrix<DerivativeValueType> dSdmu_part1(lastDimSize);
 
-  unsigned int startSamplesOK;
-  startSamplesOK = 0;
+  unsigned int startSamplesOK = 0;
 
   for (unsigned int d = 0; d < lastDimSize; ++d)
   {

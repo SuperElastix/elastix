@@ -610,8 +610,8 @@ BSplineTransformWithDiffusion<TElastix>::SetInitialGrid(bool upsampleGridOption)
   OriginType  gridorigin;
 
   /** Get the fixed image. */
-  typename FixedImageType::Pointer fixedimage;
-  fixedimage = const_cast<FixedImageType *>(this->m_Registration->GetAsITKBaseType()->GetFixedImage());
+  typename FixedImageType::Pointer fixedimage =
+    const_cast<FixedImageType *>(this->m_Registration->GetAsITKBaseType()->GetFixedImage());
 
   /** Get the size etc. of this image. */
 
@@ -693,8 +693,8 @@ BSplineTransformWithDiffusion<TElastix>::IncreaseScale()
   // OriginType gridoriginLow = this->m_BSplineTransform->GetGridOrigin();
 
   /** Get the fixed image. */
-  typename FixedImageType::Pointer fixedimage;
-  fixedimage = const_cast<FixedImageType *>(this->m_Registration->GetAsITKBaseType()->GetFixedImage());
+  typename FixedImageType::Pointer fixedimage =
+    const_cast<FixedImageType *>(this->m_Registration->GetAsITKBaseType()->GetFixedImage());
 
   /** Set start values for computing the new grid size. */
   RegionType  gridregionHigh = fixedimage->GetLargestPossibleRegion();

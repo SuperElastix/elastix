@@ -202,9 +202,7 @@ void
 SimultaneousPerturbation<TElastix>::AfterRegistration()
 {
   /** Print the best metric value */
-  double bestValue;
-
-  bestValue = this->GetValue();
+  double bestValue = this->GetValue();
   log::info(std::ostringstream{} << '\n' << "Final metric value  = " << bestValue);
 
 } // end AfterRegistration

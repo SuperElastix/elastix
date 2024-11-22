@@ -118,10 +118,8 @@ main(int argc, char ** argv)
   }
 
   // The sizes of the baseline and test image must match
-  ImageType::SizeType baselineSize;
-  baselineSize = baselineReader->GetOutput()->GetLargestPossibleRegion().GetSize();
-  ImageType::SizeType testSize;
-  testSize = testReader->GetOutput()->GetLargestPossibleRegion().GetSize();
+  ImageType::SizeType baselineSize = baselineReader->GetOutput()->GetLargestPossibleRegion().GetSize();
+  ImageType::SizeType testSize = testReader->GetOutput()->GetLargestPossibleRegion().GetSize();
 
   if (baselineSize != testSize)
   {
