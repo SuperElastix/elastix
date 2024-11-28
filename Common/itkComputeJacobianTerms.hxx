@@ -33,11 +33,8 @@ namespace itk
  */
 
 template <typename TFixedImage, typename TTransform>
-void
-ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC,
-                                                       double & TrCC,
-                                                       double & maxJJ,
-                                                       double & maxJCJ) const
+auto
+ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
 {
   /** This function computes four terms needed for the automatic parameter
    * estimation. The equation number refers to the IJCV paper.
@@ -54,9 +51,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC,
    * Term 3: maxJJ, see (47)
    * Term 4: maxJCJ, see (54)
    */
-
-  /** Initialize. */
-  TrC = TrCC = maxJJ = maxJCJ = 0.0;
 
   /** Get samples. */
   ImageSampleContainerPointer sampleContainer; // default-constructed (null)
@@ -328,6 +322,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC,
   }
 
   /** Compute TrC = trace(C), and diagcov. */
+  double TrC = 0.0;
   for (unsigned int p = 0; p < numberOfParameters; ++p)
   {
     if (!cov.empty_row(p))
@@ -345,7 +340,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC,
    * Compute TrCC = ||C||_F^2.
    */
   cov.reset();
-  bool notfinished2 = cov.next();
+  bool   notfinished2 = cov.next();
+  double TrCC = 0.0;
   while (notfinished2)
   {
     TrCC += vnl_math::sqr(cov.value());
@@ -363,8 +359,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC,
    * \li maxJJ = max_j [ ||J_j||_F^2 + 2\sqrt{2} || J_j J_j^T ||_F ]
    * \li maxJCJ = max_j [ Tr( J_j C J_j^T ) + 2\sqrt{2} || J_j C J_j^T ||_F ]
    */
-  maxJJ = 0.0;
-  maxJCJ = 0.0;
+  double       maxJJ = 0.0;
+  double       maxJCJ = 0.0;
   const double sqrt2 = std::sqrt(static_cast<double>(2.0));
 
   JacobianType              jacjjacj(outdim, outdim);
@@ -470,6 +466,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC,
 
   /** Finalize progress information. */
   // progressObserver->PrintProgress( 1.0 );
+
+  return Terms{ TrC, TrCC, maxJJ, maxJCJ };
 
 } // end Compute()
 
