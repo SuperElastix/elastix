@@ -34,7 +34,10 @@ namespace itk
 
 template <typename TFixedImage, typename TTransform>
 void
-ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & TrCC, double & maxJJ, double & maxJCJ)
+ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC,
+                                                       double & TrCC,
+                                                       double & maxJJ,
+                                                       double & maxJCJ) const
 {
   /** This function computes four terms needed for the automatic parameter
    * estimation. The equation number refers to the IJCV paper.

@@ -70,9 +70,10 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
 
 template <typename TFixedImage, typename TTransform>
 void
-ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Compute(const ParametersType & mu,
-                                                                                     double &               maxJJ,
-                                                                                     ParametersType & preconditioner)
+ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Compute(
+  const ParametersType & mu,
+  double &               maxJJ,
+  ParametersType &       preconditioner) const
 {
   /** Initialize. */
   maxJJ = 0.0;

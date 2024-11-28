@@ -94,8 +94,8 @@ public:
   /** The main function that performs the computation.
    * The aims to be a generic function, working for all transformations.
    */
-  virtual void
-  Compute(const ParametersType & mu, double & maxJJ, ParametersType & preconditioner);
+  void
+  Compute(const ParametersType & mu, double & maxJJ, ParametersType & preconditioner) const;
 
   void
   ComputeJacobiTypePreconditioner(double & maxJJ, ParametersType & preconditioner);
