@@ -143,8 +143,8 @@ protected:
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeDisplacementDistribution
   // in the future it would be better to refactoring this part of the code.
-  void
-  SampleFixedImageForJacobianTerms(ImageSampleContainerPointer & sampleContainer) const;
+  ImageSampleContainerPointer
+  SampleFixedImageForJacobianTerms() const;
 
 private:
   typename FixedImageType::ConstPointer m_FixedImage{ nullptr };
