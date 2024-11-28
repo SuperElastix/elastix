@@ -924,7 +924,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
   }
 
   /** Construct computeJacobianTerms to initialize the parameter estimation. */
-  auto computeJacobianTerms = ComputeJacobianTermsType::New();
+  const auto computeJacobianTerms = itk::ComputeJacobianTerms<FixedImageType, TransformType>::New();
   computeJacobianTerms->SetFixedImage(testPtr->GetFixedImage());
   computeJacobianTerms->SetFixedImageRegion(testPtr->GetFixedImageRegion());
   computeJacobianTerms->SetFixedImageMask(testPtr->GetFixedImageMask());
