@@ -298,7 +298,6 @@ protected:
   using itkRegistrationType = typename RegistrationType::ITKBaseType;
   using TransformType = typename itkRegistrationType::TransformType;
   using JacobianType = typename TransformType::JacobianType;
-  using ComputeJacobianTermsType = itk::ComputeJacobianTerms<FixedImageType, TransformType>;
   using JacobianValueType = typename JacobianType::ValueType;
   using typename Superclass2::SettingsType;
   using typename Superclass2::SettingsVectorType;
