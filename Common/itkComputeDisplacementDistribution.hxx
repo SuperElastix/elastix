@@ -581,7 +581,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
 template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
-  ImageSampleContainerPointer & sampleContainer)
+  ImageSampleContainerPointer & sampleContainer) const
 {
   /** Set up grid sampler. */
   ImageGridSamplerPointer sampler = ImageGridSamplerType::New();

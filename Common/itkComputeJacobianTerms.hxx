@@ -478,7 +478,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute(double & TrC, double & Tr
 template <typename TFixedImage, typename TTransform>
 void
 ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
-  ImageSampleContainerPointer & sampleContainer)
+  ImageSampleContainerPointer & sampleContainer) const
 {
   /** Set up grid sampler. */
   ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
