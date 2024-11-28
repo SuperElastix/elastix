@@ -912,12 +912,6 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
   /** Get the user input. */
   const double delta = this->GetMaximumStepLength();
 
-  /** Compute the Jacobian terms. */
-  double TrC = 0.0;
-  double TrCC = 0.0;
-  double maxJJ = 0.0;
-  double maxJCJ = 0.0;
-
   /** Get current position to start the parameter estimation. */
   this->GetRegistration()->GetAsITKBaseType()->GetModifiableTransform()->SetParameters(this->GetCurrentPosition());
 
@@ -954,7 +948,7 @@ AdaptiveStochasticLBFGS<TElastix>::AutomaticParameterEstimationOriginal()
   /** Compute the Jacobian terms. */
   log::info("  Computing JacobianTerms ...");
   timer2.Start();
-  computeJacobianTerms->Compute(TrC, TrCC, maxJJ, maxJCJ);
+  const auto [TrC, TrCC, maxJJ, maxJCJ] = computeJacobianTerms->Compute();
   timer2.Stop();
   log::info(std::ostringstream{} << "  Computing the Jacobian terms took "
                                  << Conversion::SecondsToDHMS(timer2.GetMean(), 6));

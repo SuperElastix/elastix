@@ -102,9 +102,18 @@ public:
   /** Get the region over which the metric will be computed. */
   itkGetConstReferenceMacro(FixedImageRegion, FixedImageRegionType);
 
+  /** The terms returned by `Compute()`. */
+  struct Terms
+  {
+    double TrC;
+    double TrCC;
+    double maxJJ;
+    double maxJCJ;
+  };
+
   /** The main functions that performs the computation. */
-  void
-  Compute(double & TrC, double & TrCC, double & maxJJ, double & maxJCJ) const;
+  Terms
+  Compute() const;
 
 protected:
   ComputeJacobianTerms() = default;
