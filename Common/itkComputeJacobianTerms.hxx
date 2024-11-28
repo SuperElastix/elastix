@@ -53,10 +53,9 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
    */
 
   /** Get samples. */
-  ImageSampleContainerPointer sampleContainer; // default-constructed (null)
-  SampleFixedImageForJacobianTerms(sampleContainer);
-  const SizeValueType nrofsamples = sampleContainer->Size();
-  const auto          n = static_cast<double>(nrofsamples);
+  const ImageSampleContainerPointer sampleContainer = SampleFixedImageForJacobianTerms();
+  const SizeValueType               nrofsamples = sampleContainer->Size();
+  const auto                        n = static_cast<double>(nrofsamples);
 
   /** Get the number of parameters. */
   const auto numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
@@ -477,9 +476,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
  */
 
 template <typename TFixedImage, typename TTransform>
-void
-ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
-  ImageSampleContainerPointer & sampleContainer) const
+auto
+ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms() const -> ImageSampleContainerPointer
 {
   /** Set up grid sampler. */
   ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
@@ -497,7 +495,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
 
   /** Get samples and check the actually obtained number of samples. */
   sampler->Update();
-  sampleContainer = sampler->GetOutput();
+  ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
   nrofsamples = sampleContainer->Size();
 
   if (nrofsamples == 0)
@@ -505,6 +503,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
     itkExceptionMacro("No valid voxels (0/" << this->m_NumberOfJacobianMeasurements
                                             << ") found to estimate the AdaptiveStochasticGradientDescent parameters.");
   }
+  return sampleContainer;
 
 } // end SampleFixedImageForJacobianTerms()
 

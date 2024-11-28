@@ -93,8 +93,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   this->GetScaledDerivative(mu, exactgradient);
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
-  ImageSampleContainerPointer sampleContainer;
-  this->SampleFixedImageForJacobianTerms(sampleContainer);
+  const ImageSampleContainerPointer sampleContainer = this->SampleFixedImageForJacobianTerms();
 
   /** Get transform and set current position. */
   typename TransformType::Pointer transform = this->m_Transform;
@@ -313,8 +312,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
     transformIsBSpline = true; // assume B-spline
 
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
-  ImageSampleContainerPointer sampleContainer;
-  this->SampleFixedImageForJacobianTerms(sampleContainer);
+  const ImageSampleContainerPointer sampleContainer = this->SampleFixedImageForJacobianTerms();
 
   /** Get transform and set current position. */
   typename TransformType::Pointer transform = this->m_Transform;
