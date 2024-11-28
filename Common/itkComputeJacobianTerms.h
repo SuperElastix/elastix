@@ -103,8 +103,8 @@ public:
   itkGetConstReferenceMacro(FixedImageRegion, FixedImageRegionType);
 
   /** The main functions that performs the computation. */
-  virtual void
-  Compute(double & TrC, double & TrCC, double & maxJJ, double & maxJCJ);
+  void
+  Compute(double & TrC, double & TrCC, double & maxJJ, double & maxJCJ) const;
 
 protected:
   ComputeJacobianTerms() = default;
