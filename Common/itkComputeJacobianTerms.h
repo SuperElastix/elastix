@@ -110,17 +110,6 @@ protected:
   ComputeJacobianTerms() = default;
   ~ComputeJacobianTerms() override = default;
 
-  typename FixedImageType::ConstPointer m_FixedImage{ nullptr };
-  FixedImageRegionType                  m_FixedImageRegion{};
-  FixedImageMaskConstPointer            m_FixedImageMask{ nullptr };
-  TransformPointer                      m_Transform{ nullptr };
-  ScalesType                            m_Scales{};
-  bool                                  m_UseScales{ false };
-
-  unsigned int  m_MaxBandCovSize{ 0 };
-  unsigned int  m_NumberOfBandStructureSamples{ 0 };
-  SizeValueType m_NumberOfJacobianMeasurements{ 0 };
-
   using FixedImageIndexType = typename FixedImageType::IndexType;
   using FixedImagePointType = typename FixedImageType::PointType;
   using JacobianType = typename TransformType::JacobianType;
@@ -147,6 +136,18 @@ protected:
   // in the future it would be better to refactoring this part of the code.
   void
   SampleFixedImageForJacobianTerms(ImageSampleContainerPointer & sampleContainer) const;
+
+private:
+  typename FixedImageType::ConstPointer m_FixedImage{ nullptr };
+  FixedImageRegionType                  m_FixedImageRegion{};
+  FixedImageMaskConstPointer            m_FixedImageMask{ nullptr };
+  TransformPointer                      m_Transform{ nullptr };
+  ScalesType                            m_Scales{};
+  bool                                  m_UseScales{ false };
+
+  unsigned int  m_MaxBandCovSize{ 0 };
+  unsigned int  m_NumberOfBandStructureSamples{ 0 };
+  SizeValueType m_NumberOfJacobianMeasurements{ 0 };
 };
 
 } // end namespace itk
