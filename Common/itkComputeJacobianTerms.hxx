@@ -60,9 +60,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   /** Get the number of parameters. */
   const auto numberOfParameters = static_cast<unsigned int>(this->m_Transform->GetNumberOfParameters());
 
-  /** Get transform and set current position. */
-  typename TransformType::Pointer transform = this->m_Transform;
-  static constexpr unsigned int   outdim{ TTransform::OutputSpaceDimension };
+  static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
   /** Get scales vector */
   const ScalesType & scales = this->m_Scales;
