@@ -311,12 +311,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
     }
     /**  \todo: this might be faster with get_row instead of the iterator */
     cov.reset();
-    bool notfinished = cov.next();
-    while (notfinished)
+    while (cov.next())
     {
       const int col = cov.getcolumn();
       cov(cov.getrow(), col) /= scales[col];
-      notfinished = cov.next();
     }
   }
 
@@ -339,12 +337,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
    * Compute TrCC = ||C||_F^2.
    */
   cov.reset();
-  bool   notfinished2 = cov.next();
   double TrCC = 0.0;
-  while (notfinished2)
+  while (cov.next())
   {
     TrCC += vnl_math::sqr(cov.value());
-    notfinished2 = cov.next();
   }
 
   /** Symmetry: multiply by 2 and subtract sumsqr(diagcov). */
