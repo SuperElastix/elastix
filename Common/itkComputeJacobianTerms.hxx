@@ -62,7 +62,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
 
   /** Get transform and set current position. */
   typename TransformType::Pointer transform = this->m_Transform;
-  const unsigned int              outdim = this->m_Transform->GetOutputSpaceDimension();
+  static constexpr unsigned int   outdim{ TTransform::OutputSpaceDimension };
 
   /** Get scales vector */
   const ScalesType & scales = this->m_Scales;
