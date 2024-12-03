@@ -55,6 +55,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   using FixedImagePointType = typename FixedImageType::PointType;
   using JacobianType = typename TransformType::JacobianType;
   using NumberOfParametersType = typename TransformType::NumberOfParametersType;
+  using NonZeroJacobianIndicesType = typename TransformType::NonZeroJacobianIndicesType;
 
   /** Get samples. */
   const ImageSampleContainerPointer sampleContainer = SampleFixedImageForJacobianTerms();

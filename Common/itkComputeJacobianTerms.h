@@ -66,7 +66,6 @@ public:
   using FixedImageMaskConstPointer = typename FixedImageMaskType::ConstPointer;
 
   using ScalesType = ScaledSingleValuedNonLinearOptimizer::ScalesType;
-  using NonZeroJacobianIndicesType = typename TransformType::NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
   itkSetConstObjectMacro(FixedImage, FixedImageType);
