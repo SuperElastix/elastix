@@ -119,17 +119,11 @@ protected:
   ComputeJacobianTerms() = default;
   ~ComputeJacobianTerms() override = default;
 
-  using FixedImagePointType = typename FixedImageType::PointType;
-  using JacobianType = typename TransformType::JacobianType;
-
   /** Samplers. */
   using ImageGridSamplerType = ImageGridSampler<FixedImageType>;
   using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
   using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
-
-  /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
-  using NumberOfParametersType = typename TransformType::NumberOfParametersType;
 
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeDisplacementDistribution

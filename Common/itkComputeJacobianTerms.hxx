@@ -52,6 +52,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
    * Term 4: maxJCJ, see (54)
    */
 
+  using FixedImagePointType = typename FixedImageType::PointType;
+  using JacobianType = typename TransformType::JacobianType;
+  using NumberOfParametersType = typename TransformType::NumberOfParametersType;
+
   /** Get samples. */
   const ImageSampleContainerPointer sampleContainer = SampleFixedImageForJacobianTerms();
   const SizeValueType               nrofsamples = sampleContainer->Size();
