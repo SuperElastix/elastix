@@ -119,25 +119,16 @@ protected:
   ComputeJacobianTerms() = default;
   ~ComputeJacobianTerms() override = default;
 
-  using FixedImageIndexType = typename FixedImageType::IndexType;
   using FixedImagePointType = typename FixedImageType::PointType;
   using JacobianType = typename TransformType::JacobianType;
-  using JacobianValueType = typename JacobianType::ValueType;
 
   /** Samplers. */
-  using ImageSamplerBaseType = ImageSamplerBase<FixedImageType>;
-  using ImageSamplerBasePointer = typename ImageSamplerBaseType::Pointer;
-  using ImageRandomSamplerBaseType = ImageRandomSamplerBase<FixedImageType>;
-  using ImageRandomSamplerBasePointer = typename ImageRandomSamplerBaseType::Pointer;
-
   using ImageGridSamplerType = ImageGridSampler<FixedImageType>;
   using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
   using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
-  using TransformJacobianType = JacobianType;
-  using CoordinateRepresentationType = typename TransformType::ScalarType;
   using NumberOfParametersType = typename TransformType::NumberOfParametersType;
 
   /** Sample the fixed image to compute the Jacobian terms. */
