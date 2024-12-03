@@ -65,9 +65,7 @@ public:
   using FixedImageMaskPointer = typename FixedImageMaskType::Pointer;
   using FixedImageMaskConstPointer = typename FixedImageMaskType::ConstPointer;
 
-  using ScaledSingleValuedNonLinearOptimizerType = ScaledSingleValuedNonLinearOptimizer;
-  using ScaledCostFunctionPointer = typename ScaledSingleValuedNonLinearOptimizerType ::ScaledCostFunctionPointer;
-  using ScalesType = typename ScaledSingleValuedNonLinearOptimizerType::ScalesType;
+  using ScalesType = ScaledSingleValuedNonLinearOptimizer::ScalesType;
   using NonZeroJacobianIndicesType = typename TransformType::NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
