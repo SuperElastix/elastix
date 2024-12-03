@@ -92,9 +92,9 @@ public:
   void
   SetFixedImageRegion(const FixedImageRegionType & region)
   {
-    if (region != this->m_FixedImageRegion)
+    if (region != m_FixedImageRegion)
     {
-      this->m_FixedImageRegion = region;
+      m_FixedImageRegion = region;
     }
   }
 
