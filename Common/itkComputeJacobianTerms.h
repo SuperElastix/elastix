@@ -54,8 +54,8 @@ public:
   /** typedef  */
   using FixedImageType = TFixedImage;
   using TransformType = TTransform;
-  using TransformPointer = typename TransformType::Pointer;
-  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using TransformPointer = typename TTransform::Pointer;
+  using FixedImageRegionType = typename TFixedImage::RegionType;
 
   /** Type for the mask of the fixed image. Only pixels that are "inside"
    * this mask will be considered for the computation of the Jacobian terms.
@@ -68,10 +68,10 @@ public:
   using ScalesType = ScaledSingleValuedNonLinearOptimizer::ScalesType;
 
   /** Set the fixed image. */
-  itkSetConstObjectMacro(FixedImage, FixedImageType);
+  itkSetConstObjectMacro(FixedImage, TFixedImage);
 
   /** Set the transform. */
-  itkSetObjectMacro(Transform, TransformType);
+  itkSetObjectMacro(Transform, TTransform);
 
   /** Set/Get the fixed image mask. */
   itkSetObjectMacro(FixedImageMask, FixedImageMaskType);
@@ -117,7 +117,7 @@ protected:
   ~ComputeJacobianTerms() override = default;
 
   /** Samplers. */
-  using ImageGridSamplerType = ImageGridSampler<FixedImageType>;
+  using ImageGridSamplerType = ImageGridSampler<TFixedImage>;
   using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
   using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
@@ -129,12 +129,12 @@ protected:
   SampleFixedImageForJacobianTerms() const;
 
 private:
-  typename FixedImageType::ConstPointer m_FixedImage{ nullptr };
-  FixedImageRegionType                  m_FixedImageRegion{};
-  FixedImageMaskConstPointer            m_FixedImageMask{ nullptr };
-  TransformPointer                      m_Transform{ nullptr };
-  ScalesType                            m_Scales{};
-  bool                                  m_UseScales{ false };
+  typename TFixedImage::ConstPointer m_FixedImage{ nullptr };
+  FixedImageRegionType               m_FixedImageRegion{};
+  FixedImageMaskConstPointer         m_FixedImageMask{ nullptr };
+  TransformPointer                   m_Transform{ nullptr };
+  ScalesType                         m_Scales{};
+  bool                               m_UseScales{ false };
 
   unsigned int  m_MaxBandCovSize{ 0 };
   unsigned int  m_NumberOfBandStructureSamples{ 0 };
