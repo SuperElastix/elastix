@@ -44,17 +44,6 @@ namespace itk
 template <typename TFixedImage, typename TTransform>
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeDisplacementDistribution()
 {
-  this->m_FixedImage = nullptr;
-  this->m_FixedImageMask = nullptr;
-  this->m_Transform = nullptr;
-  this->m_FixedImageMask = nullptr;
-  this->m_NumberOfJacobianMeasurements = 0;
-  this->m_SampleContainer = nullptr;
-
-  /** Threading related variables. */
-  this->m_UseMultiThread = true;
-  this->m_Threader = MultiThreaderBase::New();
-
   /** Initialize the m_ThreaderParameters. */
   this->m_ThreaderParameters.st_Self = this;
 

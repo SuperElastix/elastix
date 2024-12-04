@@ -141,15 +141,15 @@ protected:
   /** Typedef for multi-threading. */
   using ThreadInfoType = MultiThreaderBase::WorkUnitInfo;
 
-  typename FixedImageType::ConstPointer   m_FixedImage{};
+  typename FixedImageType::ConstPointer   m_FixedImage{ nullptr };
   FixedImageRegionType                    m_FixedImageRegion{};
-  FixedImageMaskConstPointer              m_FixedImageMask{};
-  TransformPointer                        m_Transform{};
+  FixedImageMaskConstPointer              m_FixedImageMask{ nullptr };
+  TransformPointer                        m_Transform{ nullptr };
   ScaledSingleValuedCostFunction::Pointer m_CostFunction{};
-  SizeValueType                           m_NumberOfJacobianMeasurements{};
+  SizeValueType                           m_NumberOfJacobianMeasurements{ 0 };
   DerivativeType                          m_ExactGradient{};
   SizeValueType                           m_NumberOfParameters{};
-  MultiThreaderBase::Pointer              m_Threader{};
+  MultiThreaderBase::Pointer              m_Threader{ MultiThreaderBase::New() };
 
   using FixedImageIndexType = typename FixedImageType::IndexType;
   using FixedImagePointType = typename FixedImageType::PointType;
@@ -220,8 +220,8 @@ private:
   mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
 
   SizeValueType               m_NumberOfPixelsCounted{};
-  bool                        m_UseMultiThread{};
-  ImageSampleContainerPointer m_SampleContainer{};
+  bool                        m_UseMultiThread{ true };
+  ImageSampleContainerPointer m_SampleContainer{ nullptr };
 };
 
 } // end namespace itk
