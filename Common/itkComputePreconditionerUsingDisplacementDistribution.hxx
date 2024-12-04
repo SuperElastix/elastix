@@ -95,9 +95,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
   const ImageSampleContainerPointer sampleContainer = this->SampleFixedImageForJacobianTerms();
 
-  /** Get transform and set current position. */
-  typename TransformType::Pointer transform = this->m_Transform;
-  const unsigned int              outdim = this->m_Transform->GetOutputSpaceDimension();
+  static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const SizeValueType        sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
@@ -314,9 +312,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   /** Get samples. Uses a grid sampler with m_NumberOfJacobianMeasurements samples. */
   const ImageSampleContainerPointer sampleContainer = this->SampleFixedImageForJacobianTerms();
 
-  /** Get transform and set current position. */
-  typename TransformType::Pointer transform = this->m_Transform;
-  const unsigned int              outdim = this->m_Transform->GetOutputSpaceDimension();
+  static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const SizeValueType sizejacind = this->m_Transform->GetNumberOfNonZeroJacobianIndices();
