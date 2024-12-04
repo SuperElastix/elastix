@@ -120,11 +120,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   const SizeValueType        sizejacind = m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType               jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
-  jacind[0] = 0;
-  if (sizejacind > 1)
-  {
-    jacind[1] = 0;
-  }
+  assert((sizejacind > 0) && (jacind.front() == 0));
 
   /**
    * Compute maxJJ and jac*gradient
@@ -331,11 +327,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   const SizeValueType        sizejacind = m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType               jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
-  jacind[0] = 0;
-  if (sizejacind > 1)
-  {
-    jacind[1] = 0;
-  }
+  assert((sizejacind > 0) && (jacind.front() == 0));
 
   /** Temporaries. */
   // std::vector< double > JGG_k; not here so only mean + 2 sigma is supported
@@ -488,11 +480,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   const SizeValueType        sizejacind = m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType               jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
-  jacind[0] = 0;
-  if (sizejacind > 1)
-  {
-    jacind[1] = 0;
-  }
+  assert((sizejacind > 0) && (jacind.front() == 0));
 
   /**
    * Compute maxJJ and jac*gradient
