@@ -111,8 +111,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   m_ExactGradient.Fill(0.0);
   this->GetScaledDerivative(mu, m_ExactGradient);
 
-  /** Get transform and set current position. */
-  const unsigned int outdim = m_Transform->GetOutputSpaceDimension();
+  static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
   unsigned int samplenr = 0;
 
@@ -309,9 +308,9 @@ void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(ThreadIdType threadId)
 {
   /** Get sample container size, number of threads, and output space dimension. */
-  const SizeValueType sampleContainerSize = m_SampleContainer->Size();
-  const ThreadIdType  numberOfThreads = m_Threader->GetNumberOfWorkUnits();
-  const unsigned int  outdim = m_Transform->GetOutputSpaceDimension();
+  const SizeValueType           sampleContainerSize = m_SampleContainer->Size();
+  const ThreadIdType            numberOfThreads = m_Threader->GetNumberOfWorkUnits();
+  static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
   /** Get a handle to the scales vector */
   const ScalesType & scales = this->GetScales();
@@ -470,9 +469,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeUsingSearchDire
   DerivativeType exactgradient(numberOfParameters);
   exactgradient = mu;
 
-  /** Get transform and set current position. */
-  typename TransformType::Pointer transform = m_Transform;
-  const unsigned int              outdim = m_Transform->GetOutputSpaceDimension();
+  static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
   unsigned int samplenr = 0;
 
