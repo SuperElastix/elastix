@@ -25,6 +25,8 @@
 #include <vnl/vnl_diag_matrix.h>
 #include <vnl/vnl_sparse_matrix.h>
 
+#include <cassert>
+
 namespace itk
 {
 
@@ -74,13 +76,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   const NumberOfParametersType sizejacind = m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType                 jacj(outdim, sizejacind, 0.0);
   NonZeroJacobianIndicesType   jacind(sizejacind);
-  jacind[0] = 0;
-  if (sizejacind > 1)
-  {
-    jacind[1] = 0;
-  }
-  NonZeroJacobianIndicesType prevjacind = jacind;
-
+  NonZeroJacobianIndicesType   prevjacind(sizejacind);
+  assert((sizejacind > 0) && (jacind.front() == 0) && (prevjacind.front() == 0));
 
   using FreqPairType = std::pair<unsigned int, unsigned int>;
   using DifHist2Type = std::vector<FreqPairType>;
@@ -122,12 +119,9 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
       m_Transform->GetJacobian(point, jacj, jacind);
 
       /** Skip invalid Jacobians in the beginning, if any. */
-      if (sizejacind > 1)
+      if (sizejacind > 1 && jacind[0] == jacind[1])
       {
-        if (jacind[0] == jacind[1])
-        {
-          continue;
-        }
+        continue;
       }
 
       /** Fill the histogram of parameter nr differences. */
@@ -206,12 +200,9 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
     m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Skip invalid Jacobians in the beginning, if any. */
-    if (sizejacind > 1)
+    if (sizejacind > 1 && jacind[0] == jacind[1])
     {
-      if (jacind[0] == jacind[1])
-      {
-        continue;
-      }
+      continue;
     }
 
     if (jacind == prevjacind)
