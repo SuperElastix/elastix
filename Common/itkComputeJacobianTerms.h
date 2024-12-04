@@ -52,8 +52,6 @@ public:
   itkOverrideGetNameOfClassMacro(ComputeJacobianTerms);
 
   /** typedef  */
-  using FixedImageType = TFixedImage;
-  using TransformType = TTransform;
   using TransformPointer = typename TTransform::Pointer;
   using FixedImageRegionType = typename TFixedImage::RegionType;
 
