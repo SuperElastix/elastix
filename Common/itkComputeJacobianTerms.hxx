@@ -472,7 +472,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
   /** Set up grid sampler. */
   ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
   sampler->SetInput(m_FixedImage);
-  sampler->SetInputImageRegion(this->GetFixedImageRegion());
+  sampler->SetInputImageRegion(m_FixedImageRegion);
   sampler->SetMask(m_FixedImageMask);
 
   /** Determine grid spacing of sampler such that the desired
@@ -480,15 +480,13 @@ ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
    * Note that the actually obtained number of samples may be lower, due to masks.
    * This is taken into account at the end of this function.
    */
-  SizeValueType nrofsamples = m_NumberOfJacobianMeasurements;
-  sampler->SetNumberOfSamples(nrofsamples);
+  sampler->SetNumberOfSamples(m_NumberOfJacobianMeasurements);
 
   /** Get samples and check the actually obtained number of samples. */
   sampler->Update();
   ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
-  nrofsamples = sampleContainer->Size();
 
-  if (nrofsamples == 0)
+  if (sampleContainer->empty())
   {
     itkExceptionMacro("No valid voxels (0/" << m_NumberOfJacobianMeasurements
                                             << ") found to estimate the AdaptiveStochasticGradientDescent parameters.");
