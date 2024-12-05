@@ -168,6 +168,8 @@ protected:
   using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
 
+  using ImageSampleType = ImageSample<TFixedImage>;
+
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   using TransformJacobianType = JacobianType;
   using CoordinateRepresentationType = typename TransformType::ScalarType;
@@ -176,7 +178,7 @@ protected:
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeJacobianTerms
   // in the future it would be better to refactoring this part of the code
-  ImageSampleContainerPointer
+  std::vector<ImageSampleType>
   SampleFixedImageForJacobianTerms() const;
 
   /** Launch MultiThread Compute. */
@@ -216,9 +218,9 @@ private:
 
   mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
 
-  SizeValueType               m_NumberOfPixelsCounted{};
-  bool                        m_UseMultiThread{ true };
-  ImageSampleContainerPointer m_SampleContainer{ nullptr };
+  SizeValueType                m_NumberOfPixelsCounted{};
+  bool                         m_UseMultiThread{ true };
+  std::vector<ImageSampleType> m_Samples{};
 };
 
 } // end namespace itk
