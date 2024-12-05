@@ -60,9 +60,9 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   using NonZeroJacobianIndicesType = typename TTransform::NonZeroJacobianIndicesType;
 
   /** Get samples. */
-  const ImageSampleContainerPointer sampleContainer = SampleFixedImageForJacobianTerms();
-  const SizeValueType               nrofsamples = sampleContainer->Size();
-  const auto                        n = static_cast<double>(nrofsamples);
+  const std::vector<ImageSampleType> samples = SampleFixedImageForJacobianTerms();
+  const SizeValueType                nrofsamples = samples.size();
+  const auto                         n = static_cast<double>(nrofsamples);
 
   /** Get the number of parameters. */
   const auto numberOfParameters = static_cast<unsigned int>(m_Transform->GetNumberOfParameters());
@@ -113,7 +113,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
       onezero = 1 - onezero; // introduces semi-randomness
 
       /** Read fixed coordinates and get Jacobian J_j. */
-      const FixedImagePointType & point = sampleContainer->GetElement(samplenr).m_ImageCoordinates;
+      const FixedImagePointType & point = samples[samplenr].m_ImageCoordinates;
       m_Transform->GetJacobian(point, jacj, jacind);
 
       /** Skip invalid Jacobians in the beginning, if any. */
@@ -192,7 +192,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
     {
       jacind[1] = 0;
     }
-    for (const auto & sample : *sampleContainer)
+    for (const auto & sample : samples)
     {
       /** Read fixed coordinates and get Jacobian J_j. */
       const FixedImagePointType & point = sample.m_ImageCoordinates;
@@ -212,7 +212,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
       else
       {
         /** The following should only be done after the first sample. */
-        if (&sample != &(sampleContainer->front()))
+        if (&sample != &(samples.front()))
         {
           /** Update covariance matrix. */
           for (unsigned int pi = 0; pi < sizejacind; ++pi)
@@ -359,7 +359,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   JacobianType              jacjcovjacj(outdim, outdim);
   itk::Array<SizeValueType> jacindExpanded(numberOfParameters);
 
-  for (const auto & sample : *sampleContainer)
+  for (const auto & sample : samples)
   {
     /** Read fixed coordinates and get Jacobian. */
     const FixedImagePointType & point = sample.m_ImageCoordinates;
@@ -466,7 +466,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
 
 template <typename TFixedImage, typename TTransform>
 auto
-ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms() const -> ImageSampleContainerPointer
+ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms() const -> std::vector<ImageSampleType>
 {
   /** Set up grid sampler. */
   ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
@@ -483,14 +483,14 @@ ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms(
 
   /** Get samples and check the actually obtained number of samples. */
   sampler->Update();
-  ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
+  std::vector<ImageSampleType> & samples = Deref(sampler->GetOutput()).CastToSTLContainer();
 
-  if (sampleContainer->empty())
+  if (samples.empty())
   {
     itkExceptionMacro("No valid voxels (0/" << m_NumberOfJacobianMeasurements
                                             << ") found to estimate the AdaptiveStochasticGradientDescent parameters.");
   }
-  return sampleContainer;
+  return std::move(samples);
 
 } // end SampleFixedImageForJacobianTerms()
 

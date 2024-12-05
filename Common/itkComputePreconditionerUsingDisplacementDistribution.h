@@ -122,6 +122,7 @@ protected:
   using typename Superclass::ImageGridSamplerPointer;
   using typename Superclass::ImageSampleContainerType;
   using typename Superclass::ImageSampleContainerPointer;
+  using typename Superclass::ImageSampleType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::CoordinateRepresentationType;
   using typename Superclass::NumberOfParametersType;

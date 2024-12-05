@@ -116,11 +116,12 @@ protected:
   using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
   using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
   using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
+  using ImageSampleType = ImageSample<TFixedImage>;
 
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeDisplacementDistribution
   // in the future it would be better to refactoring this part of the code.
-  ImageSampleContainerPointer
+  std::vector<ImageSampleType>
   SampleFixedImageForJacobianTerms() const;
 
 private:
