@@ -175,126 +175,127 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   vnl_sparse_matrix<CovarianceValueType> cov(numberOfParameters, numberOfParameters);
   DiagCovarianceMatrixType               diagcov(numberOfParameters, 0.0);
 
-  /** For temporary storage of J'J. */
-  CovarianceMatrixType jactjac(sizejacind, sizejacind, 0.0);
-
-  /** Initialize band matrix. */
-  CovarianceMatrixType bandcov(numberOfParameters, bandcovsize, 0.0);
-
-  /**
-   *    TERM 1
-   *
-   * Loop over image and compute Jacobian.
-   * Compute C = 1/n \sum_i J_i^T J_i
-   * Possibly apply scaling afterwards.
-   */
-  jacind[0] = 0;
-  if (sizejacind > 1)
   {
-    jacind[1] = 0;
-  }
-  for (const auto & sample : *sampleContainer)
-  {
-    /** Read fixed coordinates and get Jacobian J_j. */
-    const FixedImagePointType & point = sample.m_ImageCoordinates;
-    m_Transform->GetJacobian(point, jacj, jacind);
+    /** For temporary storage of J'J. */
+    CovarianceMatrixType jactjac(sizejacind, sizejacind, 0.0);
 
-    /** Skip invalid Jacobians in the beginning, if any. */
-    if (sizejacind > 1 && jacind[0] == jacind[1])
-    {
-      continue;
-    }
+    /** Initialize band matrix. */
+    CovarianceMatrixType bandcov(numberOfParameters, bandcovsize, 0.0);
 
-    if (jacind == prevjacind)
+    /**
+     *    TERM 1
+     *
+     * Loop over image and compute Jacobian.
+     * Compute C = 1/n \sum_i J_i^T J_i
+     * Possibly apply scaling afterwards.
+     */
+    jacind[0] = 0;
+    if (sizejacind > 1)
     {
-      /** Update sum of J_j^T J_j. */
-      vnl_fastops::inc_X_by_AtA(jactjac, jacj);
+      jacind[1] = 0;
     }
-    else
+    for (const auto & sample : *sampleContainer)
     {
-      /** The following should only be done after the first sample. */
-      if (&sample != &(sampleContainer->front()))
+      /** Read fixed coordinates and get Jacobian J_j. */
+      const FixedImagePointType & point = sample.m_ImageCoordinates;
+      m_Transform->GetJacobian(point, jacj, jacind);
+
+      /** Skip invalid Jacobians in the beginning, if any. */
+      if (sizejacind > 1 && jacind[0] == jacind[1])
       {
-        /** Update covariance matrix. */
-        for (unsigned int pi = 0; pi < sizejacind; ++pi)
+        continue;
+      }
+
+      if (jacind == prevjacind)
+      {
+        /** Update sum of J_j^T J_j. */
+        vnl_fastops::inc_X_by_AtA(jactjac, jacj);
+      }
+      else
+      {
+        /** The following should only be done after the first sample. */
+        if (&sample != &(sampleContainer->front()))
         {
-          const unsigned int p = prevjacind[pi];
-          for (unsigned int qi = 0; qi < sizejacind; ++qi)
+          /** Update covariance matrix. */
+          for (unsigned int pi = 0; pi < sizejacind; ++pi)
           {
-            const unsigned int q = prevjacind[qi];
-            if (q >= p)
+            const unsigned int p = prevjacind[pi];
+            for (unsigned int qi = 0; qi < sizejacind; ++qi)
             {
-              const double tempval = jactjac(pi, qi) / n;
-              if (std::abs(tempval) > 1e-14)
+              const unsigned int q = prevjacind[qi];
+              if (q >= p)
               {
-                const unsigned int bandindex = bandcovMap[q - p];
-                if (bandindex < bandcovsize)
+                const double tempval = jactjac(pi, qi) / n;
+                if (std::abs(tempval) > 1e-14)
                 {
-                  bandcov(p, bandindex) += tempval;
-                }
-                else
-                {
-                  cov(p, q) += tempval;
+                  const unsigned int bandindex = bandcovMap[q - p];
+                  if (bandindex < bandcovsize)
+                  {
+                    bandcov(p, bandindex) += tempval;
+                  }
+                  else
+                  {
+                    cov(p, q) += tempval;
+                  }
                 }
               }
-            }
-          } // qi
-        }   // pi
-      }     // end if
+            } // qi
+          }   // pi
+        }     // end if
 
-      /** Initialize jactjac by J_j^T J_j. */
-      vnl_fastops::AtA(jactjac, jacj);
+        /** Initialize jactjac by J_j^T J_j. */
+        vnl_fastops::AtA(jactjac, jacj);
 
-      /** Remember nonzerojacobian indices. */
-      prevjacind = jacind;
-    } // end else
+        /** Remember nonzerojacobian indices. */
+        prevjacind = jacind;
+      } // end else
 
-  } // end iter loop: end computation of covariance matrix
+    } // end iter loop: end computation of covariance matrix
 
-  /** Update covariance matrix once again to include last jactjac updates
-   * \todo: a bit ugly that this loop is copied from above.
-   */
-  for (unsigned int pi = 0; pi < sizejacind; ++pi)
-  {
-    const unsigned int p = prevjacind[pi];
-    for (unsigned int qi = 0; qi < sizejacind; ++qi)
+    /** Update covariance matrix once again to include last jactjac updates
+     * \todo: a bit ugly that this loop is copied from above.
+     */
+    for (unsigned int pi = 0; pi < sizejacind; ++pi)
     {
-      const unsigned int q = prevjacind[qi];
-      if (q >= p)
+      const unsigned int p = prevjacind[pi];
+      for (unsigned int qi = 0; qi < sizejacind; ++qi)
       {
-        const double tempval = jactjac(pi, qi) / n;
-        if (std::abs(tempval) > 1e-14)
+        const unsigned int q = prevjacind[qi];
+        if (q >= p)
         {
-          const unsigned int bandindex = bandcovMap[q - p];
-          if (bandindex < bandcovsize)
+          const double tempval = jactjac(pi, qi) / n;
+          if (std::abs(tempval) > 1e-14)
           {
-            bandcov(p, bandindex) += tempval;
-          }
-          else
-          {
-            cov(p, q) += tempval;
+            const unsigned int bandindex = bandcovMap[q - p];
+            if (bandindex < bandcovsize)
+            {
+              bandcov(p, bandindex) += tempval;
+            }
+            else
+            {
+              cov(p, q) += tempval;
+            }
           }
         }
-      }
-    } // qi
-  }   // pi
+      } // qi
+    }   // pi
 
-  /** Copy the bandmatrix into the sparse matrix and empty the bandcov matrix.
-   * \todo: perhaps work further with this bandmatrix instead.
-   */
-  for (unsigned int p = 0; p < numberOfParameters; ++p)
-  {
-    for (unsigned int b = 0; b < bandcovsize; ++b)
+    /** Copy the bandmatrix into the sparse matrix and empty the bandcov matrix.
+     * \todo: perhaps work further with this bandmatrix instead.
+     */
+    for (unsigned int p = 0; p < numberOfParameters; ++p)
     {
-      const double tempval = bandcov(p, b);
-      if (std::abs(tempval) > 1e-14)
+      for (unsigned int b = 0; b < bandcovsize; ++b)
       {
-        const unsigned int q = p + bandcovMap2[b];
-        cov(p, q) = tempval;
+        const double tempval = bandcov(p, b);
+        if (std::abs(tempval) > 1e-14)
+        {
+          const unsigned int q = p + bandcovMap2[b];
+          cov(p, q) = tempval;
+        }
       }
     }
-  }
-  bandcov.set_size(0, 0);
+  } // End of scope of `bandcov` and `jactjac`.
 
   /** Apply scales. the use of m_Scales maybe something wrong. */
   if (m_UseScales)
