@@ -80,18 +80,16 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   assert((sizejacind > 0) && (jacind.front() == 0) && (prevjacind.front() == 0));
 
   using FreqPairType = std::pair<unsigned int, unsigned int>;
-  using DifHist2Type = std::vector<FreqPairType>;
-  DifHist2Type difHist2;
+  std::vector<FreqPairType> difHist2;
 
   {
-    /** DifHist is a histogram of absolute parameterNrDifferences that
+    /** `difHist` is a histogram of absolute parameterNrDifferences that
      * occur in the nonzerojacobianindex vectors.
-     * DifHist2 is another way of storing the histogram, as a vector
+     * `difHist2` is another way of storing the histogram, as a vector
      * of pairs. pair.first = Frequency, pair.second = parameterNrDifference.
      * This is useful for sorting.
      */
-    using DifHistType = std::vector<unsigned int>;
-    DifHistType difHist(numberOfParameters);
+    std::vector<unsigned int> difHist(numberOfParameters);
 
     /** Try to guess the band structure of the covariance matrix.
      * A 'band' is a series of elements cov(p,q) with constant q-p.
