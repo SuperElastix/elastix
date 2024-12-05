@@ -469,7 +469,7 @@ auto
 ComputeJacobianTerms<TFixedImage, TTransform>::SampleFixedImageForJacobianTerms() const -> std::vector<ImageSampleType>
 {
   /** Set up grid sampler. */
-  ImageGridSamplerPointer sampler = ImageGridSamplerType::New();
+  const auto sampler = ImageGridSampler<TFixedImage>::New();
   sampler->SetInput(m_FixedImage);
   sampler->SetInputImageRegion(m_FixedImageRegion);
   sampler->SetMask(m_FixedImageMask);
