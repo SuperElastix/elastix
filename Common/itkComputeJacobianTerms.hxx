@@ -69,9 +69,6 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
 
   static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
-  /** Get scales vector */
-  const ScalesType & scales = m_Scales;
-
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const NumberOfParametersType sizejacind = m_Transform->GetNumberOfNonZeroJacobianIndices();
   JacobianType                 jacj(outdim, sizejacind, 0.0);
@@ -307,7 +304,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
     while (cov.next())
     {
       const int col = cov.getcolumn();
-      cov(cov.getrow(), col) /= scales[col];
+      cov(cov.getrow(), col) /= m_Scales[col];
     }
   }
 
@@ -371,7 +368,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
       for (unsigned int pi = 0; pi < sizejacind; ++pi)
       {
         const unsigned int p = jacind[pi];
-        jacj.scale_column(pi, 1.0 / scales[p]);
+        jacj.scale_column(pi, 1.0 / m_Scales[p]);
       }
     }
 
