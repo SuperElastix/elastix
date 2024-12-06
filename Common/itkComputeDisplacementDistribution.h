@@ -64,10 +64,10 @@ public:
 
   /** typedef  */
   using FixedImageType = TFixedImage;
-  using FixedImagePixelType = typename FixedImageType::PixelType;
+  using FixedImagePixelType = typename TFixedImage::PixelType;
   using TransformType = TTransform;
-  using TransformPointer = typename TransformType::Pointer;
-  using FixedImageRegionType = typename FixedImageType::RegionType;
+  using TransformPointer = typename TTransform::Pointer;
+  using FixedImageRegionType = typename TFixedImage::RegionType;
   using Superclass::ParametersType;
   using Superclass::DerivativeType;
   using Superclass::ScalesType;
@@ -79,13 +79,13 @@ public:
   using FixedImageMaskType = ImageMaskSpatialObject<Self::FixedImageDimension>;
   using FixedImageMaskPointer = typename FixedImageMaskType::Pointer;
   using FixedImageMaskConstPointer = typename FixedImageMaskType::ConstPointer;
-  using NonZeroJacobianIndicesType = typename TransformType::NonZeroJacobianIndicesType;
+  using NonZeroJacobianIndicesType = typename TTransform::NonZeroJacobianIndicesType;
 
   /** Set the fixed image. */
-  itkSetConstObjectMacro(FixedImage, FixedImageType);
+  itkSetConstObjectMacro(FixedImage, TFixedImage);
 
   /** Set the transform. */
-  itkSetObjectMacro(Transform, TransformType);
+  itkSetObjectMacro(Transform, TTransform);
 
   /** Set/Get the fixed image mask. */
   itkSetObjectMacro(FixedImageMask, FixedImageMaskType);
@@ -138,7 +138,7 @@ protected:
   /** Typedef for multi-threading. */
   using ThreadInfoType = MultiThreaderBase::WorkUnitInfo;
 
-  typename FixedImageType::ConstPointer   m_FixedImage{ nullptr };
+  typename TFixedImage::ConstPointer      m_FixedImage{ nullptr };
   FixedImageRegionType                    m_FixedImageRegion{};
   FixedImageMaskConstPointer              m_FixedImageMask{ nullptr };
   TransformPointer                        m_Transform{ nullptr };
@@ -148,17 +148,17 @@ protected:
   SizeValueType                           m_NumberOfParameters{};
   MultiThreaderBase::Pointer              m_Threader{ MultiThreaderBase::New() };
 
-  using FixedImageIndexType = typename FixedImageType::IndexType;
-  using FixedImagePointType = typename FixedImageType::PointType;
-  using JacobianType = typename TransformType::JacobianType;
+  using FixedImageIndexType = typename TFixedImage::IndexType;
+  using FixedImagePointType = typename TFixedImage::PointType;
+  using JacobianType = typename TTransform::JacobianType;
   using JacobianValueType = typename JacobianType::ValueType;
 
   using ImageSampleType = ImageSample<TFixedImage>;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */
   using TransformJacobianType = JacobianType;
-  using CoordinateRepresentationType = typename TransformType::ScalarType;
-  using NumberOfParametersType = typename TransformType::NumberOfParametersType;
+  using CoordinateRepresentationType = typename TTransform::ScalarType;
+  using NumberOfParametersType = typename TTransform::NumberOfParametersType;
 
   /** Sample the fixed image to compute the Jacobian terms. */
   // \todo: note that this is an exact copy of itk::ComputeJacobianTerms

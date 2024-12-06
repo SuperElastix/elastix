@@ -70,7 +70,7 @@ public:
   using typename Superclass::NonZeroJacobianIndicesType;
 
   // check
-  itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
+  itkStaticConstMacro(FixedImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Set/get kappa for regularization. */
   itkSetClampMacro(RegularizationKappa, double, 0.0, 1.0);
