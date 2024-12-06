@@ -111,11 +111,6 @@ protected:
   ComputeJacobianTerms() = default;
   ~ComputeJacobianTerms() override = default;
 
-  /** Samplers. */
-  using ImageGridSamplerType = ImageGridSampler<TFixedImage>;
-  using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
-  using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
-  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
   using ImageSampleType = ImageSample<TFixedImage>;
 
   /** Sample the fixed image to compute the Jacobian terms. */
