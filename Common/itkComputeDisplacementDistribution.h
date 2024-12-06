@@ -153,21 +153,6 @@ protected:
   using JacobianType = typename TransformType::JacobianType;
   using JacobianValueType = typename JacobianType::ValueType;
 
-  /** Samplers. */
-  using ImageSamplerBaseType = ImageSamplerBase<FixedImageType>;
-  using ImageSamplerBasePointer = typename ImageSamplerBaseType::Pointer;
-
-  using ImageFullSamplerType = ImageFullSampler<FixedImageType>;
-  using ImageFullSamplerPointer = typename ImageFullSamplerType::Pointer;
-
-  using ImageRandomSamplerBaseType = ImageRandomSamplerBase<FixedImageType>;
-  using ImageRandomSamplerBasePointer = typename ImageRandomSamplerBaseType::Pointer;
-
-  using ImageGridSamplerType = ImageGridSampler<FixedImageType>;
-  using ImageGridSamplerPointer = typename ImageGridSamplerType::Pointer;
-  using ImageSampleContainerType = typename ImageGridSamplerType ::ImageSampleContainerType;
-  using ImageSampleContainerPointer = typename ImageSampleContainerType::Pointer;
-
   using ImageSampleType = ImageSample<TFixedImage>;
 
   /** Typedefs for support of sparse Jacobians and AdvancedTransforms. */

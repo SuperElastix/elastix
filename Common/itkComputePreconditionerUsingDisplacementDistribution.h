@@ -64,7 +64,6 @@ public:
   using typename Superclass::ParametersType;
   using typename Superclass::DerivativeType;
   using typename Superclass::ScalesType;
-
   using typename Superclass::FixedImageMaskType;
   using typename Superclass::FixedImageMaskPointer;
   using typename Superclass::FixedImageMaskConstPointer;
@@ -112,16 +111,6 @@ protected:
   using typename Superclass::FixedImagePointType;
   using typename Superclass::JacobianType;
   using typename Superclass::JacobianValueType;
-  using typename Superclass::ImageSamplerBaseType;
-  using typename Superclass::ImageSamplerBasePointer;
-  using typename Superclass::ImageFullSamplerType;
-  using typename Superclass::ImageFullSamplerPointer;
-  using typename Superclass::ImageRandomSamplerBaseType;
-  using typename Superclass::ImageRandomSamplerBasePointer;
-  using typename Superclass::ImageGridSamplerType;
-  using typename Superclass::ImageGridSamplerPointer;
-  using typename Superclass::ImageSampleContainerType;
-  using typename Superclass::ImageSampleContainerPointer;
   using typename Superclass::ImageSampleType;
   using typename Superclass::TransformJacobianType;
   using typename Superclass::CoordinateRepresentationType;
