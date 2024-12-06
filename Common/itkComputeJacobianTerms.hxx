@@ -312,13 +312,10 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
   double TrC = 0.0;
   for (unsigned int p = 0; p < numberOfParameters; ++p)
   {
-    if (!cov.empty_row(p))
-    {
-      // avoid creation of element if the row is empty
-      CovarianceValueType & covpp = cov(p, p);
-      TrC += covpp;
-      diagcov[p] = covpp;
-    }
+    // Do cov.get(p, p) instead of cov(p, p) to avoid creation of an entry that just has zero.
+    const CovarianceValueType covpp = cov.get(p, p);
+    TrC += covpp;
+    diagcov[p] = covpp;
   }
 
   /**
