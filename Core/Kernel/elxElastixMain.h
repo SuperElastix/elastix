@@ -23,7 +23,6 @@
 #include "itkSmartPointer.h"
 #include "itkObject.h"
 
-
 namespace elastix
 {
 
@@ -87,9 +86,6 @@ public:
 
   /** Types for the masks. */
   using MaskPixelType = unsigned char;
-  // Ensure FixedImageType and MovingImageType are defined before using them
-  using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
-  using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
   using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
   /** Set/Get functions for the fixed images

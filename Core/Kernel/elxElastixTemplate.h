@@ -34,6 +34,7 @@
 #include <itkCommand.h>
 #include <itkImage.h>
 #include <itkObject.h>
+#include "itkSmartPointer.h"
 
 #include <sstream>
 

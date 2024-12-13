@@ -24,6 +24,9 @@
 #include "itkParameterMapInterface.h"
 
 #include <itkObject.h>
+#include "itkImage.h"
+#include "itkSmartPointer.h"
+#include "itkObject.h"
 
 // Standard C++ header files:
 #include <fstream>
@@ -163,6 +166,13 @@ public:
   /** Function to get the ComponentDatabase. */
   static const ComponentDatabase &
   GetComponentDatabase();
+
+  /** Types for the masks. */
+  using MaskPixelType = unsigned char;
+  // Define FixedImageType and MovingImageType if not defined elsewhere
+  using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+  using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
 protected:
   MainBase();
