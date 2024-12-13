@@ -166,6 +166,34 @@ public:
   unsigned int
   GetNumberOfMovingMasks() const;
 
+  /** Set/Add/Get/Remove/NumberOf fixed weighted masks. */
+  virtual void
+  AddFixedWeightedMask(FixedMaskType * fixedWeightedMask);
+  virtual void
+  SetFixedWeightedMask(FixedMaskType * fixedWeightedMask);
+  const FixedMaskType *
+  GetFixedWeightedMask() const;
+  const FixedMaskType *
+  GetFixedWeightedMask(const unsigned int index) const;
+  void
+  RemoveFixedWeightedMask();
+  unsigned int
+  GetNumberOfFixedWeightedMasks() const;
+
+  /** Set/Add/Get/Remove/NumberOf moving weighted masks. */
+  virtual void
+  SetMovingWeightedMask(MovingMaskType * movingWeightedMask);
+  virtual void
+  AddMovingWeightedMask(MovingMaskType * movingWeightedMask);
+  const MovingMaskType *
+  GetMovingWeightedMask() const;
+  const MovingMaskType *
+  GetMovingWeightedMask(const unsigned int index) const;
+  virtual void
+  RemoveMovingWeightedMask();
+  unsigned int
+  GetNumberOfMovingWeightedMasks() const;
+
   itkSetConstObjectMacro(FixedPoints, PointContainerType<double>);
   itkSetConstObjectMacro(MovingPoints, PointContainerType<double>);
 

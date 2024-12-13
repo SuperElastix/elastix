@@ -19,7 +19,13 @@
 #define elxElastixMain_h
 
 #include "elxMainBase.h"
+#include "itkImage.h"
+#include "itkSmartPointer.h"
+#include "itkObject.h"
 
+// Ensure FixedImageType and MovingImageType are defined before using MaskImageType
+using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
 
 namespace elastix
 {
@@ -82,6 +88,10 @@ public:
   /** Run-time type information (and related methods). */
   itkOverrideGetNameOfClassMacro(ElastixMain);
 
+  /** Types for the masks. */
+  using MaskPixelType = unsigned char;
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
+
   /** Set/Get functions for the fixed images
    * (if these are not used, elastix tries to read them from disk,
    * according to the command line parameters).
@@ -98,8 +108,21 @@ public:
   itkGetModifiableObjectMacro(FixedMaskContainer, DataObjectContainerType);
   itkGetModifiableObjectMacro(MovingMaskContainer, DataObjectContainerType);
 
-  itkSetConstObjectMacro(FixedPoints, itk::Object);
-  itkSetConstObjectMacro(MovingPoints, itk::Object);
+  /**
+   * Set/Get functions for the fixed and moving weighted masks.
+   * These masks are used to apply weights to different regions of the fixed and moving images
+   * during the registration process. The weights can influence the registration by giving more
+   * importance to certain areas of the images.
+   */
+
+
+  itkGetModifiableObjectMacro(FixedWeightedMask, MaskImageType);
+  itkGetModifiableObjectMacro(MovingWeightedMask, MaskImageType);
+
+  itkGetConstObjectMacro(FixedWeightedPoints, itk::Object);
+  itkGetConstObjectMacro(MovingWeightedPoints, itk::Object);
+
+
 
   /** Get the final transform (the result of running elastix).
    * You may pass this as an InitialTransform in an other instantiation
@@ -181,6 +204,9 @@ private:
   itk::SmartPointer<const itk::Object> m_FixedPoints{ nullptr };
   itk::SmartPointer<const itk::Object> m_MovingPoints{ nullptr };
 
+  /** Weighted masks for fixed and moving images. */
+  MaskImageType::Pointer m_FixedWeightedMask;
+  MaskImageType::Pointer m_MovingWeightedMask;
 
   /** A transform that is the result of registration. */
   ObjectPointer m_FinalTransform{ nullptr };

@@ -107,6 +107,24 @@ ElastixTemplate<TFixedImage, TMovingImage>::GetMovingMask(unsigned int idx) cons
 
 } // end SetMovingMask()
 
+/**
+ * ********************** GetFixedWeightedMask *************************
+ */
+template <typename TFixedImage, typename TMovingImage>
+typename ElastixTemplate<TFixedImage, TMovingImage>::FixedMaskType *
+ElastixTemplate<TFixedImage, TMovingImage>::GetFixedWeightedMask() const
+{
+  return dynamic_cast<FixedMaskType *>(this->GetModifiableFixedWeightedMask());
+}
+/**
+ * ********************** GetMovingWeightedMask *************************
+ */
+template <typename TFixedImage, typename TMovingImage>
+typename ElastixTemplate<TFixedImage, TMovingImage>::MovingMaskType *
+ElastixTemplate<TFixedImage, TMovingImage>::GetMovingWeightedMask() const
+{
+  return dynamic_cast<MovingMaskType *>(this->GetModifiableMovingWeightedMask());
+}
 
 /**
  * **************************** Run *****************************
