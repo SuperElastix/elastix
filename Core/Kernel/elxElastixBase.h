@@ -50,6 +50,10 @@
 using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
 using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
 
+// Types for the masks
+using MaskPixelType = unsigned char;
+using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
+
 #include <fstream>
 #include <iomanip>
 

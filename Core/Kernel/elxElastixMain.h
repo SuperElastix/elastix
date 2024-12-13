@@ -108,22 +108,21 @@ public:
   itkGetModifiableObjectMacro(FixedMaskContainer, DataObjectContainerType);
   itkGetModifiableObjectMacro(MovingMaskContainer, DataObjectContainerType);
 
-  /** Set/Get functions for the fixed and moving weighted masks. */
-  itkSetObjectMacro(FixedWeightedMask, MaskImageType);
-  itkSetObjectMacro(MovingWeightedMask, MaskImageType);
+  /**
+   * Set/Get functions for the fixed and moving weighted masks.
+   * These masks are used to apply weights to different regions of the fixed and moving images
+   * during the registration process. The weights can influence the registration by giving more
+   * importance to certain areas of the images.
+   */
+
+
   itkGetModifiableObjectMacro(FixedWeightedMask, MaskImageType);
   itkGetModifiableObjectMacro(MovingWeightedMask, MaskImageType);
 
-  itkSetConstObjectMacro(FixedPoints, itk::Object);
-  itkSetConstObjectMacro(MovingPoints, itk::Object);
+  itkGetConstObjectMacro(FixedWeightedPoints, itk::Object);
+  itkGetConstObjectMacro(MovingWeightedPoints, itk::Object);
 
-  /** Set/Get the fixed weighted mask. */
-  void SetFixedWeightedMask(const MaskImageType * mask);
-  MaskImageType * GetModifiableFixedWeightedMask();
 
-  /** Set/Get the moving weighted mask. */
-  void SetMovingWeightedMask(const MaskImageType * mask);
-  MaskImageType * GetModifiableMovingWeightedMask();
 
   /** Get the final transform (the result of running elastix).
    * You may pass this as an InitialTransform in an other instantiation
