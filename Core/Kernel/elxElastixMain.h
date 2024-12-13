@@ -98,8 +98,22 @@ public:
   itkGetModifiableObjectMacro(FixedMaskContainer, DataObjectContainerType);
   itkGetModifiableObjectMacro(MovingMaskContainer, DataObjectContainerType);
 
+  /** Set/Get functions for the fixed and moving weighted masks. */
+  itkSetObjectMacro(FixedWeightedMask, MaskImageType);
+  itkSetObjectMacro(MovingWeightedMask, MaskImageType);
+  itkGetModifiableObjectMacro(FixedWeightedMask, MaskImageType);
+  itkGetModifiableObjectMacro(MovingWeightedMask, MaskImageType);
+
   itkSetConstObjectMacro(FixedPoints, itk::Object);
   itkSetConstObjectMacro(MovingPoints, itk::Object);
+
+  /** Set/Get the fixed weighted mask. */
+  void SetFixedWeightedMask(const MaskImageType * mask);
+  MaskImageType * GetModifiableFixedWeightedMask();
+
+  /** Set/Get the moving weighted mask. */
+  void SetMovingWeightedMask(const MaskImageType * mask);
+  MaskImageType * GetModifiableMovingWeightedMask();
 
   /** Get the final transform (the result of running elastix).
    * You may pass this as an InitialTransform in an other instantiation
@@ -181,6 +195,9 @@ private:
   itk::SmartPointer<const itk::Object> m_FixedPoints{ nullptr };
   itk::SmartPointer<const itk::Object> m_MovingPoints{ nullptr };
 
+  /** Weighted masks for fixed and moving images. */
+  MaskImageType::Pointer m_FixedWeightedMask;
+  MaskImageType::Pointer m_MovingWeightedMask;
 
   /** A transform that is the result of registration. */
   ObjectPointer m_FinalTransform{ nullptr };

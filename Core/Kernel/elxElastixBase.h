@@ -299,6 +299,14 @@ public:
   elxSetObjectMacro(FinalTransform, itk::Object);
   elxGetObjectMacro(FinalTransform, itk::Object);
 
+  /** Set/Get the fixed weighted mask. */
+  void SetFixedWeightedMask(const MaskImageType * mask);
+  MaskImageType * GetModifiableFixedWeightedMask();
+
+  /** Set/Get the moving weighted mask. */
+  void SetMovingWeightedMask(const MaskImageType * mask);
+  MaskImageType * GetModifiableMovingWeightedMask();
+
   /** Empty Run()-function to be overridden. */
   virtual int
   Run() = 0;
@@ -540,6 +548,9 @@ private:
    * From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
    * backward compatability. From Elastix 4.8: set it to true by default. */
   bool m_UseDirectionCosines{ true };
+
+  MaskImageType * m_FixedWeightedMask{ nullptr };
+  MaskImageType * m_MovingWeightedMask{ nullptr };
 };
 
 } // end namespace elastix

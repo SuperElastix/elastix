@@ -209,6 +209,16 @@ public:
   MovingMaskType *
   GetMovingMask(unsigned int idx = 0) const;
 
+  /** Get pointers to the weighted masks. They are obtained from the
+   * {Fixed,Moving}WeightedMaskContainer and casted to the appropriate type.
+   */
+
+  FixedMaskType *
+  GetFixedWeightedMask() const;
+
+  MovingMaskType *
+  GetMovingWeightedMask() const;
+
   /** Main functions:
    * Run() for registration, and ApplyTransform() for just
    * applying a transform to an image.

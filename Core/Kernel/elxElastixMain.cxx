@@ -31,7 +31,6 @@ using itk::Deref;
 /**
  * ********************* Constructor ****************************
  */
-
 ElastixMain::ElastixMain() = default;
 
 /**
@@ -145,13 +144,15 @@ ElastixMain::Run()
     return 1;
   }
 
-  /** Set the images and masks. If not set by the user, it is not a problem.
+  /** Set the images, masks, and weighted masks. If not set by the user, it is not a problem.
    * ElastixTemplate will try to load them from disk.
    */
   elastixBase.SetFixedImageContainer(this->GetModifiableFixedImageContainer());
   elastixBase.SetMovingImageContainer(this->GetModifiableMovingImageContainer());
   elastixBase.SetFixedMaskContainer(this->GetModifiableFixedMaskContainer());
   elastixBase.SetMovingMaskContainer(this->GetModifiableMovingMaskContainer());
+  elastixBase.SetFixedWeightedMask(this->GetModifiableFixedWeightedMask()); // Set fixed weighted mask
+  elastixBase.SetMovingWeightedMask(this->GetModifiableMovingWeightedMask()); // Set moving weighted mask
   elastixBase.SetResultImageContainer(this->GetModifiableResultImageContainer());
 
   elastixBase.SetFixedPoints(m_FixedPoints);
@@ -559,5 +560,40 @@ ElastixMain::GetImageInformationFromFile(const std::string & filename, ImageDime
 
 } // end GetImageInformationFromFile()
 
+/**
+ * ******************** SetFixedWeightedMask ********************
+ */
+void
+ElastixMain::SetFixedWeightedMask(const MaskImageType * mask)
+{
+  m_FixedWeightedMask = mask;
+}
+
+/**
+ * ******************** GetModifiableFixedWeightedMask ********************
+ */
+ElastixMain::MaskImageType *
+ElastixMain::GetModifiableFixedWeightedMask()
+{
+  return m_FixedWeightedMask;
+}
+
+/**
+ * ******************** SetMovingWeightedMask ********************
+ */
+void
+ElastixMain::SetMovingWeightedMask(const MaskImageType * mask)
+{
+  m_MovingWeightedMask = mask;
+}
+
+/**
+ * ******************** GetModifiableMovingWeightedMask ********************
+ */
+ElastixMain::MaskImageType *
+ElastixMain::GetModifiableMovingWeightedMask()
+{
+  return m_MovingWeightedMask;
+}
 
 } // end namespace elastix
