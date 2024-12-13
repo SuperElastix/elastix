@@ -15,10 +15,11 @@ public:
 
   /** Types for the masks. */
   using MaskPixelType = unsigned char;
+  // Ensure MaskImageType is defined before using it
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
   // Define FixedImageType and MovingImageType if not defined elsewhere
   using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
   using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
-  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
 };
 } // end namespace elastix

@@ -42,6 +42,9 @@
 #include <itkObject.h>
 #include <itkTimeProbe.h>
 #include <itkVectorContainer.h>
+#include "itkImage.h"
+#include "itkSmartPointer.h"
+#include "itkObject.h"
 
 #include <fstream>
 #include <iomanip>

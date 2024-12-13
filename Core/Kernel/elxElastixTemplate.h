@@ -131,6 +131,7 @@ public:
 
   /** Types for the masks. */
   using MaskPixelType = unsigned char;
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
   using FixedMaskType = itk::Image<MaskPixelType, FixedDimension>;
   using MovingMaskType = itk::Image<MaskPixelType, MovingDimension>;
   using FixedMaskPointer = typename FixedMaskType::Pointer;
