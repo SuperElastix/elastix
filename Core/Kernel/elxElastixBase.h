@@ -175,6 +175,10 @@ public:
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
 
+  /** Types for the masks. */
+  using MaskPixelType = unsigned char;
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
+
   /** Set/Get the Configuration Object. */
   elxGetObjectMacro(Configuration, Configuration);
   elxSetObjectMacro(Configuration, Configuration);

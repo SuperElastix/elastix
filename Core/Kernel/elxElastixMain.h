@@ -19,6 +19,9 @@
 #define elxElastixMain_h
 
 #include "elxMainBase.h"
+#include "itkImage.h"
+#include "itkSmartPointer.h"
+#include "itkObject.h"
 
 
 namespace elastix
@@ -81,6 +84,13 @@ public:
 
   /** Run-time type information (and related methods). */
   itkOverrideGetNameOfClassMacro(ElastixMain);
+
+  /** Types for the masks. */
+  using MaskPixelType = unsigned char;
+  // Ensure FixedImageType and MovingImageType are defined before using them
+  using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+  using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
   /** Set/Get functions for the fixed images
    * (if these are not used, elastix tries to read them from disk,
