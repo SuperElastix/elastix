@@ -84,9 +84,6 @@ public:
   /** Run-time type information (and related methods). */
   itkOverrideGetNameOfClassMacro(ElastixMain);
 
-  /** Types for the masks. */
-  using MaskPixelType = unsigned char;
-  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
   /** Set/Get functions for the fixed images
    * (if these are not used, elastix tries to read them from disk,
