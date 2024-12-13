@@ -23,8 +23,7 @@
 #include "itkSmartPointer.h"
 #include "itkObject.h"
 
-// Ensure FixedImageType and MovingImageType are defined
-// If they are not defined elsewhere, define them here
+// Ensure FixedImageType and MovingImageType are defined before using MaskImageType
 using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
 using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
 
@@ -91,7 +90,6 @@ public:
 
   /** Types for the masks. */
   using MaskPixelType = unsigned char;
-  // Ensure MaskImageType is defined before using it
   using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
   /** Set/Get functions for the fixed images

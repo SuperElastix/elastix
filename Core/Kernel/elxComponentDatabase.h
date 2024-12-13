@@ -6,6 +6,10 @@
 // #include "itkFixedImageType.h"
 // #include "itkMovingImageType.h"
 
+// Ensure FixedImageType and MovingImageType are defined before using MaskImageType
+using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+
 namespace elastix
 {
 
@@ -17,9 +21,6 @@ public:
   using MaskPixelType = unsigned char;
   // Ensure MaskImageType is defined before using it
   using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
-  // Define FixedImageType and MovingImageType if not defined elsewhere
-  using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
-  using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
 
 };
 } // end namespace elastix
