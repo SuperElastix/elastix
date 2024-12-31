@@ -51,8 +51,8 @@ namespace itk
 /**
  * Constructor
  */
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::
   ReducedDimensionBSplineInterpolateImageFunction()
 {
   m_SplineOrder = 0;
@@ -68,10 +68,11 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 /**
  * Standard "PrintSelf" method
  */
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::PrintSelf(std::ostream & os,
-                                                                                                    Indent indent) const
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::PrintSelf(
+  std::ostream & os,
+  Indent         indent) const
 {
   Superclass::PrintSelf(os, indent);
   os << indent << "Spline Order: " << m_SplineOrder << std::endl;
@@ -79,9 +80,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::SetInputImage(
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::SetInputImage(
   const TImageType * inputData)
 {
   if (inputData)
@@ -109,9 +110,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::SetSplineOrder(
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::SetSplineOrder(
   unsigned int SplineOrder)
 {
   if (SplineOrder == m_SplineOrder)
@@ -130,9 +131,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 auto
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::EvaluateAtContinuousIndex(
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::EvaluateAtContinuousIndex(
   const ContinuousIndexType & x) const -> OutputType
 {
   /** Allocate memory on the stack: */
@@ -179,9 +180,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 auto
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::
   EvaluateDerivativeAtContinuousIndex(const ContinuousIndexType & x) const -> CovariantVectorType
 {
   /** Allocate memory on the stack: */
@@ -248,9 +249,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::SetInterpolationWeights(
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::SetInterpolationWeights(
   const ContinuousIndexType & x,
   const vnl_matrix<long> &    EvaluateIndex,
   vnl_matrix<double> &        weights,
@@ -348,9 +349,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::SetDerivativeWeights(
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::SetDerivativeWeights(
   const ContinuousIndexType & x,
   const vnl_matrix<long> &    EvaluateIndex,
   vnl_matrix<double> &        weights,
@@ -464,9 +465,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 
 
 // Generates m_PointsToIndex;
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::GeneratePointsToIndex()
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::GeneratePointsToIndex()
 {
   // number of neighborhood points used for interpolation
   const auto maxNumberInterpolationPoints =
@@ -493,9 +494,9 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::DetermineRegionOfSupport(
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::DetermineRegionOfSupport(
   vnl_matrix<long> &          evaluateIndex,
   const ContinuousIndexType & x,
   unsigned int                splineOrder) const
@@ -525,11 +526,10 @@ ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoeffici
 }
 
 
-template <typename TImageType, typename TCoordRep, typename TCoefficientType>
+template <typename TImageType, typename TCoordinate, typename TCoefficientType>
 void
-ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordRep, TCoefficientType>::ApplyMirrorBoundaryConditions(
-  vnl_matrix<long> & evaluateIndex,
-  unsigned int       splineOrder) const
+ReducedDimensionBSplineInterpolateImageFunction<TImageType, TCoordinate, TCoefficientType>::
+  ApplyMirrorBoundaryConditions(vnl_matrix<long> & evaluateIndex, unsigned int splineOrder) const
 {
   for (unsigned int n = 0; n < ImageDimension - 1; ++n)
   {

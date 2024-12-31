@@ -123,8 +123,8 @@ SetContinuousIndex(const TContinuousIndex & cindex, cl_float4 & oclindex)
 //------------------------------------------------------------------------------
 namespace itk
 {
-template <typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction>
-GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::GPUInterpolateImageFunction()
+template <typename TInputImage, typename TCoordinate, typename TParentInterpolateImageFunction>
+GPUInterpolateImageFunction<TInputImage, TCoordinate, TParentInterpolateImageFunction>::GPUInterpolateImageFunction()
 {
   const unsigned int ImageDim = InputImageType::ImageDimension;
 
@@ -151,9 +151,9 @@ GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunct
 
 
 //------------------------------------------------------------------------------
-template <typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction>
+template <typename TInputImage, typename TCoordinate, typename TParentInterpolateImageFunction>
 GPUDataManager::Pointer
-GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::GetParametersDataManager() const
+GPUInterpolateImageFunction<TInputImage, TCoordinate, TParentInterpolateImageFunction>::GetParametersDataManager() const
 {
   const unsigned int ImageDim = InputImageType::ImageDimension;
 
@@ -204,10 +204,10 @@ GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunct
 
 
 //------------------------------------------------------------------------------
-template <typename TInputImage, typename TCoordRep, typename TParentInterpolateImageFunction>
+template <typename TInputImage, typename TCoordinate, typename TParentInterpolateImageFunction>
 void
-GPUInterpolateImageFunction<TInputImage, TCoordRep, TParentInterpolateImageFunction>::PrintSelf(std::ostream & os,
-                                                                                                Indent indent) const
+GPUInterpolateImageFunction<TInputImage, TCoordinate, TParentInterpolateImageFunction>::PrintSelf(std::ostream & os,
+                                                                                                  Indent indent) const
 {
   CPUSuperclass::PrintSelf(os, indent);
 }
