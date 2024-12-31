@@ -24,8 +24,8 @@
 
 namespace itk
 {
-template <typename TInputImage, typename TCoordRep>
-GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GPULinearInterpolateImageFunction()
+template <typename TInputImage, typename TCoordinate>
+GPULinearInterpolateImageFunction<TInputImage, TCoordinate>::GPULinearInterpolateImageFunction()
 {
   // Add GPUImageFunction implementation
   const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
@@ -38,9 +38,9 @@ GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GPULinearInterpolateI
 
 
 //------------------------------------------------------------------------------
-template <typename TInputImage, typename TCoordRep>
+template <typename TInputImage, typename TCoordinate>
 bool
-GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GetSourceCode(std::string & source) const
+GPULinearInterpolateImageFunction<TInputImage, TCoordinate>::GetSourceCode(std::string & source) const
 {
   if (this->m_Sources.empty())
   {
@@ -60,9 +60,9 @@ GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::GetSourceCode(std::st
 
 
 //------------------------------------------------------------------------------
-template <typename TInputImage, typename TCoordRep>
+template <typename TInputImage, typename TCoordinate>
 void
-GPULinearInterpolateImageFunction<TInputImage, TCoordRep>::PrintSelf(std::ostream & os, Indent indent) const
+GPULinearInterpolateImageFunction<TInputImage, TCoordinate>::PrintSelf(std::ostream & os, Indent indent) const
 {
   CPUSuperclass::PrintSelf(os, indent);
   GPUSuperclass::PrintSelf(os, indent);

@@ -41,11 +41,11 @@ itkGPUKernelClassMacro(GPUBSplineInterpolateImageFunctionKernel);
  *
  * \ingroup GPUCommon
  */
-template <typename TInputImage, typename TCoordRep = float, typename TCoefficientType = float>
+template <typename TInputImage, typename TCoordinate = float, typename TCoefficientType = float>
 class ITK_EXPORT GPUBSplineInterpolateImageFunction
   : public GPUInterpolateImageFunction<TInputImage,
-                                       TCoordRep,
-                                       BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>
+                                       TCoordinate,
+                                       BSplineInterpolateImageFunction<TInputImage, TCoordinate, TCoefficientType>>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(GPUBSplineInterpolateImageFunction);
@@ -54,12 +54,12 @@ public:
   using Self = GPUBSplineInterpolateImageFunction;
   using GPUSuperclass =
     GPUInterpolateImageFunction<TInputImage,
-                                TCoordRep,
-                                BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>;
+                                TCoordinate,
+                                BSplineInterpolateImageFunction<TInputImage, TCoordinate, TCoefficientType>>;
   using CPUSuperclass =
     BSplineInterpolateImageFunction<TInputImage,
-                                    TCoordRep,
-                                    BSplineInterpolateImageFunction<TInputImage, TCoordRep, TCoefficientType>>;
+                                    TCoordinate,
+                                    BSplineInterpolateImageFunction<TInputImage, TCoordinate, TCoefficientType>>;
   using Superclass = GPUSuperclass;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;

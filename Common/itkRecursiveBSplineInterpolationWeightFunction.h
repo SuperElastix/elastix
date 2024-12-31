@@ -44,16 +44,16 @@ namespace itk
  * \ingroup Functions ImageInterpolators
  * \ingroup ITKCommon
  */
-template <typename TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+template <typename TCoordinate = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT RecursiveBSplineInterpolationWeightFunction
-  : public BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>
+  : public BSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(RecursiveBSplineInterpolationWeightFunction);
 
   /** Standard class typedefs. */
   using Self = RecursiveBSplineInterpolationWeightFunction;
-  using Superclass = BSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>;
+  using Superclass = BSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
