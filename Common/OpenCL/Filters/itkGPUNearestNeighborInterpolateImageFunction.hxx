@@ -24,8 +24,8 @@
 
 namespace itk
 {
-template <typename TInputImage, typename TCoordRep>
-GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::GPUNearestNeighborInterpolateImageFunction()
+template <typename TInputImage, typename TCoordinate>
+GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordinate>::GPUNearestNeighborInterpolateImageFunction()
 {
   // Add GPUImageFunction implementation
   const std::string sourcePath0(GPUImageFunctionKernel::GetOpenCLSource());
@@ -38,9 +38,9 @@ GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::GPUNearestNe
 
 
 //------------------------------------------------------------------------------
-template <typename TInputImage, typename TCoordRep>
+template <typename TInputImage, typename TCoordinate>
 bool
-GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::GetSourceCode(std::string & source) const
+GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordinate>::GetSourceCode(std::string & source) const
 {
   if (this->m_Sources.empty())
   {
@@ -60,9 +60,9 @@ GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::GetSourceCod
 
 
 //------------------------------------------------------------------------------
-template <typename TInputImage, typename TCoordRep>
+template <typename TInputImage, typename TCoordinate>
 void
-GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordRep>::PrintSelf(std::ostream & os, Indent indent) const
+GPUNearestNeighborInterpolateImageFunction<TInputImage, TCoordinate>::PrintSelf(std::ostream & os, Indent indent) const
 {
   CPUSuperclass::PrintSelf(os, indent);
   GPUSuperclass::PrintSelf(os, indent);

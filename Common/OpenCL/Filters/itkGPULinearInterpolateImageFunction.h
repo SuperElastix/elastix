@@ -40,17 +40,19 @@ itkGPUKernelClassMacro(GPULinearInterpolateImageFunctionKernel);
  *
  * \ingroup GPUCommon
  */
-template <typename TInputImage, typename TCoordRep = float>
+template <typename TInputImage, typename TCoordinate = float>
 class ITK_EXPORT GPULinearInterpolateImageFunction
-  : public GPUInterpolateImageFunction<TInputImage, TCoordRep, LinearInterpolateImageFunction<TInputImage, TCoordRep>>
+  : public GPUInterpolateImageFunction<TInputImage,
+                                       TCoordinate,
+                                       LinearInterpolateImageFunction<TInputImage, TCoordinate>>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(GPULinearInterpolateImageFunction);
 
   /** Standard class typedefs. */
   using Self = GPULinearInterpolateImageFunction;
-  using CPUSuperclass = LinearInterpolateImageFunction<TInputImage, TCoordRep>;
-  using GPUSuperclass = GPUInterpolateImageFunction<TInputImage, TCoordRep, CPUSuperclass>;
+  using CPUSuperclass = LinearInterpolateImageFunction<TInputImage, TCoordinate>;
+  using GPUSuperclass = GPUInterpolateImageFunction<TInputImage, TCoordinate, CPUSuperclass>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 

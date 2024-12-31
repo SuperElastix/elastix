@@ -35,8 +35,8 @@ namespace itk
  * \ingroup GPUCommon
  */
 template <typename TInputImage,
-          typename TCoordRep = float,
-          typename TParentInterpolateImageFunction = InterpolateImageFunction<TInputImage, TCoordRep>>
+          typename TCoordinate = float,
+          typename TParentInterpolateImageFunction = InterpolateImageFunction<TInputImage, TCoordinate>>
 class ITK_TEMPLATE_EXPORT GPUInterpolateImageFunction
   : public TParentInterpolateImageFunction
   , public GPUInterpolatorBase

@@ -39,16 +39,16 @@ namespace itk
  *
  * \ingroup Functions ImageInterpolators
  */
-template <typename TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+template <typename TCoordinate = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunction2
-  : public BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>
+  : public BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrder>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(BSplineInterpolationWeightFunction2);
 
   /** Standard class typedefs. */
   using Self = BSplineInterpolationWeightFunction2;
-  using Superclass = BSplineInterpolationWeightFunctionBase<TCoordRep, VSpaceDimension, VSplineOrder>;
+  using Superclass = BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrder>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 

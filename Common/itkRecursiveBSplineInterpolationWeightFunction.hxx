@@ -32,9 +32,9 @@ namespace itk
  * ********************* Evaluate ****************************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 auto
-RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
+RecursiveBSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::Evaluate(
   const ContinuousIndexType & index) const -> WeightsType
 {
   IndexType startIndex;
@@ -46,9 +46,9 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
  * ********************* Evaluate ****************************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 auto
-RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
+RecursiveBSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::Evaluate(
   const ContinuousIndexType & cindex,
   IndexType &                 startIndex) const -> WeightsType
 {
@@ -68,9 +68,9 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
 } // end Evaluate()
 
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
-RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::Evaluate(
+RecursiveBSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::Evaluate(
   const ContinuousIndexType & cindex,
   WeightsType &               weights,
   IndexType &                 startIndex) const
@@ -84,9 +84,9 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
  * ********************* EvaluateDerivative ****************************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 auto
-RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::EvaluateDerivative(
+RecursiveBSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::EvaluateDerivative(
   const ContinuousIndexType & cindex,
   const IndexType &           startIndex) const -> WeightsType
 {
@@ -107,9 +107,9 @@ RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineO
  * ********************* EvaluateSecondOrderDerivative ****************************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 auto
-RecursiveBSplineInterpolationWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::EvaluateSecondOrderDerivative(
+RecursiveBSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::EvaluateSecondOrderDerivative(
   const ContinuousIndexType & cindex,
   const IndexType &           startIndex) const -> WeightsType
 {

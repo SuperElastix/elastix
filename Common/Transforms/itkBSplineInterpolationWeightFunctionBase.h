@@ -46,9 +46,9 @@ namespace itk
  *
  * \ingroup Functions ImageInterpolators
  */
-template <typename TCoordRep = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
+template <typename TCoordinate = float, unsigned int VSpaceDimension = 2, unsigned int VSplineOrder = 3>
 class ITK_TEMPLATE_EXPORT BSplineInterpolationWeightFunctionBase
-  : public FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>,
+  : public FunctionBase<ContinuousIndex<TCoordinate, VSpaceDimension>,
                         FixedArray<double, Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension)>>
 {
 public:
@@ -56,7 +56,7 @@ public:
 
   /** Standard class typedefs. */
   using Self = BSplineInterpolationWeightFunctionBase;
-  using Superclass = FunctionBase<ContinuousIndex<TCoordRep, VSpaceDimension>,
+  using Superclass = FunctionBase<ContinuousIndex<TCoordinate, VSpaceDimension>,
                                   FixedArray<double, Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension)>>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
@@ -81,7 +81,7 @@ public:
   using SizeType = Size<VSpaceDimension>;
 
   /** ContinuousIndex typedef support. */
-  using ContinuousIndexType = ContinuousIndex<TCoordRep, VSpaceDimension>;
+  using ContinuousIndexType = ContinuousIndex<TCoordinate, VSpaceDimension>;
 
   /** Evaluate the weights at specified ContinousIndex position. */
   WeightsType

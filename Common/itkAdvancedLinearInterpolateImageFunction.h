@@ -59,16 +59,16 @@ namespace itk
  * \wikiexample{ImageProcessing/LinearInterpolateImageFunction,Linearly interpolate a position in an image}
  * \endwiki
  */
-template <typename TInputImage, typename TCoordRep = double>
+template <typename TInputImage, typename TCoordinate = double>
 class ITK_TEMPLATE_EXPORT AdvancedLinearInterpolateImageFunction
-  : public LinearInterpolateImageFunction<TInputImage, TCoordRep>
+  : public LinearInterpolateImageFunction<TInputImage, TCoordinate>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AdvancedLinearInterpolateImageFunction);
 
   /** Standard class typedefs. */
   using Self = AdvancedLinearInterpolateImageFunction;
-  using Superclass = LinearInterpolateImageFunction<TInputImage, TCoordRep>;
+  using Superclass = LinearInterpolateImageFunction<TInputImage, TCoordinate>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 

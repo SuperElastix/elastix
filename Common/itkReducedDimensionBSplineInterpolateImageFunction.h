@@ -81,16 +81,16 @@ namespace itk
  *
  * \ingroup ImageFunctions
  */
-template <typename TImageType, typename TCoordRep = double, typename TCoefficientType = double>
+template <typename TImageType, typename TCoordinate = double, typename TCoefficientType = double>
 class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineInterpolateImageFunction
-  : public InterpolateImageFunction<TImageType, TCoordRep>
+  : public InterpolateImageFunction<TImageType, TCoordinate>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ReducedDimensionBSplineInterpolateImageFunction);
 
   /** Standard class typedefs. */
   using Self = ReducedDimensionBSplineInterpolateImageFunction;
-  using Superclass = InterpolateImageFunction<TImageType, TCoordRep>;
+  using Superclass = InterpolateImageFunction<TImageType, TCoordinate>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -146,7 +146,7 @@ public:
   CovariantVectorType
   EvaluateDerivative(const PointType & point) const
   {
-    const auto index = this->GetInputImage()->template TransformPhysicalPointToContinuousIndex<TCoordRep>(point);
+    const auto index = this->GetInputImage()->template TransformPhysicalPointToContinuousIndex<TCoordinate>(point);
     return (this->EvaluateDerivativeAtContinuousIndex(index));
   }
 

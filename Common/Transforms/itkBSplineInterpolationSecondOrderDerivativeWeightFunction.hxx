@@ -30,8 +30,8 @@ namespace itk
  * ****************** Constructor *******************************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::
   BSplineInterpolationSecondOrderDerivativeWeightFunction()
 {
   /** Initialize members. */
@@ -45,9 +45,9 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
  * ******************* SetDerivativeDirections *******************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
-BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::
+BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::
   SetDerivativeDirections(unsigned int dir0, unsigned int dir1)
 {
   if (dir0 != this->m_DerivativeDirections[0] || dir1 != this->m_DerivativeDirections[1])
@@ -73,9 +73,9 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
  * ******************* PrintSelf *******************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
-BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::PrintSelf(
+BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::PrintSelf(
   std::ostream & os,
   Indent         indent) const
 {
@@ -92,9 +92,9 @@ BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimensi
  * ******************* Compute1DWeights *******************
  */
 
-template <typename TCoordRep, unsigned int VSpaceDimension, unsigned int VSplineOrder>
+template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
 void
-BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordRep, VSpaceDimension, VSplineOrder>::Compute1DWeights(
+BSplineInterpolationSecondOrderDerivativeWeightFunction<TCoordinate, VSpaceDimension, VSplineOrder>::Compute1DWeights(
   const ContinuousIndexType & index,
   const IndexType &           startIndex,
   OneDWeightsType &           weights1D) const

@@ -52,16 +52,16 @@ namespace itk
  *
  * \ingroup ImageFunctions
  */
-template <typename TInputImage, typename TCoordRep = double>
+template <typename TInputImage, typename TCoordinate = double>
 class ITK_TEMPLATE_EXPORT AdvancedRayCastInterpolateImageFunction
-  : public InterpolateImageFunction<TInputImage, TCoordRep>
+  : public InterpolateImageFunction<TInputImage, TCoordinate>
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AdvancedRayCastInterpolateImageFunction);
 
   /** Standard class typedefs. */
   using Self = AdvancedRayCastInterpolateImageFunction;
-  using Superclass = InterpolateImageFunction<TInputImage, TCoordRep>;
+  using Superclass = InterpolateImageFunction<TInputImage, TCoordinate>;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -72,7 +72,7 @@ public:
    * Type of the Transform Base class
    * The fixed image should be a 3D image
    */
-  using TransformType = Transform<TCoordRep, InputImageDimension, InputImageDimension>;
+  using TransformType = Transform<TCoordinate, InputImageDimension, InputImageDimension>;
 
   using TransformPointer = typename TransformType::Pointer;
   using InputPointType = typename TransformType::InputPointType;
@@ -84,10 +84,10 @@ public:
 
   using SizeType = typename TInputImage::SizeType;
 
-  using DirectionType = Vector<TCoordRep, InputImageDimension>;
+  using DirectionType = Vector<TCoordinate, InputImageDimension>;
 
   /**  Type of the Interpolator Base class */
-  using InterpolatorType = InterpolateImageFunction<TInputImage, TCoordRep>;
+  using InterpolatorType = InterpolateImageFunction<TInputImage, TCoordinate>;
 
   using InterpolatorPointer = typename InterpolatorType::Pointer;
 
