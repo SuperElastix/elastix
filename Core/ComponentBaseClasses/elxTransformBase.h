@@ -403,7 +403,7 @@ private:
 
   /** Function to transform coordinates from fixed to moving image. */
   void
-  TransformPointsSomePoints(const std::string & filename) const;
+  TransformPointsSomePoints(const std::string & filename, const bool binary = false) const;
 
   /** Function to transform coordinates from fixed to moving image, given as VTK file. */
   void
