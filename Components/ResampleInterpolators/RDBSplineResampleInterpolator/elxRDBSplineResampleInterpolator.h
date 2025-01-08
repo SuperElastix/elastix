@@ -54,7 +54,7 @@ template <typename TElastix>
 class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineResampleInterpolator
   : public itk::ReducedDimensionBSplineInterpolateImageFunction<
       typename ResampleInterpolatorBase<TElastix>::InputImageType,
-      typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+      typename ResampleInterpolatorBase<TElastix>::CoordinateType,
       double>
   , // CoefficientType
     public ResampleInterpolatorBase<TElastix>
@@ -66,7 +66,7 @@ public:
   using Self = ReducedDimensionBSplineResampleInterpolator;
   using Superclass1 =
     itk::ReducedDimensionBSplineInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
-                                                         typename ResampleInterpolatorBase<TElastix>::CoordRepType,
+                                                         typename ResampleInterpolatorBase<TElastix>::CoordinateType,
                                                          double>;
   using Superclass2 = ResampleInterpolatorBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;

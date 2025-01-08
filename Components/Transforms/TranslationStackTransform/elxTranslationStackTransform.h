@@ -55,7 +55,7 @@ namespace elastix
 {
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT TranslationStackTransform
-  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>
 {
@@ -64,7 +64,7 @@ public:
 
   /** Standard ITK-stuff. */
   using Self = TranslationStackTransform;
-  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                                         elx::TransformBase<TElastix>::FixedImageDimension>;
   using Superclass2 = elx::TransformBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
@@ -90,12 +90,13 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   using TranslationTransformType =
-    itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>;
+    itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordinateType, Self::SpaceDimension>;
   using TranslationTransformPointer = typename TranslationTransformType::Pointer;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
   using ReducedDimensionTranslationTransformType =
-    itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>;
+    itk::AdvancedTranslationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
+                                      Self::ReducedSpaceDimension>;
   using ReducedDimensionTranslationTransformPointer = typename ReducedDimensionTranslationTransformType::Pointer;
 
   /** Typedefs inherited from the superclass. */
@@ -106,7 +107,7 @@ public:
   using typename Superclass2::ElastixType;
   using typename Superclass2::ParameterMapType;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::CoordRepType;
+  using typename Superclass2::CoordinateType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
   using ITKBaseType = typename Superclass2::ITKBaseType;

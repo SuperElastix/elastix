@@ -91,13 +91,13 @@ public:
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
 
-  using CoordRepType = typename OutputPointType::CoordRepType;
-  using VnlVectorType = vnl_vector<CoordRepType>;
-  using VnlMatrixType = vnl_matrix<CoordRepType>;
+  using CoordinateType = typename OutputPointType::CoordinateType;
+  using VnlVectorType = vnl_vector<CoordinateType>;
+  using VnlMatrixType = vnl_matrix<CoordinateType>;
   // typedef itk::Array<VnlVectorType *> ProposalDerivativeType;
   using ProposalDerivativeType = typename std::vector<VnlVectorType *>;
   // typedef typename vnl_vector<VnlVectorType *> ProposalDerivativeType; //Cannot be linked
-  using PCACovarianceType = vnl_svd_economy<CoordRepType>;
+  using PCACovarianceType = vnl_svd_economy<CoordinateType>;
 
   /** Initialization. */
   void

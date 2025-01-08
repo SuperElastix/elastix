@@ -37,8 +37,8 @@
 namespace itk
 {
 //------------------------------------------------------------------------------
-template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
-GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::GPUInterpolatorCopier()
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordinate>
+GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordinate>::GPUInterpolatorCopier()
 {
   this->m_InputInterpolator = nullptr;
   this->m_Output = nullptr;
@@ -49,9 +49,9 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::G
 
 
 //------------------------------------------------------------------------------
-template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordinate>
 void
-GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::Update()
+GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordinate>::Update()
 {
   if (!this->m_InputInterpolator)
   {
@@ -71,7 +71,8 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
     this->m_InternalTransformTime = t;
 
     // Try Nearest
-    using NearestNeighborInterpolatorType = NearestNeighborInterpolateImageFunction<CPUInputImageType, CPUCoordRepType>;
+    using NearestNeighborInterpolatorType =
+      NearestNeighborInterpolateImageFunction<CPUInputImageType, CPUCoordinateType>;
     const auto nearest = dynamic_cast<const NearestNeighborInterpolatorType *>(m_InputInterpolator.GetPointer());
 
     if (nearest)
@@ -80,21 +81,21 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
       {
         // Create GPU NearestNeighbor interpolator in explicit mode
         using GPUNearestNeighborInterpolatorType =
-          GPUNearestNeighborInterpolateImageFunction<GPUInputImageType, GPUCoordRepType>;
+          GPUNearestNeighborInterpolateImageFunction<GPUInputImageType, GPUCoordinateType>;
         this->m_ExplicitOutput = GPUNearestNeighborInterpolatorType::New();
       }
       else
       {
         // Create GPU NearestNeighbor interpolator in implicit mode
         using GPUNearestNeighborInterpolatorType =
-          NearestNeighborInterpolateImageFunction<CPUInputImageType, GPUCoordRepType>;
+          NearestNeighborInterpolateImageFunction<CPUInputImageType, GPUCoordinateType>;
         this->m_Output = GPUNearestNeighborInterpolatorType::New();
       }
       return;
     }
 
     // Try Linear
-    using LinearInterpolatorType = LinearInterpolateImageFunction<CPUInputImageType, CPUCoordRepType>;
+    using LinearInterpolatorType = LinearInterpolateImageFunction<CPUInputImageType, CPUCoordinateType>;
     const auto linear = dynamic_cast<const LinearInterpolatorType *>(m_InputInterpolator.GetPointer());
 
     if (linear)
@@ -102,23 +103,23 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
       if (this->m_ExplicitMode)
       {
         // Create GPU Linear interpolator in explicit mode
-        using GPULinearInterpolatorType = GPULinearInterpolateImageFunction<GPUInputImageType, GPUCoordRepType>;
+        using GPULinearInterpolatorType = GPULinearInterpolateImageFunction<GPUInputImageType, GPUCoordinateType>;
         this->m_ExplicitOutput = GPULinearInterpolatorType::New();
       }
       else
       {
         // Create GPU Linear interpolator in implicit mode
-        using GPULinearInterpolatorType = LinearInterpolateImageFunction<CPUInputImageType, GPUCoordRepType>;
+        using GPULinearInterpolatorType = LinearInterpolateImageFunction<CPUInputImageType, GPUCoordinateType>;
         this->m_Output = GPULinearInterpolatorType::New();
       }
       return;
     }
 
     // Try BSpline
-    using BSplineInterpolatorType = BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, double>;
+    using BSplineInterpolatorType = BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordinateType, double>;
     const auto bspline = dynamic_cast<const BSplineInterpolatorType *>(m_InputInterpolator.GetPointer());
 
-    using BSplineInterpolatorFloatType = BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordRepType, float>;
+    using BSplineInterpolatorFloatType = BSplineInterpolateImageFunction<CPUInputImageType, CPUCoordinateType, float>;
     const auto bsplineFloat = dynamic_cast<const BSplineInterpolatorFloatType *>(m_InputInterpolator.GetPointer());
 
     if (bspline || bsplineFloat)
@@ -141,7 +142,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 
         // Create GPU BSpline interpolator in explicit mode
         using GPUBSplineInterpolatorType =
-          GPUBSplineInterpolateImageFunction<GPUInputImageType, GPUCoordRepType, GPUCoordRepType>;
+          GPUBSplineInterpolateImageFunction<GPUInputImageType, GPUCoordinateType, GPUCoordinateType>;
         auto bsplineInterpolator = GPUBSplineInterpolatorType::New();
         bsplineInterpolator->SetSplineOrder(splineOrder);
 
@@ -155,7 +156,7 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
       {
         // Create GPU BSpline interpolator in implicit mode
         using GPUBSplineInterpolatorType =
-          BSplineInterpolateImageFunction<CPUInputImageType, GPUCoordRepType, GPUCoordRepType>;
+          BSplineInterpolateImageFunction<CPUInputImageType, GPUCoordinateType, GPUCoordinateType>;
         auto bsplineInterpolator = GPUBSplineInterpolatorType::New();
         bsplineInterpolator->SetSplineOrder(splineOrder);
         this->m_Output = bsplineInterpolator;
@@ -172,10 +173,10 @@ GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::U
 
 
 //------------------------------------------------------------------------------
-template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordinate>
 void
-GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordRep>::PrintSelf(std::ostream & os,
-                                                                                         Indent         indent) const
+GPUInterpolatorCopier<TTypeList, NDimensions, TInterpolator, TOutputCoordinate>::PrintSelf(std::ostream & os,
+                                                                                           Indent         indent) const
 {
   Superclass::PrintSelf(os, indent);
   os << indent << "Input Interpolator: " << this->m_InputInterpolator << std::endl;

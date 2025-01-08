@@ -724,7 +724,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
 
   using DummyIPPPixelType = unsigned char;
   using MeshTraitsType =
-    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
+    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordinateType>;
   using PointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, MeshTraitsType>;
   using DeformationVectorType = itk::Vector<float, FixedImageDimension>;
 
@@ -1051,7 +1051,7 @@ TransformBase<TElastix>::GenerateDeformationFieldImage() const -> typename Defor
   const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
   /** Create an setup deformation field generator. */
-  const auto defGenerator = itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordRepType>::New();
+  const auto defGenerator = itk::TransformToDisplacementFieldFilter<DeformationFieldImageType, CoordinateType>::New();
   defGenerator->SetSize(resampleImageFilter.GetSize());
   defGenerator->SetOutputSpacing(resampleImageFilter.GetOutputSpacing());
   defGenerator->SetOutputOrigin(resampleImageFilter.GetOutputOrigin());

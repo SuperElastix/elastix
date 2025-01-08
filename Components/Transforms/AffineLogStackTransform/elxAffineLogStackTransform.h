@@ -39,7 +39,7 @@ namespace elastix
 
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT AffineLogStackTransform
-  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>
 {
@@ -48,7 +48,7 @@ public:
 
   /** Standard ITK-stuff. */
   using Self = AffineLogStackTransform;
-  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                                         elx::TransformBase<TElastix>::FixedImageDimension>;
   using Superclass2 = elx::TransformBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
@@ -71,13 +71,13 @@ public:
   itkStaticConstMacro(ReducedSpaceDimension, unsigned int, Superclass2::FixedImageDimension - 1);
 
   using AffineLogTransformType =
-    itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>;
+    itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordinateType, Self::SpaceDimension>;
   using AffineLogTransformPointer = typename AffineLogTransformType::Pointer;
   using InputPointType = typename AffineLogTransformType::InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
   using ReducedDimensionAffineLogTransformBaseType =
-    itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>;
+    itk::AffineLogTransform<typename elx::TransformBase<TElastix>::CoordinateType, Self::ReducedSpaceDimension>;
   using ReducedDimensionAffineLogTransformBasePointer = typename ReducedDimensionAffineLogTransformBaseType::Pointer;
 
   using ReducedDimensionOutputVectorType = typename ReducedDimensionAffineLogTransformBaseType::OutputVectorType;
@@ -91,7 +91,7 @@ public:
   using typename Superclass2::ElastixType;
   using typename Superclass2::ParameterMapType;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::CoordRepType;
+  using typename Superclass2::CoordinateType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
   using ITKBaseType = typename Superclass2::ITKBaseType;
@@ -118,8 +118,8 @@ public:
   using SpacingType = typename FixedImageType::SpacingType;
   using RegionType = typename FixedImageType::RegionType;
   using DirectionType = typename FixedImageType::DirectionType;
-  using ReducedDimensionContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension>;
-  using ContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, SpaceDimension>;
+  using ReducedDimensionContinuousIndexType = typename itk::ContinuousIndex<CoordinateType, ReducedSpaceDimension>;
+  using ContinuousIndexType = typename itk::ContinuousIndex<CoordinateType, SpaceDimension>;
 
   /** Execute stuff before anything else is done:*/
 

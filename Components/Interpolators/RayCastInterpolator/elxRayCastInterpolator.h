@@ -43,7 +43,7 @@ namespace elastix
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT RayCastInterpolator
   : public itk::AdvancedRayCastInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
-                                                        typename InterpolatorBase<TElastix>::CoordRepType>
+                                                        typename InterpolatorBase<TElastix>::CoordinateType>
   , public InterpolatorBase<TElastix>
 {
 public:
@@ -52,7 +52,7 @@ public:
   /** Standard ITK-stuff. */
   using Self = RayCastInterpolator;
   using Superclass1 = itk::AdvancedRayCastInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
-                                                                   typename InterpolatorBase<TElastix>::CoordRepType>;
+                                                                   typename InterpolatorBase<TElastix>::CoordinateType>;
   using Superclass2 = InterpolatorBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
@@ -88,14 +88,15 @@ public:
 
   /** Typedef's for CombinationTransform */
   using EulerTransformType =
-    typename itk::EulerTransform<typename InterpolatorBase<TElastix>::CoordRepType, ImageDimension>;
+    typename itk::EulerTransform<typename InterpolatorBase<TElastix>::CoordinateType, ImageDimension>;
   using TransformParametersType = typename EulerTransformType::ParametersType;
   using EulerTransformPointer = typename EulerTransformType::Pointer;
   using AdvancedTransformType = typename itk::
-    AdvancedTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension, Self::ImageDimension>;
+    AdvancedTransform<typename InterpolatorBase<TElastix>::CoordinateType, Self::ImageDimension, Self::ImageDimension>;
   using AdvancedTransformPointer = typename AdvancedTransformType::Pointer;
   using CombinationTransformType =
-    typename itk::AdvancedCombinationTransform<typename InterpolatorBase<TElastix>::CoordRepType, Self::ImageDimension>;
+    typename itk::AdvancedCombinationTransform<typename InterpolatorBase<TElastix>::CoordinateType,
+                                               Self::ImageDimension>;
   using CombinationTransformPointer = typename CombinationTransformType::Pointer;
 
 protected:

@@ -95,10 +95,10 @@ public:
   using InputImageType = typename ElastixType::MovingImageType;
   using OutputImageType = typename ElastixType::MovingImageType;
   // typedef typename ElastixType::FixedImageType      OutputImageType;
-  using CoordRepType = ElastixBase::CoordRepType;
+  using CoordinateType = ElastixBase::CoordinateType;
 
   /** Other typedef's. */
-  using ITKBaseType = itk::ResampleImageFilter<InputImageType, OutputImageType, CoordRepType>;
+  using ITKBaseType = itk::ResampleImageFilter<InputImageType, OutputImageType, CoordinateType>;
 
   /** Typedef's from ResampleImageFiler. */
   using TransformType = typename ITKBaseType::TransformType;

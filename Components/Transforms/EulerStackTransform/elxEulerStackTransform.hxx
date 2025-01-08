@@ -306,7 +306,7 @@ EulerStackTransform<TElastix>::InitialTransformCenter(ReducedDimensionInputPoint
     auto fullDimensionCenterIndex =
       this->m_Registration->GetAsITKBaseType()
         ->GetFixedImage()
-        ->template TransformPhysicalPointToContinuousIndex<CoordRepType>(fullDimensionCenterPoint);
+        ->template TransformPhysicalPointToContinuousIndex<CoordinateType>(fullDimensionCenterPoint);
 
     /** Get size of image and number of time points. */
     const SizeType fixedImageSize =

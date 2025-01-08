@@ -144,8 +144,8 @@ CenteredTransformInitializer2<TTransform, TFixedImage, TMovingImage>::Initialize
     const typename MovingImageType::IndexType &  movingIndex = movingRegion.GetIndex();
     const typename MovingImageType::SizeType &   movingSize = movingRegion.GetSize();
 
-    using CoordRepType = typename InputPointType::ValueType;
-    using ContinuousIndexType = ContinuousIndex<CoordRepType, InputSpaceDimension>;
+    using CoordinateType = typename InputPointType::ValueType;
+    using ContinuousIndexType = ContinuousIndex<CoordinateType, InputSpaceDimension>;
 
     using ContinuousIndexValueType = typename ContinuousIndexType::ValueType;
 

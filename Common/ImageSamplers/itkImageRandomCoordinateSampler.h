@@ -79,10 +79,10 @@ public:
 
   /** This image sampler samples the image on physical coordinates and thus
    * needs an interpolator. */
-  using CoordRepType = double;
-  using InterpolatorType = InterpolateImageFunction<InputImageType, CoordRepType>;
+  using CoordinateType = double;
+  using InterpolatorType = InterpolateImageFunction<InputImageType, CoordinateType>;
   using InterpolatorPointer = typename InterpolatorType::Pointer;
-  using DefaultInterpolatorType = BSplineInterpolateImageFunction<InputImageType, CoordRepType, double>;
+  using DefaultInterpolatorType = BSplineInterpolateImageFunction<InputImageType, CoordinateType, double>;
 
   /** The random number generator used to generate random coordinates. */
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;

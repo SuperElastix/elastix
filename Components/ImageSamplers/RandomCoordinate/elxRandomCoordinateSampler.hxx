@@ -47,7 +47,7 @@ RandomCoordinateSampler<TElastix>::BeforeEachResolution()
   configuration.ReadParameter(splineOrder, "FixedImageBSplineInterpolationOrder", this->GetComponentLabel(), level, 0);
   if (splineOrder == 1)
   {
-    using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>;
+    using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordinateType>;
     auto fixedImageLinearInterpolator = LinearInterpolatorType::New();
     this->SetInterpolator(fixedImageLinearInterpolator);
   }

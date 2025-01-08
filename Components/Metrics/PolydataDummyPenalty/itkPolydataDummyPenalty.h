@@ -69,8 +69,8 @@ public:
   /** Typedefs. */
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using CoordRepType = typename InputPointType::CoordRepType;
-  using VnlVectorType = vnl_vector<CoordRepType>;
+  using CoordinateType = typename InputPointType::CoordinateType;
+  using VnlVectorType = vnl_vector<CoordinateType>;
   using FixedImagePointType = typename TransformType::InputPointType;
   using MovingImagePointType = typename TransformType::OutputPointType;
   using SpatialJacobianType = typename TransformType::SpatialJacobianType;
@@ -83,7 +83,7 @@ public:
   using PointNormalType = Vector<typename TransformType::ScalarType, FixedPointSetDimension>;
   using DummyMeshPixelType = unsigned char;
   using MeshTraitsType =
-    DefaultStaticMeshTraits<PointNormalType, FixedPointSetDimension, FixedPointSetDimension, CoordRepType>;
+    DefaultStaticMeshTraits<PointNormalType, FixedPointSetDimension, FixedPointSetDimension, CoordinateType>;
   using FixedMeshType = Mesh<PointNormalType, FixedPointSetDimension, MeshTraitsType>;
 
   using FixedMeshConstPointer = typename FixedMeshType::ConstPointer;

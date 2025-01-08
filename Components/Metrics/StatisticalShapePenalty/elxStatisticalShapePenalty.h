@@ -105,16 +105,16 @@ public:
   using typename Superclass1::DerivativeType;
   using typename Superclass1::ParametersType;
 
-  using CoordRepType = typename OutputPointType::CoordRepType;
-  using VnlVectorType = vnl_vector<CoordRepType>;
+  using CoordinateType = typename OutputPointType::CoordinateType;
+  using VnlVectorType = vnl_vector<CoordinateType>;
 
   /** Other typedef's. */
   /*typedef itk::AdvancedTransform<
-    CoordRepType,
+    CoordinateType,
     itkGetStaticConstMacro( FixedImageDimension ),
     itkGetStaticConstMacro( MovingImageDimension ) >  ITKBaseType;
     */
-  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension>;
+  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordinateType, Self::FixedImageDimension>;
   using InitialTransformType = typename CombinationTransformType::InitialTransformType;
 
   /** Typedefs inherited from elastix. */

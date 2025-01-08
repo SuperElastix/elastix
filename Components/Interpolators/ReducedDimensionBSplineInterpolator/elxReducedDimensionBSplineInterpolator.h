@@ -47,7 +47,7 @@ namespace elastix
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT ReducedDimensionBSplineInterpolator
   : public itk::ReducedDimensionBSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
-                                                                typename InterpolatorBase<TElastix>::CoordRepType,
+                                                                typename InterpolatorBase<TElastix>::CoordinateType,
                                                                 double>
   , // CoefficientType
     public InterpolatorBase<TElastix>
@@ -59,7 +59,7 @@ public:
   using Self = ReducedDimensionBSplineInterpolator;
   using Superclass1 =
     itk::ReducedDimensionBSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
-                                                         typename InterpolatorBase<TElastix>::CoordRepType,
+                                                         typename InterpolatorBase<TElastix>::CoordinateType,
                                                          double>;
   using Superclass2 = InterpolatorBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;

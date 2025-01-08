@@ -73,8 +73,8 @@ public:
 
   using typename Superclass::InputPointType;
   using typename Superclass::OutputPointType;
-  using CoordRepType = typename OutputPointType::CoordRepType;
-  using VnlVectorType = vnl_vector<CoordRepType>;
+  using CoordinateType = typename OutputPointType::CoordinateType;
+  using VnlVectorType = vnl_vector<CoordinateType>;
 
   using typename Superclass::NonZeroJacobianIndicesType;
 
@@ -85,7 +85,7 @@ public:
   /** Typedefs. */
   using DummyMeshPixelType = unsigned char;
   using MeshTraitsType =
-    DefaultStaticMeshTraits<DummyMeshPixelType, FixedPointSetDimension, FixedPointSetDimension, CoordRepType>;
+    DefaultStaticMeshTraits<DummyMeshPixelType, FixedPointSetDimension, FixedPointSetDimension, CoordinateType>;
   using FixedMeshType = Mesh<DummyMeshPixelType, FixedPointSetDimension, MeshTraitsType>;
   using FixedMeshPointIdentifier = typename FixedMeshType::PointIdentifier;
 

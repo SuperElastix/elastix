@@ -26,16 +26,16 @@ namespace itk
 {
 template <unsigned int NDimension>
 class ITK_TEMPLATE_EXPORT AffineLogStackTransform
-  : public itk::StackTransform<elx::ElastixBase::CoordRepType, NDimension, NDimension>
+  : public itk::StackTransform<elx::ElastixBase::CoordinateType, NDimension, NDimension>
 {
 private:
-  using CoordRepType = elx::ElastixBase::CoordRepType;
+  using CoordinateType = elx::ElastixBase::CoordinateType;
 
 public:
   ITK_DISALLOW_COPY_AND_MOVE(AffineLogStackTransform);
 
   using Self = AffineLogStackTransform;
-  using Superclass = itk::StackTransform<CoordRepType, NDimension, NDimension>;
+  using Superclass = itk::StackTransform<CoordinateType, NDimension, NDimension>;
   using Pointer = itk::SmartPointer<AffineLogStackTransform>;
   itkNewMacro(Self);
   itkOverrideGetNameOfClassMacro(AffineLogStackTransform);
@@ -52,7 +52,7 @@ private:
   typename Superclass::SubTransformPointer
   CreateSubTransform() const override
   {
-    return AffineLogTransform<CoordRepType, NDimension - 1>::New().GetPointer();
+    return AffineLogTransform<CoordinateType, NDimension - 1>::New().GetPointer();
   }
 };
 

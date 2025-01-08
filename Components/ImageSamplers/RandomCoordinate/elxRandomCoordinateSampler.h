@@ -122,7 +122,7 @@ public:
 
   /** This image sampler samples the image on physical coordinates and thus
    * needs an interpolator. */
-  using typename Superclass1::CoordRepType;
+  using typename Superclass1::CoordinateType;
   using typename Superclass1::InterpolatorType;
   using typename Superclass1::DefaultInterpolatorType;
 

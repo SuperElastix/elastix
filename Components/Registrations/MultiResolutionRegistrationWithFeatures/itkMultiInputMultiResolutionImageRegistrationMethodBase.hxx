@@ -385,7 +385,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
       // Instead of copying the shrinking code, we compute image regions from
       // the result of the fixed image pyramid.
       using PointType = typename FixedImageType::PointType;
-      using CoordRepType = typename PointType::CoordRepType;
+      using CoordinateType = typename PointType::CoordinateType;
 
       PointType inputStartPoint;
       PointType inputEndPoint;
@@ -402,9 +402,9 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
          * To be on the safe side, the start point is ceiled, and the end point is
          * floored. To see why, consider an image of 4 by 4, and its downsampled version of 2 by 2. */
         const auto startcindex =
-          fixedImageAtLevel->template TransformPhysicalPointToContinuousIndex<CoordRepType>(inputStartPoint);
+          fixedImageAtLevel->template TransformPhysicalPointToContinuousIndex<CoordinateType>(inputStartPoint);
         const auto endcindex =
-          fixedImageAtLevel->template TransformPhysicalPointToContinuousIndex<CoordRepType>(inputEndPoint);
+          fixedImageAtLevel->template TransformPhysicalPointToContinuousIndex<CoordinateType>(inputEndPoint);
         for (unsigned int dim = 0; dim < TFixedImage::ImageDimension; ++dim)
         {
           start[dim] = static_cast<IndexValueType>(std::ceil(startcindex[dim]));

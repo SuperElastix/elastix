@@ -77,7 +77,7 @@ namespace elastix
 
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT SimilarityTransformElastix
-  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>
 {
@@ -86,7 +86,7 @@ public:
 
   /** Standard ITK-stuff. */
   using Self = SimilarityTransformElastix;
-  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                                         elx::TransformBase<TElastix>::FixedImageDimension>;
   using Superclass2 = elx::TransformBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
@@ -94,7 +94,7 @@ public:
 
   /** The ITK-class that provides most of the functionality, and
    * that is set as the "CurrentTransform" in the CombinationTransform */
-  using SimilarityTransformType = itk::SimilarityTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  using SimilarityTransformType = itk::SimilarityTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                                            elx::TransformBase<TElastix>::FixedImageDimension>;
 
   /** Method for creation through the object factory. */
@@ -137,7 +137,7 @@ public:
   using typename Superclass2::ElastixType;
   using typename Superclass2::ParameterMapType;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::CoordRepType;
+  using typename Superclass2::CoordinateType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
   using ITKBaseType = typename Superclass2::ITKBaseType;
