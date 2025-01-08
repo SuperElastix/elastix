@@ -405,7 +405,7 @@ the sequence of points to form a 2d connected polydata contour.
 
   using DummyIPPPixelType = unsigned char;
   using DummyMeshTraitsType =
-    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordRepType>;
+    itk::DefaultStaticMeshTraits<DummyIPPPixelType, FixedImageDimension, FixedImageDimension, CoordinateType>;
   using DummyPointSetType = itk::PointSet<DummyIPPPixelType, FixedImageDimension, DummyMeshTraitsType>;
   using DeformationVectorType = itk::Vector<float, FixedImageDimension>;
 

@@ -61,7 +61,7 @@ namespace itk
  *
  * \ingroup GPUCommon
  */
-template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordRep>
+template <typename TTypeList, typename NDimensions, typename TInterpolator, typename TOutputCoordinate>
 class ITK_TEMPLATE_EXPORT GPUInterpolatorCopier : public Object
 {
 public:
@@ -83,18 +83,18 @@ public:
   using CPUInterpolatorType = TInterpolator;
   using CPUInterpolatorConstPointer = typename CPUInterpolatorType::ConstPointer;
   using CPUInputImageType = typename CPUInterpolatorType::InputImageType;
-  using CPUCoordRepType = typename CPUInterpolatorType::CoordRepType;
-  using GPUCoordRepType = TOutputCoordRep;
+  using CPUCoordinateType = typename CPUInterpolatorType::CoordinateType;
+  using GPUCoordinateType = TOutputCoordinate;
 
   /** Typedef's for non explicit GPU interpolator definitions. */
-  using GPUInterpolatorType = InterpolateImageFunction<CPUInputImageType, GPUCoordRepType>;
+  using GPUInterpolatorType = InterpolateImageFunction<CPUInputImageType, GPUCoordinateType>;
   using GPUInterpolatorPointer = typename GPUInterpolatorType::Pointer;
   using GPUInterpolatorConstPointer = typename GPUInterpolatorType::ConstPointer;
 
   /** Typedef's for explicit GPU interpolator definitions. */
   using CPUInputImagePixelType = typename CPUInputImageType::PixelType;
   using GPUInputImageType = itk::GPUImage<CPUInputImagePixelType, CPUInputImageType::ImageDimension>;
-  using GPUExplicitInterpolatorType = InterpolateImageFunction<GPUInputImageType, GPUCoordRepType>;
+  using GPUExplicitInterpolatorType = InterpolateImageFunction<GPUInputImageType, GPUCoordinateType>;
   using GPUExplicitInterpolatorPointer = typename GPUExplicitInterpolatorType::Pointer;
   using GPUExplicitInterpolatorConstPointer = typename GPUExplicitInterpolatorType::ConstPointer;
 
@@ -123,7 +123,7 @@ public:
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   // Begin concept checking
-  itkConceptMacro(OutputCoordRepIsFloatingPointCheck, (Concept::IsFloatingPoint<TOutputCoordRep>));
+  itkConceptMacro(OutputCoordinateIsFloatingPointCheck, (Concept::IsFloatingPoint<TOutputCoordinate>));
   // End concept checking
 #endif
 

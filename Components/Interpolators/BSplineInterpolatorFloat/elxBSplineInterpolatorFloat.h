@@ -49,7 +49,7 @@ namespace elastix
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT BSplineInterpolatorFloat
   : public itk::BSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
-                                                typename InterpolatorBase<TElastix>::CoordRepType,
+                                                typename InterpolatorBase<TElastix>::CoordinateType,
                                                 float>
   , // CoefficientType
     public InterpolatorBase<TElastix>
@@ -60,7 +60,7 @@ public:
   /** Standard ITK-stuff. */
   using Self = BSplineInterpolatorFloat;
   using Superclass1 = itk::BSplineInterpolateImageFunction<typename InterpolatorBase<TElastix>::InputImageType,
-                                                           typename InterpolatorBase<TElastix>::CoordRepType,
+                                                           typename InterpolatorBase<TElastix>::CoordinateType,
                                                            float>;
   using Superclass2 = InterpolatorBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;

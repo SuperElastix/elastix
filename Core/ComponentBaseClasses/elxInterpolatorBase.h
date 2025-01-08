@@ -59,10 +59,10 @@ public:
 
   /** Other typedef's. */
   using InputImageType = typename ElastixType::MovingImageType;
-  using CoordRepType = ElastixBase::CoordRepType;
+  using CoordinateType = ElastixBase::CoordinateType;
 
   /** ITKBaseType. */
-  using ITKBaseType = itk::InterpolateImageFunction<InputImageType, CoordRepType>;
+  using ITKBaseType = itk::InterpolateImageFunction<InputImageType, CoordinateType>;
 
   /** Retrieves this object as ITKBaseType. */
   ITKBaseType *

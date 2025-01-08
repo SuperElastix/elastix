@@ -108,7 +108,7 @@ namespace elastix
 
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT AdvancedBSplineTransform
-  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>
 {
@@ -117,7 +117,7 @@ public:
 
   /** Standard ITK-stuff. */
   using Self = AdvancedBSplineTransform;
-  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                                         elx::TransformBase<TElastix>::FixedImageDimension>;
   using Superclass2 = elx::TransformBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
@@ -142,7 +142,7 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   using BSplineTransformBaseType =
-    itk::AdvancedBSplineDeformableTransformBase<typename elx::TransformBase<TElastix>::CoordRepType,
+    itk::AdvancedBSplineDeformableTransformBase<typename elx::TransformBase<TElastix>::CoordinateType,
                                                 Self::SpaceDimension>;
   using BSplineTransformBasePointer = typename BSplineTransformBaseType::Pointer;
 
@@ -176,15 +176,15 @@ public:
   /** Typedef's from TransformBase. */
   using typename Superclass2::ElastixType;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::CoordRepType;
+  using typename Superclass2::CoordinateType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
   using ITKBaseType = typename Superclass2::ITKBaseType;
   using CombinationTransformType = typename Superclass2::CombinationTransformType;
 
   /** Typedef's for the GridScheduleComputer and the UpsampleBSplineParametersFilter. */
-  using GridScheduleComputerType = itk::GridScheduleComputer<CoordRepType, SpaceDimension>;
-  using CyclicGridScheduleComputerType = itk::CyclicGridScheduleComputer<CoordRepType, SpaceDimension>;
+  using GridScheduleComputerType = itk::GridScheduleComputer<CoordinateType, SpaceDimension>;
+  using CyclicGridScheduleComputerType = itk::CyclicGridScheduleComputer<CoordinateType, SpaceDimension>;
   using GridScheduleComputerPointer = typename GridScheduleComputerType::Pointer;
   using GridScheduleType = typename GridScheduleComputerType ::VectorGridSpacingFactorType;
   using GridUpsamplerType = itk::UpsampleBSplineParametersFilter<ParametersType, ImageType>;

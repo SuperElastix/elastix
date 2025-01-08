@@ -146,13 +146,13 @@ DefineInterpolator(typename InterpolatorType::Pointer & interpolator,
 {
   // Interpolator typedefs
   using InputImageType = typename InterpolatorType::InputImageType;
-  using CoordRepType = typename InterpolatorType::CoordRepType;
-  using CoefficientType = CoordRepType;
+  using CoordinateType = typename InterpolatorType::CoordinateType;
+  using CoefficientType = CoordinateType;
 
   // Typedefs for all interpolators
-  using NearestNeighborInterpolatorType = itk::NearestNeighborInterpolateImageFunction<InputImageType, CoordRepType>;
-  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>;
-  using BSplineInterpolatorType = itk::BSplineInterpolateImageFunction<InputImageType, CoordRepType, CoefficientType>;
+  using NearestNeighborInterpolatorType = itk::NearestNeighborInterpolateImageFunction<InputImageType, CoordinateType>;
+  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordinateType>;
+  using BSplineInterpolatorType = itk::BSplineInterpolateImageFunction<InputImageType, CoordinateType, CoefficientType>;
 
   if (interpolatorName == "NearestNeighbor")
   {

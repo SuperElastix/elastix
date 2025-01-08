@@ -26,16 +26,16 @@ namespace itk
 {
 template <unsigned int NDimension>
 class ITK_TEMPLATE_EXPORT TranslationStackTransform
-  : public itk::StackTransform<elx::ElastixBase::CoordRepType, NDimension, NDimension>
+  : public itk::StackTransform<elx::ElastixBase::CoordinateType, NDimension, NDimension>
 {
 private:
-  using CoordRepType = elx::ElastixBase::CoordRepType;
+  using CoordinateType = elx::ElastixBase::CoordinateType;
 
 public:
   ITK_DISALLOW_COPY_AND_MOVE(TranslationStackTransform);
 
   using Self = TranslationStackTransform;
-  using Superclass = itk::StackTransform<CoordRepType, NDimension, NDimension>;
+  using Superclass = itk::StackTransform<CoordinateType, NDimension, NDimension>;
   using Pointer = itk::SmartPointer<TranslationStackTransform>;
   itkNewMacro(Self);
   itkOverrideGetNameOfClassMacro(TranslationStackTransform);
@@ -52,7 +52,7 @@ private:
   typename Superclass::SubTransformPointer
   CreateSubTransform() const override
   {
-    return AdvancedTranslationTransform<CoordRepType, NDimension - 1>::New().GetPointer();
+    return AdvancedTranslationTransform<CoordinateType, NDimension - 1>::New().GetPointer();
   }
 };
 

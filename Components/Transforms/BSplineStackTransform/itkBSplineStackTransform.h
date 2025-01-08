@@ -26,16 +26,16 @@ namespace itk
 {
 template <unsigned int NDimension>
 class ITK_TEMPLATE_EXPORT BSplineStackTransform
-  : public itk::StackTransform<elx::ElastixBase::CoordRepType, NDimension, NDimension>
+  : public itk::StackTransform<elx::ElastixBase::CoordinateType, NDimension, NDimension>
 {
 private:
-  using CoordRepType = elx::ElastixBase::CoordRepType;
+  using CoordinateType = elx::ElastixBase::CoordinateType;
 
 public:
   ITK_DISALLOW_COPY_AND_MOVE(BSplineStackTransform);
 
   using Self = BSplineStackTransform;
-  using Superclass = itk::StackTransform<CoordRepType, NDimension, NDimension>;
+  using Superclass = itk::StackTransform<CoordinateType, NDimension, NDimension>;
   using Pointer = itk::SmartPointer<BSplineStackTransform>;
   using typename Superclass::FixedParametersType;
   itkNewMacro(Self);
@@ -45,7 +45,7 @@ private:
   using Superclass::NumberOfGeneralFixedParametersOfStack;
 
   static constexpr unsigned int NumberOfFixedParametersOfSubTransform =
-    AdvancedBSplineDeformableTransformBase<CoordRepType, NDimension - 1>::NumberOfFixedParameters;
+    AdvancedBSplineDeformableTransformBase<CoordinateType, NDimension - 1>::NumberOfFixedParameters;
 
   static constexpr unsigned int NumberOfFixedParameters =
     NumberOfGeneralFixedParametersOfStack + NumberOfFixedParametersOfSubTransform + 1;
@@ -114,7 +114,7 @@ private:
   typename Superclass::SubTransformPointer
   CreateSubTransform() const override
   {
-    return AdvancedBSplineDeformableTransformBase<CoordRepType, NDimension - 1>::template Create<
+    return AdvancedBSplineDeformableTransformBase<CoordinateType, NDimension - 1>::template Create<
       AdvancedBSplineDeformableTransform>(m_SplineOrder);
   }
 

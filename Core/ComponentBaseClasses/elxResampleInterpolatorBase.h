@@ -58,10 +58,10 @@ public:
 
   /** Typedef's from elastix. */
   using InputImageType = typename ElastixType::MovingImageType;
-  using CoordRepType = ElastixBase::CoordRepType;
+  using CoordinateType = ElastixBase::CoordinateType;
 
   /** Other typedef's. */
-  using ITKBaseType = itk::InterpolateImageFunction<InputImageType, CoordRepType>;
+  using ITKBaseType = itk::InterpolateImageFunction<InputImageType, CoordinateType>;
 
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = typename ElastixType::ParameterMapType;

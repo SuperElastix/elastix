@@ -50,7 +50,7 @@ template <typename TElastix>
 class OpenCLResampler
   : public itk::ResampleImageFilter<typename ResamplerBase<TElastix>::InputImageType,
                                     typename ResamplerBase<TElastix>::OutputImageType,
-                                    typename ResamplerBase<TElastix>::CoordRepType>
+                                    typename ResamplerBase<TElastix>::CoordinateType>
   , public ResamplerBase<TElastix>
 {
 public:
@@ -61,7 +61,7 @@ public:
 
   using Superclass1 = itk::ResampleImageFilter<typename ResamplerBase<TElastix>::InputImageType,
                                                typename ResamplerBase<TElastix>::OutputImageType,
-                                               typename ResamplerBase<TElastix>::CoordRepType>;
+                                               typename ResamplerBase<TElastix>::CoordinateType>;
   using Superclass2 = ResamplerBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
@@ -132,7 +132,7 @@ protected:
   GenerateData() override;
 
   /** Transform copier */
-  using InterpolatorPrecisionType = typename ResamplerBase<TElastix>::CoordRepType;
+  using InterpolatorPrecisionType = typename ResamplerBase<TElastix>::CoordinateType;
   using AdvancedCombinationTransformType =
     typename itk::AdvancedCombinationTransform<InterpolatorPrecisionType, OutputImageType::ImageDimension>;
   using TransformCopierType = typename itk::GPUAdvancedCombinationTransformCopier<OpenCLImageTypes,
@@ -144,9 +144,9 @@ protected:
 
   /** Interpolator copier */
   using InterpolatorInputImageType = typename InterpolatorType::InputImageType;
-  using InterpolatorCoordRepType = typename InterpolatorType::CoordRepType;
+  using InterpolatorCoordinateType = typename InterpolatorType::CoordinateType;
   using InterpolateImageFunctionType =
-    itk::InterpolateImageFunction<InterpolatorInputImageType, InterpolatorCoordRepType>;
+    itk::InterpolateImageFunction<InterpolatorInputImageType, InterpolatorCoordinateType>;
   using InterpolateCopierType =
     typename itk::GPUInterpolatorCopier<OpenCLImageTypes, OpenCLImageDimentions, InterpolateImageFunctionType, float>;
   using InterpolateCopierPointer = typename InterpolateCopierType::Pointer;

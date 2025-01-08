@@ -157,7 +157,7 @@ public:
   using CommandLineEntryType = Configuration ::CommandLineEntryType;
 
   /** Elastix typedef's. */
-  using CoordRepType = ElastixBase::CoordRepType;
+  using CoordinateType = ElastixBase::CoordinateType;
   using FixedImageType = typename TElastix::FixedImageType;
   using MovingImageType = typename TElastix::MovingImageType;
 
@@ -172,7 +172,7 @@ public:
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
   /** Other typedef's. */
-  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension>;
+  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordinateType, Self::FixedImageDimension>;
   using ITKBaseType = CombinationTransformType;
   using InitialTransformType = typename CombinationTransformType::InitialTransformType;
 
@@ -336,7 +336,7 @@ private:
     const auto & resampleImageFilter = *(this->m_Elastix->GetElxResamplerBase()->GetAsITKBaseType());
 
     /** Create an setup Jacobian generator. */
-    const auto jacGenerator = TSource<TOutputImage, CoordRepType>::New();
+    const auto jacGenerator = TSource<TOutputImage, CoordinateType>::New();
 
     jacGenerator->SetTransform(this->GetAsITKBaseType());
     jacGenerator->SetOutputSize(resampleImageFilter.GetSize());

@@ -159,7 +159,7 @@ template <typename TElastix>
 class ITK_TEMPLATE_EXPORT BSplineTransformWithDiffusion
   : public itk::DeformationFieldRegulizer<itk::AdvancedCombinationTransform<
       // BSplineCombinationTransform<
-      typename elx::TransformBase<TElastix>::CoordRepType,
+      typename elx::TransformBase<TElastix>::CoordinateType,
       elx::TransformBase<TElastix>::FixedImageDimension>>
   ,
     // elx::TransformBase<TElastix>::FixedImageDimension, __VSplineOrder > >,
@@ -171,7 +171,7 @@ public:
   /** Standard ITK-stuff. */
   using Self = BSplineTransformWithDiffusion;
   using Superclass1 = itk::DeformationFieldRegulizer<
-    itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+    itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                       elx::TransformBase<TElastix>::FixedImageDimension>>;
   using Superclass2 = elx::TransformBase<TElastix>;
 
@@ -179,7 +179,7 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   using BSplineTransformType =
-    itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+    itk::AdvancedBSplineDeformableTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                             elx::TransformBase<TElastix>::FixedImageDimension,
                                             3>;
 
@@ -235,7 +235,7 @@ public:
   using typename Superclass2::ElastixType;
   using typename Superclass2::ParameterMapType;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::CoordRepType;
+  using typename Superclass2::CoordinateType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
   using ITKBaseType = typename Superclass2::ITKBaseType;
@@ -268,9 +268,9 @@ public:
   using DiffusionFilterType = itk::VectorMeanDiffusionImageFilter<VectorImageType, GrayValueImageType>;
   using DiffusionFilterPointer = typename DiffusionFilterType::Pointer;
   using RadiusType = typename VectorImageType::SizeType;
-  using ResamplerType1 = itk::ResampleImageFilter<MovingImageELXType, GrayValueImageType, CoordRepType>;
+  using ResamplerType1 = itk::ResampleImageFilter<MovingImageELXType, GrayValueImageType, CoordinateType>;
   using ResamplerPointer1 = typename ResamplerType1::Pointer;
-  using ResamplerType2 = itk::ResampleImageFilter<GrayValueImageType, GrayValueImageType, CoordRepType>;
+  using ResamplerType2 = itk::ResampleImageFilter<GrayValueImageType, GrayValueImageType, CoordinateType>;
   using ResamplerPointer2 = typename ResamplerType2::Pointer;
   using InterpolatorType = itk::BSplineInterpolateImageFunction<GrayValueImageType>;
   using InterpolatorPointer = typename InterpolatorType::Pointer;

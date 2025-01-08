@@ -562,7 +562,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::TransformPoint
 
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
-    cindex[j] = static_cast<typename ContinuousIndexType::CoordRepType>(cvector[j]);
+    cindex[j] = static_cast<typename ContinuousIndexType::CoordinateType>(cvector[j]);
   }
   return cindex;
 }

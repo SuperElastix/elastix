@@ -45,12 +45,12 @@ TestInterpolators()
   using RegionType = typename InputImageType::RegionType;
   // typedef typename RegionType::IndexType         IndexType;
   using DirectionType = typename InputImageType::DirectionType;
-  using CoordRepType = double;
+  using CoordinateType = double;
   using CoefficientType = double;
 
-  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordRepType>;
-  using AdvancedLinearInterpolatorType = itk::AdvancedLinearInterpolateImageFunction<InputImageType, CoordRepType>;
-  using BSplineInterpolatorType = itk::BSplineInterpolateImageFunction<InputImageType, CoordRepType, CoefficientType>;
+  using LinearInterpolatorType = itk::LinearInterpolateImageFunction<InputImageType, CoordinateType>;
+  using AdvancedLinearInterpolatorType = itk::AdvancedLinearInterpolateImageFunction<InputImageType, CoordinateType>;
+  using BSplineInterpolatorType = itk::BSplineInterpolateImageFunction<InputImageType, CoordinateType, CoefficientType>;
   using ContinuousIndexType = typename LinearInterpolatorType::ContinuousIndexType;
   using CovariantVectorType = typename AdvancedLinearInterpolatorType::CovariantVectorType;
   using OutputType = typename AdvancedLinearInterpolatorType::OutputType; // double scalar

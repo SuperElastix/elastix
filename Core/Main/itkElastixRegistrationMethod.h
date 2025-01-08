@@ -413,7 +413,7 @@ private:
   using Superclass::SetInput;
 
   using AdvancedCombinationTransformType =
-    AdvancedCombinationTransform<elx::ElastixBase::CoordRepType, FixedImageDimension>;
+    AdvancedCombinationTransform<elx::ElastixBase::CoordinateType, FixedImageDimension>;
 
   AdvancedCombinationTransformType *
   GetAdvancedCombinationTransform() const;

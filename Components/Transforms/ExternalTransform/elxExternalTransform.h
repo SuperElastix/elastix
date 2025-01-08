@@ -46,7 +46,7 @@ namespace elastix
 
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT ExternalTransform
-  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public TransformBase<TElastix>
 {
@@ -57,7 +57,7 @@ public:
   using Self = ExternalTransform;
 
   /** The ITK-class that provides most of the functionality */
-  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                                         elx::TransformBase<TElastix>::FixedImageDimension>;
 
   using Superclass2 = elx::TransformBase<TElastix>;
@@ -67,7 +67,7 @@ public:
 
   /** Typedef's from TransformBase. */
   using typename Superclass2::ParameterMapType;
-  using typename Superclass2::CoordRepType;
+  using typename Superclass2::CoordinateType;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -102,7 +102,7 @@ private:
   ParameterMapType
   CreateDerivedTransformParameterMap() const override;
 
-  using AdvancedTransformAdapterType = AdvancedTransformAdapter<CoordRepType, Superclass2::FixedImageDimension>;
+  using AdvancedTransformAdapterType = AdvancedTransformAdapter<CoordinateType, Superclass2::FixedImageDimension>;
 
   /** The transform that is set as current transform in the CombinationTransform */
   const itk::SmartPointer<AdvancedTransformAdapterType> m_AdvancedTransformAdapter{

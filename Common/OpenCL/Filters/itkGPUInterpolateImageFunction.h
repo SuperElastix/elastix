@@ -60,7 +60,7 @@ public:
   /** Superclass typedef support. */
   using InputImageType = typename CPUSuperclass::InputImageType;
   using ContinuousIndexType = typename CPUSuperclass::ContinuousIndexType;
-  using CoordRepType = typename CPUSuperclass::CoordRepType;
+  using CoordinateType = typename CPUSuperclass::CoordinateType;
 
 protected:
   GPUInterpolateImageFunction();

@@ -104,8 +104,8 @@ DeformationFieldTransform<TElastix>::ReadFromFile()
   this->m_DeformationFieldInterpolatingTransform->SetDeformationField(infoChanger->GetOutput());
 
   using InterpolatorType = typename DeformationFieldInterpolatingTransformType::DeformationFieldInterpolatorType;
-  using NNInterpolatorType = itk::VectorNearestNeighborInterpolateImageFunction<DeformationFieldType, CoordRepType>;
-  using LinInterpolatorType = itk::VectorLinearInterpolateImageFunction<DeformationFieldType, CoordRepType>;
+  using NNInterpolatorType = itk::VectorNearestNeighborInterpolateImageFunction<DeformationFieldType, CoordinateType>;
+  using LinInterpolatorType = itk::VectorLinearInterpolateImageFunction<DeformationFieldType, CoordinateType>;
 
   typename InterpolatorType::Pointer interpolator; // default-constructed (null)
   unsigned int                       interpolationOrder = 0;

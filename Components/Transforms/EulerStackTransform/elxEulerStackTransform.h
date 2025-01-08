@@ -82,7 +82,7 @@ namespace elastix
 
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT EulerStackTransform
-  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  : public itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                              elx::TransformBase<TElastix>::FixedImageDimension>
   , public elx::TransformBase<TElastix>
 {
@@ -91,7 +91,7 @@ public:
 
   /** Standard ITK-stuff. */
   using Self = EulerStackTransform;
-  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordRepType,
+  using Superclass1 = itk::AdvancedCombinationTransform<typename elx::TransformBase<TElastix>::CoordinateType,
                                                         elx::TransformBase<TElastix>::FixedImageDimension>;
   using Superclass2 = elx::TransformBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
@@ -117,13 +117,13 @@ public:
    * that is set as the "CurrentTransform" in the CombinationTransform.
    */
   using EulerTransformType =
-    itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::SpaceDimension>;
+    itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordinateType, Self::SpaceDimension>;
   using EulerTransformPointer = typename EulerTransformType::Pointer;
   using InputPointType = typename EulerTransformType::InputPointType;
 
   /** The ITK-class for the sub transforms, which have a reduced dimension. */
   using ReducedDimensionEulerTransformType =
-    itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordRepType, Self::ReducedSpaceDimension>;
+    itk::EulerTransform<typename elx::TransformBase<TElastix>::CoordinateType, Self::ReducedSpaceDimension>;
   using ReducedDimensionEulerTransformPointer = typename ReducedDimensionEulerTransformType::Pointer;
 
   using ReducedDimensionOutputVectorType = typename ReducedDimensionEulerTransformType::OutputVectorType;
@@ -137,7 +137,7 @@ public:
   using typename Superclass2::ElastixType;
   using typename Superclass2::ParameterMapType;
   using typename Superclass2::RegistrationType;
-  using typename Superclass2::CoordRepType;
+  using typename Superclass2::CoordinateType;
   using typename Superclass2::FixedImageType;
   using typename Superclass2::MovingImageType;
   using ITKBaseType = typename Superclass2::ITKBaseType;
@@ -164,8 +164,8 @@ public:
   using SpacingType = typename FixedImageType::SpacingType;
   using RegionType = typename FixedImageType::RegionType;
   using DirectionType = typename FixedImageType::DirectionType;
-  using ReducedDimensionContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, ReducedSpaceDimension>;
-  using ContinuousIndexType = typename itk::ContinuousIndex<CoordRepType, SpaceDimension>;
+  using ReducedDimensionContinuousIndexType = typename itk::ContinuousIndex<CoordinateType, ReducedSpaceDimension>;
+  using ContinuousIndexType = typename itk::ContinuousIndex<CoordinateType, SpaceDimension>;
 
   /** Execute stuff before anything else is done:*/
 

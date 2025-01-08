@@ -43,7 +43,7 @@ namespace elastix
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT LinearResampleInterpolator
   : public itk::LinearInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
-                                               typename ResampleInterpolatorBase<TElastix>::CoordRepType>
+                                               typename ResampleInterpolatorBase<TElastix>::CoordinateType>
   , public ResampleInterpolatorBase<TElastix>
 {
 public:
@@ -52,7 +52,7 @@ public:
   /** Standard ITK-stuff. */
   using Self = LinearResampleInterpolator;
   using Superclass1 = itk::LinearInterpolateImageFunction<typename ResampleInterpolatorBase<TElastix>::InputImageType,
-                                                          typename ResampleInterpolatorBase<TElastix>::CoordRepType>;
+                                                          typename ResampleInterpolatorBase<TElastix>::CoordinateType>;
   using Superclass2 = ResampleInterpolatorBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;

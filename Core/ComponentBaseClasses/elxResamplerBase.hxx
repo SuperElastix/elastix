@@ -355,7 +355,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
   ITKBaseType & resampleImageFilter = this->GetSelf();
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator  */
-  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
+  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordinateType> *>(
     resampleImageFilter.GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to
@@ -455,7 +455,7 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   }
 
   /** Check if ResampleInterpolator is the RayCastResampleInterpolator */
-  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordRepType> *>(
+  const auto testptr = dynamic_cast<itk::AdvancedRayCastInterpolateImageFunction<InputImageType, CoordinateType> *>(
     resampleImageFilter.GetInterpolator());
 
   /** If RayCastResampleInterpolator is used reset the Transform to

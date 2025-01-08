@@ -110,10 +110,10 @@ public:
   using typename Superclass1::DerivativeType;
   using typename Superclass1::ParametersType;
 
-  using CoordRepType = typename OutputPointType::CoordRepType;
+  using CoordinateType = typename OutputPointType::CoordinateType;
 
   using typename Superclass1::MeshIdType;
-  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordRepType, Self::FixedImageDimension>;
+  using CombinationTransformType = itk::AdvancedCombinationTransform<CoordinateType, Self::FixedImageDimension>;
   using InitialTransformType = typename CombinationTransformType::InitialTransformType;
 
   /** Typedefs inherited from elastix. */

@@ -170,7 +170,7 @@ public:
   using FlatDirectionCosinesType = std::vector<double>;
 
   /** Type for representation of the transform coordinates. */
-  using CoordRepType = double; // itk::CostFunction::ParametersValueType
+  using CoordinateType = double; // itk::CostFunction::ParametersValueType
 
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
