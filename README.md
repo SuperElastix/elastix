@@ -10,6 +10,7 @@
 [![Model Zoo](https://img.shields.io/badge/open-Model%20Zoo-blue.svg)](https://elastix.dev/modelzoo/)
 [![Docker](https://img.shields.io/badge/open-docker%20image-blueviolet.svg)](https://hub.docker.com/repository/docker/superelastix/elastix)
 [![DOI](https://zenodo.org/badge/91586944.svg)](https://zenodo.org/doi/10.5281/zenodo.13366181)
+[![CZI's Essential Open Source Software for Science](https://img.shields.io/badge/funded%20by-EOSS-FF414B)](https://czi.co/EOSS)
 
 Welcome to elastix: a toolbox for rigid and nonrigid registration of images.
 
