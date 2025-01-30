@@ -17,11 +17,16 @@
  *=========================================================================*/
 
 #include "itkParameterFileParser.h"
+#include <elxConfiguration.h>
 #include "elxDefaultConstruct.h"
 
 #include <itksys/SystemTools.hxx>
 #include <itksys/RegularExpression.hxx>
 
+// Header file from TOML++, by Mark Gillard.
+#include "tomlplusplus/toml.hpp"
+
+#include <deque>
 #include <fstream>
 
 namespace itk
@@ -237,7 +242,7 @@ CheckLine(const std::string & lineIn, std::string & lineOut)
 // Performs the following checks:
 // - Is a filename is given
 // - Does the file exist
-// - Is a text file, i.e. does it end with .txt
+// - Is a text or TOML file, i.e. does it end with .txt or .toml
 // If one of these conditions fail, an exception is thrown.
 void
 BasicFileChecking(const std::string & parameterFileName)
@@ -264,9 +269,10 @@ BasicFileChecking(const std::string & parameterFileName)
 
   /** Check the extension. */
   const std::string ext = itksys::SystemTools::GetFilenameLastExtension(parameterFileName);
-  if (ext != ".txt")
+  if (ext != ".txt" && ext != ".toml")
   {
-    itkGenericExceptionMacro("ERROR: the file " << parameterFileName << " should be a text file (*.txt).");
+    itkGenericExceptionMacro("ERROR: the file " << parameterFileName
+                                                << " should be a text file (*.txt) or a TOML file (*.toml).");
   }
 
 } // end BasicFileChecking()
@@ -298,6 +304,125 @@ ReadParameterMapFromInputStream(ParameterFileParser::ParameterMapType & paramete
   }
 }
 
+
+// Offers a read-only view on the lines of text of the specified file contents.
+class LineViewer
+{
+private:
+  std::string_view        m_Contents;
+  std::deque<std::size_t> m_LineIndices;
+
+public:
+  // Explicit constructor.
+  explicit LineViewer(const std::string_view contents)
+    : m_Contents(contents)
+    , m_LineIndices([contents] {
+      std::deque<std::size_t> result{ 0 };
+      const auto              n = contents.size();
+      for (std::size_t i{}; i < n; ++i)
+      {
+        if (contents[i] == '\n')
+        {
+          result.push_back(i + 1);
+        }
+      }
+      result.push_back(contents.size());
+      return result;
+    }())
+  {}
+
+  // Assume zero-based line numbering.
+  std::string_view
+  GetLine(const std::size_t lineNumber) const
+  {
+    const std::size_t lineIndex{ m_LineIndices.at(lineNumber) };
+
+    // Position of the last character before '\r' or '\n'.
+    const std::size_t posOfLastChar{
+      m_Contents.substr(lineIndex, m_LineIndices.at(lineNumber + 1) - lineIndex).find_last_not_of("\r\n")
+    };
+    return m_Contents.substr(lineIndex, (posOfLastChar == std::string::npos) ? 0 : posOfLastChar + 1);
+  }
+};
+
+
+// Parses the specified TOML file, and returns its key-value pairs as an elastix ParameterMap.
+auto
+ParseTomlFile(const std::string & fileName)
+{
+  ParameterFileParser::ParameterMapType parameterMap;
+
+  const auto fileContents = [&fileName] {
+    std::ifstream inputFileStream(fileName);
+    return std::string(std::istreambuf_iterator<char>(inputFileStream), std::istreambuf_iterator<char>());
+  }();
+
+  const LineViewer lineViewer(fileContents);
+
+  // Retrieves an elastix parameter value from the specified TOML node.
+  const auto getParameterValue = [&lineViewer, &fileName](const toml::node & tomlNode) -> std::string {
+    // When the TOML node holds a string, just use it as it was produced by the TOML parser. (The TOML parser removes
+    // surrounding double-quotes from string values.)
+    if (const auto * const result = tomlNode.as_string())
+    {
+      return result->get();
+    }
+
+    const auto convertTomlValueToString = [](const auto & tomlValue) {
+      return elx::Conversion::ToString(tomlValue.get());
+    };
+
+    if (const auto * const result = tomlNode.as_boolean())
+    {
+      return convertTomlValueToString(*result);
+    }
+    if (const auto * const result = tomlNode.as_integer())
+    {
+      return convertTomlValueToString(*result);
+    }
+    if (const auto * const result = tomlNode.as_floating_point())
+    {
+      return convertTomlValueToString(*result);
+    }
+
+    const toml::source_position sourceRegionBegin = tomlNode.source().begin;
+    itkGenericExceptionMacro("Unsupported TOML value type `" << tomlNode.type() << "` in \"" << fileName << "\" "
+                                                             << sourceRegionBegin << ", at the following line:\n\""
+                                                             << lineViewer.GetLine(sourceRegionBegin.line - 1) << "\"");
+  };
+
+  try
+  {
+    for (const auto & [tomlKey, tomlNode] : toml::parse(fileContents))
+    {
+      const auto parameterName = tomlKey.str();
+      auto &     parameterValues = parameterMap[std::string(parameterName)];
+
+      if (const auto tomlArray = tomlNode.as_array())
+      {
+        // An elastix parameter that may have multiple values.
+        for (const toml::node & tomlArrayElement : *tomlArray)
+        {
+          parameterValues.push_back(getParameterValue(tomlArrayElement));
+        }
+      }
+      else
+      {
+        // An elastix parameter that has just a single value.
+        parameterValues.push_back(getParameterValue(tomlNode));
+      }
+    }
+  }
+  catch (const toml::parse_error & parseError)
+  {
+    const toml::source_position sourceRegionBegin = parseError.source().begin;
+    itkGenericExceptionMacro("TOML parse error: " << parseError.what() << "\nWhile parsing \"" << fileName << "\" "
+                                                  << sourceRegionBegin << ", at the following line:\n\""
+                                                  << lineViewer.GetLine(sourceRegionBegin.line - 1) << "\"");
+  }
+
+  return parameterMap;
+}
 
 } // namespace
 
@@ -337,16 +462,23 @@ ParameterFileParser::ReadParameterFile()
   /** Perform some basic checks. */
   BasicFileChecking(m_ParameterFileName);
 
-  /** Open the parameter file for reading. */
-  std::ifstream parameterFile(m_ParameterFileName);
-
-  /** Check if it opened. */
-  if (!parameterFile.is_open())
+  if (itksys::SystemTools::GetFilenameLastExtension(m_ParameterFileName) == ".toml")
   {
-    itkExceptionMacro("ERROR: could not open " << m_ParameterFileName << " for reading.");
+    m_ParameterMap = ParseTomlFile(m_ParameterFileName);
   }
+  else
+  {
+    /** Open the parameter file for reading. */
+    std::ifstream parameterFile(m_ParameterFileName);
 
-  ReadParameterMapFromInputStream(m_ParameterMap, parameterFile);
+    /** Check if it opened. */
+    if (!parameterFile.is_open())
+    {
+      itkExceptionMacro("ERROR: could not open " << m_ParameterFileName << " for reading.");
+    }
+
+    ReadParameterMapFromInputStream(m_ParameterMap, parameterFile);
+  }
 
 } // end ReadParameterFile()
 
