@@ -58,3 +58,7 @@ They are:
                       Components/Metrics/KNNGraphAlphaMutualInformation/KNN/ann_1.1.
                       Please read the content of the subdirectory for details.
 
+2) TOML++ library:    Copyright by Mark Gillard.
+                      Distributed under the MIT License.
+                      The source file can be found at
+                      Common/ParameterFileParser/tomlplusplus/toml.hpp
