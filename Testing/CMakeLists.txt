@@ -455,7 +455,7 @@ if(ELASTIX_BUILD_EXECUTABLE)
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
     -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
     -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
-    -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
+    -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.toml"
     -out "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
 endif()
 
@@ -745,33 +745,33 @@ elx_add_run_test(3DCT_lung.example
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001.toml)
 
 # Test some transforms
 elx_add_run_test(3DCT_lung.NC.translation.ASGD.001
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.translation.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.NC.translation.ASGD.001.toml)
 
 elx_add_run_test(3DCT_lung.NC.euler.ASGD.001
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.NC.euler.ASGD.001.toml)
 
 elx_add_run_test(3DCT_lung.NC.affine.ASGD.001
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
-  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.NC.affine.ASGD.001.toml)
 
 elx_add_run_test(3DCT_lung.NC.bspline_r.ASGD.001a
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline_r.ASGD.001a.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline_r.ASGD.001a.toml)
 
 # Test some metrics
 elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.001
@@ -779,28 +779,28 @@ elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.001
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.toml)
 
 elx_add_run_test(3DCT_lung.MI.bspline.ASGD.001
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.MI.bspline.ASGD.001.toml)
 
 elx_add_run_test(3DCT_lung.NMI.bspline.ASGD.001
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NMI.bspline.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.NMI.bspline.ASGD.001.toml)
 
 elx_add_run_test(3DCT_lung.Kappa.bspline.ASGD.001
   "CHECKSUM;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline_mask.mha
   -m ${TestDataDir}/3DCT_lung_followup_mask.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.Kappa.bspline.ASGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.Kappa.bspline.ASGD.001.toml)
 
 # Test some combo metrics
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.002
@@ -810,31 +810,31 @@ elx_add_run_test(3DCT_lung.NC.bspline.ASGD.002
   -fp ${TestDataDir}/3DCT_lung_baseline.txt
   -mp ${TestDataDir}/3DCT_lung_followup.txt
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.002.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.002.toml)
 
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.003
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.003.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.003.toml)
 
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.004
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004.toml)
 
 configure_file(
-  ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004b.txt.in
-  ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.txt @ONLY)
+  ${TestDataDir}/parameters.3D.NC.bspline.ASGD.004b.toml.in
+  ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.toml @ONLY)
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.004b
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.txt)
+  -p ${TestOutputDir}/parameters.3D.NC.bspline.ASGD.004b.toml)
 
 # Test some optimizers
 elx_add_run_test(3DCT_lung.NC.bspline.SGD.001
@@ -842,14 +842,14 @@ elx_add_run_test(3DCT_lung.NC.bspline.SGD.001
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.SGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.SGD.001.toml)
 
 elx_add_run_test(3DCT_lung.NC.bspline.QN.001
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.QN.001.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.QN.001.toml)
 
 # Test some samplers
 elx_add_run_test(3DCT_lung.MI.bspline.SGD.001
@@ -857,21 +857,21 @@ elx_add_run_test(3DCT_lung.MI.bspline.SGD.001
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt)
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.toml)
 
 elx_add_run_test(3DCT_lung.MI.bspline.SGD.002
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.002.txt)
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.002.toml)
 
 elx_add_run_test(3DCT_lung.MI.bspline.SGD.003
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.txt)
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.003.toml)
 
 elx_add_run_test(3DCT_lung.MI.bspline.SGD.004
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
@@ -879,7 +879,7 @@ elx_add_run_test(3DCT_lung.MI.bspline.SGD.004
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -fMask ${TestDataDir}/3DCT_lung_baseline_mask.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.004.txt)
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.004.toml)
 
 # Test some interpolators
 elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.002
@@ -887,14 +887,14 @@ elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.002
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.002.txt)
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.002.toml)
 
 elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.003
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.003.txt)
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.003.toml)
 
 # Test multi-threading effects for SSD
 elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.001-Threads1
@@ -902,21 +902,21 @@ elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.001-Threads1
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.toml
   -threads 1)
 elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.001-Threads2
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.toml
   -threads 2)
 elx_add_run_test(3DCT_lung.SSD.bspline.ASGD.001-Threads4
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.txt
+  -p ${TestDataDir}/parameters.3D.SSD.bspline.ASGD.001.toml
   -threads 4)
 
 # Test multi-threading effects for NC
@@ -925,21 +925,21 @@ elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001a-Threads1
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.toml
   -threads 1)
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001a-Threads2
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.toml
   -threads 2)
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001a-Threads4
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.toml
   -threads 4)
 
 # Test multi-threading effects for MI
@@ -948,21 +948,21 @@ elx_add_run_test(3DCT_lung.MI.bspline.SGD.001-Threads1
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.toml
   -threads 1)
 elx_add_run_test(3DCT_lung.MI.bspline.SGD.001-Threads2
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.toml
   -threads 2)
 elx_add_run_test(3DCT_lung.MI.bspline.SGD.001-Threads4
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.txt
+  -p ${TestDataDir}/parameters.3D.MI.bspline.SGD.001.toml
   -threads 4)
 
 # Test several ASGD options
@@ -971,28 +971,28 @@ elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001a # auto estimation and adaptive s
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001a.toml)
 
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001b # auto estimation and no adaptive stepsize
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001b.toml)
 
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001c # manual estimation and adaptive stepsize
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001c.toml)
 
 elx_add_run_test(3DCT_lung.NC.bspline.ASGD.001d # manual estimation and no adaptive stepsize
   "CHECKSUM;PARAMETERS;OVERLAP;LANDMARKS"
   -f ${TestDataDir}/3DCT_lung_baseline.mha
   -m ${TestDataDir}/3DCT_lung_followup.mha
   -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.txt)
+  -p ${TestDataDir}/parameters.3D.NC.bspline.ASGD.001d.toml)
 
 if(${ELASTIX_BUILD_EXECUTABLE})
   # Test transformix to check memory problem
