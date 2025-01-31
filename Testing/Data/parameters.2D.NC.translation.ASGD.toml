@@ -1,13 +1,13 @@
-// This parameter file is used to register the images
-// 2D_square_object_at_(1,3) and 2D_square_object_at_(2,1).
+# This parameter file is used to register the images
+# 2D_square_object_at_(1,3) and 2D_square_object_at_(2,1).
 
-(FixedInternalImagePixelType "float")
-(FixedImageDimension 2)
-(MovingInternalImagePixelType "float")
-(MovingImageDimension 2)
+FixedInternalImagePixelType = "float"
+FixedImageDimension = 2
+MovingInternalImagePixelType = "float"
+MovingImageDimension = 2
 
-(Metric "AdvancedNormalizedCorrelation")
-(Optimizer "AdaptiveStochasticGradientDescent")
-(Transform "TranslationTransform")
-(MaximumNumberOfIterations 2)
-(ImageSampler "Full")
+Metric = "AdvancedNormalizedCorrelation"
+Optimizer = "AdaptiveStochasticGradientDescent"
+Transform = "TranslationTransform"
+MaximumNumberOfIterations = 2
+ImageSampler = "Full"
