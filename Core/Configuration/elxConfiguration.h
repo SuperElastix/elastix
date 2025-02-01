@@ -313,7 +313,6 @@ protected:
 private:
   CommandLineArgumentMapType                m_CommandLineArgumentMap{};
   std::string                               m_ParameterFileName{};
-  const itk::ParameterFileParser::Pointer   m_ParameterFileParser{ itk::ParameterFileParser::New() };
   const itk::ParameterMapInterface::Pointer m_ParameterMapInterface{ itk::ParameterMapInterface::New() };
 
   bool         m_IsInitialized{ false };
