@@ -356,18 +356,18 @@ ParameterFileParser::ReadParameterFile()
  */
 
 std::string
-ParameterFileParser::ReturnParameterFileAsString()
+ParameterFileParser::ReturnParameterFileAsString(const std::string & fileName)
 {
   /** Perform some basic checks. */
-  BasicFileChecking(m_ParameterFileName);
+  BasicFileChecking(fileName);
 
   /** Open the parameter file for reading. */
-  std::ifstream parameterFile(m_ParameterFileName);
+  std::ifstream parameterFile(fileName);
 
   /** Check if it opened. */
   if (!parameterFile.is_open())
   {
-    itkExceptionMacro("ERROR: could not open " << m_ParameterFileName << " for reading.");
+    itkGenericExceptionMacro("ERROR: could not open " << fileName << " for reading.");
   }
 
   /** Loop over the parameter file, line by line. */

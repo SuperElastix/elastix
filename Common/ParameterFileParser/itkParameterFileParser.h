@@ -111,8 +111,8 @@ public:
   /** Read the parameter file and return the content as a string.
    * Useful for printing the content.
    */
-  std::string
-  ReturnParameterFileAsString();
+  static std::string
+  ReturnParameterFileAsString(const std::string & fileName);
 
   /** Read the specified file into a parameter map and return the map. */
   static ParameterMapType
