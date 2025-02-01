@@ -87,7 +87,7 @@ void
 Configuration::PrintParameterFile() const
 {
   /** Read what's in the parameter file. */
-  std::string params = m_ParameterFileParser->ReturnParameterFileAsString();
+  std::string params = itk::ParameterFileParser::ReturnParameterFileAsString(m_ParameterFileName);
 
   /** Separate clearly in log-file, before and after writing the parameter file. */
   log::info_to_log_file(std::ostringstream{}
