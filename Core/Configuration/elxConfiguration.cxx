@@ -90,12 +90,11 @@ Configuration::PrintParameterFile() const
   std::string params = m_ParameterFileParser->ReturnParameterFileAsString();
 
   /** Separate clearly in log-file, before and after writing the parameter file. */
-  log::info_to_log_file(std::ostringstream{} << '\n'
-                                             << "=============== start of ParameterFile: "
-                                             << this->GetParameterFileName() << " ===============\n"
-                                             << params << '\n'
-                                             << "=============== end of ParameterFile: " << this->GetParameterFileName()
-                                             << " ===============\n");
+  log::info_to_log_file(std::ostringstream{}
+                        << '\n'
+                        << "=============== start of ParameterFile: " << m_ParameterFileName << " ===============\n"
+                        << params << '\n'
+                        << "=============== end of ParameterFile: " << m_ParameterFileName << " ===============\n");
 
 } // end PrintParameterFile()
 
@@ -160,12 +159,12 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   if (!p.empty() && tp.empty())
   {
     /** elastix called Initialize(). */
-    this->SetParameterFileName(p);
+    m_ParameterFileName = p;
   }
   else if (p.empty() && !tp.empty())
   {
     /** transformix called Initialize(). */
-    this->SetParameterFileName(tp);
+    m_ParameterFileName = tp;
   }
   else if (p.empty() && tp.empty())
   {
