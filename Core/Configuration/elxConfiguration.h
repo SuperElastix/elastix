@@ -310,6 +310,10 @@ protected:
   void
   PrintParameterFile() const;
 
+  /** Print the parameter map to the log file. */
+  void
+  PrintParameterMap() const;
+
 private:
   CommandLineArgumentMapType                m_CommandLineArgumentMap{};
   std::string                               m_ParameterFileName{};
