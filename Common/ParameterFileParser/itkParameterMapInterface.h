@@ -100,6 +100,13 @@ public:
   void
   SetParameterMap(const ParameterMapType & parMap);
 
+  /** Returns the parameter map. */
+  const ParameterMapType &
+  GetParameterMap() const
+  {
+    return m_ParameterMap;
+  }
+
   /** Option to print error and warning messages to a stream.
    * The default is true. If set to false no messages are printed.
    */
