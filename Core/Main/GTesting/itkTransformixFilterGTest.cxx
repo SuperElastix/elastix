@@ -55,6 +55,7 @@
 #include <cmath>
 #include <map>
 #include <random>
+#include <regex>
 #include <string>
 
 
@@ -415,6 +416,139 @@ Test_BSplineViaExternalTransformFile(const std::string & rootOutputDirectoryPath
   }
 }
 
+
+using Lines = std::deque<std::string>;
+
+auto
+ReadFile(const std::string & filePath)
+{
+  Lines result;
+
+  std::ifstream inputFileStream{ filePath };
+  std::string   line;
+  while (std::getline(inputFileStream, line))
+  {
+    result.push_back(line);
+  }
+  return result;
+}
+
+
+void
+WriteFile(const std::string & filePath, const Lines & lines)
+{
+  std::ofstream outputFileStream{ filePath };
+  for (const auto & line : lines)
+  {
+    outputFileStream << line << '\n';
+  }
+}
+
+
+// Converts the lines from legacy elastix parameter file format to TOML.
+void
+ConvertTxtToToml(Lines & lines)
+{
+  unsigned numberOfParameters{};
+
+  for (auto & line : lines)
+  {
+    if (!line.empty())
+    {
+      // TOML uses a hash symbol for comment.
+      if (const auto pos = line.find("//"); pos != std::string::npos)
+      {
+        line.replace(pos, 2, "#");
+      }
+
+      std::match_results<std::string::const_iterator> results;
+
+      // Try to match a line, having an elastix parameter, of the form "(Name Value ... Value)".
+      if (std::regex_match(line, results, std::regex{ R"delimiter(\s*\(\s*(\w+)\s+([^\)]+)\s*\)(.*))delimiter" }) &&
+          results.size() == 4)
+      {
+        ++numberOfParameters;
+
+        auto values = results[2].str();
+
+        assert(!values.empty());
+
+        const auto removeDoubleQuotes = [&values](const std::string_view value) {
+          for (;;)
+          {
+            if (const auto foundPos = values.find(value); foundPos == std::string::npos)
+            {
+              break;
+            }
+            else
+            {
+              values.replace(foundPos, value.size(), std::string_view(value.data() + 1, value.size() - 2));
+            }
+          }
+        };
+
+        // TOML uses lowercase for Booleans, just like the elastix legacy format, but without quotes.
+        removeDoubleQuotes("\"false\"");
+        removeDoubleQuotes("\"true\"");
+
+        // Replace tabs with spaces.
+        std::replace(values.begin(), values.end(), '\t', ' ');
+
+        // Replace double spaces with single spaces.
+        for (;;)
+        {
+          if (const auto foundPos = values.find("  "); foundPos == std::string::npos)
+          {
+            break;
+          }
+          else
+          {
+            values.replace(foundPos, 2, " ");
+          }
+        }
+
+        unsigned numberOfAddedCommas{};
+        if (const auto numberOfChars = values.size(); numberOfChars > 1)
+        {
+          bool evenNumberOfDoubleQuotes = values.back() != '"';
+
+          // Prepend a comma to each space. TOML uses a comma as separator between two array elements.
+          for (auto i = numberOfChars - 2; i > 0; --i)
+          {
+            if (values[i] == '"')
+            {
+              evenNumberOfDoubleQuotes = !evenNumberOfDoubleQuotes;
+            }
+            else
+            {
+              if (evenNumberOfDoubleQuotes && (values[i] == ' '))
+              {
+                values.replace(i, 1, ", ");
+                ++numberOfAddedCommas;
+              }
+            }
+          }
+        }
+
+        if (numberOfAddedCommas > 0)
+        {
+          // TOML uses square brackets for arrays.
+          values = '[' + values + ']';
+        }
+        line = results[1].str() + " = " + values + results[3].str();
+      }
+    }
+  }
+}
+
+
+void
+ConvertTxtFileToToml(const std::string & inputFilePath, const std::string & outputFilePath)
+{
+  auto lines = ReadFile(inputFilePath);
+  ConvertTxtToToml(lines);
+  WriteFile(outputFilePath, lines);
+}
 
 } // namespace
 
@@ -1567,4 +1701,37 @@ GTEST_TEST(itkTransformixFilter, SetExternalTransform)
   const auto resampleImageFilter = CreateResampleImageFilter(*movingImage, itkTransform);
 
   EXPECT_EQ(Deref(transformixFilter.GetOutput()), Deref(resampleImageFilter->GetOutput()));
+}
+
+
+// Tests support of the TOML file format for transform parameter files.
+GTEST_TEST(itkTransformixFilter, SupportTomlAsTransformParameterFileFormat)
+{
+  static constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  elx::DefaultConstruct<itk::TransformixFilter<itk::Image<PixelType, ImageDimension>>> transformixFilter{};
+
+  // Test two arbitrary transform parameter files.
+  for (const std::string txtParameterFileName :
+       { GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters-Size-5x6.txt",
+         GetDataDirectoryPath() + "/../Baselines/TransformParameters_3DCT_lung.affine.inverse.txt" })
+  {
+    transformixFilter.SetTransformParameterFileName(txtParameterFileName);
+
+    const ParameterMapVectorType parameterMapsFromTxt =
+      itk::Deref(transformixFilter.GetTransformParameterObject()).GetParameterMaps();
+
+    const std::string testDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
+    itk::FileTools::CreateDirectory(testDirectoryPath);
+
+    const std::string tomlParameterFileName = testDirectoryPath + "/TransformParameters.toml";
+    ConvertTxtFileToToml(txtParameterFileName, tomlParameterFileName);
+
+    transformixFilter.SetTransformParameterFileName(tomlParameterFileName);
+
+    const ParameterMapVectorType parameterMapsFromToml =
+      itk::Deref(transformixFilter.GetTransformParameterObject()).GetParameterMaps();
+
+    EXPECT_EQ(parameterMapsFromToml, parameterMapsFromTxt);
+  }
 }
