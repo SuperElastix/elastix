@@ -109,7 +109,8 @@ Configuration::PrintParameterMap() const
   // Separate clearly in log-file, before and after writing the parameter map.
   log::info_to_log_file(std::ostringstream{}
                         << "\n=============== start of ParameterMap ===============\n"
-                        << Conversion::ParameterMapToString(m_ParameterMapInterface->GetParameterMap())
+                        << Conversion::ParameterMapToString(m_ParameterMapInterface->GetParameterMap(),
+                                                            ParameterMapStringFormat::LegacyTxt)
                         << "\n=============== end of ParameterMap ===============\n");
 
 } // end PrintParameterMap()

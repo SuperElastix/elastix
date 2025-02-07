@@ -641,11 +641,20 @@ template <typename TElastix>
 void
 ResamplerBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
+
   ParameterMapType parameterMap;
   Self::CreateTransformParameterMap(parameterMap);
 
+  const std::string parameterMapFileFormat =
+    configuration.RetrieveParameterStringValue("", "OutputTransformParameterFileFormat", 0, false);
+
+  const auto format = Conversion::StringToParameterMapStringFormat(parameterMapFileFormat);
+
   /** Write resampler specific things. */
-  transformationParameterInfo << ("\n// Resampler specific\n" + Conversion::ParameterMapToString(parameterMap));
+  transformationParameterInfo << '\n'
+                              << Conversion::ParameterMapStartOfCommentString(format)
+                              << " Resampler specific\n " + Conversion::ParameterMapToString(parameterMap, format);
 
 } // end WriteToFile()
 

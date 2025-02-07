@@ -35,6 +35,12 @@ class ITK_TEMPLATE_EXPORT OptimizerParameters;
 
 namespace elastix
 {
+enum class ParameterMapStringFormat
+{
+  LegacyTxt,
+  Toml
+};
+
 /**
  * \class Conversion
  *
@@ -68,9 +74,16 @@ public:
   static itk::OptimizerParameters<double>
   ToOptimizerParameters(const std::vector<double> &);
 
-  /** Converts the specified parameter map to a text string, according to the elastix parameter text file format. */
+  /** Converts the specified parameter map to a string, according to the specified format. */
   static std::string
-  ParameterMapToString(const ParameterMapType &);
+  ParameterMapToString(const ParameterMapType &, const ParameterMapStringFormat);
+
+  /** Resturns the character sequence to indicate the start of a comment, for the specified format. */
+  static std::string_view
+  ParameterMapStartOfCommentString(const ParameterMapStringFormat format)
+  {
+    return format == ParameterMapStringFormat::Toml ? "#" : "//";
+  }
 
   /** Convenience function overload to convert a Boolean to a text string. */
   static std::string
@@ -235,6 +248,15 @@ public:
    */
   static bool
   StringToValue(const std::string & str, itk::Object *& value);
+
+  /** Converts the specified string to the corresponding enum value. Returns ParameterMapStringFormat::LegacyTxt when
+   * the string is empty. */
+  static ParameterMapStringFormat
+  StringToParameterMapStringFormat(const std::string & str);
+
+  /** Creates a parameter map file name extension for the corresponding format. */
+  static std::string
+  CreateParameterMapFileNameExtension(const ParameterMapStringFormat format);
 };
 
 } // end namespace elastix
