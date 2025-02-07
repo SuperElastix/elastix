@@ -732,8 +732,13 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
 
   if (writeFinalTansformParameters && !outputDirectoryPath.empty())
   {
+    const std::string parameterMapFileFormat =
+      configuration.RetrieveParameterStringValue("", "OutputTransformParameterFileFormat", 0, false);
+    const auto format = Conversion::StringToParameterMapStringFormat(parameterMapFileFormat);
+
     std::ostringstream makeFileName;
-    makeFileName << outputDirectoryPath << "TransformParameters." << configuration.GetElastixLevel() << ".txt";
+    makeFileName << outputDirectoryPath << "TransformParameters." << configuration.GetElastixLevel()
+                 << Conversion::CreateParameterMapFileNameExtension(format);
     std::string FileName = makeFileName.str();
 
     /** Create a final TransformParameterFile. */

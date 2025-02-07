@@ -2622,3 +2622,49 @@ GTEST_TEST(itkElastixRegistrationMethod, EuclideanDistancePointMetric)
   const auto transformParameters = GetTransformParametersFromFilter(registration);
   EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), translationOffset);
 }
+
+
+// Tests the use of the OutputTransformParameterFileFormat parameter.
+GTEST_TEST(itkElastixRegistrationMethod, OutputTransformParameterFileFormat)
+{
+  const std::string rootOutputDirectoryPath = GetCurrentBinaryDirectoryPath() + '/' + GetNameOfTest(*this);
+  itk::FileTools::CreateDirectory(rootOutputDirectoryPath);
+
+  using ImageType = itk::Image<float>;
+  elx::DefaultConstruct<ImageType> image{};
+  image.SetRegions(itk::MakeSize(5, 6));
+  image.AllocateInitialized();
+
+  elx::DefaultConstruct<elx::ParameterObject>                     parameterObject{};
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+
+  registration.SetFixedImage(&image);
+  registration.SetMovingImage(&image);
+  registration.SetParameterObject(&parameterObject);
+
+  elx::ParameterObject::ParameterMapType parameterMap{ // Parameters in alphabetic order:
+                                                       { "ImageSampler", { "Full" } },
+                                                       { "MaximumNumberOfIterations", { "2" } },
+                                                       { "Metric", { "AdvancedNormalizedCorrelation" } },
+                                                       { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                                       { "Transform", { "TranslationTransform" } }
+  };
+
+  const auto check = [&parameterMap, &parameterObject, &registration, rootOutputDirectoryPath](
+                       const std::string & outputTransformParameterFileFormat,
+                       const std::string & expectedTransformParameterFileExtension) {
+    const std::string outputDirectoryPath = rootOutputDirectoryPath + "/" + outputTransformParameterFileFormat;
+    itk::FileTools::CreateDirectory(outputDirectoryPath);
+
+    registration.SetOutputDirectory(outputDirectoryPath);
+    parameterMap["OutputTransformParameterFileFormat"] = { outputTransformParameterFileFormat };
+    parameterObject.SetParameterMap(parameterMap);
+    registration.Update();
+
+    EXPECT_TRUE(itksys::SystemTools::FileExists(outputDirectoryPath + "/TransformParameters.0" +
+                                                expectedTransformParameterFileExtension));
+  };
+
+  check("TOML", ".toml");
+  check("txt", ".txt");
+}

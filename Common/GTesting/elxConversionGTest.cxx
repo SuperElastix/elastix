@@ -325,11 +325,14 @@ GTEST_TEST(Conversion, ToOptimizerParameters)
 
 GTEST_TEST(Conversion, ParameterMapToString)
 {
-  EXPECT_EQ(Conversion::ParameterMapToString({}), std::string{});
-  EXPECT_EQ(Conversion::ParameterMapToString({ { "A", {} } }), "(A)\n");
-  EXPECT_EQ(Conversion::ParameterMapToString({ { "Numbers", { "0", "1" } } }), "(Numbers 0 1)\n");
-  EXPECT_EQ(Conversion::ParameterMapToString({ { "Letters", { "a", "z" } } }), "(Letters \"a\" \"z\")\n");
-  EXPECT_EQ(Conversion::ParameterMapToString(TestExample::parameterMap), TestExample::parameterMapTextString);
+  EXPECT_EQ(Conversion::ParameterMapToString({}, elx::ParameterMapStringFormat::LegacyTxt), std::string{});
+  EXPECT_EQ(Conversion::ParameterMapToString({ { "A", {} } }, elx::ParameterMapStringFormat::LegacyTxt), "(A)\n");
+  EXPECT_EQ(Conversion::ParameterMapToString({ { "Numbers", { "0", "1" } } }, elx::ParameterMapStringFormat::LegacyTxt),
+            "(Numbers 0 1)\n");
+  EXPECT_EQ(Conversion::ParameterMapToString({ { "Letters", { "a", "z" } } }, elx::ParameterMapStringFormat::LegacyTxt),
+            "(Letters \"a\" \"z\")\n");
+  EXPECT_EQ(Conversion::ParameterMapToString(TestExample::parameterMap, elx::ParameterMapStringFormat::LegacyTxt),
+            TestExample::parameterMapTextString);
 }
 
 

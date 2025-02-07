@@ -280,7 +280,12 @@ ParameterObject::WriteParameterFile(const ParameterMapType &      parameterMap,
 
   try
   {
-    parameterFile << Conversion::ParameterMapToString(parameterMap);
+    const auto format = itksys::SystemTools::GetFilenameLastExtension(parameterFileName) ==
+                            Conversion::CreateParameterMapFileNameExtension(ParameterMapStringFormat::Toml)
+                          ? ParameterMapStringFormat::Toml
+                          : ParameterMapStringFormat::LegacyTxt;
+
+    parameterFile << Conversion::ParameterMapToString(parameterMap, format);
   }
   catch (const std::ios_base::failure & e)
   {

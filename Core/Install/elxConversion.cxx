@@ -219,53 +219,103 @@ Conversion::ToOptimizerParameters(const std::vector<double> & stdVector)
  */
 
 std::string
-Conversion::ParameterMapToString(const ParameterMapType & parameterMap)
+Conversion::ParameterMapToString(const ParameterMapType & parameterMap, const ParameterMapStringFormat format)
 {
-  const auto expectedNumberOfChars = std::accumulate(
-    parameterMap.cbegin(),
-    parameterMap.cend(),
-    std::size_t{},
-    [](const std::size_t numberOfChars, const std::pair<std::string, ParameterValuesType> & parameter) {
-      return numberOfChars +
-             std::accumulate(parameter.second.cbegin(),
-                             parameter.second.cend(),
-                             // Two parentheses and a linebreak are added for each parameter.
-                             parameter.first.size() + 3,
-                             [](const std::size_t numberOfCharsPerParameter, const std::string & value) {
-                               // A space character is added for each of the values.
-                               // Plus two double-quotes, if the value is not a number.
-                               return numberOfCharsPerParameter + value.size() + (Conversion::IsNumber(value) ? 1 : 3);
-                             });
-    });
-
   std::string result;
-  result.reserve(expectedNumberOfChars);
 
-  for (const auto & parameter : parameterMap)
+  if (format == ParameterMapStringFormat::Toml)
   {
-    result.push_back('(');
-    result.append(parameter.first);
-
-    for (const auto & value : parameter.second)
-    {
-      result.push_back(' ');
-
-      if (Conversion::IsNumber(value))
+    const auto parameterValueToTomlValue = [](const std::string & parameterValue) {
+      // Use the same representation in TOML as in elastix for booleans and numbers.
+      if (parameterValue == BoolToString(false) || parameterValue == BoolToString(true) || IsNumber(parameterValue))
       {
-        result.append(value);
+        return parameterValue;
       }
       else
       {
-        result.push_back('"');
-        result.append(value);
-        result.push_back('"');
+        return '"' + parameterValue + '"';
       }
+    };
+
+    for (const auto & parameter : parameterMap)
+    {
+      result.append(parameter.first).append(" = ");
+
+      const auto & parameterValues = parameter.second;
+
+      if (parameterValues.size() == 1)
+      {
+        result.append(parameterValueToTomlValue(parameterValues.front()));
+      }
+      else
+      {
+        result.push_back('[');
+
+        if (!parameterValues.empty())
+        {
+          result.append(parameterValueToTomlValue(parameterValues.front()));
+
+          const std::size_t numberOfParameterValues = parameterValues.size();
+
+          for (std::size_t i{ 1 }; i < numberOfParameterValues; ++i)
+          {
+            result.append(", ").append(parameterValueToTomlValue(parameterValues[i]));
+          }
+        }
+        result.push_back(']');
+      }
+      result.push_back('\n');
     }
-    result.append(")\n");
+  }
+  else
+  {
+    const auto expectedNumberOfChars = std::accumulate(
+      parameterMap.cbegin(),
+      parameterMap.cend(),
+      std::size_t{},
+      [](const std::size_t numberOfChars, const std::pair<std::string, ParameterValuesType> & parameter) {
+        return numberOfChars +
+               std::accumulate(parameter.second.cbegin(),
+                               parameter.second.cend(),
+                               // Two parentheses and a linebreak are added for each parameter.
+                               parameter.first.size() + 3,
+                               [](const std::size_t numberOfCharsPerParameter, const std::string & value) {
+                                 // A space character is added for each of the values.
+                                 // Plus two double-quotes, if the value is not a number.
+                                 return numberOfCharsPerParameter + value.size() +
+                                        (Conversion::IsNumber(value) ? 1 : 3);
+                               });
+      });
+
+    result.reserve(expectedNumberOfChars);
+
+    for (const auto & parameter : parameterMap)
+    {
+      result.push_back('(');
+      result.append(parameter.first);
+
+      for (const auto & value : parameter.second)
+      {
+        result.push_back(' ');
+
+        if (Conversion::IsNumber(value))
+        {
+          result.append(value);
+        }
+        else
+        {
+          result.push_back('"');
+          result.append(value);
+          result.push_back('"');
+        }
+      }
+      result.append(")\n");
+    }
+
+    // Assert that the correct number of characters was reserved.
+    assert(result.size() == expectedNumberOfChars);
   }
 
-  // Assert that the correct number of characters was reserved.
-  assert(result.size() == expectedNumberOfChars);
   return result;
 }
 
@@ -424,6 +474,34 @@ Conversion::StringToValue(const std::string & str, itk::Object *& value)
   const bool hasSucceeded = StringToValue<void *>(str, voidPtr);
   value = static_cast<itk::Object *>(voidPtr);
   return hasSucceeded;
+}
+
+
+ParameterMapStringFormat
+Conversion::StringToParameterMapStringFormat(const std::string & str)
+{
+  if (str.empty() || str == "txt")
+  {
+    return ParameterMapStringFormat::LegacyTxt;
+  }
+  if (str == "TOML")
+  {
+    return ParameterMapStringFormat::Toml;
+  }
+  itkGenericExceptionMacro("Failed to convert to the following string to ParameterMapStringFormat: \"" << str << '"');
+}
+
+std::string
+Conversion::CreateParameterMapFileNameExtension(const ParameterMapStringFormat format)
+{
+  switch (format)
+  {
+    case ParameterMapStringFormat::LegacyTxt:
+      return ".txt";
+    case ParameterMapStringFormat::Toml:
+      return ".toml";
+  }
+  itkGenericExceptionMacro("Failed to create a file name extension for '" << static_cast<int>(format) << '\'');
 }
 
 } // end namespace elastix

@@ -561,7 +561,12 @@ TransformBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo,
     }
   }
 
-  transformationParameterInfo << Conversion::ParameterMapToString(parameterMap);
+  const std::string parameterMapFileFormat =
+    configuration.RetrieveParameterStringValue("", "OutputTransformParameterFileFormat", 0, false);
+
+  const auto format = Conversion::StringToParameterMapStringFormat(parameterMapFileFormat);
+
+  transformationParameterInfo << Conversion::ParameterMapToString(parameterMap, format);
 
   WriteDerivedTransformDataToFile();
 

@@ -20,7 +20,10 @@
 #define elxResampleInterpolatorBase_hxx
 
 #include "elxResampleInterpolatorBase.h"
+#include "elxConfiguration.h"
 #include "elxConversion.h"
+
+#include "itkDeref.h"
 
 #include <cassert>
 
@@ -48,12 +51,21 @@ template <typename TElastix>
 void
 ResampleInterpolatorBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo) const
 {
+  const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
+
   ParameterMapType parameterMap;
   this->CreateTransformParameterMap(parameterMap);
 
+  const std::string parameterMapFileFormat =
+    configuration.RetrieveParameterStringValue("", "OutputTransformParameterFileFormat", 0, false);
+
+  const auto format = Conversion::StringToParameterMapStringFormat(parameterMapFileFormat);
+
   /** Write ResampleInterpolator specific things. */
-  transformationParameterInfo << ("\n// ResampleInterpolator specific\n" +
-                                  Conversion::ParameterMapToString(parameterMap));
+  transformationParameterInfo << '\n'
+                              << Conversion::ParameterMapStartOfCommentString(format)
+                              << " ResampleInterpolator specific\n " +
+                                   Conversion::ParameterMapToString(parameterMap, format);
 
 } // end WriteToFile()
 
