@@ -28,7 +28,7 @@ template <typename TPixel, unsigned int VDimension>
 void
 NDImageTemplate<TPixel, VDimension>::SetRegions(SizeType size)
 {
-  this->m_Image->SetRegions(ConvertToStaticArray<SizeType, SizeTypeD>::DO(size));
+  this->m_Image->SetRegions(ConvertToStaticArray<SizeType, SizeTypeD>(size));
 }
 
 
@@ -68,7 +68,7 @@ template <typename TPixel, unsigned int VDimension>
 void
 NDImageTemplate<TPixel, VDimension>::SetPixel(const IndexType & index, const TPixel & value)
 {
-  this->m_Image->SetPixel(ConvertToStaticArray<IndexType, IndexTypeD>::DO(index), value);
+  this->m_Image->SetPixel(ConvertToStaticArray<IndexType, IndexTypeD>(index), value);
 }
 
 
@@ -76,7 +76,7 @@ template <typename TPixel, unsigned int VDimension>
 const TPixel &
 NDImageTemplate<TPixel, VDimension>::GetPixel(const IndexType & index) const
 {
-  return this->m_Image->GetPixel(ConvertToStaticArray<IndexType, IndexTypeD>::DO(index));
+  return this->m_Image->GetPixel(ConvertToStaticArray<IndexType, IndexTypeD>(index));
 }
 
 
@@ -84,7 +84,7 @@ template <typename TPixel, unsigned int VDimension>
 TPixel &
 NDImageTemplate<TPixel, VDimension>::GetPixel(const IndexType & index)
 {
-  return this->m_Image->GetPixel(ConvertToStaticArray<IndexType, IndexTypeD>::DO(index));
+  return this->m_Image->GetPixel(ConvertToStaticArray<IndexType, IndexTypeD>(index));
 }
 
 
@@ -146,7 +146,7 @@ template <typename TPixel, unsigned int VDimension>
 void
 NDImageTemplate<TPixel, VDimension>::SetSpacing(const SpacingType & spacing)
 {
-  this->m_Image->SetSpacing(ConvertToStaticArray<SpacingType, SpacingTypeD>::DO(spacing));
+  this->m_Image->SetSpacing(ConvertToStaticArray<SpacingType, SpacingTypeD>(spacing));
 }
 
 
@@ -154,7 +154,7 @@ template <typename TPixel, unsigned int VDimension>
 void
 NDImageTemplate<TPixel, VDimension>::SetOrigin(const PointType & origin)
 {
-  this->m_Image->SetOrigin(ConvertToStaticArray<PointType, PointTypeD>::DO(origin));
+  this->m_Image->SetOrigin(ConvertToStaticArray<PointType, PointTypeD>(origin));
 }
 
 
@@ -162,7 +162,7 @@ template <typename TPixel, unsigned int VDimension>
 auto
 NDImageTemplate<TPixel, VDimension>::GetSpacing() -> SpacingType
 {
-  return ConvertToDynamicArray<SpacingTypeD, SpacingType>::DO(this->m_Image->GetSpacing());
+  return ConvertToDynamicArray<SpacingTypeD, SpacingType>(this->m_Image->GetSpacing());
 }
 
 
@@ -170,7 +170,7 @@ template <typename TPixel, unsigned int VDimension>
 auto
 NDImageTemplate<TPixel, VDimension>::GetOrigin() -> PointType
 {
-  return ConvertToDynamicArray<PointTypeD, PointType>::DO(this->m_Image->GetOrigin());
+  return ConvertToDynamicArray<PointTypeD, PointType>(this->m_Image->GetOrigin());
 }
 
 
@@ -193,7 +193,7 @@ template <typename TPixel, unsigned int VDimension>
 auto
 NDImageTemplate<TPixel, VDimension>::ComputeOffset(const IndexType & ind) const -> OffsetValueType
 {
-  return this->m_Image->ComputeOffset(ConvertToStaticArray<IndexType, IndexTypeD>::DO(ind));
+  return this->m_Image->ComputeOffset(ConvertToStaticArray<IndexType, IndexTypeD>(ind));
 }
 
 
@@ -201,7 +201,7 @@ template <typename TPixel, unsigned int VDimension>
 auto
 NDImageTemplate<TPixel, VDimension>::ComputeIndex(OffsetValueType offset) const -> IndexType
 {
-  return ConvertToDynamicArray<IndexTypeD, IndexType>::DO(this->m_Image->ComputeIndex(offset));
+  return ConvertToDynamicArray<IndexTypeD, IndexType>(this->m_Image->ComputeIndex(offset));
 }
 
 
