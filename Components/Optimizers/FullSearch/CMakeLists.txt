@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( FullSearch
  elxFullSearchOptimizer.cxx
  itkFullSearchOptimizer.h
  itkFullSearchOptimizer.cxx)
-

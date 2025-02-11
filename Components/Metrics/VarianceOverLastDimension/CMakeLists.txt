@@ -6,4 +6,3 @@ ADD_ELXCOMPONENT( VarianceOverLastDimensionMetric
  itkVarianceOverLastDimensionImageMetric.h
  itkVarianceOverLastDimensionImageMetric.hxx
  )
-

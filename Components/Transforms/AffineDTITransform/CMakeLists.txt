@@ -8,4 +8,3 @@ ADD_ELXCOMPONENT( AffineDTITransformElastix # Was OFF by default before elastix 
  itkAffineDTI3DTransform.h
  itkAffineDTI3DTransform.hxx
  itkAffineDTITransform.h)
-

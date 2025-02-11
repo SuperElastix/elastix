@@ -7,4 +7,3 @@ ADD_ELXCOMPONENT( StandardGradientDescent
  itkStandardGradientDescentOptimizer.cxx
  itkGradientDescentOptimizer2.h
  itkGradientDescentOptimizer2.cxx)
-

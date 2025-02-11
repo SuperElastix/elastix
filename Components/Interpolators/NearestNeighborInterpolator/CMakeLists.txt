@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( NearestNeighborInterpolator # Was OFF by default before elasti
  elxNearestNeighborInterpolator.h
  elxNearestNeighborInterpolator.hxx
  elxNearestNeighborInterpolator.cxx)
-

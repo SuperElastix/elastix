@@ -8,4 +8,3 @@ ADD_ELXCOMPONENT( PreconditionedStochasticGradientDescent
  ../StandardGradientDescent/itkStandardGradientDescentOptimizer.cxx
  ../StandardGradientDescent/itkGradientDescentOptimizer2.cxx
 )
-

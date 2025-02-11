@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( FixedShrinkingPyramid # Was OFF by default before elastix 5.0.
  elxFixedShrinkingPyramid.h
  elxFixedShrinkingPyramid.hxx
  elxFixedShrinkingPyramid.cxx)
-

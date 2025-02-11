@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( DistancePreservingRigidityPenalty
  elxDistancePreservingRigidityPenaltyTerm.cxx
  itkDistancePreservingRigidityPenaltyTerm.h
  itkDistancePreservingRigidityPenaltyTerm.hxx)
-

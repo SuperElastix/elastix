@@ -1,7 +1,7 @@
 name: Elastix
 
 on: [push, pull_request]
-  
+
 jobs:
   build:
     # The CMake configure and build commands are platform agnostic and should work equally
@@ -30,7 +30,7 @@ jobs:
             ANNLib: "ANNlib-5.2.dll"
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-13
-            c-compiler: "clang"  
+            c-compiler: "clang"
             cxx-compiler: "clang++"
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
@@ -39,7 +39,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Make directory structure
       run: |
         items=(*)
@@ -49,15 +49,15 @@ jobs:
         mv .clang-format Elastix-source
         mv Elastix-source/Dockerfile .
       shell: bash
-      
+
     - uses: actions/cache@v3
       id: cache
       with:
         path: |
           ITK-build
           ITK-source
-        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }} 
-        
+        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}
+
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
@@ -67,17 +67,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install ninja
-        
+
     - name: Get specific version of CMake, Ninja
       uses: lukka/get-cmake@v3.24.2
-      
+
     - name: Download ITK
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/InsightSoftwareConsortium/ITK.git ITK-source
         cd ITK-source
         git checkout ${{ matrix.itk-git-tag }}
-   
+
     - name: Build ITK
       if: ${{ steps.cache.outputs.cache-hit != 'true' && !startsWith(matrix.os, 'windows') }}
       run: |
@@ -85,7 +85,7 @@ jobs:
         cd ITK-build
         cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_LEGACY_REMOVE=ON -GNinja ../ITK-source
         ninja
-        
+
     - name: Build ITK
       if: steps.cache.outputs.cache-hit != 'true' && startsWith(matrix.os, 'windows')
       run: |
@@ -95,7 +95,7 @@ jobs:
         cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK-source
         ninja
       shell: cmd
-      
+
     - name: Install requirements of PythonTests
       run: |
         python -m pip install -r ${{ github.workspace }}/Elastix-source/Testing/PythonTests/requirements.txt
@@ -141,7 +141,7 @@ jobs:
       if: startsWith(matrix.os, 'macos')
       run: |
        ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
-      
+
     - name: Test Windows
       if: startsWith(matrix.os, 'windows')
       run: |
@@ -153,7 +153,7 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
-      
+
     - name: Build externalproject example
       if: ${{ !startsWith(matrix.os, 'windows') }}
       run: |
@@ -161,7 +161,7 @@ jobs:
         cd externalproject-build
         cmake -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} -DElastix_DIR=${{ github.workspace }}/Elastix-build -GNinja ../Elastix-source/dox/externalproject
         ninja
-        
+
     - name: Build externalproject example
       if: startsWith(matrix.os, 'windows')
       run: |
@@ -183,7 +183,7 @@ jobs:
         set path=${{ github.workspace }}\Elastix-build\bin
         externalproject-build\elastix_translation_example.exe
       shell: cmd
-      
+
     - name: Prepare Artifacts Unix
       if: ${{ !startsWith(matrix.os, 'windows') }}
       shell: bash
@@ -199,7 +199,7 @@ jobs:
         mv Elastix-source/LICENSE uploads
         mv bin uploads
         mv lib uploads
-      
+
     - name: Prepare Artifacts Windows
       if: startsWith(matrix.os, 'windows')
       shell: bash
@@ -210,13 +210,13 @@ jobs:
         mv Elastix-build/bin/elastix.exe uploads
         mv Elastix-build/bin/transformix.exe uploads
         mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
-  
+
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4.4.3
-      with: 
+      with:
         name: "${{ matrix.os }}"
         path: uploads
-        
+
     - name: Login to Docker Hub
       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(matrix.os, 'ubuntu')
       uses: docker/login-action@v1
@@ -225,11 +225,9 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
     - name: Build and push
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(matrix.os, 'ubuntu')     
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(matrix.os, 'ubuntu')
       run: |
         mkdir output
         docker build -t superelastix/elastix:${GITHUB_REF#refs/tags/} .
         docker run -u $UID:$GROUPS --mount type=bind,source="$(pwd)"/output,target=/out -v "$(pwd)"/Elastix-source/Testing/Data:/elastix/ superelastix/elastix:${GITHUB_REF#refs/tags/} elastix -out /out/ -p /elastix/parameters.3D.NC.euler.ASGD.001.txt -f /elastix/3DCT_lung_baseline.mha -m /elastix/3DCT_lung_followup.mha
         docker push superelastix/elastix:${GITHUB_REF#refs/tags/}
-
-

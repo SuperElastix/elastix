@@ -55,4 +55,3 @@ namespace elastix
 } // end namespace elastix
 
 #endif // end #ifndef elxSupportedImageTypes_h
-

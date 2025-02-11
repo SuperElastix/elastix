@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( BSplineResampleInterpolatorFloat # Was OFF by default before e
  elxBSplineResampleInterpolatorFloat.h
  elxBSplineResampleInterpolatorFloat.hxx
  elxBSplineResampleInterpolatorFloat.cxx)
-

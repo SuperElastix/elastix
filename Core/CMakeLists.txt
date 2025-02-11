@@ -297,4 +297,3 @@ endif()
 # defining the elastix compilation types.
 
 add_subdirectory(Install)
-

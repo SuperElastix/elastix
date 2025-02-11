@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( LinearResampleInterpolator # Was OFF by default before elastix
  elxLinearResampleInterpolator.h
  elxLinearResampleInterpolator.hxx
  elxLinearResampleInterpolator.cxx)
-

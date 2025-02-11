@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( AdvancedKappaStatisticMetric # Was OFF by default before elast
  elxAdvancedKappaStatisticMetric.cxx
  itkAdvancedKappaStatisticImageToImageMetric.h
  itkAdvancedKappaStatisticImageToImageMetric.hxx)
-

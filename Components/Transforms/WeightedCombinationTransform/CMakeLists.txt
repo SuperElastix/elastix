@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( WeightedCombinationTransformElastix # Was OFF by default befor
  elxWeightedCombinationTransform.cxx
  itkWeightedCombinationTransform.h
  itkWeightedCombinationTransform.hxx)
-

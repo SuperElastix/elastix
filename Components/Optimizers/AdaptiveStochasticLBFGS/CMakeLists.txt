@@ -10,4 +10,3 @@ ADD_ELXCOMPONENT( AdaptiveStochasticLBFGS OFF # OFF by default after elastix 5.0
  ../StandardStochasticGradientDescent/itkStochasticGradientDescentOptimizer.h
  ../StandardStochasticGradientDescent/itkStochasticGradientDescentOptimizer.cxx
 )
-

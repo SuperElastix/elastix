@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( AffineLogTransformElastix # Was OFF by default before elastix 
  elxAffineLogTransform.cxx
  itkAffineLogTransform.h
  itkAffineLogTransform.hxx)
-

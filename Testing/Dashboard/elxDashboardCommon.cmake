@@ -238,4 +238,3 @@ else()
   # Submit results, retry every 5 minutes for a maximum of two hours
   ctest_submit(RETRY_COUNT 24 RETRY_DELAY 300)
 endif()
-

@@ -4,4 +4,3 @@ ADD_ELXCOMPONENT( PCAMetric ON
  elxPCAMetric.cxx
  itkPCAMetric.h
  itkPCAMetric.hxx)
-

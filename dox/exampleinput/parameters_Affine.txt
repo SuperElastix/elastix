@@ -2,9 +2,9 @@
 // C-style comments: //
 
 // The internal pixel type, used for internal computations
-// Leave to float in general. 
-// NB: this is not the type of the input images! The pixel 
-// type of the input images is automatically read from the 
+// Leave to float in general.
+// NB: this is not the type of the input images! The pixel
+// type of the input images is automatically read from the
 // images themselves.
 // This setting can be changed to "short" to save some memory
 // in case of very large 3D images.
@@ -20,7 +20,7 @@
 // Specify whether you want to take into account the so-called
 // direction cosines of the images. Recommended: true.
 // In some cases, the direction cosines of the image are corrupt,
-// due to image format conversions for example. In that case, you 
+// due to image format conversions for example. In that case, you
 // may want to set this option to "false".
 (UseDirectionCosines "true")
 
@@ -48,7 +48,7 @@
 // ***************** Transformation **************************
 
 // Scales the affine matrix elements compared to the translations, to make
-// sure they are in the same range. In general, it's best to  
+// sure they are in the same range. In general, it's best to
 // use automatic scales estimation:
 (AutomaticScalesEstimation "true")
 
@@ -69,7 +69,7 @@
 //(NumberOfHistogramBins 16 32 64)
 (NumberOfHistogramBins 32)
 
-// If you use a mask, this option is important. 
+// If you use a mask, this option is important.
 // If the mask serves as region of interest, set it to false.
 // If the mask indicates which pixels are valid, then set it to true.
 // If you do not use a mask, the option doesn't matter.
@@ -126,7 +126,7 @@
 
 // Order of B-Spline interpolation used during registration/optimisation.
 // It may improve accuracy if you set this to 3. Never use 0.
-// An order of 1 gives linear interpolation. This is in most 
+// An order of 1 gives linear interpolation. This is in most
 // applications a good choice.
 (BSplineInterpolationOrder 1)
 
@@ -150,5 +150,3 @@
 // The pixel type and format of the resulting deformed moving image
 (ResultImagePixelType "short")
 (ResultImageFormat "mhd")
-
-
