@@ -232,11 +232,11 @@ protected:
 
   // virtual void PrintSelf(std::ostream& os, Indent indent) const;
 
+private:
   ImagePointer  m_Image{ nullptr };
   WriterPointer m_Writer{ nullptr };
   ReaderPointer m_Reader{ nullptr };
 
-private:
   template <typename TIn, typename TOut>
   static TOut
   ConvertToDynamicArray(const TIn & in)
