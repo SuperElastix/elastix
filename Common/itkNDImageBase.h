@@ -271,22 +271,21 @@ NDImageBase<TPixel>::NewNDImage(unsigned int dim) -> Pointer
   switch (dim)
   {
     case 1:
-      return dynamic_cast<NDImageBase<TPixel> *>(NDImageTemplate<TPixel, 1>::New().GetPointer());
+      return NDImageTemplate<TPixel, 1>::New().GetPointer();
     case 2:
-      return dynamic_cast<NDImageBase<TPixel> *>(NDImageTemplate<TPixel, 2>::New().GetPointer());
+      return NDImageTemplate<TPixel, 2>::New().GetPointer();
     case 3:
-      return dynamic_cast<NDImageBase<TPixel> *>(NDImageTemplate<TPixel, 3>::New().GetPointer());
+      return NDImageTemplate<TPixel, 3>::New().GetPointer();
     case 4:
-      return dynamic_cast<NDImageBase<TPixel> *>(NDImageTemplate<TPixel, 4>::New().GetPointer());
+      return NDImageTemplate<TPixel, 4>::New().GetPointer();
     case 5:
-      return dynamic_cast<NDImageBase<TPixel> *>(NDImageTemplate<TPixel, 5>::New().GetPointer());
+      return NDImageTemplate<TPixel, 5>::New().GetPointer();
     // add here more dimensions if needed...
     // we could do this also with a recursive
     // template and a #define MAXDIM,
     // or something like that....
     default:
-      // Return a default-constructed SmartPointer (null).
-      return typename NDImageBase<TPixel>::Pointer();
+      return nullptr;
   }
 }
 
