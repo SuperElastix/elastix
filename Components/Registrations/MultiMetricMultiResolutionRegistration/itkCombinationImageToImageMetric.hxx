@@ -30,91 +30,91 @@
  */
 
 /** For setting objects, implement two methods */
-#define itkImplementationSetObjectMacro2(_name, _type1, _type2)                                                        \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg, unsigned int pos)    \
-  {                                                                                                                    \
-    if (pos == 0)                                                                                                      \
-    {                                                                                                                  \
-      this->Superclass::Set##_name(_arg);                                                                              \
-    }                                                                                                                  \
-    ImageMetricType *    testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(pos));                             \
-    PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(pos));                          \
-    if (testPtr1)                                                                                                      \
-    {                                                                                                                  \
-      testPtr1->Set##_name(_arg);                                                                                      \
-    }                                                                                                                  \
-    else if (testPtr2)                                                                                                 \
-    {                                                                                                                  \
-      testPtr2->Set##_name(_arg);                                                                                      \
-    }                                                                                                                  \
-  }                                                                                                                    \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                      \
-  {                                                                                                                    \
-    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                      \
-    {                                                                                                                  \
-      this->Set##_name(_arg, i);                                                                                       \
-    }                                                                                                                  \
+#define itkImplementationSetObjectMacro2(_name, _type1, _type2)                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                            \
+  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg, unsigned int pos) \
+  {                                                                                                                 \
+    if (pos == 0)                                                                                                   \
+    {                                                                                                               \
+      this->Superclass::Set##_name(_arg);                                                                           \
+    }                                                                                                               \
+    ImageMetricType *    testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(pos));                          \
+    PointSetMetricType * testPtr2 = dynamic_cast<PointSetMetricType *>(this->GetMetric(pos));                       \
+    if (testPtr1)                                                                                                   \
+    {                                                                                                               \
+      testPtr1->Set##_name(_arg);                                                                                   \
+    }                                                                                                               \
+    else if (testPtr2)                                                                                              \
+    {                                                                                                               \
+      testPtr2->Set##_name(_arg);                                                                                   \
+    }                                                                                                               \
+  }                                                                                                                 \
+  template <typename TFixedImage, typename TMovingImage>                                                            \
+  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                   \
+  {                                                                                                                 \
+    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                   \
+    {                                                                                                               \
+      this->Set##_name(_arg, i);                                                                                    \
+    }                                                                                                               \
   } // comments for allowing ; after calling the macro
 
-#define itkImplementationSetObjectMacro1(_name, _type1, _type2)                                                        \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg, unsigned int pos)    \
-  {                                                                                                                    \
-    if (pos == 0)                                                                                                      \
-    {                                                                                                                  \
-      this->Superclass::Set##_name(_arg);                                                                              \
-    }                                                                                                                  \
-    ImageMetricType * testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(pos));                                \
-    if (testPtr1)                                                                                                      \
-    {                                                                                                                  \
-      testPtr1->Set##_name(_arg);                                                                                      \
-    }                                                                                                                  \
-  }                                                                                                                    \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                      \
-  {                                                                                                                    \
-    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                      \
-    {                                                                                                                  \
-      this->Set##_name(_arg, i);                                                                                       \
-    }                                                                                                                  \
+#define itkImplementationSetObjectMacro1(_name, _type1, _type2)                                                     \
+  template <typename TFixedImage, typename TMovingImage>                                                            \
+  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg, unsigned int pos) \
+  {                                                                                                                 \
+    if (pos == 0)                                                                                                   \
+    {                                                                                                               \
+      this->Superclass::Set##_name(_arg);                                                                           \
+    }                                                                                                               \
+    ImageMetricType * testPtr1 = dynamic_cast<ImageMetricType *>(this->GetMetric(pos));                             \
+    if (testPtr1)                                                                                                   \
+    {                                                                                                               \
+      testPtr1->Set##_name(_arg);                                                                                   \
+    }                                                                                                               \
+  }                                                                                                                 \
+  template <typename TFixedImage, typename TMovingImage>                                                            \
+  void CombinationImageToImageMetric<TFixedImage, TMovingImage>::Set##_name(_type1 _type2 * _arg)                   \
+  {                                                                                                                 \
+    for (unsigned int i = 0; i < this->GetNumberOfMetrics(); ++i)                                                   \
+    {                                                                                                               \
+      this->Set##_name(_arg, i);                                                                                    \
+    }                                                                                                               \
   } // comments for allowing ; after calling the macro
 
 /** for getting const object, implement one method */
-#define itkImplementationGetConstObjectMacro1(_name, _type)                                                            \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type *     \
-  {                                                                                                                    \
-    const ImageMetricType * testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));                    \
-    if (testPtr1)                                                                                                      \
-    {                                                                                                                  \
-      return testPtr1->Get##_name();                                                                                   \
-    }                                                                                                                  \
-    else                                                                                                               \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
+#define itkImplementationGetConstObjectMacro1(_name, _type)                                                        \
+  template <typename TFixedImage, typename TMovingImage>                                                           \
+  auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type * \
+  {                                                                                                                \
+    const ImageMetricType * testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));                \
+    if (testPtr1)                                                                                                  \
+    {                                                                                                              \
+      return testPtr1->Get##_name();                                                                               \
+    }                                                                                                              \
+    else                                                                                                           \
+    {                                                                                                              \
+      return 0;                                                                                                    \
+    }                                                                                                              \
   } // comments for allowing ; after calling the macro
 
-#define itkImplementationGetConstObjectMacro2(_name, _type)                                                            \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type *     \
-  {                                                                                                                    \
-    const ImageMetricType *    testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));                 \
-    const PointSetMetricType * testPtr2 = dynamic_cast<const PointSetMetricType *>(this->GetMetric(pos));              \
-    if (testPtr1)                                                                                                      \
-    {                                                                                                                  \
-      return testPtr1->Get##_name();                                                                                   \
-    }                                                                                                                  \
-    else if (testPtr2)                                                                                                 \
-    {                                                                                                                  \
-      return testPtr2->Get##_name();                                                                                   \
-    }                                                                                                                  \
-    else                                                                                                               \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
+#define itkImplementationGetConstObjectMacro2(_name, _type)                                                        \
+  template <typename TFixedImage, typename TMovingImage>                                                           \
+  auto CombinationImageToImageMetric<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type * \
+  {                                                                                                                \
+    const ImageMetricType *    testPtr1 = dynamic_cast<const ImageMetricType *>(this->GetMetric(pos));             \
+    const PointSetMetricType * testPtr2 = dynamic_cast<const PointSetMetricType *>(this->GetMetric(pos));          \
+    if (testPtr1)                                                                                                  \
+    {                                                                                                              \
+      return testPtr1->Get##_name();                                                                               \
+    }                                                                                                              \
+    else if (testPtr2)                                                                                             \
+    {                                                                                                              \
+      return testPtr2->Get##_name();                                                                               \
+    }                                                                                                              \
+    else                                                                                                           \
+    {                                                                                                              \
+      return 0;                                                                                                    \
+    }                                                                                                              \
   } // comments for allowing ; after calling the macro
 
 namespace itk

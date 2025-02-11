@@ -198,13 +198,13 @@ private:
  * Returns true if \a lhs OpenCL image format is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs);
+operator==(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL image format is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs);
+operator!=(const OpenCLImageFormat & lhs, const OpenCLImageFormat & rhs);
 
 /** Stream out operator for OpenCLImageFormat */
 template <typename charT, typename traits>

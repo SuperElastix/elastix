@@ -53,10 +53,7 @@ TRANSFORMIX::TRANSFORMIX()
  * ******************* Destructor ***********************
  */
 
-TRANSFORMIX::~TRANSFORMIX()
-{
-  this->m_ResultImage = nullptr;
-} // end Destructor
+TRANSFORMIX::~TRANSFORMIX() { this->m_ResultImage = nullptr; } // end Destructor
 
 
 /**

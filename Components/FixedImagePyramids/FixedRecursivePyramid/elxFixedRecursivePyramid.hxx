@@ -23,4 +23,4 @@
 
 // nothing
 
-#endif //#ifndef elxFixedRecursivePyramid_hxx
+#endif // #ifndef elxFixedRecursivePyramid_hxx

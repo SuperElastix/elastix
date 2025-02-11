@@ -79,7 +79,7 @@ public:
 
   /** Overloaded. */
   void
-  Write(PriorityLevelEnum level, std::string const & content) override;
+  Write(PriorityLevelEnum level, const std::string & content) override;
 
 protected:
   /** Constructor */

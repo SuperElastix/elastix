@@ -101,12 +101,14 @@ public:
 
   /** Returns a reference to the element at \a index in this OpenCL vector.
    * The vector will be copied to host memory if necessary. */
-  T & operator[](const std::size_t index);
+  T &
+  operator[](const std::size_t index);
 
   /** Returns a const reference to the element at \a index in this
    * OpenCL vector. The vector will be copied to host memory
    * if necessary. */
-  const T & operator[](const std::size_t index) const;
+  const T &
+  operator[](const std::size_t index) const;
 
   /** Reads the \a count elements starting \a offset in this vector
    * into \a data.

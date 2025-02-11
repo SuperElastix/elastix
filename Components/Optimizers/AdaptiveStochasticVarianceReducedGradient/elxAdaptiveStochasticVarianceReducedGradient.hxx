@@ -1106,7 +1106,7 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::SampleGradients(const Param
       } // end if random sampler
 
     } // end for loop over metrics
-  }   // end if NewSamplesEveryIteration.
+  } // end if NewSamplesEveryIteration.
 
   /** Prepare for progress printing. */
   const bool showProgressPercentage = configuration.RetrieveParameterValue(false, "ShowProgressPercentage", 0, false);

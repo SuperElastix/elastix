@@ -350,7 +350,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
       }
 
     } // if sampler required by metric
-  }   // for loop over metrics
+  } // for loop over metrics
 
 } // end SetComponents()
 

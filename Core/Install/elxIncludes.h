@@ -43,4 +43,4 @@
 /** Writing to screen and logfiles etc. */
 #include "elxlog.h"
 
-#endif //#ifndef elxIncludes_h
+#endif // #ifndef elxIncludes_h

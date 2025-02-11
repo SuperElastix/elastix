@@ -90,10 +90,7 @@ OpenCLVectorBase::OpenCLVectorBase(const std::size_t elemSize, const OpenCLVecto
 
 
 //------------------------------------------------------------------------------
-OpenCLVectorBase::~OpenCLVectorBase()
-{
-  this->Release();
-}
+OpenCLVectorBase::~OpenCLVectorBase() { this->Release(); }
 
 
 //------------------------------------------------------------------------------

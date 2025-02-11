@@ -38,7 +38,7 @@
  * Details: the declaration of InstallComponent function defined
  * by elxInstallMacro is simply repeated.
  */
-#define elxInstallComponentFunctionDeclarationMacro(_classname)                                                        \
+#define elxInstallComponentFunctionDeclarationMacro(_classname) \
   extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb)
 
 /**

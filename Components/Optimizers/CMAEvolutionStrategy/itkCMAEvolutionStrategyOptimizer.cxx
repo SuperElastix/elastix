@@ -32,11 +32,7 @@ namespace itk
  * ******************** Constructor *************************
  */
 
-CMAEvolutionStrategyOptimizer::CMAEvolutionStrategyOptimizer()
-{
-  itkDebugMacro("Constructor");
-
-} // end constructor
+CMAEvolutionStrategyOptimizer::CMAEvolutionStrategyOptimizer() { itkDebugMacro("Constructor"); } // end constructor
 
 
 /**

@@ -210,7 +210,7 @@ private:
   RegionType           m_OutputRegion{}; // region of the output image
   TransformPointerType m_Transform{
     AdvancedIdentityTransform<TTransformPrecisionType, ImageDimension>::New()
-  };                                                               // Coordinate transform to use
+  }; // Coordinate transform to use
   SpacingType   m_OutputSpacing{ 1.0 };                            // output image spacing
   OriginType    m_OutputOrigin{};                                  // output image origin
   DirectionType m_OutputDirection{ DirectionType::GetIdentity() }; // output image direction cosines

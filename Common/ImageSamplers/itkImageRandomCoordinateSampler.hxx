@@ -100,7 +100,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
       sampleValue = static_cast<ImageSampleValueType>(this->m_Interpolator->EvaluateAtContinuousIndex(sampleContIndex));
 
     } // end for loop
-  }   // end if no mask
+  } // end if no mask
   else
   {
     /** Update the mask. */
@@ -141,7 +141,7 @@ ImageRandomCoordinateSampler<TInputImage>::GenerateData()
       sampleValue = static_cast<ImageSampleValueType>(this->m_Interpolator->EvaluateAtContinuousIndex(sampleContIndex));
 
     } // end for loop
-  }   // end if mask
+  } // end if mask
 
 } // end GenerateData()
 

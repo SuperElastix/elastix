@@ -33,7 +33,8 @@
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 1, 1> vnl_adjugate(vnl_matrix_fixed<T, 1, 1> const & m)
+vnl_matrix_fixed<T, 1, 1>
+vnl_adjugate(const vnl_matrix_fixed<T, 1, 1> & m)
 {
   return vnl_matrix_fixed<T, 1, 1>(m(0, 0));
 }
@@ -50,7 +51,8 @@ vnl_matrix_fixed<T, 1, 1> vnl_adjugate(vnl_matrix_fixed<T, 1, 1> const & m)
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 2, 2> vnl_adjugate(vnl_matrix_fixed<T, 2, 2> const & m)
+vnl_matrix_fixed<T, 2, 2>
+vnl_adjugate(const vnl_matrix_fixed<T, 2, 2> & m)
 {
   T d[4];
   d[0] = m(1, 1);
@@ -72,7 +74,8 @@ vnl_matrix_fixed<T, 2, 2> vnl_adjugate(vnl_matrix_fixed<T, 2, 2> const & m)
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 3, 3> vnl_adjugate(vnl_matrix_fixed<T, 3, 3> const & m)
+vnl_matrix_fixed<T, 3, 3>
+vnl_adjugate(const vnl_matrix_fixed<T, 3, 3> & m)
 {
   T d[9];
   d[0] = (m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1));
@@ -99,7 +102,8 @@ vnl_matrix_fixed<T, 3, 3> vnl_adjugate(vnl_matrix_fixed<T, 3, 3> const & m)
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 4, 4> vnl_adjugate(vnl_matrix_fixed<T, 4, 4> const & m)
+vnl_matrix_fixed<T, 4, 4>
+vnl_adjugate(const vnl_matrix_fixed<T, 4, 4> & m)
 {
   T d[16];
   d[0] = m(1, 1) * m(2, 2) * m(3, 3) - m(1, 1) * m(2, 3) * m(3, 2) - m(2, 1) * m(1, 2) * m(3, 3) +
@@ -150,7 +154,7 @@ vnl_matrix_fixed<T, 4, 4> vnl_adjugate(vnl_matrix_fixed<T, 4, 4> const & m)
 
 template <typename T>
 vnl_matrix<T>
-vnl_adjugate_asfixed(vnl_matrix<T> const & m)
+vnl_adjugate_asfixed(const vnl_matrix<T> & m)
 {
   assert(m.rows() == m.columns());
   assert(m.rows() <= 4);
@@ -178,7 +182,8 @@ vnl_adjugate_asfixed(vnl_matrix<T> const & m)
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 1, 1> vnl_cofactor(vnl_matrix_fixed<T, 1, 1> const & m)
+vnl_matrix_fixed<T, 1, 1>
+vnl_cofactor(const vnl_matrix_fixed<T, 1, 1> & m)
 {
   return vnl_matrix_fixed<T, 1, 1>(T(1) / m(0, 0));
 }
@@ -197,7 +202,8 @@ vnl_matrix_fixed<T, 1, 1> vnl_cofactor(vnl_matrix_fixed<T, 1, 1> const & m)
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 2, 2> vnl_cofactor(vnl_matrix_fixed<T, 2, 2> const & m)
+vnl_matrix_fixed<T, 2, 2>
+vnl_cofactor(const vnl_matrix_fixed<T, 2, 2> & m)
 {
 
   T d[4];
@@ -222,7 +228,8 @@ vnl_matrix_fixed<T, 2, 2> vnl_cofactor(vnl_matrix_fixed<T, 2, 2> const & m)
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 3, 3> vnl_cofactor(vnl_matrix_fixed<T, 3, 3> const & m)
+vnl_matrix_fixed<T, 3, 3>
+vnl_cofactor(const vnl_matrix_fixed<T, 3, 3> & m)
 {
 
   T d[9];
@@ -252,7 +259,8 @@ vnl_matrix_fixed<T, 3, 3> vnl_cofactor(vnl_matrix_fixed<T, 3, 3> const & m)
 //  \relatesalso vnl_matrix_fixed
 
 template <typename T>
-vnl_matrix_fixed<T, 4, 4> vnl_cofactor(vnl_matrix_fixed<T, 4, 4> const & m)
+vnl_matrix_fixed<T, 4, 4>
+vnl_cofactor(const vnl_matrix_fixed<T, 4, 4> & m)
 {
   T d[16];
   d[0] = m(1, 1) * m(2, 2) * m(3, 3) - m(1, 1) * m(2, 3) * m(3, 2) - m(2, 1) * m(1, 2) * m(3, 3) +
@@ -305,7 +313,7 @@ vnl_matrix_fixed<T, 4, 4> vnl_cofactor(vnl_matrix_fixed<T, 4, 4> const & m)
 
 template <typename T>
 vnl_matrix<T>
-vnl_cofactor(vnl_matrix<T> const & m)
+vnl_cofactor(const vnl_matrix<T> & m)
 {
   assert(m.rows() == m.columns());
   assert(m.rows() <= 4);
@@ -321,7 +329,8 @@ vnl_cofactor(vnl_matrix<T> const & m)
 
 
 template <typename T>
-vnl_vector_fixed<T, 3> vnl_cofactor_row1(vnl_vector_fixed<T, 3> const & row2, vnl_vector_fixed<T, 3> const & row3)
+vnl_vector_fixed<T, 3>
+vnl_cofactor_row1(const vnl_vector_fixed<T, 3> & row2, const vnl_vector_fixed<T, 3> & row3)
 {
   T d[3];
   d[0] = (row2[1] * row3[2] - row2[2] * row3[1]);

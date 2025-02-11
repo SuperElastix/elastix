@@ -236,8 +236,8 @@ elastix::TransformIO::MakeDeformationFieldFileName(const Configuration & configu
   const std::string::size_type pos = transformParameterFileName.rfind(transformParameterBaseName + '.');
   const std::string            lastpart =
     (pos == std::string::npos)
-      ? ""
-      : transformParameterFileName.substr(pos + transformParameterBaseNameSize,
+                 ? ""
+                 : transformParameterFileName.substr(pos + transformParameterBaseNameSize,
                                           transformParameterFileName.size() - pos - transformParameterBaseNameSize - 4);
 
   // Create the filename of the deformationField image.

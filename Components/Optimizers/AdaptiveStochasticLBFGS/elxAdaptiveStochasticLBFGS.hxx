@@ -1310,7 +1310,7 @@ AdaptiveStochasticLBFGS<TElastix>::SampleGradients(const ParametersType & mu0,
       } // end if random sampler
 
     } // end for loop over metrics
-  }   // end if NewSamplesEveryIteration.
+  } // end if NewSamplesEveryIteration.
 
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 

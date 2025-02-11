@@ -52,30 +52,30 @@
  *
  * These macros are undef'd at the end of this file
  */
-#define elxGetObjectMacro(_name, _type)                                                                                \
+#define elxGetObjectMacro(_name, _type) \
   _type * Get##_name() const { return m_##_name.GetPointer(); }
 // end elxGetObjectMacro
 
-#define elxSetObjectMacro(_name, _type)                                                                                \
-  void Set##_name(_type * _arg)                                                                                        \
-  {                                                                                                                    \
-    if (m_##_name != _arg)                                                                                             \
-    {                                                                                                                  \
-      m_##_name = _arg;                                                                                                \
-      this->itk::Object::Modified();                                                                                   \
-    }                                                                                                                  \
+#define elxSetObjectMacro(_name, _type) \
+  void Set##_name(_type * _arg)         \
+  {                                     \
+    if (m_##_name != _arg)              \
+    {                                   \
+      m_##_name = _arg;                 \
+      this->itk::Object::Modified();    \
+    }                                   \
   }
 // end elxSetObjectMacro
 
 /** defines for example: GetNumberOfMetrics() */
-#define elxGetNumberOfMacro(_name)                                                                                     \
-  unsigned int GetNumberOf##_name##s() const                                                                           \
-  {                                                                                                                    \
-    if (m_##_name##Container != nullptr)                                                                               \
-    {                                                                                                                  \
-      return m_##_name##Container->Size();                                                                             \
-    }                                                                                                                  \
-    return 0;                                                                                                          \
+#define elxGetNumberOfMacro(_name)           \
+  unsigned int GetNumberOf##_name##s() const \
+  {                                          \
+    if (m_##_name##Container != nullptr)     \
+    {                                        \
+      return m_##_name##Container->Size();   \
+    }                                        \
+    return 0;                                \
   }
 // end elxGetNumberOfMacro
 

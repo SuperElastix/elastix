@@ -207,7 +207,7 @@ PolydataDummyPenalty<TElastix>::AfterEachIteration()
         log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachIteration()
 
@@ -256,7 +256,7 @@ PolydataDummyPenalty<TElastix>::AfterEachResolution()
         log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachResolution()
 

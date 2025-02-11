@@ -166,13 +166,13 @@ private:
  * Returns true if \a lhs OpenCL platform identifier is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLPlatform & lhs, const OpenCLPlatform & rhs);
+operator==(const OpenCLPlatform & lhs, const OpenCLPlatform & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL platform identifier is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLPlatform & lhs, const OpenCLPlatform & rhs);
+operator!=(const OpenCLPlatform & lhs, const OpenCLPlatform & rhs);
 
 /** Stream out operator for OpenCLPlatform */
 template <typename charT, typename traits>

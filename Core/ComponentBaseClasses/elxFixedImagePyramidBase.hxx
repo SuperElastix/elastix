@@ -133,7 +133,7 @@ FixedImagePyramidBase<TElastix>::SetFixedSchedule()
       found &= ijfound;
 
     } // end for ImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if (!found && configuration.GetPrintErrorMessages())
   {

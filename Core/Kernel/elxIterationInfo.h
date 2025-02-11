@@ -30,7 +30,8 @@ namespace elastix
 class IterationInfo
 {
 public:
-  std::ostream & operator[](const char * const cellName);
+  std::ostream &
+  operator[](const char * const cellName);
 
   void
   AddNewTargetCell(const char * const cellName);

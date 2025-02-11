@@ -21,7 +21,7 @@
 #include "elxIncludes.h"
 #include "itkPolydataDummyPenalty.h"
 
-//#include "elxMetricBase.h"
+// #include "elxMetricBase.h"
 
 #include "itkMeshFileReader.h"
 #include "itkMeshFileWriter.h"

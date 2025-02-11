@@ -262,7 +262,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
           ++derivit;
           ++jointPDFDerivativesConstit;
         } // end while-loop over parameters
-      }   // end if-block to check non-zero bin contribution
+      } // end if-block to check non-zero bin contribution
       ++movingPDFconstit;
       ++jointPDFconstit;
       jointPDFDerivativesConstit.NextLine();

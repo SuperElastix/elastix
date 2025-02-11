@@ -48,7 +48,7 @@
 // elastix advanced transform includes
 #include "itkGPUAdvancedBSplineDeformableTransformFactory.h"
 #include "itkGPUAdvancedCombinationTransformFactory.h"
-//#include "itkGPUAdvancedEuler2DTransformFactory.h"
+// #include "itkGPUAdvancedEuler2DTransformFactory.h"
 #include "itkGPUAdvancedEuler3DTransformFactory.h"
 #include "itkGPUAdvancedMatrixOffsetTransformBaseFactory.h"
 #include "itkGPUAdvancedSimilarity2DTransformFactory.h"

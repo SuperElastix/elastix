@@ -24,40 +24,40 @@
 #include <vnl/vnl_math.h>
 
 /** Macro that implements the set methods. */
-#define itkImplementationSetMacro(_name, _type)                                                                        \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  void MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Set##_name(_type        _arg,     \
-                                                                                                unsigned int pos)      \
-  {                                                                                                                    \
-    if (pos == 0)                                                                                                      \
-    {                                                                                                                  \
-      this->Superclass::Set##_name(_arg);                                                                              \
-    }                                                                                                                  \
-    if (pos >= this->GetNumberOf##_name##s())                                                                          \
-    {                                                                                                                  \
-      this->SetNumberOf##_name##s(pos + 1);                                                                            \
-    }                                                                                                                  \
-    if (this->m_##_name##s[pos] != _arg)                                                                               \
-    {                                                                                                                  \
-      this->m_##_name##s[pos] = _arg;                                                                                  \
-      this->Modified();                                                                                                \
-    }                                                                                                                  \
+#define itkImplementationSetMacro(_name, _type)                                                                    \
+  template <typename TFixedImage, typename TMovingImage>                                                           \
+  void MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Set##_name(_type        _arg, \
+                                                                                                unsigned int pos)  \
+  {                                                                                                                \
+    if (pos == 0)                                                                                                  \
+    {                                                                                                              \
+      this->Superclass::Set##_name(_arg);                                                                          \
+    }                                                                                                              \
+    if (pos >= this->GetNumberOf##_name##s())                                                                      \
+    {                                                                                                              \
+      this->SetNumberOf##_name##s(pos + 1);                                                                        \
+    }                                                                                                              \
+    if (this->m_##_name##s[pos] != _arg)                                                                           \
+    {                                                                                                              \
+      this->m_##_name##s[pos] = _arg;                                                                              \
+      this->Modified();                                                                                            \
+    }                                                                                                              \
   } // comment to allow ; after calling macro
 
 /** Macro that implements the get methods. */
-#define itkImplementationGetMacro(_name, _type1, _type2)                                                               \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  auto MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Get##_name(unsigned int pos)      \
-    const->_type1 _type2                                                                                               \
-  {                                                                                                                    \
-    if (pos >= this->GetNumberOf##_name##s())                                                                          \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
-    else                                                                                                               \
-    {                                                                                                                  \
-      return this->m_##_name##s[pos].GetPointer();                                                                     \
-    }                                                                                                                  \
+#define itkImplementationGetMacro(_name, _type1, _type2)                                                          \
+  template <typename TFixedImage, typename TMovingImage>                                                          \
+  auto MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) \
+    const->_type1 _type2                                                                                          \
+  {                                                                                                               \
+    if (pos >= this->GetNumberOf##_name##s())                                                                     \
+    {                                                                                                             \
+      return 0;                                                                                                   \
+    }                                                                                                             \
+    else                                                                                                          \
+    {                                                                                                             \
+      return this->m_##_name##s[pos].GetPointer();                                                                \
+    }                                                                                                             \
   } // comment to allow ; after calling macro
 
 namespace itk

@@ -23,4 +23,4 @@
 
 // nothing
 
-#endif //#ifndef elxInterpolatorBase_hxx
+#endif // #ifndef elxInterpolatorBase_hxx

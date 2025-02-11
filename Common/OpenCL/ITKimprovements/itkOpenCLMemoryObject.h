@@ -194,13 +194,13 @@ private:
  * Returns true if \a lhs OpenCL memory object is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs);
+operator==(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL memory object identifier is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs);
+operator!=(const OpenCLMemoryObject & lhs, const OpenCLMemoryObject & rhs);
 
 /** Stream out operator for OpenCLMemoryObject */
 template <typename charT, typename traits>

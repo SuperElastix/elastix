@@ -207,10 +207,7 @@ log::guard::guard(const std::string & log_filename,
   setup_implementation(log_filename, do_log_to_file, do_log_to_stdout, log_level);
 }
 
-log::guard::~guard()
-{
-  get_logger().reset();
-}
+log::guard::~guard() { get_logger().reset(); }
 
 
 void

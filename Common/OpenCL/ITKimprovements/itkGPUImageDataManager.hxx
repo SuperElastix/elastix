@@ -37,7 +37,7 @@
 
 #include "itkGPUImageDataManager.h"
 
-//#define VERBOSE
+// #define VERBOSE
 
 namespace itk
 {

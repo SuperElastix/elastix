@@ -178,13 +178,13 @@ private:
  * Returns true if \a lhs OpenCL sampler is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLSampler & lhs, const OpenCLSampler & rhs);
+operator==(const OpenCLSampler & lhs, const OpenCLSampler & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL sampler is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLSampler & lhs, const OpenCLSampler & rhs);
+operator!=(const OpenCLSampler & lhs, const OpenCLSampler & rhs);
 
 /** Stream out operator for OpenCLSampler */
 template <typename charT, typename traits>

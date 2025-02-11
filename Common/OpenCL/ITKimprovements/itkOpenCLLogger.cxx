@@ -150,7 +150,7 @@ OpenCLLogger::IsCreated() const
 
 //------------------------------------------------------------------------------
 void
-OpenCLLogger::Write(PriorityLevelEnum level, std::string const & content)
+OpenCLLogger::Write(PriorityLevelEnum level, const std::string & content)
 {
   if (this->m_Stream.IsNull())
   {

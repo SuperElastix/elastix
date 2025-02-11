@@ -440,4 +440,4 @@ private:
 
 } // end namespace itk
 
-#endif //#ifndef itkCMAEvolutionStrategyOptimizer_h
+#endif // #ifndef itkCMAEvolutionStrategyOptimizer_h

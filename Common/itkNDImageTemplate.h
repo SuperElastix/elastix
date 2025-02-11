@@ -235,39 +235,29 @@ protected:
   ReaderPointer m_Reader{ nullptr };
 
   template <typename TIn, typename TOut>
-  class ITK_TEMPLATE_EXPORT ConvertToDynamicArray
+  class ITK_TEMPLATE_EXPORT ConvertToDynamicArray{ public: static TOut DO(const TIn & in){ TOut out(VDimension);
+
+  for (unsigned int i = 0; i < VDimension; ++i)
   {
-  public:
-    static TOut
-    DO(const TIn & in)
-    {
-      TOut out(VDimension);
+    out[i] = in[i];
+  }
+  return out;
+}
+}; // namespace itk
 
-      for (unsigned int i = 0; i < VDimension; ++i)
-      {
-        out[i] = in[i];
-      }
-      return out;
-    }
-  };
+template <typename TIn, typename TOut>
+class ITK_TEMPLATE_EXPORT ConvertToStaticArray{ public: static TOut DO(const TIn & in){ TOut out;
 
-  template <typename TIn, typename TOut>
-  class ITK_TEMPLATE_EXPORT ConvertToStaticArray
-  {
-  public:
-    static TOut
-    DO(const TIn & in)
-    {
-      TOut out;
-
-      for (unsigned int i = 0; i < VDimension; ++i)
-      {
-        out[i] = in[i];
-      }
-      return out;
-    }
-  };
-};
+for (unsigned int i = 0; i < VDimension; ++i)
+{
+  out[i] = in[i];
+}
+return out;
+}
+}
+;
+}
+;
 
 } // end namespace itk
 

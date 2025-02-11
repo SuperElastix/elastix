@@ -282,7 +282,7 @@ main(int argc, char * argv[])
   // Avoid compiler optimizations, so use sum
   std::cerr << sum << std::endl; // works but ugly on screen
   //  volatile double a = sum; // works but gives unused variable warning
-  //#pragma optimize( "", off ) // unrecognized pragma
+  // #pragma optimize( "", off ) // unrecognized pragma
   // sum += 2.0;
 
   /** Report timings. */

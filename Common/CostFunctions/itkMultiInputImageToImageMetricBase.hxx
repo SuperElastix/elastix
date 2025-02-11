@@ -28,65 +28,65 @@
  */
 
 /** Macro for setting objects. */
-#define itkImplementationSetObjectMacro(_name, _type)                                                                  \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  void MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Set##_name(_type * _arg, unsigned int pos)         \
-  {                                                                                                                    \
-    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
-    {                                                                                                                  \
-      this->m_##_name##Vector.resize(pos + 1);                                                                         \
-      this->m_NumberOf##_name##s = pos + 1;                                                                            \
-    }                                                                                                                  \
-    if (pos == 0)                                                                                                      \
-    {                                                                                                                  \
-      this->Superclass::Set##_name(_arg);                                                                              \
-    }                                                                                                                  \
-    if (this->m_##_name##Vector[pos] != _arg)                                                                          \
-    {                                                                                                                  \
-      this->m_##_name##Vector[pos] = _arg;                                                                             \
-      this->Modified();                                                                                                \
-    }                                                                                                                  \
+#define itkImplementationSetObjectMacro(_name, _type)                                                          \
+  template <typename TFixedImage, typename TMovingImage>                                                       \
+  void MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Set##_name(_type * _arg, unsigned int pos) \
+  {                                                                                                            \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                              \
+    {                                                                                                          \
+      this->m_##_name##Vector.resize(pos + 1);                                                                 \
+      this->m_NumberOf##_name##s = pos + 1;                                                                    \
+    }                                                                                                          \
+    if (pos == 0)                                                                                              \
+    {                                                                                                          \
+      this->Superclass::Set##_name(_arg);                                                                      \
+    }                                                                                                          \
+    if (this->m_##_name##Vector[pos] != _arg)                                                                  \
+    {                                                                                                          \
+      this->m_##_name##Vector[pos] = _arg;                                                                     \
+      this->Modified();                                                                                        \
+    }                                                                                                          \
   } // comments for allowing ; after calling the macro
 
 /** Macro for setting objects. */
-#define itkImplementationSetObjectMacro2(_name, _type)                                                                 \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  void MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Set##_name(_type * _arg, unsigned int pos)         \
-  {                                                                                                                    \
-    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
-    {                                                                                                                  \
-      this->m_##_name##Vector.resize(pos + 1);                                                                         \
-      this->m_NumberOf##_name##s = pos + 1;                                                                            \
-    }                                                                                                                  \
-    if (this->m_##_name##Vector[pos] != _arg)                                                                          \
-    {                                                                                                                  \
-      this->m_##_name##Vector[pos] = _arg;                                                                             \
-      this->Modified();                                                                                                \
-    }                                                                                                                  \
+#define itkImplementationSetObjectMacro2(_name, _type)                                                         \
+  template <typename TFixedImage, typename TMovingImage>                                                       \
+  void MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Set##_name(_type * _arg, unsigned int pos) \
+  {                                                                                                            \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                              \
+    {                                                                                                          \
+      this->m_##_name##Vector.resize(pos + 1);                                                                 \
+      this->m_NumberOf##_name##s = pos + 1;                                                                    \
+    }                                                                                                          \
+    if (this->m_##_name##Vector[pos] != _arg)                                                                  \
+    {                                                                                                          \
+      this->m_##_name##Vector[pos] = _arg;                                                                     \
+      this->Modified();                                                                                        \
+    }                                                                                                          \
   } // comments for allowing ; after calling the macro
 
 /** Macro for getting objects. */
-#define itkImplementationGetObjectMacro(_name, _type)                                                                  \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  auto MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->_type *        \
-  {                                                                                                                    \
-    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
-    return this->m_##_name##Vector[pos];                                                                               \
+#define itkImplementationGetObjectMacro(_name, _type)                                                           \
+  template <typename TFixedImage, typename TMovingImage>                                                        \
+  auto MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->_type * \
+  {                                                                                                             \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                               \
+    {                                                                                                           \
+      return 0;                                                                                                 \
+    }                                                                                                           \
+    return this->m_##_name##Vector[pos];                                                                        \
   } // comments for allowing ; after calling the macro
 
 /** Macro for getting const objects. */
-#define itkImplementationGetConstObjectMacro(_name, _type)                                                             \
-  template <typename TFixedImage, typename TMovingImage>                                                               \
-  auto MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type *  \
-  {                                                                                                                    \
-    if (this->m_##_name##Vector.size() < pos + 1)                                                                      \
-    {                                                                                                                  \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
-    return this->m_##_name##Vector[pos];                                                                               \
+#define itkImplementationGetConstObjectMacro(_name, _type)                                                            \
+  template <typename TFixedImage, typename TMovingImage>                                                              \
+  auto MultiInputImageToImageMetricBase<TFixedImage, TMovingImage>::Get##_name(unsigned int pos) const->const _type * \
+  {                                                                                                                   \
+    if (this->m_##_name##Vector.size() < pos + 1)                                                                     \
+    {                                                                                                                 \
+      return 0;                                                                                                       \
+    }                                                                                                                 \
+    return this->m_##_name##Vector[pos];                                                                              \
   } // comments for allowing ; after calling the macro
 
 namespace itk

@@ -486,7 +486,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
           }
         }
       } // end if m_UseMovingImageDerivativeScales
-    }   // end if gradient
+    } // end if gradient
     else
     {
       movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);

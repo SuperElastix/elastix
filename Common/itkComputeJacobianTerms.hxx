@@ -235,8 +235,8 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
                 }
               }
             } // qi
-          }   // pi
-        }     // end if
+          } // pi
+        } // end if
 
         /** Initialize jactjac by J_j^T J_j. */
         vnl_fastops::AtA(jactjac, jacj);
@@ -273,7 +273,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
           }
         }
       } // qi
-    }   // pi
+    } // pi
 
     /** Copy the bandmatrix into the sparse matrix and empty the bandcov matrix.
      * \todo: perhaps work further with this bandmatrix instead.
@@ -417,9 +417,9 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
           {
             jacjcov[dx][pi] += jacj[dx][qi] * covElement;
           } // dx
-        }   // if qi < sizejacind
-      }     // for covrow
-    }       // pi
+        } // if qi < sizejacind
+      } // for covrow
+    } // pi
 
     /** J_j C J_j^T  = jacjCjacj.
      * But note that we actually compute J_j cov' J_j^T

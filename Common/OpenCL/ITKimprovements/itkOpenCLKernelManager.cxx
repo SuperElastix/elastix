@@ -38,10 +38,7 @@
 
 namespace itk
 {
-OpenCLKernelManager::OpenCLKernelManager()
-{
-  this->m_Context = OpenCLContext::GetInstance();
-}
+OpenCLKernelManager::OpenCLKernelManager() { this->m_Context = OpenCLContext::GetInstance(); }
 
 
 //------------------------------------------------------------------------------

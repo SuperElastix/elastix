@@ -17,7 +17,7 @@
  *=========================================================================*/
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkBSplineDeformableTransform.h" // original ITK
-//#include "itkBSplineTransform.h" // new ITK4
+// #include "itkBSplineTransform.h" // new ITK4
 #include "itkGridScheduleComputer.h"
 
 #include <ctime>

@@ -20,7 +20,7 @@
 
 #include "elxIncludes.h"
 #include "itkSumSquaredTissueVolumeDifferenceImageToImageMetric.h"
-//#include "itkTimeProbe.h"
+// #include "itkTimeProbe.h"
 
 namespace elastix
 {

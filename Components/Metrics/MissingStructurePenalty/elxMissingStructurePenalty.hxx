@@ -219,7 +219,7 @@ MissingStructurePenalty<TElastix>::AfterEachIteration()
         log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachIteration()
 
@@ -268,7 +268,7 @@ MissingStructurePenalty<TElastix>::AfterEachResolution()
         log::error(std::ostringstream{} << "Exception caught: \n" << excp << "Resuming elastix.");
       }
     } // end for
-  }   // end if
+  } // end if
 
 } // end AfterEachResolution()
 
