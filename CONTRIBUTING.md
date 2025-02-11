@@ -72,6 +72,7 @@ These guidelines are largely inspired by Chris Beam's
 [How to Write a Commit Message](https://chris.beams.io/posts/git-commit/)
 post.
 
+* After cloning the repository, run the `./tools/pre-commit-setup.bash` script to install the pre-commit hook. This hook will check the code format with clangFormat before committing. If the hook fails, the commit will be aborted. The hook can be used locally, for details see below.
 
 * Ensure the PR adheres to our [coding conventions](#coding-conventions), the PR code format will be checked with clangFormat on the CI. The hook can be used locally, for details see below.
 
