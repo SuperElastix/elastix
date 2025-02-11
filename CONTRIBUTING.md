@@ -86,24 +86,7 @@ post.
 
 * Please read [Contributing to the Rails Documentation](http://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html#contributing-to-the-rails-documentation).
 -->
-## Pre-commit clangFormat hook ##
 
-A pre-commit hook that formats the code in the repository according to the correct clangFormat, is available for git.
-In order to use the hook, it is has to be moved to the .git/hooks folder locally:
-
-For Unix:
-
-  `cp .githooks/pre-commit .git/hooks`
-
-  `chmod u+x .git/hooks/pre-commit`
-
-For Windows:
-
-  `copy .githooks\pre-commit .git\hooks`
-
-The pre-commit hooks is triggered by any git commit message, if files that don't adhere to the correct clangFormat style are found, these files are changes.
-Run `git status` or `git diff` to see these changes.
-Changes, if found, have to be re-added and re-commited with git, make sure to use the --amend flag when re-commiting to keep the commit history clean.
 
 ## Coding conventions ##
 
