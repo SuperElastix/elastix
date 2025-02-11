@@ -78,12 +78,12 @@ public:
 
 
 /// Expect the specified condition to be false, and throw an exception if it is true.
-#define ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(condition)                                                       \
-  if (condition)                                                                                                       \
-  {                                                                                                                    \
-    EXPECT_FALSE(true) << "Expected to be false: " #condition;                                                         \
-    throw ::elastix::CoreMainGTestUtilities::Exception("Exception thrown because " #condition);                        \
-  }                                                                                                                    \
+#define ELX_GTEST_EXPECT_FALSE_AND_THROW_EXCEPTION_IF(condition)                                \
+  if (condition)                                                                                \
+  {                                                                                             \
+    EXPECT_FALSE(true) << "Expected to be false: " #condition;                                  \
+    throw ::elastix::CoreMainGTestUtilities::Exception("Exception thrown because " #condition); \
+  }                                                                                             \
   static_assert(true, "Expect a semi-colon ';' at the end of a macro call")
 
 template <typename TSmartPointer>
@@ -188,8 +188,8 @@ ConvertToOffset(const std::vector<double> & doubles)
 }
 
 
-std::map<std::string, std::vector<std::string>> inline CreateParameterMap(
-  std::initializer_list<std::pair<std::string, std::vector<std::string>>> initializerList)
+inline std::map<std::string, std::vector<std::string>>
+CreateParameterMap(std::initializer_list<std::pair<std::string, std::vector<std::string>>> initializerList)
 {
   std::map<std::string, std::vector<std::string>> result;
 
@@ -201,8 +201,8 @@ std::map<std::string, std::vector<std::string>> inline CreateParameterMap(
 }
 
 
-std::map<std::string, std::vector<std::string>> inline CreateParameterMap(
-  std::initializer_list<std::pair<std::string, std::string>> initializerList)
+inline std::map<std::string, std::vector<std::string>>
+CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> initializerList)
 {
   std::map<std::string, std::vector<std::string>> result;
 
@@ -228,8 +228,8 @@ CreateParameterMap(std::initializer_list<std::pair<std::string, std::string>> in
 }
 
 
-ParameterObject::Pointer inline CreateParameterObject(
-  std::initializer_list<std::pair<std::string, std::string>> initializerList)
+inline ParameterObject::Pointer
+CreateParameterObject(std::initializer_list<std::pair<std::string, std::string>> initializerList)
 {
   const auto parameterObject = ParameterObject::New();
   parameterObject->SetParameterMap(CreateParameterMap(initializerList));
@@ -237,7 +237,8 @@ ParameterObject::Pointer inline CreateParameterObject(
 }
 
 
-ParameterObject::Pointer inline CreateParameterObject(const ParameterObject::ParameterMapType & parameterMap)
+inline ParameterObject::Pointer
+CreateParameterObject(const ParameterObject::ParameterMapType & parameterMap)
 {
   const auto parameterObject = ParameterObject::New();
   parameterObject->SetParameterMap(parameterMap);

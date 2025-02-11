@@ -21,19 +21,19 @@
 #  include "elxElastixTemplate.h"
 #  include <itkDeref.h>
 
-#  define elxCheckAndSetComponentMacro(_name)                                                                          \
-    _name##BaseType * base = this->GetElx##_name##Base(i);                                                             \
-    if (base != nullptr)                                                                                               \
-    {                                                                                                                  \
-      base->SetComponentLabel(#_name, i);                                                                              \
-      base->SetElastix(This);                                                                                          \
-    }                                                                                                                  \
-    else                                                                                                               \
-    {                                                                                                                  \
-      std::string par = "";                                                                                            \
-      itk::Deref(ElastixBase::GetConfiguration()).ReadParameter(par, #_name, i, false);                                \
-      itkExceptionMacro("ERROR: entry " << i << " of " << #_name << " reads \"" << par << "\", which is not of type "  \
-                                        << #_name << "BaseType.");                                                     \
+#  define elxCheckAndSetComponentMacro(_name)                                                                         \
+    _name##BaseType * base = this->GetElx##_name##Base(i);                                                            \
+    if (base != nullptr)                                                                                              \
+    {                                                                                                                 \
+      base->SetComponentLabel(#_name, i);                                                                             \
+      base->SetElastix(This);                                                                                         \
+    }                                                                                                                 \
+    else                                                                                                              \
+    {                                                                                                                 \
+      std::string par = "";                                                                                           \
+      itk::Deref(ElastixBase::GetConfiguration()).ReadParameter(par, #_name, i, false);                               \
+      itkExceptionMacro("ERROR: entry " << i << " of " << #_name << " reads \"" << par << "\", which is not of type " \
+                                        << #_name << "BaseType.");                                                    \
     }
 // end elxCheckAndSetComponentMacro
 

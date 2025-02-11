@@ -674,7 +674,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       }
       ++it_RCI;
     } // end while
-  }   // end if do orthonormality
+  } // end if do orthonormality
 
   /** TASK 4B:
    * Do the actual calculation of the rigidity penalty term value.
@@ -742,7 +742,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       ++it_RCI;
 
     } // end while
-  }   // end if do properness
+  } // end if do properness
 
   /** TASK 4C:
    * Do the actual calculation of the rigidity penalty term value.
@@ -785,7 +785,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       ++it_RCI;
 
     } // end while
-  }   // end if do properness
+  } // end if do properness
 
   /** TASK 5:
    * Do the actual calculation of the rigidity penalty term value.
@@ -1234,7 +1234,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       ++it_RCI;
 
     } // end while
-  }   // end if do orthonormality
+  } // end if do orthonormality
 
   /** TASK 4B:
    * Do the calculation of the properness parts.
@@ -1415,7 +1415,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       ++it_RCI;
 
     } // end while
-  }   // end if do properness
+  } // end if do properness
 
   /** TASK 4C:
    * Do the calculation of the linearity parts.
@@ -1494,7 +1494,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       ++it_RCI;
 
     } // end while
-  }   // end if do linearity
+  } // end if do linearity
 
   /** TASK 5:
    * Do the actual calculation of the rigidity penalty term value.
@@ -1661,7 +1661,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         }
       }
     } // end while
-  }   // end if do orthonormality
+  } // end if do orthonormality
 
   /** TASK 7B:
    * Calculate the filtered versions of the properness subparts.
@@ -1714,7 +1714,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         }
       }
     } // end while
-  }   // end if do properness
+  } // end if do properness
 
   /** TASK 7C:
    * Calculate the filtered versions of the linearity subparts.
@@ -1775,7 +1775,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
         }
       }
     } // end while
-  }   // end if do linearity
+  } // end if do linearity
 
   /** TASK 8:
    * Add it all to create the final derivative images.
@@ -1863,7 +1863,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       ++itDIs[i];
       ++j;
     } // end while
-  }   // end for
+  } // end for
 
 } // end GetValueAndDerivative()
 

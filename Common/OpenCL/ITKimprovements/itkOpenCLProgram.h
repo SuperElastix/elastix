@@ -139,13 +139,13 @@ private:
  * Returns true if \a lhs OpenCL program is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLProgram & lhs, const OpenCLProgram & rhs);
+operator==(const OpenCLProgram & lhs, const OpenCLProgram & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL program is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLProgram & lhs, const OpenCLProgram & rhs);
+operator!=(const OpenCLProgram & lhs, const OpenCLProgram & rhs);
 
 /** Stream out operator for OpenCLProgram */
 template <typename charT, typename traits>

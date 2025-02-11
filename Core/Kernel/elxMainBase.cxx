@@ -233,7 +233,7 @@ MainBase::CreateComponents(const std::string &              key,
         return objectContainer;
       }
     } // end if
-  }   // end while
+  } // end while
 
   return objectContainer;
 

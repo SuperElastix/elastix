@@ -274,7 +274,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(const 
         sumValues += movingImageValue;
         sumValuesSquared += movingImageValue * movingImageValue;
       } // end if sampleOk
-    }   // end for loop over last dimension
+    } // end for loop over last dimension
 
     if (numSamplesOk > 0)
     {

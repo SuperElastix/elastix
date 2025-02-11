@@ -908,7 +908,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Eva
       /** Set the gradient into the matrix. */
       featureGradients.set_row(i - 1, gradient.GetDataPointer());
     } // end for-loop
-  }   // end if
+  } // end if
   //  else
   //  {
   //  /** Get the gradient by NearestNeighboorInterpolation of the gradient image.

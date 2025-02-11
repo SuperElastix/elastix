@@ -416,4 +416,4 @@ private:
 
 /*    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
-#endif //#ifndef itkQuasiNewtonLBFGSOptimizer_h
+#endif // #ifndef itkQuasiNewtonLBFGSOptimizer_h

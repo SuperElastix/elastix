@@ -22,15 +22,15 @@
 #include <vector>
 
 /** Macro for setting the number of objects. */
-#define itkSetNumberOfMacro(name)                                                                                      \
-  virtual void SetNumberOf##name##s(const unsigned int _arg)                                                           \
-  {                                                                                                                    \
-    if (this->m_NumberOf##name##s != _arg)                                                                             \
-    {                                                                                                                  \
-      this->m_##name##Vector.resize(_arg);                                                                             \
-      this->m_NumberOf##name##s = _arg;                                                                                \
-      this->Modified();                                                                                                \
-    }                                                                                                                  \
+#define itkSetNumberOfMacro(name)                            \
+  virtual void SetNumberOf##name##s(const unsigned int _arg) \
+  {                                                          \
+    if (this->m_NumberOf##name##s != _arg)                   \
+    {                                                        \
+      this->m_##name##Vector.resize(_arg);                   \
+      this->m_NumberOf##name##s = _arg;                      \
+      this->Modified();                                      \
+    }                                                        \
   } // comments for allowing ; after calling the macro
 
 namespace itk

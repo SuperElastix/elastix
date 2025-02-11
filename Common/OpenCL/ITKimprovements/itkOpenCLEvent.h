@@ -242,13 +242,13 @@ private:
  * Returns true if \a lhs OpenCL event is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLEvent & lhs, const OpenCLEvent & rhs);
+operator==(const OpenCLEvent & lhs, const OpenCLEvent & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL event is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLEvent & lhs, const OpenCLEvent & rhs);
+operator!=(const OpenCLEvent & lhs, const OpenCLEvent & rhs);
 
 /** Stream out operator for OpenCLEvent */
 template <typename charT, typename traits>

@@ -519,8 +519,8 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
           }
         }
       } // end if B-spline
-    }   // end if sampleOk
-  }     // end for loop over the image sample container
+    } // end if sampleOk
+  } // end for loop over the image sample container
 
   /** Only update these variables at the end to prevent unnecessary "false sharing". */
   Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted = numberOfPixelsCounted;

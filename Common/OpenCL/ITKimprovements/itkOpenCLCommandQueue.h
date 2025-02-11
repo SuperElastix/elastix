@@ -121,13 +121,13 @@ private:
  * Returns true if \a lhs OpenCL command queue is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs);
+operator==(const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL command queue is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs);
+operator!=(const OpenCLCommandQueue & lhs, const OpenCLCommandQueue & rhs);
 
 /** Stream out operator for OpenCLCommandQueue */
 template <typename charT, typename traits>

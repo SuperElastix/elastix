@@ -584,13 +584,13 @@ private:
  * Returns true if \a lhs OpenCL device identifier is the same as \a rhs, false otherwise.
  * \sa operator!= */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLDevice & lhs, const OpenCLDevice & rhs);
+operator==(const OpenCLDevice & lhs, const OpenCLDevice & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL device identifier is not the same as \a rhs, false otherwise.
  * \sa operator== */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLDevice & lhs, const OpenCLDevice & rhs);
+operator!=(const OpenCLDevice & lhs, const OpenCLDevice & rhs);
 
 /** Stream out operator for OpenCLDevice */
 template <typename charT, typename traits>

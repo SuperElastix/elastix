@@ -19,10 +19,7 @@
 
 namespace itk
 {
-GPUInterpolatorBase::GPUInterpolatorBase()
-{
-  this->m_ParametersDataManager = GPUDataManager::New();
-}
+GPUInterpolatorBase::GPUInterpolatorBase() { this->m_ParametersDataManager = GPUDataManager::New(); }
 
 
 //------------------------------------------------------------------------------

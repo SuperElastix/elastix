@@ -371,7 +371,7 @@ ConjugateGradient<TElastix>::AfterEachIteration()
         throw;
       }
     } // end if new samples every iteration
-  }   // end if not in line search
+  } // end if not in line search
 
 } // end AfterEachIteration
 

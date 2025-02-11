@@ -23,4 +23,4 @@
 
 // nothing
 
-#endif //#ifndef elxMovingSmoothingPyramid_hxx
+#endif // #ifndef elxMovingSmoothingPyramid_hxx

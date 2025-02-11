@@ -19,7 +19,7 @@
 #define itkListSampleCArray_h
 
 #include "itkObjectFactory.h"
-//#include "itkListSampleBase.h"
+// #include "itkListSampleBase.h"
 #include "itkSample.h"
 
 namespace itk

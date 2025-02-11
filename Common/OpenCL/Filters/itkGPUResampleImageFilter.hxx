@@ -656,7 +656,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
         eventList.Append(loopEvent);
 
       } // end loop over the list of transforms
-    }   // end if is combo
+    } // end if is combo
     else
     {
       /** Get the kernel id for this transform and launch it. */

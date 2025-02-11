@@ -194,7 +194,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
             }
             maxdiff = diff_jacobian > maxdiff ? diff_jacobian : maxdiff;
           } // end if
-        }   // end for
+        } // end for
 
         if (maxdiff > 0)
         {
@@ -223,7 +223,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
             sum_displacement += std::abs(jacj_k * exactgradient(pk)) * weight;
             sum_weight += weight;
           } // end if
-        }   // end for loop regularization
+        } // end for loop regularization
 
         if (sum_weight > 0.0)
         {
@@ -590,8 +590,8 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
 #else // use new method
     // average over the neighborhood using only the non -1 entries
     // we should repeat this a couple of times, until no -1's are left
-    double tmp = 0.0;
-    auto radius = GridSizeType::Filled(1);
+    double                                     tmp = 0.0;
+    auto                                       radius = GridSizeType::Filled(1);
     NeighborhoodIterator<CoefficientImageType> nit(radius, coefImage, region2);
     while (!nit.IsAtEnd())
     {
@@ -602,7 +602,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Pre
       }
 
       // average over the neighborhood
-      double accum = 0.0;
+      double       accum = 0.0;
       unsigned int count = 0;
       for (unsigned int i = 0; i < nit.Size(); ++i)
       {

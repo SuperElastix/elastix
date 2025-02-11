@@ -24,4 +24,4 @@
 namespace elastix
 {} // end namespace elastix
 
-#endif //#ifndef elxFixedSmoothingPyramid_hxx
+#endif // #ifndef elxFixedSmoothingPyramid_hxx

@@ -24,4 +24,4 @@
 namespace elastix
 {} // end namespace elastix
 
-#endif //#ifndef elxMovingShrinkingPyramid_hxx
+#endif // #ifndef elxMovingShrinkingPyramid_hxx

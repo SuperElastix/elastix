@@ -264,4 +264,4 @@ private:
 
 } // end namespace itk
 
-#endif //#ifndef itkGenericConjugateGradientOptimizer_h
+#endif // #ifndef itkGenericConjugateGradientOptimizer_h

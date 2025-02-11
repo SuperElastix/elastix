@@ -160,7 +160,7 @@ OpenCLContext::IsCreated() const
 // asynchronously by the OpenCL implementation. It is the application's
 // responsibility to ensure that the callback function is thread-safe.
 void CL_CALLBACK
-     opencl_context_notify(const char * errinfo, const void * /*private_info*/, std::size_t /*cb*/, void * /*user_data*/)
+opencl_context_notify(const char * errinfo, const void * /*private_info*/, std::size_t /*cb*/, void * /*user_data*/)
 {
   itkOpenCLErrorMacroGeneric(<< "OpenCL error during context creation or runtime:\n" << errinfo);
 }

@@ -28,11 +28,7 @@ namespace itk
 /**
  * ************************ Constructor **************************
  */
-FullSearchOptimizer::FullSearchOptimizer()
-{
-  itkDebugMacro("Constructor");
-
-} // end constructor
+FullSearchOptimizer::FullSearchOptimizer() { itkDebugMacro("Constructor"); } // end constructor
 
 
 /**

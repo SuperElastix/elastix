@@ -59,8 +59,8 @@ struct OCLImageDims
   itkStaticConstMacro(Support3D, bool, true);
 };
 
-#define ITK_OPENCL_COMPARE(actual, expected)                                                                           \
-  if (!itk::Compare(actual, expected, #actual, #expected, __FILE__, __LINE__))                                         \
+#define ITK_OPENCL_COMPARE(actual, expected)                                   \
+  if (!itk::Compare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
   itkGenericExceptionMacro("Compared values are not the same")
 
 namespace itk
@@ -68,7 +68,7 @@ namespace itk
 //------------------------------------------------------------------------------
 template <typename T>
 inline bool
-Compare(T const & t1, T const & t2, const char * actual, const char * expected, const char * file, int line)
+Compare(const T & t1, const T & t2, const char * actual, const char * expected, const char * file, int line)
 {
   return (t1 == t2) ? true : false;
 }

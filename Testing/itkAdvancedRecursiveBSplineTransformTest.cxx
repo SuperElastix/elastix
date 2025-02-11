@@ -18,7 +18,7 @@
 #include "itkBSplineDeformableTransform.h"         // original ITK
 #include "itkAdvancedBSplineDeformableTransform.h" // original elastix
 #include "itkRecursiveBSplineTransform.h"          // recursive version
-//#include "itkBSplineTransform.h"                   // new ITK4
+// #include "itkBSplineTransform.h"                   // new ITK4
 
 #include "itkGridScheduleComputer.h"
 

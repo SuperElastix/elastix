@@ -452,8 +452,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
         ++itWeights;
         ++itCoeffs;
       } // end for mu
-    }   // end for dim
-  }     // end for i
+    } // end for dim
+  } // end for i
 
   /** Take into account grid spacing and direction cosines. */
   sj *= Superclass::m_PointToIndexMatrix2;
@@ -778,7 +778,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       }
 
     } // end for dim
-  }   // end for i
+  } // end for i
 
   /** Take into account grid spacing and direction cosines. */
   sj *= Superclass::m_PointToIndexMatrix2;
@@ -889,7 +889,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
         ++count;
 
       } // end for j
-    }   // end for i
+    } // end for i
   }
 
   /** Compute d/dmu d^2T_{dim} / dx_i dx_j = weights. */
@@ -1058,7 +1058,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
         }
 
       } // end for j
-    }   // end for i
+    } // end for i
   }
 
   /** Take into account grid spacing and direction matrix. */
@@ -1235,7 +1235,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Comp
         nonZeroJacobianIndices[localParNum + dim * NumberOfWeights] = globalParNum + dim * parametersPerDim;
       }
     } // end for
-  }   // end general case
+  } // end general case
 
 } // end ComputeNonZeroJacobianIndices()
 

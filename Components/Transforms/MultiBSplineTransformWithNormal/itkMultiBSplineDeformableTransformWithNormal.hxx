@@ -93,28 +93,28 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 }
 
 
-#define LOOP_ON_LABELS(FUNC, ARGS)                                                                                     \
-  for (unsigned i = 0; i <= m_NbLabels; ++i)                                                                           \
-  {                                                                                                                    \
-    m_Trans[i]->FUNC(ARGS);                                                                                            \
+#define LOOP_ON_LABELS(FUNC, ARGS)           \
+  for (unsigned i = 0; i <= m_NbLabels; ++i) \
+  {                                          \
+    m_Trans[i]->FUNC(ARGS);                  \
   }
 
-#define SET_ALL_LABELS(FUNC, TYPE)                                                                                     \
-  template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                                 \
-  void MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Set##FUNC(const TYPE _arg)   \
-  {                                                                                                                    \
-    if (_arg != this->Get##FUNC())                                                                                     \
-    {                                                                                                                  \
-      LOOP_ON_LABELS(Set##FUNC, _arg);                                                                                 \
-      this->Modified();                                                                                                \
-    }                                                                                                                  \
+#define SET_ALL_LABELS(FUNC, TYPE)                                                                                   \
+  template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                               \
+  void MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Set##FUNC(const TYPE _arg) \
+  {                                                                                                                  \
+    if (_arg != this->Get##FUNC())                                                                                   \
+    {                                                                                                                \
+      LOOP_ON_LABELS(Set##FUNC, _arg);                                                                               \
+      this->Modified();                                                                                              \
+    }                                                                                                                \
   }
 
-#define GET_FIRST_LABEL(FUNC, TYPE)                                                                                    \
-  template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                                 \
-  auto MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Get##FUNC() const->TYPE      \
-  {                                                                                                                    \
-    return m_Trans[0]->Get##FUNC();                                                                                    \
+#define GET_FIRST_LABEL(FUNC, TYPE)                                                                               \
+  template <typename TScalarType, unsigned int NDimensions, unsigned int VSplineOrder>                            \
+  auto MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::Get##FUNC() const->TYPE \
+  {                                                                                                               \
+    return m_Trans[0]->Get##FUNC();                                                                               \
   }
 
 // Set the grid region

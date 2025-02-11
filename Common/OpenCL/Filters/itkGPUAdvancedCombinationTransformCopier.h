@@ -173,8 +173,7 @@ private:
 
   /** Templated struct to capture the transform space dimension */
   template <unsigned int Dimension>
-  struct ITK_TEMPLATE_EXPORT TransformSpaceDimensionToType
-  {};
+  struct ITK_TEMPLATE_EXPORT TransformSpaceDimensionToType{};
 
   /** Copy method for Euler2D transform. */
   template <unsigned int InputSpaceDimension>

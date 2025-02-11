@@ -29,7 +29,8 @@
 namespace elastix
 {
 
-std::ostream & IterationInfo::operator[](const char * const cellName)
+std::ostream &
+IterationInfo::operator[](const char * const cellName)
 {
   return m_CellMap[cellName];
 }

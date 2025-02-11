@@ -141,8 +141,16 @@ public:
   virtual TPixel &
   GetPixel(const IndexType & index) = 0;
 
-  TPixel &       operator[](const IndexType & index) { return this->GetPixel(index); }
-  const TPixel & operator[](const IndexType & index) const { return this->GetPixel(index); }
+  TPixel &
+  operator[](const IndexType & index)
+  {
+    return this->GetPixel(index);
+  }
+  const TPixel &
+  operator[](const IndexType & index) const
+  {
+    return this->GetPixel(index);
+  }
 
   virtual TPixel *
   GetBufferPointer() = 0;

@@ -71,4 +71,4 @@ ImageSamplerBase<TElastix>::BeforeEachResolutionBase()
 
 } // end namespace elastix
 
-#endif //#ifndef elxImageSamplerBase_hxx
+#endif // #ifndef elxImageSamplerBase_hxx

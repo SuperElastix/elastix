@@ -72,7 +72,7 @@ void
 TransformFactoryRegistration::RegisterTransforms()
 {
   // Use C++11 "magic statics" to ensure that ::RegisterTransforms is called only once, thread-safely.
-  const static EmptyStruct emptyStruct = (::RegisterTransforms<ItkBSplineTransformOrder1Type,
+  static const EmptyStruct emptyStruct = (::RegisterTransforms<ItkBSplineTransformOrder1Type,
                                                                ItkBSplineTransformOrder2Type,
                                                                itk::AffineLogStackTransform,
                                                                itk::BSplineStackTransform,

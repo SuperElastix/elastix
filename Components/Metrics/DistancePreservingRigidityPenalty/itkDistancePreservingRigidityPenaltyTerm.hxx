@@ -257,10 +257,10 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const 
               penaltyTerm += penaltyTermBuffer / numberOfRigidGridsNeighbor / (this->m_NumberOfRigidGrids);
             }
           } // end for
-        }   // end if
-      }     // end if
-    }       // end for
-  }         // end if ( dimension = 3 )
+        } // end if
+      } // end if
+    } // end for
+  } // end if ( dimension = 3 )
 
   /** Return the rigidity penalty term value. */
   return penaltyTerm;
@@ -489,10 +489,10 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
               }
             }
           } // end for
-        }   // end if
+        } // end if
       }
     } // end for
-  }   // end if ( dimension = 3 )
+  } // end if ( dimension = 3 )
 
 } // end GetValueAndDerivative()
 

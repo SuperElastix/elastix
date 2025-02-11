@@ -43,11 +43,7 @@ ProgressCommand::ProgressCommand()
  * ******************* Destructor ***********************
  */
 
-ProgressCommand::~ProgressCommand()
-{
-  this->DisconnectObserver(m_ObservedProcessObject);
-
-} // end Destructor()
+ProgressCommand::~ProgressCommand() { this->DisconnectObserver(m_ObservedProcessObject); } // end Destructor()
 
 
 /**

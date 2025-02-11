@@ -195,7 +195,7 @@ main(int argc, char ** argv)
           }
         }
       } // end else (so, if key does not equal "-p")
-    }   // end for loop
+    } // end for loop
 
     /** The argv0 argument, required for finding the component.dll/so's. */
     argMap.insert(ArgumentMapEntryType("-argv0", argv[0]));

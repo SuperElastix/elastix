@@ -51,14 +51,14 @@
  * This macro is \#undef'ed at the end of this header file.
  */
 
-#define elxGetBaseMacro(_name, _elxbasetype)                                                                           \
-  _elxbasetype * GetElx##_name##Base(const unsigned int idx = 0) const                                                 \
-  {                                                                                                                    \
-    if (idx < this->GetNumberOf##_name##s())                                                                           \
-    {                                                                                                                  \
-      return dynamic_cast<_elxbasetype *>(this->Get##_name##Container()->ElementAt(idx).GetPointer());                 \
-    }                                                                                                                  \
-    return nullptr;                                                                                                    \
+#define elxGetBaseMacro(_name, _elxbasetype)                                                           \
+  _elxbasetype * GetElx##_name##Base(const unsigned int idx = 0) const                                 \
+  {                                                                                                    \
+    if (idx < this->GetNumberOf##_name##s())                                                           \
+    {                                                                                                  \
+      return dynamic_cast<_elxbasetype *>(this->Get##_name##Container()->ElementAt(idx).GetPointer()); \
+    }                                                                                                  \
+    return nullptr;                                                                                    \
   }
 // end elxGetBaseMacro
 

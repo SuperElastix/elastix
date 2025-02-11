@@ -83,10 +83,7 @@ public:
  * ****************** Constructor ********************************
  */
 
-ComponentLoader::ComponentLoader()
-{
-  this->m_ImageTypeSupportInstalled = false;
-}
+ComponentLoader::ComponentLoader() { this->m_ImageTypeSupportInstalled = false; }
 
 
 /**

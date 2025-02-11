@@ -193,4 +193,4 @@ private:
 
 } // end namespace itk
 
-#endif //#ifndef itkScaledSingleValuedNonLinearOptimizer_h
+#endif // #ifndef itkScaledSingleValuedNonLinearOptimizer_h

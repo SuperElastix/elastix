@@ -79,7 +79,8 @@ OpenCLVector<T>::Release()
 
 //------------------------------------------------------------------------------
 template <typename T>
-T & OpenCLVector<T>::operator[](const std::size_t index)
+T &
+OpenCLVector<T>::operator[](const std::size_t index)
 {
   itkAssertOrThrowMacro((index < this->m_Size), "OpenCLVector<T>::operator[" << index << "] index out of range");
   if (!this->m_Mapped)
@@ -92,7 +93,8 @@ T & OpenCLVector<T>::operator[](const std::size_t index)
 
 //------------------------------------------------------------------------------
 template <typename T>
-const T & OpenCLVector<T>::operator[](const std::size_t index) const
+const T &
+OpenCLVector<T>::operator[](const std::size_t index) const
 {
   itkAssertOrThrowMacro((index < this->m_Size), "OpenCLVector<T>::operator[" << index << "] index out of range");
   if (!this->m_Mapped)

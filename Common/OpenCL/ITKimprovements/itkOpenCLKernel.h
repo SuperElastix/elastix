@@ -110,18 +110,18 @@ namespace itk
 // Defines for macro injections to reduce spoil code
 #define OpenCLKernelSetArgMacroH(type) cl_int SetArg(const cl_uint index, const type value);
 
-#define OpenCLKernelSetArgMacroCXX(type)                                                                               \
-  cl_int OpenCLKernel::SetArg(const cl_uint index, const type value)                                                   \
-  {                                                                                                                    \
-    return clSetKernelArg(this->m_KernelId, index, sizeof(value), (const void *)&value);                               \
+#define OpenCLKernelSetArgMacroCXX(type)                                                 \
+  cl_int OpenCLKernel::SetArg(const cl_uint index, const type value)                     \
+  {                                                                                      \
+    return clSetKernelArg(this->m_KernelId, index, sizeof(value), (const void *)&value); \
   }
 
-#define OpenCLKernelSetArgsMacroH(type0, type1, type2, type3, type4)                                                   \
-  OpenCLKernelSetArgMacroH(type0) OpenCLKernelSetArgMacroH(type1) OpenCLKernelSetArgMacroH(type2)                      \
+#define OpenCLKernelSetArgsMacroH(type0, type1, type2, type3, type4)                              \
+  OpenCLKernelSetArgMacroH(type0) OpenCLKernelSetArgMacroH(type1) OpenCLKernelSetArgMacroH(type2) \
     OpenCLKernelSetArgMacroH(type3) OpenCLKernelSetArgMacroH(type4)
 
-#define OpenCLKernelSetArgsMacroCXX(type0, type1, type2, type3, type4)                                                 \
-  OpenCLKernelSetArgMacroCXX(type0) OpenCLKernelSetArgMacroCXX(type1) OpenCLKernelSetArgMacroCXX(type2)                \
+#define OpenCLKernelSetArgsMacroCXX(type0, type1, type2, type3, type4)                                  \
+  OpenCLKernelSetArgMacroCXX(type0) OpenCLKernelSetArgMacroCXX(type1) OpenCLKernelSetArgMacroCXX(type2) \
     OpenCLKernelSetArgMacroCXX(type3) OpenCLKernelSetArgMacroCXX(type4)
 
 // Forward declaration
@@ -867,13 +867,13 @@ private:
  * Returns true if \a lhs OpenCL kernel identifier is the same as \a rhs, false otherwise.
  * \sa operator!=, operator==(), GetKernelId() */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLKernel & lhs, const OpenCLKernel & rhs);
+operator==(const OpenCLKernel & lhs, const OpenCLKernel & rhs);
 
 /** Operator !=
  * Returns true if \a lhs OpenCL kernel identifier is not the same as \a rhs, false otherwise.
  * \sa operator==, operator==(), GetKernelId() */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLKernel & lhs, const OpenCLKernel & rhs);
+operator!=(const OpenCLKernel & lhs, const OpenCLKernel & rhs);
 
 /** Stream out operator for OpenCLKernel */
 template <typename charT, typename traits>

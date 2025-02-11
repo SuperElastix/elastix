@@ -134,7 +134,7 @@ MovingImagePyramidBase<TElastix>::SetMovingSchedule()
       found &= ijfound;
 
     } // end for ImageDimension
-  }   // end for numberOfResolutions
+  } // end for numberOfResolutions
 
   if (!found && configuration.GetPrintErrorMessages())
   {

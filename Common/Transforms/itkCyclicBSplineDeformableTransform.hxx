@@ -349,7 +349,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
       /** Update the spatial Jacobian sj. */
       sj(dim, i) += sum;
     } // end for dim
-  }   // end for i
+  } // end for i
 
   /** Take into account grid spacing and direction cosines. */
   sj *= this->m_PointToIndexMatrix;
@@ -409,7 +409,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Comput
       ++iterator;
       ++mu;
     } // end while
-  }   // end for (supportregions)
+  } // end for (supportregions)
 
 } // end ComputeNonZeroJacobianIndices()
 

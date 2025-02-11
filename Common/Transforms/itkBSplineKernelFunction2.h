@@ -129,8 +129,7 @@ protected:
 private:
   /** Structures to control overloaded versions of Evaluate */
   template <unsigned int>
-  struct ITK_TEMPLATE_EXPORT Dispatch
-  {};
+  struct ITK_TEMPLATE_EXPORT Dispatch{};
 
   /** *****************************************************
    * B-spline functions for one point.

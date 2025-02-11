@@ -157,11 +157,11 @@ protected:
   typename TInputImage::SizeType m_DataLength{}; // Image size
 
   unsigned int
-               m_SplineOrder[ImageDimension]{}; // User specified spline order per dimension (3rd or cubic is the default)
-  double       m_SplinePoles[3]{};              // Poles calculated for a given spline order
-  int          m_NumberOfPoles{};               // number of poles
-  double       m_Tolerance{};                   // Tolerance used for determining initial causal coefficient
-  unsigned int m_IteratorDirection{};           // Direction for iterator incrementing
+         m_SplineOrder[ImageDimension]{}; // User specified spline order per dimension (3rd or cubic is the default)
+  double m_SplinePoles[3]{};              // Poles calculated for a given spline order
+  int    m_NumberOfPoles{};               // number of poles
+  double m_Tolerance{};                   // Tolerance used for determining initial causal coefficient
+  unsigned int m_IteratorDirection{};     // Direction for iterator incrementing
 
 private:
   /** Determines the poles for dimension given the Spline Order. */

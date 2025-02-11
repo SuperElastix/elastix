@@ -35,22 +35,22 @@ OpenCLGetPtrHelper(const std::unique_ptr<TObjectType> & p)
   return p.get();
 }
 
-#define ITK_OPENCL_DECLARE_PRIVATE(Class)                                                                              \
-  inline Class##Pimpl *       d_func() { return reinterpret_cast<Class##Pimpl *>(OpenCLGetPtrHelper(d_ptr)); }         \
-  inline const Class##Pimpl * d_func() const                                                                           \
-  {                                                                                                                    \
-    return reinterpret_cast<const Class##Pimpl *>(OpenCLGetPtrHelper(d_ptr));                                          \
-  }                                                                                                                    \
+#define ITK_OPENCL_DECLARE_PRIVATE(Class)                                                                      \
+  inline Class##Pimpl *       d_func() { return reinterpret_cast<Class##Pimpl *>(OpenCLGetPtrHelper(d_ptr)); } \
+  inline const Class##Pimpl * d_func() const                                                                   \
+  {                                                                                                            \
+    return reinterpret_cast<const Class##Pimpl *>(OpenCLGetPtrHelper(d_ptr));                                  \
+  }                                                                                                            \
   friend class Class##Pimpl;
 
-#define ITK_OPENCL_DECLARE_PRIVATE_D(Dptr, Class)                                                                      \
-  inline Class##Pimpl *       d_func() { return reinterpret_cast<Class##Pimpl *>(Dptr); }                              \
-  inline const Class##Pimpl * d_func() const { return reinterpret_cast<const Class##Pimpl *>(Dptr); }                  \
+#define ITK_OPENCL_DECLARE_PRIVATE_D(Dptr, Class)                                                     \
+  inline Class##Pimpl *       d_func() { return reinterpret_cast<Class##Pimpl *>(Dptr); }             \
+  inline const Class##Pimpl * d_func() const { return reinterpret_cast<const Class##Pimpl *>(Dptr); } \
   friend class Class##Pimpl;
 
-#define ITK_OPENCL_DECLARE_PUBLIC(Class)                                                                               \
-  inline Class *       q_func() { return static_cast<Class *>(q_ptr); }                                                \
-  inline const Class * q_func() const { return static_cast<const Class *>(q_ptr); }                                    \
+#define ITK_OPENCL_DECLARE_PUBLIC(Class)                                            \
+  inline Class *       q_func() { return static_cast<Class *>(q_ptr); }             \
+  inline const Class * q_func() const { return static_cast<const Class *>(q_ptr); } \
   friend class Class;
 
 #define ITK_OPENCL_D(Class) Class##Pimpl * const d = d_func()

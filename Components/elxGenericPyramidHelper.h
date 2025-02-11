@@ -98,7 +98,7 @@ public:
         foundRescale &= ijfound;
 
       } // end for ImageDimension
-    }   // end for numberOfResolutions
+    } // end for numberOfResolutions
 
     if (!foundRescale && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {
@@ -144,7 +144,7 @@ public:
         foundSmoothing &= ijfound;
 
       } // end for ImageDimension
-    }   // end for numberOfResolutions
+    } // end for numberOfResolutions
 
     if (!foundSmoothing && pyramid.GetConfiguration()->GetPrintErrorMessages())
     {

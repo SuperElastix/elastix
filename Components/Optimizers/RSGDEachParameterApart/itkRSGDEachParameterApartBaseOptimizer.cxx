@@ -27,10 +27,7 @@ namespace itk
 /**
  * Constructor
  */
-RSGDEachParameterApartBaseOptimizer ::RSGDEachParameterApartBaseOptimizer()
-{
-  itkDebugMacro("Constructor");
-}
+RSGDEachParameterApartBaseOptimizer ::RSGDEachParameterApartBaseOptimizer() { itkDebugMacro("Constructor"); }
 
 
 /**

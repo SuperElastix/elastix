@@ -192,12 +192,20 @@ public:
 
   /** Access an element of the size. Elements are numbered
    * 0, ..., Dim-1. No bounds checking is performed. */
-  std::size_t & operator[](const std::size_t dim) { return this->m_Sizes[dim]; }
+  std::size_t &
+  operator[](const std::size_t dim)
+  {
+    return this->m_Sizes[dim];
+  }
 
   /** Access an element of the size. Elements are numbered
    * 0, ..., Dim-1. This version can only be an rvalue.
    * No bounds checking is performed. */
-  std::size_t operator[](const std::size_t dim) const { return this->m_Sizes[dim]; }
+  std::size_t
+  operator[](const std::size_t dim) const
+  {
+    return this->m_Sizes[dim];
+  }
 
   /** Returns the best-fit local work size that evenly divides this work
    * size and fits within the maximums defined by \a maxWorkItemSize
@@ -226,12 +234,12 @@ private:
 /** Operator ==
  * Returns true if lhs and rhs are equal, otherwise returns false. */
 bool ITKOpenCL_EXPORT
-     operator==(const OpenCLSize & lhs, const OpenCLSize & rhs);
+operator==(const OpenCLSize & lhs, const OpenCLSize & rhs);
 
 /** Operator !=
  * Returns true if lhs and rhs are different, otherwise returns false. */
 bool ITKOpenCL_EXPORT
-     operator!=(const OpenCLSize & lhs, const OpenCLSize & rhs);
+operator!=(const OpenCLSize & lhs, const OpenCLSize & rhs);
 
 /** Stream out operator for OpenCLSize */
 template <typename charT, typename traits>

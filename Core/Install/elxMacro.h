@@ -94,10 +94,10 @@
  * supported image types).
  *
  */
-#define elxInstallMacro(_classname)                                                                                    \
-  extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb)                                     \
-  {                                                                                                                    \
-    return ::elastix::ComponentInstaller<::elastix::_classname>::DO(_cdb);                                             \
+#define elxInstallMacro(_classname)                                                \
+  extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb) \
+  {                                                                                \
+    return ::elastix::ComponentInstaller<::elastix::_classname>::DO(_cdb);         \
   } // ignore semicolon
 
 
@@ -120,25 +120,25 @@
  * Use this macro in every component that will be installed in the
  * ComponentDatabase, using "elxInstallMacro".
  */
-#define elxClassNameMacro(_name)                                                                                       \
-  static const char * elxGetClassNameStatic() { return _name; }                                                        \
+#define elxClassNameMacro(_name)                                \
+  static const char * elxGetClassNameStatic() { return _name; } \
   const char *        elxGetClassName() const override { return _name; }
 
 /** Declares a pair of pure virtual member functions (overloaded for const
  * and non-const) to get a reference to itself, of the specified type.
  */
-#define elxDeclarePureVirtualGetSelfMacro(type)                                                                        \
-  virtual const type & GetSelf() const override = 0;                                                                   \
+#define elxDeclarePureVirtualGetSelfMacro(type)      \
+  virtual const type & GetSelf() const override = 0; \
   virtual type &       GetSelf() override = 0
 
 /** Defines a pair of overrides of GetSelf() (overloaded for const and
  * non-const), which return a reference to itself. Declares a deleted static
  * member function overload, just to allow macro calls to end with a semicolon.
  */
-#define elxOverrideGetSelfMacro                                                                                        \
-  auto GetSelf() const->decltype(*this) override { return *this; }                                                     \
-  auto GetSelf()->decltype(*this) override { return *this; }                                                           \
-  static void                     GetSelf(const void *) = delete
+#define elxOverrideGetSelfMacro                                      \
+  auto GetSelf() const -> decltype(*this) override { return *this; } \
+  auto GetSelf() -> decltype(*this) override { return *this; }       \
+  static void                       GetSelf(const void *) = delete
 
 
 /**

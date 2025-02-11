@@ -74,19 +74,19 @@ public:
  * ElastixTypedef<VIndex>.
  */
 
-#define elxSupportedImageTypeMacro(_fPixelType, _fDim, _mPixelType, _mDim, _VIndex)                                    \
-  template <>                                                                                                          \
-  class ElastixTypedef<_VIndex>                                                                                        \
-  {                                                                                                                    \
-  public:                                                                                                              \
-    using FixedImageType = ::itk::Image<_fPixelType, _fDim>;                                                           \
-    using MovingImageType = ::itk::Image<_mPixelType, _mDim>;                                                          \
-    using ElastixType = ::elx::ElastixTemplate<FixedImageType, MovingImageType>;                                       \
-    static constexpr const char * FixedPixelTypeString{ #_fPixelType };                                                \
-    static constexpr const char * MovingPixelTypeString{ #_mPixelType };                                               \
-    static constexpr unsigned int FixedDimension{ _fDim };                                                             \
-    static constexpr unsigned int MovingDimension{ _mDim };                                                            \
-    static constexpr bool         IsDefined{ true };                                                                   \
+#define elxSupportedImageTypeMacro(_fPixelType, _fDim, _mPixelType, _mDim, _VIndex) \
+  template <>                                                                       \
+  class ElastixTypedef<_VIndex>                                                     \
+  {                                                                                 \
+  public:                                                                           \
+    using FixedImageType = ::itk::Image<_fPixelType, _fDim>;                        \
+    using MovingImageType = ::itk::Image<_mPixelType, _mDim>;                       \
+    using ElastixType = ::elx::ElastixTemplate<FixedImageType, MovingImageType>;    \
+    static constexpr const char * FixedPixelTypeString{ #_fPixelType };             \
+    static constexpr const char * MovingPixelTypeString{ #_mPixelType };            \
+    static constexpr unsigned int FixedDimension{ _fDim };                          \
+    static constexpr unsigned int MovingDimension{ _mDim };                         \
+    static constexpr bool         IsDefined{ true };                                \
   }
 
 #endif // end #ifndef elxPrepareImageTypeSupport_h

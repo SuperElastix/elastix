@@ -19,10 +19,7 @@
 
 namespace itk
 {
-GPUTransformBase::GPUTransformBase()
-{
-  this->m_ParametersDataManager = GPUDataManager::New();
-}
+GPUTransformBase::GPUTransformBase() { this->m_ParametersDataManager = GPUDataManager::New(); }
 
 
 //------------------------------------------------------------------------------

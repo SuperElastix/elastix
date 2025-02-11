@@ -116,7 +116,7 @@ GenerateFileNameContainer(const Configuration & configuration,
         ++i;
       }
     } // end while
-  }   // end if
+  } // end if
 
   return fileNameContainer;
 

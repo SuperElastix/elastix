@@ -49,34 +49,34 @@
 //! This macro is used to print out debug message to the current message handler
 //! in main() function or generic functions
 //! itkOpenCLDebugMacroGeneric(<< "Debug message generic" << SomeVariable);
-#define itkOpenCLDebugMacroGeneric(x)                                                                                  \
-  {                                                                                                                    \
-    std::stringstream itkmsg;                                                                                          \
-    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL generic debug."                                             \
-           << "\nDebug: in function: " << __FUNCTION__ << "\nDetails: " x << "\n\n";                                   \
-    ::itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());                                                         \
+#define itkOpenCLDebugMacroGeneric(x)                                                \
+  {                                                                                  \
+    std::stringstream itkmsg;                                                        \
+    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL generic debug."           \
+           << "\nDebug: in function: " << __FUNCTION__ << "\nDetails: " x << "\n\n"; \
+    ::itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());                       \
   }
 
 //! This macro is used to print out warning message to the current message
 //! handler in main() function or generic functions
 //! itkOpenCLWarningMacroGeneric(<< "Warning message generic" << SomeVariable);
-#define itkOpenCLWarningMacroGeneric(x)                                                                                \
-  {                                                                                                                    \
-    std::stringstream itkmsg;                                                                                          \
-    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL generic warning."                                           \
-           << "\nWarning: in function: " << __FUNCTION__ << "\nDetails: " x << "\n\n";                                 \
-    ::itk::OutputWindowDisplayWarningText(itkmsg.str().c_str());                                                       \
+#define itkOpenCLWarningMacroGeneric(x)                                                \
+  {                                                                                    \
+    std::stringstream itkmsg;                                                          \
+    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL generic warning."           \
+           << "\nWarning: in function: " << __FUNCTION__ << "\nDetails: " x << "\n\n"; \
+    ::itk::OutputWindowDisplayWarningText(itkmsg.str().c_str());                       \
   }
 
 //! This macro is used to print out error message to the current message handler
 //! in main() function or generic functions
 //! itkOpenCLErrorMacroGeneric(<< "Error message generic" << SomeVariable);
-#define itkOpenCLErrorMacroGeneric(x)                                                                                  \
-  {                                                                                                                    \
-    std::stringstream itkmsg;                                                                                          \
-    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL generic error."                                             \
-           << "\nError: in function: " << __FUNCTION__ << "\nDetails: " x << "\n\n";                                   \
-    ::itk::OutputWindowDisplayErrorText(itkmsg.str().c_str());                                                         \
+#define itkOpenCLErrorMacroGeneric(x)                                                \
+  {                                                                                  \
+    std::stringstream itkmsg;                                                        \
+    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL generic error."           \
+           << "\nError: in function: " << __FUNCTION__ << "\nDetails: " x << "\n\n"; \
+    ::itk::OutputWindowDisplayErrorText(itkmsg.str().c_str());                       \
   }
 
 /** This macro is used to print out debug statements. For example:
@@ -85,13 +85,13 @@
  * \endcode
  * File and line information will be printed in Visual Studio format.
  * \sa itkOpenCLWarningWithObjectMacro(), itkOpenCLErrorWithObjectMacro() */
-#define itkOpenCLDebugWithObjectMacro(self, x)                                                                         \
-  {                                                                                                                    \
-    std::stringstream itkmsg;                                                                                          \
-    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL debug."                                                     \
-           << "\nDebug: in function: " << __FUNCTION__ << "; Name: " << self->GetNameOfClass() << " (" << self << ")"  \
-           << "\nDetails: " x << "\n\n";                                                                               \
-    ::itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());                                                         \
+#define itkOpenCLDebugWithObjectMacro(self, x)                                                                        \
+  {                                                                                                                   \
+    std::stringstream itkmsg;                                                                                         \
+    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL debug."                                                    \
+           << "\nDebug: in function: " << __FUNCTION__ << "; Name: " << self->GetNameOfClass() << " (" << self << ")" \
+           << "\nDetails: " x << "\n\n";                                                                              \
+    ::itk::OutputWindowDisplayDebugText(itkmsg.str().c_str());                                                        \
   }
 
 /** This macro is used to print out warnings. For example:
@@ -100,14 +100,14 @@
  * \endcode
  * File and line information will be printed in Visual Studio format.
  * \sa itkOpenCLDebugWithObjectMacro(), itkOpenCLErrorWithObjectMacro() */
-#define itkOpenCLWarningWithObjectMacro(self, x)                                                                       \
-  {                                                                                                                    \
-    std::stringstream itkmsg;                                                                                          \
-    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL warning."                                                   \
-           << "\nWarning: in function: " << __FUNCTION__ << "; Name: " << self->GetNameOfClass() << " (" << self       \
-           << ")"                                                                                                      \
-           << "\nDetails: " x << "\n\n";                                                                               \
-    ::itk::OutputWindowDisplayWarningText(itkmsg.str().c_str());                                                       \
+#define itkOpenCLWarningWithObjectMacro(self, x)                                                                 \
+  {                                                                                                              \
+    std::stringstream itkmsg;                                                                                    \
+    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL warning."                                             \
+           << "\nWarning: in function: " << __FUNCTION__ << "; Name: " << self->GetNameOfClass() << " (" << self \
+           << ")"                                                                                                \
+           << "\nDetails: " x << "\n\n";                                                                         \
+    ::itk::OutputWindowDisplayWarningText(itkmsg.str().c_str());                                                 \
   }
 
 /** This macro is used to print out errors. For example:
@@ -116,13 +116,13 @@
  * \endcode
  * File and line information will be printed in Visual Studio format.
  * \sa itkOpenCLWarningWithObjectMacro(), itkOpenCLDebugWithObjectMacro() */
-#define itkOpenCLErrorWithObjectMacro(self, x)                                                                         \
-  {                                                                                                                    \
-    std::stringstream itkmsg;                                                                                          \
-    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL error."                                                     \
-           << "\nError: in function: " << __FUNCTION__ << "; Name: " << self->GetNameOfClass() << " (" << self << ")"  \
-           << "\nDetails: " x << "\n\n";                                                                               \
-    ::itk::OutputWindowDisplayErrorText(itkmsg.str().c_str());                                                         \
+#define itkOpenCLErrorWithObjectMacro(self, x)                                                                        \
+  {                                                                                                                   \
+    std::stringstream itkmsg;                                                                                         \
+    itkmsg << __FILE__ << "(" << __LINE__ << "): itkOpenCL error."                                                    \
+           << "\nError: in function: " << __FUNCTION__ << "; Name: " << self->GetNameOfClass() << " (" << self << ")" \
+           << "\nDetails: " x << "\n\n";                                                                              \
+    ::itk::OutputWindowDisplayErrorText(itkmsg.str().c_str());                                                        \
   }
 
 namespace itk

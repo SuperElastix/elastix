@@ -30,11 +30,7 @@ namespace itk
  * ****************** Constructor ************************
  */
 
-GradientDescentOptimizer2 ::GradientDescentOptimizer2()
-{
-  itkDebugMacro("Constructor");
-
-} // end Constructor
+GradientDescentOptimizer2 ::GradientDescentOptimizer2() { itkDebugMacro("Constructor"); } // end Constructor
 
 
 /**

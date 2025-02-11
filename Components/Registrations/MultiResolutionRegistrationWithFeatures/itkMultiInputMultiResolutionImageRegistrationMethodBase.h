@@ -25,25 +25,25 @@
 /** defines a method that calls the same method
  * with an extra 0 argument.
  */
-#define itkSimpleSetMacro(_name, _type)                                                                                \
+#define itkSimpleSetMacro(_name, _type) \
   virtual void Set##_name(_type _arg) { this->Set##_name(_arg, 0); }
 
-#define elxOverrideSimpleSetMacro(_name, _type)                                                                        \
+#define elxOverrideSimpleSetMacro(_name, _type) \
   void Set##_name(_type _arg) override { this->Set##_name(_arg, 0); }
 
 /** defines for example: SetNumberOfInterpolators(). */
-#define itkSetNumberOfMacro(_name)                                                                                     \
-  virtual void SetNumberOf##_name##s(unsigned int _arg)                                                                \
-  {                                                                                                                    \
-    if (this->m_##_name##s.size() != _arg)                                                                             \
-    {                                                                                                                  \
-      this->m_##_name##s.resize(_arg);                                                                                 \
-      this->Modified();                                                                                                \
-    }                                                                                                                  \
+#define itkSetNumberOfMacro(_name)                      \
+  virtual void SetNumberOf##_name##s(unsigned int _arg) \
+  {                                                     \
+    if (this->m_##_name##s.size() != _arg)              \
+    {                                                   \
+      this->m_##_name##s.resize(_arg);                  \
+      this->Modified();                                 \
+    }                                                   \
   }
 
 /** defines for example: GetNumberOfInterpolators() */
-#define itkGetNumberOfMacro(_name)                                                                                     \
+#define itkGetNumberOfMacro(_name) \
   virtual unsigned int GetNumberOf##_name##s() const { return this->m_##_name##s.size(); }
 
 namespace itk

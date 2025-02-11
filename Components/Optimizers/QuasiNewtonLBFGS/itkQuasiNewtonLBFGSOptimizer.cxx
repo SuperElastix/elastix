@@ -27,11 +27,7 @@ namespace itk
  * ******************** Constructor *************************
  */
 
-QuasiNewtonLBFGSOptimizer::QuasiNewtonLBFGSOptimizer()
-{
-  itkDebugMacro("Constructor");
-
-} // end constructor
+QuasiNewtonLBFGSOptimizer::QuasiNewtonLBFGSOptimizer() { itkDebugMacro("Constructor"); } // end constructor
 
 
 /**
