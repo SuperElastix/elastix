@@ -39,7 +39,7 @@ DIV.header, DIV.summary, DIV.navpath {
     color: #CC0000;
     border: none;
     margin: 2px;
-} 
+}
 .navpath li.navelem a {
   color: #000000;
 }
@@ -52,7 +52,7 @@ DIV.header, DIV.summary, DIV.navpath {
 DIV.header, DIV.summary, DIV.navpath ul {
   background-image:none;
   border: none;
-  margin: 2px; 
+  margin: 2px;
 }
 
 DIV.summary
@@ -63,7 +63,7 @@ DIV.summary
   padding-top: 15px;
 	width: 50%;
 	text-align: right;
-}       
+}
 
 A.qindex {
     text-decoration: none;
@@ -98,7 +98,7 @@ A.qindexHL:hover {
 }
 A.qindexHL:visited { text-decoration: none; background-color: #CC0000; color: #ffffff }
 
- 
+
 
 A.el {
     text-decoration: none;
@@ -278,7 +278,7 @@ SPAN.charliteral   { color: #008080 }
     border-left-color: #E0E0E0;
     border-right-style: none;
     border-bottom-style: none;
-    border-left-style: none;  
+    border-left-style: none;
     background-color: #FFFBD7;
     color: #000000;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;

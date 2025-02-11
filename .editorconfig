@@ -6,6 +6,6 @@ root = true
 # Apply to any source file
 [*.*]
 
-# Indentation of two spaces 
+# Indentation of two spaces
 indent_style = space
 indent_size = 2
