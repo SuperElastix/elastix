@@ -16,7 +16,7 @@ cmake_policy(SET CMP0042 NEW) # "MACOSX_RPATH is enabled by default."
 include(CTest)
 
 #---------------------------------------------------------------------
-# Allow specifying whether or not the executables are built. 
+# Allow specifying whether or not the executables are built.
 option( ELASTIX_BUILD_EXECUTABLE "Build elastix and transformix as executable? (The libraries are always built as well anyway.)" ON )
 
   # The following may make smaller and quicker loading libraries,

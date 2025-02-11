@@ -347,7 +347,7 @@ void set_interpolation_weights_3d( const float3 cindex, float * weights,
   // function pointers to reference the correct spline order. Left as is for
   // now for readability use following float per different spline order:
   // float w, w2, w4, t, t0, t1, t2;
-  
+
   // create float x[3] from float3, makes it easy to use in loops
   float x[3];
   x[0] = cindex.x;

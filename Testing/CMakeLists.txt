@@ -453,7 +453,7 @@ if(ELASTIX_BUILD_EXECUTABLE)
   file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
   add_test(NAME OutputDirectoryPathContainingSpacesTest
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
-    -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd" 
+    -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
     -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
     -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
     -out "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
