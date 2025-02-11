@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( RayCastResampleInterpolator # Was OFF by default before elasti
  elxRayCastResampleInterpolator.h
  elxRayCastResampleInterpolator.hxx
  elxRayCastResampleInterpolator.cxx)
-

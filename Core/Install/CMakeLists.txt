@@ -155,4 +155,3 @@ if(ELASTIX_USE_OPENCL)
     ${elastix_BINARY_DIR}/elxOpenCLSupportedImageTypes.h
     @ONLY)
 endif()
-

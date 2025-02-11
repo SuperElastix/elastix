@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( AdvancedMattesMutualInformationMetric
  elxAdvancedMattesMutualInformationMetric.cxx
  itkParzenWindowMutualInformationImageToImageMetric.h
  itkParzenWindowMutualInformationImageToImageMetric.hxx)
-

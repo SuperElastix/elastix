@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( CMAEvolutionStrategy # Was OFF by default before elastix 5.0.1
  elxCMAEvolutionStrategy.cxx
  itkCMAEvolutionStrategyOptimizer.h
  itkCMAEvolutionStrategyOptimizer.cxx)
-

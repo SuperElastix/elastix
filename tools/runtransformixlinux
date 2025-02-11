@@ -31,4 +31,3 @@ transformix $*
 
 # after exitting this script, the LD_LIBRARY_PATH is
 # automatically as it was before running this script.
-

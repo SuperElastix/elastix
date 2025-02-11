@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( TranslationStackTransform
  elxTranslationStackTransform.hxx
  elxTranslationStackTransform.cxx
  itkTranslationStackTransform.h)
-

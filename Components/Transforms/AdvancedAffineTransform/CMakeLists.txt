@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( AdvancedAffineTransformElastix
  elxAdvancedAffineTransform.cxx
  itkCenteredTransformInitializer2.h
  itkCenteredTransformInitializer2.hxx)
-

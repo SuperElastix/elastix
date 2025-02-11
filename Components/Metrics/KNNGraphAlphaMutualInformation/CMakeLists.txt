@@ -18,4 +18,3 @@ if(USE_KNNGraphAlphaMutualInformationMetric)
   elastix_export_target(KNNlib)
   elastix_export_target(ANNlib)
 endif()
-

@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( SumOfPairwiseCorrelationCoefficientsMetric
  itkSumOfPairwiseCorrelationCoefficientsMetric.h
  itkSumOfPairwiseCorrelationCoefficientsMetric.hxx
 )
-

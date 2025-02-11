@@ -214,4 +214,3 @@ endif()
 target_link_libraries(elxCommon
   ${ITK_LIBRARIES}
 )
-

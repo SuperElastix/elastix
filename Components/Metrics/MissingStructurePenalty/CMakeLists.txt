@@ -3,6 +3,5 @@ ADD_ELXCOMPONENT( MissingStructurePenalty # Was OFF by default before elastix 5.
  elxMissingStructurePenalty.h
  elxMissingStructurePenalty.hxx
  itkMissingStructurePenalty.h
- itkMissingStructurePenalty.hxx 
+ itkMissingStructurePenalty.hxx
  vnl_adjugate_fixed.h)
-

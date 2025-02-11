@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( NearestNeighborResampleInterpolator # Was OFF by default befor
  elxNearestNeighborResampleInterpolator.h
  elxNearestNeighborResampleInterpolator.hxx
  elxNearestNeighborResampleInterpolator.cxx)
-

@@ -26,4 +26,3 @@ else()
   # list defined in Components/CMakeLists.txt.
   REMOVE_ELXCOMPONENT( OpenCLResampler)
 endif()
-

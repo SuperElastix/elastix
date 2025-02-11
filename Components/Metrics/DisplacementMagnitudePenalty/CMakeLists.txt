@@ -6,4 +6,3 @@ ADD_ELXCOMPONENT( DisplacementMagnitudePenalty # Was OFF by default before elast
  itkDisplacementMagnitudePenaltyTerm.h
  itkDisplacementMagnitudePenaltyTerm.hxx
 )
-

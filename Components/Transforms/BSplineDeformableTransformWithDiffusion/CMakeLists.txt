@@ -9,4 +9,3 @@ ADD_ELXCOMPONENT( BSplineTransformWithDiffusion OFF
  itkDeformationVectorFieldTransform.hxx
  itkVectorMeanDiffusionImageFilter.h
  itkVectorMeanDiffusionImageFilter.hxx)
-

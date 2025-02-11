@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( PatternIntensityMetric # Was OFF by default before elastix 5.0
  elxPatternIntensityMetric.cxx
  itkPatternIntensityImageToImageMetric.h
  itkPatternIntensityImageToImageMetric.hxx)
-

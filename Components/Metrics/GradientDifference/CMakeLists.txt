@@ -5,4 +5,3 @@ ADD_ELXCOMPONENT( GradientDifferenceMetric # Was OFF by default before elastix 5
  elxGradientDifferenceMetric.cxx
  itkGradientDifferenceImageToImageMetric2.h
  itkGradientDifferenceImageToImageMetric2.hxx)
-

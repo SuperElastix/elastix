@@ -8,4 +8,3 @@ ADD_ELXCOMPONENT( AdaptiveStochasticVarianceReducedGradient OFF # OFF by default
  itkStandardStochasticVarianceReducedGradientDescentOptimizer.cxx
  itkStochasticVarianceReducedGradientDescentOptimizer.cxx
 )
-

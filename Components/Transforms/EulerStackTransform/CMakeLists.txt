@@ -3,4 +3,3 @@ ADD_ELXCOMPONENT( EulerStackTransform
  elxEulerStackTransform.hxx
  elxEulerStackTransform.cxx
  itkEulerStackTransform.h)
-

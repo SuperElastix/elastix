@@ -68,4 +68,3 @@ transformix -jac all -out exampleoutput -tp exampleoutput/TransformParameters.1.
 @echo # user mailing-list and post your question to the community!
 @echo # In that way you will also be kept informed on updates.
 @echo #
-

@@ -36,8 +36,8 @@
 # 18. copy $tempdir to the website, using winscp.
 #
 # This script is rather nongeneric. It only works on stefan's computer :)
-# 
-# Prerequisites: install Dot, doxygen, svn, 7z, cygwin or gitBash (to run this script), cmake, itk 
+#
+# Prerequisites: install Dot, doxygen, svn, 7z, cygwin or gitBash (to run this script), cmake, itk
 #
 
 arg="$1"
@@ -147,14 +147,14 @@ if [ "$arg" = "zipwin" ]
 then
   currentdir=`pwd`
   cd $exportdirwin
-  cd bin 
+  cd bin
 	# call cpack
 	cpack -C Release --config CPackConfig.cmake
 	cpack -C Release --config CPackSourceConfig.cmake
 	# rename zips to website convention
 	mv elastix-$fullversion-win64.zip elastix_windows64_v$version.zip
 	mv elastix-$fullversion-win64.exe elastix_windows64_v$version.exe
-	mv elastix-$fullversion-Source.zip elastix_sources_v$version.zip 
+	mv elastix-$fullversion-Source.zip elastix_sources_v$version.zip
 	# create help zip
   cd ../help
 	helpzip="elastix_example_v$version.zip"
@@ -197,4 +197,3 @@ fi
 # copy using winscp
 
 exit 0
-

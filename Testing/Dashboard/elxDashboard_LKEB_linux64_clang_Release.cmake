@@ -92,4 +92,3 @@ USE_ALL_COMPONENTS:BOOL=ON
 
 # Load the common dashboard script.
 include(${CTEST_SCRIPT_DIRECTORY}/elxDashboardCommon.cmake)
-
