@@ -20,6 +20,8 @@
 
 #include "itkNDImageBase.h"
 #include "itkImageFileReader.h"
+#include <algorithm>   // For copy_n.
+#include <type_traits> // For is_same_v.
 
 namespace itk
 {
@@ -239,25 +241,22 @@ private:
   static TOut
   ConvertToDynamicArray(const TIn & in)
   {
-    TOut out(VDimension);
+    static_assert(TIn().size() == VDimension);
+    static_assert(std::is_same_v<decltype(TIn().data()), typename TOut::ValueType *>);
 
-    for (unsigned int i = 0; i < VDimension; ++i)
-    {
-      out[i] = in[i];
-    }
-    return out;
+    return TOut(in.data(), VDimension);
   }
 
   template <typename TIn, typename TOut>
   static TOut
   ConvertToStaticArray(const TIn & in)
   {
-    TOut out;
+    // Note: It is assumed here that `in.size()` is also equal to VDimension.
+    static_assert(TOut().size() == VDimension);
+    static_assert(std::is_same_v<decltype(*(TIn().begin())), decltype(*(TOut().begin()))>);
 
-    for (unsigned int i = 0; i < VDimension; ++i)
-    {
-      out[i] = in[i];
-    }
+    TOut out;
+    std::copy_n(in.begin(), VDimension, out.begin());
     return out;
   }
 };
