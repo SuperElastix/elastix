@@ -208,6 +208,13 @@ public:
   /** Allows disabling the use of multi-threading, by `SetUseMultiThread(false)`. */
   itkSetMacro(UseMultiThread, bool);
 
+  /** Tells that the sampler is used for groupwise registration. */
+  void
+  UseForGroupwiseRegistration()
+  {
+    m_UseForGroupwiseRegistration = true;
+  }
+
 protected:
   /** The constructor. */
   ImageSamplerBase();
@@ -267,6 +274,8 @@ private:
 
   InputImageRegionType m_CroppedInputImageRegion{};
   InputImageRegionType m_DummyInputImageRegion{};
+
+  bool m_UseForGroupwiseRegistration{ false };
 };
 
 } // end namespace itk
