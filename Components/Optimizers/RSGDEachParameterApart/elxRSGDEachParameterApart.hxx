@@ -125,39 +125,26 @@ RSGDEachParameterApart<TElastix>::AfterEachResolution()
    * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
    * ImageNotAvailable, SamplesNotAvailable, MaximumNumberOfIterations, MetricError
    */
-  std::string stopcondition;
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
 
-  switch (this->GetStopCondition())
-  {
-
-    case GradientMagnitudeTolerance:
-      stopcondition = "Minimum gradient magnitude has been reached";
-      break;
-
-    case StepTooSmall:
-      stopcondition = "Minimum step size has been reached";
-      break;
-
-    case MaximumNumberOfIterations:
-      stopcondition = "Maximum number of iterations has been reached";
-      break;
-
-    case ImageNotAvailable:
-      stopcondition = "No image available";
-      break;
-
-    case SamplesNotAvailable:
-      stopcondition = "No samples available";
-      break;
-
-    case MetricError:
-      stopcondition = "Error in metric";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+      case GradientMagnitudeTolerance:
+        return "Minimum gradient magnitude has been reached";
+      case StepTooSmall:
+        return "Minimum step size has been reached";
+      case MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case ImageNotAvailable:
+        return "No image available";
+      case SamplesNotAvailable:
+        return "No samples available";
+      case MetricError:
+        return "Error in metric";
+      default:
+        return "Unknown";
+    }
+  }();
   /** Print the stopping condition */
 
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");

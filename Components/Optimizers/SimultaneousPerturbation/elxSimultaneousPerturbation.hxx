@@ -169,23 +169,18 @@ SimultaneousPerturbation<TElastix>::AfterEachResolution()
    * enum   StopConditionType {  MaximumNumberOfIterations, MetricError }
    * ignore the BelowTolerance-criterion.
    */
-  std::string stopcondition;
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
 
-  switch (this->GetStopCondition())
-  {
-
-    case StopConditionSPSAOptimizerEnum::MaximumNumberOfIterations:
-      stopcondition = "Maximum number of iterations has been reached";
-      break;
-
-    case StopConditionSPSAOptimizerEnum::MetricError:
-      stopcondition = "Error in metric";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+      case StopConditionSPSAOptimizerEnum::MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case StopConditionSPSAOptimizerEnum::MetricError:
+        return "Error in metric";
+      default:
+        return "Unknown";
+    }
+  }();
   /** Print the stopping condition */
 
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");

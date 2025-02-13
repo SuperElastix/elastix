@@ -160,23 +160,18 @@ FiniteDifferenceGradientDescent<TElastix>::AfterEachResolution()
   /**
    * enum   StopConditionType {  MaximumNumberOfIterations, MetricError }
    */
-  std::string stopcondition;
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
 
-  switch (this->GetStopCondition())
-  {
-
-    case MaximumNumberOfIterations:
-      stopcondition = "Maximum number of iterations has been reached";
-      break;
-
-    case MetricError:
-      stopcondition = "Error in metric";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+      case MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case MetricError:
+        return "Error in metric";
+      default:
+        return "Unknown";
+    }
+  }();
   /** Print the stopping condition */
 
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");

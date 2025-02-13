@@ -203,26 +203,19 @@ ConjugateGradientFRPR<TElastix>::AfterEachResolution()
 
   /** \todo StopConditions are not yet implemented in the FRPROptimizer;
    * Uncomment the following code when they are implemented.
+  std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
 
-  std::string stopcondition;
-
-  switch( this->GetStopCondition() )
-  {
-
-  case MaximumNumberOfIterations :
-    stopcondition = "Maximum number of iterations has been reached";
-    break;
-
-  case MetricError :
-    stopcondition = "Error in metric";
-    break;
-
-  default:
-    stopcondition = "Unknown";
-    break;
-
-  }
-*/
+      case MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case MetricError:
+        return "Error in metric";
+      default:
+        return "Unknown";
+    }
+  }();
+   */
   /** Print the stopping condition */
   // elxout << "Stopping condition: " << stopcondition << "." << std::endl;
 
