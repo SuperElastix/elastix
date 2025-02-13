@@ -245,10 +245,10 @@ TransformBase<TElastix>::SetFinalParameters()
   /** Make a local copy, since some transforms do not do this,
    * like the B-spline transform.
    */
-  this->m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition();
+  m_FinalParameters = this->GetElastix()->GetElxOptimizerBase()->GetAsITKBaseType()->GetCurrentPosition();
 
   /** Set the final Parameters for the resampler. */
-  this->GetAsITKBaseType()->SetParameters(this->m_FinalParameters);
+  this->GetAsITKBaseType()->SetParameters(m_FinalParameters);
 
 } // end SetFinalParameters()
 
@@ -284,7 +284,7 @@ TransformBase<TElastix>::ReadFromFile()
   /** Task 1 - Read the parameters from file. */
 
   /** Read the TransformParameters. */
-  if (this->m_ReadWriteTransformParameters)
+  if (m_ReadWriteTransformParameters)
   {
     const auto itkParameterValues = configuration.RetrieveValuesOfParameter<double>("ITKTransformParameters");
 
@@ -336,7 +336,7 @@ TransformBase<TElastix>::ReadFromFile()
     /** Set the parameters into this transform. */
     this->GetAsITKBaseType()->SetParameters(m_TransformParameters);
 
-  } // end if this->m_ReadWriteTransformParameters
+  } // end if m_ReadWriteTransformParameters
 
   /** Task 2 - Get the InitialTransform. */
   const ElastixBase & elastixBase = itk::Deref(Superclass::GetElastix());
@@ -624,7 +624,7 @@ TransformBase<TElastix>::CreateTransformParameterMap(const ParametersType & para
                    { "UseDirectionCosines", { Conversion::ToString(elastixObject.GetUseDirectionCosines()) } } };
 
   /** Write the parameters of this transform. */
-  if (this->m_ReadWriteTransformParameters)
+  if (m_ReadWriteTransformParameters)
   {
     /** In this case, write in a normal way to the parameter file. */
     parameterMap["TransformParameters"] = { Conversion::ToVectorOfStrings(param) };
@@ -1354,11 +1354,11 @@ void
 TransformBase<TElastix>::SetTransformParameterFileName(const std::string & filename)
 {
   /** Copied from itkSetStringMacro. */
-  if (filename == this->m_TransformParameterFileName)
+  if (filename == m_TransformParameterFileName)
   {
     return;
   }
-  this->m_TransformParameterFileName = filename;
+  m_TransformParameterFileName = filename;
   this->GetAsITKBaseType()->Modified();
 
 } // end SetTransformParameterFileName()
@@ -1373,9 +1373,9 @@ void
 TransformBase<TElastix>::SetReadWriteTransformParameters(const bool _arg)
 {
   /** Copied from itkSetMacro. */
-  if (this->m_ReadWriteTransformParameters != _arg)
+  if (m_ReadWriteTransformParameters != _arg)
   {
-    this->m_ReadWriteTransformParameters = _arg;
+    m_ReadWriteTransformParameters = _arg;
     this->GetAsITKBaseType()->Modified();
   }
 
