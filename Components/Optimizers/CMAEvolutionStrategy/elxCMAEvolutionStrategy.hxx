@@ -240,38 +240,25 @@ CMAEvolutionStrategy<TElastix>::AfterEachResolution()
     ZeroStepLength,
     Unknown };  */
 
-  std::string stopcondition;
-
-  switch (this->GetStopCondition())
-  {
-    case MetricError:
-      stopcondition = "Error in metric";
-      break;
-
-    case MaximumNumberOfIterations:
-      stopcondition = "Maximum number of iterations has been reached";
-      break;
-
-    case PositionToleranceMin:
-      stopcondition = "The minimum step length condition has been reached";
-      break;
-
-    case PositionToleranceMax:
-      stopcondition = "The maximum step length condition has been reached";
-      break;
-
-    case ValueTolerance:
-      stopcondition = "Almost no decrease in function value anymore";
-      break;
-
-    case ZeroStepLength:
-      stopcondition = "The step length is 0";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
+      case MetricError:
+        return "Error in metric";
+      case MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case PositionToleranceMin:
+        return "The minimum step length condition has been reached";
+      case PositionToleranceMax:
+        return "The maximum step length condition has been reached";
+      case ValueTolerance:
+        return "Almost no decrease in function value anymore";
+      case ZeroStepLength:
+        return "The step length is 0";
+      default:
+        return "Unknown";
+    }
+  }();
 
   /** Print the stopping condition */
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");

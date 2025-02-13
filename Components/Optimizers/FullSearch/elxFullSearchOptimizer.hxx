@@ -221,22 +221,17 @@ FullSearch<TElastix>::AfterEachResolution()
   const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   // enum StopConditionType {FullRangeSearched,  MetricError };
-  std::string stopcondition;
-
-  switch (this->GetStopCondition())
-  {
-    case FullRangeSearched:
-      stopcondition = "The full range has been searched";
-      break;
-
-    case MetricError:
-      stopcondition = "Error in metric";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
+      case FullRangeSearched:
+        return "The full range has been searched";
+      case MetricError:
+        return "Error in metric";
+      default:
+        return "Unknown";
+    }
+  }();
 
   /** Print the stopping condition */
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");

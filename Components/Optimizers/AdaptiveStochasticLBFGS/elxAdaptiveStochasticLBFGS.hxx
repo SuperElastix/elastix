@@ -375,34 +375,23 @@ AdaptiveStochasticLBFGS<TElastix>::AfterEachResolution()
    *   MetricError,
    *   MinimumStepSize };
    */
-  std::string stopcondition;
-
-  switch (this->GetStopCondition())
-  {
-    case MetricError:
-      stopcondition = "Error in metric";
-      break;
-
-    case MaximumNumberOfIterations:
-      stopcondition = "Maximum number of iterations has been reached";
-      break;
-
-    case InvalidDiagonalMatrix:
-      stopcondition = "The InvalidDiagonalMatrix";
-      break;
-
-    case GradientMagnitudeTolerance:
-      stopcondition = "The gradient magnitude has (nearly) vanished";
-      break;
-
-    case MinimumStepSize:
-      stopcondition = "The last step size was (nearly) zero";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
+      case MetricError:
+        return "Error in metric";
+      case MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case InvalidDiagonalMatrix:
+        return "The InvalidDiagonalMatrix";
+      case GradientMagnitudeTolerance:
+        return "The gradient magnitude has (nearly) vanished";
+      case MinimumStepSize:
+        return "The last step size was (nearly) zero";
+      default:
+        return "Unknown";
+    }
+  }();
 
   /** Print the stopping condition. */
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");

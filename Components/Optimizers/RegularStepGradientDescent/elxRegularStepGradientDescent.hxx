@@ -120,35 +120,24 @@ RegularStepGradientDescent<TElastix>::AfterEachResolution()
    * enum   StopConditionType {   GradientMagnitudeTolerance = 1, StepTooSmall,
    * ImageNotAvailable, CostFunctionError, MaximumNumberOfIterations
    */
-  std::string stopcondition;
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
 
-  switch (this->GetStopCondition())
-  {
-
-    case StopConditionEnum::GradientMagnitudeTolerance:
-      stopcondition = "Minimum gradient magnitude has been reached";
-      break;
-
-    case StopConditionEnum::StepTooSmall:
-      stopcondition = "Minimum step size has been reached";
-      break;
-
-    case StopConditionEnum::MaximumNumberOfIterations:
-      stopcondition = "Maximum number of iterations has been reached";
-      break;
-
-    case StopConditionEnum::ImageNotAvailable:
-      stopcondition = "No image available";
-      break;
-
-    case StopConditionEnum::CostFunctionError:
-      stopcondition = "Error in cost function";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+      case StopConditionEnum::GradientMagnitudeTolerance:
+        return "Minimum gradient magnitude has been reached";
+      case StopConditionEnum::StepTooSmall:
+        return "Minimum step size has been reached";
+      case StopConditionEnum::MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case StopConditionEnum::ImageNotAvailable:
+        return "No image available";
+      case StopConditionEnum::CostFunctionError:
+        return "Error in cost function";
+      default:
+        return "Unknown";
+    }
+  }();
   /** Print the stopping condition */
 
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");

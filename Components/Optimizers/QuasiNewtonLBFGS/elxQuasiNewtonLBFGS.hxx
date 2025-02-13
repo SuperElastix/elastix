@@ -391,37 +391,26 @@ QuasiNewtonLBFGS<TElastix>::AfterEachResolution()
   }
   else
   {
-    switch (this->GetStopCondition())
-    {
+    stopcondition = [this] {
+      switch (this->GetStopCondition())
+      {
 
-      case StopConditionType::MetricError:
-        stopcondition = "Error in metric";
-        break;
-
-      case StopConditionType::LineSearchError:
-        stopcondition = "Error in LineSearch";
-        break;
-
-      case StopConditionType::MaximumNumberOfIterations:
-        stopcondition = "Maximum number of iterations has been reached";
-        break;
-
-      case StopConditionType::InvalidDiagonalMatrix:
-        stopcondition = "The diagonal matrix is invalid";
-        break;
-
-      case StopConditionType::GradientMagnitudeTolerance:
-        stopcondition = "The gradient magnitude has (nearly) vanished";
-        break;
-
-      case StopConditionType::ZeroStep:
-        stopcondition = "The last step size was (nearly) zero";
-        break;
-
-      default:
-        stopcondition = "Unknown";
-        break;
-    }
+        case StopConditionType::MetricError:
+          return "Error in metric";
+        case StopConditionType::LineSearchError:
+          return "Error in LineSearch";
+        case StopConditionType::MaximumNumberOfIterations:
+          return "Maximum number of iterations has been reached";
+        case StopConditionType::InvalidDiagonalMatrix:
+          return "The diagonal matrix is invalid";
+        case StopConditionType::GradientMagnitudeTolerance:
+          return "The gradient magnitude has (nearly) vanished";
+        case StopConditionType::ZeroStep:
+          return "The last step size was (nearly) zero";
+        default:
+          return "Unknown";
+      }
+    }();
   }
 
   /** Print the stopping condition */
@@ -497,51 +486,27 @@ QuasiNewtonLBFGS<TElastix>::GetLineSearchStopCondition() const
     Unknown
   };
 
-  std::string stopcondition;
-
-  auto lineSearchStopCondition = static_cast<LineSearchStopConditionType>(this->m_LineOptimizer->GetStopCondition());
-
-  switch (lineSearchStopCondition)
+  switch (static_cast<LineSearchStopConditionType>(this->m_LineOptimizer->GetStopCondition()))
   {
-
     case LineSearchStopConditionType::StrongWolfeConditionsSatisfied:
-      stopcondition = "WolfeSatisfied";
-      break;
-
+      return "WolfeSatisfied";
     case LineSearchStopConditionType::MetricError:
-      stopcondition = "MetricError";
-      break;
-
+      return "MetricError";
     case LineSearchStopConditionType::MaximumNumberOfIterations:
-      stopcondition = "MaxNrIterations";
-      break;
-
+      return "MaxNrIterations";
     case LineSearchStopConditionType::StepTooSmall:
-      stopcondition = "StepTooSmall";
-      break;
-
+      return "StepTooSmall";
     case LineSearchStopConditionType::StepTooLarge:
-      stopcondition = "StepTooLarge";
-      break;
-
+      return "StepTooLarge";
     case LineSearchStopConditionType::IntervalTooSmall:
-      stopcondition = "IntervalTooSmall";
-      break;
-
+      return "IntervalTooSmall";
     case LineSearchStopConditionType::RoundingError:
-      stopcondition = "RoundingError";
-      break;
-
+      return "RoundingError";
     case LineSearchStopConditionType::AscentSearchDirection:
-      stopcondition = "AscentSearchDir";
-      break;
-
+      return "AscentSearchDir";
     default:
-      stopcondition = "Unknown";
-      break;
+      return "Unknown";
   }
-
-  return stopcondition;
 
 } // end GetLineSearchStopCondition
 

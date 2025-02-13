@@ -304,26 +304,19 @@ AdaptiveStochasticGradientDescent<TElastix>::AfterEachResolution()
    *   MetricError,
    *   MinimumStepSize };
    */
-  std::string stopcondition;
-
-  switch (this->GetStopCondition())
-  {
-    case MaximumNumberOfIterations:
-      stopcondition = "Maximum number of iterations has been reached";
-      break;
-
-    case MetricError:
-      stopcondition = "Error in metric";
-      break;
-
-    case MinimumStepSize:
-      stopcondition = "The minimum step length has been reached";
-      break;
-
-    default:
-      stopcondition = "Unknown";
-      break;
-  }
+  const std::string stopcondition = [this] {
+    switch (this->GetStopCondition())
+    {
+      case MaximumNumberOfIterations:
+        return "Maximum number of iterations has been reached";
+      case MetricError:
+        return "Error in metric";
+      case MinimumStepSize:
+        return "The minimum step length has been reached";
+      default:
+        return "Unknown";
+    }
+  }();
 
   /** Print the stopping condition. */
   log::info(std::ostringstream{} << "Stopping condition: " << stopcondition << ".");
