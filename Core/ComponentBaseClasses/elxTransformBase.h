@@ -118,6 +118,9 @@ namespace elastix
  * \transformparameter InitialTransformParametersFileName: legacy parameter name, replaced with
  * "InitialTransformParameterFileName", and deprecated from June 2023.
  *
+ * \transformparameter OutputTransformParameterFileFormat: The file format of the transform parameter files written to
+ * the output directory. Possible values: "txt" (the legacy parameter file format) and "TOML". Default: "txt".
+ *
  * The command line arguments used by this class are:
  * \commandlinearg -t0: optional argument for elastix for specifying an initial transform
  *    parameter file. \n
