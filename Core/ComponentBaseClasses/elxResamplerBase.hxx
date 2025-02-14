@@ -654,7 +654,7 @@ ResamplerBase<TElastix>::WriteToFile(std::ostream & transformationParameterInfo)
   /** Write resampler specific things. */
   transformationParameterInfo << '\n'
                               << Conversion::ParameterMapStartOfCommentString(format)
-                              << " Resampler specific\n " + Conversion::ParameterMapToString(parameterMap, format);
+                              << " Resampler specific\n" + Conversion::ParameterMapToString(parameterMap, format);
 
 } // end WriteToFile()
 
