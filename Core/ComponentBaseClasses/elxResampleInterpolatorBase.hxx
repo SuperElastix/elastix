@@ -64,7 +64,7 @@ ResampleInterpolatorBase<TElastix>::WriteToFile(std::ostream & transformationPar
   /** Write ResampleInterpolator specific things. */
   transformationParameterInfo << '\n'
                               << Conversion::ParameterMapStartOfCommentString(format)
-                              << " ResampleInterpolator specific\n " +
+                              << " ResampleInterpolator specific\n" +
                                    Conversion::ParameterMapToString(parameterMap, format);
 
 } // end WriteToFile()
