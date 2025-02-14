@@ -2642,29 +2642,40 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputTransformParameterFileFormat)
   registration.SetMovingImage(&image);
   registration.SetParameterObject(&parameterObject);
 
-  elx::ParameterObject::ParameterMapType parameterMap{ // Parameters in alphabetic order:
-                                                       { "ImageSampler", { "Full" } },
-                                                       { "MaximumNumberOfIterations", { "2" } },
-                                                       { "Metric", { "AdvancedNormalizedCorrelation" } },
-                                                       { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
-                                                       { "Transform", { "TranslationTransform" } }
-  };
-
-  const auto check = [&parameterMap, &parameterObject, &registration, rootOutputDirectoryPath](
+  const auto check = [&parameterObject, &registration, rootOutputDirectoryPath](
                        const std::string & outputTransformParameterFileFormat,
                        const std::string & expectedTransformParameterFileExtension) {
     const std::string outputDirectoryPath = rootOutputDirectoryPath + "/" + outputTransformParameterFileFormat;
     itk::FileTools::CreateDirectory(outputDirectoryPath);
 
     registration.SetOutputDirectory(outputDirectoryPath);
-    parameterMap["OutputTransformParameterFileFormat"] = { outputTransformParameterFileFormat };
+
+    elx::ParameterObject::ParameterMapType parameterMap{
+      // Parameters in alphabetic order:
+      { "ImageSampler", { "Full" } },
+      { "MaximumNumberOfIterations", { "2" } },
+      { "Metric", { "AdvancedNormalizedCorrelation" } },
+      { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+      { "OutputTransformParameterFileFormat", { outputTransformParameterFileFormat } },
+      { "Transform", { "TranslationTransform" } }
+    };
+
     parameterObject.SetParameterMap(parameterMap);
     registration.Update();
 
+    const std::string transformParameterFileName =
+      outputDirectoryPath + "/TransformParameters.0" + expectedTransformParameterFileExtension;
+
     EXPECT_TRUE(itksys::SystemTools::FileExists(outputDirectoryPath + "/TransformParameters.0" +
                                                 expectedTransformParameterFileExtension));
+
+    elx::DefaultConstruct<itk::TransformixFilter<ImageType>> transformix{};
+    transformix.SetTransformParameterFileName(transformParameterFileName);
+    return itk::Deref(transformix.GetTransformParameterObject()).GetParameterMaps();
   };
 
-  check("TOML", ".toml");
-  check("txt", ".txt");
+  const ParameterMapVectorType parameterMapsFromToml = check("TOML", ".toml");
+  const ParameterMapVectorType parameterMapsFromText = check("txt", ".txt");
+
+  EXPECT_EQ(parameterMapsFromToml, parameterMapsFromText);
 }
