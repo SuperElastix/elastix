@@ -26,7 +26,6 @@
 // Header file from TOML++, by Mark Gillard.
 #include "tomlplusplus/toml.hpp"
 
-#include <deque>
 #include <fstream>
 
 namespace itk
@@ -305,45 +304,50 @@ ReadParameterMapFromInputStream(ParameterFileParser::ParameterMapType & paramete
 }
 
 
-// Offers a read-only view on the lines of text of the specified file contents.
-class LineViewer
+// Returns a string_view to the line with the specified line number (counting "1-based").
+std::string_view
+GetLine(const std::string_view contents, const toml::source_index lineNumber)
 {
-private:
-  std::string_view        m_Contents;
-  std::deque<std::size_t> m_LineIndices;
+  if (lineNumber == 0)
+  {
+    return {};
+  }
 
-public:
-  // Explicit constructor.
-  explicit LineViewer(const std::string_view contents)
-    : m_Contents(contents)
-    , m_LineIndices([contents] {
-      std::deque<std::size_t> result{ 0 };
-      const auto              n = contents.size();
-      for (std::size_t i{}; i < n; ++i)
+  // The position of the first character of the specified line.
+  const auto beginOfLine = [contents, lineNumber]() -> std::size_t {
+    if (lineNumber == 1)
+    {
+      return 0;
+    }
+
+    const auto  numberOfChars = contents.size();
+    std::size_t currentLineNumber{ 1 };
+
+    for (std::size_t i{}; i < numberOfChars; ++i)
+    {
+      if (contents[i] == '\n')
       {
-        if (contents[i] == '\n')
+        ++currentLineNumber;
+
+        if (currentLineNumber == lineNumber)
         {
-          result.push_back(i + 1);
+          return i + 1;
         }
       }
-      result.push_back(contents.size());
-      return result;
-    }())
-  {}
+    }
+    return std::string_view::npos;
+  }();
 
-  // Assume zero-based line numbering.
-  std::string_view
-  GetLine(const std::size_t lineNumber) const
+  if (beginOfLine >= contents.size())
   {
-    const std::size_t lineIndex{ m_LineIndices.at(lineNumber) };
-
-    // Position of the last character before '\r' or '\n'.
-    const std::size_t posOfLastChar{
-      m_Contents.substr(lineIndex, m_LineIndices.at(lineNumber + 1) - lineIndex).find_last_not_of("\r\n")
-    };
-    return m_Contents.substr(lineIndex, (posOfLastChar == std::string::npos) ? 0 : posOfLastChar + 1);
+    return {};
   }
-};
+
+  const auto endOfLine = contents.find_first_of("\r\n", beginOfLine);
+
+  return contents.substr(beginOfLine,
+                         (endOfLine == std::string_view::npos) ? std::string_view::npos : (endOfLine - beginOfLine));
+}
 
 
 // Parses the specified TOML file, and returns its key-value pairs as an elastix ParameterMap.
@@ -357,10 +361,8 @@ ParseTomlFile(const std::string & fileName)
     return std::string(std::istreambuf_iterator<char>(inputFileStream), std::istreambuf_iterator<char>());
   }();
 
-  const LineViewer lineViewer(fileContents);
-
   // Retrieves an elastix parameter value from the specified TOML node.
-  const auto getParameterValue = [&lineViewer, &fileName](const toml::node & tomlNode) -> std::string {
+  const auto getParameterValue = [&fileContents, &fileName](const toml::node & tomlNode) -> std::string {
     // When the TOML node holds a string, just use it as it was produced by the TOML parser. (The TOML parser removes
     // surrounding double-quotes from string values.)
     if (const auto * const result = tomlNode.as_string())
@@ -388,7 +390,7 @@ ParseTomlFile(const std::string & fileName)
     const toml::source_position sourceRegionBegin = tomlNode.source().begin;
     itkGenericExceptionMacro("Unsupported TOML value type `" << tomlNode.type() << "` in \"" << fileName << "\" "
                                                              << sourceRegionBegin << ", at the following line:\n\""
-                                                             << lineViewer.GetLine(sourceRegionBegin.line - 1) << "\"");
+                                                             << GetLine(fileContents, sourceRegionBegin.line) << "\"");
   };
 
   try
@@ -418,7 +420,7 @@ ParseTomlFile(const std::string & fileName)
     const toml::source_position sourceRegionBegin = parseError.source().begin;
     itkGenericExceptionMacro("TOML parse error: " << parseError.what() << "\nWhile parsing \"" << fileName << "\" "
                                                   << sourceRegionBegin << ", at the following line:\n\""
-                                                  << lineViewer.GetLine(sourceRegionBegin.line - 1) << "\"");
+                                                  << GetLine(fileContents, sourceRegionBegin.line) << "\"");
   }
 
   return parameterMap;
