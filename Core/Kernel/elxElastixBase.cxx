@@ -18,6 +18,7 @@
 #include "elxElastixBase.h"
 #include <Core/elxVersionMacros.h>
 #include "elxConversion.h"
+#include <Core/elxGitRevisionInfo.h>
 #include <sstream>
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 
@@ -177,7 +178,8 @@ ElastixBase::BeforeAllBase()
   int returndummy = 0;
 
   /** Check Command line options and print them to the logfile. */
-  log::info("ELASTIX version: " ELASTIX_VERSION_STRING "\nCommand line options from ElastixBase:");
+  log::info(std::string("ELASTIX version: " ELASTIX_VERSION_STRING "\nGit revision SHA: ") + gitRevisionSha +
+            "\nGit revision date: " + gitRevisionDate + "\nCommand line options from ElastixBase:");
 
   if (!BaseComponent::IsElastixLibrary())
   {
