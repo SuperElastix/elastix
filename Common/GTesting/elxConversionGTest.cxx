@@ -35,6 +35,7 @@
 
 #include <itkImageBase.h>
 #include <itkIndex.h>
+#include <itkMath.h>
 #include <itkOptimizerParameters.h>
 #include <itkPoint.h>
 #include <itkSize.h>
@@ -387,40 +388,40 @@ GTEST_TEST(Conversion, ToString)
   EXPECT_EQ(Conversion::ToString(0.1), "0.1");
   EXPECT_EQ(Conversion::ToString(1.0 / 3.0), "0." + std::string(expectedPrecision, '3'));
 
-  for (std::uint8_t exponent{ 20 }; exponent > 0; --exponent)
+  for (std::uint64_t exponent{ 20 }; exponent > 0; --exponent)
   {
-    const auto power_of_ten = std::pow(10.0, exponent);
+    const auto power_of_ten = 10.0 * static_cast<double>(itk::Math::UnsignedPower(10, exponent - 1));
 
     // Test +/- 1000...000
     EXPECT_EQ(Conversion::ToString(power_of_ten), '1' + std::string(exponent, '0'));
     EXPECT_EQ(Conversion::ToString(-power_of_ten), "-1" + std::string(exponent, '0'));
   }
 
-  for (std::uint8_t exponent{ 15 }; exponent > 0; --exponent)
+  for (std::uint64_t exponent{ 15 }; exponent > 0; --exponent)
   {
-    const auto power_of_ten = std::pow(10.0, exponent);
+    const auto power_of_ten = static_cast<double>(itk::Math::UnsignedPower(10, exponent));
 
     // Test +/- 999...999
     EXPECT_EQ(Conversion::ToString(power_of_ten - 1), std::string(exponent, '9'));
     EXPECT_EQ(Conversion::ToString(1 - power_of_ten), '-' + std::string(exponent, '9'));
   }
 
-  for (std::int8_t exponent{ -6 }; exponent < 0; ++exponent)
+  for (std::uint64_t exponent{ 6 }; exponent > 0; --exponent)
   {
-    const auto power_of_ten = std::pow(10.0, exponent);
+    const auto power_of_ten = 1.0 / static_cast<double>(itk::Math::UnsignedPower(10, exponent));
 
     // Test +/- 0.000...001
-    EXPECT_EQ(Conversion::ToString(power_of_ten), "0." + std::string(-1 - exponent, '0') + '1');
-    EXPECT_EQ(Conversion::ToString(-power_of_ten), "-0." + std::string(-1 - exponent, '0') + '1');
+    EXPECT_EQ(Conversion::ToString(power_of_ten), "0." + std::string(exponent - 1, '0') + '1');
+    EXPECT_EQ(Conversion::ToString(-power_of_ten), "-0." + std::string(exponent - 1, '0') + '1');
   }
 
-  for (std::int8_t exponent{ -16 }; exponent < 0; ++exponent)
+  for (std::uint64_t exponent{ 16 }; exponent > 0; --exponent)
   {
-    const auto power_of_ten = std::pow(10.0, exponent);
+    const auto power_of_ten = 1.0 / static_cast<double>(itk::Math::UnsignedPower(10, exponent));
 
     // Test +/- 0.999...999
-    EXPECT_EQ(Conversion::ToString(1 - power_of_ten), "0." + std::string(-exponent, '9'));
-    EXPECT_EQ(Conversion::ToString(power_of_ten - 1), "-0." + std::string(-exponent, '9'));
+    EXPECT_EQ(Conversion::ToString(1 - power_of_ten), "0." + std::string(exponent, '9'));
+    EXPECT_EQ(Conversion::ToString(power_of_ten - 1), "-0." + std::string(exponent, '9'));
   }
 
   // The first powers of ten that are represented by scientific "e" notation:
