@@ -20,6 +20,7 @@
 
 #include "itkTransformRigidityPenaltyTerm.h"
 
+#include "itkMath.h"
 #include "itkZeroFluxNeumannBoundaryCondition.h"
 
 namespace itk
@@ -647,19 +648,19 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       if constexpr (ImageDimension == 2)
       {
         this->m_OrthonormalityConditionValue +=
-          it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A - 1.0, 2.0) +
-                          std::pow(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) - 1.0, 2.0) +
-                          std::pow(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B), 2.0));
+          it_RCI.Get() * (Math::sqr(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A - 1.0) +
+                          Math::sqr(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) - 1.0) +
+                          Math::sqr(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B)));
       }
       else if constexpr (ImageDimension == 3)
       {
         this->m_OrthonormalityConditionValue +=
-          it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A + mu3_A * mu3_A - 1.0, 2.0) +
-                          std::pow(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B) + mu3_A * mu3_B, 2.0) +
-                          std::pow(+(1.0 + mu1_A) * mu1_C + mu2_A * mu2_C + mu3_A * (1.0 + mu3_C), 2.0) +
-                          std::pow(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) + mu3_B * mu3_B - 1.0, 2.0) +
-                          std::pow(+mu1_B * mu1_C + (1.0 + mu2_B) * mu2_C + mu3_B * (1.0 + mu3_C), 2.0) +
-                          std::pow(+mu1_C * mu1_C + mu2_C * mu2_C + (1.0 + mu3_C) * (1.0 + mu3_C) - 1.0, 2.0));
+          it_RCI.Get() * (Math::sqr(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A + mu3_A * mu3_A - 1.0) +
+                          Math::sqr(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B) + mu3_A * mu3_B) +
+                          Math::sqr(+(1.0 + mu1_A) * mu1_C + mu2_A * mu2_C + mu3_A * (1.0 + mu3_C)) +
+                          Math::sqr(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) + mu3_B * mu3_B - 1.0) +
+                          Math::sqr(+mu1_B * mu1_C + (1.0 + mu2_B) * mu2_C + mu3_B * (1.0 + mu3_C)) +
+                          Math::sqr(+mu1_C * mu1_C + mu2_C * mu2_C + (1.0 + mu3_C) * (1.0 + mu3_C) - 1.0));
       }
 
       /** Increase all iterators. */
@@ -718,15 +719,14 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
       if constexpr (ImageDimension == 2)
       {
         this->m_PropernessConditionValue +=
-          it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu2_B) - mu2_A * mu1_B - 1.0, 2.0));
+          it_RCI.Get() * Math::sqr(+(1.0 + mu1_A) * (1.0 + mu2_B) - mu2_A * mu1_B - 1.0);
       }
       else if constexpr (ImageDimension == 3)
       {
         this->m_PropernessConditionValue +=
-          it_RCI.Get() * (std::pow(-mu1_C * (1.0 + mu2_B) * mu3_A + mu1_B * mu2_C * mu3_A + mu1_C * mu2_A * mu3_B -
-                                     (1.0 + mu1_A) * mu2_C * mu3_B - mu1_B * mu2_A * (1.0 + mu3_C) +
-                                     (1.0 + mu1_A) * (1.0 + mu2_B) * (1.0 + mu3_C) - 1.0,
-                                   2.0));
+          it_RCI.Get() * Math::sqr(-mu1_C * (1.0 + mu2_B) * mu3_A + mu1_B * mu2_C * mu3_A + mu1_C * mu2_A * mu3_B -
+                                   (1.0 + mu1_A) * mu2_C * mu3_B - mu1_B * mu2_A * (1.0 + mu3_C) +
+                                   (1.0 + mu1_A) * (1.0 + mu2_B) * (1.0 + mu3_C) - 1.0);
       }
 
       /** Increase all iterators. */
@@ -1128,9 +1128,9 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       {
         /** Calculate the value of the orthonormality condition. */
         this->m_OrthonormalityConditionValue +=
-          it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A - 1.0, 2.0) +
-                          std::pow(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) - 1.0, 2.0) +
-                          std::pow(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B), 2.0));
+          it_RCI.Get() * (Math::sqr(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A - 1.0) +
+                          Math::sqr(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) - 1.0) +
+                          Math::sqr(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B)));
         /** Calculate the derivative of the orthonormality condition. */
         /** mu1, part 1 */
         valueOC = +2.0 * (1.0 + mu1_A) * (1.0 + mu1_A) * (1.0 + mu1_A) + 2.0 * mu2_A * mu2_A * (1.0 + mu1_A) -
@@ -1154,12 +1154,12 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       {
         /** Calculate the value of the orthonormality condition. */
         this->m_OrthonormalityConditionValue +=
-          it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A + mu3_A * mu3_A - 1.0, 2.0) +
-                          std::pow(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B) + mu3_A * mu3_B, 2.0) +
-                          std::pow(+(1.0 + mu1_A) * mu1_C + mu2_A * mu2_C + mu3_A * (1.0 + mu3_C), 2.0) +
-                          std::pow(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) + mu3_B * mu3_B - 1.0, 2.0) +
-                          std::pow(+mu1_B * mu1_C + (1.0 + mu2_B) * mu2_C + mu3_B * (1.0 + mu3_C), 2.0) +
-                          std::pow(+mu1_C * mu1_C + mu2_C * mu2_C + (1.0 + mu3_C) * (1.0 + mu3_C) - 1.0, 2.0));
+          it_RCI.Get() * (Math::sqr(+(1.0 + mu1_A) * (1.0 + mu1_A) + mu2_A * mu2_A + mu3_A * mu3_A - 1.0) +
+                          Math::sqr(+(1.0 + mu1_A) * mu1_B + mu2_A * (1.0 + mu2_B) + mu3_A * mu3_B) +
+                          Math::sqr(+(1.0 + mu1_A) * mu1_C + mu2_A * mu2_C + mu3_A * (1.0 + mu3_C)) +
+                          Math::sqr(+mu1_B * mu1_B + (1.0 + mu2_B) * (1.0 + mu2_B) + mu3_B * mu3_B - 1.0) +
+                          Math::sqr(+mu1_B * mu1_C + (1.0 + mu2_B) * mu2_C + mu3_B * (1.0 + mu3_C)) +
+                          Math::sqr(+mu1_C * mu1_C + mu2_C * mu2_C + (1.0 + mu3_C) * (1.0 + mu3_C) - 1.0));
         /** Calculate the derivative of the orthonormality condition. */
         /** mu1, part 1 */
         valueOC = +2.0 * (1.0 + mu1_A) * (1.0 + mu1_A) * (1.0 + mu1_A) + 2.0 * mu2_A * mu2_A * (1.0 + mu1_A) +
@@ -1278,7 +1278,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       {
         /** Calculate the value of the properness condition. */
         this->m_PropernessConditionValue +=
-          it_RCI.Get() * (std::pow(+(1.0 + mu1_A) * (1.0 + mu2_B) - mu2_A * mu1_B - 1.0, 2.0));
+          it_RCI.Get() * Math::sqr(+(1.0 + mu1_A) * (1.0 + mu2_B) - mu2_A * mu1_B - 1.0);
         /** Calculate the derivative of the properness condition. */
         /** mu1, part 1 */
         valuePC = +(1.0 + mu2_B) * (1.0 + mu2_B) * (1.0 + mu1_A) - mu2_A * (1.0 + mu2_B) * mu1_B - (1.0 + mu2_B);
@@ -1297,10 +1297,9 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
       {
         /** Calculate the value of the properness condition. */
         this->m_PropernessConditionValue +=
-          it_RCI.Get() * (std::pow(-mu1_C * (1.0 + mu2_B) * mu3_A + mu1_B * mu2_C * mu3_A + mu1_C * mu2_A * mu3_B -
-                                     (1.0 + mu1_A) * mu2_C * mu3_B - mu1_B * mu2_A * (1.0 + mu3_C) +
-                                     (1.0 + mu1_A) * (1.0 + mu2_B) * (1.0 + mu3_C) - 1.0,
-                                   2.0));
+          it_RCI.Get() * Math::sqr(-mu1_C * (1.0 + mu2_B) * mu3_A + mu1_B * mu2_C * mu3_A + mu1_C * mu2_A * mu3_B -
+                                   (1.0 + mu1_A) * mu2_C * mu3_B - mu1_B * mu2_A * (1.0 + mu3_C) +
+                                   (1.0 + mu1_A) * (1.0 + mu2_B) * (1.0 + mu3_C) - 1.0);
         /** Calculate the derivative of the properness condition. */
         /** mu1, part 1 */
         valuePC = +(1.0 + mu1_A) * mu2_C * mu2_C * mu3_B * mu3_B +
