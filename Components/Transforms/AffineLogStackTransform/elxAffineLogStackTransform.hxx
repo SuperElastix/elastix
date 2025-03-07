@@ -417,20 +417,14 @@ AffineLogStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInp
    * file, which is the rotationPoint, expressed in world coordinates.
    */
   ReducedDimensionInputPointType RDcenterOfRotationPoint{};
-  bool                           centerGivenAsPoint = true;
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
     {
-      centerGivenAsPoint = false;
+      return false;
     }
-  }
-
-  if (!centerGivenAsPoint)
-  {
-    return false;
   }
 
   /** copy the temporary variable into the output of this function,
