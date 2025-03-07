@@ -120,7 +120,7 @@ SimilarityTransformElastix<TElastix>::InitializeTransform()
   IndexType      centerOfRotationIndex{};
   InputPointType centerOfRotationPoint{};
   bool           centerGivenAsIndex = true;
-  bool           centerGivenAsPoint = true;
+  const bool     centerGivenAsPoint = ReadCenterOfRotationPoint(centerOfRotationPoint);
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Check COR index: Returns zero when parameter was in the parameter file. */
@@ -128,12 +128,6 @@ SimilarityTransformElastix<TElastix>::InitializeTransform()
     if (!foundI)
     {
       centerGivenAsIndex = false;
-    }
-    /** Check COR point: Returns zero when parameter was in the parameter file. */
-    bool foundP = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
-    if (!foundP)
-    {
-      centerGivenAsPoint = false;
     }
   } // end loop over SpaceDimension
 
