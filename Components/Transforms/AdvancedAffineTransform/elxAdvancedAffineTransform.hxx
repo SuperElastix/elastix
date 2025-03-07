@@ -147,17 +147,13 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
   /** Try to read CenterOfRotationIndex from parameter file,
    * which is the rotationPoint, expressed in index-values.
    */
-  IndexType      centerOfRotationIndex;
-  InputPointType centerOfRotationPoint;
+  IndexType      centerOfRotationIndex{};
+  InputPointType centerOfRotationPoint{};
 
   bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    /** Initialize. */
-    centerOfRotationIndex[i] = 0;
-    centerOfRotationPoint[i] = 0.0;
-
     /** Check COR index: Returns zero when parameter was in the parameter file. */
     bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!foundI)
@@ -442,12 +438,10 @@ AdvancedAffineTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointTy
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
-  InputPointType centerOfRotationPoint;
+  InputPointType centerOfRotationPoint{};
   bool           centerGivenAsPoint = true;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    centerOfRotationPoint[i] = 0.0;
-
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
