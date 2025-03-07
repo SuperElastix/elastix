@@ -174,12 +174,10 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
    * which is the rotationPoint, expressed in index-values.
    */
 
-  ContinuousIndexType                 centerOfRotationIndex{};
-  InputPointType                      centerOfRotationPoint{};
-  ReducedDimensionContinuousIndexType RDcenterOfRotationIndex{};
-  ReducedDimensionInputPointType      RDcenterOfRotationPoint{};
-  InputPointType                      TransformedCenterOfRotation{};
-  ReducedDimensionInputPointType      RDTransformedCenterOfRotation{};
+  ContinuousIndexType            centerOfRotationIndex{};
+  ReducedDimensionInputPointType RDcenterOfRotationPoint{};
+  InputPointType                 TransformedCenterOfRotation{};
+  ReducedDimensionInputPointType RDTransformedCenterOfRotation{};
 
   bool     centerGivenAsIndex = true;
   bool     centerGivenAsPoint = true;
