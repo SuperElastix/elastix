@@ -334,20 +334,14 @@ SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType &
    * file, which is the rotationPoint, expressed in index-values.
    */
   IndexType centerOfRotationIndex{};
-  bool      centerGivenAsIndex = true;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!found)
     {
-      centerGivenAsIndex = false;
+      return false;
     }
-  }
-
-  if (!centerGivenAsIndex)
-  {
-    return false;
   }
 
   /** Get spacing, origin and size of the fixed image.
