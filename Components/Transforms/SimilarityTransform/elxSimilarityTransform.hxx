@@ -66,24 +66,12 @@ SimilarityTransformElastix<TElastix>::ReadFromFile()
   {
     /** Variables. */
     InputPointType centerOfRotationPoint{};
-    bool           indexRead = false;
 
-    /** Try first to read the CenterOfRotationPoint from the
-     * transform parameter file, this is the new, and preferred
-     * way, since elastix 3.402.
+    /** Try to read the CenterOfRotationPoint from the transform parameter file
      */
     const bool pointRead = this->ReadCenterOfRotationPoint(centerOfRotationPoint);
 
-    /** If this did not succeed, probably a transform parameter file
-     * is trying to be read that was generated using an older elastix
-     * version. Try to read it as an index, and convert to point.
-     */
     if (!pointRead)
-    {
-      indexRead = this->ReadCenterOfRotationIndex(centerOfRotationPoint);
-    }
-
-    if (!pointRead && !indexRead)
     {
       log::error("ERROR: No center of rotation is specified in the transform parameter file.");
       itkExceptionMacro("Transform parameter file is corrupt.");
@@ -94,7 +82,7 @@ SimilarityTransformElastix<TElastix>::ReadFromFile()
   }
 
   /** Call the ReadFromFile from the TransformBase.
-   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
+   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotationPoint
    * is set, because it is used in the SetParameters()-function of this transform.
    */
   this->Superclass2::ReadFromFile();
@@ -324,108 +312,6 @@ SimilarityTransformElastix<TElastix>::SetScales()
   this->m_Registration->GetAsITKBaseType()->GetModifiableOptimizer()->SetScales(newscales);
 
 } // end SetScales()
-
-
-/**
- * ******************** ReadCenterOfRotationIndex *********************
- */
-
-template <typename TElastix>
-bool
-SimilarityTransformElastix<TElastix>::ReadCenterOfRotationIndex(InputPointType & rotationPoint) const
-{
-  /** Try to read CenterOfRotationIndex from the transform parameter
-   * file, which is the rotationPoint, expressed in index-values.
-   */
-  IndexType centerOfRotationIndex;
-  bool      centerGivenAsIndex = true;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    centerOfRotationIndex[i] = 0;
-
-    /** Returns zero when parameter was in the parameter file. */
-    bool found = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!found)
-    {
-      centerGivenAsIndex = false;
-    }
-  }
-
-  if (!centerGivenAsIndex)
-  {
-    return false;
-  }
-
-  /** Get spacing, origin and size of the fixed image.
-   * We put this in a dummy image, so that we can correctly
-   * calculate the center of rotation in world coordinates.
-   */
-  SpacingType spacing;
-  IndexType   index;
-  PointType   origin;
-  SizeType    size;
-  auto        direction = DirectionType::GetIdentity();
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    /** Read size from the parameter file. Zero by default, which is illegal. */
-    size[i] = 0;
-    this->m_Configuration->ReadParameter(size[i], "Size", i);
-
-    /** Default index. Read index from the parameter file. */
-    index[i] = 0;
-    this->m_Configuration->ReadParameter(index[i], "Index", i);
-
-    /** Default spacing. Read spacing from the parameter file. */
-    spacing[i] = 1.0;
-    this->m_Configuration->ReadParameter(spacing[i], "Spacing", i);
-
-    /** Default origin. Read origin from the parameter file. */
-    origin[i] = 0.0;
-    this->m_Configuration->ReadParameter(origin[i], "Origin", i);
-
-    /** Read direction cosines. (The matrix elements must be specified in column-major order.) Default identity */
-    for (unsigned int j = 0; j < SpaceDimension; ++j)
-    {
-      this->m_Configuration->ReadParameter(direction(j, i), "Direction", i * SpaceDimension + j);
-    }
-  }
-
-  /** Check for image size. */
-  bool illegalSize = false;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    if (size[i] == 0)
-    {
-      illegalSize = true;
-    }
-  }
-
-  if (illegalSize)
-  {
-    log::error("ERROR: One or more image sizes are 0!");
-    return false;
-  }
-
-  /** Make a temporary image with the right region info,
-   * so that the TransformIndexToPhysicalPoint-functions will be right.
-   */
-  using DummyImageType = FixedImageType;
-  auto       dummyImage = DummyImageType::New();
-  RegionType region;
-  region.SetIndex(index);
-  region.SetSize(size);
-  dummyImage->SetRegions(region);
-  dummyImage->SetOrigin(origin);
-  dummyImage->SetSpacing(spacing);
-  dummyImage->SetDirection(direction);
-
-  /** Convert center of rotation from index-value to physical-point-value.*/
-  dummyImage->TransformIndexToPhysicalPoint(centerOfRotationIndex, rotationPoint);
-
-  /** Successfully read centerOfRotation as Index */
-  return true;
-
-} // end ReadCenterOfRotationIndex()
 
 
 /**

@@ -64,9 +64,6 @@ namespace elastix
  *    By default "GeometricalCenter" is assumed.\n
  *
  * The transform parameters necessary for transformix, additionally defined by this class, are:
- * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
- *    example: <tt>(CenterOfRotation 128 128 90)</tt>
- *    deprecated! From elastix version 3.402 this is changed to CenterOfRotationPoint!
  * \transformparameter CenterOfRotationPoint: stores the center of rotation, expressed in world coordinates. \n
  *    example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
  *
