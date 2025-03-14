@@ -83,7 +83,7 @@ AffineLogTransformElastix<TElastix>::ReadFromFile()
   this->m_AffineLogTransform->SetCenter(centerOfRotationPoint);
 
   /** Call the ReadFromFile from the TransformBase.
-   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
+   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotationPoint
    * is set, because it is used in the SetParameters()-function of this transform.
    */
   this->Superclass2::ReadFromFile();
