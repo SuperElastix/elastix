@@ -181,7 +181,6 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   InputPointType                      TransformedCenterOfRotation{};
   ReducedDimensionInputPointType      RDTransformedCenterOfRotation{};
 
-  bool     centerGivenAsIndex = true;
   bool     centerGivenAsPoint = true;
   SizeType fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
@@ -190,13 +189,6 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
 
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!foundI)
-    {
-      centerGivenAsIndex = false;
-    }
-
     /** Check COR point: Returns zero when parameter was in the parameter file. */
     bool foundP = configuration.ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!foundP)
@@ -218,8 +210,7 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   }
 
   /** Set the center of rotation to the center of the image if no center was given */
-  bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if (!centerGiven)
+  if (!centerGivenAsPoint)
   {
     /** Use center of image as default center of rotation */
     for (unsigned int k = 0; k < SpaceDimension; ++k)
@@ -242,16 +233,6 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   if (centerGivenAsPoint)
   {
     m_DummySubTransform->SetCenter(RDcenterOfRotationPoint);
-  }
-  if (centerGivenAsIndex)
-  {
-    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(
-      centerOfRotationIndex, TransformedCenterOfRotation);
-    for (unsigned int k = 0; k < ReducedSpaceDimension; ++k)
-    {
-      RDTransformedCenterOfRotation[k] = TransformedCenterOfRotation[k];
-    }
-    m_DummySubTransform->SetCenter(RDTransformedCenterOfRotation);
   }
 
   /** Set the translation to zero */

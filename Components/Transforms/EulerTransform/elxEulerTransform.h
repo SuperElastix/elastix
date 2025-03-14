@@ -48,9 +48,6 @@ namespace elastix
  *    parameter is ignored and the scales are determined automatically. \n
  *    example: <tt>( AutomaticScalesEstimation "true" ) </tt> \n
  *    Default: "false" (for backwards compatibility). Recommended: "true".
- * \parameter CenterOfRotation: an index around which the image is rotated. \n
- *    example: <tt>(CenterOfRotation 128 128 90)</tt> \n
- *    By default the CenterOfRotation is set to the geometric center of the image.
  * \parameter AutomaticTransformInitialization: whether or not the initial translation
  *    between images should be estimated as the distance between their centers.\n
  *    example: <tt>(AutomaticTransformInitialization "true")</tt> \n
@@ -63,9 +60,6 @@ namespace elastix
  *    This parameter is only relevant for 3D transformation, otherwise it is ignored.\n
  *
  * The transform parameters necessary for transformix, additionally defined by this class, are:
- * \transformparameter CenterOfRotation: stores the center of rotation as an index. \n
- *    example: <tt>(CenterOfRotation 128 128 90)</tt>\n
- *    <b>depecrated!</b> From elastix version 3.402 this is changed to CenterOfRotationPoint!
  * \transformparameter CenterOfRotationPoint: stores the center of rotation, expressed in world coordinates. \n
  *    example: <tt>(CenterOfRotationPoint 10.555 6.666 12.345)</tt>
  *

@@ -112,7 +112,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
   }
 
   /** Call the ReadFromFile from the TransformBase.
-   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
+   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotationPoint
    * is set, because it is used in the SetParameters()-function of this transform.
    */
   this->Superclass2::ReadFromFile();
@@ -147,23 +147,13 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
   /** Try to read CenterOfRotationIndex from parameter file,
    * which is the rotationPoint, expressed in index-values.
    */
-  IndexType      centerOfRotationIndex;
   InputPointType centerOfRotationPoint;
 
-  bool centerGivenAsIndex = true;
   bool centerGivenAsPoint = true;
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Initialize. */
-    centerOfRotationIndex[i] = 0;
     centerOfRotationPoint[i] = 0.0;
-
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!foundI)
-    {
-      centerGivenAsIndex = false;
-    }
 
     /** Check COR point: Returns zero when parameter was in the parameter file. */
     bool foundP = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
@@ -173,14 +163,8 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
     }
   } // end loop over SpaceDimension
 
-  /** Check if CenterOfRotation has index-values within image. */
-  bool CORIndexInImage = true;
+  /** Check if CenterOfRotationPoint has index-values within image. */
   bool CORPointInImage = true;
-  if (centerGivenAsIndex)
-  {
-    CORIndexInImage = this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().IsInside(
-      centerOfRotationIndex);
-  }
 
   if (centerGivenAsPoint)
   {
@@ -192,13 +176,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
   }
 
   /** Give a warning if necessary. */
-  if (!CORIndexInImage && centerGivenAsIndex)
-  {
-    log::warn("WARNING: Center of Rotation (index) is not within image boundaries!");
-  }
-
-  /** Give a warning if necessary. */
-  if (!CORPointInImage && centerGivenAsPoint && !centerGivenAsIndex)
+  if (!CORPointInImage && centerGivenAsPoint)
   {
     log::warn("WARNING: Center of Rotation (point) is not within image boundaries!");
   }
@@ -219,8 +197,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
    * - No center of rotation was given, or
    * - The user asked for AutomaticTransformInitialization
    */
-  bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if (!centerGiven || automaticTransformInitialization)
+  if (!centerGivenAsPoint || automaticTransformInitialization)
   {
     /** Use the TransformInitializer to determine a center of
      * of rotation and an initial translation.
@@ -286,14 +263,8 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
   }
 
   /** Set the center of rotation if it was entered by the user. */
-  if (centerGiven)
+  if (centerGivenAsPoint)
   {
-    if (centerGivenAsIndex)
-    {
-      /** Convert from index-value to physical-point-value. */
-      this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformIndexToPhysicalPoint(centerOfRotationIndex,
-                                                                                               centerOfRotationPoint);
-    }
     this->m_AffineTransform->SetCenter(centerOfRotationPoint);
   }
 
