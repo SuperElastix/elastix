@@ -195,7 +195,6 @@ EulerStackTransform<TElastix>::InitializeTransform()
   ReducedDimensionContinuousIndexType redDimCenterOfRotationIndex{};
   ReducedDimensionInputPointType      redDimCenterOfRotationPoint{};
 
-  bool     centerGivenAsIndex = true;
   bool     centerGivenAsPoint = true;
   SizeType fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
@@ -203,13 +202,6 @@ EulerStackTransform<TElastix>::InitializeTransform()
   /** Try to read center of rotation point (COP) from parameter file. */
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    const bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!foundI)
-    {
-      centerGivenAsIndex = false;
-    }
-
     /** Check COR point: Returns zero when parameter was in the parameter file. */
     const bool foundP = configuration.ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!foundP)
@@ -219,8 +211,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
   } // end loop over SpaceDimension
 
   /** Determine the center of rotation as the center of the image if no center was given */
-  const bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
-  if (!centerGiven)
+  if (!centerGivenAsPoint)
   {
     /** Use center of image as default center of rotation */
     for (unsigned int k = 0; k < SpaceDimension; ++k)
@@ -245,18 +236,6 @@ EulerStackTransform<TElastix>::InitializeTransform()
       log::info(std::ostringstream{}
                 << "warning: a wrong center of rotation could have been set,  please check the transform matrix in the "
                    "header file");
-    }
-  }
-
-  /** Transform center of rotation point to physical point if given as index in parameter file. */
-  if (centerGivenAsIndex)
-  {
-    this->m_Registration->GetAsITKBaseType()->GetFixedImage()->TransformContinuousIndexToPhysicalPoint(
-      centerOfRotationIndex, centerOfRotationPoint);
-
-    for (unsigned int k = 0; k < ReducedSpaceDimension; ++k)
-    {
-      redDimCenterOfRotationPoint[k] = centerOfRotationPoint[k];
     }
   }
 
