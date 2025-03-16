@@ -234,7 +234,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
 
     for (unsigned int k = 0; k < ReducedSpaceDimension; ++k)
     {
-      redDimCenterOfRotationPoint[k] = redDimCenterOfRotationPoint[k];
+      redDimCenterOfRotationPoint[k] = centerOfRotationPoint[k];
     }
 
     /** FIX: why may the cop not work when using direction cosines? */
