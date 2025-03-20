@@ -225,7 +225,7 @@ EulerStackTransform<TElastix>::InitializeTransform()
     /** Use center of image as default center of rotation */
     for (unsigned int k = 0; k < SpaceDimension; ++k)
     {
-      centerOfRotationIndex[k] = (fixedImageSize[k] - 1.0f) / 2.0f;
+      centerOfRotationIndex[k] = (fixedImageSize[k] - 1.0) / 2.0;
     }
 
     /** Convert from continuous index to physical point */
