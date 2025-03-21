@@ -1,6 +1,6 @@
 variables:
-  ITKv5_VERSION: v5.4.1
-  ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
+  ITKv5_VERSION: patch-1
+  ITK_GIT_URL: https://github.com/michalmeszaroswork/ITK.git
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
