@@ -61,8 +61,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
   samples.resize(this->GetNumberOfSamples());
 
   /** Setup a random iterator over the input image. */
-  using RandomIteratorType = ImageRandomConstIteratorWithIndex<InputImageType>;
-  RandomIteratorType randIter(&inputImage, this->GetCroppedInputImageRegion());
+  ImageRandomConstIteratorWithIndex<InputImageType> randIter(&inputImage, this->GetCroppedInputImageRegion());
 
   if (const auto optionalSeed = Superclass::GetOptionalSeed())
   {
