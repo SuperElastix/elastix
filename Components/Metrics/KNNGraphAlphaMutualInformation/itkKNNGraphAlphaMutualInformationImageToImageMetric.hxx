@@ -306,8 +306,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
                                                          dummySpatialDerivativesContainer);
 
   /** Check if enough samples were valid. */
-  unsigned long size = this->GetImageSampler()->GetOutput()->Size();
-  this->CheckNumberOfSamples(size);
+  this->CheckNumberOfSamples();
 
   /**
    * *************** Generate the three trees ******************
@@ -530,8 +529,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
                                                          spatialDerivativesContainer);
 
   /** Check if enough samples were valid. */
-  unsigned long size = this->GetImageSampler()->GetOutput()->Size();
-  this->CheckNumberOfSamples(size);
+  this->CheckNumberOfSamples();
 
   /**
    * *************** Generate the three trees ******************

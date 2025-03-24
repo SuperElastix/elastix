@@ -220,7 +220,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameter
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(numberOfSamples);
+  this->CheckNumberOfSamples();
   const unsigned int N = Superclass::m_NumberOfPixelsCounted;
   MatrixType         A(datablock.extract(N, lastDimSize));
 
@@ -402,7 +402,7 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const ParametersTyp
   }
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
   unsigned int N = Superclass::m_NumberOfPixelsCounted;
 
   MatrixType A(datablock.extract(N, lastDimSize));

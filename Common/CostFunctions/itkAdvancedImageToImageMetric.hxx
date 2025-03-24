@@ -23,6 +23,7 @@
 
 #include "itkAdvancedRayCastInterpolateImageFunction.h"
 #include "itkComputeImageExtremaFilter.h"
+#include <itkDeref.h>
 
 #include <algorithm> // For min.
 #include <cassert>
@@ -749,11 +750,16 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
 
 template <typename TFixedImage, typename TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsigned long wanted) const
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples() const
 {
-  if (const SizeValueType found{ Superclass::m_NumberOfPixelsCounted }; found < wanted * m_RequiredRatioOfValidSamples)
+  const auto & samples = Deref(Deref(m_ImageSampler.get()).GetOutput());
+  const auto   numberOfSamples = samples.size();
+
+  if (const SizeValueType found{ Superclass::m_NumberOfPixelsCounted };
+      found < m_RequiredRatioOfValidSamples * numberOfSamples)
   {
-    itkExceptionMacro("Too many samples map outside moving image buffer: " << found << " / " << wanted << '\n');
+    itkExceptionMacro("Too many samples map outside moving image buffer: " << found << " / " << numberOfSamples
+                                                                           << '\n');
   }
 
 } // end CheckNumberOfSamples()
