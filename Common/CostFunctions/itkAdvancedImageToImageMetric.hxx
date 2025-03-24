@@ -143,9 +143,9 @@ void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
 {
   /** Set up fixed limiter. */
-  if (this->GetUseFixedImageLimiter())
+  if (m_UseFixedImageLimiter)
   {
-    if (this->GetFixedImageLimiter() == nullptr)
+    if (m_FixedImageLimiter == nullptr)
     {
       itkExceptionMacro("No fixed image limiter has been set!");
     }
@@ -172,9 +172,9 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
   }
 
   /** Set up moving limiter. */
-  if (this->GetUseMovingImageLimiter())
+  if (m_UseMovingImageLimiter)
   {
-    if (this->GetMovingImageLimiter() == nullptr)
+    if (m_MovingImageLimiter == nullptr)
     {
       itkExceptionMacro("No moving image limiter has been set!");
     }
@@ -211,7 +211,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeImageSampler()
 {
-  if (this->GetUseImageSampler())
+  if (m_UseImageSampler)
   {
     /** Check if the ImageSampler is set. */
     if (!m_ImageSampler)
@@ -610,7 +610,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::BeforeThreadedGetValueAnd
     this->SetTransformParameters(parameters);
     if (m_UseImageSampler)
     {
-      this->GetImageSampler()->Update();
+      m_ImageSampler->Update();
     }
   }
 
@@ -753,7 +753,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsi
                                                                             unsigned long found) const
 {
   Superclass::m_NumberOfPixelsCounted = found;
-  if (found < wanted * this->GetRequiredRatioOfValidSamples())
+  if (found < wanted * m_RequiredRatioOfValidSamples)
   {
     itkExceptionMacro("Too many samples map outside moving image buffer: " << found << " / " << wanted << '\n');
   }
