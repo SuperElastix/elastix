@@ -108,7 +108,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Para
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Update measure value. */
   measure /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
@@ -309,7 +309,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Update measure value. */
   measure /= static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
@@ -551,7 +551,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::AfterThreadedGetVal
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Accumulate and normalize values. */
   value = MeasureType{};

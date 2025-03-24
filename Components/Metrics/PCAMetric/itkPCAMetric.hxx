@@ -219,7 +219,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(numberOfSamples, Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(numberOfSamples);
   MatrixType A(datablock.extract(Superclass::m_NumberOfPixelsCounted, m_G));
 
   MatrixType Amm(Superclass::m_NumberOfPixelsCounted, m_G, vnl_matrix_null);
@@ -390,7 +390,7 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   MatrixType A(datablock.extract(Superclass::m_NumberOfPixelsCounted, m_G));
 
@@ -741,7 +741,7 @@ PCAMetric<TFixedImage, TMovingImage>::AfterThreadedGetSamples(MeasureType & valu
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   MatrixType   A(Superclass::m_NumberOfPixelsCounted, m_G);
   unsigned int row_start = 0;

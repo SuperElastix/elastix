@@ -214,7 +214,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** If NumberOfPixelsCounted > 0, then subtract things from sff, smm and sfm. */
   const auto N = static_cast<RealType>(Superclass::m_NumberOfPixelsCounted);
@@ -368,7 +368,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   const auto numberOfParameters = this->GetNumberOfParameters();
 
@@ -590,7 +590,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Afte
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Accumulate values. */
   AccumulateType sff = this->m_CorrelationGetValueAndDerivativePerThreadVariables[0].st_Sff;

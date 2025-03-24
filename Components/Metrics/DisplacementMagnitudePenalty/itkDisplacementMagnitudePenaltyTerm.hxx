@@ -104,7 +104,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValue(const Param
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Update measure value. Avoid division by zero. */
   measure /= std::max(NumericTraits<RealType>::One, static_cast<RealType>(Superclass::m_NumberOfPixelsCounted));
@@ -213,7 +213,7 @@ DisplacementMagnitudePenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivativ
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Update measure value and derivative. The factor 2 in the derivative
    * originates from the square in ||T(x)-x||^2 */

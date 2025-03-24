@@ -483,7 +483,7 @@ protected:
   /** Check if enough samples have been found to compute a reliable
    * estimate of the value/derivative; throws an exception if not. */
   void
-  CheckNumberOfSamples(unsigned long wanted, unsigned long found) const;
+  CheckNumberOfSamples(unsigned long wanted) const;
 
   /** Methods for image derivative evaluation support **********/
 
