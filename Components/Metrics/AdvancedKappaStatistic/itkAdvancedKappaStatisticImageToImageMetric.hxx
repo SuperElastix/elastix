@@ -201,7 +201,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValue(co
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
 
   /** Compute the final metric value. */
   std::size_t areaSum = fixedForegroundArea + movingForegroundArea;
@@ -348,7 +348,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::GetValueAnd
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
 
   /** Compute the final metric value. */
   std::size_t areaSum = fixedForegroundArea + movingForegroundArea;
@@ -562,7 +562,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::AfterThread
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
 
   /** Accumulate values. */
   MeasureType areaSum{};

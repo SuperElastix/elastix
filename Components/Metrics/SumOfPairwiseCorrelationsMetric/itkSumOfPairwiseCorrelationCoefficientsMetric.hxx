@@ -203,7 +203,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(NumberOfSamples);
+  this->CheckNumberOfSamples();
   unsigned int N = Superclass::m_NumberOfPixelsCounted;
 
   MatrixType A(datablock.extract(N, G));
@@ -368,7 +368,7 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   } /** end first loop over image sample container */
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
   unsigned int N = Superclass::m_NumberOfPixelsCounted;
 
   MatrixType A(datablock.extract(N, G));

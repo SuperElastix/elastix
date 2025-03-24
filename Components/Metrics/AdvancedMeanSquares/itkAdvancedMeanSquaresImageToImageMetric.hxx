@@ -186,7 +186,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingle
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
 
   /** Update measure value. */
   double normal_sum = 0.0;
@@ -335,7 +335,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
 
   /** The normalization factor. */
   DerivativeValueType normal_sum =
@@ -468,7 +468,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDer
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
 
   /** Compute the measure value and derivative. */
   double normal_sum = 0.0;
@@ -647,7 +647,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedG
 
   /** Check if enough samples were valid. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  this->CheckNumberOfSamples(sampleContainer->Size());
+  this->CheckNumberOfSamples();
 
   /** The normalization factor. */
   DerivativeValueType normal_sum =
