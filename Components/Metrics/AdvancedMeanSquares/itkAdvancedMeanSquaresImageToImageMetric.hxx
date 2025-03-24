@@ -20,7 +20,6 @@
 
 #include "itkAdvancedMeanSquaresImageToImageMetric.h"
 #include <vnl/algo/vnl_matrix_update.h>
-#include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkComputeImageExtremaFilter.h"
 
 namespace itk
