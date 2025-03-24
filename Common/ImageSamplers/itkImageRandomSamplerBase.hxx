@@ -21,7 +21,6 @@
 #include "itkImageRandomSamplerBase.h"
 
 #include "itkMersenneTwisterRandomVariateGenerator.h"
-#include "itkImageRandomConstIteratorWithIndex.h"
 
 namespace itk
 {
