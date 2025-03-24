@@ -20,7 +20,6 @@
 
 #include "itkImageRandomSampler.h"
 
-#include "itkMersenneTwisterRandomVariateGenerator.h"
 #include "itkImageRandomConstIteratorWithIndex.h"
 #include <itkDeref.h>
 #include <cassert>

@@ -20,7 +20,6 @@
 
 #include "itkPCAMetric.h"
 
-#include "itkMersenneTwisterRandomVariateGenerator.h"
 #include <vnl/algo/vnl_matrix_update.h>
 #include "itkImage.h"
 #include <vnl/algo/vnl_svd.h>
