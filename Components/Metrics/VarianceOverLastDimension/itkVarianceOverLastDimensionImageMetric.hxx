@@ -289,7 +289,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValue(const 
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Compute average over variances. */
   measure /= static_cast<float>(Superclass::m_NumberOfPixelsCounted);
@@ -487,7 +487,7 @@ VarianceOverLastDimensionImageMetric<TFixedImage, TMovingImage>::GetValueAndDeri
   } // end for loop over the image sample container
 
   /** Check if enough samples were valid. */
-  this->CheckNumberOfSamples(sampleContainer->Size(), Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(sampleContainer->Size());
 
   /** Compute average over variances and normalize with initial variance. */
   measure /= static_cast<float>(Superclass::m_NumberOfPixelsCounted * m_InitialVariance);

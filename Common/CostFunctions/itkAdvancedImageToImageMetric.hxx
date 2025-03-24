@@ -749,11 +749,9 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::AccumulateDerivativesThre
 
 template <typename TFixedImage, typename TMovingImage>
 void
-AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsigned long wanted,
-                                                                            unsigned long found) const
+AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckNumberOfSamples(unsigned long wanted) const
 {
-  Superclass::m_NumberOfPixelsCounted = found;
-  if (found < wanted * m_RequiredRatioOfValidSamples)
+  if (const SizeValueType found{ Superclass::m_NumberOfPixelsCounted }; found < wanted * m_RequiredRatioOfValidSamples)
   {
     itkExceptionMacro("Too many samples map outside moving image buffer: " << found << " / " << wanted << '\n');
   }

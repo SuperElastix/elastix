@@ -307,7 +307,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
 
   /** Check if enough samples were valid. */
   unsigned long size = this->GetImageSampler()->GetOutput()->Size();
-  this->CheckNumberOfSamples(size, Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(size);
 
   /**
    * *************** Generate the three trees ******************
@@ -531,7 +531,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Get
 
   /** Check if enough samples were valid. */
   unsigned long size = this->GetImageSampler()->GetOutput()->Size();
-  this->CheckNumberOfSamples(size, Superclass::m_NumberOfPixelsCounted);
+  this->CheckNumberOfSamples(size);
 
   /**
    * *************** Generate the three trees ******************
