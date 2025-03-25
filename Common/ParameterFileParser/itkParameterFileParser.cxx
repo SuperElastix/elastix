@@ -304,52 +304,6 @@ ReadParameterMapFromInputStream(ParameterFileParser::ParameterMapType & paramete
 }
 
 
-// Returns a string_view to the line with the specified line number (counting "1-based").
-std::string_view
-GetLine(const std::string_view contents, const toml::source_index lineNumber)
-{
-  if (lineNumber == 0)
-  {
-    return {};
-  }
-
-  // The position of the first character of the specified line.
-  const auto beginOfLine = [contents, lineNumber]() -> std::size_t {
-    if (lineNumber == 1)
-    {
-      return 0;
-    }
-
-    const auto  numberOfChars = contents.size();
-    std::size_t currentLineNumber{ 1 };
-
-    for (std::size_t i{}; i < numberOfChars; ++i)
-    {
-      if (contents[i] == '\n')
-      {
-        ++currentLineNumber;
-
-        if (currentLineNumber == lineNumber)
-        {
-          return i + 1;
-        }
-      }
-    }
-    return std::string_view::npos;
-  }();
-
-  if (beginOfLine >= contents.size())
-  {
-    return {};
-  }
-
-  const auto endOfLine = contents.find_first_of("\r\n", beginOfLine);
-
-  return contents.substr(beginOfLine,
-                         (endOfLine == std::string_view::npos) ? std::string_view::npos : (endOfLine - beginOfLine));
-}
-
-
 // Parses the specified TOML file, and returns its key-value pairs as an elastix ParameterMap.
 auto
 ParseTomlFile(const std::string & fileName)
@@ -360,6 +314,9 @@ ParseTomlFile(const std::string & fileName)
     std::ifstream inputFileStream(fileName);
     return std::string(std::istreambuf_iterator<char>(inputFileStream), std::istreambuf_iterator<char>());
   }();
+
+  // Default for if `toml::get_line` cannot find a line at the specified line number.
+  static constexpr std::string_view defaultLine = "(There appears to be no line at this specific line number!)";
 
   // Retrieves an elastix parameter value from the specified TOML node.
   const auto getParameterValue = [&fileContents, &fileName](const toml::node & tomlNode) -> std::string {
@@ -388,9 +345,10 @@ ParseTomlFile(const std::string & fileName)
     }
 
     const toml::source_position sourceRegionBegin = tomlNode.source().begin;
-    itkGenericExceptionMacro("Unsupported TOML value type `" << tomlNode.type() << "` in \"" << fileName << "\" "
-                                                             << sourceRegionBegin << ", at the following line:\n\""
-                                                             << GetLine(fileContents, sourceRegionBegin.line) << "\"");
+    itkGenericExceptionMacro("Unsupported TOML value type `"
+                             << tomlNode.type() << "` in \"" << fileName << "\" " << sourceRegionBegin
+                             << ", at the following line:\n\""
+                             << toml::get_line(fileContents, sourceRegionBegin.line).value_or(defaultLine) << "\"");
   };
 
   try
@@ -418,9 +376,10 @@ ParseTomlFile(const std::string & fileName)
   catch (const toml::parse_error & parseError)
   {
     const toml::source_position sourceRegionBegin = parseError.source().begin;
-    itkGenericExceptionMacro("TOML parse error: " << parseError.what() << "\nWhile parsing \"" << fileName << "\" "
-                                                  << sourceRegionBegin << ", at the following line:\n\""
-                                                  << GetLine(fileContents, sourceRegionBegin.line) << "\"");
+    itkGenericExceptionMacro("TOML parse error: "
+                             << parseError.what() << "\nWhile parsing \"" << fileName << "\" " << sourceRegionBegin
+                             << ", at the following line:\n\""
+                             << toml::get_line(fileContents, sourceRegionBegin.line).value_or(defaultLine) << "\"");
   }
 
   return parameterMap;
