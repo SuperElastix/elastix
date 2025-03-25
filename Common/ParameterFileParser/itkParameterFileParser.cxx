@@ -16,6 +16,9 @@
  *
  *=========================================================================*/
 
+// Disable conditional noexcept, in order to use toml++ `for_each` with MSVC's legacy (C++17) lambda processor.
+#define TOML_DISABLE_CONDITIONAL_NOEXCEPT_LAMBDA 1
+
 #include "itkParameterFileParser.h"
 #include <elxConfiguration.h>
 #include "elxDefaultConstruct.h"
@@ -319,59 +322,54 @@ ParseTomlFile(const std::string & fileName)
   static constexpr std::string_view defaultLine = "(There appears to be no line at this specific line number!)";
 
   // Retrieves an elastix parameter value from the specified TOML node.
-  const auto getParameterValue = [&fileContents, &fileName](const toml::node & tomlNode) -> std::string {
+  const auto getParameterValue = [&fileContents, &fileName](const auto & tomlValue) -> std::string {
     // When the TOML node holds a string, just use it as it was produced by the TOML parser. (The TOML parser removes
     // surrounding double-quotes from string values.)
-    if (const auto * const result = tomlNode.as_string())
-    {
-      return result->get();
-    }
 
-    const auto convertTomlValueToString = [](const auto & tomlValue) {
-      return elx::Conversion::ToString(tomlValue.get());
-    };
+    using TomlValueType = decltype(tomlValue);
 
-    if (const auto * const result = tomlNode.as_boolean())
+    if constexpr (toml::is_string<TomlValueType>)
     {
-      return convertTomlValueToString(*result);
+      return tomlValue.get();
     }
-    if (const auto * const result = tomlNode.as_integer())
+    else
     {
-      return convertTomlValueToString(*result);
+      if constexpr (toml::is_boolean<TomlValueType> || toml::is_integer<TomlValueType> ||
+                    toml::is_floating_point<TomlValueType>)
+      {
+        return elx::Conversion::ToString(tomlValue.get());
+      }
+      else
+      {
+        const toml::source_position sourceRegionBegin = tomlValue.source().begin;
+        itkGenericExceptionMacro("Unsupported TOML value type `"
+                                 << tomlValue.type() << "` in \"" << fileName << "\" " << sourceRegionBegin
+                                 << ", at the following line:\n\""
+                                 << toml::get_line(fileContents, sourceRegionBegin.line).value_or(defaultLine) << "\"");
+      }
     }
-    if (const auto * const result = tomlNode.as_floating_point())
-    {
-      return convertTomlValueToString(*result);
-    }
-
-    const toml::source_position sourceRegionBegin = tomlNode.source().begin;
-    itkGenericExceptionMacro("Unsupported TOML value type `"
-                             << tomlNode.type() << "` in \"" << fileName << "\" " << sourceRegionBegin
-                             << ", at the following line:\n\""
-                             << toml::get_line(fileContents, sourceRegionBegin.line).value_or(defaultLine) << "\"");
   };
 
   try
   {
-    for (const auto & [tomlKey, tomlNode] : toml::parse(fileContents))
-    {
-      const auto parameterName = tomlKey.str();
-      auto &     parameterValues = parameterMap[std::string(parameterName)];
+    toml::parse(fileContents)
+      .for_each([&parameterMap, getParameterValue](const toml::key & tomlKey, const auto & tomlValue) {
+        const auto parameterName = tomlKey.str();
+        auto &     parameterValues = parameterMap[std::string(parameterName)];
 
-      if (const auto tomlArray = tomlNode.as_array())
-      {
-        // An elastix parameter that may have multiple values.
-        for (const toml::node & tomlArrayElement : *tomlArray)
+        if constexpr (toml::is_array<decltype(tomlValue)>)
         {
-          parameterValues.push_back(getParameterValue(tomlArrayElement));
+          // An elastix parameter that may have multiple values.
+          tomlValue.for_each([&parameterValues, getParameterValue](const auto & tomlArrayElement) {
+            parameterValues.push_back(getParameterValue(tomlArrayElement));
+          });
         }
-      }
-      else
-      {
-        // An elastix parameter that has just a single value.
-        parameterValues.push_back(getParameterValue(tomlNode));
-      }
-    }
+        else
+        {
+          // An elastix parameter that has just a single value.
+          parameterValues.push_back(getParameterValue(tomlValue));
+        }
+      });
   }
   catch (const toml::parse_error & parseError)
   {
