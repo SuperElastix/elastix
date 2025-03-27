@@ -317,6 +317,12 @@ public:
   virtual void
   BeforeThreadedGetValueAndDerivative(const TransformParametersType & parameters) const;
 
+  void
+  SetRandomVariateGenerator(Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator)
+  {
+    m_RandomVariateGenerator = &randomVariateGenerator;
+  }
+
 protected:
   /** Constructor. */
   AdvancedImageToImageMetric();
@@ -598,6 +604,19 @@ protected:
     itkExceptionMacro("Intentionally left unimplemented!");
   }
 
+  Statistics::MersenneTwisterRandomVariateGenerator &
+  GetRandomVariateGenerator()
+  {
+    return Deref(m_RandomVariateGenerator);
+  }
+
+  // Note: Bypasses logical const-correctness
+  Statistics::MersenneTwisterRandomVariateGenerator &
+  GetMutableRandomVariateGenerator() const
+  {
+    return Deref(m_RandomVariateGenerator);
+  }
+
   // Protected using-declaration, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
   using Superclass::SetTransform;
 
@@ -626,6 +645,8 @@ private:
   bool   m_ScaleGradientWithRespectToMovingImageOrientation{ false };
 
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales{ MovingImageDerivativeScalesType::Filled(1.0) };
+
+  Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ nullptr };
 
   // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
   using Superclass::TransformPoint;

@@ -48,9 +48,6 @@ GTEST_TEST(ImageRandomSamplerSparseMask, CheckImageValuesOfSamples)
   using ImageType = itk::Image<PixelType, Dimension>;
   using MaskSpatialObjectType = itk::ImageMaskSpatialObject<Dimension>;
 
-  // Use a fixed seed, in order to have a reproducible sampler output.
-  DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
-
   const auto imageSize = ImageType::SizeType::Filled(minimumImageSizeValue);
   const auto image = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
 
@@ -61,9 +58,12 @@ GTEST_TEST(ImageRandomSamplerSparseMask, CheckImageValuesOfSamples)
   maskSpatialObject->SetImage(maskImage);
   maskSpatialObject->Update();
 
+  elx::DefaultConstruct<MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  randomVariateGenerator.SetSeed(1);
   elx::DefaultConstruct<itk::ImageRandomSamplerSparseMask<ImageType>> sampler{};
 
   const size_t numberOfSamples{ 3 };
+  sampler.SetRandomVariateGenerator(randomVariateGenerator);
   sampler.SetInput(image);
   sampler.SetMask(maskSpatialObject);
   sampler.SetNumberOfSamples(numberOfSamples);
@@ -104,9 +104,11 @@ GTEST_TEST(ImageRandomSamplerSparseMask, SetSeedMakesRandomizationDeterministic)
   for (const SamplerType::SeedIntegerType seed : { 0, 1 })
   {
     const auto generateSamples = [seed, image, maskSpatialObject] {
-      elx::DefaultConstruct<SamplerType> sampler{};
+      elx::DefaultConstruct<MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+      elx::DefaultConstruct<SamplerType>                           sampler{};
 
-      DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(seed);
+      randomVariateGenerator.SetSeed(seed);
+      sampler.SetRandomVariateGenerator(randomVariateGenerator);
       sampler.SetInput(image);
       sampler.SetMask(maskSpatialObject);
       sampler.Update();
@@ -144,8 +146,9 @@ GTEST_TEST(ImageRandomSamplerSparseMask, HasSameOutputWhenUsingMultiThread)
   maskSpatialObject->Update();
 
   const auto generateSamples = [image, maskSpatialObject](const bool useMultiThread) {
-    DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
-    elx::DefaultConstruct<SamplerType> sampler{};
+    elx::DefaultConstruct<MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+    elx::DefaultConstruct<SamplerType>                           sampler{};
+    sampler.SetRandomVariateGenerator(randomVariateGenerator);
     sampler.SetUseMultiThread(useMultiThread);
     sampler.SetInput(image);
     sampler.SetMask(maskSpatialObject);

@@ -86,9 +86,9 @@ PCAMetric2<TFixedImage, TMovingImage>::SampleRandom(const int n, const int m, st
   numbers.clear();
   numbers.reserve(m_NumAdditionalSamplesFixed + n);
 
-  /** Initialize random number generator. */
-  Statistics::MersenneTwisterRandomVariateGenerator::Pointer randomGenerator =
-    Statistics::MersenneTwisterRandomVariateGenerator::GetInstance();
+  // Retrieve random number generator.
+  Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator =
+    Deref(Superclass::GetRandomVariateGenerator());
 
   /** Sample additional at fixed timepoint. */
   for (unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i)
@@ -102,7 +102,7 @@ PCAMetric2<TFixedImage, TMovingImage>::SampleRandom(const int n, const int m, st
     int randomNum = 0;
     do
     {
-      randomNum = static_cast<int>(randomGenerator->GetVariateWithClosedRange(m));
+      randomNum = static_cast<int>(randomVariateGenerator.GetVariateWithClosedRange(m));
     } while (find(numbers.begin(), numbers.end(), randomNum) != numbers.end());
     numbers.push_back(randomNum);
   }

@@ -343,9 +343,6 @@ protected:
   /** The transform stored as AdvancedTransform */
   AdvancedTransformPointer m_AdvancedTransform;
 
-  /** RandomGenerator for AddRandomPerturbation. */
-  RandomGeneratorPointer m_RandomGenerator;
-
   double m_SigmoidScaleFactor;
 
   /** Select different method to estimate some reasonable values for the parameters

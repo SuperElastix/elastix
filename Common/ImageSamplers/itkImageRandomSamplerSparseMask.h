@@ -94,7 +94,6 @@ protected:
   void
   GenerateData() override;
 
-  RandomGeneratorPointer     m_RandomGenerator{ RandomGeneratorType::GetInstance() };
   InternalFullSamplerPointer m_InternalFullSampler{ InternalFullSamplerType::New() };
 
 private:

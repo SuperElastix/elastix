@@ -24,6 +24,21 @@ namespace elastix
 {
 
 /**
+ * ******************* BeforeRegistrationBase ******************
+ */
+
+template <typename TElastix>
+void
+MetricBase<TElastix>::BeforeRegistrationBase()
+{
+  if (auto * const thisAsAdvanced = dynamic_cast<AdvancedMetricType *>(this))
+  {
+    thisAsAdvanced->SetRandomVariateGenerator(Superclass::GetRandomVariateGenerator());
+  }
+}
+
+
+/**
  * ******************* BeforeEachResolutionBase ******************
  */
 
