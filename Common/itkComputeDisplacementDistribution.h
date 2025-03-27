@@ -203,7 +203,6 @@ private:
 
   mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
 
-  SizeValueType                m_NumberOfPixelsCounted{};
   bool                         m_UseMultiThread{ true };
   std::vector<ImageSampleType> m_Samples{};
 };

@@ -410,9 +410,9 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::AfterThreadedCompute(d
 {
   /** Reset all variables. */
   maxJJ = 0.0;
-  double displacement = 0.0;
-  double displacementSquared = 0.0;
-  m_NumberOfPixelsCounted = 0.0;
+  double        displacement = 0.0;
+  double        displacementSquared = 0.0;
+  SizeValueType numberOfPixelsCounted = 0;
 
   /** Accumulate thread results. */
   for (const auto & computePerThreadStruct : m_ComputePerThreadVariables)
@@ -420,14 +420,14 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::AfterThreadedCompute(d
     maxJJ = std::max(maxJJ, computePerThreadStruct.st_MaxJJ);
     displacement += computePerThreadStruct.st_Displacement;
     displacementSquared += computePerThreadStruct.st_DisplacementSquared;
-    m_NumberOfPixelsCounted += computePerThreadStruct.st_NumberOfPixelsCounted;
+    numberOfPixelsCounted += computePerThreadStruct.st_NumberOfPixelsCounted;
   }
   // Reset all variables for the next resolution.
   std::fill_n(m_ComputePerThreadVariables.begin(), m_ComputePerThreadVariables.size(), AlignedComputePerThreadStruct());
 
   /** Compute the sigma of the distribution of the displacements. */
-  const double meanDisplacement = displacement / m_NumberOfPixelsCounted;
-  const double sigma = displacementSquared / m_NumberOfPixelsCounted - vnl_math::sqr(meanDisplacement);
+  const double meanDisplacement = displacement / numberOfPixelsCounted;
+  const double sigma = displacementSquared / numberOfPixelsCounted - vnl_math::sqr(meanDisplacement);
 
   jacg = meanDisplacement + 2.0 * std::sqrt(sigma);
 
