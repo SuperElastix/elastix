@@ -94,6 +94,8 @@ public:
     return m_OptionalSeed;
   }
 
+  itkSetMacro(RandomVariateGenerator, Statistics::MersenneTwisterRandomVariateGenerator *);
+
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
@@ -108,6 +110,12 @@ protected:
   void
   GenerateRandomNumberList();
 
+  auto *
+  GetRandomVariateGenerator()
+  {
+    return m_RandomVariateGenerator;
+  }
+
   /** PrintSelf. */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
@@ -117,6 +125,8 @@ protected:
 
 private:
   std::optional<SeedIntegerType> m_OptionalSeed{};
+
+  Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ nullptr };
 };
 
 } // end namespace itk
