@@ -313,7 +313,6 @@ private:
 
   mutable std::vector<AlignedComputePerThreadStruct> m_ComputePerThreadVariables{};
   bool                                               m_UseMultiThread{};
-  SizeValueType                                      m_NumberOfPixelsCounted{};
 
   SizeValueType               m_NumberOfSamplesForCenteredTransformInitialization{};
   InputPixelType              m_LowerThresholdForCenterGravity{};
