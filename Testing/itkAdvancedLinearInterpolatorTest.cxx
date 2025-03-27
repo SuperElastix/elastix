@@ -29,6 +29,8 @@
 #include "itkImageFileWriter.h"
 #include "itkTimeProbe.h"
 
+#include "elxDefaultConstruct.h"
+
 #include <cmath> // For abs.
 
 //-------------------------------------------------------------------------------------
@@ -56,10 +58,8 @@ TestInterpolators()
   using OutputType = typename AdvancedLinearInterpolatorType::OutputType; // double scalar
 
   using IteratorType = itk::ImageRegionIterator<InputImageType>;
-  using RandomNumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
-  // typedef itk::ImageFileWriter< InputImageType >                 WriterType;
 
-  RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
+  elastix::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
 
   /** Create random input image. */
   SizeType    size;
@@ -68,8 +68,8 @@ TestInterpolators()
   for (unsigned int i = 0; i < Dimension; ++i)
   {
     size[i] = 10;
-    spacing[i] = randomNum->GetUniformVariate(0.5, 2.0);
-    origin[i] = randomNum->GetUniformVariate(-1, 0);
+    spacing[i] = randomVariateGenerator.GetUniformVariate(0.5, 2.0);
+    origin[i] = randomVariateGenerator.GetUniformVariate(-1, 0);
   }
   RegionType region;
   region.SetSize(size);
@@ -100,7 +100,7 @@ TestInterpolators()
 
   while (!it.IsAtEnd())
   {
-    it.Set(randomNum->GetUniformVariate(0, 255));
+    it.Set(randomVariateGenerator.GetUniformVariate(0, 255));
     ++it;
   }
 

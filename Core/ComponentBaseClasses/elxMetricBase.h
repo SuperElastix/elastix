@@ -144,6 +144,9 @@ public:
   }
 
 
+  void
+  BeforeRegistrationBase() override;
+
   /** Execute stuff before each resolution:
    * \li Check if the exact metric value should be computed
    * (to monitor the progress of the registration).

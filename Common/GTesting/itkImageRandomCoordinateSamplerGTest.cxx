@@ -43,14 +43,14 @@ GTEST_TEST(ImageRandomCoordinateSampler, CheckImageValuesOfSamples)
   using ImageType = itk::Image<PixelType>;
   using SamplerType = itk::ImageRandomCoordinateSampler<ImageType>;
 
-  // Use a fixed seed, in order to have a reproducible sampler output.
-  DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
-
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
 
+  elx::DefaultConstruct<MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  randomVariateGenerator.SetSeed(1);
   elx::DefaultConstruct<SamplerType> sampler{};
 
+  sampler.SetRandomVariateGenerator(randomVariateGenerator);
   const size_t numberOfSamples{ 3 };
   sampler.SetNumberOfSamples(numberOfSamples);
   sampler.SetInput(image);
@@ -84,9 +84,11 @@ GTEST_TEST(ImageRandomCoordinateSampler, SetSeedMakesRandomizationDeterministic)
   for (const SamplerType::SeedIntegerType seed : { 0, 1 })
   {
     const auto generateSamples = [seed, image] {
+      elx::DefaultConstruct<MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+      randomVariateGenerator.SetSeed(seed);
       elx::DefaultConstruct<SamplerType> sampler{};
 
-      DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(seed);
+      sampler.SetRandomVariateGenerator(randomVariateGenerator);
       sampler.SetInput(image);
       sampler.Update();
       return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
@@ -114,9 +116,10 @@ GTEST_TEST(ImageRandomCoordinateSampler, HasSameOutputWhenUsingMultiThread)
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
 
   const auto generateSamples = [image](const bool useMultiThread) {
-    DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
+    elx::DefaultConstruct<MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
 
     elx::DefaultConstruct<SamplerType> sampler{};
+    sampler.SetRandomVariateGenerator(randomVariateGenerator);
     sampler.SetUseMultiThread(useMultiThread);
     sampler.SetInput(image);
     sampler.Update();

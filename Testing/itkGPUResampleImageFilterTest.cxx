@@ -58,6 +58,7 @@
 
 // elastix include files
 #include "itkCommandLineArgumentParser.h"
+#include "elxDefaultConstruct.h"
 
 // Other include files
 #include <iomanip> // setprecision, etc.
@@ -795,9 +796,8 @@ main(int argc, char * argv[])
   // Construct and setup the resample filter
   cpuFilter = FilterType::New();
 
-  using RandomNumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
-  RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
-  randomNum->SetSeed(std::mt19937::default_seed);
+  elastix::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  randomVariateGenerator.SetSeed(std::mt19937::default_seed);
 
   InputImageType::ConstPointer        inputImage = cpuReader->GetOutput();
   const InputImageType::SpacingType   inputSpacing = inputImage->GetSpacing();
@@ -815,13 +815,13 @@ main(int argc, char * argv[])
   double tmp1, tmp2;
   for (std::size_t i = 0; i < Dimension; ++i)
   {
-    tmp1 = randomNum->GetUniformVariate(0.9, 1.1);
+    tmp1 = randomVariateGenerator.GetUniformVariate(0.9, 1.1);
     tmp2 = inputSpacing[i] * tmp1;
     s << tmp2;
     s >> outputSpacing[i];
     s.clear();
 
-    tmp1 = randomNum->GetUniformVariate(-10.0, 10.0);
+    tmp1 = randomVariateGenerator.GetUniformVariate(-10.0, 10.0);
     tmp2 = inputOrigin[i] + tmp1;
     s << tmp2;
     s >> outputOrigin[i];
@@ -829,12 +829,12 @@ main(int argc, char * argv[])
 
     for (unsigned int j = 0; j < Dimension; ++j)
     {
-      // tmp = randomNum->GetUniformVariate( 0.9 * inputOrigin[ i ], 1.1 *
+      // tmp = randomVariateGenerator.GetUniformVariate( 0.9 * inputOrigin[ i ], 1.1 *
       // inputOrigin[ i ] );
       outputDirection[i][j] = inputDirection[i][j]; // * tmp;
     }
 
-    tmp1 = randomNum->GetUniformVariate(0.9, 1.1);
+    tmp1 = randomVariateGenerator.GetUniformVariate(0.9, 1.1);
     outputSize[i] = itk::Math::Round<SizeValueType>(inputSize[i] * tmp1);
   }
 

@@ -131,8 +131,7 @@ protected:
     return interpolator;
   }();
 
-  RandomGeneratorPointer m_RandomGenerator{ RandomGeneratorType::GetInstance() };
-  InputImageSpacingType  m_SampleRegionSize{ itk::MakeFilled<InputImageSpacingType>(1.0) };
+  InputImageSpacingType m_SampleRegionSize{ itk::MakeFilled<InputImageSpacingType>(1.0) };
 
   /** Generate the two corners of a sampling region, given the two corners
    * of an image. If UseRandomSampleRegion=false, the smallesPoint and largestPoint

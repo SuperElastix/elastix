@@ -465,7 +465,7 @@ CMAEvolutionStrategyOptimizer::GenerateOffspring()
     /** draw from distribution N(0,I) */
     for (unsigned int par = 0; par < N; ++par)
     {
-      this->m_NormalizedSearchDirs[lam][par] = this->m_RandomGenerator->GetNormalVariate();
+      this->m_NormalizedSearchDirs[lam][par] = m_RandomVariateGenerator->GetNormalVariate();
     }
     /** Make like it was drawn from N(0,C) */
     if (this->GetUseCovarianceMatrixAdaptation())

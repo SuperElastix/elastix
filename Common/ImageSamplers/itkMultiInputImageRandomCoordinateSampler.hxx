@@ -233,10 +233,12 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateRandomCoordinate(
   const InputImageContinuousIndexType & largestContIndex,
   InputImageContinuousIndexType &       randomContIndex)
 {
+  Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator = Superclass::GetRandomVariateGenerator();
+
   for (unsigned int i = 0; i < InputImageDimension; ++i)
   {
     randomContIndex[i] = static_cast<InputImagePointValueType>(
-      this->m_RandomGenerator->GetUniformVariate(smallestContIndex[i], largestContIndex[i]));
+      randomVariateGenerator.GetUniformVariate(smallestContIndex[i], largestContIndex[i]));
   }
 } // end GenerateRandomCoordinate()
 
@@ -252,7 +254,6 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::PrintSelf(std::ostream & os
   Superclass::PrintSelf(os, indent);
 
   os << indent << "Interpolator: " << this->m_Interpolator.GetPointer() << std::endl;
-  os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
 } // end PrintSelf
 

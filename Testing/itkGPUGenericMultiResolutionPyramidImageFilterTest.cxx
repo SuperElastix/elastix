@@ -29,6 +29,8 @@
 
 #include "itkOpenCLContextScopeGuard.h"
 
+#include "elxDefaultConstruct.h"
+
 // ITK include files
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
@@ -127,9 +129,8 @@ main(int argc, char * argv[])
   using RescaleScheduleType = FilterType::RescaleScheduleType;
   using SmoothingScheduleType = FilterType::SmoothingScheduleType;
 
-  using RandomNumberGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
-  RandomNumberGeneratorType::Pointer randomNum = RandomNumberGeneratorType::GetInstance();
-  randomNum->SetSeed(std::mt19937::default_seed);
+  elastix::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  randomVariateGenerator.SetSeed(std::mt19937::default_seed);
 
   RescaleScheduleType   rescaleSchedule(numberOfLevels, Dimension);
   SmoothingScheduleType smoothingSchedule(numberOfLevels, Dimension);
@@ -138,10 +139,10 @@ main(int argc, char * argv[])
   {
     for (unsigned int j = 0; j < Dimension; ++j)
     {
-      tmp = randomNum->GetUniformVariate(0, 8);
+      tmp = randomVariateGenerator.GetUniformVariate(0, 8);
       rescaleSchedule[i][j] = static_cast<unsigned int>(tmp);
 
-      tmp = randomNum->GetUniformVariate(0, 4);
+      tmp = randomVariateGenerator.GetUniformVariate(0, 4);
       smoothingSchedule[i][j] = tmp;
     }
   }

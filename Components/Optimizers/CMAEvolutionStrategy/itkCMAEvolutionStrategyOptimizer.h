@@ -27,6 +27,7 @@
 #include "itkArray.h"
 #include "itkArray2D.h"
 #include "itkMersenneTwisterRandomVariateGenerator.h"
+#include "elxDefaultConstruct.h"
 #include <vnl/vnl_diag_matrix.h>
 
 namespace itk
@@ -224,6 +225,12 @@ public:
   itkSetMacro(ValueTolerance, double);
   itkGetConstMacro(ValueTolerance, double);
 
+  void
+  SetRandomVariateGenerator(Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator)
+  {
+    m_RandomVariateGenerator = &randomVariateGenerator;
+  }
+
 protected:
   using RecombinationWeightsType = Array<double>;
   using EigenValueMatrixType = vnl_diag_matrix<double>;
@@ -235,9 +242,6 @@ protected:
   using MeasureContainerType = std::vector<MeasureIndexPairType>;
 
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
-
-  /** The random number generator used to generate the offspring. */
-  RandomGeneratorType::Pointer m_RandomGenerator{ RandomGeneratorType::GetInstance() };
 
   /** The value of the cost function at the current position */
   MeasureType m_CurrentValue{ 0.0 };
@@ -436,6 +440,9 @@ private:
   double        m_PositionToleranceMax{ 1e8 };
   double        m_PositionToleranceMin{ 1e-12 };
   double        m_ValueTolerance{ 1e-12 };
+
+  elastix::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
+  Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
 };
 
 } // end namespace itk
