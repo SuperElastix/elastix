@@ -289,8 +289,7 @@ ElastixBase::BeforeAllBase()
   using SeedType = RandomGeneratorType::IntegerType;
   unsigned int randomSeed = 121212;
   m_Configuration->ReadParameter(randomSeed, "RandomSeed", 0, false);
-  RandomGeneratorType::Pointer randomGenerator = RandomGeneratorType::GetInstance();
-  randomGenerator->SetSeed(static_cast<SeedType>(randomSeed));
+  m_RandomVariateGenerator.SetSeed(static_cast<SeedType>(randomSeed));
 
   /** Return a value. */
   return returndummy;

@@ -2542,10 +2542,6 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerStackTransformComputeZYX)
   });
 
   const auto doRegistration = [imageStack](const bool computeZYX) {
-    // Use a fixed seed, in order to have a reproducible sampler output.
-    DerefSmartPointer(MersenneTwisterRandomVariateGenerator::GetInstance()).SetSeed(1);
-    MersenneTwisterRandomVariateGenerator::ResetNextSeed();
-
     elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
     registration.SetFixedImage(imageStack);
     registration.SetMovingImage(imageStack);

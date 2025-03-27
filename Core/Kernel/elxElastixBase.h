@@ -31,6 +31,7 @@
 #include "elxBaseComponent.h"
 #include "elxComponentDatabase.h"
 #include "elxConfiguration.h"
+#include "elxDefaultConstruct.h"
 #include "elxIterationInfo.h"
 #include "elxMacro.h"
 #include "elxlog.h"
@@ -39,6 +40,7 @@
 #include <itkChangeInformationImageFilter.h>
 #include <itkDataObject.h>
 #include <itkImageFileReader.h>
+#include <itkMersenneTwisterRandomVariateGenerator.h>
 #include <itkObject.h>
 #include <itkTimeProbe.h>
 #include <itkVectorContainer.h>
@@ -319,6 +321,11 @@ public:
   int
   BeforeAllTransformixBase();
 
+  itk::Statistics::MersenneTwisterRandomVariateGenerator &
+  GetRandomVariateGenerator()
+  {
+    return m_RandomVariateGenerator;
+  }
   ResultImageType *
   GetResultImage(const unsigned int idx = 0) const;
 
@@ -540,6 +547,8 @@ private:
    * From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
    * backward compatability. From Elastix 4.8: set it to true by default. */
   bool m_UseDirectionCosines{ true };
+
+  elx::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> m_RandomVariateGenerator{};
 };
 
 } // end namespace elastix

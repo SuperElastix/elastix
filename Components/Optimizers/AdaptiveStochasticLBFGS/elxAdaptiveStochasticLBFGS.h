@@ -299,9 +299,6 @@ protected:
   /** The transform stored as AdvancedTransform */
   typename AdvancedTransformType::Pointer m_AdvancedTransform;
 
-  /** RandomGenerator for AddRandomPerturbation. */
-  typename RandomGeneratorType::Pointer m_RandomGenerator;
-
   double m_SigmoidScaleFactor;
 
   /** Select different method to estimate some reasonable values for the parameters

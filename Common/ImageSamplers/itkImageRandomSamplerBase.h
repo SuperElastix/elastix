@@ -20,6 +20,7 @@
 
 #include "itkImageSamplerBase.h"
 #include <itkMersenneTwisterRandomVariateGenerator.h>
+#include "elxDefaultConstruct.h"
 #include <optional>
 
 namespace itk
@@ -94,6 +95,13 @@ public:
     return m_OptionalSeed;
   }
 
+  void
+  SetRandomVariateGenerator(Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator)
+  {
+    m_RandomVariateGenerator = &randomVariateGenerator;
+  }
+
+
   /** The input image dimension. */
   itkStaticConstMacro(InputImageDimension, unsigned int, Superclass::InputImageDimension);
 
@@ -108,6 +116,12 @@ protected:
   void
   GenerateRandomNumberList();
 
+  Statistics::MersenneTwisterRandomVariateGenerator &
+  GetRandomVariateGenerator()
+  {
+    return *m_RandomVariateGenerator;
+  }
+
   /** PrintSelf. */
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
@@ -117,6 +131,10 @@ protected:
 
 private:
   std::optional<SeedIntegerType> m_OptionalSeed{};
+  SeedIntegerType                m_Seed{ 121212 + 1 };
+
+  elastix::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
+  Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
 };
 
 } // end namespace itk

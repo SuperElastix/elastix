@@ -23,6 +23,7 @@
 
 // ITK header files:
 #include <itkMacro.h> // For ITK_DISALLOW_COPY_AND_MOVE.
+#include <itkDeref.h>
 #include <itkWeakPointer.h>
 
 namespace elastix
@@ -83,6 +84,12 @@ public:
   GetElastix() const
   {
     return this->m_Elastix.GetPointer();
+  }
+
+  itk::Statistics::MersenneTwisterRandomVariateGenerator &
+  GetRandomVariateGenerator()
+  {
+    return itk::Deref(m_Elastix.GetPointer()).GetRandomVariateGenerator();
   }
 
   void

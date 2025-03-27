@@ -20,6 +20,7 @@
 #define elxImageSamplerBase_hxx
 
 #include "elxImageSamplerBase.h"
+#include "itkImageRandomSamplerBase.h"
 #include <itkDeref.h>
 
 namespace elastix
@@ -36,6 +37,11 @@ ImageSamplerBase<TElastix>::BeforeRegistrationBase()
   const Configuration & configuration = itk::Deref(Superclass::GetConfiguration());
   ITKBaseType &         sampler = GetSelf();
   sampler.SetUseMultiThread(configuration.RetrieveParameterValue(true, "UseMultiThreadingForSamplers", 0, false));
+
+  if (auto * const randomSampler = dynamic_cast<itk::ImageRandomSamplerBase<InputImageType> *>(&sampler))
+  {
+    randomSampler->SetRandomVariateGenerator(Superclass::GetRandomVariateGenerator());
+  }
 }
 
 /**
