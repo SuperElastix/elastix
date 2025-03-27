@@ -38,7 +38,9 @@
 // ITK header files:
 #include <itkChangeInformationImageFilter.h>
 #include <itkDataObject.h>
+#include <itkDeref.h>
 #include <itkImageFileReader.h>
+#include <itkMersenneTwisterRandomVariateGenerator.h>
 #include <itkObject.h>
 #include <itkTimeProbe.h>
 #include <itkVectorContainer.h>
@@ -319,6 +321,18 @@ public:
   int
   BeforeAllTransformixBase();
 
+  itk::Statistics::MersenneTwisterRandomVariateGenerator &
+  GetRandomVariateGenerator()
+  {
+    return itk::Deref(m_RandomVariateGenerator);
+  }
+
+  void
+  SetRandomVariateGenerator(itk::Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator)
+  {
+    m_RandomVariateGenerator = &randomVariateGenerator;
+  }
+
   ResultImageType *
   GetResultImage(const unsigned int idx = 0) const;
 
@@ -540,6 +554,8 @@ private:
    * From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
    * backward compatability. From Elastix 4.8: set it to true by default. */
   bool m_UseDirectionCosines{ true };
+
+  itk::Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ nullptr };
 };
 
 } // end namespace elastix

@@ -75,6 +75,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   const ImageSampleContainerType & allValidSamples = Deref(this->m_InternalFullSampler->GetOutput());
   unsigned long                    numberOfValidSamples = allValidSamples.Size();
 
+  Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator = Superclass::GetRandomVariateGenerator();
 
   /** If desired we exercise a multi-threaded version. */
   if (Superclass::m_UseMultiThread)
@@ -84,7 +85,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 
     for (unsigned int i = 0; i < Superclass::m_NumberOfSamples; ++i)
     {
-      m_RandomIndices.push_back(m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1));
+      m_RandomIndices.push_back(randomVariateGenerator.GetIntegerVariate(numberOfValidSamples - 1));
     }
 
     auto & samples = sampleContainer.CastToSTLContainer();
@@ -101,7 +102,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 
   for (unsigned int i = 0; i < Superclass::m_NumberOfSamples; ++i)
   {
-    unsigned long randomIndex = this->m_RandomGenerator->GetIntegerVariate(numberOfValidSamples - 1);
+    unsigned long randomIndex = randomVariateGenerator.GetIntegerVariate(numberOfValidSamples - 1);
     sampleVector.push_back(allValidSamples.ElementAt(randomIndex));
   }
 
@@ -157,7 +158,6 @@ ImageRandomSamplerSparseMask<TInputImage>::PrintSelf(std::ostream & os, Indent i
   Superclass::PrintSelf(os, indent);
 
   os << indent << "InternalFullSampler: " << this->m_InternalFullSampler.GetPointer() << std::endl;
-  os << indent << "RandomGenerator: " << this->m_RandomGenerator.GetPointer() << std::endl;
 
 } // end PrintSelf()
 

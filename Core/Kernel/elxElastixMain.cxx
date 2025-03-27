@@ -105,6 +105,7 @@ ElastixMain::Run()
 #endif
   auto & elastixBase = this->GetElastixBase();
 
+  elastixBase.SetRandomVariateGenerator(m_RandomVariateGenerator);
   /** Set some information in the ElastixBase. */
   elastixBase.SetConfiguration(MainBase::GetConfiguration());
   elastixBase.SetTransformConfigurations(MainBase::m_TransformConfigurations);

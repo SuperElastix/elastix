@@ -70,7 +70,6 @@ AdaptiveStochasticVarianceReducedGradient<TElastix>::AdaptiveStochasticVarianceR
   this->m_NumberOfInnerIterations = 50;
   this->m_OutsideIterations = 10;
 
-  this->m_RandomGenerator = RandomGeneratorType::GetInstance();
   this->m_AdvancedTransform = nullptr;
 
   this->m_UseNoiseCompensation = true;
@@ -1235,10 +1234,13 @@ template <typename TElastix>
 void
 AdaptiveStochasticVarianceReducedGradient<TElastix>::AddRandomPerturbation(ParametersType & parameters, double sigma)
 {
+  itk::Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator =
+    Superclass2::GetRandomVariateGenerator();
+
   /** Add delta ~ sigma * N(0,I) to the input parameters. */
   for (unsigned int p = 0; p < parameters.GetSize(); ++p)
   {
-    parameters[p] += sigma * this->m_RandomGenerator->GetNormalVariate(0.0, 1.0);
+    parameters[p] += sigma * randomVariateGenerator.GetNormalVariate(0.0, 1.0);
   }
 
 } // end AddRandomPerturbation()
