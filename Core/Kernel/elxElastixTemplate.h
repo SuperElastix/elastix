@@ -34,6 +34,7 @@
 #include <itkCommand.h>
 #include <itkImage.h>
 #include <itkObject.h>
+#include "itkSmartPointer.h"
 
 #include <sstream>
 
@@ -130,6 +131,7 @@ public:
 
   /** Types for the masks. */
   using MaskPixelType = unsigned char;
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
   using FixedMaskType = itk::Image<MaskPixelType, FixedDimension>;
   using MovingMaskType = itk::Image<MaskPixelType, MovingDimension>;
   using FixedMaskPointer = typename FixedMaskType::Pointer;
@@ -208,6 +210,16 @@ public:
 
   MovingMaskType *
   GetMovingMask(unsigned int idx = 0) const;
+
+  /** Get pointers to the weighted masks. They are obtained from the
+   * {Fixed,Moving}WeightedMaskContainer and casted to the appropriate type.
+   */
+
+  FixedMaskType *
+  GetFixedWeightedMask() const;
+
+  MovingMaskType *
+  GetMovingWeightedMask() const;
 
   /** Main functions:
    * Run() for registration, and ApplyTransform() for just

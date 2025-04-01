@@ -24,12 +24,18 @@
 #include "itkParameterMapInterface.h"
 
 #include <itkObject.h>
+#include "itkImage.h"
+#include "itkSmartPointer.h"
+#include "itkObject.h"
 
 // Standard C++ header files:
 #include <fstream>
 #include <iostream>
 #include <string>
 
+// Ensure FixedImageType and MovingImageType are defined before using MaskImageType
+using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
 
 namespace elastix
 {
@@ -163,6 +169,10 @@ public:
   /** Function to get the ComponentDatabase. */
   static const ComponentDatabase &
   GetComponentDatabase();
+
+  /** Types for the masks. */
+  using MaskPixelType = unsigned char;
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
 protected:
   MainBase();
