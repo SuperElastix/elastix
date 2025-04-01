@@ -94,7 +94,7 @@
 #
 #==========================================================================*/
 
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 set(dashboard_user_home "$ENV{HOME}")
 

@@ -62,3 +62,10 @@ They are:
                       Distributed under the MIT License.
                       The source file can be found at
                       Common/ParameterFileParser/tomlplusplus/toml.hpp
+
+3) LibTorch library:  Copyright by Meta Platforms, Inc. and affiliates.
+                      Distributed under the BSD-style license found in the
+                      LICENSE file in the root directory of the source tree.
+                      LibTorch is the PyTorch C++ distribution. It is used in
+                      elastix for deep feature extraction via the IMPACT metric.
+                      See https://pytorch.org/ for more information.

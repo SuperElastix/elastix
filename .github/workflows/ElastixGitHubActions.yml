@@ -18,24 +18,40 @@ jobs:
           - os: ubuntu-22.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
+            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.2.so"
             ANNLib2: "libANNlib-5.2.so.1"
+            TORCH_LIBS:
+              - libtorch/libtorch/lib/libc10.so
+              - libtorch/libtorch/lib/libgomp-98b21ff3.so.1
+              - libtorch/libtorch/lib/libtorch.so
+              - libtorch/libtorch/lib/libtorch_cpu.so
           - os: windows-2022
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
+            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.6.0%2Bcpu.zip
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.2.dll"
+            TORCH_LIBS:
+              - libtorch/libtorch/lib/c10.dll
+              - libtorch/libtorch/lib/torch_cpu.dll
+              - libtorch/libtorch/lib/torch.dll
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-14
             c-compiler: "clang"
             cxx-compiler: "clang++"
+            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.6.0.zip
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.2.1.dylib"
             ANNLib2: "libANNlib-5.2.dylib"
+            TORCH_LIBS:
+              - libtorch/libtorch/lib/libtorch.dylib
+              - libtorch/libtorch/lib/libc10.dylib
+              - libtorch/libtorch/lib/libtorch_cpu.dylib
 
     steps:
     - uses: actions/checkout@v3
@@ -51,12 +67,24 @@ jobs:
       shell: bash
 
     - uses: actions/cache@v3
-      id: cache
+      id: cache_ITK
       with:
         path: |
           ITK-build
           ITK-source
-        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}
+        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}-v2
+
+    - name: Save libtorch URL to file
+      shell: bash
+      run: |
+        echo "${{ matrix.libtorch_url }}" > libtorch_url.txt
+
+    - uses: actions/cache@v3
+      id: cache_libtorch
+      with:
+        path: |
+          libtorch
+        key: libtorch-${{ hashFiles('libtorch_url.txt') }}-v2
 
     - name: Set up Python
       # Use the version of setup-python that has just dropped Python 3.8.
@@ -70,17 +98,29 @@ jobs:
         python -m pip install ninja
 
     - name: Get specific version of CMake, Ninja
-      uses: lukka/get-cmake@v3.24.2
+      uses: lukka/get-cmake@latest
+
+    - name: Download libtorch CPU
+      if: ${{ steps.cache_libtorch.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: |
+        curl -L ${{matrix.libtorch_url}} -o libtorch.zip
+
+    - name: Extract libtorch
+      if: ${{ steps.cache_libtorch.outputs.cache-hit != 'true'}}
+      shell: bash
+      run: |
+        unzip -q libtorch.zip -d libtorch
 
     - name: Download ITK
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache_ITK.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/InsightSoftwareConsortium/ITK.git ITK-source
         cd ITK-source
         git checkout ${{ matrix.itk-git-tag }}
 
     - name: Build ITK
-      if: ${{ steps.cache.outputs.cache-hit != 'true' && !startsWith(matrix.os, 'windows') }}
+      if: ${{ steps.cache_ITK.outputs.cache-hit != 'true' && !startsWith(matrix.os, 'windows') }}
       run: |
         mkdir ITK-build
         cd ITK-build
@@ -88,7 +128,7 @@ jobs:
         ninja
 
     - name: Build ITK
-      if: steps.cache.outputs.cache-hit != 'true' && startsWith(matrix.os, 'windows')
+      if: steps.cache_ITK.outputs.cache-hit != 'true' && startsWith(matrix.os, 'windows')
       run: |
         mkdir ITK-build
         cd ITK-build
@@ -123,10 +163,11 @@ jobs:
         set(ENV{CC} ${{ matrix.c-compiler }})
         set(ENV{CXX} ${{ matrix.cxx-compiler }})
         if(WIN32)
-          set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\$ENV{PATH}")
+          set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/lib;\$ENV{PATH}")
         endif()
         set(dashboard_cache "
         ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+        Torch_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/share/cmake/Torch
         ELASTIX_USE_GTEST:BOOL=ON
         USE_ALL_COMPONENTS:BOOL=ON
         BUILD_TESTING:BOOL=ON
@@ -176,18 +217,22 @@ jobs:
     - name: Run externalproject example
       if: ${{ !startsWith(matrix.os, 'windows') }}
       run: |
-        externalproject-build/elastix_translation_example
+        cd externalproject-build
+        ./elastix_impact_metric_example
 
     - name: Run externalproject example
       if: startsWith(matrix.os, 'windows')
       run: |
-        set path=${{ github.workspace }}\Elastix-build\bin
-        externalproject-build\elastix_translation_example.exe
+        set PATH=${{ github.workspace }}\Elastix-build\bin;${{ github.workspace }}\libtorch\libtorch\lib;%PATH%
+        cd externalproject-build
+        .\elastix_impact_metric_example.exe
       shell: cmd
 
     - name: Prepare Artifacts Unix
       if: ${{ !startsWith(matrix.os, 'windows') }}
       shell: bash
+      env:
+        TORCH_LIBS: ${{ join(matrix.TORCH_LIBS, ' ') }}
       run: |
         mkdir bin
         mkdir lib
@@ -196,6 +241,9 @@ jobs:
         mv Elastix-build/bin/transformix bin
         mv Elastix-build/bin/${{ matrix.ANNLib }} lib
         mv Elastix-build/bin/${{ matrix.ANNLib2 }} lib
+        for lib in $TORCH_LIBS; do
+          cp "$lib" lib
+        done
         mv Elastix-source/NOTICE uploads
         mv Elastix-source/LICENSE uploads
         mv bin uploads
@@ -204,6 +252,8 @@ jobs:
     - name: Prepare Artifacts Windows
       if: startsWith(matrix.os, 'windows')
       shell: bash
+      env:
+        TORCH_LIBS: ${{ join(matrix.TORCH_LIBS, ' ') }}
       run: |
         mkdir uploads
         mv Elastix-source/NOTICE uploads
@@ -211,7 +261,10 @@ jobs:
         mv Elastix-build/bin/elastix.exe uploads
         mv Elastix-build/bin/transformix.exe uploads
         mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
-
+        for lib in $TORCH_LIBS; do
+          echo "Copying $lib"
+          cp "$lib" uploads
+        done
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4.4.3
       with:
