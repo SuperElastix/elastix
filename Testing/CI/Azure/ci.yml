@@ -1,6 +1,10 @@
 variables:
   ITKv5_VERSION: v5.4.1
   ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
+  LIBTORCH_BINARY_URL_WIN: https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.6.0%2Bcpu.zip
+  LIBTORCH_BINARY_URL_LINUX: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip
+  LIBTORCH_BINARY_URL_MAC: https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.6.0.zip
+  LIBTORCH_BINARY_DIR: $(Agent.BuildDirectory)/libtorch/libtorch
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
@@ -34,13 +38,22 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
-    displayName: Clone ITK
-  - script: |
       mkdir "$(ITK_BINARY_DIR)"
       mkdir "$(ELASTIX_BINARY_DIR)"
       mkdir externalproject-build
-    displayName: Make build directories
+      mkdir "$(Agent.BuildDirectory)/libtorch"
+    displayName: 'Make build directories'
+  - script: |
+      curl -L "%LIBTORCH_BINARY_URL_WIN%" -o "$(Agent.BuildDirectory)/libtorch.zip"
+    displayName: 'Download LibTorch CPU'
+  - task: ExtractFiles@1
+    displayName: 'Extract LibTorch'
+    inputs:
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
+      destinationFolder: '$(Agent.BuildDirectory)/libtorch'
+  - script: |
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+    displayName: 'Clone ITK'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -54,7 +67,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -G "Visual Studio 17 2022" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
+      cmakeArgs: -G "Visual Studio 17 2022" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DTorch_DIR=$(LIBTORCH_BINARY_DIR)/share/cmake/Torch/ -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -71,12 +84,16 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
-  - bash: ../../../externalproject-build/Release/elastix_translation_example
+  - bash: |
+      export PATH="$(ELASTIX_BINARY_DIR)/bin/Release:$(LIBTORCH_BINARY_DIR)/lib:$PATH"
+      ./Release/elastix_impact_metric_example.exe
     displayName: 'Run externalproject'
-    workingDirectory: $(Agent.BuildDirectory)\Elastix-build\bin\Release
+    workingDirectory: $(Agent.BuildDirectory)/externalproject-build
   - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
     displayName: 'Install PythonTests requirements'
-  - bash: ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
+  - bash: |
+      export PATH="$(ELASTIX_BINARY_DIR)/bin/Release:$(LIBTORCH_BINARY_DIR)/lib:$PATH"
+      ctest -C Release -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP"
     displayName: 'CTest Elastix'
     workingDirectory: $(ELASTIX_BINARY_DIR)
 - job: Ubuntu
@@ -89,12 +106,22 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
-  - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
-    displayName: Clone ITK
+      mkdir "$(Agent.BuildDirectory)/libtorch"
+    displayName: 'Make build directories'
+  - script: |
+      curl -L $(LIBTORCH_BINARY_URL_LINUX) -o $(Agent.BuildDirectory)/libtorch.zip
+    displayName: 'Download LibTorch CPU'
+  - task: ExtractFiles@1
+    displayName: 'Extract LibTorch'
+    inputs:
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
+      destinationFolder: '$(Agent.BuildDirectory)/libtorch'
+  - script: |
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+    displayName: 'Clone ITK'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -108,7 +135,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DTorch_DIR=$(LIBTORCH_BINARY_DIR)/share/cmake/Torch/ -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -125,7 +152,8 @@ jobs:
     inputs:
       cmakeArgs: --build .
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
-  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_translation_example
+  - bash: ./elastix_impact_metric_example
+    workingDirectory: $(Agent.BuildDirectory)/externalproject-build
     displayName: 'Run externalproject'
   - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
     displayName: 'Install PythonTests requirements'
@@ -135,20 +163,36 @@ jobs:
 - job: macOS
   timeoutInMinutes: 0
   pool:
-    vmImage: 'macOS-14'
+    vmImage: 'macos-14'
   strategy:
     matrix:
       ITKv5:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
-    displayName: Clone ITK
-  - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
-    displayName: Make build directories
+      mkdir "$(Agent.BuildDirectory)/libtorch-build"
+    displayName: 'Make build directories'
+  - script: |
+      git clone --recursive https://github.com/pytorch/pytorch.git $(Agent.BuildDirectory)/pytorch
+    displayName: 'Clone LibTorch'
+  - script: |
+      python3 -m venv $(Agent.BuildDirectory)/venv
+      source $(Agent.BuildDirectory)/venv/bin/activate
+      $(Agent.BuildDirectory)/venv/bin/python -m pip install -r $(Agent.BuildDirectory)/pytorch/requirements.txt
+      cmake $(Agent.BuildDirectory)/pytorch -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(Agent.BuildDirectory)/libtorch -DPython_EXECUTABLE=-DPython_EXECUTABLE=$(Agent.BuildDirectory)/venv/bin/python -DBUILD_PYTHON=OFF -DBUILD_TEST=OFF -DUSE_CUDA=OFF -DUSE_MPS=OFF -DUSE_MKLDNN=OFF -DUSE_QNNPACK=OFF -DUSE_XNNPACK=OFF -DUSE_FBGEMM=OFF
+    workingDirectory: $(Agent.BuildDirectory)/libtorch-build
+    displayName: 'CMake Generate LibTorch'
+  - script: |
+      source $(Agent.BuildDirectory)/venv/bin/activate
+      ninja install
+    workingDirectory: $(Agent.BuildDirectory)/libtorch-build
+    displayName: 'CMake Build LibTorch'
+  - script: |
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+    displayName: 'Clone ITK'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -162,7 +206,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DTorch_DIR=$(Agent.BuildDirectory)/libtorch/share/cmake/Torch/ -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -179,7 +223,8 @@ jobs:
     inputs:
       cmakeArgs: --build .
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
-  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_translation_example
+  - bash: ./elastix_impact_metric_example
+    workingDirectory: $(Agent.BuildDirectory)/externalproject-build
     displayName: 'Run externalproject'
     # Note: On macOS, we have not yet found how to successfully install requirements.txt for Python, so for the time being, we skip the tests.
     # See also https://github.com/SuperElastix/elastix/issues/739

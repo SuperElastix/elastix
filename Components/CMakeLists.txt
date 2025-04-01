@@ -79,6 +79,14 @@ endmacro(REMOVE_ELXCOMPONENT)
 
 macro(ADD_ELXCOMPONENT name)
 
+  set(USE_TORCH_COMPONENT OFF)
+
+  foreach(arg ${ARGN})
+    if("${arg}" STREQUAL "USE_TORCH")
+      set(USE_TORCH_COMPONENT ON)
+    endif()
+  endforeach()
+
   # Compile this component or not
   set(defaultValue ON)
   if(${ARGV1} STREQUAL "OFF")
@@ -121,12 +129,21 @@ macro(ADD_ELXCOMPONENT name)
   if(USE_${name})
     # Create the list of files which create the library
     set(filelist ${ARGN})
-    list(REMOVE_ITEM filelist "ON" "OFF")
+    list(REMOVE_ITEM filelist "ON" "OFF" "USE_TORCH")
 
     # Create project and static library
     project(${name})
     add_library(${name} STATIC ${filelist})
     target_link_libraries(${name} ${elxLinkLibs})
+
+    # Optionally link Torch
+    if(USE_TORCH_COMPONENT)
+      if(NOT TARGET torch)
+        find_package(Torch REQUIRED)
+      endif()
+      target_link_libraries(${name} ${TORCH_LIBRARIES})
+    endif()
+
     if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
       install(TARGETS ${name}
         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}

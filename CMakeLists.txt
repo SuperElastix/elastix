@@ -31,6 +31,9 @@ if(ELASTIX_USE_OPENCL)
   list(APPEND _GPU_depends ITKGPUCommon)
 endif()
 
+# Propagate Torch_DIR to all subdirectories so that find_package(Torch REQUIRED) works in Components/Metrics/Impact/CMakeLists.txt
+set(Torch_DIR "${Torch_DIR}" CACHE PATH "Path to Torch CMake files")
+
 set(_ITK_io_depends
     ITKImageIO
     ITKTransformIO
@@ -580,12 +583,20 @@ endforeach()
 # forward slashes before using the ITK bin directory.
 string(REPLACE "\\" "/" ELASTIX_ITK_DIR ${ITK_DIR})
 
+if (DEFINED Torch_DIR)
+  string(REPLACE "\\" "/" ELASTIX_Torch_DIR ${Torch_DIR})
+endif()
+
 # Create the Config.cmake file for the build tree:
 set(ElastixConfig_TREE "build")
+
 set(ElastixConfig_CODE "if(NOT DEFINED ITK_DIR)
   set(ITK_DIR \"${ELASTIX_ITK_DIR}\")
 endif()
-")
+if(NOT DEFINED Torch_DIR)
+  set(Torch_DIR \"${ELASTIX_Torch_DIR}\")
+endif()")
+
 set(ELX_CONFIG_INCLUDE_DIRECTORIES "${elxINCLUDE_DIRECTORIES}")
 configure_file(ElastixConfig.cmake.in ElastixConfig.cmake @ONLY)
 

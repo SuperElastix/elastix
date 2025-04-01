@@ -1,0 +1,104 @@
+/// This parameter file has kind of realistic values.
+// In most other parameter files for testing, the number of samples and iterations is rather low, to allow fast testing.
+
+
+// ********** Image Types
+
+(FixedInternalImagePixelType "float")
+(FixedImageDimension 2)
+(MovingInternalImagePixelType "float")
+(MovingImageDimension 2)
+
+
+// ********** Components
+(RandomSeed 42)
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedGenericImagePyramid")
+(MovingImagePyramid "MovingGenericImagePyramid")
+(ImagePyramidRescaleSchedule 1 1 1 1 1 1)
+(ImagePyramidSmoothingSchedule 1 1 1 1 1 1)
+(Interpolator "BSplineInterpolator")
+
+(Metric "Impact")
+(Optimizer "AdaptiveStochasticGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+(Transform "BSplineTransform")
+
+
+// ********** Pyramid
+
+// Total number of resolutions
+(NumberOfResolutions 2)
+(ImagePyramidSchedule 3 3 1 1)
+
+
+// ********** Transform
+
+(FinalGridSpacingInPhysicalUnits 16)
+(GridSpacingSchedule 3.0 1.0)
+(HowToCombineTransforms "Compose")
+
+
+// ********** Optimizer
+
+// Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 200)
+
+(AutomaticParameterEstimation "true")
+(UseAdaptiveStepSizes "true")
+
+
+// ********** Metric
+(ImpactModelsPath "./R1D2_2D.pt")
+(ImpactDimension 2)
+(ImpactNumberOfChannels 1)
+(ImpactPatchSize 0 0)
+(ImpactVoxelSize 3 3 1.5 1.5)
+(ImpactLayersMask "1")
+ 
+(ImpactSubsetFeatures 4)
+(ImpactLayersWeight 1)
+(ImpactMode "Static")
+(ImpactGPU -1)
+(ImpactPCA 0)
+(ImpactDistance "L2")
+(ImpactFeaturesMapUpdateInterval -1)
+(ImpactWriteFeatureMaps "false")
+
+
+
+// ********** Several
+
+(WriteTransformParametersEachIteration "false")
+(WriteTransformParametersEachResolution "true")
+(WriteResultImageAfterEachResolution "false")
+(WritePyramidImagesAfterEachResolution "false")
+(WriteResultImage "true")
+(ShowExactMetricValue "false")
+(ErodeMask "false")
+(UseDirectionCosines "true")
+
+
+// ********** ImageSampler
+
+//Number of spatial samples used to compute the mutual information in each resolution level:
+(ImageSampler "RandomCoordinate")
+(NumberOfSpatialSamples 500)
+(NewSamplesEveryIteration "true")
+(UseRandomSampleRegion "false")
+//(SampleRegionSize 50.0 50.0 50.0)
+(MaximumNumberOfSamplingAttempts 8)
+
+
+// ********** Interpolator and Resampler
+
+//Order of B-Spline interpolation used in each resolution level:
+(BSplineInterpolationOrder 1)
+
+//Order of B-Spline interpolation used for applying the final deformation:
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue 0)
+
