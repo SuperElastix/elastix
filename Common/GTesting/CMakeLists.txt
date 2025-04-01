@@ -3,6 +3,7 @@ add_executable(CommonGTest
   elxDefaultConstructGTest.cxx
   elxElastixMainGTest.cxx
   elxGTestUtilities.h
+  elxImpactMetricGTest.cxx
   elxResampleInterpolatorGTest.cxx
   elxResamplerGTest.cxx
   elxTransformIOGTest.cxx
