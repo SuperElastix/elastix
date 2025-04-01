@@ -1,0 +1,590 @@
+/*=========================================================================
+ *
+ *  Copyright UMC Utrecht and contributors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+
+/**
+ * \file ImpactLoss.h
+ *
+ * Implementation of differentiable loss functions used in the IMPACT image registration metric.
+ * Each loss is implemented as a class inheriting from `Loss`, and can be registered dynamically
+ * via the `LossFactory` for use at runtime.
+ *
+ * Supports both static and Jacobian-based backpropagation modes.
+ */
+
+#ifndef _ImpactLoss_h
+#define _ImpactLoss_h
+
+#include <torch/torch.h>
+#include <cmath>
+#include <iostream>
+#include "itkTimeProbe.h"
+
+namespace ImpactLoss
+{
+
+/**
+ * \class Loss
+ * \brief Abstract base class for losses operating on extracted feature maps.
+ *
+ * Stores the accumulated loss value and its derivative, and provides methods for updating them.
+ * Designed to support both:
+ *   - Static mode (with manual update of derivative using precomputed jacobians)
+ *   - Jacobian mode (direct backpropagation of gradients)
+ *
+ * Subclasses must implement:
+ *   - updateValue()
+ *   - updateValueAndGetGradientModulator()
+ */
+class Loss
+{
+private:
+  mutable double m_normalization = 0;
+
+protected:
+  double        m_value;
+  torch::Tensor m_derivative;
+  bool          m_initialized = false;
+  int           m_nb_parameters;
+
+public:
+  Loss(bool isLossNormalized)
+  {
+    if (!isLossNormalized)
+    {
+      this->m_normalization = 1.0;
+    }
+  }
+
+  void
+  set_nb_parameters(int nb_parameters)
+  {
+    this->m_nb_parameters = nb_parameters;
+  }
+  void
+  reset()
+  {
+    this->m_initialized = false;
+  }
+
+  virtual void
+  initialize(torch::Tensor & output)
+  {
+    // Lazy initialization of internal buffers based on output tensor shape and number of parameters
+    if (!this->m_initialized)
+    {
+      this->m_value = 0;
+      this->m_derivative = torch::zeros({ this->m_nb_parameters }, output.options());
+      this->m_initialized = true;
+    }
+  }
+
+  virtual void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) = 0;
+  virtual void
+  updateValueAndDerivativeInStaticMode(torch::Tensor & fixedOutput,
+                                       torch::Tensor & movingOutput,
+                                       torch::Tensor & jacobian,
+                                       torch::Tensor & nonZeroJacobianIndices)
+  {
+    this->m_derivative.index_add_(
+      0,
+      nonZeroJacobianIndices.flatten(),
+      (this->updateValueAndGetGradientModulator(fixedOutput, movingOutput).unsqueeze(-1) * jacobian).sum(1).flatten());
+  }
+  virtual torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) = 0;
+  void
+  updateDerivativeInJacobianMode(torch::Tensor & jacobian, torch::Tensor & nonZeroJacobianIndices)
+  {
+    this->m_derivative.index_add_(0, nonZeroJacobianIndices.flatten(), jacobian.flatten());
+  }
+
+  virtual double
+  GetValue(double N) const
+  {
+    if (this->m_normalization == 0)
+    {
+      this->m_normalization = 1 / (this->m_value / N);
+    }
+    return this->m_normalization * this->m_value / N;
+  }
+
+  virtual torch::Tensor
+  GetDerivative(double N) const
+  {
+    return this->m_normalization * this->m_derivative.to(torch::kCPU) / N;
+  }
+
+  virtual ~Loss() = default;
+
+  virtual Loss &
+  operator+=(const Loss & other)
+  {
+    if (!this->m_initialized && other.m_initialized)
+    {
+      this->m_value = other.m_value;
+      this->m_derivative = other.m_derivative;
+      this->m_initialized = true;
+    }
+    else if (other.m_initialized)
+    {
+      this->m_value += other.m_value;
+      this->m_derivative += other.m_derivative;
+    }
+    return *this;
+  }
+};
+
+/**
+ * \class LossFactory
+ * \brief Singleton factory to register and create Loss instances by string name.
+ *
+ * Used to instantiate losses dynamically from configuration.
+ * Example: "L1", "L2", "NCC", etc.
+ */
+class LossFactory
+{
+public:
+  using CreatorFunc = std::function<std::unique_ptr<Loss>()>;
+
+  static LossFactory &
+  Instance()
+  {
+    static LossFactory instance;
+    return instance;
+  }
+
+  void
+  RegisterLoss(const std::string & name, CreatorFunc creator)
+  {
+    factoryMap[name] = creator;
+  }
+
+  std::unique_ptr<Loss>
+  Create(const std::string & name)
+  {
+    auto it = factoryMap.find(name);
+    if (it != factoryMap.end())
+    {
+      return it->second();
+    }
+    throw std::runtime_error("Error: Unknown loss function " + name);
+  }
+
+private:
+  std::unordered_map<std::string, CreatorFunc> factoryMap;
+};
+
+template <typename T>
+class RegisterLoss
+{
+public:
+  RegisterLoss(const std::string & name)
+  {
+    LossFactory::Instance().RegisterLoss(name, []() { return std::make_unique<T>(); });
+  }
+};
+
+/**
+ * \class L1
+ * \brief L1 loss over feature vectors: mean absolute difference.
+ */
+class L1 : public Loss
+{
+public:
+  L1()
+    : Loss(true)
+  {}
+
+  void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    this->m_value += (fixedOutput - movingOutput).abs().mean(1).sum().item<double>();
+  }
+
+  torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    torch::Tensor diffOutput = fixedOutput - movingOutput;
+    this->m_value += diffOutput.abs().mean(1).sum().item<double>();
+    return -torch::sign(diffOutput) / fixedOutput.size(1);
+  }
+};
+
+inline RegisterLoss<L1> L1_reg("L1"); // Register the loss under its string name for factory-based creation
+
+/**
+ * \class L2
+ * \brief Mean Squared Error (L2) over feature vectors.
+ */
+class L2 : public Loss
+{
+public:
+  L2()
+    : Loss(true)
+  {}
+
+  void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    this->m_value += (fixedOutput - movingOutput).pow(2).mean(1).sum().item<double>();
+  }
+
+  torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    torch::Tensor diffOutput = fixedOutput - movingOutput;
+    this->m_value += diffOutput.pow(2).mean(1).sum().item<double>();
+    return -2 * diffOutput / fixedOutput.size(1);
+  }
+};
+
+
+inline RegisterLoss<L2> MSE_reg("L2"); // Register the loss under its string name for factory-based creation
+
+/**
+ * \class Dice
+ * \brief Binary Dice loss (assumes thresholded activations).
+ *
+ * Rounds inputs to {0, 1} before computing overlap.
+ */
+class Dice : public Loss
+{
+public:
+  Dice()
+    : Loss(false)
+  {}
+
+  void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    fixedOutput = torch::round(fixedOutput).clamp(0);
+    movingOutput = torch::round(movingOutput).clamp(0);
+
+    torch::Tensor intersection = (fixedOutput * movingOutput).sum(1);
+    torch::Tensor unionSum = (fixedOutput + movingOutput).sum(1);
+    torch::Tensor diceScore = (2 * intersection + 1e-6) / (unionSum + 1e-6);
+
+    this->m_value += (1 - diceScore.mean()).item<double>();
+  }
+
+  torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    fixedOutput = torch::round(fixedOutput).clamp(0);
+    movingOutput = torch::round(movingOutput).clamp(0);
+    torch::Tensor intersection = (fixedOutput * movingOutput).sum(1);
+    torch::Tensor unionSum = (fixedOutput + movingOutput).sum(1);
+    torch::Tensor diceScore = (2 * intersection + 1e-6) / (unionSum + 1e-6);
+
+    this->m_value += (1 - diceScore.mean()).item<double>();
+
+    return -(2 * (fixedOutput * unionSum.unsqueeze(-1) - intersection.unsqueeze(-1)) /
+             (unionSum * unionSum + 1e-6).unsqueeze(-1));
+  }
+};
+
+
+inline RegisterLoss<Dice> Dice_reg("Dice"); // Register the loss under its string name for factory-based creation
+
+/**
+ * \class L1Cosine
+ * \brief Combined cosine similarity and exponential L1 loss.
+ *
+ * Useful for simultaneously penalizing direction and magnitude.
+ */
+class L1Cosine : public Loss
+{
+private:
+  double lambda;
+
+public:
+  L1Cosine()
+    : Loss(false)
+  {
+    this->lambda = 0.1;
+  }
+
+  void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    torch::Tensor dot_product = (fixedOutput * movingOutput).sum(1);
+    torch::Tensor norm_fixed = torch::norm(fixedOutput, 2, 1);
+    torch::Tensor norm_moving = torch::norm(movingOutput, 2, 1);
+    torch::Tensor cosine = dot_product / (norm_fixed * norm_moving);
+    torch::Tensor expL1 = torch::exp(-this->lambda * (fixedOutput - movingOutput).abs());
+    this->m_value -= (cosine.unsqueeze(-1) * expL1).mean(1).sum().item<double>();
+  }
+
+  torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    torch::Tensor diffOutput = fixedOutput - movingOutput;
+    torch::Tensor dot_product = (fixedOutput * movingOutput).sum(1);
+    torch::Tensor norm_fixed = torch::norm(fixedOutput, 2, 1);
+    torch::Tensor norm_moving = torch::norm(movingOutput, 2, 1);
+    torch::Tensor v = (norm_fixed * norm_moving);
+
+    torch::Tensor cosine = dot_product / (v);
+    torch::Tensor expL1 = torch::exp(-this->lambda * (fixedOutput - movingOutput).abs());
+
+    torch::Tensor dCossine = -(fixedOutput / v.unsqueeze(-1) -
+                               (fixedOutput * movingOutput * movingOutput) / (v * norm_moving.pow(2)).unsqueeze(-1));
+    torch::Tensor dexpL1 = -torch::sign(diffOutput) * expL1 / fixedOutput.size(1);
+    this->m_value -= (cosine.unsqueeze(-1) * expL1).mean(1).sum().item<double>();
+    return dCossine * dexpL1 + cosine.unsqueeze(-1) * dexpL1;
+  }
+};
+
+inline RegisterLoss<L1Cosine> L1Cosine_reg(
+  "L1Cosine"); // Register the loss under its string name for factory-based creation
+
+/**
+ * \class Cosine
+ * \brief Cosine similarity loss (negative mean cosine between vectors).
+ */
+class Cosine : public Loss
+{
+public:
+  Cosine()
+    : Loss(false)
+  {}
+
+  void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    torch::Tensor dot_product = (fixedOutput * movingOutput).sum(1);
+    torch::Tensor norm_fixed = torch::norm(fixedOutput, 2, 1);
+    torch::Tensor norm_moving = torch::norm(movingOutput, 2, 1);
+    this->m_value -= (dot_product / (norm_fixed * norm_moving)).sum().item<double>();
+  }
+
+  torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    torch::Tensor dot_product = (fixedOutput * movingOutput).sum(1);
+    torch::Tensor norm_fixed = torch::norm(fixedOutput, 2, 1);
+    torch::Tensor norm_moving = torch::norm(movingOutput, 2, 1);
+    torch::Tensor v = (norm_fixed * norm_moving);
+    this->m_value -= (dot_product / v).sum().item<double>();
+    return -(fixedOutput / v.unsqueeze(-1) -
+             (fixedOutput * movingOutput * movingOutput) / (v * norm_moving.pow(2)).unsqueeze(-1));
+  }
+};
+
+inline RegisterLoss<Cosine> Cosine_reg("Cosine"); // Register the loss under its string name for factory-based creation
+
+/**
+ * \class DotProduct
+ * \brief Negative dot product loss (simple similarity).
+ */
+class DotProduct : public Loss
+{
+public:
+  DotProduct()
+    : Loss(false)
+  {}
+
+  void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    this->m_value -= (fixedOutput * movingOutput).sum(1).sum().item<double>();
+  }
+
+  torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    this->m_value -= (fixedOutput * movingOutput).sum(1).sum().item<double>();
+    return -fixedOutput;
+  }
+};
+
+
+inline RegisterLoss<DotProduct> DotProduct_reg(
+  "DotProduct"); // Register the loss under its string name for factory-based creation
+
+/**
+ * \class NCC
+ * \brief Normalized Cross Correlation loss over feature vectors.
+ *
+ * Computes NCC between fixed and moving features across batches.
+ * Derivative is accumulated in static mode using full Jacobian tracking.
+ */
+class NCC : public Loss
+{
+private:
+  torch::Tensor m_sff, m_smm, m_sfm, m_sf, m_sm;
+  torch::Tensor m_sfdm, m_smdm, m_sdm;
+
+public:
+  NCC()
+    : Loss(false)
+  {}
+
+  void
+  initialize(torch::Tensor & output) override
+  {
+    if (!this->m_initialized)
+    {
+      this->m_sff = torch::zeros({ output.size(1) }, output.options());
+      this->m_smm = torch::zeros({ output.size(1) }, output.options());
+      this->m_sfm = torch::zeros({ output.size(1) }, output.options());
+      this->m_sf = torch::zeros({ output.size(1) }, output.options());
+      this->m_sm = torch::zeros({ output.size(1) }, output.options());
+      this->m_initialized = true;
+    }
+  }
+
+  void
+  updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    this->initialize(fixedOutput);
+    this->m_sff += (fixedOutput * fixedOutput).sum(0);
+    this->m_smm += (movingOutput * movingOutput).sum(0);
+    this->m_sfm += (fixedOutput * movingOutput).sum(0);
+    this->m_sf += fixedOutput.sum(0);
+    this->m_sm += movingOutput.sum(0);
+  }
+
+  void
+  updateValueAndDerivativeInStaticMode(torch::Tensor & fixedOutput,
+                                       torch::Tensor & movingOutput,
+                                       torch::Tensor & jacobian,
+                                       torch::Tensor & nonZeroJacobianIndices) override
+  {
+    // Accumulate first-order statistics and weighted Jacobians
+    // sfdm: sum(fixed * dM), smdm: sum(moving * dM), sdm: sum(dM)
+    if (!this->m_initialized)
+    {
+      this->m_sfdm = torch::zeros({ fixedOutput.size(1), this->m_nb_parameters }, fixedOutput.options());
+      this->m_smdm = torch::zeros({ fixedOutput.size(1), this->m_nb_parameters }, fixedOutput.options());
+      this->m_sdm = torch::zeros({ fixedOutput.size(1), this->m_nb_parameters }, fixedOutput.options());
+    }
+    this->updateValue(fixedOutput, movingOutput);
+    this->m_sfdm.index_add_(
+      1, nonZeroJacobianIndices.flatten(), (fixedOutput.unsqueeze(-1) * jacobian).permute({ 1, 0, 2 }).flatten(1, 2));
+    this->m_smdm.index_add_(
+      1, nonZeroJacobianIndices.flatten(), (movingOutput.unsqueeze(-1) * jacobian).permute({ 1, 0, 2 }).flatten(1, 2));
+    this->m_sdm.index_add_(1, nonZeroJacobianIndices.flatten(), (jacobian).permute({ 1, 0, 2 }).flatten(1, 2));
+  }
+
+  torch::Tensor
+  updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
+  {
+    if (!this->m_initialized)
+    {
+      this->m_derivative = torch::zeros({ this->m_nb_parameters }, fixedOutput.options());
+    }
+    this->initialize(fixedOutput);
+
+    const double  N = fixedOutput.size(0);
+    torch::Tensor sff = (fixedOutput * fixedOutput).sum(0);
+    torch::Tensor smm = (movingOutput * movingOutput).sum(0);
+    torch::Tensor sfm = (fixedOutput * movingOutput).sum(0);
+    torch::Tensor sf = fixedOutput.sum(0);
+    torch::Tensor sm = movingOutput.sum(0);
+
+    this->m_sff += sff;
+    this->m_smm += smm;
+    this->m_sfm += sfm;
+    this->m_sf += sf;
+    this->m_sm += sm;
+
+    torch::Tensor u = sfm - (sf * sm / N);
+    torch::Tensor v = torch::sqrt(sff - sf * sf / N) * torch::sqrt(smm - sm * sm / N); // v = a*b
+
+    torch::Tensor u_p = fixedOutput - sf.unsqueeze(0) / N;
+    return -((u_p - u.unsqueeze(0) * (movingOutput - sm.unsqueeze(0) / N) / (smm - sm * sm / N).unsqueeze(0)) /
+             v.unsqueeze(0)) /
+           fixedOutput.size(1);
+  }
+
+  double
+  GetValue(double N) const override
+  {
+    // Compute NCC loss from accumulated statistics: mean( -NCC(channel) )
+    if (N <= 0)
+      return 0.0;
+    torch::Tensor u = this->m_sfm - (this->m_sf * this->m_sm / N);
+    torch::Tensor v =
+      torch::sqrt(this->m_sff - this->m_sf * this->m_sf / N) * torch::sqrt(this->m_smm - this->m_sm * this->m_sm / N);
+    return -(u / v).mean().item<double>();
+  }
+
+  torch::Tensor
+  GetDerivative(double N) const override
+  {
+    if (this->m_derivative.defined())
+    {
+      return this->m_derivative.to(torch::kCPU);
+    }
+
+    torch::Tensor u = this->m_sfm - (this->m_sf * this->m_sm / N);
+    torch::Tensor v =
+      torch::sqrt(this->m_sff - this->m_sf * this->m_sf / N) * torch::sqrt(this->m_smm - this->m_sm * this->m_sm / N);
+    torch::Tensor u_p = this->m_sfdm - this->m_sf.unsqueeze(-1) * this->m_sdm / N;
+    return -((u_p - u.unsqueeze(-1) * (this->m_smdm - this->m_sm.unsqueeze(-1) * this->m_sdm / N) /
+                      (this->m_smm - this->m_sm * this->m_sm / N).unsqueeze(-1)) /
+             v.unsqueeze(-1))
+              .mean(0)
+              .to(torch::kCPU);
+  }
+
+  NCC &
+  operator+=(const Loss & other) override
+  {
+    const auto * nccOther = dynamic_cast<const NCC *>(&other);
+    if (nccOther)
+    {
+      this->m_sff += nccOther->m_sff;
+      this->m_smm += nccOther->m_smm;
+      this->m_sfm += nccOther->m_sfm;
+      this->m_sf += nccOther->m_sf;
+      this->m_sm += nccOther->m_sm;
+      if (this->m_sfdm.defined())
+      {
+        this->m_sfdm += nccOther->m_sfdm;
+        this->m_smdm += nccOther->m_smdm;
+        this->m_sdm += nccOther->m_sdm;
+      }
+      if (this->m_derivative.defined())
+      {
+        this->m_derivative += nccOther->m_derivative;
+      }
+    }
+    return *this;
+  }
+};
+
+inline RegisterLoss<NCC> NCC_reg("NCC"); // Register the loss under its string name for factory-based creation
+
+} // namespace ImpactLoss
+
+#endif // _ImpactLoss_h
