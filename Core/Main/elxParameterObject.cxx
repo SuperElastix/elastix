@@ -531,16 +531,13 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
 
       for (const std::string & value : parameterMapValueVector)
       {
-        std::istringstream stream(value);
-        float              number;
-        stream >> number;
-        if (stream.fail())
+        if (Conversion::IsNumber(value))
         {
-          os << " \"" << value << '"';
+          os << ' ' << value;
         }
         else
         {
-          os << ' ' << number;
+          os << " \"" << value << '"';
         }
       }
 
