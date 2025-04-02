@@ -33,45 +33,50 @@
 #include <torch/torch.h>
 
 template <typename TImage, typename TInterpolator>
-class BSplineInterpolateVectorImageFunction {
+class BSplineInterpolateVectorImageFunction
+{
 public:
-    using ImageType = TImage;
-    using InterpolatorType = TInterpolator;
-    using PixelType = typename ImageType::PixelType;
+  using ImageType = TImage;
+  using InterpolatorType = TInterpolator;
+  using PixelType = typename ImageType::PixelType;
 
-    BSplineInterpolateVectorImageFunction() = default;
+  BSplineInterpolateVectorImageFunction() = default;
 
-    /**
-    * \brief Initializes one B-Spline interpolator per feature channel in the input VectorImage.
-    *
-    * Each channel of the vector image is assigned its own BSpline interpolator. This is necessary
-    * since ITK's BSplineInterpolateImageFunction does not directly support VectorImages.
-    */
-    void SetInputImage(typename ImageType::Pointer vectorImage);
+  /**
+   * \brief Initializes one B-Spline interpolator per feature channel in the input VectorImage.
+   *
+   * Each channel of the vector image is assigned its own BSpline interpolator. This is necessary
+   * since ITK's BSplineInterpolateImageFunction does not directly support VectorImages.
+   */
+  void
+  SetInputImage(typename ImageType::Pointer vectorImage);
 
-    /**
-    * \brief Interpolates the selected feature channels at a given physical point.
-    *
-    * \param point The physical coordinate where interpolation is performed.
-    * \param subsetOfFeatures Indices of feature channels to interpolate.
-    * \return A 1D torch::Tensor containing interpolated values for the requested channels.
-    */
-    torch::Tensor Evaluate(typename ImageType::PointType point, std::vector<int> subsetOfFeatures) const;
+  /**
+   * \brief Interpolates the selected feature channels at a given physical point.
+   *
+   * \param point The physical coordinate where interpolation is performed.
+   * \param subsetOfFeatures Indices of feature channels to interpolate.
+   * \return A 1D torch::Tensor containing interpolated values for the requested channels.
+   */
+  torch::Tensor
+  Evaluate(typename ImageType::PointType point, std::vector<int> subsetOfFeatures) const;
 
-    /**
-    * \brief Evaluates the spatial derivative of selected features at a given point.
-    *
-    * Computes gradients of the selected feature channels with respect to spatial dimensions
-    * using the underlying B-Spline interpolators.
-    *
-    * \param point The physical coordinate at which derivatives are computed.
-    * \param subsetOfFeatures Indices of feature channels to differentiate.
-    * \return A 2D torch::Tensor (Channels × SpatialDimension) with spatial gradients per feature.
-    */
-    torch::Tensor EvaluateDerivative(typename ImageType::PointType point, std::vector<int> subsetOfFeatures) const;
+  /**
+   * \brief Evaluates the spatial derivative of selected features at a given point.
+   *
+   * Computes gradients of the selected feature channels with respect to spatial dimensions
+   * using the underlying B-Spline interpolators.
+   *
+   * \param point The physical coordinate at which derivatives are computed.
+   * \param subsetOfFeatures Indices of feature channels to differentiate.
+   * \return A 2D torch::Tensor (Channels × SpatialDimension) with spatial gradients per feature.
+   */
+  torch::Tensor
+  EvaluateDerivative(typename ImageType::PointType point, std::vector<int> subsetOfFeatures) const;
+
 private:
-    typename ImageType::Pointer m_VectorImage;
-    std::vector<typename InterpolatorType::Pointer> m_Interpolators;
+  typename ImageType::Pointer                     m_VectorImage;
+  std::vector<typename InterpolatorType::Pointer> m_Interpolators;
 };
 
 #ifndef ITK_MANUAL_INSTANTIATION

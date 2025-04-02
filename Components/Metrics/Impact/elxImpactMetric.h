@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
- 
+
 #ifndef elxImpactMetric_h
 #define elxImpactMetric_h
 
@@ -36,8 +36,8 @@ namespace elastix
  *
  * ### Multi-model support
  * Multiple pretrained models can be specified for both the fixed and moving images. Each model can have its own
- * configuration (dimension, number of channels, patch size, voxel size, mask). To do this, simply provide **space-separated values**
- * for each parameter, in the same order as the models listed.
+ * configuration (dimension, number of channels, patch size, voxel size, mask). To do this, simply provide
+ * **space-separated values** for each parameter, in the same order as the models listed.
  *
  * Example:
  * \code
@@ -117,8 +117,8 @@ namespace elastix
  *   Set to 0 to disable PCA. Example: <tt>(PCA "32 3")</tt>
  *
  * \param Distance Specifies the similarity function to compare features.
- *   Supported values per model: <tt>L1</tt>, <tt>L2</tt>, <tt>NCC</tt>, <tt>Cosine</tt>, <tt>L1Cosine</tt>, <tt>Dice</tt>.
- *   Example: <tt>(Distance "L2 Cosine")</tt>
+ *   Supported values per model: <tt>L1</tt>, <tt>L2</tt>, <tt>NCC</tt>, <tt>Cosine</tt>, <tt>L1Cosine</tt>,
+ * <tt>Dice</tt>. Example: <tt>(Distance "L2 Cosine")</tt>
  *
  * \param FeaturesMapUpdateInterval Frequency (in iterations) at which feature maps are recomputed in "Static" mode.
  *   Set to -1 to disable updates and keep features fixed. Example: <tt>(FeaturesMapUpdateInterval 10)</tt>
@@ -143,11 +143,11 @@ namespace elastix
  *
  * \ingroup Metrics
  */
- 
+
 template <typename TElastix>
 class ITK_TEMPLATE_EXPORT ImpactMetric
   : public itk::ImpactImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
-                                                          typename MetricBase<TElastix>::MovingImageType>
+                                         typename MetricBase<TElastix>::MovingImageType>
   , public MetricBase<TElastix>
 {
 public:
@@ -155,8 +155,8 @@ public:
 
   /** Standard ITK-stuff. */
   using Self = ImpactMetric;
-  using Superclass1 = itk::ImpactImageToImageMetric< typename MetricBase<TElastix>::FixedImageType,
-                                                                      typename MetricBase<TElastix>::MovingImageType>;
+  using Superclass1 = itk::ImpactImageToImageMetric<typename MetricBase<TElastix>::FixedImageType,
+                                                    typename MetricBase<TElastix>::MovingImageType>;
   using Superclass2 = MetricBase<TElastix>;
   using Pointer = itk::SmartPointer<Self>;
   using ConstPointer = itk::SmartPointer<const Self>;
@@ -166,15 +166,15 @@ public:
 
   /** Run-time type information (and related methods). */
   itkOverrideGetNameOfClassMacro(ImpactMetric);
-  
+
   /**
-  * Name of this class.
-  * Use this name in the parameter file to select this specific metric.
-  * Example:
-  * \code
-  * (Metric "Impact")
-  * \endcode
-  */
+   * Name of this class.
+   * Use this name in the parameter file to select this specific metric.
+   * Example:
+   * \code
+   * (Metric "Impact")
+   * \endcode
+   */
   elxClassNameMacro("Impact");
 
   /** Typedefs from the superclass. */
@@ -217,7 +217,7 @@ public:
 
   /** The fixed image dimension. */
   itkStaticConstMacro(FixedImageDimension, unsigned int, FixedImageType::ImageDimension);
-  
+
   /** The moving image dimension. */
   itkStaticConstMacro(MovingImageDimension, unsigned int, MovingImageType::ImageDimension);
 
@@ -234,10 +234,10 @@ public:
   Initialize() override;
 
   /** Update the current iteration and refresh feature maps in static mode.
-  */
+   */
   void
   AfterEachIteration() override;
-  
+
   /**
    * Do some things before each resolution:
    * \li Set CheckNumberOfSamples setting
@@ -246,7 +246,7 @@ public:
   void
   BeforeEachResolution() override;
 
-  
+
 protected:
   /** The constructor. */
   ImpactMetric() = default;
@@ -257,15 +257,26 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
-  
-  /** Utility functions to parse Elastix-style vector strings. */
-  template <typename T> std::vector<T> GetVectorFromString(int size, std::string valueStr, T defaultValue);
-  template <typename T> std::vector<T> GetVectorFromString(int size, std::string valueStr, T defaultValue, char delimiter);
-  template <typename T> std::vector<T> GetVectorFromString(std::string valueStr, T defaultValue, char delimiter);
-  template <typename T> std::vector<T> GetVectorFromString(std::string valueStr, T defaultValue);
 
-  std::vector<typename Superclass1::ModelConfiguration> GenerateModelsConfiguration(unsigned int level, std::string type, std::string mode, unsigned int imageDimension);
-  template <typename T> std::string GetStringFromVector(const std::vector<T>& vec);
+  /** Utility functions to parse Elastix-style vector strings. */
+  template <typename T>
+  std::vector<T>
+  GetVectorFromString(int size, std::string valueStr, T defaultValue);
+  template <typename T>
+  std::vector<T>
+  GetVectorFromString(int size, std::string valueStr, T defaultValue, char delimiter);
+  template <typename T>
+  std::vector<T>
+  GetVectorFromString(std::string valueStr, T defaultValue, char delimiter);
+  template <typename T>
+  std::vector<T>
+  GetVectorFromString(std::string valueStr, T defaultValue);
+
+  std::vector<typename Superclass1::ModelConfiguration>
+  GenerateModelsConfiguration(unsigned int level, std::string type, std::string mode, unsigned int imageDimension);
+  template <typename T>
+  std::string
+  GetStringFromVector(const std::vector<T> & vec);
 };
 
 } // end namespace elastix
