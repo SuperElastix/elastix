@@ -536,15 +536,15 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
         stream >> number;
         if (stream.fail())
         {
-          os << " \"" << value << "\"";
+          os << " \"" << value << '"';
         }
         else
         {
-          os << " " << number;
+          os << ' ' << number;
         }
       }
 
-      os << ")" << std::endl;
+      os << ')' << std::endl;
       ++parameterMapIterator;
     }
   }
