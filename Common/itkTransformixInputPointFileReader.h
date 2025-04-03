@@ -83,6 +83,11 @@ public:
    */
   itkGetConstMacro(NumberOfPoints, unsigned long);
 
+  /** Get and set whether to read the points from a binary file.
+  */
+  itkGetConstMacro(Binary, bool);
+  itkSetMacro(Binary, bool);
+
   /** Prepare the allocation of the output mesh during the first back
    * propagation of the pipeline. Updates the PointsAreIndices and NumberOfPoints.
    */
@@ -100,6 +105,7 @@ protected:
 private:
   unsigned long m_NumberOfPoints{ 0 };
   bool          m_PointsAreIndices{ false };
+  bool          m_Binary{ false };
 
   std::ifstream m_Reader{};
 };
