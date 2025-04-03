@@ -31,6 +31,7 @@ if(ELASTIX_USE_OPENCL)
   list(APPEND _GPU_depends ITKGPUCommon)
 endif()
 
+find_package(Torch REQUIRED)
 # Find ITK.
 find_package(ITK 5.4.1 REQUIRED COMPONENTS
     ITKCommon

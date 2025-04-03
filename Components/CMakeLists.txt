@@ -126,7 +126,11 @@ macro(ADD_ELXCOMPONENT name)
     # Create project and static library
     project(${name})
     add_library(${name} STATIC ${filelist})
-    target_link_libraries(${name} ${elxLinkLibs})
+    if (${name} STREQUAL "ImpactMetric")
+      target_link_libraries( ${name} ${elxLinkLibs} torch)
+    else()
+      target_link_libraries( ${name} ${elxLinkLibs})
+    endif()
     if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
       install(TARGETS ${name}
         ARCHIVE DESTINATION ${ELASTIX_ARCHIVE_DIR}
