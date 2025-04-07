@@ -128,7 +128,6 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
     layers = layers.permute({ 1, 2, 3, 0 }).contiguous();
     ;
   }
-
   const unsigned int numberOfChannels = layers.size(Dimension);
 
   typename TFeatureImage::Pointer    itkImage = TFeatureImage::New();
@@ -178,7 +177,7 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
     {
       for (int y = 0; y < size[0]; ++y)
       {
-        const float *                    pixelPtr = layersData + x * sliceStride + y * rowStride;
+        const float *                    pixelPtr = layersData + x * rowStride + y * numberOfChannels;
         itk::VariableLengthVector<float> variableLengthVector(numberOfChannels);
         for (unsigned int i = 0; i < numberOfChannels; i++)
         {
@@ -277,15 +276,15 @@ getPatch(std::vector<int> slice, std::vector<long> patchSize, torch::Tensor inpu
 torch::Tensor
 pca_fit(torch::Tensor input, int new_C)
 {
-  int C = input.size(0);
-  int D = input.size(1);
-  int H = input.size(2);
-  int W = input.size(3);
+
+  int     C = input.size(0);
+  int64_t N = std::accumulate(input.sizes().begin() + 1, input.sizes().end(), 1LL, std::multiplies<int64_t>());
+
   // Flatten spatial dimensions to compute PCA across feature channels
-  torch::Tensor reshaped = input.view({ C, D * H * W });
+  torch::Tensor reshaped = input.view({ C, N });
   torch::Tensor centered = reshaped - reshaped.mean(1, true);
   // Center data and compute channel-wise covariance matrix
-  torch::Tensor covariance = torch::matmul(centered, centered.t()) / (D * H * W - 1);
+  torch::Tensor covariance = torch::matmul(centered, centered.t()) / (N - 1);
 
   torch::Tensor eigenvalues, eigenvectors;
   std::tie(eigenvalues, eigenvectors) = torch::linalg_eigh(covariance);
@@ -300,12 +299,13 @@ torch::Tensor
 pca_transform(torch::Tensor input, torch::Tensor principal_components)
 {
   int           C = input.size(0);
-  int           D = input.size(1);
-  int           H = input.size(2);
-  int           W = input.size(3);
-  torch::Tensor reshaped = input.view({ C, D * H * W });
-  return torch::matmul(principal_components.t(), reshaped - reshaped.mean(1, true))
-    .view({ principal_components.size(1), D, H, W });
+  int64_t       N = std::accumulate(input.sizes().begin() + 1, input.sizes().end(), 1LL, std::multiplies<int64_t>());
+  torch::Tensor reshaped = input.view({ C, N });
+  torch::Tensor projected = torch::matmul(principal_components.t(), reshaped - reshaped.mean(1, true));
+
+  std::vector<int64_t> final_shape = { principal_components.size(1) };
+  final_shape.insert(final_shape.end(), input.sizes().begin() + 1, input.sizes().end());
+  return projected.view(final_shape);
 } // end pca_transform
 
 /**
@@ -335,6 +335,7 @@ GetFeaturesMaps(
       // Convert image to tensor representation for deep feature extraction
       torch::Tensor inputTensor =
         ImageToTensor<TImage, InterpolatorType>(image, interpolator, config.m_voxelSize, transformPoint);
+
       if (writeInputImage)
       {
         std::string result;
@@ -350,6 +351,7 @@ GetFeaturesMaps(
         }
         writeInputImage(image, inputTensor, result + "mm");
       }
+
       std::vector<int64_t> channelRepeat(config.m_dimension + 1, 1);
       channelRepeat[0] = config.m_numberOfChannels;
 
@@ -372,10 +374,9 @@ GetFeaturesMaps(
       std::vector<std::vector<int>> inputSlices;
       std::vector<int>              inputCurrent(config.m_dimension);
       generateCartesianProduct(inputStartIndices, inputCurrent, 0, inputSlices);
-      std::vector<std::vector<std::vector<int>>> layersSlices;
-      std::vector<torch::Tensor>                 layers;
-      std::vector<std::vector<double>>           ratio;
-
+      std::vector<std::vector<std::vector<int>>>             layersSlices;
+      std::vector<torch::Tensor>                             layers;
+      std::vector<std::vector<torch::indexing::TensorIndex>> cutting;
       if (config.m_dimension < inputTensor.dim())
       {
         for (int depthIndex = 0; depthIndex < inputTensor.size(0); depthIndex++)
@@ -403,8 +404,18 @@ GetFeaturesMaps(
 
                 if (sliceIndex == 0 && depthIndex == 0)
                 {
-                  ratio.push_back({ layerPatch.size(1) / static_cast<double>(patchSize[0]),
-                                    layerPatch.size(2) / static_cast<double>(patchSize[1]) });
+                  std::vector<torch::indexing::TensorIndex> cuttingLoc;
+                  cuttingLoc.push_back(torch::indexing::Slice());
+                  cuttingLoc.push_back(torch::indexing::Slice());
+
+                  for (int r = 0; r < patchSize.size(); r++)
+                  {
+                    cuttingLoc.push_back(torch::indexing::Slice(
+                      0, layerPatch.size(r + 1) / static_cast<double>(patchSize[r]) * inputTensor.size(r + 1)));
+                  }
+
+                  cutting.push_back(cuttingLoc);
+
 
                   std::vector<std::vector<int>> layerStartIndices(config.m_dimension);
                   std::vector<long>             layerSize(config.m_dimension + 2);
@@ -435,6 +446,7 @@ GetFeaturesMaps(
                       static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1]),
                       static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1] + layerPatch.size(2))) },
                   layerPatch);
+
                 realLayerIndex++;
               }
             }
@@ -450,6 +462,7 @@ GetFeaturesMaps(
                                        .repeat({ torch::IntArrayRef(channelRepeat) })
                                        .unsqueeze(0)
                                        .to(gpu);
+
           std::vector<torch::jit::IValue> outputsPatch = config.m_model->forward({ inputPatch }).toList().vec();
 
           if (config.m_layersMask.size() != outputsPatch.size())
@@ -465,9 +478,16 @@ GetFeaturesMaps(
 
               if (sliceIndex == 0)
               {
-                ratio.push_back({ layerPatch.size(1) / static_cast<double>(patchSize[0]),
-                                  layerPatch.size(2) / static_cast<double>(patchSize[1]),
-                                  layerPatch.size(3) / static_cast<double>(patchSize[2]) });
+                std::vector<torch::indexing::TensorIndex> cuttingLoc;
+                cuttingLoc.push_back(torch::indexing::Slice());
+                for (int r = 0; r < patchSize.size(); r++)
+                {
+                  cuttingLoc.push_back(torch::indexing::Slice(
+                    0, layerPatch.size(r + 1) / static_cast<double>(patchSize[r]) * inputTensor.size(r)));
+                }
+
+                cutting.push_back(cuttingLoc);
+
 
                 std::vector<std::vector<int>> layerStartIndices(config.m_dimension);
                 std::vector<long>             layerSize(config.m_dimension + 1);
@@ -486,19 +506,33 @@ GetFeaturesMaps(
 
                 layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, torch::kFloat));
               }
-              layers[realLayerIndex].index_put_(
-                { torch::indexing::Slice(),
-                  torch::indexing::Slice(
-                    static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0]),
-                    static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0] + layerPatch.size(1))),
-                  torch::indexing::Slice(
-                    static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1]),
-                    static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1] + layerPatch.size(2))),
-                  torch::indexing::Slice(
-                    static_cast<int>(layersSlices[realLayerIndex][sliceIndex][2]),
-                    static_cast<int>(layersSlices[realLayerIndex][sliceIndex][2] + layerPatch.size(3))) },
-                layerPatch);
-
+              if (layerPatch.dim() == 3)
+              {
+                layers[realLayerIndex].index_put_(
+                  { torch::indexing::Slice(),
+                    torch::indexing::Slice(
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0]),
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0] + layerPatch.size(1))),
+                    torch::indexing::Slice(
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1]),
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1] + layerPatch.size(2))) },
+                  layerPatch);
+              }
+              else
+              {
+                layers[realLayerIndex].index_put_(
+                  { torch::indexing::Slice(),
+                    torch::indexing::Slice(
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0]),
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0] + layerPatch.size(1))),
+                    torch::indexing::Slice(
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1]),
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1] + layerPatch.size(2))),
+                    torch::indexing::Slice(
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][2]),
+                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][2] + layerPatch.size(3))) },
+                  layerPatch);
+              }
               realLayerIndex++;
             }
           }
@@ -507,23 +541,7 @@ GetFeaturesMaps(
       unsigned int a = 0;
       for (size_t i = 0; i < layers.size(); i++)
       {
-        std::vector<torch::indexing::TensorIndex> cutting;
-        int                                       j = 0;
-        for (; j < layers[i].dim() - ratio[i].size(); j++)
-        {
-          cutting.push_back(torch::indexing::Slice());
-        }
-        for (int r = 0; r < ratio[i].size(); r++)
-        {
-          int end = -layers[i].size(j + r) + ratio[i][r] * inputTensor.size(j - 1 + r);
-          if (end <= 0)
-          {
-            end = layers[i].size(j + r);
-          }
-          cutting.push_back(torch::indexing::Slice(0, end));
-        }
-        torch::Tensor result = layers[i].index(cutting);
-
+        torch::Tensor result = layers[i].index(cutting[i]);
         if (pca[i] > 0)
         {
           if (principal_components.size() <= a)

@@ -602,6 +602,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
       else
       {
         this->SetWriteFeatureMaps(true);
+        this->SetFeatureMapsPath(writeFeatureMapsStr);
       }
     }
   }

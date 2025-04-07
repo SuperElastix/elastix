@@ -69,7 +69,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       }
       catch (itk::ExceptionObject & error)
       {
-        itkGenericExceptionMacro("Error writing image file: " << writer->GetFileName() << "ITK Exception: " << error);
+        itkGenericExceptionMacro("Error writing image file: " << writer->GetFileName() << " ITK Exception: " << error);
       }
     });
 
@@ -86,7 +86,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       }
       catch (itk::ExceptionObject & error)
       {
-        itkGenericExceptionMacro("Error writing image file: " << writer->GetFileName() << "ITK Exception: " << error);
+        itkGenericExceptionMacro("Error writing image file: " << writer->GetFileName() << " ITK Exception: " << error);
       }
     });
 
