@@ -184,13 +184,13 @@ protected:
   /** The destructor. */
   ~AffineDTITransformElastix() override = default;
 
+private:
+  elxOverrideGetSelfMacro;
+
   /** Try to read the CenterOfRotationPoint from the transform parameter file
    * The CenterOfRotationPoint is already in world coordinates. */
   bool
   ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
-
-private:
-  elxOverrideGetSelfMacro;
 
   /** Initialize Transform.
    * \li Set all parameters to zero.
