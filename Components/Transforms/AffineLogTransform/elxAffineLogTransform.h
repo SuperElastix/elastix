@@ -153,7 +153,7 @@ protected:
 
   /** Try to read the CenterOfRotationPoint from the transform parameter file
    * The CenterOfRotationPoint is already in world coordinates. */
-  virtual bool
+  bool
   ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
 
 private:
