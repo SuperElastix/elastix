@@ -117,14 +117,14 @@ GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension);
  */
 template <class ModelConfiguration, class ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputs(const std::vector<ModelConfiguration> &                                  modelConfig,
-                const std::vector<ImagePointType> &                                      fixedPoints,
-                const std::vector<std::vector<std::vector<std::vector<float>>>> &        patchIndex,
-                const std::vector<torch::Tensor>                                         subsetsOfFeatures,
-                torch::Device                                                            gpu,
+GenerateOutputs(const std::vector<ModelConfiguration> &                                     modelConfig,
+                const std::vector<ImagePointType> &                                         fixedPoints,
+                const std::vector<std::vector<std::vector<std::vector<float>>>> &           patchIndex,
+                const std::vector<torch::Tensor>                                            subsetsOfFeatures,
+                torch::Device                                                               gpu,
                 const std::function<typename torch::Tensor(const ImagePointType &,
                                                            const std::vector<std::vector<float>> &,
-                                                           const std::vector<long> &)> & evaluator);
+                                                           const std::vector<int64_t> &)> & evaluator);
 
 /**
  * \brief Computes both feature outputs and their spatial Jacobians.
@@ -146,7 +146,7 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
                            const std::function<typename torch::Tensor(const ImagePointType &,
                                                                       torch::Tensor &,
                                                                       const std::vector<std::vector<float>> &,
-                                                                      const std::vector<long> &,
+                                                                      const std::vector<int64_t> &,
                                                                       int)> &                evaluator);
 
 } // namespace ImpactTensorUtils

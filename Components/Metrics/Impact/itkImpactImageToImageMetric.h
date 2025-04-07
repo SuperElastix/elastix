@@ -185,25 +185,25 @@ public:
    */
   struct ModelConfiguration
   {
-    std::string        m_modelPath;
-    unsigned int       m_dimension;
-    unsigned int       m_numberOfChannels;
-    std::vector<long>  m_patchSize;
-    std::vector<float> m_voxelSize;
-    std::vector<bool>  m_layersMask;
+    std::string          m_modelPath;
+    unsigned int         m_dimension;
+    unsigned int         m_numberOfChannels;
+    std::vector<int64_t> m_patchSize;
+    std::vector<float>   m_voxelSize;
+    std::vector<bool>    m_layersMask;
 
     std::shared_ptr<torch::jit::script::Module> m_model;
 
     std::vector<std::vector<float>>                        m_patchIndex;
     std::vector<std::vector<torch::indexing::TensorIndex>> m_centersIndexLayers;
 
-    ModelConfiguration(std::string        modelPath,
-                       unsigned int       dimension,
-                       unsigned int       numberOfChannels,
-                       std::vector<long>  patchSize,
-                       std::vector<float> voxelSize,
-                       std::vector<bool>  layersMask,
-                       bool               is_static)
+    ModelConfiguration(std::string          modelPath,
+                       unsigned int         dimension,
+                       unsigned int         numberOfChannels,
+                       std::vector<int64_t> patchSize,
+                       std::vector<float>   voxelSize,
+                       std::vector<bool>    layersMask,
+                       bool                 is_static)
       : m_modelPath(modelPath)
       , m_dimension(dimension)
       , m_numberOfChannels(numberOfChannels)
@@ -221,9 +221,9 @@ public:
         this->m_patchIndex.clear();
         if (this->m_patchSize.size() == 2)
         {
-          for (int y = 0; y < this->m_patchSize[1]; ++y)
+          for (size_t y = 0; y < this->m_patchSize[1]; ++y)
           {
-            for (int x = 0; x < this->m_patchSize[0]; ++x)
+            for (size_t x = 0; x < this->m_patchSize[0]; ++x)
             {
               this->m_patchIndex.push_back({ (x - this->m_patchSize[0] / 2) * this->m_voxelSize[0],
                                              (y - this->m_patchSize[1] / 2) * this->m_voxelSize[1] });
@@ -232,11 +232,11 @@ public:
         }
         else
         {
-          for (int z = 0; z < this->m_patchSize[2]; ++z)
+          for (size_t z = 0; z < this->m_patchSize[2]; ++z)
           {
-            for (int y = 0; y < this->m_patchSize[1]; ++y)
+            for (size_t y = 0; y < this->m_patchSize[1]; ++y)
             {
-              for (int x = 0; x < this->m_patchSize[0]; ++x)
+              for (size_t x = 0; x < this->m_patchSize[0]; ++x)
               {
                 this->m_patchIndex.push_back({ (x - this->m_patchSize[0] / 2) * this->m_voxelSize[0],
                                                (y - this->m_patchSize[1] / 2) * this->m_voxelSize[1],
@@ -370,7 +370,7 @@ protected:
     set_nb_parameters(int nb_parameters)
     {
       this->m_nb_parameters = nb_parameters;
-      for (int l = 0; l < this->m_layersWeight.size(); l++)
+      for (size_t l = 0; l < this->m_layersWeight.size(); ++l)
       {
         this->m_losses[l]->set_nb_parameters(nb_parameters);
       }
@@ -390,7 +390,7 @@ protected:
     GetValue()
     {
       MeasureType value = MeasureType{};
-      for (int l = 0; l < this->m_layersWeight.size(); l++)
+      for (size_t l = 0; l < this->m_layersWeight.size(); ++l)
       {
         value +=
           this->m_layersWeight[l] * this->m_losses[l]->GetValue(static_cast<double>(this->m_numberOfPixelsCounted));
@@ -403,11 +403,11 @@ protected:
     {
       DerivativeType derivative = DerivativeType(this->m_nb_parameters);
       derivative.Fill(DerivativeValueType{});
-      for (int l = 0; l < this->m_layersWeight.size(); l++)
+      for (size_t l = 0; l < this->m_layersWeight.size(); ++l)
       {
         torch::Tensor d = this->m_layersWeight[l] *
                           this->m_losses[l]->GetDerivative(static_cast<double>(this->m_numberOfPixelsCounted));
-        for (int i = 0; i < d.size(0); i++)
+        for (size_t i = 0; i < d.size(0); ++i)
         {
           derivative[i] += d[i].item<float>();
         }
@@ -422,7 +422,7 @@ protected:
       if (lossPerThreadStructOther)
       {
         m_numberOfPixelsCounted += lossPerThreadStructOther->m_numberOfPixelsCounted;
-        for (int i = 0; i < lossPerThreadStructOther->m_losses.size(); i++)
+        for (size_t i = 0; i < lossPerThreadStructOther->m_losses.size(); ++i)
         {
           *m_losses[i] += *lossPerThreadStructOther->m_losses[i];
         }
@@ -584,7 +584,7 @@ private:
   torch::Tensor
   EvaluateFixedImagesPatchValue(const FixedImagePointType &             fixedImageCenterCoordinate,
                                 const std::vector<std::vector<float>> & patchIndex,
-                                const std::vector<long> &               patchSize) const;
+                                const std::vector<int64_t> &            patchSize) const;
 
   /**
    * Extracts a moving image patch tensor (intensity values) corresponding to a fixed point,
@@ -593,7 +593,7 @@ private:
   torch::Tensor
   EvaluateMovingImagesPatchValue(const FixedImagePointType &             fixedImageCenterCoordinate,
                                  const std::vector<std::vector<float>> & patchIndex,
-                                 const std::vector<long> &               patchSize) const;
+                                 const std::vector<int64_t> &            patchSize) const;
 
   /**
    * Extracts moving image patch values *and* computes the spatial Jacobians w.r.t. image coordinates.
@@ -603,7 +603,7 @@ private:
   EvaluateMovingImagesPatchValuesAndJacobians(const FixedImagePointType &             fixedImageCenterCoordinate,
                                               torch::Tensor &                         movingImagesPatchesJacobians,
                                               const std::vector<std::vector<float>> & patchIndex,
-                                              const std::vector<long> &               patchSize,
+                                              const std::vector<int64_t> &            patchSize,
                                               int                                     s) const;
 
   /**

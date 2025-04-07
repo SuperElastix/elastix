@@ -53,9 +53,9 @@ ImageToTensor(typename TImage::ConstPointer                                     
     fixedImagesPatchValues.resize(newSize[0] * newSize[1], 0.0f);
 // For each target voxel, compute physical coordinates and interpolate intensity
 #pragma omp parallel for collapse(2) schedule(dynamic)
-    for (int y = 0; y < newSize[1]; ++y)
+    for (size_t y = 0; y < newSize[1]; ++y)
     {
-      for (int x = 0; x < newSize[0]; ++x)
+      for (size_t x = 0; x < newSize[0]; ++x)
       {
         unsigned int               index = y * newSize[0] + x;
         typename TImage::PointType imagePoint;
@@ -79,11 +79,11 @@ ImageToTensor(typename TImage::ConstPointer                                     
     fixedImagesPatchValues.resize(newSize[0] * newSize[1] * newSize[2], 0.0f);
 // For each target voxel, compute physical coordinates and interpolate intensity
 #pragma omp parallel for collapse(3) schedule(dynamic)
-    for (int z = 0; z < newSize[2]; ++z)
+    for (size_t z = 0; z < newSize[2]; ++z)
     {
-      for (int y = 0; y < newSize[1]; ++y)
+      for (size_t y = 0; y < newSize[1]; ++y)
       {
-        for (int x = 0; x < newSize[0]; ++x)
+        for (size_t x = 0; x < newSize[0]; ++x)
         {
           unsigned int               index = z * newSize[1] * newSize[0] + y * newSize[0] + x;
           typename TImage::PointType imagePoint;
@@ -136,7 +136,7 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   itk::Vector<float, Dimension>             spacing;
   itk::Matrix<double, Dimension, Dimension> direction;
 
-  for (int s = 0; s < Dimension; s++)
+  for (size_t s = 0; s < Dimension; ++s)
   {
     size[s] = layers.size(Dimension - 1 - s);
   }
@@ -145,14 +145,14 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   itkImage->SetVectorLength(numberOfChannels);
 
   auto oldSize = image->GetLargestPossibleRegion().GetSize();
-  for (int i = 0; i < Dimension; i++)
+  for (size_t i = 0; i < Dimension; ++i)
   {
     origin[i] = image->GetOrigin()[i];
     spacing[i] = oldSize[i] * image->GetSpacing()[i] / size[i];
   }
-  for (unsigned int i = 0; i < Dimension; ++i)
+  for (size_t i = 0; i < Dimension; ++i)
   {
-    for (unsigned int j = 0; j < Dimension; ++j)
+    for (size_t j = 0; j < Dimension; ++j)
     {
       direction[i][j] = image->GetDirection()[i][j];
     }
@@ -171,13 +171,13 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   if (Dimension == 2)
   {
 #pragma omp parallel for collapse(2) schedule(dynamic)
-    for (int x = 0; x < size[1]; ++x)
+    for (size_t x = 0; x < size[1]; ++x)
     {
-      for (int y = 0; y < size[0]; ++y)
+      for (size_t y = 0; y < size[0]; ++y)
       {
         const float *                    pixelPtr = layersData + x * rowStride + y * numberOfChannels;
         itk::VariableLengthVector<float> variableLengthVector(numberOfChannels);
-        for (unsigned int i = 0; i < numberOfChannels; i++)
+        for (size_t i = 0; i < numberOfChannels; ++i)
         {
           variableLengthVector[i] = pixelPtr[i];
         }
@@ -191,15 +191,15 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   else
   {
 #pragma omp parallel for collapse(3) schedule(dynamic)
-    for (int x = 0; x < size[2]; ++x)
+    for (size_t x = 0; x < size[2]; ++x)
     {
-      for (int y = 0; y < size[1]; ++y)
+      for (size_t y = 0; y < size[1]; ++y)
       {
-        for (int z = 0; z < size[0]; ++z)
+        for (size_t z = 0; z < size[0]; ++z)
         {
           const float * pixelPtr = layersData + x * sliceStride + y * rowStride + z * numberOfChannels;
           itk::VariableLengthVector<float> variableLengthVector(numberOfChannels);
-          for (unsigned int i = 0; i < numberOfChannels; i++)
+          for (size_t i = 0; i < numberOfChannels; ++i)
           {
             variableLengthVector[i] = pixelPtr[i]; // layers[x][y][z][i].item<float>();
           }
@@ -221,7 +221,7 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
 void
 generateCartesianProduct(const std::vector<std::vector<int>> & startIndex,
                          std::vector<int> &                    current,
-                         size_t                                depth,
+                         unsigned int                          depth,
                          std::vector<std::vector<int>> &       result)
 {
   // Recursive function to compute the Cartesian product of multiple 1D index sets
@@ -242,7 +242,7 @@ generateCartesianProduct(const std::vector<std::vector<int>> & startIndex,
  * ******************* getPatch ***********************
  */
 torch::Tensor
-getPatch(std::vector<int> slice, std::vector<long> patchSize, torch::Tensor input)
+getPatch(std::vector<int> slice, std::vector<int64_t> patchSize, torch::Tensor input)
 {
   torch::Tensor                          patch;
   std::vector<int64_t>                   padding;
@@ -336,7 +336,7 @@ GetFeaturesMaps(
       {
         std::string result;
 
-        for (int i = 0; i < config.m_voxelSize.size(); ++i)
+        for (size_t i = 0; i < config.m_voxelSize.size(); ++i)
         {
           if (i > 0)
             result += "_";
@@ -352,16 +352,16 @@ GetFeaturesMaps(
       channelRepeat[0] = config.m_numberOfChannels;
 
       std::vector<std::vector<int>> inputStartIndices(config.m_dimension);
-      std::vector<long>             patchSize = config.m_patchSize;
-      for (int dim = 0; dim < config.m_dimension; dim++)
+      std::vector<int64_t>          patchSize = config.m_patchSize;
+      for (size_t dim = 0; dim < config.m_dimension; ++dim)
       {
         if (config.m_patchSize[dim] <= 0)
         {
           patchSize[dim] = inputTensor.size(inputTensor.dim() - config.m_dimension + dim);
         }
-        for (int step = 0; step < std::ceil(inputTensor.size(inputTensor.dim() - config.m_dimension + dim) /
-                                            static_cast<float>(patchSize[dim]));
-             step++)
+        for (size_t step = 0; step < std::ceil(inputTensor.size(inputTensor.dim() - config.m_dimension + dim) /
+                                               static_cast<float>(patchSize[dim]));
+             ++step)
         {
           inputStartIndices[dim].push_back(patchSize[dim] * step);
         }
@@ -375,9 +375,9 @@ GetFeaturesMaps(
       std::vector<std::vector<torch::indexing::TensorIndex>> cutting;
       if (config.m_dimension < inputTensor.dim())
       {
-        for (int depthIndex = 0; depthIndex < inputTensor.size(0); depthIndex++)
+        for (int64_t depthIndex = 0; depthIndex < inputTensor.size(0); ++depthIndex)
         {
-          for (int sliceIndex = 0; sliceIndex < inputSlices.size(); sliceIndex++)
+          for (size_t sliceIndex = 0; sliceIndex < inputSlices.size(); ++sliceIndex)
           {
             torch::Tensor inputPatch = getPatch(inputSlices[sliceIndex], patchSize, inputTensor[depthIndex])
                                          .unsqueeze(0)
@@ -391,7 +391,7 @@ GetFeaturesMaps(
             {
               itkGenericExceptionMacro("Mismatch between layersMask size and model output layers.");
             }
-            for (size_t layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); layerIndex++)
+            for (size_t layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); ++layerIndex)
             {
               if (config.m_layersMask[layerIndex])
               {
@@ -404,7 +404,7 @@ GetFeaturesMaps(
                   cuttingLoc.push_back(torch::indexing::Slice());
                   cuttingLoc.push_back(torch::indexing::Slice());
 
-                  for (int r = 0; r < patchSize.size(); r++)
+                  for (size_t r = 0; r < patchSize.size(); ++r)
                   {
                     cuttingLoc.push_back(torch::indexing::Slice(
                       0, layerPatch.size(r + 1) / static_cast<double>(patchSize[r]) * inputTensor.size(r + 1)));
@@ -414,13 +414,13 @@ GetFeaturesMaps(
 
 
                   std::vector<std::vector<int>> layerStartIndices(config.m_dimension);
-                  std::vector<long>             layerSize(config.m_dimension + 2);
+                  std::vector<int64_t>          layerSize(config.m_dimension + 2);
                   layerSize[0] = layerPatch.size(0);
                   layerSize[1] = inputTensor.size(0);
 
-                  for (int it1 = 0; it1 < config.m_dimension; it1++)
+                  for (size_t it1 = 0; it1 < config.m_dimension; ++it1)
                   {
-                    for (int it2 = 0; it2 < inputStartIndices[it1].size(); it2++)
+                    for (size_t it2 = 0; it2 < inputStartIndices[it1].size(); ++it2)
                     {
                       layerStartIndices[it1].push_back(layerPatch.size(it1 + 1) * it2);
                     }
@@ -451,7 +451,7 @@ GetFeaturesMaps(
       }
       else
       {
-        for (int sliceIndex = 0; sliceIndex < inputSlices.size(); sliceIndex++)
+        for (size_t sliceIndex = 0; sliceIndex < inputSlices.size(); ++sliceIndex)
         {
           torch::Tensor inputPatch = getPatch(inputSlices[sliceIndex], patchSize, inputTensor)
                                        .unsqueeze(0)
@@ -465,7 +465,7 @@ GetFeaturesMaps(
           {
             itkGenericExceptionMacro("Mismatch between layersMask size and model output layers.");
           }
-          for (size_t layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); layerIndex++)
+          for (size_t layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); ++layerIndex)
           {
             if (config.m_layersMask[layerIndex])
             {
@@ -476,7 +476,7 @@ GetFeaturesMaps(
               {
                 std::vector<torch::indexing::TensorIndex> cuttingLoc;
                 cuttingLoc.push_back(torch::indexing::Slice());
-                for (int r = 0; r < patchSize.size(); r++)
+                for (size_t r = 0; r < patchSize.size(); ++r)
                 {
                   cuttingLoc.push_back(torch::indexing::Slice(
                     0, layerPatch.size(r + 1) / static_cast<double>(patchSize[r]) * inputTensor.size(r)));
@@ -486,11 +486,11 @@ GetFeaturesMaps(
 
 
                 std::vector<std::vector<int>> layerStartIndices(config.m_dimension);
-                std::vector<long>             layerSize(config.m_dimension + 1);
+                std::vector<int64_t>          layerSize(config.m_dimension + 1);
                 layerSize[0] = layerPatch.size(0);
-                for (int it1 = 0; it1 < config.m_dimension; it1++)
+                for (size_t it1 = 0; it1 < config.m_dimension; ++it1)
                 {
-                  for (int it2 = 0; it2 < inputStartIndices[it1].size(); it2++)
+                  for (size_t it2 = 0; it2 < inputStartIndices[it1].size(); ++it2)
                   {
                     layerStartIndices[it1].push_back(layerPatch.size(it1 + 1) * it2);
                   }
@@ -522,7 +522,7 @@ GetFeaturesMaps(
         }
       }
       unsigned int a = 0;
-      for (size_t i = 0; i < layers.size(); i++)
+      for (size_t i = 0; i < layers.size(); ++i)
       {
         torch::Tensor result = layers[i].index(cutting[i]);
         if (pca[i] > 0)
@@ -669,9 +669,9 @@ GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension)
     MatrixType                      matrix = rotationZ * rotationY * rotationX;
     std::vector<std::vector<float>> patchIndex;
 
-    for (int y = 0; y < modelConfiguration.m_patchSize[1]; ++y)
+    for (size_t y = 0; y < modelConfiguration.m_patchSize[1]; ++y)
     {
-      for (int x = 0; x < modelConfiguration.m_patchSize[0]; ++x)
+      for (size_t x = 0; x < modelConfiguration.m_patchSize[0]; ++x)
       {
         Point3D point({ (x - modelConfiguration.m_patchSize[0] / 2) * modelConfiguration.m_voxelSize[0],
                         (y - modelConfiguration.m_patchSize[1] / 2) * modelConfiguration.m_voxelSize[1],
@@ -693,14 +693,14 @@ GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension)
  */
 template <typename ModelConfiguration, typename ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputs(const std::vector<ModelConfiguration> &                                  modelConfig,
-                const std::vector<ImagePointType> &                                      fixedPoints,
-                const std::vector<std::vector<std::vector<std::vector<float>>>> &        patchIndex,
-                const std::vector<torch::Tensor>                                         subsetsOfFeatures,
-                torch::Device                                                            gpu,
+GenerateOutputs(const std::vector<ModelConfiguration> &                                     modelConfig,
+                const std::vector<ImagePointType> &                                         fixedPoints,
+                const std::vector<std::vector<std::vector<std::vector<float>>>> &           patchIndex,
+                const std::vector<torch::Tensor>                                            subsetsOfFeatures,
+                torch::Device                                                               gpu,
                 const std::function<typename torch::Tensor(const ImagePointType &,
                                                            const std::vector<std::vector<float>> &,
-                                                           const std::vector<long> &)> & evaluator)
+                                                           const std::vector<int64_t> &)> & evaluator)
 {
 
   std::vector<torch::Tensor> outputsTensor;
@@ -766,7 +766,7 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
                            const std::function<typename torch::Tensor(const ImagePointType &,
                                                                       torch::Tensor &,
                                                                       const std::vector<std::vector<float>> &,
-                                                                      const std::vector<long> &,
+                                                                      const std::vector<int64_t> &,
                                                                       int)> &                evaluator)
 {
   std::vector<torch::Tensor> layersJacobian;
@@ -788,7 +788,7 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
                                        .unsqueeze(1)
                                        .clone();
     torch::Tensor imagesPatchesJacobians =
-      torch::zeros({ nbSample, static_cast<long>(patchIndex[i][0].size()), dimension }, torch::kFloat);
+      torch::zeros({ nbSample, static_cast<int64_t>(patchIndex[i][0].size()), dimension }, torch::kFloat);
 
     for (size_t s = 0; s < nbSample; ++s)
     {

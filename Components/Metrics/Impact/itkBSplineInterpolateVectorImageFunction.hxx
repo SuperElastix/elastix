@@ -69,7 +69,7 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::EvaluateDerivative
   for (size_t i = 0; i < subsetOfFeatures.size(); ++i)
   {
     dev = this->m_Interpolators[subsetOfFeatures[i]]->EvaluateDerivative(point);
-    for (unsigned int it = 0; it < TImage::ImageDimension; it++)
+    for (unsigned int it = 0; it < TImage::ImageDimension; ++it)
     {
       derivative[i * TImage::ImageDimension + it] = static_cast<float>(dev[it]);
     }
