@@ -211,7 +211,8 @@ public:
       , m_layersMask(layersMask)
       , m_patchSize(patchSize)
     {
-      this->m_model = std::make_shared<torch::jit::script::Module>(torch::jit::load(this->m_modelPath));
+      this->m_model =
+        std::make_shared<torch::jit::script::Module>(torch::jit::load(this->m_modelPath, torch::Device(torch::kCPU)));
       this->m_model->eval();
       this->m_model->to(torch::kFloat);
       if (!is_static)

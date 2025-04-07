@@ -377,7 +377,8 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
     }
     catch (const c10::Error & e)
     {
-      itkExceptionMacro("ERROR: the fixed model are not loaded from this file : " << modelsPathVec[i] << ".");
+      itkExceptionMacro("ERROR: the model are not loaded from this file: " << modelsPathVec[i]
+                                                                           << ". Torch error message:" << e.what());
     }
   }
   return modelsConfiguration;

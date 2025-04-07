@@ -20,8 +20,6 @@
 #define _ImpactTensorUtils_hxx
 
 #include "ImpactTensorUtils.h"
-#include <cuda_runtime.h>
-#include <c10/cuda/CUDACachingAllocator.h>
 #include "elxlog.h"
 #include <ATen/autocast_mode.h>
 
@@ -246,21 +244,19 @@ generateCartesianProduct(const std::vector<std::vector<int>> & startIndex,
 torch::Tensor
 getPatch(std::vector<int> slice, std::vector<long> patchSize, torch::Tensor input)
 {
-  torch::Tensor        patch;
-  std::vector<int64_t> padding;
-  if (input.dim() == 2)
+  torch::Tensor                          patch;
+  std::vector<int64_t>                   padding;
+  std::vector<at::indexing::TensorIndex> indices = {
+    torch::indexing::Slice(static_cast<int>(slice[0]), static_cast<int>(slice[0] + patchSize[0])),
+    torch::indexing::Slice(static_cast<int>(slice[1]), static_cast<int>(slice[1] + patchSize[1]))
+  };
+
+  if (input.dim() == 3)
   {
-    patch =
-      input.index({ torch::indexing::Slice(static_cast<int>(slice[0]), static_cast<int>(slice[0] + patchSize[0])),
-                    torch::indexing::Slice(static_cast<int>(slice[1]), static_cast<int>(slice[1] + patchSize[1])) });
+    indices.push_back(torch::indexing::Slice(static_cast<int>(slice[2]), static_cast<int>(slice[2] + patchSize[2])));
   }
-  else
-  {
-    patch =
-      input.index({ torch::indexing::Slice(static_cast<int>(slice[0]), static_cast<int>(slice[0] + patchSize[0])),
-                    torch::indexing::Slice(static_cast<int>(slice[1]), static_cast<int>(slice[1] + patchSize[1])),
-                    torch::indexing::Slice(static_cast<int>(slice[2]), static_cast<int>(slice[2] + patchSize[2])) });
-  }
+  patch = input.index(indices);
+
   // Pad the patch if it's smaller than the expected size
   for (int i = input.dim() - 1; i >= 0; i--)
   {
@@ -506,33 +502,20 @@ GetFeaturesMaps(
 
                 layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, torch::kFloat));
               }
-              if (layerPatch.dim() == 3)
+              const auto & slice = layersSlices[realLayerIndex][sliceIndex];
+
+
+              std::vector<at::indexing::TensorIndex> slices = {
+                torch::indexing::Slice(), // batch/channel dimension
+                torch::indexing::Slice(static_cast<int>(slice[0]), static_cast<int>(slice[0] + layerPatch.size(1))),
+                torch::indexing::Slice(static_cast<int>(slice[1]), static_cast<int>(slice[1] + layerPatch.size(2)))
+              };
+              if (layerPatch.dim() == 4)
               {
-                layers[realLayerIndex].index_put_(
-                  { torch::indexing::Slice(),
-                    torch::indexing::Slice(
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0]),
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0] + layerPatch.size(1))),
-                    torch::indexing::Slice(
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1]),
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1] + layerPatch.size(2))) },
-                  layerPatch);
+                slices.push_back(
+                  torch::indexing::Slice(static_cast<int>(slice[2]), static_cast<int>(slice[2] + layerPatch.size(3))));
               }
-              else
-              {
-                layers[realLayerIndex].index_put_(
-                  { torch::indexing::Slice(),
-                    torch::indexing::Slice(
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0]),
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][0] + layerPatch.size(1))),
-                    torch::indexing::Slice(
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1]),
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][1] + layerPatch.size(2))),
-                    torch::indexing::Slice(
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][2]),
-                      static_cast<int>(layersSlices[realLayerIndex][sliceIndex][2] + layerPatch.size(3))) },
-                  layerPatch);
-              }
+              layers[realLayerIndex].index_put_(slices, layerPatch);
               realLayerIndex++;
             }
           }
