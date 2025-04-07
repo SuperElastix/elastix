@@ -31,7 +31,9 @@ if(ELASTIX_USE_OPENCL)
   list(APPEND _GPU_depends ITKGPUCommon)
 endif()
 
-find_package(Torch REQUIRED)
+# Propagate Torch_DIR to all subdirectories so that find_package(Torch REQUIRED) works in Components/Metrics/Impact/CMakeLists.txt
+set(Torch_DIR "${Torch_DIR}" CACHE PATH "Path to Torch CMake files")
+
 # Find ITK.
 find_package(ITK 5.4.1 REQUIRED COMPONENTS
     ITKCommon
