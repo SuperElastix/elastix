@@ -46,12 +46,12 @@ jobs:
     displayName: 'Make build directories'
 
   - script: |
-      curl -L "%LIBTORCH_BINARY_URL%" -o "$(Agent.BuildDirectory)/libtorch/libtorch.zip"
+      curl -L "%LIBTORCH_BINARY_URL%" -o "$(Agent.BuildDirectory)/libtorch.zip"
     displayName: 'Download LibTorch CPU'
   - task: ExtractFiles@1
     displayName: 'Extract LibTorch'
     inputs:
-      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch/libtorch.zip'
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
       destinationFolder: '$(Agent.BuildDirectory)/libtorch'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
@@ -103,17 +103,18 @@ jobs:
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
   - script: |
-      curl -L $(LIBTORCH_BINARY_URL) -o $(Agent.BuildDirectory)/libtorch/libtorch.zip
+      curl -L $(LIBTORCH_BINARY_URL) -o $(Agent.BuildDirectory)/libtorch.zip
     displayName: 'Download LibTorch CPU'
   - task: ExtractFiles@1
     displayName: 'Extract LibTorch'
     inputs:
-      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch/libtorch.zip'
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
       destinationFolder: '$(Agent.BuildDirectory)/libtorch'
   - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
+      mkdir "$(Agent.BuildDirectory)/libtorch"
     displayName: 'Make build directories'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
@@ -165,17 +166,18 @@ jobs:
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
   - script: |
-      curl -L $(LIBTORCH_BINARY_URL) -o $(Agent.BuildDirectory)/libtorch/libtorch.zip
+      curl -L $(LIBTORCH_BINARY_URL) -o $(Agent.BuildDirectory)/libtorch.zip
     displayName: 'Download LibTorch CPU'
   - task: ExtractFiles@1
     displayName: 'Extract LibTorch'
     inputs:
-      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch/libtorch.zip'
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
       destinationFolder: '$(Agent.BuildDirectory)/libtorch'
   - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
+      mkdir "$(Agent.BuildDirectory)/libtorch"
     displayName: 'Make build directories'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
