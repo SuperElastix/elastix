@@ -535,7 +535,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
     subsetsOfFeatures,
     this->GetGPU(),
     std::function<typename torch::Tensor(
-      const MovingImagePointType &, const std::vector<std::vector<float>> &, const std::vector<long> &)>(
+      const MovingImagePointType &, const std::vector<std::vector<float>> &, const std::vector<int64_t> &)>(
       [this](const MovingImagePointType &            fixedImageCenterCoordinateLoc,
              const std::vector<std::vector<float>> & patchIndexLoc,
              const std::vector<int64_t> &            patchSizeLoc) {
