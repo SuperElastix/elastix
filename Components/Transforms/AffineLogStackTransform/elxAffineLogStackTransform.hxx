@@ -181,9 +181,9 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   InputPointType                 TransformedCenterOfRotation{};
   ReducedDimensionInputPointType RDTransformedCenterOfRotation{};
 
-  bool     centerGivenAsIndex = true;
-  bool     centerGivenAsPoint = true;
-  SizeType fixedImageSize =
+  bool       centerGivenAsIndex = true;
+  const bool centerGivenAsPoint = ReadCenterOfRotationPoint(RDcenterOfRotationPoint);
+  SizeType   fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
@@ -193,13 +193,6 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
     if (!foundI)
     {
       centerGivenAsIndex = false;
-    }
-
-    /** Check COR point: Returns zero when parameter was in the parameter file. */
-    bool foundP = configuration.ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
-    if (!foundP)
-    {
-      centerGivenAsPoint = false;
     }
   } // end loop over SpaceDimension
 
