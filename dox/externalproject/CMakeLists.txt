@@ -24,3 +24,19 @@ target_include_directories(elastix_translation_example
 
 target_link_libraries(elastix_translation_example
   PRIVATE ${ITK_LIBRARIES} elastix_lib)
+
+# Build the example executable using Impact metric
+add_executable(elastix_impact_metric_example ElastixImpactMetricExample.cxx)
+
+set_property(TARGET elastix_impact_metric_example PROPERTY CXX_STANDARD 17)
+
+target_include_directories(elastix_impact_metric_example
+  PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
+
+target_link_libraries(elastix_impact_metric_example
+  PRIVATE ${ITK_LIBRARIES} elastix_lib)
+
+add_custom_command(TARGET elastix_impact_metric_example POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  ${CMAKE_CURRENT_SOURCE_DIR}/Identity_2D.pt
+  $<TARGET_FILE_DIR:elastix_impact_metric_example>)
