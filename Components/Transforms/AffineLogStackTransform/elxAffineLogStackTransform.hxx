@@ -167,6 +167,8 @@ template <typename TElastix>
 void
 AffineLogStackTransform<TElastix>::InitializeTransform()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Set all parameters to zero (no rotations, no translation). */
   m_DummySubTransform->SetIdentity();
 
@@ -183,8 +185,6 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   bool     centerGivenAsPoint = true;
   SizeType fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-
-  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
 
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
