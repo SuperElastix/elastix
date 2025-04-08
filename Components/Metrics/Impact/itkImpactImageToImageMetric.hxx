@@ -114,7 +114,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
   {
     unsigned int level = this->GetCurrentLevel();
     using WriterType = itk::ImageFileWriter<FeaturesImageType>;
-    for (size_t i = 0; i < movingFeaturesMaps.size(); ++i)
+    for (int i = 0; i < movingFeaturesMaps.size(); ++i)
     {
       typename WriterType::Pointer writer = WriterType::New();
 
@@ -128,7 +128,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       catch (itk::ExceptionObject & error)
       {}
     }
-    for (size_t i = 0; i < fixedFeaturesMaps.size(); ++i)
+    for (int i = 0; i < fixedFeaturesMaps.size(); ++i)
     {
       typename WriterType::Pointer writer = WriterType::New();
 
@@ -187,7 +187,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
   {
     unsigned int level = this->GetCurrentLevel();
 
-    for (size_t i = 0; i < movingFeaturesMaps.size(); ++i)
+    for (int i = 0; i < movingFeaturesMaps.size(); ++i)
     {
       typename WriterType::Pointer writer = WriterType::New();
 
@@ -227,7 +227,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
                         << ", movingFeaturesMaps.size() = " << this->movingFeaturesMaps.size());
     }
 
-    for (size_t i = 0; i < this->fixedFeaturesMaps.size(); ++i)
+    for (int i = 0; i < this->fixedFeaturesMaps.size(); ++i)
     {
       if (this->fixedFeaturesMaps[i].m_featuresMaps->GetNumberOfComponentsPerPixel() !=
           this->movingFeaturesMaps[i].m_featuresMaps->GetNumberOfComponentsPerPixel())
@@ -239,7 +239,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
       }
     }
 
-    for (size_t i = 0; i < this->fixedFeaturesMaps.size(); ++i)
+    for (int i = 0; i < this->fixedFeaturesMaps.size(); ++i)
     {
       int numComponents = this->fixedFeaturesMaps[i].m_featuresMaps->GetNumberOfComponentsPerPixel();
       this->m_SubsetFeatures[i] = std::clamp<unsigned int>(this->GetSubsetFeatures()[i], 1, numComponents);
@@ -260,7 +260,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
                                                                << ", moving = " << movingOutputsTensor.size());
     }
 
-    for (size_t i = 0; i < fixedOutputsTensor.size(); ++i)
+    for (int i = 0; i < fixedOutputsTensor.size(); ++i)
     {
       if (fixedOutputsTensor[i].size(0) != movingOutputsTensor[i].size(0))
       {
@@ -270,7 +270,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
       }
     }
 
-    for (size_t i = 0; i < fixedOutputsTensor.size(); ++i)
+    for (int i = 0; i < fixedOutputsTensor.size(); ++i)
     {
       int numComponents = fixedOutputsTensor[i].size(1);
       this->m_SubsetFeatures[i] = std::clamp<unsigned int>(this->m_SubsetFeatures[i], 1, numComponents);
@@ -319,9 +319,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::SampleCheck(
 {
   FixedImagePointType  fixedImagePoint(fixedImageCenterCoordinate);
   MovingImagePointType mappedPoint;
-  for (size_t i = 0; i < patchIndex.size(); ++i)
+  for (int i = 0; i < patchIndex.size(); ++i)
   {
-    for (size_t dim = 0; dim < patchIndex[i].size(); ++dim)
+    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
     {
       fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
     }
@@ -359,10 +359,10 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
   std::vector<ImagePointType> fixedPoints;
 
   std::vector<bool> pointsMask(fixedPointsTmp.size(), true);
-  for (size_t i = 0; i < modelConfig.size(); ++i)
+  for (int i = 0; i < modelConfig.size(); ++i)
   {
     patchIndex[i] = std::vector<std::vector<std::vector<float>>>();
-    for (size_t it = 0; it < fixedPointsTmp.size(); ++it)
+    for (int it = 0; it < fixedPointsTmp.size(); ++it)
     {
       std::vector<std::vector<float>> patch =
         ImpactTensorUtils::GetPatchIndex<ModelConfiguration>(modelConfig[i], FixedImageDimension);
@@ -376,7 +376,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
       }
     }
   }
-  for (size_t it = 0; it < fixedPointsTmp.size(); ++it)
+  for (int it = 0; it < fixedPointsTmp.size(); ++it)
   {
     if (pointsMask[it])
     {
@@ -399,9 +399,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateFixedImagesPatchVal
   std::vector<float> fixedImagesPatchValues(patchIndex.size(), 0.0f);
 
   FixedImagePointType fixedImagePoint(fixedImageCenterCoordinate);
-  for (size_t i = 0; i < patchIndex.size(); ++i)
+  for (int i = 0; i < patchIndex.size(); ++i)
   {
-    for (size_t dim = 0; dim < patchIndex[i].size(); ++dim)
+    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
     {
       fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
     }
@@ -426,9 +426,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchVa
   RealType           movingImageValue;
 
   FixedImagePointType fixedImagePoint(fixedImageCenterCoordinate);
-  for (size_t i = 0; i < patchIndex.size(); ++i)
+  for (int i = 0; i < patchIndex.size(); ++i)
   {
-    for (size_t dim = 0; dim < patchIndex[i].size(); ++dim)
+    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
     {
       fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
     }
@@ -461,9 +461,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchVa
   MovingImageDerivativeType movingImageJacobian;
 
   FixedImagePointType fixedImagePoint(fixedImageCenterCoordinate);
-  for (size_t i = 0; i < patchIndex.size(); ++i)
+  for (int i = 0; i < patchIndex.size(); ++i)
   {
-    for (size_t dim = 0; dim < patchIndex[i].size(); ++dim)
+    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
     {
       fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
     }
@@ -506,7 +506,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
 
   std::vector<torch::Tensor> subsetsOfFeatures(this->features_indexes.size());
 
-  for (size_t i = 0; i < this->features_indexes.size(); ++i)
+  for (int i = 0; i < this->features_indexes.size(); ++i)
   {
     std::vector<int> features_index = this->features_indexes[i];
     std::shuffle(features_index.begin(), features_index.end(), this->g);
@@ -542,7 +542,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
         return this->EvaluateMovingImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
       }));
 
-  for (size_t i = 0; i < fixedOutputsTensor.size(); ++i)
+  for (int i = 0; i < fixedOutputsTensor.size(); ++i)
   {
     losses[i]->updateValue(fixedOutputsTensor[i], movingOutputsTensor[i]);
   }
@@ -572,7 +572,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueStatic(
     return 0;
   }
   unsigned int nb_sample = fixedPoints.size();
-  for (size_t i = 0; i < this->fixedFeaturesMaps.size(); ++i)
+  for (int i = 0; i < this->fixedFeaturesMaps.size(); ++i)
   {
     std::vector<int> features_index = this->features_indexes[i];
     std::shuffle(features_index.begin(), features_index.end(), this->g);
@@ -580,7 +580,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueStatic(
 
     torch::Tensor fixedOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] });
     torch::Tensor movingOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] });
-    for (size_t s = 0; s < nb_sample; ++s)
+    for (int s = 0; s < nb_sample; ++s)
     {
       const auto & fixedPoint = fixedPoints[s];
       fixedOutputTensor[s] =
@@ -619,7 +619,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
   TransformJacobianType      flatTransformJacobian;
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(numNonZeroJacobianIndices);
 
-  for (size_t s = 0; s < nb_sample; ++s)
+  for (int s = 0; s < nb_sample; ++s)
   {
     this->m_AdvancedTransform->GetJacobian(fixedPoints[s], flatTransformJacobian, flatNonZeroJacobianIndices);
     nonZeroJacobianIndices[s] =
@@ -634,7 +634,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
   nonZeroJacobianIndices = nonZeroJacobianIndices.to(this->GetGPU());
   std::vector<torch::Tensor> subsetsOfFeatures(this->features_indexes.size());
 
-  for (size_t i = 0; i < this->features_indexes.size(); ++i)
+  for (int i = 0; i < this->features_indexes.size(); ++i)
   {
     std::vector<int> features_index = this->features_indexes[i];
     std::shuffle(features_index.begin(), features_index.end(), this->g);
@@ -679,7 +679,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
           fixedImageCenterCoordinateLoc, movingImagesPatchesJacobiansLoc, patchIndexLoc, patchSizeLoc, sLoc);
       }));
 
-  for (size_t i = 0; i < fixedOutputsTensor.size(); ++i)
+  for (int i = 0; i < fixedOutputsTensor.size(); ++i)
   {
     torch::Tensor jacobian = torch::bmm(layersJacobian[i], transformsJacobian);
     losses[i]->updateDerivativeInJacobianMode(jacobian, nonZeroJacobianIndices);
@@ -718,7 +718,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
 
   TransformJacobianType      flatTransformJacobian;
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(numNonZeroJacobianIndices);
-  for (size_t s = 0; s < nb_sample; ++s)
+  for (int s = 0; s < nb_sample; ++s)
   {
     this->m_AdvancedTransform->GetJacobian(fixedPoints[s], flatTransformJacobian, flatNonZeroJacobianIndices);
     nonZeroJacobianIndices[s] =
@@ -731,7 +731,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
   }
 
 
-  for (size_t i = 0; i < this->fixedFeaturesMaps.size(); ++i)
+  for (int i = 0; i < this->fixedFeaturesMaps.size(); ++i)
   {
     std::vector<int> features_index = this->features_indexes[i];
     std::shuffle(features_index.begin(), features_index.end(), this->g);
@@ -744,7 +744,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
     torch::Tensor        movingOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] }, torch::kFloat);
     torch::Tensor        movingDerivativeTensor =
       torch::zeros({ nb_sample, this->GetSubsetFeatures()[i], MovingImageDimension }, torch::kFloat);
-    for (size_t s = 0; s < nb_sample; ++s)
+    for (int s = 0; s < nb_sample; ++s)
     {
       const auto & fixedPoint = fixedPoints[s];
       mappedPoint = this->TransformPoint(fixedPoint);
@@ -784,14 +784,14 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParamete
   {
     this->m_LossThreadStruct.reset(new AlignedLossPerThreadStruct[numberOfThreads]);
 
-    for (size_t i = 0; i < numberOfThreads; ++i)
+    for (int i = 0; i < numberOfThreads; ++i)
     {
       this->m_LossThreadStruct[i].init(this->GetDistance(), this->GetLayersWeight());
     }
     this->m_LossThreadStructSize = numberOfThreads;
   }
   const int nb_parameters = this->GetNumberOfParameters();
-  for (size_t i = 0; i < numberOfThreads; ++i)
+  for (int i = 0; i < numberOfThreads; ++i)
   {
     this->m_LossThreadStruct[i].set_nb_parameters(nb_parameters);
   }
@@ -840,7 +840,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(cons
 
   std::vector<FixedImagePointType> fixedPoints;
   fixedPoints.reserve(sampleContainerSize);
-  for (size_t i = 0; i < sampleContainerSize; ++i)
+  for (int i = 0; i < sampleContainerSize; ++i)
   {
     fixedPoints.push_back((*sampleContainer)[i].m_ImageCoordinates);
   }
@@ -982,7 +982,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingle
 
   std::vector<FixedImagePointType> fixedPoints;
   fixedPoints.reserve(sampleContainerSize);
-  for (size_t i = 0; i < sampleContainerSize; ++i)
+  for (int i = 0; i < sampleContainerSize; ++i)
   {
     fixedPoints.push_back((*sampleContainer)[i].m_ImageCoordinates);
   }

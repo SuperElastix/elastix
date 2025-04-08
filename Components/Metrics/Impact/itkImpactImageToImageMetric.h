@@ -370,7 +370,7 @@ protected:
     set_nb_parameters(int nb_parameters)
     {
       this->m_nb_parameters = nb_parameters;
-      for (size_t l = 0; l < this->m_layersWeight.size(); ++l)
+      for (int l = 0; l < this->m_layersWeight.size(); ++l)
       {
         this->m_losses[l]->set_nb_parameters(nb_parameters);
       }
@@ -390,7 +390,7 @@ protected:
     GetValue()
     {
       MeasureType value = MeasureType{};
-      for (size_t l = 0; l < this->m_layersWeight.size(); ++l)
+      for (int l = 0; l < this->m_layersWeight.size(); ++l)
       {
         value +=
           this->m_layersWeight[l] * this->m_losses[l]->GetValue(static_cast<double>(this->m_numberOfPixelsCounted));
@@ -403,11 +403,11 @@ protected:
     {
       DerivativeType derivative = DerivativeType(this->m_nb_parameters);
       derivative.Fill(DerivativeValueType{});
-      for (size_t l = 0; l < this->m_layersWeight.size(); ++l)
+      for (int l = 0; l < this->m_layersWeight.size(); ++l)
       {
         torch::Tensor d = this->m_layersWeight[l] *
                           this->m_losses[l]->GetDerivative(static_cast<double>(this->m_numberOfPixelsCounted));
-        for (size_t i = 0; i < d.size(0); ++i)
+        for (int i = 0; i < d.size(0); ++i)
         {
           derivative[i] += d[i].item<float>();
         }
@@ -422,7 +422,7 @@ protected:
       if (lossPerThreadStructOther)
       {
         m_numberOfPixelsCounted += lossPerThreadStructOther->m_numberOfPixelsCounted;
-        for (size_t i = 0; i < lossPerThreadStructOther->m_losses.size(); ++i)
+        for (int i = 0; i < lossPerThreadStructOther->m_losses.size(); ++i)
         {
           *m_losses[i] += *lossPerThreadStructOther->m_losses[i];
         }

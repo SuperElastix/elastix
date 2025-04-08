@@ -48,7 +48,7 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::Evaluate(typename 
                                                                        std::vector<int> subsetOfFeatures) const
 {
   std::vector<float> result;
-  for (size_t i = 0; i < subsetOfFeatures.size(); ++i)
+  for (int i = 0; i < subsetOfFeatures.size(); ++i)
   {
     result.push_back(this->m_Interpolators[subsetOfFeatures[i]]->Evaluate(point));
   }
@@ -66,7 +66,7 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::EvaluateDerivative
   std::vector<float>  derivative(subsetOfFeatures.size() * TImage::ImageDimension, 0.0f);
   CovariantVectorType dev;
   // Fill the derivative tensor with directional gradients for each selected feature
-  for (size_t i = 0; i < subsetOfFeatures.size(); ++i)
+  for (int i = 0; i < subsetOfFeatures.size(); ++i)
   {
     dev = this->m_Interpolators[subsetOfFeatures[i]]->EvaluateDerivative(point);
     for (unsigned int it = 0; it < TImage::ImageDimension; ++it)

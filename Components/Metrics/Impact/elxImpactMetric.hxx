@@ -44,7 +44,7 @@ ImpactMetric<TElastix>::Initialize()
   std::ostringstream oss;
   oss << "Initialization of Impact metric took: " << static_cast<int64_t>(timer.GetMean() * 1000)
       << " ms with \nFixed : ";
-  for (size_t i = 0; i < this->GetFixedModelsConfiguration().size(); ++i)
+  for (int i = 0; i < this->GetFixedModelsConfiguration().size(); ++i)
   {
     oss << "\n\tModel(" << i << ") : \n"
         << "\t\tPath : " << this->GetFixedModelsConfiguration()[i].m_modelPath
@@ -57,7 +57,7 @@ ImpactMetric<TElastix>::Initialize()
         << this->GetStringFromVector<bool>(this->GetFixedModelsConfiguration()[i].m_layersMask);
   }
   oss << "\nMoving : ";
-  for (size_t i = 0; i < this->GetMovingModelsConfiguration().size(); ++i)
+  for (int i = 0; i < this->GetMovingModelsConfiguration().size(); ++i)
   {
     oss << "\n\tModel(" << i << ") : "
         << "\n\t\tPath : " << this->GetMovingModelsConfiguration()[i].m_modelPath
@@ -280,7 +280,7 @@ ImpactMetric<TElastix>::GetStringFromVector(const std::vector<T> & vec)
 {
   std::stringstream ss;
   ss << "(";
-  for (size_t i = 0; i < vec.size(); ++i)
+  for (int i = 0; i < vec.size(); ++i)
   {
     ss << vec[i];
     if (i != vec.size() - 1)
@@ -347,7 +347,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   // Each configuration includes model path, input dimension, channel count,
   // patch size, voxel size, and layer mask.
   // In static mode, we flag the model to cache features at init.
-  for (size_t i = 0; i < modelsPathVec.size(); ++i)
+  for (int i = 0; i < modelsPathVec.size(); ++i)
   {
     try
     {
@@ -461,7 +461,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
 
   // Ensure model input dimensions are not higher than image dimensions (e.g., model dim 3 vs image dim 2)
-  for (size_t i = 0; i < this->GetFixedModelsConfiguration().size(); ++i)
+  for (int i = 0; i < this->GetFixedModelsConfiguration().size(); ++i)
   {
     if (this->GetFixedModelsConfiguration()[i].m_dimension > FixedImageDimension)
     {
@@ -474,7 +474,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
     }
   }
 
-  for (size_t i = 0; i < this->GetMovingModelsConfiguration().size(); ++i)
+  for (int i = 0; i < this->GetMovingModelsConfiguration().size(); ++i)
   {
     if (this->GetMovingModelsConfiguration()[i].m_dimension > FixedImageDimension)
     {
@@ -531,7 +531,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   //
   int fixedNumberOfLayers = 0;
-  for (size_t i = 0; i < this->GetFixedModelsConfiguration().size(); ++i)
+  for (int i = 0; i < this->GetFixedModelsConfiguration().size(); ++i)
   {
     std::vector<bool> layersMask = this->GetFixedModelsConfiguration()[i].m_layersMask;
     fixedNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
@@ -539,7 +539,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
 
   int movingNumberOfLayers = 0;
-  for (size_t i = 0; i < this->GetMovingModelsConfiguration().size(); ++i)
+  for (int i = 0; i < this->GetMovingModelsConfiguration().size(); ++i)
   {
     std::vector<bool> layersMask = this->GetMovingModelsConfiguration()[i].m_layersMask;
     movingNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
