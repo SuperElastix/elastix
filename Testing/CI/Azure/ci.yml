@@ -1,6 +1,8 @@
 variables:
   ITKv5_VERSION: v5.4.1
   ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
+  LIBTORCH_BINARY_URL: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip
+  LIBTORCH_BINARY_DIR: $(Agent.BuildDirectory)/libtorch
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
   ELASTIX_SOURCE_DIR: $(Build.Repository.LocalPath)
@@ -35,12 +37,23 @@ jobs:
   steps:
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
-    displayName: Clone ITK
+    displayName: 'Clone ITK'
   - script: |
       mkdir "$(ITK_BINARY_DIR)"
       mkdir "$(ELASTIX_BINARY_DIR)"
       mkdir externalproject-build
-    displayName: Make build directories
+    displayName: 'Make build directories'
+
+  - script: |
+      curl -L "%LIBTORCH_BINARY_URL%" -o "$(Agent.BuildDirectory)/libtorch.zip"
+    displayName: 'Download LibTorch CPU'
+
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
+      destinationFolder: '$(Agent.BuildDirectory)'
+    displayName: 'Extract LibTorch'
+
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -54,7 +67,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -G "Visual Studio 17 2022" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
+      cmakeArgs: -G "Visual Studio 17 2022" -T host=x64 -DITK_DIR="$(ITK_BINARY_DIR)" -DTorch_DIR=$(LIBTORCH_BINARY_DIR)/share/cmake/Torch/ -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON "$(ELASTIX_SOURCE_DIR)"
       workingDirectory: "$(ELASTIX_BINARY_DIR)"
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -91,10 +104,18 @@ jobs:
   - script: |
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
   - script: |
+      curl -L $(LIBTORCH_BINARY_URL) -o libtorch.zip
+    displayName: 'Download LibTorch CPU'
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
+      destinationFolder: '$(Agent.BuildDirectory)'
+    displayName: 'Extract LibTorch'
+  - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
-    displayName: Clone ITK
+    displayName: 'Make build directories'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -108,7 +129,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DTorch_DIR=$(LIBTORCH_BINARY_DIR)/share/cmake/Torch/ -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(ELASTIX_SOURCE_DIR)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'
@@ -145,10 +166,18 @@ jobs:
       git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
     displayName: Clone ITK
   - script: |
+      curl -L $(LIBTORCH_BINARY_URL) -o libtorch.zip
+    displayName: 'Download LibTorch CPU'
+  - task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
+      destinationFolder: '$(Agent.BuildDirectory)'
+    displayName: 'Extract LibTorch'
+  - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
-    displayName: Make build directories
+    displayName: 'Make build directories'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -162,7 +191,7 @@ jobs:
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
     inputs:
-      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
+      cmakeArgs: -DITK_DIR=$(ITK_BINARY_DIR) -DTorch_DIR=$(LIBTORCH_BINARY_DIR)/share/cmake/Torch/ -DBUILD_TESTING=ON -DELASTIX_USE_GTEST=ON -DUSE_ALL_COMPONENTS=ON $(Build.Repository.LocalPath)
       workingDirectory: $(ELASTIX_BINARY_DIR)
   - task: CMake@1
     displayName: 'CMake Build Elastix'

@@ -71,6 +71,12 @@ jobs:
     - name: Get specific version of CMake, Ninja
       uses: lukka/get-cmake@v3.24.2
 
+    - name: Download and extract LibTorch
+      shell: bash
+      run: |
+        curl -L https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip -o libtorch.zip
+        unzip -q libtorch.zip -d libtorch
+
     - name: Download ITK
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
@@ -126,6 +132,7 @@ jobs:
         endif()
         set(dashboard_cache "
         ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+        Torch_DIR=\${CTEST_DASHBOARD_ROOT}/libtorch/share/cmake/Torch
         ELASTIX_USE_GTEST:BOOL=ON
         USE_ALL_COMPONENTS:BOOL=ON
         BUILD_TESTING:BOOL=ON
