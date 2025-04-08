@@ -20,6 +20,7 @@
 
 #include "elxAffineDTITransform.h"
 #include "itkContinuousIndex.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -119,6 +120,8 @@ template <typename TElastix>
 void
 AffineDTITransformElastix<TElastix>::InitializeTransform()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineDTITransform->SetIdentity();
 
@@ -132,7 +135,7 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
+    bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
     if (!foundI)
     {
       centerGivenAsIndex = false;
@@ -175,7 +178,7 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
    */
   bool automaticTransformInitialization = false;
   bool tmpBool = false;
-  this->m_Configuration->ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
+  configuration.ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
   if (tmpBool && this->Superclass1::GetInitialTransform() == nullptr)
   {
     automaticTransformInitialization = true;
@@ -201,7 +204,7 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
     /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
     std::string method = "GeometricalCenter";
-    this->m_Configuration->ReadParameter(method, "AutomaticTransformInitializationMethod", 0);
+    configuration.ReadParameter(method, "AutomaticTransformInitializationMethod", 0);
     if (method == "CenterOfGravity")
     {
       transformInitializer->MomentsOn();

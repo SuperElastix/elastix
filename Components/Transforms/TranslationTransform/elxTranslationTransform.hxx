@@ -19,6 +19,7 @@
 #define elxTranslationTransform_hxx
 
 #include "elxTranslationTransform.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -55,13 +56,15 @@ template <typename TElastix>
 void
 TranslationTransformElastix<TElastix>::InitializeTransform()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Set all parameters to zero (no translation). */
   this->m_TranslationTransform->SetIdentity();
 
   /** Check if user wants automatic transform initialization; false by default. */
   bool automaticTransformInitialization = false;
   bool tmpBool = false;
-  this->m_Configuration->ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
+  configuration.ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
   if (tmpBool && this->Superclass1::GetInitialTransform() == nullptr)
   {
     automaticTransformInitialization = true;
@@ -84,7 +87,7 @@ TranslationTransformElastix<TElastix>::InitializeTransform()
     /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
     std::string method = "GeometricalCenter";
-    this->m_Configuration->ReadParameter(method, "AutomaticTransformInitializationMethod", 0);
+    configuration.ReadParameter(method, "AutomaticTransformInitializationMethod", 0);
     if (method == "CenterOfGravity")
     {
       transformInitializer->MomentsOn();
