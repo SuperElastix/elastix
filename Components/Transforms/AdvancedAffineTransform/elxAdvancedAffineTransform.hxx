@@ -158,8 +158,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!foundI)
+    if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
     {
       centerGivenAsIndex = false;
     }
