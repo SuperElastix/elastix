@@ -130,16 +130,17 @@ AffineDTITransformElastix<TElastix>::InitializeTransform()
    */
   IndexType      centerOfRotationIndex{};
   InputPointType centerOfRotationPoint{};
-  bool           centerGivenAsIndex = true;
-  const bool     centerGivenAsPoint = ReadCenterOfRotationPoint(centerOfRotationPoint);
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
+  const bool     centerGivenAsIndex = [&configuration, &centerOfRotationIndex] {
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
-      centerGivenAsIndex = false;
+      if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
+      {
+        return false;
+      }
     }
-  } // end loop over SpaceDimension
+    return true;
+  }();
+  const bool centerGivenAsPoint = ReadCenterOfRotationPoint(centerOfRotationPoint);
 
   /** Check if CenterOfRotation has index-values within image. */
   bool CORIndexInImage = true;

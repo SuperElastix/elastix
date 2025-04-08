@@ -181,19 +181,19 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
   InputPointType                 TransformedCenterOfRotation{};
   ReducedDimensionInputPointType RDTransformedCenterOfRotation{};
 
-  bool       centerGivenAsIndex = true;
+  const bool centerGivenAsIndex = [&configuration, &centerOfRotationIndex] {
+    for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
+    {
+      if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
+      {
+        return false;
+      }
+    }
+    return true;
+  }();
   const bool centerGivenAsPoint = ReadCenterOfRotationPoint(RDcenterOfRotationPoint);
   SizeType   fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-
-  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
-  {
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
-    {
-      centerGivenAsIndex = false;
-    }
-  } // end loop over SpaceDimension
 
   /** Check if user wants automatic transform initialization; false by default.
    * If an initial transform is given, automatic transform initialization is
