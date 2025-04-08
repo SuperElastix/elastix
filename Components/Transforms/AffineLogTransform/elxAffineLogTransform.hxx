@@ -129,18 +129,19 @@ AffineLogTransformElastix<TElastix>::InitializeTransform()
    */
   IndexType      centerOfRotationIndex{};
   InputPointType centerOfRotationPoint{};
-  bool           centerGivenAsIndex = true;
-  const bool     centerGivenAsPoint = ReadCenterOfRotationPoint(centerOfRotationPoint);
+  const bool     centerGivenAsIndex = [&configuration, &centerOfRotationIndex] {
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
+    {
+      if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
+      {
+        return false;
+      }
+    }
+    return true;
+  }();
+  const bool centerGivenAsPoint = ReadCenterOfRotationPoint(centerOfRotationPoint);
   // SizeType fixedImageSize = this->m_Registration->GetAsITKBaseType()
   //  ->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
-    {
-      centerGivenAsIndex = false;
-    }
-  } // end loop over SpaceDimension
 
   /** Check if CenterOfRotation has index-values within image. */
   bool CORIndexInImage = true;
