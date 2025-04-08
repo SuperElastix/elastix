@@ -221,9 +221,9 @@ public:
         this->m_patchIndex.clear();
         if (this->m_patchSize.size() == 2)
         {
-          for (size_t y = 0; y < this->m_patchSize[1]; ++y)
+          for (int y = 0; y < this->m_patchSize[1]; ++y)
           {
-            for (size_t x = 0; x < this->m_patchSize[0]; ++x)
+            for (int x = 0; x < this->m_patchSize[0]; ++x)
             {
               this->m_patchIndex.push_back({ (x - this->m_patchSize[0] / 2) * this->m_voxelSize[0],
                                              (y - this->m_patchSize[1] / 2) * this->m_voxelSize[1] });
@@ -232,11 +232,11 @@ public:
         }
         else
         {
-          for (size_t z = 0; z < this->m_patchSize[2]; ++z)
+          for (int z = 0; z < this->m_patchSize[2]; ++z)
           {
-            for (size_t y = 0; y < this->m_patchSize[1]; ++y)
+            for (int y = 0; y < this->m_patchSize[1]; ++y)
             {
-              for (size_t x = 0; x < this->m_patchSize[0]; ++x)
+              for (int x = 0; x < this->m_patchSize[0]; ++x)
               {
                 this->m_patchIndex.push_back({ (x - this->m_patchSize[0] / 2) * this->m_voxelSize[0],
                                                (y - this->m_patchSize[1] / 2) * this->m_voxelSize[1],

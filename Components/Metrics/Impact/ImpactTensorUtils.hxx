@@ -669,9 +669,9 @@ GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension)
     MatrixType                      matrix = rotationZ * rotationY * rotationX;
     std::vector<std::vector<float>> patchIndex;
 
-    for (size_t y = 0; y < modelConfiguration.m_patchSize[1]; ++y)
+    for (int y = 0; y < modelConfiguration.m_patchSize[1]; ++y)
     {
-      for (size_t x = 0; x < modelConfiguration.m_patchSize[0]; ++x)
+      for (int x = 0; x < modelConfiguration.m_patchSize[0]; ++x)
       {
         Point3D point({ (x - modelConfiguration.m_patchSize[0] / 2) * modelConfiguration.m_voxelSize[0],
                         (y - modelConfiguration.m_patchSize[1] / 2) * modelConfiguration.m_voxelSize[1],
