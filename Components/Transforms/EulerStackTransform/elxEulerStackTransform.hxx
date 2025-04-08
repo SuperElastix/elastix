@@ -194,9 +194,9 @@ EulerStackTransform<TElastix>::InitializeTransform()
   InputPointType                 centerOfRotationPoint{};
   ReducedDimensionInputPointType redDimCenterOfRotationPoint{};
 
-  bool     centerGivenAsIndex = true;
-  bool     centerGivenAsPoint = true;
-  SizeType fixedImageSize =
+  bool       centerGivenAsIndex = true;
+  const bool centerGivenAsPoint = ReadCenterOfRotationPoint(redDimCenterOfRotationPoint);
+  SizeType   fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
 
   /** Try to read center of rotation point (COP) from parameter file. */
@@ -207,13 +207,6 @@ EulerStackTransform<TElastix>::InitializeTransform()
     if (!foundI)
     {
       centerGivenAsIndex = false;
-    }
-
-    /** Check COR point: Returns zero when parameter was in the parameter file. */
-    const bool foundP = configuration.ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
-    if (!foundP)
-    {
-      centerGivenAsPoint = false;
     }
   } // end loop over SpaceDimension
 
