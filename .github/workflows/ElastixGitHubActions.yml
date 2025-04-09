@@ -153,7 +153,7 @@ jobs:
         endif()
         set(dashboard_cache "
         ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
-        Torch_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/libtorch/share/cmake/Torch
+        Torch_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/share/cmake/Torch
         ELASTIX_USE_GTEST:BOOL=ON
         USE_ALL_COMPONENTS:BOOL=ON
         BUILD_TESTING:BOOL=ON
