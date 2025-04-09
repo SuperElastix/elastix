@@ -693,14 +693,12 @@ GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension)
  */
 template <typename ModelConfiguration, typename ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputs(const std::vector<ModelConfiguration> &                                     modelConfig,
-                const std::vector<ImagePointType> &                                         fixedPoints,
-                const std::vector<std::vector<std::vector<std::vector<float>>>> &           patchIndex,
-                const std::vector<torch::Tensor>                                            subsetsOfFeatures,
-                torch::Device                                                               gpu,
-                const std::function<typename torch::Tensor(const ImagePointType &,
-                                                           const std::vector<std::vector<float>> &,
-                                                           const std::vector<int64_t> &)> & evaluator)
+GenerateOutputs(const std::vector<ModelConfiguration> &                               modelConfig,
+                const std::vector<ImagePointType> &                                   fixedPoints,
+                const std::vector<std::vector<std::vector<std::vector<float>>>> &     patchIndex,
+                const std::vector<torch::Tensor>                                      subsetsOfFeatures,
+                torch::Device                                                         gpu,
+                const ImpactTensorUtils::ImagesPatchValuesEvaluator<ImagePointType> & imagesPatchValuesEvaluator)
 {
 
   std::vector<torch::Tensor> outputsTensor;
@@ -724,7 +722,7 @@ GenerateOutputs(const std::vector<ModelConfiguration> &                         
 
       for (int s = 0; s < nbSample; ++s)
       {
-        patchValueTensor[s] = evaluator(fixedPoints[s], patchIndex[i][s], config.m_patchSize);
+        patchValueTensor[s] = imagesPatchValuesEvaluator(fixedPoints[s], patchIndex[i][s], config.m_patchSize);
       }
 
       std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
@@ -763,11 +761,8 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
                            std::vector<torch::Tensor>                                        fixedOutputsTensor,
                            torch::Device                                                     gpu,
                            std::vector<std::unique_ptr<ImpactLoss::Loss>> &                  losses,
-                           const std::function<typename torch::Tensor(const ImagePointType &,
-                                                                      torch::Tensor &,
-                                                                      const std::vector<std::vector<float>> &,
-                                                                      const std::vector<int64_t> &,
-                                                                      int)> &                evaluator)
+                           const ImpactTensorUtils::ImagesPatchValuesAndJacobiansEvaluator<ImagePointType> &
+                             imagesPatchValuesAndJacobiansEvaluator)
 {
   std::vector<torch::Tensor> layersJacobian;
 
@@ -792,7 +787,8 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
 
     for (int s = 0; s < nbSample; ++s)
     {
-      patchValueTensor[s] = evaluator(fixedPoints[s], imagesPatchesJacobians, patchIndex[i][s], config.m_patchSize, s);
+      patchValueTensor[s] = imagesPatchValuesAndJacobiansEvaluator(
+        fixedPoints[s], imagesPatchesJacobians, patchIndex[i][s], config.m_patchSize, s);
     }
 
 

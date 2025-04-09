@@ -105,6 +105,9 @@ template <typename ModelConfiguration>
 std::vector<std::vector<float>>
 GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension);
 
+template <typename ImagePointType>
+using ImagesPatchValuesEvaluator = std::function<
+  torch::Tensor(const ImagePointType &, const std::vector<std::vector<float>> &, const std::vector<int64_t> &)>;
 
 /**
  * \brief Computes feature outputs for all patches using each model.
@@ -117,14 +120,19 @@ GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension);
  */
 template <class ModelConfiguration, class ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputs(const std::vector<ModelConfiguration> &                                     modelConfig,
-                const std::vector<ImagePointType> &                                         fixedPoints,
-                const std::vector<std::vector<std::vector<std::vector<float>>>> &           patchIndex,
-                const std::vector<torch::Tensor>                                            subsetsOfFeatures,
-                torch::Device                                                               gpu,
-                const std::function<typename torch::Tensor(const ImagePointType &,
-                                                           const std::vector<std::vector<float>> &,
-                                                           const std::vector<int64_t> &)> & evaluator);
+GenerateOutputs(const std::vector<ModelConfiguration> &                               modelConfig,
+                const std::vector<ImagePointType> &                                   fixedPoints,
+                const std::vector<std::vector<std::vector<std::vector<float>>>> &     patchIndex,
+                const std::vector<torch::Tensor>                                      subsetsOfFeatures,
+                torch::Device                                                         gpu,
+                const ImpactTensorUtils::ImagesPatchValuesEvaluator<ImagePointType> & imagesPatchValuesEvaluator);
+
+template <typename ImagePointType>
+using ImagesPatchValuesAndJacobiansEvaluator = std::function<torch::Tensor(const ImagePointType &,
+                                                                           torch::Tensor &,
+                                                                           const std::vector<std::vector<float>> &,
+                                                                           const std::vector<int64_t> &,
+                                                                           int)>;
 
 /**
  * \brief Computes both feature outputs and their spatial Jacobians.
@@ -143,11 +151,8 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
                            std::vector<torch::Tensor>                                        fixedOutputsTensor,
                            torch::Device                                                     gpu,
                            std::vector<std::unique_ptr<ImpactLoss::Loss>> &                  losses,
-                           const std::function<typename torch::Tensor(const ImagePointType &,
-                                                                      torch::Tensor &,
-                                                                      const std::vector<std::vector<float>> &,
-                                                                      const std::vector<int64_t> &,
-                                                                      int)> &                evaluator);
+                           const ImpactTensorUtils::ImagesPatchValuesAndJacobiansEvaluator<ImagePointType> &
+                             imagesPatchValuesAndJacobiansEvaluator);
 
 } // namespace ImpactTensorUtils
 

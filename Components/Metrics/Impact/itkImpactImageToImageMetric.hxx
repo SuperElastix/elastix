@@ -53,9 +53,6 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
   this->movingFeaturesMaps.clear();
   this->principal_components.clear();
 
-  std::function<typename TMovingImage::PointType(const typename TMovingImage::PointType &)>(
-    [this](const typename TMovingImage::PointType & point) { return this->TransformPoint(point); });
-
   auto movingWriter = std::function<void(typename TMovingImage::ConstPointer, torch::Tensor &, const std::string &)>(
     [this](typename TMovingImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
       unsigned int level = this->GetCurrentLevel();
@@ -514,33 +511,36 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
     subsetsOfFeatures[i] = torch::tensor(subsetOfFeatures, torch::kInt64).to(this->GetGPU());
   }
 
-  fixedOutputsTensor = ImpactTensorUtils::GenerateOutputs<ModelConfiguration, FixedImagePointType>(
-    this->GetFixedModelsConfiguration(),
-    fixedPoints,
-    patchIndex,
-    subsetsOfFeatures,
-    this->GetGPU(),
-    std::function<typename torch::Tensor(
-      const FixedImagePointType &, const std::vector<std::vector<float>> &, const std::vector<int64_t> &)>(
-      [this](const FixedImagePointType &             fixedImageCenterCoordinateLoc,
-             const std::vector<std::vector<float>> & patchIndexLoc,
-             const std::vector<int64_t> &            patchSizeLoc) {
-        return this->EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
-      }));
+  const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> fixedimagesPatchValuesEvaluator =
+    [this](const FixedImagePointType &             fixedImageCenterCoordinateLoc,
+           const std::vector<std::vector<float>> & patchIndexLoc,
+           const std::vector<int64_t> &            patchSizeLoc) {
+      return this->EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
+    };
 
-  movingOutputsTensor = ImpactTensorUtils::GenerateOutputs<ModelConfiguration, MovingImagePointType>(
-    this->GetMovingModelsConfiguration(),
-    fixedPoints,
-    patchIndex,
-    subsetsOfFeatures,
-    this->GetGPU(),
-    std::function<typename torch::Tensor(
-      const MovingImagePointType &, const std::vector<std::vector<float>> &, const std::vector<int64_t> &)>(
-      [this](const MovingImagePointType &            fixedImageCenterCoordinateLoc,
-             const std::vector<std::vector<float>> & patchIndexLoc,
-             const std::vector<int64_t> &            patchSizeLoc) {
-        return this->EvaluateMovingImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
-      }));
+
+  fixedOutputsTensor =
+    ImpactTensorUtils::GenerateOutputs<ModelConfiguration, FixedImagePointType>(this->GetFixedModelsConfiguration(),
+                                                                                fixedPoints,
+                                                                                patchIndex,
+                                                                                subsetsOfFeatures,
+                                                                                this->GetGPU(),
+                                                                                fixedimagesPatchValuesEvaluator);
+
+  const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> movingimagesPatchValuesEvaluator =
+    [this](const MovingImagePointType &            fixedImageCenterCoordinateLoc,
+           const std::vector<std::vector<float>> & patchIndexLoc,
+           const std::vector<int64_t> &            patchSizeLoc) {
+      return this->EvaluateMovingImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
+    };
+
+  movingOutputsTensor =
+    ImpactTensorUtils::GenerateOutputs<ModelConfiguration, MovingImagePointType>(this->GetMovingModelsConfiguration(),
+                                                                                 fixedPoints,
+                                                                                 patchIndex,
+                                                                                 subsetsOfFeatures,
+                                                                                 this->GetGPU(),
+                                                                                 movingimagesPatchValuesEvaluator);
 
   for (int i = 0; i < fixedOutputsTensor.size(); ++i)
   {
@@ -642,20 +642,32 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
     subsetsOfFeatures[i] = torch::tensor(subsetOfFeatures, torch::kInt64).to(this->GetGPU());
   };
 
+  const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> imagesPatchValuesEvaluator =
+    [this](const FixedImagePointType &             fixedImageCenterCoordinateLoc,
+           const std::vector<std::vector<float>> & patchIndexLoc,
+           const std::vector<int64_t> &            patchSizeLoc) {
+      return this->EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
+    };
+
   std::vector<torch::Tensor> fixedOutputsTensor, movingOutputsTensor;
-  fixedOutputsTensor = ImpactTensorUtils::GenerateOutputs<ModelConfiguration, FixedImagePointType>(
-    this->GetFixedModelsConfiguration(),
-    fixedPoints,
-    patchIndex,
-    subsetsOfFeatures,
-    this->GetGPU(),
-    std::function<typename torch::Tensor(
-      const FixedImagePointType &, const std::vector<std::vector<float>> &, const std::vector<int64_t> &)>(
-      [this](const FixedImagePointType &             fixedImageCenterCoordinateLoc,
-             const std::vector<std::vector<float>> & patchIndexLoc,
-             const std::vector<int64_t> &            patchSizeLoc) {
-        return this->EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
-      }));
+  fixedOutputsTensor =
+    ImpactTensorUtils::GenerateOutputs<ModelConfiguration, FixedImagePointType>(this->GetFixedModelsConfiguration(),
+                                                                                fixedPoints,
+                                                                                patchIndex,
+                                                                                subsetsOfFeatures,
+                                                                                this->GetGPU(),
+                                                                                imagesPatchValuesEvaluator);
+
+
+  const ImpactTensorUtils::ImagesPatchValuesAndJacobiansEvaluator<MovingImagePointType>
+    imagesPatchValuesAndJacobiansEvaluator = [this](const MovingImagePointType & fixedImageCenterCoordinateLoc,
+                                                    torch::Tensor &              movingImagesPatchesJacobiansLoc,
+                                                    const std::vector<std::vector<float>> & patchIndexLoc,
+                                                    const std::vector<int64_t> &            patchSizeLoc,
+                                                    int                                     sLoc) {
+      return this->EvaluateMovingImagesPatchValuesAndJacobians(
+        fixedImageCenterCoordinateLoc, movingImagesPatchesJacobiansLoc, patchIndexLoc, patchSizeLoc, sLoc);
+    };
 
   std::vector<torch::Tensor> layersJacobian =
     ImpactTensorUtils::GenerateOutputsAndJacobian<ModelConfiguration, MovingImagePointType>(
@@ -666,18 +678,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
       fixedOutputsTensor,
       this->GetGPU(),
       losses,
-      std::function<typename torch::Tensor(const MovingImagePointType &,
-                                           torch::Tensor &,
-                                           const std::vector<std::vector<float>> &,
-                                           const std::vector<int64_t> &,
-                                           int)>([this](const MovingImagePointType & fixedImageCenterCoordinateLoc,
-                                                        torch::Tensor &              movingImagesPatchesJacobiansLoc,
-                                                        const std::vector<std::vector<float>> & patchIndexLoc,
-                                                        const std::vector<int64_t> &            patchSizeLoc,
-                                                        int                                     sLoc) {
-        return this->EvaluateMovingImagesPatchValuesAndJacobians(
-          fixedImageCenterCoordinateLoc, movingImagesPatchesJacobiansLoc, patchIndexLoc, patchSizeLoc, sLoc);
-      }));
+      imagesPatchValuesAndJacobiansEvaluator);
 
   for (int i = 0; i < fixedOutputsTensor.size(); ++i)
   {
@@ -709,7 +710,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
   {
     return 0;
   }
-  unsigned int  nb_sample = fixedPoints.size();
+  int           nb_sample = fixedPoints.size();
   const int     numNonZeroJacobianIndices = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   torch::Tensor nonZeroJacobianIndices = torch::zeros({ nb_sample, numNonZeroJacobianIndices }, torch::kLong);
 
@@ -736,8 +737,6 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
     std::vector<int> features_index = this->features_indexes[i];
     std::shuffle(features_index.begin(), features_index.end(), this->g);
     std::vector<int> subsetOfFeatures(features_index.begin(), features_index.begin() + this->GetSubsetFeatures()[i]);
-
-    torch::Tensor functionJacobian;
 
     MovingImagePointType mappedPoint;
     torch::Tensor        fixedOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] }, torch::kFloat);
@@ -780,16 +779,14 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParamete
 
   /** Only resize the array of structs when needed. */
   // if (this->m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads){
-  if (this->m_LossThreadStructSize != numberOfThreads)
-  {
-    this->m_LossThreadStruct.reset(new AlignedLossPerThreadStruct[numberOfThreads]);
+  this->m_LossThreadStruct.reset(new AlignedLossPerThreadStruct[numberOfThreads]);
 
-    for (int i = 0; i < numberOfThreads; ++i)
-    {
-      this->m_LossThreadStruct[i].init(this->GetDistance(), this->GetLayersWeight());
-    }
-    this->m_LossThreadStructSize = numberOfThreads;
+  for (int i = 0; i < numberOfThreads; ++i)
+  {
+    this->m_LossThreadStruct[i].init(this->GetDistance(), this->GetLayersWeight());
   }
+  this->m_LossThreadStructSize = numberOfThreads;
+
   const int nb_parameters = this->GetNumberOfParameters();
   for (int i = 0; i < numberOfThreads; ++i)
   {
