@@ -12,6 +12,13 @@ if ( DEFINED ELASTIX_ITK_DIR)
 endif()
 find_package(ITK REQUIRED)
 
+# Use the version of Torch from Elastix.
+if ( DEFINED ELASTIX_Torch_DIR)
+  set(Torch_DIR "${ELASTIX_Torch_DIR}" CACHE PATH "Torch_DIR from Elastix" FORCE)
+endif()
+find_package(Torch REQUIRED)
+
+
 include(${ELASTIX_CONFIG_TARGETS_FILE})
 
 # Build a small example executable.

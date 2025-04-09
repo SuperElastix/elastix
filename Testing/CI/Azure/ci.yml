@@ -4,7 +4,6 @@ variables:
   LIBTORCH_BINARY_URL_WIN: https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.6.0%2Bcpu.zip
   LIBTORCH_BINARY_URL_LINUX: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip
   LIBTORCH_BINARY_URL_MAC: https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.6.0.zip
-
   LIBTORCH_BINARY_DIR: $(Agent.BuildDirectory)/libtorch/libtorch
   ITK_SOURCE_DIR: $(Agent.BuildDirectory)/ITK-source
   ITK_BINARY_DIR: $(Agent.BuildDirectory)/ITK-build
@@ -85,7 +84,7 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
-  - bash: ../../../externalproject-build/Release/elastix_translation_example
+  - bash: ../../../externalproject-build/Release/elastix_impact_metric_example
     displayName: 'Run externalproject'
     workingDirectory: $(Agent.BuildDirectory)\Elastix-build\bin\Release
   - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
@@ -148,7 +147,7 @@ jobs:
     inputs:
       cmakeArgs: --build .
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
-  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_translation_example
+  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_impact_metric_example
     displayName: 'Run externalproject'
   - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
     displayName: 'Install PythonTests requirements'
@@ -211,7 +210,7 @@ jobs:
     inputs:
       cmakeArgs: --build .
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
-  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_translation_example
+  - bash: $(Agent.BuildDirectory)/externalproject-build/elastix_impact_metric_example
     displayName: 'Run externalproject'
     # Note: On macOS, we have not yet found how to successfully install requirements.txt for Python, so for the time being, we skip the tests.
     # See also https://github.com/SuperElastix/elastix/issues/739
