@@ -580,7 +580,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueStatic(
 
     torch::Tensor fixedOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] });
     torch::Tensor movingOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] });
-    for (int s = 0; s < nb_sample; ++s)
+    for (unsigned int s = 0; s < nb_sample; ++s)
     {
       const auto & fixedPoint = fixedPoints[s];
       fixedOutputTensor[s] =
@@ -619,7 +619,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
   TransformJacobianType      flatTransformJacobian;
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(numNonZeroJacobianIndices);
 
-  for (int s = 0; s < nb_sample; ++s)
+  for (unsigned int s = 0; s < nb_sample; ++s)
   {
     this->m_AdvancedTransform->GetJacobian(fixedPoints[s], flatTransformJacobian, flatNonZeroJacobianIndices);
     nonZeroJacobianIndices[s] =
@@ -710,7 +710,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
   {
     return 0;
   }
-  int           nb_sample = fixedPoints.size();
+  unsigned int  nb_sample = fixedPoints.size();
   const int     numNonZeroJacobianIndices = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   torch::Tensor nonZeroJacobianIndices = torch::zeros({ nb_sample, numNonZeroJacobianIndices }, torch::kLong);
 
@@ -719,7 +719,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
 
   TransformJacobianType      flatTransformJacobian;
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(numNonZeroJacobianIndices);
-  for (int s = 0; s < nb_sample; ++s)
+  for (unsigned int s = 0; s < nb_sample; ++s)
   {
     this->m_AdvancedTransform->GetJacobian(fixedPoints[s], flatTransformJacobian, flatNonZeroJacobianIndices);
     nonZeroJacobianIndices[s] =
@@ -743,7 +743,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
     torch::Tensor        movingOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] }, torch::kFloat);
     torch::Tensor        movingDerivativeTensor =
       torch::zeros({ nb_sample, this->GetSubsetFeatures()[i], MovingImageDimension }, torch::kFloat);
-    for (int s = 0; s < nb_sample; ++s)
+    for (unsigned int s = 0; s < nb_sample; ++s)
     {
       const auto & fixedPoint = fixedPoints[s];
       mappedPoint = this->TransformPoint(fixedPoint);
@@ -837,7 +837,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(cons
 
   std::vector<FixedImagePointType> fixedPoints;
   fixedPoints.reserve(sampleContainerSize);
-  for (int i = 0; i < sampleContainerSize; ++i)
+  for (unsigned int i = 0; i < sampleContainerSize; ++i)
   {
     fixedPoints.push_back((*sampleContainer)[i].m_ImageCoordinates);
   }
@@ -979,7 +979,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingle
 
   std::vector<FixedImagePointType> fixedPoints;
   fixedPoints.reserve(sampleContainerSize);
-  for (int i = 0; i < sampleContainerSize; ++i)
+  for (unsigned int i = 0; i < sampleContainerSize; ++i)
   {
     fixedPoints.push_back((*sampleContainer)[i].m_ImageCoordinates);
   }
