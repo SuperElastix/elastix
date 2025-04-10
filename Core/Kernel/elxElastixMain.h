@@ -19,8 +19,6 @@
 #define elxElastixMain_h
 
 #include "elxMainBase.h"
-#include "elxDefaultConstruct.h"
-#include <itkMersenneTwisterRandomVariateGenerator.h>
 
 
 namespace elastix
@@ -196,8 +194,6 @@ private:
   ParameterMapType m_TransformParameterMap{};
 
   FlatDirectionCosinesType m_OriginalFixedImageDirectionFlat{};
-
-  elx::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> m_RandomVariateGenerator{};
 };
 
 } // end namespace elastix
