@@ -31,6 +31,7 @@
 #include "elxBaseComponent.h"
 #include "elxComponentDatabase.h"
 #include "elxConfiguration.h"
+#include "elxDefaultConstruct.h"
 #include "elxIterationInfo.h"
 #include "elxMacro.h"
 #include "elxlog.h"
@@ -38,7 +39,6 @@
 // ITK header files:
 #include <itkChangeInformationImageFilter.h>
 #include <itkDataObject.h>
-#include <itkDeref.h>
 #include <itkImageFileReader.h>
 #include <itkMersenneTwisterRandomVariateGenerator.h>
 #include <itkObject.h>
@@ -324,15 +324,8 @@ public:
   itk::Statistics::MersenneTwisterRandomVariateGenerator &
   GetRandomVariateGenerator()
   {
-    return itk::Deref(m_RandomVariateGenerator);
+    return m_RandomVariateGenerator;
   }
-
-  void
-  SetRandomVariateGenerator(itk::Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator)
-  {
-    m_RandomVariateGenerator = &randomVariateGenerator;
-  }
-
   ResultImageType *
   GetResultImage(const unsigned int idx = 0) const;
 
@@ -555,7 +548,7 @@ private:
    * backward compatability. From Elastix 4.8: set it to true by default. */
   bool m_UseDirectionCosines{ true };
 
-  itk::Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ nullptr };
+  elx::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> m_RandomVariateGenerator{};
 };
 
 } // end namespace elastix
