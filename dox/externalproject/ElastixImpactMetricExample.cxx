@@ -88,7 +88,7 @@ main()
                                               { "LayersMask", { "1" } },
                                               { "SubsetFeatures", { "3" } },
                                               { "Mode", { "Jacobian" } },
-                                              { "GPU", { "-1" } },
+                                              { "Device", { "-1" } },
                                               { "PCA", { "0" } },
                                               { "Distance", { "L2" } },
                                               { "Optimizer", { "AdaptiveStochasticGradientDescent" } },

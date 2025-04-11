@@ -11,12 +11,12 @@
 
 
 // ********** Components
-
+(RandomSeed 42)
 (Registration "MultiResolutionRegistration")
 (FixedImagePyramid "FixedGenericImagePyramid")
 (MovingImagePyramid "MovingGenericImagePyramid")
 (ImagePyramidRescaleSchedule 1 1 1 1 1 1)
-(ImagePyramidSmoothingSchedule 1 1 1 1 1)
+(ImagePyramidSmoothingSchedule 1 1 1 1 1 1)
 (Interpolator "BSplineInterpolator")
 
 (Metric "Impact")
@@ -29,21 +29,21 @@
 // ********** Pyramid
 
 // Total number of resolutions
-(NumberOfResolutions 3)
-(ImagePyramidSchedule 4 4 4 2 2 2 1 1 1)
+(NumberOfResolutions 2)
+(ImagePyramidSchedule 3 3 3 1 1 1)
 
 
 // ********** Transform
 
-(FinalGridSpacingInPhysicalUnits 10.0 10.0 10.0)
-(GridSpacingSchedule 4.0 2.0 1.0)
+(FinalGridSpacingInPhysicalUnits 10.0)
+(GridSpacingSchedule 3.0 1.0)
 (HowToCombineTransforms "Compose")
 
 
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 500)
+(MaximumNumberOfIterations 200)
 
 (AutomaticParameterEstimation "true")
 (UseAdaptiveStepSizes "true")
@@ -54,13 +54,13 @@
 (Dimension "3")
 (NumberOfChannels "1")
 (PatchSize "0*0*0")
-(VoxelSize "6*6*6" "3*3*3" "1.5*1.5*1.5")
+(VoxelSize "3*3*3" "1*1*1")
 (LayersMask "1")
  
 (SubsetFeatures "32")
 (LayersWeight "1")
 (Mode "Static")
-(GPU -1)
+(Device -1)
 (PCA "0")
 (Distance "L2")
 (FeaturesMapUpdateInterval -1)
@@ -83,7 +83,7 @@
 
 //Number of spatial samples used to compute the mutual information in each resolution level:
 (ImageSampler "RandomCoordinate")
-(NumberOfSpatialSamples 2000)
+(NumberOfSpatialSamples 500)
 (NewSamplesEveryIteration "true")
 (UseRandomSampleRegion "false")
 (MaximumNumberOfSamplingAttempts 8)

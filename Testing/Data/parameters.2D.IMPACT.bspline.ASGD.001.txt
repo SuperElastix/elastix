@@ -43,7 +43,7 @@
 // ********** Optimizer
 
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 500)
+(MaximumNumberOfIterations 200)
 
 (AutomaticParameterEstimation "true")
 (UseAdaptiveStepSizes "true")
@@ -60,7 +60,7 @@
 (SubsetFeatures "4")
 (LayersWeight "1")
 (Mode "Jacobian")
-(GPU -1)
+(Device -1)
 (PCA "0")
 (Distance "L2")
 (FeaturesMapUpdateInterval -1)
@@ -82,9 +82,10 @@
 
 // ********** ImageSampler
 
+(RandomSeed 42)
 //Number of spatial samples used to compute the mutual information in each resolution level:
 (ImageSampler "RandomCoordinate")
-(NumberOfSpatialSamples 2000)
+(NumberOfSpatialSamples 500)
 (NewSamplesEveryIteration "true")
 (UseRandomSampleRegion "false")
 //(SampleRegionSize 50.0 50.0 50.0)
