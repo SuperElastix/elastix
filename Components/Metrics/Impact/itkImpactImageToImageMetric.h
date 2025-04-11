@@ -32,6 +32,27 @@
 #include <random>
 #include <algorithm>
 
+/**
+ * ******************* GetStringFromVector ***********************
+ */
+template <typename T>
+std::string
+GetStringFromVector(const std::vector<T> & vec)
+{
+  std::stringstream ss;
+  ss << "(";
+  for (int i = 0; i < vec.size(); ++i)
+  {
+    ss << vec[i];
+    if (i != vec.size() - 1)
+    {
+      ss << " ";
+    }
+  }
+  ss << ")";
+  return ss.str();
+} // end GetStringFromVector
+
 namespace itk
 {
 
@@ -67,7 +88,6 @@ namespace itk
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
-
 template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT ImpactImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
@@ -185,18 +205,7 @@ public:
    */
   struct ModelConfiguration
   {
-    std::string          m_modelPath;
-    unsigned int         m_dimension;
-    unsigned int         m_numberOfChannels;
-    std::vector<int64_t> m_patchSize;
-    std::vector<float>   m_voxelSize;
-    std::vector<bool>    m_layersMask;
-
-    std::shared_ptr<torch::jit::script::Module> m_model;
-
-    std::vector<std::vector<float>>                        m_patchIndex;
-    std::vector<std::vector<torch::indexing::TensorIndex>> m_centersIndexLayers;
-
+  public:
     ModelConfiguration(std::string          modelPath,
                        unsigned int         dimension,
                        unsigned int         numberOfChannels,
@@ -255,7 +264,81 @@ public:
              m_numberOfChannels == rhs.m_numberOfChannels && m_patchSize == rhs.m_patchSize &&
              m_voxelSize == rhs.m_voxelSize && m_layersMask == rhs.m_layersMask;
     }
+
+    friend std::ostream &
+    operator<<(std::ostream & os, const ModelConfiguration & config)
+    {
+      os << "\t\tPath : " << config.m_modelPath << "\n\t\tDimension : " << config.m_dimension
+         << "\n\t\tNumberOfChannels : " << config.m_numberOfChannels
+         << "\n\t\tPatchSize : " << GetStringFromVector<int64_t>(config.m_patchSize)
+         << "\n\t\tVoxelSize : " << GetStringFromVector<float>(config.m_voxelSize)
+         << "\n\t\tLayersMask : " << GetStringFromVector<bool>(config.m_layersMask);
+      return os;
+    }
+
+    const std::string &
+    GetModelPath() const
+    {
+      return m_modelPath;
+    }
+    unsigned int
+    GetDimension() const
+    {
+      return m_dimension;
+    }
+    unsigned int
+    GetNumberOfChannels() const
+    {
+      return m_numberOfChannels;
+    }
+    const std::vector<int64_t> &
+    GetPatchSize() const
+    {
+      return m_patchSize;
+    }
+    const std::vector<float> &
+    GetVoxelSize() const
+    {
+      return m_voxelSize;
+    }
+    const std::vector<bool> &
+    GetLayersMask() const
+    {
+      return m_layersMask;
+    }
+    const std::shared_ptr<torch::jit::script::Module> &
+    GetModel() const
+    {
+      return m_model;
+    }
+    const std::vector<std::vector<float>> &
+    GetPatchIndex() const
+    {
+      return m_patchIndex;
+    }
+    const std::vector<std::vector<torch::indexing::TensorIndex>> &
+    GetCentersIndexLayers() const
+    {
+      return m_centersIndexLayers;
+    }
+    void
+    SetCentersIndexLayers(std::vector<std::vector<torch::indexing::TensorIndex>> & centersIndexLayers)
+    {
+      this->m_centersIndexLayers = centersIndexLayers;
+    }
+
+  private:
+    std::string                                            m_modelPath;
+    unsigned int                                           m_dimension;
+    unsigned int                                           m_numberOfChannels;
+    std::vector<int64_t>                                   m_patchSize;
+    std::vector<float>                                     m_voxelSize;
+    std::vector<bool>                                      m_layersMask;
+    std::shared_ptr<torch::jit::script::Module>            m_model;
+    std::vector<std::vector<float>>                        m_patchIndex;
+    std::vector<std::vector<torch::indexing::TensorIndex>> m_centersIndexLayers;
   };
+
 
   /** Set/Get the list of TorchScript model configurations used to extract features from the fixed image.
    * Each model can target a different resolution, architecture, or semantic level.

@@ -330,36 +330,36 @@ GetFeaturesMaps(
     {
       // Convert image to tensor representation for deep feature extraction
       torch::Tensor inputTensor =
-        ImageToTensor<TImage, InterpolatorType>(image, interpolator, config.m_voxelSize, transformPoint);
+        ImageToTensor<TImage, InterpolatorType>(image, interpolator, config.GetVoxelSize(), transformPoint);
 
       if (writeInputImage)
       {
         std::string result;
 
-        for (int i = 0; i < config.m_voxelSize.size(); ++i)
+        for (int i = 0; i < config.GetVoxelSize().size(); ++i)
         {
           if (i > 0)
             result += "_";
 
           std::ostringstream oss;
-          oss << std::fixed << std::setprecision(2) << config.m_voxelSize[i];
+          oss << std::fixed << std::setprecision(2) << config.GetVoxelSize()[i];
           result += oss.str();
         }
         writeInputImage(image, inputTensor, result + "mm");
       }
 
-      std::vector<int64_t> channelRepeat(config.m_dimension + 1, 1);
-      channelRepeat[0] = config.m_numberOfChannels;
+      std::vector<int64_t> channelRepeat(config.GetDimension() + 1, 1);
+      channelRepeat[0] = config.GetNumberOfChannels();
 
-      std::vector<std::vector<int>> inputStartIndices(config.m_dimension);
-      std::vector<int64_t>          patchSize = config.m_patchSize;
-      for (unsigned int dim = 0; dim < config.m_dimension; ++dim)
+      std::vector<std::vector<int>> inputStartIndices(config.GetDimension());
+      std::vector<int64_t>          patchSize = config.GetPatchSize();
+      for (unsigned int dim = 0; dim < config.GetDimension(); ++dim)
       {
-        if (config.m_patchSize[dim] <= 0)
+        if (config.GetPatchSize()[dim] <= 0)
         {
-          patchSize[dim] = inputTensor.size(inputTensor.dim() - config.m_dimension + dim);
+          patchSize[dim] = inputTensor.size(inputTensor.dim() - config.GetDimension() + dim);
         }
-        for (int step = 0; step < std::ceil(inputTensor.size(inputTensor.dim() - config.m_dimension + dim) /
+        for (int step = 0; step < std::ceil(inputTensor.size(inputTensor.dim() - config.GetDimension() + dim) /
                                             static_cast<float>(patchSize[dim]));
              ++step)
         {
@@ -368,12 +368,12 @@ GetFeaturesMaps(
       }
 
       std::vector<std::vector<int>> inputSlices;
-      std::vector<int>              inputCurrent(config.m_dimension);
+      std::vector<int>              inputCurrent(config.GetDimension());
       generateCartesianProduct(inputStartIndices, inputCurrent, 0, inputSlices);
       std::vector<std::vector<std::vector<int>>>             layersSlices;
       std::vector<torch::Tensor>                             layers;
       std::vector<std::vector<torch::indexing::TensorIndex>> cutting;
-      if (config.m_dimension < inputTensor.dim())
+      if (config.GetDimension() < inputTensor.dim())
       {
         for (int64_t depthIndex = 0; depthIndex < inputTensor.size(0); ++depthIndex)
         {
@@ -384,16 +384,16 @@ GetFeaturesMaps(
                                          .repeat({ torch::IntArrayRef(channelRepeat) })
                                          .unsqueeze(0)
                                          .to(device);
-            std::vector<torch::jit::IValue> outputsPatch = config.m_model->forward({ inputPatch }).toList().vec();
+            std::vector<torch::jit::IValue> outputsPatch = config.GetModel()->forward({ inputPatch }).toList().vec();
 
 
-            if (config.m_layersMask.size() != outputsPatch.size())
+            if (config.GetLayersMask().size() != outputsPatch.size())
             {
               itkGenericExceptionMacro("Mismatch between layersMask size and model output layers.");
             }
             for (int layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); ++layerIndex)
             {
-              if (config.m_layersMask[layerIndex])
+              if (config.GetLayersMask()[layerIndex])
               {
                 torch::Tensor layerPatch =
                   outputsPatch[layerIndex].toTensor().squeeze(0).to(torch::kCPU).to(torch::kFloat);
@@ -413,12 +413,12 @@ GetFeaturesMaps(
                   cutting.push_back(cuttingLoc);
 
 
-                  std::vector<std::vector<int>> layerStartIndices(config.m_dimension);
-                  std::vector<int64_t>          layerSize(config.m_dimension + 2);
+                  std::vector<std::vector<int>> layerStartIndices(config.GetDimension());
+                  std::vector<int64_t>          layerSize(config.GetDimension() + 2);
                   layerSize[0] = layerPatch.size(0);
                   layerSize[1] = inputTensor.size(0);
 
-                  for (unsigned int it1 = 0; it1 < config.m_dimension; ++it1)
+                  for (unsigned int it1 = 0; it1 < config.GetDimension(); ++it1)
                   {
                     for (int it2 = 0; it2 < inputStartIndices[it1].size(); ++it2)
                     {
@@ -426,7 +426,7 @@ GetFeaturesMaps(
                     }
                     layerSize[it1 + 2] = inputStartIndices[it1].size() * layerPatch.size(it1 + 1);
                   }
-                  std::vector<int> layerCurrent(config.m_dimension);
+                  std::vector<int> layerCurrent(config.GetDimension());
                   layersSlices.push_back(std::vector<std::vector<int>>());
                   generateCartesianProduct(layerStartIndices, layerCurrent, 0, layersSlices[realLayerIndex]);
 
@@ -459,15 +459,15 @@ GetFeaturesMaps(
                                        .unsqueeze(0)
                                        .to(device);
 
-          std::vector<torch::jit::IValue> outputsPatch = config.m_model->forward({ inputPatch }).toList().vec();
+          std::vector<torch::jit::IValue> outputsPatch = config.GetModel()->forward({ inputPatch }).toList().vec();
 
-          if (config.m_layersMask.size() != outputsPatch.size())
+          if (config.GetLayersMask().size() != outputsPatch.size())
           {
             itkGenericExceptionMacro("Mismatch between layersMask size and model output layers.");
           }
           for (int layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); ++layerIndex)
           {
-            if (config.m_layersMask[layerIndex])
+            if (config.GetLayersMask()[layerIndex])
             {
               torch::Tensor layerPatch =
                 outputsPatch[layerIndex].toTensor().squeeze(0).to(torch::kCPU).to(torch::kFloat);
@@ -485,10 +485,10 @@ GetFeaturesMaps(
                 cutting.push_back(cuttingLoc);
 
 
-                std::vector<std::vector<int>> layerStartIndices(config.m_dimension);
-                std::vector<int64_t>          layerSize(config.m_dimension + 1);
+                std::vector<std::vector<int>> layerStartIndices(config.GetDimension());
+                std::vector<int64_t>          layerSize(config.GetDimension() + 1);
                 layerSize[0] = layerPatch.size(0);
-                for (unsigned int it1 = 0; it1 < config.m_dimension; ++it1)
+                for (unsigned int it1 = 0; it1 < config.GetDimension(); ++it1)
                 {
                   for (int it2 = 0; it2 < inputStartIndices[it1].size(); ++it2)
                   {
@@ -496,7 +496,7 @@ GetFeaturesMaps(
                   }
                   layerSize[it1 + 1] = inputStartIndices[it1].size() * layerPatch.size(it1 + 1);
                 }
-                std::vector<int> layerCurrent(config.m_dimension);
+                std::vector<int> layerCurrent(config.GetDimension());
                 layersSlices.push_back(std::vector<std::vector<int>>());
                 generateCartesianProduct(layerStartIndices, layerCurrent, 0, layersSlices[realLayerIndex]);
 
@@ -558,10 +558,10 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
     for (int i = 0; i < modelsConfig.size(); ++i)
     {
       const auto &         config = modelsConfig[i];
-      std::vector<int64_t> resizeVector(config.m_patchSize.size() + 1, 1);
-      resizeVector[0] = config.m_numberOfChannels;
+      std::vector<int64_t> resizeVector(config.GetPatchSize().size() + 1, 1);
+      resizeVector[0] = config.GetNumberOfChannels();
       std::vector<torch::jit::IValue> outputsList;
-      auto modelInput = torch::zeros({ torch::IntArrayRef(config.m_patchSize) }, torch::kFloat)
+      auto modelInput = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, torch::kFloat)
                           .unsqueeze(0)
                           .repeat({ torch::IntArrayRef(resizeVector) })
                           .unsqueeze(0)
@@ -569,7 +569,7 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
                           .to(device);
       try
       {
-        outputsList = config.m_model->forward({ modelInput }).toList().vec();
+        outputsList = config.GetModel()->forward({ modelInput }).toList().vec();
       }
       catch (const std::exception & e)
       {
@@ -579,20 +579,20 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
                            "not meet the requirements of the model.\n"
                            "Details:\n"
                            " - Number of channels: "
-                        << config.m_numberOfChannels
+                        << config.GetNumberOfChannels()
                         << "\n"
                            " - Patch size: "
-                        << config.m_patchSize
+                        << config.GetPatchSize()
                         << "\n"
                            " - Dimension: "
-                        << config.m_dimension
+                        << config.GetDimension()
                         << "\n"
                            "Please verify the configuration to ensure compatibility with the model. \n Exception : "
                         << e.what());
       }
-      if (config.m_layersMask.size() != outputsList.size())
+      if (config.GetLayersMask().size() != outputsList.size())
       {
-        itkGenericExceptionMacro("Error: The number of " << modelType << " masks (" << config.m_layersMask.size()
+        itkGenericExceptionMacro("Error: The number of " << modelType << " masks (" << config.GetLayersMask().size()
                                                          << ") does not match the number of layers ("
                                                          << outputsList.size()
                                                          << "). Please ensure that the configuration is consistent.");
@@ -600,7 +600,7 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
 
       for (int it = 0; it < outputsList.size(); ++it)
       {
-        if (config.m_layersMask[it])
+        if (config.GetLayersMask()[it])
         {
           outputsTensor.push_back(outputsList[it].toTensor().to(torch::kCPU).to(torch::kFloat));
         }
@@ -608,8 +608,8 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
     }
     for (int i = 0; i < modelsConfig.size(); ++i)
     {
-      auto & config = modelsConfig[i];
-      config.m_centersIndexLayers.clear();
+      auto &                                                 config = modelsConfig[i];
+      std::vector<std::vector<torch::indexing::TensorIndex>> centersIndexLayers;
       for (int it = 0; it < outputsTensor.size(); ++it)
       {
         std::vector<torch::indexing::TensorIndex> centersIndexLayer;
@@ -618,8 +618,9 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
         {
           centersIndexLayer.push_back(outputsTensor[it].size(j) / 2);
         }
-        config.m_centersIndexLayers.push_back(centersIndexLayer);
+        centersIndexLayers.push_back(centersIndexLayer);
       }
+      config.SetCentersIndexLayers(centersIndexLayers);
     }
   }
   return outputsTensor;
@@ -632,9 +633,9 @@ template <typename ModelConfiguration>
 std::vector<std::vector<float>>
 GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension)
 {
-  if (dimension == modelConfiguration.m_patchSize.size())
+  if (dimension == modelConfiguration.GetPatchSize().size())
   {
-    return modelConfiguration.m_patchIndex;
+    return modelConfiguration.GetPatchIndex();
   }
   else
   {
@@ -672,12 +673,12 @@ GetPatchIndex(ModelConfiguration modelConfiguration, unsigned int dimension)
     MatrixType                      matrix = rotationZ * rotationY * rotationX;
     std::vector<std::vector<float>> patchIndex;
 
-    for (int y = 0; y < modelConfiguration.m_patchSize[1]; ++y)
+    for (int y = 0; y < modelConfiguration.GetPatchSize()[1]; ++y)
     {
-      for (int x = 0; x < modelConfiguration.m_patchSize[0]; ++x)
+      for (int x = 0; x < modelConfiguration.GetPatchSize()[0]; ++x)
       {
-        Point3D point({ (x - modelConfiguration.m_patchSize[0] / 2) * modelConfiguration.m_voxelSize[0],
-                        (y - modelConfiguration.m_patchSize[1] / 2) * modelConfiguration.m_voxelSize[1],
+        Point3D point({ (x - modelConfiguration.GetPatchSize()[0] / 2) * modelConfiguration.GetVoxelSize()[0],
+                        (y - modelConfiguration.GetPatchSize()[1] / 2) * modelConfiguration.GetVoxelSize()[1],
                         0 });
         point = matrix * point;
         std::vector<float> vec(3);
@@ -714,10 +715,10 @@ GenerateOutputs(const std::vector<ModelConfiguration> &                         
     {
       const auto & config = modelConfig[i];
 
-      std::vector<int64_t> sizes(config.m_patchSize.size() + 1, -1);
+      std::vector<int64_t> sizes(config.GetPatchSize().size() + 1, -1);
       sizes[0] = nbSample;
 
-      torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.m_patchSize) }, torch::kFloat)
+      torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, torch::kFloat)
                                          .unsqueeze(0)
                                          .expand(sizes)
                                          .unsqueeze(1)
@@ -725,23 +726,24 @@ GenerateOutputs(const std::vector<ModelConfiguration> &                         
 
       for (unsigned int s = 0; s < nbSample; ++s)
       {
-        patchValueTensor[s] = imagesPatchValuesEvaluator(fixedPoints[s], patchIndex[i][s], config.m_patchSize);
+        patchValueTensor[s] = imagesPatchValuesEvaluator(fixedPoints[s], patchIndex[i][s], config.GetPatchSize());
       }
 
       std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
-      resizeVector[1] = config.m_numberOfChannels;
+      resizeVector[1] = config.GetNumberOfChannels();
       std::vector<torch::jit::IValue> outputsList =
-        config.m_model->forward({ patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone() })
+        config.GetModel()
+          ->forward({ patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone() })
           .toList()
           .vec();
 
       for (int it = 0; it < outputsList.size(); ++it)
       {
-        if (config.m_layersMask[it])
+        if (config.GetLayersMask()[it])
         {
           outputsTensor.push_back(outputsList[it]
                                     .toTensor()
-                                    .index(config.m_centersIndexLayers[a])
+                                    .index(config.GetCentersIndexLayers()[a])
                                     .index_select(1, subsetsOfFeatures[a])
                                     .to(torch::kFloat));
           a++;
@@ -777,10 +779,10 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
   {
     const auto & config = modelConfig[i];
 
-    std::vector<int64_t> sizes(config.m_patchSize.size() + 1, -1);
+    std::vector<int64_t> sizes(config.GetPatchSize().size() + 1, -1);
     sizes[0] = nbSample;
 
-    torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.m_patchSize) }, torch::kFloat)
+    torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, torch::kFloat)
                                        .unsqueeze(0)
                                        .expand(sizes)
                                        .unsqueeze(1)
@@ -791,27 +793,27 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
     for (unsigned int s = 0; s < nbSample; ++s)
     {
       patchValueTensor[s] = imagesPatchValuesAndJacobiansEvaluator(
-        fixedPoints[s], imagesPatchesJacobians, patchIndex[i][s], config.m_patchSize, s);
+        fixedPoints[s], imagesPatchesJacobians, patchIndex[i][s], config.GetPatchSize(), s);
     }
 
 
     std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
-    resizeVector[1] = config.m_numberOfChannels;
+    resizeVector[1] = config.GetNumberOfChannels();
     patchValueTensor =
       patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone().set_requires_grad(true);
-    imagesPatchesJacobians = imagesPatchesJacobians.to(device).repeat({ 1, config.m_numberOfChannels, 1 }).clone();
+    imagesPatchesJacobians = imagesPatchesJacobians.to(device).repeat({ 1, config.GetNumberOfChannels(), 1 }).clone();
 
-    std::vector<torch::jit::IValue> outputsList = config.m_model->forward({ patchValueTensor }).toList().vec();
+    std::vector<torch::jit::IValue> outputsList = config.GetModel()->forward({ patchValueTensor }).toList().vec();
     torch::Tensor                   layer, diffLayer, modelJacobian;
     for (int it = 0; it < outputsList.size(); ++it)
     {
-      if (config.m_layersMask[it])
+      if (config.GetLayersMask()[it])
       {
-        int nb = std::accumulate(config.m_layersMask.begin(), config.m_layersMask.end(), 0);
+        int nb = std::accumulate(config.GetLayersMask().begin(), config.GetLayersMask().end(), 0);
 
         layer = outputsList[it]
                   .toTensor()
-                  .index(config.m_centersIndexLayers[a])
+                  .index(config.GetCentersIndexLayers()[a])
                   .index_select(1, subsetsOfFeatures[a])
                   .to(torch::kFloat);
         torch::Tensor gradientModulator = losses[a]->updateValueAndGetGradientModulator(fixedOutputsTensor[a], layer);

@@ -258,28 +258,188 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  /** Utility functions to parse Elastix-style vector strings. */
-  template <typename T>
-  std::vector<T>
-  GetVectorFromString(int size, std::string valueStr, T defaultValue);
-  template <typename T>
-  std::vector<T>
-  GetVectorFromString(int size, std::string valueStr, T defaultValue, char delimiter);
-  template <typename T>
-  std::vector<T>
-  GetVectorFromString(std::string valueStr, T defaultValue, char delimiter);
-  template <typename T>
-  std::vector<T>
-  GetVectorFromString(std::string valueStr, T defaultValue);
-
   std::vector<typename Superclass1::ModelConfiguration>
   GenerateModelsConfiguration(unsigned int level, std::string type, std::string mode, unsigned int imageDimension);
-  template <typename T>
-  std::string
-  GetStringFromVector(const std::vector<T> & vec);
 };
 
 } // end namespace elastix
+
+/**
+ * ******************* GetVectorFromString ***********************
+ */
+template <typename T>
+std::vector<T>
+GetVectorFromString(std::string valueStr, T defaultValue, char delimiter)
+{
+  std::vector<T> values;
+
+  if (delimiter == '\0')
+  {
+    for (char c : valueStr)
+    {
+      std::stringstream tokenStream(std::string(1, c));
+      std::string       token;
+      if (tokenStream >> token)
+      {
+        if constexpr (std::is_unsigned<T>::value)
+        {
+          int temp = std::stoi(token);
+          if (temp < 0)
+          {
+            temp = 0;
+          }
+          values.push_back(static_cast<T>(temp));
+        }
+        else
+        {
+          values.push_back(static_cast<T>(token));
+        }
+      }
+    }
+  }
+  else
+  {
+    std::stringstream ss(valueStr);
+    std::string       token;
+
+    while (std::getline(ss, token, delimiter))
+    {
+      std::stringstream tokenStream(token);
+      std::string       token1;
+      if (tokenStream >> token1)
+      {
+        if constexpr (std::is_unsigned<T>::value)
+        {
+          int temp = std::stoi(token1);
+          if (temp < 0)
+          {
+            temp = 0;
+          }
+          values.push_back(static_cast<T>(temp));
+        }
+        else
+        {
+          values.push_back(static_cast<T>(token1));
+        }
+      }
+    }
+  }
+  if (values.empty())
+  {
+    values.push_back(defaultValue);
+  }
+  return values;
+} // end GetVectorFromString
+
+/**
+ * ******************* GetVectorFromString ***********************
+ */
+template <typename T>
+std::vector<T>
+GetVectorFromString(std::string valueStr, T defaultValue)
+{
+  std::stringstream ss(valueStr);
+  std::vector<T>    values;
+  std::string       token;
+
+  while (ss >> token)
+  {
+    if constexpr (std::is_unsigned<T>::value)
+    {
+      int temp = std::stoi(token);
+      if (temp < 0)
+      {
+        temp = 0;
+      }
+      values.push_back(static_cast<T>(temp));
+    }
+    else
+    {
+      values.push_back(static_cast<T>(token));
+    }
+  }
+  if (values.empty())
+  {
+    values.push_back(defaultValue);
+  }
+  return values;
+} // end GetVectorFromString
+
+/**
+ * ******************* GetVectorFromString ***********************
+ */
+template <typename T>
+std::vector<T>
+GetVectorFromString(int size, std::string valueStr, T defaultValue)
+{
+  std::stringstream ss(valueStr);
+  std::vector<T>    values;
+  T                 value;
+
+  while (ss >> value && values.size() < size)
+  {
+    values.push_back(value);
+  }
+  if (values.empty())
+  {
+    values.push_back(defaultValue);
+  }
+  while (values.size() < size)
+  {
+    values.push_back(values[0]);
+  }
+  return values;
+} // end GetVectorFromString
+
+/**
+ * ******************* GetVectorFromString ***********************
+ */
+template <typename T>
+std::vector<T>
+GetVectorFromString(int size, std::string valueStr, T defaultValue, char delimiter)
+{
+  std::vector<T> values;
+
+  if (delimiter == '\0')
+  {
+    for (char c : valueStr)
+    {
+      if (values.size() >= size)
+        break;
+      std::stringstream tokenStream(std::string(1, c));
+      T                 value;
+      if (tokenStream >> value)
+      {
+        values.push_back(value);
+      }
+    }
+  }
+  else
+  {
+    std::stringstream ss(valueStr);
+    std::string       token;
+
+    while (std::getline(ss, token, delimiter) && values.size() < size)
+    {
+      std::stringstream tokenStream(token);
+      T                 value;
+      if (tokenStream >> value)
+      {
+        values.push_back(value);
+      }
+    }
+  }
+  if (values.empty())
+  {
+    values.push_back(defaultValue);
+  }
+  while (values.size() < size)
+  {
+    values.push_back(values[0]);
+  }
+
+  return values;
+} // end GetVectorFromString
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #  include "elxImpactMetric.hxx"
