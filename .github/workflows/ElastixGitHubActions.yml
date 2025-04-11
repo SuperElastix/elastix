@@ -18,6 +18,7 @@ jobs:
           - os: ubuntu-22.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
+            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.2.so"
@@ -25,6 +26,7 @@ jobs:
           - os: windows-2022
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
+            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.6.0%2Bcpu.zip
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
             ANNLib: "ANNlib-5.2.dll"
@@ -32,6 +34,7 @@ jobs:
           - os: macos-13
             c-compiler: "clang"
             cxx-compiler: "clang++"
+            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.6.0.zip
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
             ANNLib: "libANNlib-5.2.1.dylib"
@@ -51,12 +54,24 @@ jobs:
       shell: bash
 
     - uses: actions/cache@v3
-      id: cache
+      id: cache_ITK
       with:
         path: |
           ITK-build
           ITK-source
         key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}
+
+    - name: Save libtorch URL to file
+      run: |
+        echo "${{ matrix.libtorch_url }}" > libtorch_url.txt
+
+    - uses: actions/cache@v3
+      id: cache_libtorch
+      with:
+        path: |
+          libtorch.zip
+          libtorch
+        key: libtorch-${{ hashFiles('libtorch_url.txt') }}
 
     - name: Set up Python
       uses: actions/setup-python@v3
@@ -71,15 +86,27 @@ jobs:
     - name: Get specific version of CMake, Ninja
       uses: lukka/get-cmake@v3.24.2
 
+    - name: Download libtorch CPU
+      if: steps.cache_libtorch.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        curl -L ${{matrix.libtorch_url}} -o libtorch.zip
+
+    - name: Extract libtorch
+      if: steps.cache_libtorch.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        unzip -q libtorch.zip -d libtorch
+
     - name: Download ITK
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache_ITK.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/InsightSoftwareConsortium/ITK.git ITK-source
         cd ITK-source
         git checkout ${{ matrix.itk-git-tag }}
 
     - name: Build ITK
-      if: ${{ steps.cache.outputs.cache-hit != 'true' && !startsWith(matrix.os, 'windows') }}
+      if: ${{ steps.cache_ITK.outputs.cache-hit != 'true' && !startsWith(matrix.os, 'windows') }}
       run: |
         mkdir ITK-build
         cd ITK-build
@@ -87,7 +114,7 @@ jobs:
         ninja
 
     - name: Build ITK
-      if: steps.cache.outputs.cache-hit != 'true' && startsWith(matrix.os, 'windows')
+      if: steps.cache_ITK.outputs.cache-hit != 'true' && startsWith(matrix.os, 'windows')
       run: |
         mkdir ITK-build
         cd ITK-build
@@ -126,6 +153,7 @@ jobs:
         endif()
         set(dashboard_cache "
         ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+        Torch_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/share/cmake/Torch
         ELASTIX_USE_GTEST:BOOL=ON
         USE_ALL_COMPONENTS:BOOL=ON
         BUILD_TESTING:BOOL=ON
@@ -175,13 +203,13 @@ jobs:
     - name: Run externalproject example
       if: ${{ !startsWith(matrix.os, 'windows') }}
       run: |
-        externalproject-build/elastix_translation_example
+        externalproject-build/elastix_impact_metric_example
 
     - name: Run externalproject example
       if: startsWith(matrix.os, 'windows')
       run: |
         set path=${{ github.workspace }}\Elastix-build\bin
-        externalproject-build\elastix_translation_example.exe
+        externalproject-build\elastix_impact_metric_example.exe
       shell: cmd
 
     - name: Prepare Artifacts Unix
