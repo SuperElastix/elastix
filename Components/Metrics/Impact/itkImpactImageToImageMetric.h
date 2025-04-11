@@ -294,11 +294,11 @@ public:
   itkSetMacro(PCA, std::vector<unsigned int>);
   itkGetConstMacro(PCA, std::vector<unsigned int>);
 
-  /** Set/Get the GPU device on which all model inference and tensor operations are performed.
+  /** Set/Get the device on which all model inference and tensor operations are performed.
    * Example: torch::Device(torch::kCUDA, 0) for GPU 0.
    */
-  itkSetMacro(GPU, torch::Device);
-  itkGetConstMacro(GPU, torch::Device);
+  itkSetMacro(Device, torch::Device);
+  itkGetConstMacro(Device, torch::Device);
 
   /** Set/Get whether the extracted feature maps should be written to disk (for inspection or debugging).
    * Useful for visualizing the intermediate representations used by the metric.
@@ -628,7 +628,7 @@ private:
   std::string               m_Mode;
   bool                      m_WriteFeatureMaps;
   std::string               m_FeatureMapsPath;
-  torch::Device             m_GPU = torch::Device(torch::kCPU);
+  torch::Device             m_Device = torch::Device(torch::kCPU);
   unsigned int              m_CurrentLevel;
 
   std::vector<FeaturesMaps>  fixedFeaturesMaps;

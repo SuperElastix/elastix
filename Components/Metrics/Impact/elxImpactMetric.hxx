@@ -74,7 +74,7 @@ ImpactMetric<TElastix>::Initialize()
       << "\nPCA: " << this->GetStringFromVector<unsigned int>(this->GetPCA())
       << "\nLayersWeight: " << this->GetStringFromVector<float>(this->GetLayersWeight())
       << "\nDistance: " << this->GetStringFromVector<std::string>(this->GetDistance()) << "\nMode: " << this->GetMode()
-      << "\nGPU: " << this->GetGPU();
+      << "\nDevice: " << this->GetDevice();
 
   if (this->GetMode() == "Static")
   {
@@ -490,7 +490,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   // Choose GPU device if available and requested, fallback to CPU otherwise.
   // Raise explicit errors if user-requested GPU index is invalid.
   int device = 0;
-  this->GetConfiguration()->ReadParameter(device, "GPU", this->GetComponentLabel(), level, 0);
+  this->GetConfiguration()->ReadParameter(device, "Device", this->GetComponentLabel(), level, 0);
 
   // Select computation device (GPU or CPU) based on availability and config
   if (device >= 0)
@@ -500,7 +500,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
       int availableGPUs = torch::cuda::device_count();
       if (device < availableGPUs)
       {
-        this->SetGPU(torch::Device(torch::kCUDA, device));
+        this->SetDevice(torch::Device(torch::kCUDA, device));
       }
       else
       {
@@ -515,7 +515,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
   else
   {
-    this->SetGPU(torch::Device(torch::kCPU));
+    this->SetDevice(torch::Device(torch::kCPU));
   }
 
   // Handle feature map export setup.
@@ -535,7 +535,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetFixedModelsConfiguration()[i].m_layersMask;
     fixedNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetFixedModelsConfiguration()[i].m_model->to(this->GetGPU());
+    this->GetFixedModelsConfiguration()[i].m_model->to(this->GetDevice());
   }
 
   int movingNumberOfLayers = 0;
@@ -543,7 +543,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetMovingModelsConfiguration()[i].m_layersMask;
     movingNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetMovingModelsConfiguration()[i].m_model->to(this->GetGPU());
+    this->GetMovingModelsConfiguration()[i].m_model->to(this->GetDevice());
   }
 
   if (fixedNumberOfLayers != movingNumberOfLayers)
@@ -575,7 +575,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   if (mode == "Static")
   {
-    std::string writeFeatureMapsStr;
+    std::string writeFeatureMapsStr = "false";
     this->GetConfiguration()->ReadParameter(
       writeFeatureMapsStr, "WriteFeatureMaps", this->GetComponentLabel(), level, 0);
     if (writeFeatureMapsStr != "false")

@@ -38,9 +38,6 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
-    displayName: 'Clone ITK'
-  - script: |
       mkdir "$(ITK_BINARY_DIR)"
       mkdir "$(ELASTIX_BINARY_DIR)"
       mkdir externalproject-build
@@ -54,6 +51,9 @@ jobs:
     inputs:
       archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
       destinationFolder: '$(Agent.BuildDirectory)/libtorch'
+  - script: |
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+    displayName: 'Clone ITK'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -84,8 +84,9 @@ jobs:
     inputs:
       cmakeArgs: --build . --config Release
       workingDirectory: $(Agent.BuildDirectory)/externalproject-build
-  - script: externalproject-build\Release\elastix_impact_metric_example.exe
-    shell: cmd
+  - bash: |
+      export PATH="$(ELASTIX_BINARY_DIR)/bin/Release:$(LIBTORCH_BINARY_DIR)/lib:$PATH"
+      ./Release/elastix_impact_metric_example.exe
     displayName: 'Run externalproject'
     workingDirectory: $(Agent.BuildDirectory)
   - bash: python -m pip install -r "$(ELASTIX_SOURCE_DIR)/Testing/PythonTests/requirements.txt"
@@ -103,8 +104,6 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
-  - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
@@ -118,6 +117,9 @@ jobs:
     inputs:
       archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
       destinationFolder: '$(Agent.BuildDirectory)/libtorch'
+  - script: |
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+    displayName: 'Clone ITK'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:
@@ -165,22 +167,14 @@ jobs:
         itk.version: $(ITKv5_VERSION)
   steps:
   - script: |
-      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
-    displayName: Clone ITK
-  - script: |
       mkdir $(ITK_BINARY_DIR)
       mkdir $(ELASTIX_BINARY_DIR)
       mkdir externalproject-build
       mkdir "$(Agent.BuildDirectory)/libtorch"
     displayName: 'Make build directories'
   - script: |
-      curl -L $(LIBTORCH_BINARY_URL_MAC) -o $(Agent.BuildDirectory)/libtorch.zip
-    displayName: 'Download LibTorch CPU'
-  - task: ExtractFiles@1
-    displayName: 'Extract LibTorch'
-    inputs:
-      archiveFilePatterns: '$(Agent.BuildDirectory)/libtorch.zip'
-      destinationFolder: '$(Agent.BuildDirectory)/libtorch'
+      git clone $(ITK_GIT_URL) --branch $(itk.version) --depth 1 "$(ITK_SOURCE_DIR)"
+    displayName: 'Clone ITK'
   - task: CMake@1
     displayName: 'CMake Generate ITK'
     inputs:

@@ -76,7 +76,7 @@ GetFeaturesMaps(
   typename TImage::ConstPointer                                                                    image,
   typename InterpolatorType::Pointer                                                               interpolator,
   const std::vector<ModelConfiguration> &                                                          modelsConfiguration,
-  torch::Device                                                                                    gpu,
+  torch::Device                                                                                    device,
   std::vector<unsigned int>                                                                        pca,
   std::vector<torch::Tensor> &                                                                     principal_components,
   const std::function<void(typename TImage::ConstPointer, torch::Tensor &, const std::string &)> & writeInputImage,
@@ -94,7 +94,7 @@ template <typename ModelConfiguration>
 std::vector<torch::Tensor>
 GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
                        const std::string &               modelType,
-                       torch::Device                     gpu);
+                       torch::Device                     device);
 
 /**
  * \brief Computes patch index offsets around a center point based on model config.
@@ -124,7 +124,7 @@ GenerateOutputs(const std::vector<ModelConfiguration> &                         
                 const std::vector<ImagePointType> &                                   fixedPoints,
                 const std::vector<std::vector<std::vector<std::vector<float>>>> &     patchIndex,
                 const std::vector<torch::Tensor>                                      subsetsOfFeatures,
-                torch::Device                                                         gpu,
+                torch::Device                                                         device,
                 const ImpactTensorUtils::ImagesPatchValuesEvaluator<ImagePointType> & imagesPatchValuesEvaluator);
 
 template <typename ImagePointType>
@@ -149,7 +149,7 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
                            const std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex,
                            std::vector<torch::Tensor>                                        subsetsOfFeatures,
                            std::vector<torch::Tensor>                                        fixedOutputsTensor,
-                           torch::Device                                                     gpu,
+                           torch::Device                                                     device,
                            std::vector<std::unique_ptr<ImpactLoss::Loss>> &                  losses,
                            const ImpactTensorUtils::ImagesPatchValuesAndJacobiansEvaluator<ImagePointType> &
                              imagesPatchValuesAndJacobiansEvaluator);

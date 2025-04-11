@@ -177,7 +177,7 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
       {
         const float *                    pixelPtr = layersData + x * rowStride + y * numberOfChannels;
         itk::VariableLengthVector<float> variableLengthVector(numberOfChannels);
-        for (int i = 0; i < numberOfChannels; ++i)
+        for (unsigned int i = 0; i < numberOfChannels; ++i)
         {
           variableLengthVector[i] = pixelPtr[i];
         }
@@ -317,7 +317,7 @@ GetFeaturesMaps(
   typename TImage::ConstPointer                                                                    image,
   typename InterpolatorType::Pointer                                                               interpolator,
   const std::vector<ModelConfiguration> &                                                          modelsConfiguration,
-  torch::Device                                                                                    gpu,
+  torch::Device                                                                                    device,
   std::vector<unsigned int>                                                                        pca,
   std::vector<torch::Tensor> &                                                                     principal_components,
   const std::function<void(typename TImage::ConstPointer, torch::Tensor &, const std::string &)> & writeInputImage,
@@ -383,7 +383,7 @@ GetFeaturesMaps(
                                          .unsqueeze(0)
                                          .repeat({ torch::IntArrayRef(channelRepeat) })
                                          .unsqueeze(0)
-                                         .to(gpu);
+                                         .to(device);
             std::vector<torch::jit::IValue> outputsPatch = config.m_model->forward({ inputPatch }).toList().vec();
 
 
@@ -457,7 +457,7 @@ GetFeaturesMaps(
                                        .unsqueeze(0)
                                        .repeat({ torch::IntArrayRef(channelRepeat) })
                                        .unsqueeze(0)
-                                       .to(gpu);
+                                       .to(device);
 
           std::vector<torch::jit::IValue> outputsPatch = config.m_model->forward({ inputPatch }).toList().vec();
 
@@ -547,7 +547,9 @@ GetFeaturesMaps(
  */
 template <typename ModelConfiguration>
 std::vector<torch::Tensor>
-GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig, const std::string & modelType, torch::Device gpu)
+GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
+                       const std::string &               modelType,
+                       torch::Device                     device)
 {
 
   std::vector<torch::Tensor> outputsTensor;
@@ -564,28 +566,29 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig, const std
                           .repeat({ torch::IntArrayRef(resizeVector) })
                           .unsqueeze(0)
                           .clone()
-                          .to(gpu);
+                          .to(device);
       try
       {
         outputsList = config.m_model->forward({ modelInput }).toList().vec();
       }
       catch (const std::exception & e)
       {
-        itkGenericExceptionMacro("ERROR: The "
-                                 << modelType << " model " << i
-                                 << " configuration is invalid. The dimensions, number of channels, or patch size may "
-                                    "not meet the requirements of the model.\n"
-                                    "Details:\n"
-                                    " - Number of channels: "
-                                 << config.m_numberOfChannels
-                                 << "\n"
-                                    " - Patch size: "
-                                 << config.m_patchSize
-                                 << "\n"
-                                    " - Dimension: "
-                                 << config.m_dimension
-                                 << "\n"
-                                    "Please verify the configuration to ensure compatibility with the model.");
+        itkGenericExceptionMacro(
+          "ERROR: The " << modelType << " model " << i
+                        << " configuration is invalid. The dimensions, number of channels, or patch size may "
+                           "not meet the requirements of the model.\n"
+                           "Details:\n"
+                           " - Number of channels: "
+                        << config.m_numberOfChannels
+                        << "\n"
+                           " - Patch size: "
+                        << config.m_patchSize
+                        << "\n"
+                           " - Dimension: "
+                        << config.m_dimension
+                        << "\n"
+                           "Please verify the configuration to ensure compatibility with the model. \n Exception : "
+                        << e.what());
       }
       if (config.m_layersMask.size() != outputsList.size())
       {
@@ -697,7 +700,7 @@ GenerateOutputs(const std::vector<ModelConfiguration> &                         
                 const std::vector<ImagePointType> &                                   fixedPoints,
                 const std::vector<std::vector<std::vector<std::vector<float>>>> &     patchIndex,
                 const std::vector<torch::Tensor>                                      subsetsOfFeatures,
-                torch::Device                                                         gpu,
+                torch::Device                                                         device,
                 const ImpactTensorUtils::ImagesPatchValuesEvaluator<ImagePointType> & imagesPatchValuesEvaluator)
 {
 
@@ -728,7 +731,7 @@ GenerateOutputs(const std::vector<ModelConfiguration> &                         
       std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
       resizeVector[1] = config.m_numberOfChannels;
       std::vector<torch::jit::IValue> outputsList =
-        config.m_model->forward({ patchValueTensor.to(gpu).repeat({ torch::IntArrayRef(resizeVector) }).clone() })
+        config.m_model->forward({ patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone() })
           .toList()
           .vec();
 
@@ -759,7 +762,7 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
                            const std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex,
                            std::vector<torch::Tensor>                                        subsetsOfFeatures,
                            std::vector<torch::Tensor>                                        fixedOutputsTensor,
-                           torch::Device                                                     gpu,
+                           torch::Device                                                     device,
                            std::vector<std::unique_ptr<ImpactLoss::Loss>> &                  losses,
                            const ImpactTensorUtils::ImagesPatchValuesAndJacobiansEvaluator<ImagePointType> &
                              imagesPatchValuesAndJacobiansEvaluator)
@@ -795,8 +798,8 @@ GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &              
     std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
     resizeVector[1] = config.m_numberOfChannels;
     patchValueTensor =
-      patchValueTensor.to(gpu).repeat({ torch::IntArrayRef(resizeVector) }).clone().set_requires_grad(true);
-    imagesPatchesJacobians = imagesPatchesJacobians.to(gpu).repeat({ 1, config.m_numberOfChannels, 1 }).clone();
+      patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone().set_requires_grad(true);
+    imagesPatchesJacobians = imagesPatchesJacobians.to(device).repeat({ 1, config.m_numberOfChannels, 1 }).clone();
 
     std::vector<torch::jit::IValue> outputsList = config.m_model->forward({ patchValueTensor }).toList().vec();
     torch::Tensor                   layer, diffLayer, modelJacobian;

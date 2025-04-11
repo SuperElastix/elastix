@@ -110,8 +110,8 @@ namespace elastix
  * \param LayersWeight Relative importance of each selected model/layer in the total loss computation.
  *   Can be used to emphasize certain semantic levels. Example: <tt>(LayersWeight "1.0 0.5")</tt>
  *
- * \param GPU Index of the GPU device to use. Set to -1 to force CPU execution.
- *   Example: <tt>(GPU -1)</tt>
+ * \param Device Index of the GPU device to use. Set to -1 to force CPU execution.
+ *   Example: <tt>(Device -1)</tt>
  *
  * \param PCA Number of principal components to retain per model during optional PCA-based feature compression.
  *   Set to 0 to disable PCA. Example: <tt>(PCA "32 3")</tt>

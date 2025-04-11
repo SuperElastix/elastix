@@ -66,7 +66,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       }
       catch (itk::ExceptionObject & error)
       {
-        itkGenericExceptionMacro("Error writing image file: " << writer->GetFileName() << " ITK Exception: " << error);
+        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << " ITK Exception: " << error);
       }
     });
 
@@ -83,7 +83,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       }
       catch (itk::ExceptionObject & error)
       {
-        itkGenericExceptionMacro("Error writing image file: " << writer->GetFileName() << " ITK Exception: " << error);
+        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << " ITK Exception: " << error);
       }
     });
 
@@ -92,7 +92,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       Superclass::m_MovingImage,
       Superclass::m_Interpolator,
       this->GetMovingModelsConfiguration(),
-      this->GetGPU(),
+      this->GetDevice(),
       this->GetPCA(),
       this->principal_components,
       this->GetWriteFeatureMaps() ? movingWriter : nullptr);
@@ -102,7 +102,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       Superclass::m_FixedImage,
       this->fixedInterpolator,
       this->GetFixedModelsConfiguration(),
-      this->GetGPU(),
+      this->GetDevice(),
       this->GetPCA(),
       this->principal_components,
       this->GetWriteFeatureMaps() ? fixedWriter : nullptr);
@@ -123,7 +123,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
         writer->Update();
       }
       catch (itk::ExceptionObject & error)
-      {}
+      {
+        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << " ITK Exception: " << error);
+      }
     }
     for (int i = 0; i < fixedFeaturesMaps.size(); ++i)
     {
@@ -137,7 +139,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
         writer->Update();
       }
       catch (itk::ExceptionObject & error)
-      {}
+      {
+        itkGenericExceptionMacro("Error writing feature map: " << writer->GetFileName() << " ITK Exception: " << error);
+      }
     }
   }
 } // end UpdateFeaturesMaps
@@ -162,7 +166,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
       }
       catch (itk::ExceptionObject & error)
       {
-        itkGenericExceptionMacro("Error writing image file: " << writer->GetFileName() << "ITK Exception: " << error);
+        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << "ITK Exception: " << error);
       }
     });
 
@@ -172,7 +176,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
       Superclass::m_MovingImage,
       Superclass::m_Interpolator,
       this->GetMovingModelsConfiguration(),
-      this->GetGPU(),
+      this->GetDevice(),
       this->GetPCA(),
       this->principal_components,
       this->GetWriteFeatureMaps() ? movingWriter : nullptr,
@@ -196,7 +200,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
         writer->Update();
       }
       catch (itk::ExceptionObject & error)
-      {}
+      {
+        itkGenericExceptionMacro("Error writing feature map: " << writer->GetFileName() << "ITK Exception: " << error);
+      }
     }
   }
 } // end UpdateMovingFeaturesMaps
@@ -247,9 +253,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   else
   {
     std::vector<torch::Tensor> fixedOutputsTensor = ImpactTensorUtils::GetModelOutputsExample<ModelConfiguration>(
-      this->m_FixedModelsConfiguration, "fixed", this->GetGPU());
+      this->m_FixedModelsConfiguration, "fixed", this->GetDevice());
     std::vector<torch::Tensor> movingOutputsTensor = ImpactTensorUtils::GetModelOutputsExample<ModelConfiguration>(
-      this->m_MovingModelsConfiguration, "moving", this->GetGPU());
+      this->m_MovingModelsConfiguration, "moving", this->GetDevice());
 
     if (fixedOutputsTensor.size() != movingOutputsTensor.size())
     {
@@ -508,7 +514,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
     std::vector<int> features_index = this->features_indexes[i];
     std::shuffle(features_index.begin(), features_index.end(), this->g);
     std::vector<int> subsetOfFeatures(features_index.begin(), features_index.begin() + this->GetSubsetFeatures()[i]);
-    subsetsOfFeatures[i] = torch::tensor(subsetOfFeatures, torch::kInt64).to(this->GetGPU());
+    subsetsOfFeatures[i] = torch::tensor(subsetOfFeatures, torch::kInt64).to(this->GetDevice());
   }
 
   const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> fixedimagesPatchValuesEvaluator =
@@ -524,7 +530,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
                                                                                 fixedPoints,
                                                                                 patchIndex,
                                                                                 subsetsOfFeatures,
-                                                                                this->GetGPU(),
+                                                                                this->GetDevice(),
                                                                                 fixedimagesPatchValuesEvaluator);
 
   const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> movingimagesPatchValuesEvaluator =
@@ -539,7 +545,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
                                                                                  fixedPoints,
                                                                                  patchIndex,
                                                                                  subsetsOfFeatures,
-                                                                                 this->GetGPU(),
+                                                                                 this->GetDevice(),
                                                                                  movingimagesPatchValuesEvaluator);
 
   for (int i = 0; i < fixedOutputsTensor.size(); ++i)
@@ -616,22 +622,29 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
   torch::Tensor transformsJacobian =
     torch::zeros({ nb_sample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat);
 
-  TransformJacobianType      flatTransformJacobian;
-  NonZeroJacobianIndicesType flatNonZeroJacobianIndices(numNonZeroJacobianIndices);
+  TransformJacobianType      flatTransformJacobian; // class itk::Array2D<double>
+  NonZeroJacobianIndicesType flatNonZeroJacobianIndices(
+    numNonZeroJacobianIndices); // class std::vector<unsigned long,class std::allocator<unsigned long> >
 
   for (unsigned int s = 0; s < nb_sample; ++s)
   {
     this->m_AdvancedTransform->GetJacobian(fixedPoints[s], flatTransformJacobian, flatNonZeroJacobianIndices);
-    nonZeroJacobianIndices[s] =
-      torch::from_blob(flatNonZeroJacobianIndices.data(), { numNonZeroJacobianIndices }, torch::kLong).clone();
+    // Explicit cast to int64_t is required for from_blob with torch::kLong,
+    // ensuring portability across 32-bit and 64-bit architectures.
+    // Only needed for integer types, floating point is safe.
+    for (size_t i = 0; i < numNonZeroJacobianIndices; ++i)
+    {
+      nonZeroJacobianIndices[s][i] = static_cast<int64_t>(flatNonZeroJacobianIndices[i]);
+    }
+
     transformsJacobian[s] = torch::from_blob(&(*flatTransformJacobian.begin()),
                                              { MovingImageDimension, numNonZeroJacobianIndices },
                                              torch::kDouble)
                               .to(torch::kFloat)
                               .clone();
   }
-  transformsJacobian = transformsJacobian.to(this->GetGPU());
-  nonZeroJacobianIndices = nonZeroJacobianIndices.to(this->GetGPU());
+  transformsJacobian = transformsJacobian.to(this->GetDevice());
+  nonZeroJacobianIndices = nonZeroJacobianIndices.to(this->GetDevice());
   std::vector<torch::Tensor> subsetsOfFeatures(this->features_indexes.size());
 
   for (int i = 0; i < this->features_indexes.size(); ++i)
@@ -639,7 +652,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
     std::vector<int> features_index = this->features_indexes[i];
     std::shuffle(features_index.begin(), features_index.end(), this->g);
     std::vector<int> subsetOfFeatures(features_index.begin(), features_index.begin() + this->GetSubsetFeatures()[i]);
-    subsetsOfFeatures[i] = torch::tensor(subsetOfFeatures, torch::kInt64).to(this->GetGPU());
+    subsetsOfFeatures[i] = torch::tensor(subsetOfFeatures, torch::kInt64).to(this->GetDevice());
   };
 
   const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> imagesPatchValuesEvaluator =
@@ -655,7 +668,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
                                                                                 fixedPoints,
                                                                                 patchIndex,
                                                                                 subsetsOfFeatures,
-                                                                                this->GetGPU(),
+                                                                                this->GetDevice(),
                                                                                 imagesPatchValuesEvaluator);
 
 
@@ -676,7 +689,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
       patchIndex,
       subsetsOfFeatures,
       fixedOutputsTensor,
-      this->GetGPU(),
+      this->GetDevice(),
       losses,
       imagesPatchValuesAndJacobiansEvaluator);
 
@@ -717,13 +730,20 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
   torch::Tensor transformsJacobian =
     torch::zeros({ nb_sample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat);
 
-  TransformJacobianType      flatTransformJacobian;
-  NonZeroJacobianIndicesType flatNonZeroJacobianIndices(numNonZeroJacobianIndices);
+  TransformJacobianType      flatTransformJacobian; // class itk::Array2D<double>
+  NonZeroJacobianIndicesType flatNonZeroJacobianIndices(
+    numNonZeroJacobianIndices); // class std::vector<unsigned long,class std::allocator<unsigned long> >
   for (unsigned int s = 0; s < nb_sample; ++s)
   {
     this->m_AdvancedTransform->GetJacobian(fixedPoints[s], flatTransformJacobian, flatNonZeroJacobianIndices);
-    nonZeroJacobianIndices[s] =
-      torch::from_blob(flatNonZeroJacobianIndices.data(), { numNonZeroJacobianIndices }, torch::kLong).clone();
+    // Explicit cast to int64_t is required for from_blob with torch::kLong,
+    // ensuring portability across 32-bit and 64-bit architectures.
+    // Only needed for integer types, floating point is safe.
+    for (size_t i = 0; i < numNonZeroJacobianIndices; ++i)
+    {
+      nonZeroJacobianIndices[s][i] = static_cast<int64_t>(flatNonZeroJacobianIndices[i]);
+    }
+
     transformsJacobian[s] = torch::from_blob(&(*flatTransformJacobian.begin()),
                                              { MovingImageDimension, numNonZeroJacobianIndices },
                                              torch::kDouble)
@@ -781,14 +801,14 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParamete
   // if (this->m_GetValueAndDerivativePerThreadVariablesSize != numberOfThreads){
   this->m_LossThreadStruct.reset(new AlignedLossPerThreadStruct[numberOfThreads]);
 
-  for (int i = 0; i < numberOfThreads; ++i)
+  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     this->m_LossThreadStruct[i].init(this->GetDistance(), this->GetLayersWeight());
   }
   this->m_LossThreadStructSize = numberOfThreads;
 
   const int nb_parameters = this->GetNumberOfParameters();
-  for (int i = 0; i < numberOfThreads; ++i)
+  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
   {
     this->m_LossThreadStruct[i].set_nb_parameters(nb_parameters);
   }
