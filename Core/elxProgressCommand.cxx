@@ -185,7 +185,7 @@ ProgressCommand::PrintProgress(const float progress) const
 void
 ProgressCommand::UpdateAndPrintProgress(const unsigned long currentVoxelNumber) const
 {
-  const auto frac = static_cast<unsigned long>(m_NumberOfVoxels / m_NumberOfUpdates);
+  const auto frac = static_cast<std::uint64_t>(m_NumberOfVoxels / m_NumberOfUpdates);
   if (currentVoxelNumber % frac == 0)
   {
     this->PrintProgress(static_cast<float>(currentVoxelNumber) / static_cast<float>(m_NumberOfVoxels));

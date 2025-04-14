@@ -192,7 +192,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
   /** Print the time spent on reading images. */
   ElastixBase::m_Timer0.Stop();
   log::info(std::ostringstream{} << "Reading images took "
-                                 << static_cast<unsigned long>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.\n");
+                                 << static_cast<std::uint64_t>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.\n");
 
   /** Give all components the opportunity to do some initialization. */
   this->BeforeRegistration();
@@ -503,7 +503,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeRegistration()
   /** Print time for initializing. */
   ElastixBase::m_Timer0.Stop();
   log::info(std::ostringstream{} << "Initialization of all components (before registration) took: "
-                                 << static_cast<unsigned long>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
+                                 << static_cast<std::uint64_t>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
 
   /** Start Timer0 here, to make it possible to measure the time needed for
    * preparation of the first resolution.
@@ -529,7 +529,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   {
     ElastixBase::m_Timer0.Stop();
     log::info(std::ostringstream{} << "Preparation of the image pyramids took: "
-                                   << static_cast<unsigned long>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
+                                   << static_cast<std::uint64_t>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
     ElastixBase::m_Timer0.Reset();
     ElastixBase::m_Timer0.Start();
   }
@@ -558,7 +558,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::BeforeEachResolution()
   /** Print the extra preparation time needed for this resolution. */
   ElastixBase::m_Timer0.Stop();
   log::info(std::ostringstream{} << "Elastix initialization of all components (for this resolution) took: "
-                                 << static_cast<unsigned long>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
+                                 << static_cast<std::uint64_t>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
 
   /** Start ResolutionTimer, which measures the total iteration time in this resolution. */
   ElastixBase::m_ResolutionTimer.Reset();
@@ -763,7 +763,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::AfterRegistration()
   /** Print the time spent on things after the registration. */
   ElastixBase::m_Timer0.Stop();
   log::info(std::ostringstream{} << "Time spent on saving the results, applying the final transform etc.: "
-                                 << static_cast<unsigned long>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
+                                 << static_cast<std::uint64_t>(ElastixBase::m_Timer0.GetMean() * 1000) << " ms.");
 
 } // end AfterRegistration()
 
