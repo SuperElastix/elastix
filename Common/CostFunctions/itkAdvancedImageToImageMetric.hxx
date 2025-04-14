@@ -443,7 +443,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
         MovingImageIndexType index;
         for (unsigned int j = 0; j < MovingImageDimension; ++j)
         {
-          index[j] = static_cast<long>(Math::Round<int64_t>(cindex[j]));
+          index[j] = Math::Round<int64_t>(cindex[j]);
         }
         (*gradient) = Superclass::m_GradientImage->GetPixel(index);
       }
