@@ -129,7 +129,7 @@ DistancePreservingRigidityPenalty<TElastix>::Initialize()
   /** Stop and print the timer. */
   timer.Stop();
   log::info(std::ostringstream{} << "Initialization of DistancePreservingRigidityPenalty term took: "
-                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
+                                 << static_cast<std::int64_t>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
