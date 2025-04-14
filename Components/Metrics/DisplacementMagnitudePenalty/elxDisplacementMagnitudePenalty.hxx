@@ -37,7 +37,7 @@ DisplacementMagnitudePenalty<TElastix>::Initialize()
   this->Superclass1::Initialize();
   timer.Stop();
   log::info(std::ostringstream{} << "Initialization of DisplacementMagnitude metric took: "
-                                 << static_cast<long>(timer.GetMean() * 1000) << " ms.");
+                                 << static_cast<std::int64_t>(timer.GetMean() * 1000) << " ms.");
 
 } // end Initialize()
 
