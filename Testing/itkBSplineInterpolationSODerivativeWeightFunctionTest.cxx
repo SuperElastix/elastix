@@ -21,6 +21,8 @@
 #include <ctime>
 #include <iomanip>
 
+#include <itkMath.h>
+
 //-------------------------------------------------------------------------------------
 
 int
@@ -255,8 +257,7 @@ main()
     return 1;
   }
 
-  if (SODerivativeWeightFunctionType::NumberOfWeights !=
-      static_cast<unsigned long>(std::pow(static_cast<float>(SplineOrder + 1), 2.0f)))
+  if (SODerivativeWeightFunctionType::NumberOfWeights != itk::Math::sqr(SplineOrder + 1))
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;
     return 1;

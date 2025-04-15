@@ -21,6 +21,8 @@
 #include <ctime>
 #include <iomanip>
 
+#include <itkMath.h>
+
 //-------------------------------------------------------------------------------------
 // This test tests the itkBSplineInterpolationWeightFunction2 and compares
 // it with the ITK implementation. It should give equal results and comparable
@@ -249,8 +251,7 @@ main()
     return EXIT_FAILURE;
   }
 
-  if (WeightFunction2Type2D::NumberOfWeights !=
-      static_cast<unsigned long>(std::pow(static_cast<float>(SplineOrder + 1), 2.0f)))
+  if (WeightFunction2Type2D::NumberOfWeights != itk::Math::sqr(SplineOrder + 1))
   {
     std::cerr << "ERROR: wrong number of weights was computed." << std::endl;
     return EXIT_FAILURE;
