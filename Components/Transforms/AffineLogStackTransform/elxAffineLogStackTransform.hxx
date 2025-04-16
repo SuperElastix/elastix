@@ -167,6 +167,8 @@ template <typename TElastix>
 void
 AffineLogStackTransform<TElastix>::InitializeTransform()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Set all parameters to zero (no rotations, no translation). */
   m_DummySubTransform->SetIdentity();
 
@@ -174,36 +176,24 @@ AffineLogStackTransform<TElastix>::InitializeTransform()
    * which is the rotationPoint, expressed in index-values.
    */
 
-  ContinuousIndexType                 centerOfRotationIndex{};
-  InputPointType                      centerOfRotationPoint{};
-  ReducedDimensionContinuousIndexType RDcenterOfRotationIndex{};
-  ReducedDimensionInputPointType      RDcenterOfRotationPoint{};
-  InputPointType                      TransformedCenterOfRotation{};
-  ReducedDimensionInputPointType      RDTransformedCenterOfRotation{};
+  ContinuousIndexType            centerOfRotationIndex{};
+  ReducedDimensionInputPointType RDcenterOfRotationPoint{};
+  InputPointType                 TransformedCenterOfRotation{};
+  ReducedDimensionInputPointType RDTransformedCenterOfRotation{};
 
-  bool     centerGivenAsIndex = true;
-  bool     centerGivenAsPoint = true;
-  SizeType fixedImageSize =
+  const bool centerGivenAsIndex = [&configuration, &centerOfRotationIndex] {
+    for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
+    {
+      if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
+      {
+        return false;
+      }
+    }
+    return true;
+  }();
+  const bool centerGivenAsPoint = ReadCenterOfRotationPoint(RDcenterOfRotationPoint);
+  SizeType   fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-
-  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
-
-  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
-  {
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!foundI)
-    {
-      centerGivenAsIndex = false;
-    }
-
-    /** Check COR point: Returns zero when parameter was in the parameter file. */
-    bool foundP = configuration.ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
-    if (!foundP)
-    {
-      centerGivenAsPoint = false;
-    }
-  } // end loop over SpaceDimension
 
   /** Check if user wants automatic transform initialization; false by default.
    * If an initial transform is given, automatic transform initialization is
@@ -419,20 +409,14 @@ AffineLogStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInp
    * file, which is the rotationPoint, expressed in world coordinates.
    */
   ReducedDimensionInputPointType RDcenterOfRotationPoint{};
-  bool                           centerGivenAsPoint = true;
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(RDcenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
     {
-      centerGivenAsPoint = false;
+      return false;
     }
-  }
-
-  if (!centerGivenAsPoint)
-  {
-    return false;
   }
 
   /** copy the temporary variable into the output of this function,

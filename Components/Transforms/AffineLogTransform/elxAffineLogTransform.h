@@ -151,13 +151,13 @@ protected:
   /** The destructor. */
   ~AffineLogTransformElastix() override = default;
 
-  /** Try to read the CenterOfRotationPoint from the transform parameter file
-   * The CenterOfRotationPoint is already in world coordinates. */
-  virtual bool
-  ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
-
 private:
   elxOverrideGetSelfMacro;
+
+  /** Try to read the CenterOfRotationPoint from the transform parameter file
+   * The CenterOfRotationPoint is already in world coordinates. */
+  bool
+  ReadCenterOfRotationPoint(InputPointType & rotationPoint) const;
 
   /** Initialize Transform.
    * \li Set all parameters to zero.

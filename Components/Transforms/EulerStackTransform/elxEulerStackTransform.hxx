@@ -190,33 +190,23 @@ EulerStackTransform<TElastix>::InitializeTransform()
    * which is the rotationPoint, expressed in index-values.
    */
 
-  ContinuousIndexType                 centerOfRotationIndex{};
-  InputPointType                      centerOfRotationPoint{};
-  ReducedDimensionContinuousIndexType redDimCenterOfRotationIndex{};
-  ReducedDimensionInputPointType      redDimCenterOfRotationPoint{};
+  ContinuousIndexType            centerOfRotationIndex{};
+  InputPointType                 centerOfRotationPoint{};
+  ReducedDimensionInputPointType redDimCenterOfRotationPoint{};
 
-  bool     centerGivenAsIndex = true;
-  bool     centerGivenAsPoint = true;
-  SizeType fixedImageSize =
+  const bool centerGivenAsIndex = [&configuration, &centerOfRotationIndex] {
+    for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
+    {
+      if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
+      {
+        return false;
+      }
+    }
+    return true;
+  }();
+  const bool centerGivenAsPoint = ReadCenterOfRotationPoint(redDimCenterOfRotationPoint);
+  SizeType   fixedImageSize =
     this->m_Registration->GetAsITKBaseType()->GetFixedImage()->GetLargestPossibleRegion().GetSize();
-
-  /** Try to read center of rotation point (COP) from parameter file. */
-  for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
-  {
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    const bool foundI = configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!foundI)
-    {
-      centerGivenAsIndex = false;
-    }
-
-    /** Check COR point: Returns zero when parameter was in the parameter file. */
-    const bool foundP = configuration.ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
-    if (!foundP)
-    {
-      centerGivenAsPoint = false;
-    }
-  } // end loop over SpaceDimension
 
   /** Determine the center of rotation as the center of the image if no center was given */
   const bool centerGiven = centerGivenAsIndex || centerGivenAsPoint;
@@ -500,7 +490,6 @@ EulerStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPo
    * file, which is the rotationPoint, expressed in world coordinates.
    */
   ReducedDimensionInputPointType redDimCenterOfRotationPoint{};
-  bool                           centerGivenAsPoint = true;
   for (unsigned int i = 0; i < ReducedSpaceDimension; ++i)
   {
     /** Returns zero when parameter was in the parameter file. */
@@ -508,13 +497,8 @@ EulerStackTransform<TElastix>::ReadCenterOfRotationPoint(ReducedDimensionInputPo
       this->m_Configuration->ReadParameter(redDimCenterOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
     {
-      centerGivenAsPoint = false;
+      return false;
     }
-  }
-
-  if (!centerGivenAsPoint)
-  {
-    return false;
   }
 
   /** copy the temporary variable into the output of this function,

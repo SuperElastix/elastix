@@ -41,6 +41,7 @@ using ParameterFileNameVectorType = elx::ParameterObject::ParameterFileNameVecto
 // Using-declarations:
 using elx::CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath;
 using elx::CoreMainGTestUtilities::GetNameOfTest;
+using elx::CoreMainGTestUtilities::TypeHolder;
 
 // Tests that ParameterObject::WriteParameterFiles writes all the specified files.
 GTEST_TEST(ParameterObject, WriteParameterFiles)
@@ -72,4 +73,75 @@ GTEST_TEST(ParameterObject, WriteParameterFiles)
       EXPECT_TRUE(itksys::SystemTools::FileExists(fileName.c_str(), true));
     }
   }
+}
+
+
+// Tests that any numeric parameter value is printed (by `<<` into an output stream) literally as it was originally
+// placed into the ParameterMap.
+GTEST_TEST(ParameterObject, PrintOriginalNumericValues)
+{
+  static constexpr auto check = [](const std::string & parameterValue) {
+    elx::DefaultConstruct<elx::ParameterObject> parameterObject{};
+
+    const std::string parameterName = "ParameterName";
+
+    parameterObject.SetParameterMap(elx::ParameterObject::ParameterMapType{ { parameterName, { parameterValue } } });
+    std::ostringstream outputStringStream;
+
+    outputStringStream << parameterObject;
+    const auto        printedString = outputStringStream.str();
+    const std::string expectedParameter = '(' + parameterName + ' ' + parameterValue + ")\n";
+    ASSERT_GT(printedString.size(), expectedParameter.size());
+    EXPECT_EQ(std::string_view(printedString).substr(printedString.size() - expectedParameter.size()),
+              expectedParameter);
+  };
+
+  for (const std::string parameterValue : { "0", "1", "1.23456789", "0.1", "-0.1", "3e+38", "4e+38" })
+  {
+    check(parameterValue);
+  }
+
+  check(std::to_string(std::numeric_limits<std::int32_t>::min()));
+  check(std::to_string(std::numeric_limits<std::int32_t>::max()));
+  check(std::to_string(std::numeric_limits<std::uint32_t>::max()));
+  check(std::to_string(std::numeric_limits<std::int64_t>::min()));
+  check(std::to_string(std::numeric_limits<std::int64_t>::max()));
+  check(std::to_string(std::numeric_limits<std::uint64_t>::max()));
+
+  {
+    // Test +/- 100000000000000000000
+    constexpr auto power_of_ten = 10.0 * static_cast<double>(itk::Math::UnsignedPower(10, 19));
+    check(elx::Conversion::ToString(power_of_ten));
+    check(elx::Conversion::ToString(-power_of_ten));
+  }
+  {
+    // Test +/- 999999999999999
+    constexpr auto power_of_ten = static_cast<double>(itk::Math::UnsignedPower(10, 15));
+    check(elx::Conversion::ToString(power_of_ten - 1.0));
+    check(elx::Conversion::ToString(1.0 - power_of_ten));
+  }
+  {
+    // Test +/- 0.000001
+    constexpr auto power_of_ten = 1.0 / static_cast<double>(itk::Math::UnsignedPower(10, 6));
+    check(elx::Conversion::ToString(power_of_ten));
+    check(elx::Conversion::ToString(-power_of_ten));
+  }
+
+  const auto checkNumericLimits = [](const auto typeHolder) {
+    (void)typeHolder;
+    using FloatingPointType = typename decltype(typeHolder)::Type;
+    using NumericLimits = std::numeric_limits<FloatingPointType>;
+    for (const auto value : { NumericLimits::epsilon(),
+                              NumericLimits::min(),
+                              NumericLimits::lowest(),
+                              NumericLimits::max(),
+                              NumericLimits::denorm_min(),
+                              -NumericLimits::denorm_min() })
+    {
+      check(elx::Conversion::ToString(value));
+    }
+  };
+
+  checkNumericLimits(TypeHolder<float>{});
+  checkNumericLimits(TypeHolder<double>{});
 }

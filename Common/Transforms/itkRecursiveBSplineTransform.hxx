@@ -566,8 +566,8 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::ComputeNonZeroJac
   }
 
   /** Call the recursive implementation. */
-  unsigned long   currentIndex = totalOffsetToSupportIndex;
-  unsigned long * nzjiPointer = &nonZeroJacobianIndices[0];
+  unsigned long currentIndex = totalOffsetToSupportIndex;
+  uint64_t *    nzjiPointer = &nonZeroJacobianIndices[0];
   ImplementationType::ComputeNonZeroJacobianIndices(nzjiPointer, parametersPerDim, currentIndex, gridOffsetTable);
 
 } // end ComputeNonZeroJacobianIndices()

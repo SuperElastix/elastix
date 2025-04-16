@@ -26,6 +26,7 @@
 #include "itkContinuousIndex.h"
 
 #include "itkTimeProbe.h"
+#include <itkDeref.h>
 
 namespace elastix
 {
@@ -112,7 +113,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
   }
 
   /** Call the ReadFromFile from the TransformBase.
-   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotation
+   * BE AWARE: Only call Superclass2::ReadFromFile() after CenterOfRotationPoint
    * is set, because it is used in the SetParameters()-function of this transform.
    */
   this->Superclass2::ReadFromFile();
@@ -141,37 +142,28 @@ template <typename TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Set all parameters to zero (no rotations, no translation). */
   this->m_AffineTransform->SetIdentity();
 
   /** Try to read CenterOfRotationIndex from parameter file,
    * which is the rotationPoint, expressed in index-values.
    */
-  IndexType      centerOfRotationIndex;
-  InputPointType centerOfRotationPoint;
+  IndexType      centerOfRotationIndex{};
+  InputPointType centerOfRotationPoint{};
 
-  bool centerGivenAsIndex = true;
-  bool centerGivenAsPoint = true;
-  for (unsigned int i = 0; i < SpaceDimension; ++i)
-  {
-    /** Initialize. */
-    centerOfRotationIndex[i] = 0;
-    centerOfRotationPoint[i] = 0.0;
-
-    /** Check COR index: Returns zero when parameter was in the parameter file. */
-    bool foundI = this->m_Configuration->ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false);
-    if (!foundI)
+  const bool centerGivenAsIndex = [&configuration, &centerOfRotationIndex] {
+    for (unsigned int i = 0; i < SpaceDimension; ++i)
     {
-      centerGivenAsIndex = false;
+      if (!configuration.ReadParameter(centerOfRotationIndex[i], "CenterOfRotation", i, false))
+      {
+        return false;
+      }
     }
-
-    /** Check COR point: Returns zero when parameter was in the parameter file. */
-    bool foundP = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
-    if (!foundP)
-    {
-      centerGivenAsPoint = false;
-    }
-  } // end loop over SpaceDimension
+    return true;
+  }();
+  const bool centerGivenAsPoint = ReadCenterOfRotationPoint(centerOfRotationPoint);
 
   /** Check if CenterOfRotation has index-values within image. */
   bool CORIndexInImage = true;
@@ -209,7 +201,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
    */
   bool automaticTransformInitialization = false;
   bool tmpBool = false;
-  this->m_Configuration->ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
+  configuration.ReadParameter(tmpBool, "AutomaticTransformInitialization", 0);
   if (tmpBool && this->Superclass1::GetInitialTransform() == nullptr)
   {
     automaticTransformInitialization = true;
@@ -238,7 +230,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
     /** Select the method of initialization. Default: "GeometricalCenter". */
     transformInitializer->GeometryOn();
     std::string method = "GeometricalCenter";
-    this->m_Configuration->ReadParameter(method, "AutomaticTransformInitializationMethod", 0);
+    configuration.ReadParameter(method, "AutomaticTransformInitializationMethod", 0);
     if (method == "CenterOfGravity")
     {
       bool centerOfGravityUsesLowerThreshold = false;
@@ -248,12 +240,12 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
       if (centerOfGravityUsesLowerThreshold)
       {
         double lowerThresholdForCenterGravity = 500;
-        this->m_Configuration->ReadParameter(lowerThresholdForCenterGravity, "LowerThresholdForCenterGravity", 0);
+        configuration.ReadParameter(lowerThresholdForCenterGravity, "LowerThresholdForCenterGravity", 0);
         transformInitializer->SetLowerThresholdForCenterGravity(lowerThresholdForCenterGravity);
       }
 
       double nrofsamples = 10000;
-      this->m_Configuration->ReadParameter(nrofsamples, "NumberOfSamplesForCenteredTransformInitialization", 0);
+      configuration.ReadParameter(nrofsamples, "NumberOfSamplesForCenteredTransformInitialization", 0);
       transformInitializer->SetNumberOfSamplesForCenteredTransformInitialization(nrofsamples);
 
       transformInitializer->MomentsOn();
@@ -442,23 +434,15 @@ AdvancedAffineTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointTy
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
-  InputPointType centerOfRotationPoint;
-  bool           centerGivenAsPoint = true;
+  InputPointType centerOfRotationPoint{};
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    centerOfRotationPoint[i] = 0.0;
-
     /** Returns zero when parameter was in the parameter file. */
     bool found = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
     {
-      centerGivenAsPoint = false;
+      return false;
     }
-  }
-
-  if (!centerGivenAsPoint)
-  {
-    return false;
   }
 
   /** copy the temporary variable into the output of this function,
