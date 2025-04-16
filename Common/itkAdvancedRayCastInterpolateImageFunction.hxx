@@ -531,7 +531,7 @@ AdvancedRayCastInterpolateImageFunction<TInputImage, TCoordinate>::RayCastHelper
     denom = (m_BoundingPlane[j][0] * m_RayDirectionInMM[0] + m_BoundingPlane[j][1] * m_RayDirectionInMM[1] +
              m_BoundingPlane[j][2] * m_RayDirectionInMM[2]);
 
-    if ((long)(denom * 100) != 0)
+    if (static_cast<int64_t>(denom * 100) != 0)
     {
       d[j] =
         -(m_BoundingPlane[j][3] + m_BoundingPlane[j][0] * m_CurrentRayPositionInMM[0] +
