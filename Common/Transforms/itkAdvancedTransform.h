@@ -130,7 +130,7 @@ public:
    * Using an itk::FixedArray instead of an std::vector gives a performance
    * gain for the SpatialHessianType.
    */
-  using NonZeroJacobianIndicesType = std::vector<unsigned long>;
+  using NonZeroJacobianIndicesType = std::vector<uint64_t>;
   using SpatialJacobianType = Matrix<ScalarType, OutputSpaceDimension, InputSpaceDimension>;
   using JacobianOfSpatialJacobianType = std::vector<SpatialJacobianType>;
   // \todo: think about the SpatialHessian type, should be a 3D native type
