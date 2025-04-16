@@ -1577,7 +1577,7 @@ GTEST_TEST(itkTransformixFilter, CheckMinimumMovingImageUsingAnyInternalPixelTyp
   };
 
   check(TypeHolder<char>{});
-  check(TypeHolder<unsigned long>{});
+  check(TypeHolder<unsigned int>{});
   check(TypeHolder<double>{});
 }
 
@@ -1619,7 +1619,7 @@ GTEST_TEST(itkTransformixFilter, CheckZeroFilledMovingImageWithRandomDomainUsing
   };
 
   check(TypeHolder<char>{});
-  check(TypeHolder<unsigned long>{});
+  check(TypeHolder<unsigned int>{});
   check(TypeHolder<double>{});
 }
 
