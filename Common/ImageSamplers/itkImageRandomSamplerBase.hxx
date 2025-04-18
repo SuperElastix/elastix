@@ -45,13 +45,7 @@ template <typename TInputImage>
 void
 ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 {
-  /** Create a random number generator. Also used in the ImageRandomConstIteratorWithIndex. */
-  const auto localGenerator = Statistics::MersenneTwisterRandomVariateGenerator::New();
-
-  if (m_OptionalSeed)
-  {
-    localGenerator->SetSeed(*m_OptionalSeed);
-  }
+  m_RandomVariateGenerator->SetSeed(m_OptionalSeed.value_or(m_RandomVariateGenerator->GetSeed() + 1));
 
   /** Clear the random number list. */
   this->m_RandomNumberList.clear();
@@ -59,10 +53,10 @@ ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 
   /** Fill the list with random numbers. */
   const auto numPixels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
-  localGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
+  m_RandomVariateGenerator->GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
   for (unsigned long i = 0; i < this->m_NumberOfSamples; ++i)
   {
-    const double randomPosition = localGenerator->GetVariateWithOpenRange(numPixels - 0.5);
+    const double randomPosition = m_RandomVariateGenerator->GetVariateWithOpenRange(numPixels - 0.5);
     this->m_RandomNumberList.push_back(randomPosition);
   }
 }
