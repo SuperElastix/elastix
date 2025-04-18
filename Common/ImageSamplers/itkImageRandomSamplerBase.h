@@ -20,6 +20,7 @@
 
 #include "itkImageSamplerBase.h"
 #include <itkMersenneTwisterRandomVariateGenerator.h>
+#include "elxDefaultConstruct.h"
 #include <optional>
 
 namespace itk
@@ -131,7 +132,8 @@ protected:
 private:
   std::optional<SeedIntegerType> m_OptionalSeed{};
 
-  Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ nullptr };
+  elastix::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
+  Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
 };
 
 } // end namespace itk
