@@ -45,7 +45,7 @@ template <typename TInputImage>
 void
 ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 {
-  static uint32_t seed = m_RandomVariateGenerator->GetSeed();
+  static uint32_t seed = m_RandomVariateGenerator->GetSeed() + 1;
 
   elastix::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
   randomVariateGenerator.SetSeed(m_OptionalSeed.value_or(++seed));

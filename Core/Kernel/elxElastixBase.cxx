@@ -287,7 +287,7 @@ ElastixBase::BeforeAllBase()
    * starting elastix */
   using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
   using SeedType = RandomGeneratorType::IntegerType;
-  unsigned int randomSeed = 121212 + 1; // Added 1 for backward compatibility (April 2024).
+  unsigned int randomSeed = 121212;
   m_Configuration->ReadParameter(randomSeed, "RandomSeed", 0, false);
   m_RandomVariateGenerator.SetSeed(static_cast<SeedType>(randomSeed));
 
