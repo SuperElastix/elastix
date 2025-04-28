@@ -59,9 +59,10 @@ jobs:
         key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}
 
     - name: Set up Python
-      uses: actions/setup-python@v3
+      # Use the version of setup-python that has just dropped Python 3.8.
+      uses: actions/setup-python@v5.4.0
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Install build dependencies
       run: |
