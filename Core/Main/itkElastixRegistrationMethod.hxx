@@ -1050,6 +1050,90 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::ConvertToItkTransform(cons
   itkGenericExceptionMacro("Failed to convert transform object " << elxTransform);
 }
 
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::AddFixedWeightedMask(FixedMaskType * fixedWeightedMask)
+{
+  this->GetElastixMain()->SetFixedWeightedMask(fixedWeightedMask);
+}
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetFixedWeightedMask(FixedMaskType * fixedWeightedMask)
+{
+  this->GetElastixMain()->SetFixedWeightedMask(fixedWeightedMask);
+}
+
+template <typename TFixedImage, typename TMovingImage>
+const typename ElastixRegistrationMethod<TFixedImage, TMovingImage>::FixedMaskType *
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedWeightedMask() const
+{
+  return this->GetElastixMain()->GetModifiableFixedWeightedMask();
+}
+
+template <typename TFixedImage, typename TMovingImage>
+const typename ElastixRegistrationMethod<TFixedImage, TMovingImage>::FixedMaskType *
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetFixedWeightedMask(const unsigned int index) const
+{
+  return this->GetElastixMain()->GetModifiableFixedWeightedMask();
+}
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::RemoveFixedWeightedMask()
+{
+  this->GetElastixMain()->SetFixedWeightedMask(nullptr);
+}
+
+template <typename TFixedImage, typename TMovingImage>
+unsigned int
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfFixedWeightedMasks() const
+{
+  return this->GetElastixMain()->GetModifiableFixedWeightedMask() ? 1 : 0;
+}
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::SetMovingWeightedMask(MovingMaskType * movingWeightedMask)
+{
+  this->GetElastixMain()->SetMovingWeightedMask(movingWeightedMask);
+}
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::AddMovingWeightedMask(MovingMaskType * movingWeightedMask)
+{
+  this->GetElastixMain()->SetMovingWeightedMask(movingWeightedMask);
+}
+
+template <typename TFixedImage, typename TMovingImage>
+const typename ElastixRegistrationMethod<TFixedImage, TMovingImage>::MovingMaskType *
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingWeightedMask() const
+{
+  return this->GetElastixMain()->GetModifiableMovingWeightedMask();
+}
+
+template <typename TFixedImage, typename TMovingImage>
+const typename ElastixRegistrationMethod<TFixedImage, TMovingImage>::MovingMaskType *
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetMovingWeightedMask(const unsigned int index) const
+{
+  return this->GetElastixMain()->GetModifiableMovingWeightedMask();
+}
+
+template <typename TFixedImage, typename TMovingImage>
+void
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::RemoveMovingWeightedMask()
+{
+  this->GetElastixMain()->SetMovingWeightedMask(nullptr);
+}
+
+template <typename TFixedImage, typename TMovingImage>
+unsigned int
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::GetNumberOfMovingWeightedMasks() const
+{
+  return this->GetElastixMain()->GetModifiableMovingWeightedMask() ? 1 : 0;
+}
+
 } // namespace itk
 
 #endif

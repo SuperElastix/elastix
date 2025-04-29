@@ -42,6 +42,17 @@
 #include <itkObject.h>
 #include <itkTimeProbe.h>
 #include <itkVectorContainer.h>
+#include "itkImage.h"
+#include "itkSmartPointer.h"
+#include "itkObject.h"
+
+// Ensure FixedImageType and MovingImageType are defined before using MaskImageType
+using FixedImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+using MovingImageType = itk::Image<float, 3>; // Example definition, adjust as necessary
+
+// Types for the masks
+using MaskPixelType = unsigned char;
+using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
 
 #include <fstream>
 #include <iomanip>
@@ -175,6 +186,10 @@ public:
   /** Typedef that is used in the elastix dll version. */
   using ParameterMapType = itk::ParameterMapInterface::ParameterMapType;
 
+  /** Types for the masks. */
+  using MaskPixelType = unsigned char;
+  using MaskImageType = itk::Image<MaskPixelType, itk::GetImageDimension<FixedImageType>::ImageDimension>;
+
   /** Set/Get the Configuration Object. */
   elxGetObjectMacro(Configuration, Configuration);
   elxSetObjectMacro(Configuration, Configuration);
@@ -298,6 +313,14 @@ public:
    */
   elxSetObjectMacro(FinalTransform, itk::Object);
   elxGetObjectMacro(FinalTransform, itk::Object);
+
+  /** Set/Get the fixed weighted mask. */
+  void SetFixedWeightedMask(const MaskImageType * mask);
+  MaskImageType * GetModifiableFixedWeightedMask();
+
+  /** Set/Get the moving weighted mask. */
+  void SetMovingWeightedMask(const MaskImageType * mask);
+  MaskImageType * GetModifiableMovingWeightedMask();
 
   /** Empty Run()-function to be overridden. */
   virtual int
@@ -540,6 +563,9 @@ private:
    * From Elastix 4.3 to 4.7: Ignore direction cosines by default, for
    * backward compatability. From Elastix 4.8: set it to true by default. */
   bool m_UseDirectionCosines{ true };
+
+  MaskImageType * m_FixedWeightedMask{ nullptr };
+  MaskImageType * m_MovingWeightedMask{ nullptr };
 };
 
 } // end namespace elastix

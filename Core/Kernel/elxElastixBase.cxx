@@ -508,5 +508,28 @@ ElastixBase::GetNumberOfTransformConfigurations() const
   return m_TransformConfigurations.size();
 }
 
+void
+ElastixBase::SetFixedWeightedMask(const MaskImageType * mask)
+{
+  m_FixedWeightedMask = mask;
+}
+
+ElastixBase::MaskImageType *
+ElastixBase::GetModifiableFixedWeightedMask()
+{
+  return m_FixedWeightedMask;
+}
+
+void
+ElastixBase::SetMovingWeightedMask(const MaskImageType * mask)
+{
+  m_MovingWeightedMask = mask;
+}
+
+ElastixBase::MaskImageType *
+ElastixBase::GetModifiableMovingWeightedMask()
+{
+  return m_MovingWeightedMask;
+}
 
 } // end namespace elastix
