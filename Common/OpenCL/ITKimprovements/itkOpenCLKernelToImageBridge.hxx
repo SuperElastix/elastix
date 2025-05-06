@@ -146,7 +146,7 @@ OpenCLKernelToImageBridge<TImage>::SetImageMetaData(OpenCLKernel &              
   imageMetaDataManager->Initialize();
   imageMetaDataManager->SetBufferFlag(CL_MEM_READ_ONLY);
 
-  switch (static_cast<unsigned int>(ImageDimension))
+  switch (ImageDimension)
   {
     case 1:
     {
