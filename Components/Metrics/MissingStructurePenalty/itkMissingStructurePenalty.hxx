@@ -214,7 +214,7 @@ MissingVolumeMeshPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDerivative
       float signedVolume; // = vnl_determinant(fullMatrix.GetVnlMatrix());
 
       // const VectorType::const_pointer p1,p2,p3,p4;
-      switch (static_cast<unsigned int>(FixedPointSetDimension))
+      switch (FixedPointSetDimension)
       {
         case 2:
         {

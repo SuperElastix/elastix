@@ -482,7 +482,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
   }
 
   unsigned int mem_size_DF = 0;
-  switch (static_cast<unsigned int>(OutputImageDimension))
+  switch (OutputImageDimension)
   {
     case 1:
       mem_size_DF = totalDFSize * sizeof(cl_float);
@@ -547,7 +547,7 @@ GPUResampleImageFilter<TInputImage, TOutputImage, TInterpolatorPrecisionType, TT
     // The deformation field size is the second argument in the
     // pre/loop/post kernel, i.e. index is 1.
     const cl_uint dfSizeKernelIndex = 1;
-    switch (static_cast<unsigned int>(OutputImageDimension))
+    switch (OutputImageDimension)
     {
       case 1:
       {
