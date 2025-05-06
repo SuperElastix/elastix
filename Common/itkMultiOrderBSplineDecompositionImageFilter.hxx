@@ -215,45 +215,41 @@ template <typename TInputImage, typename TOutputImage>
 void
 MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetInitialCausalCoefficient(double z)
 {
-  /* begining InitialCausalCoefficient */
-  /* See Unser, 1999, Box 2 for explaination */
-  CoeffType     sum;
-  double        zn, z2n, iz;
-  unsigned long horizon;
+  // See Unser, 1999, Box 2 for explanation
 
-  /* this initialization corresponds to mirror boundaries */
-  horizon = m_DataLength[m_IteratorDirection];
-  zn = z;
+  double zn = z;
+
   if (m_Tolerance > 0.0)
   {
-    horizon = (long)std::ceil(std::log(m_Tolerance) / std::log(std::fabs(z)));
-  }
-  if (horizon < m_DataLength[m_IteratorDirection])
-  {
-    /* accelerated loop */
-    sum = m_Scratch[0]; // verify this
-    for (unsigned int n = 1; n < horizon; ++n)
+    if (const auto horizon = static_cast<SizeValueType>(std::ceil(std::log(m_Tolerance) / std::log(std::abs(z))));
+        horizon < m_DataLength[m_IteratorDirection])
     {
-      sum += zn * m_Scratch[n];
-      zn *= z;
+      // Accelerated loop
+      CoeffType sum = m_Scratch[0]; // verify this
+      for (SizeValueType n = 1; n < horizon; ++n)
+      {
+        sum += zn * m_Scratch[n];
+        zn *= z;
+      }
+      m_Scratch[0] = sum;
+
+      // Return early.
+      return;
     }
-    m_Scratch[0] = sum;
   }
-  else
+
+  // Full loop
+  const double iz = 1.0 / z;
+  double       z2n = std::pow(z, static_cast<double>(m_DataLength[m_IteratorDirection] - 1));
+  CoeffType    sum = m_Scratch[0] + z2n * m_Scratch[m_DataLength[m_IteratorDirection] - 1];
+  z2n *= z2n * iz;
+  for (SizeValueType n = 1; n <= (m_DataLength[m_IteratorDirection] - 2); ++n)
   {
-    /* full loop */
-    iz = 1.0 / z;
-    z2n = std::pow(z, (double)(m_DataLength[m_IteratorDirection] - 1));
-    sum = m_Scratch[0] + z2n * m_Scratch[m_DataLength[m_IteratorDirection] - 1];
-    z2n *= z2n * iz;
-    for (SizeValueType n = 1; n <= (m_DataLength[m_IteratorDirection] - 2); ++n)
-    {
-      sum += (zn + z2n) * m_Scratch[n];
-      zn *= z;
-      z2n *= iz;
-    }
-    m_Scratch[0] = sum / (1.0 - zn * zn);
+    sum += (zn + z2n) * m_Scratch[n];
+    zn *= z;
+    z2n *= iz;
   }
+  m_Scratch[0] = sum / (1.0 - zn * zn);
 }
 
 
