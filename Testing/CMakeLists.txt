@@ -298,10 +298,9 @@ macro(elx_add_run_test testbasename howtocompare)
     list_count("${ARGN}" "-p" countp)
     math(EXPR countp "${countp} - 1")
 
-    # Run elastix, but only in release mode
+    # Run elastix
     # Set maximum test length to 10 minutes
     add_test(NAME ${testname}_OUTPUT
-      CONFIGURATIONS Release
       COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
       ${elastixargs} -out ${output_dir})
     set_tests_properties(${testname}_OUTPUT
@@ -342,7 +341,6 @@ macro(elx_add_run_test testbasename howtocompare)
     # Compare elastix output image with baseline image
     if(NOT ${compare_image} EQUAL -1)
       add_test(NAME ${testname}_COMPARE_IM
-        CONFIGURATIONS Release
         COMMAND elxImageCompare
         -base ${baseline}
         -test ${output_dir}/result.${countp}.mhd
@@ -357,7 +355,6 @@ macro(elx_add_run_test testbasename howtocompare)
       if(python_executable)
         # Add comparison test, checking the final metric value and more
         add_test(NAME ${testname}_COMPARE_METRIC
-          CONFIGURATIONS Release
           COMMAND ${python_executable} ${pythonfinalmetric}
           -b ${baseline} -d ${output_dir})
         set_tests_properties(${testname}_COMPARE_METRIC
@@ -371,7 +368,6 @@ macro(elx_add_run_test testbasename howtocompare)
       if(python_executable AND knownChecksumSystem)
         # Add comparison test, checking the registration checksum
         add_test(NAME ${testname}_COMPARE_CHECKSUM
-          CONFIGURATIONS Release
           COMMAND ${python_executable} ${pythonchecksum}
           -f ${checksumBaselineFile} -d ${output_dir} -v)
         set_tests_properties(${testname}_COMPARE_CHECKSUM
@@ -384,7 +380,6 @@ macro(elx_add_run_test testbasename howtocompare)
       # Only run when python was found
       if(python_executable)
         add_test(NAME ${testname}_COMPARE_OVERLAP
-          CONFIGURATIONS Release
           COMMAND ${python_executable} ${pythonoverlap}
           -b ${baselineTP} -d ${output_dir} -m ${TestDataDir}/3DCT_lung_followup_mask.mha
           -p $<TARGET_FILE:elxComputeOverlap>)
@@ -398,7 +393,6 @@ macro(elx_add_run_test testbasename howtocompare)
       # Only run when python was found
       if(python_executable)
         add_test(NAME ${testname}_COMPARE_LANDMARKS
-          CONFIGURATIONS Release
           COMMAND ${python_executable} ${pythonlandmarks}
           -b ${baselineTP} -d ${output_dir} -f ${TestDataDir}/3DCT_lung_baseline_landmarks.txt -t 1.0
           -p $<TARGET_FILE:transformix_exe>)
@@ -410,7 +404,6 @@ macro(elx_add_run_test testbasename howtocompare)
     # Compare elastix output using transform parameters comparison
     if(NOT ${compare_tp} EQUAL -1)
       add_test(NAME ${testname}_COMPARE_TP
-        CONFIGURATIONS Release
         COMMAND elxTransformParametersCompare
         -base ${baselineTP}
         -test ${testTP}
