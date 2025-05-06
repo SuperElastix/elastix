@@ -163,8 +163,8 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameter
   using MatrixType = vnl_matrix<RealType>;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, lastDimSize, vnl_matrix_null);
+  const size_t numberOfSamples{ sampleContainer->size() };
+  MatrixType   datablock(numberOfSamples, lastDimSize, vnl_matrix_null);
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
@@ -346,8 +346,8 @@ PCAMetric2<TFixedImage, TMovingImage>::GetValueAndDerivative(const ParametersTyp
   std::vector<FixedImagePointType> SamplesOK;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, lastDimSize, vnl_matrix_null);
+  const size_t numberOfSamples{ sampleContainer->size() };
+  MatrixType   datablock(numberOfSamples, lastDimSize, vnl_matrix_null);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;

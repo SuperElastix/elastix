@@ -734,7 +734,7 @@ KNNGraphAlphaMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long         nrOfRequestedSamples = sampleContainer->Size();
+  const size_t                nrOfRequestedSamples{ sampleContainer->size() };
 
   /** Get the size of the feature vectors. */
   const unsigned int fixedSize = this->GetNumberOfFixedImages();
