@@ -102,7 +102,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::DataToCoef
   }
 
   // apply the gain
-  for (unsigned int n = 0; n < m_DataLength[m_IteratorDirection]; ++n)
+  for (SizeValueType n = 0; n < m_DataLength[m_IteratorDirection]; ++n)
   {
     m_Scratch[n] *= c0;
   }
@@ -113,7 +113,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::DataToCoef
     // causal initialization
     this->SetInitialCausalCoefficient(m_SplinePoles[k]);
     // causal recursion
-    for (unsigned int n = 1; n < m_DataLength[m_IteratorDirection]; ++n)
+    for (SizeValueType n = 1; n < m_DataLength[m_IteratorDirection]; ++n)
     {
       m_Scratch[n] += m_SplinePoles[k] * m_Scratch[n - 1];
     }
@@ -246,7 +246,7 @@ MultiOrderBSplineDecompositionImageFilter<TInputImage, TOutputImage>::SetInitial
     z2n = std::pow(z, (double)(m_DataLength[m_IteratorDirection] - 1L));
     sum = m_Scratch[0] + z2n * m_Scratch[m_DataLength[m_IteratorDirection] - 1L];
     z2n *= z2n * iz;
-    for (unsigned int n = 1; n <= (m_DataLength[m_IteratorDirection] - 2); ++n)
+    for (SizeValueType n = 1; n <= (m_DataLength[m_IteratorDirection] - 2); ++n)
     {
       sum += (zn + z2n) * m_Scratch[n];
       zn *= z;
