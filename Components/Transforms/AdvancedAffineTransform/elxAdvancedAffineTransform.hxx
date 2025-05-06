@@ -76,16 +76,16 @@ template <typename TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::ReadFromFile()
 {
-  const auto itkParameterValues =
-    this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformParameters");
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
+  const auto itkParameterValues = configuration.RetrieveValuesOfParameter<double>("ITKTransformParameters");
 
   if (itkParameterValues != nullptr)
   {
     m_AffineTransform->SetParameters(Conversion::ToOptimizerParameters(*itkParameterValues));
   }
 
-  const auto itkFixedParameterValues =
-    this->m_Configuration->template RetrieveValuesOfParameter<double>("ITKTransformFixedParameters");
+  const auto itkFixedParameterValues = configuration.RetrieveValuesOfParameter<double>("ITKTransformFixedParameters");
 
   if (itkFixedParameterValues != nullptr)
   {
@@ -319,13 +319,15 @@ template <typename TElastix>
 void
 AdvancedAffineTransformElastix<TElastix>::SetScales()
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Create the new scales. */
   const NumberOfParametersType numberOfParameters = this->GetNumberOfParameters();
   ScalesType                   newscales(numberOfParameters, 1.0);
 
   /** Check if automatic scales estimation is desired. */
   bool automaticScalesEstimation = false;
-  this->m_Configuration->ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
+  configuration.ReadParameter(automaticScalesEstimation, "AutomaticScalesEstimation", 0);
 
   if (automaticScalesEstimation)
   {
@@ -362,7 +364,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
      */
     const unsigned int rotationPart = SpaceDimension * SpaceDimension;
 
-    /** this->m_Configuration->ReadParameter() returns 0 if there is a value given
+    /** configuration.ReadParameter() returns 0 if there is a value given
      * in the parameter-file, and returns 1 if there is no value given in the
      * parameter-file.
      * Check which option is used:
@@ -375,7 +377,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
      */
     const double defaultScalingvalue = 100000.0;
 
-    std::size_t count = this->m_Configuration->CountNumberOfParameterEntries("Scales");
+    std::size_t count = configuration.CountNumberOfParameterEntries("Scales");
 
     /** Check which of the above options is used. */
     if (count == 0)
@@ -390,7 +392,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
     {
       /** In this case the second option is used. */
       double scale = defaultScalingvalue;
-      this->m_Configuration->ReadParameter(scale, "Scales", 0);
+      configuration.ReadParameter(scale, "Scales", 0);
       for (unsigned int i = 0; i < rotationPart; ++i)
       {
         newscales[i] = scale;
@@ -401,7 +403,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
       /** In this case the third option is used. */
       for (unsigned int i = 0; i < numberOfParameters; ++i)
       {
-        this->m_Configuration->ReadParameter(newscales[i], "Scales", i);
+        configuration.ReadParameter(newscales[i], "Scales", i);
       }
     }
     else
@@ -431,6 +433,8 @@ template <typename TElastix>
 bool
 AdvancedAffineTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointType & rotationPoint) const
 {
+  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+
   /** Try to read CenterOfRotationPoint from the transform parameter
    * file, which is the rotationPoint, expressed in world coordinates.
    */
@@ -438,7 +442,7 @@ AdvancedAffineTransformElastix<TElastix>::ReadCenterOfRotationPoint(InputPointTy
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Returns zero when parameter was in the parameter file. */
-    bool found = this->m_Configuration->ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
+    bool found = configuration.ReadParameter(centerOfRotationPoint[i], "CenterOfRotationPoint", i, false);
     if (!found)
     {
       return false;
