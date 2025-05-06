@@ -268,8 +268,8 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
   unsigned long numberOfPixelsCounted = 0;
 
   /** Get sample container size, number of threads, and output space dimension. */
-  const SizeValueType sampleContainerSize = this->m_SampleContainer->Size();
-  const ThreadIdType  numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
+  const size_t       sampleContainerSize{ this->m_SampleContainer->size() };
+  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
 
   /** Get the samples for this thread. */
   const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
@@ -580,7 +580,7 @@ AdvancedImageMomentsCalculator<TInputImage>::SampleImage(ImageSampleContainerPoi
   /** Get samples and check the actually obtained number of samples. */
   sampler->Update();
   sampleContainer = sampler->GetOutput();
-  nrofsamples = sampleContainer->Size();
+  nrofsamples = sampleContainer->size();
 
   if (nrofsamples == 0)
   {

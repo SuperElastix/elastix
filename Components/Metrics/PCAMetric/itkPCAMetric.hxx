@@ -162,8 +162,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValue(const ParametersType & parameters
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, m_G, vnl_matrix_null);
+  const size_t numberOfSamples{ sampleContainer->size() };
+  MatrixType   datablock(numberOfSamples, m_G, vnl_matrix_null);
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
@@ -332,8 +332,8 @@ PCAMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingleThreaded(const 
   std::vector<FixedImagePointType> SamplesOK;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  const unsigned int numberOfSamples = sampleContainer->Size();
-  MatrixType         datablock(numberOfSamples, m_G, vnl_matrix_null);
+  const size_t numberOfSamples{ sampleContainer->size() };
+  MatrixType   datablock(numberOfSamples, m_G, vnl_matrix_null);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;
@@ -646,7 +646,7 @@ PCAMetric<TFixedImage, TMovingImage>::ThreadedGetSamples(ThreadIdType threadId)
 {
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long         sampleContainerSize = sampleContainer->Size();
+  const size_t                sampleContainerSize{ sampleContainer->size() };
 
   /** Get the samples for this thread. */
   const auto nrOfSamplesPerThreads = static_cast<unsigned long>(

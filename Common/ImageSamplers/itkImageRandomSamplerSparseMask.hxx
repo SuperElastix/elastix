@@ -73,7 +73,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
 
   /** Get a handle to the full sampler output. */
   const ImageSampleContainerType & allValidSamples = Deref(this->m_InternalFullSampler->GetOutput());
-  unsigned long                    numberOfValidSamples = allValidSamples.Size();
+  size_t                           numberOfValidSamples{ allValidSamples.size() };
 
   Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator = Superclass::GetRandomVariateGenerator();
 

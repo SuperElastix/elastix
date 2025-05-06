@@ -1049,7 +1049,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
 
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const unsigned long         sampleContainerSize = sampleContainer->Size();
+  const size_t                sampleContainerSize{ sampleContainer->size() };
 
   /** Get the samples for this thread. */
   const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
