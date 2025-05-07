@@ -111,25 +111,23 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   std::vector<unsigned int> dimensions;
   if (mode == "Static")
   {
-    patchSizeStr = formatParameterStringByDimensionAndLevel<Configuration>(
-      this->GetConfiguration(), prefix, "PatchSize", level, imageDimension);
+    patchSizeStr =
+      formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", level, imageDimension);
     for (int i = 0; i < modelsPathVec.size(); ++i)
       dimensions.push_back(imageDimension);
     if (patchSizeStr.empty() && level > 0)
     {
-      patchSizeStr = formatParameterStringByDimensionAndLevel<Configuration>(
-        this->GetConfiguration(), prefix, "PatchSize", 0, imageDimension);
+      patchSizeStr =
+        formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", 0, imageDimension);
     }
   }
   else
   {
-    patchSizeStr =
-      formatParameterStringByDimensionAndLevel<Configuration>(this->GetConfiguration(), prefix, "PatchSize", level);
+    patchSizeStr = formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", level);
     dimensions = modelsDimensionVec;
     if (patchSizeStr.empty() && level > 0)
     {
-      patchSizeStr =
-        formatParameterStringByDimensionAndLevel<Configuration>(this->GetConfiguration(), prefix, "PatchSize", 0);
+      patchSizeStr = formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", 0);
     }
   }
   std::vector<std::string> patchSizeVec = groupStrByDimensions(patchSizeStr, dimensions);
@@ -138,8 +136,8 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   std::vector<std::string> voxelSizeVec;
   if (mode == "Static")
   {
-    voxelSizeStr = formatParameterStringByDimensionAndLevel<Configuration>(
-      this->GetConfiguration(), prefix, "VoxelSize", level, imageDimension);
+    voxelSizeStr =
+      formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "VoxelSize", level, imageDimension);
     std::vector<unsigned int> imageDimensions;
     for (int i = 0; i < modelsPathVec.size(); ++i)
       imageDimensions.push_back(imageDimension);
@@ -147,8 +145,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   }
   else
   {
-    voxelSizeStr =
-      formatParameterStringByDimensionAndLevel<Configuration>(this->GetConfiguration(), prefix, "VoxelSize", level);
+    voxelSizeStr = formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "VoxelSize", level);
     voxelSizeVec = groupStrByDimensions(voxelSizeStr, modelsDimensionVec);
   }
 
