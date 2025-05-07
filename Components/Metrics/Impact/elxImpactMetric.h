@@ -20,6 +20,7 @@
 #define elxImpactMetric_h
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
+#include "elxConfiguration.h"
 #include "itkImpactImageToImageMetric.h"
 #include "itkVector.h"
 
@@ -261,8 +262,6 @@ private:
   GenerateModelsConfiguration(unsigned int level, std::string type, std::string mode, unsigned int imageDimension);
 };
 
-} // end namespace elastix
-
 /**
  * \brief Convert a string token to a typed value with bounds checking.
  *
@@ -481,19 +480,17 @@ groupStrByDimensions(std::string valueStr, std::vector<unsigned int> dimensions)
  * The output collects parameters for the requested level. If a value at that level
  * contains multiple space-separated entries, it is returned directly.
  *
- * \tparam TConfiguration Type of the configuration (must provide ReadParameter).
  * \param config Pointer to configuration object.
  * \param prefix Parameter prefix (e.g., "Impact").
  * \param parameterName Name of the parameter suffix (e.g., "PatchSize").
  * \param level Level index to extract values from.
  * \return Formatted string containing values.
  */
-template <typename TConfiguration>
-std::string
-formatParameterStringByDimensionAndLevel(const TConfiguration * config,
-                                         const std::string &    prefix,
-                                         const std::string &    parameterName,
-                                         int                    level)
+inline std::string
+formatParameterStringByDimensionAndLevel(const Configuration * config,
+                                         const std::string &   prefix,
+                                         const std::string &   parameterName,
+                                         int                   level)
 {
   std::ostringstream paramStream;
   std::ostringstream paramDefault;
@@ -547,7 +544,6 @@ formatParameterStringByDimensionAndLevel(const TConfiguration * config,
  *
  * Similar to the above function but uses a constant dimension instead of a per-level model dimension.
  *
- * \tparam TConfiguration Type of the configuration (must provide ReadParameter).
  * \param config Pointer to configuration object.
  * \param prefix Parameter prefix (e.g., "Impact").
  * \param parameterName Name of the parameter (e.g., "PatchSize").
@@ -555,13 +551,12 @@ formatParameterStringByDimensionAndLevel(const TConfiguration * config,
  * \param dimension Fixed dimension used to select parameters.
  * \return Formatted string containing values.
  */
-template <typename TConfiguration>
-std::string
-formatParameterStringByDimensionAndLevel(const TConfiguration * config,
-                                         const std::string &    prefix,
-                                         const std::string &    parameterName,
-                                         int                    level,
-                                         unsigned int           dimension)
+inline std::string
+formatParameterStringByDimensionAndLevel(const Configuration * config,
+                                         const std::string &   prefix,
+                                         const std::string &   parameterName,
+                                         int                   level,
+                                         unsigned int          dimension)
 {
   std::ostringstream paramStream;
   int                paramIndex = 0;
@@ -605,6 +600,8 @@ formatParameterStringByDimensionAndLevel(const TConfiguration * config,
 
   return paramStream.str();
 } // end formatParameterStringByDimensionAndLevel
+
+} // end namespace elastix
 
 
 #ifndef ITK_MANUAL_INSTANTIATION

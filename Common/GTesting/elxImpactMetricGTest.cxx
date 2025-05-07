@@ -6,6 +6,13 @@
 #include <sstream>
 #include "itkParameterMapInterface.h"
 
+using elx::formatParameterStringByDimensionAndLevel;
+using elx::GetBooleanVectorFromString;
+using elx::GetVectorFromString;
+using elx::groupStrByDimensions;
+
+namespace
+{
 // Helper to format vector outputs
 template <typename T>
 std::string
@@ -25,6 +32,7 @@ ExpectVectorEqual(const std::vector<T> & actual, const std::vector<T> & expected
 {
   EXPECT_EQ(actual, expected) << "Expected: " << vecToStr(expected) << "\nActual:   " << vecToStr(actual);
 }
+} // namespace
 
 
 GTEST_TEST(GetVectorFromString, LimitsAndParsing)
@@ -95,18 +103,15 @@ GTEST_TEST(FormatParameterStringByDimensionAndLevel, Basic)
   config->Initialize(argMap, parameterMap);
 
   // Level 0: read 3 individual values → expect "5 5 5"
-  std::string resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 0, 3);
+  std::string resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
   EXPECT_EQ(resultStr, "5 5 5");
 
   // Level 1: one line with 5 values → "11 11 11 29 29"
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 1, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1, 3);
   EXPECT_EQ(resultStr, "11 11 11 29 29");
 
   // Level 2: only "13" twice → expect fallback to fill 3 values
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 2, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 2, 3);
   EXPECT_EQ(resultStr, "13 13");
 
   // --- Second case: PatchSize as float ---
@@ -115,13 +120,11 @@ GTEST_TEST(FormatParameterStringByDimensionAndLevel, Basic)
   config->Initialize(argMap, parameterMap);
 
   // Level 0: two values → repeat to fill 3
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 0, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
   EXPECT_EQ(resultStr, "6.0 6.0");
 
   // Level 1: only "1.0 1.0"
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 1, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1, 3);
   EXPECT_EQ(resultStr, "1.0 1.0");
 
   // --- Third case: all entries are "6.0", just checking fallback filling ---
@@ -129,17 +132,14 @@ GTEST_TEST(FormatParameterStringByDimensionAndLevel, Basic)
   parameterMap["ImpactPatchSize"] = { "6.0", "6.0", "6.0", "6.0", "3.0 3.0 1.5 1.5 1.5", "1.0", "1.0" };
   config->Initialize(argMap, parameterMap);
 
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 0, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
   EXPECT_EQ(resultStr, "6.0 6.0 6.0");
 
   // Check fallback with single value
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 1, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1, 3);
   EXPECT_EQ(resultStr, "6.0");
 
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 2, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 2, 3);
   EXPECT_EQ(resultStr, "1.0 1.0");
 
   // --- Fourth case: test imageDimension auto-detection via ImpactDimension ---
@@ -148,16 +148,13 @@ GTEST_TEST(FormatParameterStringByDimensionAndLevel, Basic)
   parameterMap["ImpactPatchSize"] = { "5", "5", "13", "13", "13", "11 11 11 29 29" };
   config->Initialize(argMap, parameterMap);
 
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 0);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0);
   EXPECT_EQ(resultStr, "5 5");
 
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 1);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1);
   EXPECT_EQ(resultStr, "13 13 13");
 
-  resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 2);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 2);
   EXPECT_EQ(resultStr, "11 11 11 29 29");
 }
 
@@ -172,8 +169,7 @@ GTEST_TEST(FormatParameterStringByDimensionAndLevel, EarlyStopDueToMissingParam)
   parameterMap["ImpactPatchSize"] = { "5", "5" };
   config->Initialize(argMap, parameterMap);
 
-  std::string resultStr =
-    formatParameterStringByDimensionAndLevel<elastix::Configuration>(config.GetPointer(), "Impact", "PatchSize", 0, 3);
+  std::string resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
 
   // Should stop early and return "5 5" (not enough to fill 3)
   EXPECT_EQ(resultStr, "5 5");
@@ -188,7 +184,7 @@ GTEST_TEST(FormatParameterStringByDimensionAndLevel, LevelBeyondAvailable)
   parameterMap["ImpactPatchSize"] = { "5", "5" }; // Only 2 values
   config->Initialize(argMap, parameterMap);
 
-  std::string resultStr = formatParameterStringByDimensionAndLevel<elastix::Configuration>(
-    config.GetPointer(), "Impact", "PatchSize", 5, 3); // ask level 5
+  std::string resultStr =
+    formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 5, 3); // ask level 5
   EXPECT_EQ(resultStr, "");
 }
