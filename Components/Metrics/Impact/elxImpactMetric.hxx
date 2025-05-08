@@ -80,13 +80,13 @@ ImpactMetric<TElastix>::Initialize()
  * ******************* GenerateModelsConfiguration ***********************
  */
 template <typename TElastix>
-std::vector<typename ImpactMetric<TElastix>::Superclass1::ModelConfiguration>
+std::vector<itk::ImpactModelConfiguration>
 ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
                                                     std::string  prefix,
                                                     std::string  mode,
                                                     unsigned int imageDimension)
 {
-  std::vector<typename ImpactMetric<TElastix>::Superclass1::ModelConfiguration> modelsConfiguration;
+  std::vector<itk::ImpactModelConfiguration> modelsConfiguration;
 
   /** Get and set the model path. */
   std::string modelsPathStr;
