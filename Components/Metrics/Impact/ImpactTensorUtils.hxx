@@ -307,16 +307,12 @@ pca_transform(torch::Tensor input, torch::Tensor principal_components)
 /**
  * ******************* GetFeaturesMaps ***********************
  */
-template <typename TImage,
-          typename FeaturesMaps,
-          typename InterpolatorType,
-          typename ModelConfiguration,
-          typename FeaturesImageType>
+template <typename TImage, typename FeaturesMaps, typename InterpolatorType, typename FeaturesImageType>
 std::vector<FeaturesMaps>
 GetFeaturesMaps(
   typename TImage::ConstPointer                                                                    image,
   typename InterpolatorType::Pointer                                                               interpolator,
-  const std::vector<ModelConfiguration> &                                                          modelsConfiguration,
+  const std::vector<itk::ImpactModelConfiguration> &                                               modelsConfiguration,
   torch::Device                                                                                    device,
   std::vector<unsigned int>                                                                        pca,
   std::vector<torch::Tensor> &                                                                     principal_components,
@@ -545,11 +541,10 @@ GetFeaturesMaps(
 /**
  * **************** GetModelOutputsExample ****************
  */
-template <typename ModelConfiguration>
-std::vector<torch::Tensor>
-GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
-                       const std::string &               modelType,
-                       torch::Device                     device)
+inline std::vector<torch::Tensor>
+GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig,
+                       const std::string &                          modelType,
+                       torch::Device                                device)
 {
 
   std::vector<torch::Tensor> outputsTensor;
@@ -629,9 +624,8 @@ GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
 /**
  * ******************* GetPatchIndex ***********************
  */
-template <typename ModelConfiguration>
-std::vector<std::vector<float>>
-GetPatchIndex(ModelConfiguration modelConfiguration, std::mt19937 & randomGenerator, unsigned int dimension)
+inline std::vector<std::vector<float>>
+GetPatchIndex(itk::ImpactModelConfiguration modelConfiguration, std::mt19937 & randomGenerator, unsigned int dimension)
 {
   if (dimension == modelConfiguration.GetPatchSize().size())
   {
@@ -696,9 +690,9 @@ GetPatchIndex(ModelConfiguration modelConfiguration, std::mt19937 & randomGenera
 /**
  * ******************* GenerateOutputs ***********************
  */
-template <typename ModelConfiguration, typename ImagePointType>
+template <typename ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputs(const std::vector<ModelConfiguration> &                               modelConfig,
+GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &                    modelConfig,
                 const std::vector<ImagePointType> &                                   fixedPoints,
                 const std::vector<std::vector<std::vector<std::vector<float>>>> &     patchIndex,
                 const std::vector<torch::Tensor>                                      subsetsOfFeatures,
@@ -758,9 +752,9 @@ GenerateOutputs(const std::vector<ModelConfiguration> &                         
 /**
  * ******************* GenerateOutputsAndJacobian ***********************
  */
-template <typename ModelConfiguration, typename ImagePointType>
+template <typename ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &                           modelConfig,
+GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &                modelConfig,
                            const std::vector<ImagePointType> &                               fixedPoints,
                            const std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex,
                            std::vector<torch::Tensor>                                        subsetsOfFeatures,

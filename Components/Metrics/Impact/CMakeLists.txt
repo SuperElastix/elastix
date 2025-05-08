@@ -9,4 +9,5 @@ ADD_ELXCOMPONENT(ImpactMetric USE_TORCH
  itkBSplineInterpolateVectorImageFunction.hxx
  itkImpactImageToImageMetric.h
  itkImpactImageToImageMetric.hxx
+ itkImpactModelConfiguration.h
  )
