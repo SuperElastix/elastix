@@ -37,6 +37,7 @@
 #include <functional>
 #include <exception>
 #include "ImpactLoss.h"
+#include "itkImpactModelConfiguration.h"
 #include <random>
 
 namespace ImpactTensorUtils
@@ -67,16 +68,12 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers);
  * \param writeInputImage Optional function to export resampled input for debugging.
  * \return Vector of ITK feature images, one per layer and model.
  */
-template <typename TImage,
-          typename FeaturesMaps,
-          typename InterpolatorType,
-          typename ModelConfiguration,
-          typename FeaturesImageType>
+template <typename TImage, typename FeaturesMaps, typename InterpolatorType, typename FeaturesImageType>
 std::vector<FeaturesMaps>
 GetFeaturesMaps(
   typename TImage::ConstPointer                                                                    image,
   typename InterpolatorType::Pointer                                                               interpolator,
-  const std::vector<ModelConfiguration> &                                                          modelsConfiguration,
+  const std::vector<itk::ImpactModelConfiguration> &                                               modelsConfiguration,
   torch::Device                                                                                    device,
   std::vector<unsigned int>                                                                        pca,
   std::vector<torch::Tensor> &                                                                     principal_components,
@@ -91,20 +88,18 @@ GetFeaturesMaps(
  *
  * Called during initialization to ensure models are properly loaded and executable.
  */
-template <typename ModelConfiguration>
 std::vector<torch::Tensor>
-GetModelOutputsExample(std::vector<ModelConfiguration> & modelsConfig,
-                       const std::string &               modelType,
-                       torch::Device                     device);
+GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig,
+                       const std::string &                          modelType,
+                       torch::Device                                device);
 
 /**
  * \brief Computes patch index offsets around a center point based on model config.
  *
  * This is used to extract local neighborhoods for each model (e.g., 5x5x5 patch).
  */
-template <typename ModelConfiguration>
 std::vector<std::vector<float>>
-GetPatchIndex(ModelConfiguration modelConfiguration, std::mt19937 & randomGenerator, unsigned int dimension);
+GetPatchIndex(itk::ImpactModelConfiguration modelConfiguration, std::mt19937 & randomGenerator, unsigned int dimension);
 
 template <typename ImagePointType>
 using ImagesPatchValuesEvaluator = std::function<
@@ -119,9 +114,9 @@ using ImagesPatchValuesEvaluator = std::function<
  *
  * \param evaluator  Callable to produce a tensor from a point + patch + subset
  */
-template <class ModelConfiguration, class ImagePointType>
+template <class ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputs(const std::vector<ModelConfiguration> &                               modelConfig,
+GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &                    modelConfig,
                 const std::vector<ImagePointType> &                                   fixedPoints,
                 const std::vector<std::vector<std::vector<std::vector<float>>>> &     patchIndex,
                 const std::vector<torch::Tensor>                                      subsetsOfFeatures,
@@ -143,9 +138,9 @@ using ImagesPatchValuesAndJacobiansEvaluator = std::function<torch::Tensor(const
  * \param evaluator Callable that returns a pair (features, jacobian) from a point.
  * \param losses    Mutable references to per-layer loss objects (updated incrementally).
  */
-template <typename ModelConfiguration, typename ImagePointType>
+template <typename ImagePointType>
 std::vector<torch::Tensor>
-GenerateOutputsAndJacobian(const std::vector<ModelConfiguration> &                           modelConfig,
+GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &                modelConfig,
                            const std::vector<ImagePointType> &                               fixedPoints,
                            const std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex,
                            std::vector<torch::Tensor>                                        subsetsOfFeatures,
