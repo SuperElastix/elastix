@@ -258,7 +258,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  std::vector<typename Superclass1::ModelConfiguration>
+  std::vector<itk::ImpactModelConfiguration>
   GenerateModelsConfiguration(unsigned int level, std::string type, std::string mode, unsigned int imageDimension);
 };
 
