@@ -219,6 +219,12 @@ public:
   itkSetMacro(Device, torch::Device);
   itkGetConstMacro(Device, torch::Device);
 
+  /**
+   * Set/Get whether mixed precision (float16/float32) should be used during model inference.
+   */
+  itkSetMacro(UseMixedPrecision, bool);
+  itkGetConstMacro(UseMixedPrecision, bool);
+
   /** Set/Get whether the extracted feature maps should be written to disk (for inspection or debugging).
    * Useful for visualizing the intermediate representations used by the metric.
    */
@@ -561,6 +567,7 @@ private:
   bool                      m_WriteFeatureMaps;
   std::string               m_FeatureMapsPath;
   torch::Device             m_Device = torch::Device(torch::kCPU);
+  bool                      m_UseMixedPrecision;
   unsigned int              m_CurrentLevel;
   unsigned int              m_Seed;
 

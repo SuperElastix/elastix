@@ -259,7 +259,11 @@ private:
   elxOverrideGetSelfMacro;
 
   std::vector<itk::ImpactModelConfiguration>
-  GenerateModelsConfiguration(unsigned int level, std::string type, std::string mode, unsigned int imageDimension);
+  GenerateModelsConfiguration(unsigned int level,
+                              std::string  type,
+                              std::string  mode,
+                              unsigned int imageDimension,
+                              bool         useMixedPrecision);
 };
 
 /**

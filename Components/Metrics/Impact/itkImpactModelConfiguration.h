@@ -69,22 +69,22 @@ public:
                            std::vector<unsigned int> patchSize,
                            std::vector<float>        voxelSize,
                            std::vector<bool>         layersMask,
-                           bool                      is_static)
+                           bool                      is_static,
+                           bool                      useMixedPrecision)
     : m_modelPath(modelPath)
     , m_dimension(dimension)
     , m_numberOfChannels(numberOfChannels)
     , m_voxelSize(voxelSize)
     , m_layersMask(layersMask)
+    , m_dtype(useMixedPrecision ? torch::kFloat16 : torch::kFloat32)
   {
     this->m_patchSize = std::vector<int64_t>(patchSize.size());
     std::transform(patchSize.begin(), patchSize.end(), this->m_patchSize.begin(), [](unsigned int val) {
       return static_cast<int64_t>(val);
     });
-    ;
-    this->m_model =
-      std::make_shared<torch::jit::script::Module>(torch::jit::load(this->m_modelPath, torch::Device(torch::kCPU)));
-    this->m_model->eval();
-    this->m_model->to(torch::kFloat);
+
+    this->m_model = loadModelFromCacheOrDisk(this->m_modelPath, this->m_dtype);
+
     if (!is_static)
     {
       /** Initialize some variables precalculation for loop performance */
@@ -142,6 +142,13 @@ public:
   {
     return m_modelPath;
   }
+
+  const torch::ScalarType &
+  Getdtype() const
+  {
+    return m_dtype;
+  }
+
   unsigned int
   GetDimension() const
   {
@@ -198,7 +205,31 @@ private:
   std::shared_ptr<torch::jit::script::Module>            m_model;
   std::vector<std::vector<float>>                        m_patchIndex;
   std::vector<std::vector<torch::indexing::TensorIndex>> m_centersIndexLayers;
+  torch::ScalarType                                      m_dtype;
+
+  static std::unordered_map<std::string, std::shared_ptr<torch::jit::script::Module>> modelCache;
+
+  static std::shared_ptr<torch::jit::script::Module>
+  loadModelFromCacheOrDisk(const std::string & modelPath, torch::ScalarType dtype)
+  {
+    // auto it = modelCache.find(modelPath);
+    // if (it != modelCache.end())
+    //{
+    //     return it->second;
+    // }
+
+    std::shared_ptr<torch::jit::script::Module> model =
+      std::make_shared<torch::jit::script::Module>(torch::jit::load(modelPath, torch::Device(torch::kCPU)));
+    model->eval();
+    model->to(dtype);
+
+    // modelCache[modelPath] = model;
+    return model;
+  }
 };
+
+inline std::unordered_map<std::string, std::shared_ptr<torch::jit::script::Module>>
+  ImpactModelConfiguration::modelCache;
 
 } // end namespace itk
 
