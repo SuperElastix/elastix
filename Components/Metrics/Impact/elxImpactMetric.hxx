@@ -231,6 +231,9 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   // Generate fixed model configuration (fallback to shared if FixedModelsPath is missing)
   bool hasFixed =
     this->GetConfiguration()->ReadParameter(modelsPath, "ImpactFixedModelsPath", this->GetComponentLabel(), level, 0);
+  bool hasMoving =
+    this->GetConfiguration()->ReadParameter(modelsPath, "ImpactMovingModelsPath", this->GetComponentLabel(), level, 0);
+
   if (hasFixed)
   {
     this->SetFixedModelsConfiguration(
@@ -247,8 +250,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
 
   // Generate moving model configuration (fallback to shared if MovingModelsPath is missing)
-  bool hasMoving =
-    this->GetConfiguration()->ReadParameter(modelsPath, "ImpactMovingModelsPath", this->GetComponentLabel(), level, 0);
+
   if (hasMoving)
   {
     this->SetMovingModelsConfiguration(
@@ -351,7 +353,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetFixedModelsConfiguration()[i].GetLayersMask();
     fixedNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetFixedModelsConfiguration()[i].GetModel()->to(this->GetDevice());
+    this->GetFixedModelsConfiguration()[i].GetModel().to(this->GetDevice());
   }
 
   int movingNumberOfLayers = 0;
@@ -359,7 +361,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetMovingModelsConfiguration()[i].GetLayersMask();
     movingNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetMovingModelsConfiguration()[i].GetModel()->to(this->GetDevice());
+    this->GetMovingModelsConfiguration()[i].GetModel().to(this->GetDevice());
   }
 
   if (fixedNumberOfLayers != movingNumberOfLayers)
