@@ -73,14 +73,10 @@ public:
     : m_modelPath(modelPath)
     , m_dimension(dimension)
     , m_numberOfChannels(numberOfChannels)
+    , m_patchSize(patchSize.begin(), patchSize.end())
     , m_voxelSize(voxelSize)
     , m_layersMask(layersMask)
   {
-    this->m_patchSize = std::vector<int64_t>(patchSize.size());
-    std::transform(patchSize.begin(), patchSize.end(), this->m_patchSize.begin(), [](unsigned int val) {
-      return static_cast<int64_t>(val);
-    });
-    ;
     this->m_model =
       std::make_shared<torch::jit::script::Module>(torch::jit::load(this->m_modelPath, torch::Device(torch::kCPU)));
     this->m_model->eval();
