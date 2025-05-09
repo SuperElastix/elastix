@@ -114,32 +114,32 @@ GTEST_TEST(FormatParameterStringByDimensionAndLevel, Basic)
   resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 2, 3);
   EXPECT_EQ(resultStr, "13 13");
 
-  // --- Second case: PatchSize as float ---
+  // --- Second case: VoxelSize as float ---
 
-  parameterMap["ImpactPatchSize"] = { "6.0", "6.0", "3.0 3.0 1.5 1.5 1.5", "1.0", "1.0" };
+  parameterMap["ImpactVoxelSize"] = { "6.0", "6.0", "3.0 3.0 1.5 1.5 1.5", "1.0", "1.0" };
   config->Initialize(argMap, parameterMap);
 
   // Level 0: two values → repeat to fill 3
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 0, 3);
   EXPECT_EQ(resultStr, "6.0 6.0");
 
   // Level 1: only "1.0 1.0"
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 1, 3);
   EXPECT_EQ(resultStr, "1.0 1.0");
 
   // --- Third case: all entries are "6.0", just checking fallback filling ---
 
-  parameterMap["ImpactPatchSize"] = { "6.0", "6.0", "6.0", "6.0", "3.0 3.0 1.5 1.5 1.5", "1.0", "1.0" };
+  parameterMap["ImpactVoxelSize"] = { "6.0", "6.0", "6.0", "6.0", "3.0 3.0 1.5 1.5 1.5", "1.0", "1.0" };
   config->Initialize(argMap, parameterMap);
 
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 0, 3);
   EXPECT_EQ(resultStr, "6.0 6.0 6.0");
 
   // Check fallback with single value
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 1, 3);
   EXPECT_EQ(resultStr, "6.0");
 
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 2, 3);
+  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 2, 3);
   EXPECT_EQ(resultStr, "1.0 1.0");
 
   // --- Fourth case: test imageDimension auto-detection via ImpactDimension ---
