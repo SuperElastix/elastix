@@ -322,11 +322,11 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::SampleCheck(
 {
   FixedImagePointType  fixedImagePoint(fixedImageCenterCoordinate);
   MovingImagePointType mappedPoint;
-  for (int i = 0; i < patchIndex.size(); ++i)
+  for (const std::vector<float> & patchIndexItem : patchIndex)
   {
-    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
+    for (int dim = 0; dim < patchIndexItem.size(); ++dim)
     {
-      fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
+      fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndexItem[dim];
     }
     mappedPoint = this->TransformPoint(fixedImagePoint);
     if (Superclass::m_Interpolator->IsInsideBuffer(mappedPoint) == false)
