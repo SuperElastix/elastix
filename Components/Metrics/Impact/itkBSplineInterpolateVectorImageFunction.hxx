@@ -52,7 +52,7 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::Evaluate(typename 
   {
     result.push_back(this->m_Interpolators[subsetOfFeatures[i]]->Evaluate(point));
   }
-  return torch::from_blob(result.data(), { static_cast<int64_t>(result.size()) }, torch::kFloat).clone();
+  return torch::from_blob(result.data(), { static_cast<int64_t>(result.size()) }, torch::kFloat32).clone();
 }
 
 template <typename TImage, typename TInterpolator>
@@ -74,8 +74,9 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::EvaluateDerivative
       derivative[i * TImage::ImageDimension + it] = static_cast<float>(dev[it]);
     }
   }
-  return torch::from_blob(
-           derivative.data(), { static_cast<int64_t>(subsetOfFeatures.size()), TImage::ImageDimension }, torch::kFloat)
+  return torch::from_blob(derivative.data(),
+                          { static_cast<int64_t>(subsetOfFeatures.size()), TImage::ImageDimension },
+                          torch::kFloat32)
     .clone();
 }
 

@@ -411,7 +411,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateFixedImagesPatchVal
     }
     fixedImagesPatchValues[i] = this->m_fixedInterpolator->Evaluate(fixedImagePoint);
   }
-  return torch::from_blob(fixedImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat)
+  return torch::from_blob(fixedImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat32)
     .unsqueeze(0)
     .clone();
 } // end EvaluateFixedImagesPatchValue
@@ -440,7 +440,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchVa
       this->TransformPoint(fixedImagePoint), movingImageValue, nullptr);
     movingImagesPatchValues[i] = movingImageValue;
   }
-  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat)
+  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat32)
     .clone()
     .unsqueeze(0);
 } // end EvaluateFixedPatchValue
@@ -497,9 +497,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchVa
   }
   movingImagesPatchesJacobians[s] = torch::from_blob(movingImagesPatchJacobians.data(),
                                                      { static_cast<int64_t>(patchIndex.size()), MovingImageDimension },
-                                                     torch::kFloat)
+                                                     torch::kFloat32)
                                       .clone();
-  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat)
+  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat32)
     .unsqueeze(0)
     .clone();
 } // end EvaluateMovingPatchValueAndDerivative
@@ -637,7 +637,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
   const int     numNonZeroJacobianIndices = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   torch::Tensor nonZeroJacobianIndices = torch::zeros({ nb_sample, numNonZeroJacobianIndices }, torch::kLong);
   torch::Tensor transformsJacobian =
-    torch::zeros({ nb_sample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat);
+    torch::zeros({ nb_sample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat32);
 
   TransformJacobianType      flatTransformJacobian; // class itk::Array2D<double>
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(
@@ -654,7 +654,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
     transformsJacobian[s] = torch::from_blob(&(*flatTransformJacobian.begin()),
                                              { MovingImageDimension, numNonZeroJacobianIndices },
                                              torch::kDouble)
-                              .to(torch::kFloat)
+                              .to(torch::kFloat32)
                               .clone();
   }
   transformsJacobian = transformsJacobian.to(this->GetDevice());
@@ -743,7 +743,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
   torch::Tensor nonZeroJacobianIndices = torch::zeros({ nb_sample, numNonZeroJacobianIndices }, torch::kLong);
 
   torch::Tensor transformsJacobian =
-    torch::zeros({ nb_sample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat);
+    torch::zeros({ nb_sample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat32);
 
   TransformJacobianType      flatTransformJacobian; // class itk::Array2D<double>
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(
@@ -758,7 +758,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
     transformsJacobian[s] = torch::from_blob(&(*flatTransformJacobian.begin()),
                                              { MovingImageDimension, numNonZeroJacobianIndices },
                                              torch::kDouble)
-                              .to(torch::kFloat)
+                              .to(torch::kFloat32)
                               .clone();
   }
 
@@ -769,10 +769,10 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
       this->GetSubsetOfFeatures(this->m_features_indexes[i], loss.m_randomGenerator, this->GetSubsetFeatures()[i]);
 
     MovingImagePointType mappedPoint;
-    torch::Tensor        fixedOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] }, torch::kFloat);
-    torch::Tensor        movingOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] }, torch::kFloat);
-    torch::Tensor        movingDerivativeTensor =
-      torch::zeros({ nb_sample, this->GetSubsetFeatures()[i], MovingImageDimension }, torch::kFloat);
+    torch::Tensor        fixedOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] }, torch::kFloat32);
+    torch::Tensor movingOutputTensor = torch::zeros({ nb_sample, this->GetSubsetFeatures()[i] }, torch::kFloat32);
+    torch::Tensor movingDerivativeTensor =
+      torch::zeros({ nb_sample, this->GetSubsetFeatures()[i], MovingImageDimension }, torch::kFloat32);
     for (unsigned int s = 0; s < nb_sample; ++s)
     {
       const auto & fixedPoint = fixedPoints[s];
