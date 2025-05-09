@@ -65,13 +65,14 @@ ImpactMetric<TElastix>::Initialize()
   if (this->GetMode() == "Static")
   {
     oss << "\nFeaturesMapUpdateInterval: " << this->GetFeaturesMapUpdateInterval()
-        << "\n WriteFeatureMaps: " << this->GetWriteFeatureMaps();
+        << "\nWriteFeatureMaps: " << this->GetWriteFeatureMaps();
     if (this->GetWriteFeatureMaps())
     {
-      oss << "\n FeatureMapsPath: " << this->GetFeatureMapsPath();
+      oss << "\nFeatureMapsPath: " << this->GetFeatureMapsPath();
     }
   }
 
+  oss << "\nUseMixedPrecision: " << this->GetUseMixedPrecision();
   log::info(oss.str());
 } // end Initialize()
 
@@ -84,7 +85,8 @@ std::vector<itk::ImpactModelConfiguration>
 ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
                                                     std::string  prefix,
                                                     std::string  mode,
-                                                    unsigned int imageDimension)
+                                                    unsigned int imageDimension,
+                                                    bool         useMixedPrecision)
 {
   std::vector<itk::ImpactModelConfiguration> modelsConfiguration;
 
@@ -171,7 +173,8 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
         GetVectorFromString<unsigned int>(modelsDimensionVec[i], patchSizeVec[i], 5),
         GetVectorFromString<float>(mode == "Static" ? imageDimension : modelsDimensionVec[i], voxelSizeVec[i], 1.5),
         GetBooleanVectorFromString(layersMaskVec[i], false),
-        mode == "Static");
+        mode == "Static",
+        useMixedPrecision);
     }
     catch (const c10::Error & e)
     {
@@ -200,6 +203,11 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   this->GetConfiguration()->ReadParameter(randomSeed, "RandomSeed", 0, false);
   this->SetSeed(randomSeed);
 
+  bool useMixedPrecision = false;
+  this->GetConfiguration()->ReadParameter(
+    useMixedPrecision, "ImpactUseMixedPrecision", this->GetComponentLabel(), level, 0);
+  this->SetUseMixedPrecision(useMixedPrecision);
+
   // Read the mode of operation for the metric: "Jacobian" or "Static".
   // - Static: features are precomputed and optionally saved.
   // - Jacobian: gradients are propagated through the models.
@@ -226,11 +234,12 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   if (hasFixed)
   {
     this->SetFixedModelsConfiguration(
-      this->GenerateModelsConfiguration(level, "ImpactFixed", mode, FixedImageDimension));
+      this->GenerateModelsConfiguration(level, "ImpactFixed", mode, FixedImageDimension, useMixedPrecision));
   }
   else if (hasSharedModel)
   {
-    this->SetFixedModelsConfiguration(this->GenerateModelsConfiguration(level, "Impact", mode, FixedImageDimension));
+    this->SetFixedModelsConfiguration(
+      this->GenerateModelsConfiguration(level, "Impact", mode, FixedImageDimension, useMixedPrecision));
   }
   else
   {
@@ -243,11 +252,12 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   if (hasMoving)
   {
     this->SetMovingModelsConfiguration(
-      this->GenerateModelsConfiguration(level, "ImpactMoving", mode, MovingImageDimension));
+      this->GenerateModelsConfiguration(level, "ImpactMoving", mode, MovingImageDimension, useMixedPrecision));
   }
   else if (hasSharedModel)
   {
-    this->SetMovingModelsConfiguration(this->GenerateModelsConfiguration(level, "Impact", mode, MovingImageDimension));
+    this->SetMovingModelsConfiguration(
+      this->GenerateModelsConfiguration(level, "Impact", mode, MovingImageDimension, useMixedPrecision));
   }
   else
   {
