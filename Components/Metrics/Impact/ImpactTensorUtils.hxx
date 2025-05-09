@@ -72,7 +72,7 @@ ImageToTensor(typename TImage::ConstPointer                                     
       }
     }
     // Wrap raw buffer into a torch tensor and clone to detach from underlying data
-    return torch::from_blob(fixedImagesPatchValues.data(), { newSize[0], newSize[1] }, torch::kFloat).clone();
+    return torch::from_blob(fixedImagesPatchValues.data(), { newSize[0], newSize[1] }, torch::kFloat32).clone();
   }
   else
   {
@@ -102,7 +102,7 @@ ImageToTensor(typename TImage::ConstPointer                                     
       }
     }
     // Wrap raw buffer into a torch tensor and clone to detach from underlying data
-    return torch::from_blob(fixedImagesPatchValues.data(), { newSize[2], newSize[1], newSize[0] }, torch::kFloat)
+    return torch::from_blob(fixedImagesPatchValues.data(), { newSize[2], newSize[1], newSize[0] }, torch::kFloat32)
       .clone();
   }
 } // end ImageToTensor
@@ -118,12 +118,12 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   // Rearrange tensor dimensions to match ITK vector image layout
   if (Dimension == 2)
   {
-    layers = layers.permute({ 1, 2, 0 }).contiguous();
+    layers = layers.permute({ 1, 2, 0 }).contiguous().to(torch::kFloat32);
     ;
   }
   else
   {
-    layers = layers.permute({ 1, 2, 3, 0 }).contiguous();
+    layers = layers.permute({ 1, 2, 3, 0 }).contiguous().to(torch::kFloat32);
     ;
   }
   const unsigned int numberOfChannels = layers.size(Dimension);
@@ -326,7 +326,8 @@ GetFeaturesMaps(
     {
       // Convert image to tensor representation for deep feature extraction
       torch::Tensor inputTensor =
-        ImageToTensor<TImage, InterpolatorType>(image, interpolator, config.GetVoxelSize(), transformPoint);
+        ImageToTensor<TImage, InterpolatorType>(image, interpolator, config.GetVoxelSize(), transformPoint)
+          .to(config.Getdtype());
 
       if (writeInputImage)
       {
@@ -391,8 +392,7 @@ GetFeaturesMaps(
             {
               if (config.GetLayersMask()[layerIndex])
               {
-                torch::Tensor layerPatch =
-                  outputsPatch[layerIndex].toTensor().squeeze(0).to(torch::kCPU).to(torch::kFloat);
+                torch::Tensor layerPatch = outputsPatch[layerIndex].toTensor().squeeze(0).to(torch::kCPU);
 
                 if (sliceIndex == 0 && depthIndex == 0)
                 {
@@ -426,7 +426,7 @@ GetFeaturesMaps(
                   layersSlices.push_back(std::vector<std::vector<int>>());
                   generateCartesianProduct(layerStartIndices, layerCurrent, 0, layersSlices[realLayerIndex]);
 
-                  layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, torch::kFloat));
+                  layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, config.Getdtype()));
                 }
                 layers[realLayerIndex].index_put_(
                   { torch::indexing::Slice(),
@@ -465,8 +465,7 @@ GetFeaturesMaps(
           {
             if (config.GetLayersMask()[layerIndex])
             {
-              torch::Tensor layerPatch =
-                outputsPatch[layerIndex].toTensor().squeeze(0).to(torch::kCPU).to(torch::kFloat);
+              torch::Tensor layerPatch = outputsPatch[layerIndex].toTensor().squeeze(0).to(torch::kCPU);
 
               if (sliceIndex == 0)
               {
@@ -496,7 +495,7 @@ GetFeaturesMaps(
                 layersSlices.push_back(std::vector<std::vector<int>>());
                 generateCartesianProduct(layerStartIndices, layerCurrent, 0, layersSlices[realLayerIndex]);
 
-                layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, torch::kFloat));
+                layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, config.Getdtype()));
               }
               const auto & slice = layersSlices[realLayerIndex][sliceIndex];
 
@@ -556,7 +555,7 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
       std::vector<int64_t> resizeVector(config.GetPatchSize().size() + 1, 1);
       resizeVector[0] = config.GetNumberOfChannels();
       std::vector<torch::jit::IValue> outputsList;
-      auto modelInput = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, torch::kFloat)
+      auto modelInput = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.Getdtype())
                           .unsqueeze(0)
                           .repeat({ torch::IntArrayRef(resizeVector) })
                           .unsqueeze(0)
@@ -597,7 +596,7 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
       {
         if (config.GetLayersMask()[it])
         {
-          outputsTensor.push_back(outputsList[it].toTensor().to(torch::kCPU).to(torch::kFloat));
+          outputsTensor.push_back(outputsList[it].toTensor().to(torch::kCPU));
         }
       }
     }
@@ -713,7 +712,7 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
       std::vector<int64_t> sizes(config.GetPatchSize().size() + 1, -1);
       sizes[0] = nbSample;
 
-      torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, torch::kFloat)
+      torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.Getdtype())
                                          .unsqueeze(0)
                                          .expand(sizes)
                                          .unsqueeze(1)
@@ -721,7 +720,8 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
 
       for (unsigned int s = 0; s < nbSample; ++s)
       {
-        patchValueTensor[s] = imagesPatchValuesEvaluator(fixedPoints[s], patchIndex[i][s], config.GetPatchSize());
+        patchValueTensor[s] =
+          imagesPatchValuesEvaluator(fixedPoints[s], patchIndex[i][s], config.GetPatchSize()).to(config.Getdtype());
       }
 
       std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
@@ -740,7 +740,7 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
                                     .toTensor()
                                     .index(config.GetCentersIndexLayers()[a])
                                     .index_select(1, subsetsOfFeatures[a])
-                                    .to(torch::kFloat));
+                                    .to(torch::kFloat32));
           a++;
         }
       }
@@ -777,18 +777,19 @@ GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &   
     std::vector<int64_t> sizes(config.GetPatchSize().size() + 1, -1);
     sizes[0] = nbSample;
 
-    torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, torch::kFloat)
+    torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.Getdtype())
                                        .unsqueeze(0)
                                        .expand(sizes)
                                        .unsqueeze(1)
                                        .clone();
     torch::Tensor imagesPatchesJacobians =
-      torch::zeros({ nbSample, static_cast<int64_t>(patchIndex[i][0].size()), dimension }, torch::kFloat);
+      torch::zeros({ nbSample, static_cast<int64_t>(patchIndex[i][0].size()), dimension }, torch::kFloat32);
 
     for (unsigned int s = 0; s < nbSample; ++s)
     {
       patchValueTensor[s] = imagesPatchValuesAndJacobiansEvaluator(
-        fixedPoints[s], imagesPatchesJacobians, patchIndex[i][s], config.GetPatchSize(), s);
+                              fixedPoints[s], imagesPatchesJacobians, patchIndex[i][s], config.GetPatchSize(), s)
+                              .to(config.Getdtype());
     }
 
 
@@ -810,13 +811,14 @@ GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &   
                   .toTensor()
                   .index(config.GetCentersIndexLayers()[a])
                   .index_select(1, subsetsOfFeatures[a])
-                  .to(torch::kFloat);
+                  .to(torch::kFloat32);
         torch::Tensor gradientModulator = losses[a]->updateValueAndGetGradientModulator(fixedOutputsTensor[a], layer);
         std::vector<torch::Tensor> modelJacobians;
         layersJacobian.push_back(
           torch::bmm(torch::autograd::grad({ layer }, { patchValueTensor }, { gradientModulator }, nb > 1, false)[0]
                        .flatten(1)
-                       .unsqueeze(1),
+                       .unsqueeze(1)
+                       .to(torch::kFloat32),
                      imagesPatchesJacobians));
 
         a++;
