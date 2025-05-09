@@ -40,7 +40,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ImpactImageToImageMetric()
   this->Superclass::SetUseImageSampler(true);
   this->SetUseFixedImageLimiter(false);
   this->SetUseMovingImageLimiter(false);
-}
+} // end Constructor
 
 /**
  * ********************* UpdateFeaturesMaps ****************************

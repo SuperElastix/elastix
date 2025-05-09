@@ -32,114 +32,126 @@ namespace elastix
  * \brief A metric based on itk::ImpactImageToImageMetric.
  *
  * This metric compares semantic features extracted from one or more pretrained TorchScript models
- * applied to both the fixed and moving images. Feature vectors are compared using a configurable loss,
- * such as L1, L2, NCC, Cosine, or L1Cosine distance.
+ * applied to both the fixed and moving images. Feature vectors are compared using a configurable distance,
+ * such as L1, L2, NCC, Cosine, Dice, or L1Cosine.
  *
- * ### Multi-model support
- * Multiple pretrained models can be specified for both the fixed and moving images. Each model can have its own
- * configuration (dimension, number of channels, patch size, voxel size, mask). To do this, simply provide
- * **space-separated values** for each parameter, in the same order as the models listed.
- *
- * Example:
+ * ### Minimal Example
+ * Example configuration for a single model:
  * \code
- * (ImpactModelsPath "/Data/Models/TS/M850_8_Layers.pt")
+ * (ImpactModelsPath "/Data/Models/TS/M291_1_Layers.pt")
  * (ImpactDimension 3)
  * (ImpactNumberOfChannels 1)
- * (ImpactPatchSize 0 0 0)
+ * (ImpactPatchSize 5 5 5)
  * (ImpactVoxelSize 1.5 1.5 1.5)
- * (ImpactLayersMask "10000001")
- * (ImpactPCA 3)
- * (ImpactSubsetFeatures 3 10)
- * (ImpactLayersWeight 0.5 0.5)
+ * (ImpactLayersMask "1")
+ * (ImpactSubsetFeatures 32)
+ * (ImpactPCA 0)
  * (ImpactDistance "L2")
+ * (ImpactLayersWeight 1)
+ * (ImpactMode "Jacobian")
+ * (ImpactGPU 0)
+ * (ImpactUseMixedPrecision "true")
+ * (ImpactFeaturesMapUpdateInterval -1)
+ * (ImpactWriteFeatureMaps "false")
  * \endcode
  *
- * ### Multi-resolution support
- * All parameters support per-resolution configuration using Elastix's multi-resolution syntax.
- * For instance for a 2 resolution setup:
+ * ### Parameter Descriptions
+ * The parameters used in this class are as follows:
+ *
+ * \param ImpactModelsPath Path to TorchScript model used for feature extraction.
+ *
+ * \param ImpactDimension Defines the dimensionality of the input expected by the TorchScript model.
+ *   - `2` for 2D models (e.g., SAM2.1, DINOv2)
+ *   - `3` for 3D models (e.g., TotalSegmentator, Anatomix, MIND).
+ *
+ * \param ImpactNumberOfChannels Specifies the number of channels in the input images for each model.
+ *   - `1` for grayscale medical images (e.g., TotalSegmentator, Anatomix, MIND)
+ *   - `3` for RGB-based models (e.g., SAM2.1, DINOv2)
+ *
+ * \param ImpactPatchSize The size of the patch used for feature extraction.
+ *   - `X Y Z` for 3D models
+ *   - `X Y` for 2D models
+ *   If not all dimensions are specified, the first value is used to fill in missing dimensions (e.g., `5` becomes `5 5
+ * 5` for 3D).
+ *
+ * \param ImpactVoxelSize Defines the physical spacing of the voxels (in millimeters).
+ *   - `X Y Z` for 3D models
+ *   - `X Y` for 2D models
+ *   Use consistent voxel sizes to avoid inconsistencies during image pyramid processing.
+ *
+ * \param ImpactLayersMask Binary string indicating which output layers of the model to include in the similarity
+ * computation. Example: `"00000001"` selects only the last layer.
+ *
+ * \param ImpactMode Defines how features are computed:
+ *   - `"Static"`: Features are computed once per image and resolution level.
+ *   - `"Jacobian"`: Features are computed at each iteration with backpropagation through the model.
+ *
+ * \param ImpactSubsetFeatures Number of feature channels randomly selected per voxel at each iteration.
+ *
+ * \param ImpactLayersWeight The relative importance of each layer in the similarity score.
+ *
+ * \param ImpactGPU Specifies the GPU device index, or `-1` for CPU execution.
+ *
+ * \param ImpactUseMixedPrecision Enables or disables the use of mixed precision (float16 and float32).
+ *   Recommended to be disabled on CPU.
+ *
+ * \param ImpactPCA Number of principal components to retain for dimensionality reduction. Set to `0` to disable.
+ *
+ * \param ImpactDistance Specifies the distance metric to compare feature vectors. Supported values: `L1`, `L2`,
+ * `Cosine`, `L1Cosine`, `Dice`, `NCC`, `DotProduct`.
+ *
+ * \param ImpactFeaturesMapUpdateInterval Controls how often feature maps are recomputed in "Static" mode.
+ *   - Set to `-1` to compute once per resolution level.
+ *   - Set to a positive integer to recompute every _N_ iterations.
+ *
+ * \param ImpactWriteFeatureMaps Enables saving both the input images and feature maps to disk (in Static mode).
+ *
+ * ### Advanced Use: Multi-resolution and Multi-model Setup
+ *
+ * IMPACT supports parallel use of multiple models and per-resolution customization. The following configurations are
+ * supported:
+ *
  * \code
- * (ImpactModelsPath "/Data/Models/TS/M850_8_Layers.pt" "/Data/Models/SAM/Tiny_2_Layers.pt")
+ * (ImpactModelsPath "/Data/Models/TS/M291_1_Layers.pt" "/Data/Models/SAM/Tiny_2_Layers.pt")
  * (ImpactDimension 3 2)
  * (ImpactNumberOfChannels 1 3)
  * (ImpactPatchSize 5 5 5 29 29 29)
  * (ImpactVoxelSize 3 3 3 1.5 1.5 1.5)
- * (ImpactLayersMask "00000001" "01")
+ * (ImpactLayersMask "1" "01")
+ * (ImpactPCA 0 3)
+ * (ImpactSubsetFeatures 32 3)
+ * (ImpactDistance "L2" "L1")
+ * (ImpactLayersWeight 1 1)
+ * (ImpactMode "Static" "Jacobian")
+ * (ImpactGPU 0 0)
+ * (ImpactUseMixedPrecision "true" "true")
+ * (ImpactFeaturesMapUpdateInterval -1 -1)
+ * (ImpactWriteFeatureMaps "false" "false")
  * \endcode
-
- * If needed, you can provide separate configurations for the fixed and moving images
- * by adding the <tt>ImpactFixed</tt> or <tt>ImpactMoving</tt> prefix to each parameter name.
  *
+ * **Multi-model Setup**:
+ * Use space-separated lists for different models:
  * \code
- * (ImpactFixedModelsPath "...") and (ImpactMovingModelsPath "...")
+ * (ImpactModelsPath "/Models/M850_8_Layers.pt /Models/MIND/R1D2.pt")
+ * (ImpactDimension "3 3")
+ * (ImpactNumberOfChannels "1 1")
+ * (ImpactPatchSize "5 5 5 7 7 7")
+ * (ImpactVoxelSize "1.5 1.5 1.5 6 6 6")
+ * (ImpactLayersMask "00000001 1")
+ * (ImpactPCA "0 0")
+ * (ImpactSubsetFeatures "64 16")
+ * (ImpactDistance "Dice L2")
+ * (ImpactLayersWeight "1.0 0.5")
  * \endcode
  *
- * All related parameters (e.g., <tt>Dimension</tt>, <tt>VoxelSize</tt>, <tt>LayersMask</tt>, etc.)
- * should then be specified separately using their <tt>ImpactFixed*</tt> and <tt>ImpactMoving*</tt> versions.
+ * **Fixed and Moving-Specific Models**:
+ * Assign different models to the fixed and moving images:
+ * \code
+ * (FixedModelsPath "/Models/TS/M850_8_Layers.pt")
+ * (MovingModelsPath "/Models/MIND/R1D2.pt")
+ * \endcode
  *
- * ### Key Parameters
- *
- * The parameters used in this class are:
- *
- * \param ImpactMode Defines the operational mode of the metric. Possible values are:
- *   - "Static": features are precomputed and held fixed during optimization.
- *   - "Jacobian": gradients are backpropagated through the feature extractor.
- *
- * \param ImpactModelsPath Specifies the path(s) to one or more TorchScript models used for feature extraction.
- *   Space-separated values allow combining multiple models in parallel.
- *   Example: <tt>(ImpactModelsPath "/path/to/model1.pt /path/to/model2.pt")</tt>
- *
- * \param ImpactDimension Defines the dimensionality of the input images (e.g., 2 or 3).
- *   This must match the input expectation of each model (one value per model).
- *   Example: <tt>(ImpactDimension "3 2")</tt>
- *
- * \param ImpactNumberOfChannels Specifies the number of channels in the input images for each model.
- *   For grayscale, use 1. Example: <tt>(ImpactNumberOfChannels "1 3")</tt>
- *
- * \param ImpactPatchSize Size of the patch used for local feature extraction, given per model.
- *   Example: <tt>(ImpactPatchSize "5 5 5 7 7 7")</tt>
- *
- * \param ImpactVoxelSize Defines the physical spacing of voxels for each model's input space.
- *   This determines patch resolution. Example: <tt>(ImpactVoxelSize "1.5 1.5 1.5 3 3 3")</tt>
- *
- * \param ImpactLayersMask A binary string (per model) indicating which output layers of the model to use.
- *   Example: <tt>(ImpactLayersMask "00000001 1")</tt> uses the last layer of model 1 and layer 0 of model 2.
- *
- * \param ImpactSubsetFeatures Number of feature channels randomly selected per model.
- *   Example: <tt>(ImpactSubsetFeatures "1000 32")</tt>
- *
- * \param ImpactLayersWeight Relative importance of each selected model/layer in the total loss computation.
- *   Can be used to emphasize certain semantic levels. Example: <tt>(ImpactLayersWeight "1.0 0.5")</tt>
- *
- * \param GOU Index of the GPU device to use. Set to -1 to force CPU execution.
- *   Example: <tt>(ImpactGPU -1)</tt>
- *
- * \param ImpactPCA Number of principal components to retain per model during optional PCA-based feature compression.
- *   Set to 0 to disable PCA. Example: <tt>(ImpactPCA "32 3")</tt>
- *
- * \param ImpactDistance Specifies the similarity function to compare features.
- *   Supported values per model: <tt>L1</tt>, <tt>L2</tt>, <tt>NCC</tt>, <tt>Cosine</tt>, <tt>L1Cosine</tt>,
- * <tt>Dice</tt>. Example: <tt>(ImpactDistance "L2 Cosine")</tt>
- *
- * \param ImpactFeaturesMapUpdateInterval Frequency (in iterations) at which feature maps are recomputed in "Static"
- * mode. Set to -1 to disable updates and keep features fixed. Example: <tt>(ImpactFeaturesMapUpdateInterval 10)</tt>
- *
- * \param ImpactWriteFeatureMaps Enables writing both the input images and the corresponding output feature maps
- *   to disk in "Static" mode, for each model and each resolution level. This is useful for inspection,
- *   debugging, or understanding which semantic features are being used during registration.
- *
- *   The files are saved to the output directory and follow the naming conventions:
- *
- *   - Input images:
- *     <tt>Fixed_<N>_<M>.mha</tt> and <tt>Moving_<N>_<M>.mha</tt>
- *     where <tt>N</tt> is the resolution level and <tt>M</tt> is the model index.
- *
- *   - Feature maps:
- *     <tt>FeatureMap/Fixed_<N>_<R1>_<R2>_<R3>.mha</tt> and <tt>Moving_<N>_<R1>_<R2>_<R3>.mha</tt>
- *     where <tt>R1, R2, R3</tt> are the voxels size.
- *
- *   Example: <tt>(ImpactWriteFeatureMaps "true")</tt>
- *
- *   Default is "false".
+ * This allows asymmetric model configurations for different image modalities or anatomical content.
  *
  * \ingroup Metrics
  */
