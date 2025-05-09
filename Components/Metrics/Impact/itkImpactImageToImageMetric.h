@@ -36,38 +36,22 @@
 namespace itk
 {
 
-/** \class ImpactImageToImageMetric
- * \brief Semantic similarity metric for multimodal image registration based on deep features.
+/**
+ * \class ImpactImageToImageMetric
+ * \brief A semantic similarity metric for multimodal image registration based on deep learning features.
  *
- * This class is templated over the type of the fixed and moving images to be compared.
+ * This class define a loss by compares the fixed and moving images using high-level semantic representations
+ * extracted from pretrained deep learning models, rather than relying on raw pixel intensities
+ * or handcrafted features.
  *
- * Unlike conventional similarity metrics that rely on raw pixel intensities or handcrafted features,
- * this metric leverages high-level semantic representations extracted from pretrained deep learning models.
- * It enables robust registration by comparing the anatomical content of the fixed and moving images
- * in a shared feature space, rather than relying on potentially inconsistent intensity relationships.
- *
- * The semantic features are extracted from pretrained segmentation models (e.g., TotalSegmentator, SAM2.1)
- * and are used to guide the alignment of anatomical structures. These features are robust to noise,
- * artifacts, and intensity inhomogeneities, making the metric particularly effective in multimodal settings.
- *
- * The similarity is computed by comparing feature representations extracted from local image patches
- * (Jacobian mode) or from full feature maps (Static mode), using various distance functions (L1, L2, NCC, cosine).
- * In Jacobian mode, gradients are propagated through the feature extractor to enable efficient optimization.
- *
- * The proposed metric, called IMPACT (Image Metric with Pretrained model-Agnostic Comparison for Transmodality
- * registration), was shown to significantly improve alignment accuracy in several registration frameworks (Elastix,
- * VoxelMorph), across different anatomical regions and imaging modalities (CT, CBCT, MRI).
- *
- * Key characteristics:
- * - Semantic comparison based on deep features from pretrained segmentation networks.
- * - Robust to modality gaps, noise, and anatomical variability.
- * - Supports patch-based Jacobian mode and full-image Static mode.
- * - Compatible with various similarity distance functions.
- * - Fully integrated with multi-resolution strategies and weakly supervised mask-based optimization.
+ * All details can be found in:\n
+ * Valentin Boussot, Cédric Hémon, Jean-Claude Nunes, Jason Dowling, Simon Rouzé, Caroline Lafond, Anaïs Barateau,
+ * Jean-Louis Dillenseger A Generic Semantic Loss for Multimodal Image Registration https://arxiv.org/abs/2503.24121
  *
  * \ingroup RegistrationMetrics
  * \ingroup Metrics
  */
+
 template <typename TFixedImage, typename TMovingImage>
 class ITK_TEMPLATE_EXPORT ImpactImageToImageMetric : public AdvancedImageToImageMetric<TFixedImage, TMovingImage>
 {
@@ -180,13 +164,13 @@ public:
    * Each model can target a different resolution, architecture, or semantic level.
    */
   itkSetMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
-  itkGetConstMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkGetConstReferenceMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
 
   /** Set/Get the list of TorchScript model configurations used to extract features from the moving image.
    * Allows using different models for fixed and moving images to support asymmetric or multimodal setups.
    */
   itkSetMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
-  itkGetConstMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkGetConstReferenceMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
 
   /** Set/Get the subset of feature indices to be used in the loss computation.
    * This allows dimensionality reduction or focusing on the most informative channels.
@@ -274,10 +258,15 @@ protected:
   /** Protected Typedefs ******************/
 
   /**
-   * Thread-local structure that accumulates loss values and gradients for each layer.
+   * \brief Thread-local structure for accumulating loss values and gradients for each layer.
    *
-   * Encapsulates one loss object per output layer (as defined by layersMask), allowing multi-layer
-   * loss computation and weighted aggregation. Also provides interfaces to get final loss and gradient.
+   * This structure encapsulates one loss object per output layer (defined by the layersMask), enabling
+   * multi-layer loss computation and weighted aggregation. It allows efficient computation of the final loss
+   * and its gradients by keeping track of the contributions from each layer.
+   *
+   * \details This structure is designed to be used in a multi-threaded environment, where each thread
+   * maintains its own instance to store intermediate results, ensuring thread-safety during parallel loss
+   * and gradient computations.
    */
   struct LossPerThreadStruct
   {
@@ -381,105 +370,162 @@ protected:
   using typename Superclass::MovingImageDerivativeType;
   using typename Superclass::NonZeroJacobianIndicesType;
 
-  /** Check if a patch centered at the given fixed image point is valid for sampling.
-   * This version considers a specific patch layout (patchIndex) and verifies that all
-   * transformed points remain inside the moving image domain.
+  /**
+   * \brief Checks if a patch centered at the given fixed image point is valid for sampling.
+   *
+   * This function verifies that a patch, defined by the `patchIndex`, centered at the given fixed image
+   * point, is valid for sampling. It ensures that all transformed points of the patch remain inside
+   * the domain of the moving image, or within the moving mask if one is defined.
+   * It is used to validate patches before they are processed in the similarity metric.
+   *
+   * \param fixedImageCenterCoordinate The center coordinate of the patch in the fixed image.
+   * \param patchIndex A layout of the patch, defining the indices of the region to sample around
+   *                   the fixed image point.
+   *
+   * \return `true` if the patch is valid for sampling, meaning all transformed points are inside the
+   *         moving image domain or mask; `false` otherwise.
    */
   bool
   SampleCheck(const FixedImagePointType &             fixedImageCenterCoordinate,
               const std::vector<std::vector<float>> & patchIndex) const;
 
-  /** Check if the fixed image point lies within valid bounds for sampling.
-   * This version does not consider patch geometry. It is used to validate
-   * isolated points before processing them in the similarity metric.
+  /**
+   * \brief Checks if the fixed image point lies within valid bounds for sampling.
+   *
+   * This function checks if a fixed image point is within the valid bounds for sampling.
+   * It is used to validate individual points before they are processed in the similarity metric.
+   *
+   * \param fixedImageCenterCoordinate The coordinate of the fixed image point to validate.
+   *
+   * \return `true` if the fixed image point is within valid bounds for sampling, `false` otherwise.
    */
   bool
   SampleCheck(const FixedImagePointType & fixedImageCenterCoordinate) const;
 
-  /** Compute the similarity value contribution for a given thread.
-   * This method is called in parallel across threads. Each thread accumulates
-   * a partial loss.
+  /**
+   * \brief Computes the similarity value contribution for a given thread.
+   *
+   * This method is called in parallel across multiple threads. Each thread calculates
+   * and accumulates its partial loss contribution to the overall similarity value.
+   *
+   * \param threadID The unique identifier of the thread processing the similarity calculation.
    */
   void
   ThreadedGetValue(ThreadIdType threadID) const override;
 
-  /** Combine the similarity values computed by all threads.
-   * Aggregates the loss contributions stored in each thread’s `LossPerThreadStruct`
-   * into a global scalar value used by the optimizer.
+  /**
+   * \brief Combines the similarity values computed by all threads.
+   *
+   * This method aggregates the loss contributions stored in each thread’s `LossPerThreadStruct`
+   * and combines them into a global scalar value. This aggregated value is then used by the optimizer
+   * during the optimization process.
+   *
+   * \param value The scalar value to store the aggregated similarity result.
    */
   void
   AfterThreadedGetValue(MeasureType & value) const override;
 
-  /** Compute both similarity value and its derivative (gradient) for a given thread.
-   * Each thread computes the semantic loss and its gradient w.r.t. transformation parameters.
-   * Gradients are computed either analytically (Jacobian mode) or skipped (static mode).
+  /**
+   * \brief Computes both the similarity value and its gradient for a given thread.
+   *
+   * Each thread computes the semantic loss and its gradient with respect to the transformation parameters.
+   *
+   * \param threadID The unique identifier of the thread performing the calculation.
    */
   void
   ThreadedGetValueAndDerivative(ThreadIdType threadID) const override;
 
-  /** Combine the values and gradients computed by all threads.
-   * Final reduction step to produce global loss and gradient vectors used in optimization.
+  /**
+   * \brief Combines the values and gradients computed by all threads.
+   *
+   * This method performs the final reduction step to aggregate the values and gradients
+   * computed by each thread into global loss and gradient vectors. These aggregated results
+   * are then used in the optimization process.
+   *
+   * \param value The global loss value computed by combining the contributions from all threads.
+   * \param derivative The global gradient vector computed by combining the gradients from all threads.
    */
   void
   AfterThreadedGetValueAndDerivative(MeasureType & value, DerivativeType & derivative) const override;
 
-  /** Compute the semantic similarity value using the current transform parameters.
-   * This method evaluates the loss at all sampled points using the current transformation,
-   * without computing derivatives. It uses patch-based inference and feature comparison.
-   * Applicable in both Jacobian and static modes.
+  /**
+   * \brief Computes the semantic similarity value using the current transform parameters.
    *
-   * \param fixedPoints Sampled points in the fixed image.
-   * \param loss Loss objects (one per semantic layer) to accumulate values.
-   * \return Number of valid samples used in the computation.
+   * This method computes the loss at all sampled points using the current transformation parameters,
+   * without calculating derivatives. It performs patch-based inference and feature comparison in
+   * Jacobian mode.
+   *
+   * \param fixedPoints A vector of sampled points in the fixed image.
+   * \param loss The loss objects (one per layer) where the values will be accumulated.
+   *
+   * \return The number of valid samples used in the similarity computation.
    */
   unsigned int
   ComputeValue(const std::vector<FixedImagePointType> & fixedPoints, LossPerThreadStruct & loss) const;
 
-  /** Compute the semantic similarity value in static mode (precomputed feature maps).
-   * Unlike ComputeValue(), this version uses pre-extracted static features for both
-   * fixed and moving images, avoiding repeated forward passes through the model.
+  /**
+   * \brief Computes the semantic similarity value in static mode (using precomputed feature maps).
    *
-   * \param fixedPoints Sampled points in the fixed image.
-   * \param loss Loss objects (one per semantic layer) to accumulate values.
-   * \return Number of valid samples used in the computation.
+   * Unlike `ComputeValue()`, this method uses pre-extracted static feature maps for both the
+   * fixed and moving images, avoiding repeated forward passes through the model
+   *
+   * \param fixedPoints A vector of sampled points in the fixed image.
+   * \param loss The loss objects (one per semantic layer) where the values will be accumulated.
+   *
+   * \return The number of valid samples used in the similarity computation.
    */
   unsigned int
   ComputeValueStatic(const std::vector<FixedImagePointType> & fixedPoints, LossPerThreadStruct & loss) const;
 
-  /** Compute both the semantic similarity value and its derivative using Jacobian mode.
-   * In this mode, gradients are backpropagated through the model to compute the
-   * sensitivity of the metric to transformation parameters. This is essential for
-   * enabling gradient-based optimization.
+  /**
+   * \brief Computes both the semantic similarity value and its derivative using Jacobian mode.
    *
-   * \param fixedPoints Sampled points in the fixed image.
-   * \param loss Loss objects to store both values and gradients per layer.
-   * \return Number of valid samples used in the computation.
+   * This method computes both the similarity value and its derivative (gradient)
+   * by backpropagating through the model. This allows the metric to assess the sensitivity to
+   * transformation parameters, which is crucial for gradient-based optimization.
+   *
+   * \param fixedPoints A vector of sampled points in the fixed image.
+   * \param loss Loss objects to store both the values and gradients for each semantic layer.
+   *
+   * \return The number of valid samples used in the similarity and gradient computation.
    */
   unsigned int
   ComputeValueAndDerivativeJacobian(const std::vector<FixedImagePointType> & fixedPoints,
                                     LossPerThreadStruct &                    loss) const;
 
-  /** Compute value and derivative in static mode (precomputed features).
-   * Gradients are computed via chain rule using the interpolated feature fields.
+  /**
+   * \brief Computes the value and derivative in static mode (using precomputed features).
    *
-   * \param fixedPoints Sampled points in the fixed image.
-   * \param loss Loss objects to store both values and gradients per layer.
-   * \return Number of valid samples used in the computation.
+   * This method computes the similarity value and its derivative (gradient)
+   * using precomputed feature maps. Gradients are computed via the chain rule, using the
+   * interpolated feature fields rather than backpropagating through the model.
+   *
+   * \param fixedPoints A vector of sampled points in the fixed image.
+   * \param loss Loss objects to store both the values and gradients for each semantic layer.
+   *
+   * \return The number of valid samples used in the similarity and gradient computation.
    */
   unsigned int
   ComputeValueAndDerivativeStatic(const std::vector<FixedImagePointType> & fixedPoints,
                                   LossPerThreadStruct &                    loss) const;
 
 
-  /** Update the fixed feature maps (static mode).
-   * Re-extracts deep features from the images using the TorchScript models
-   * when entering a new pyramid level or after a feature update interval.
+  /**
+   * \brief Updates the fixed feature maps in static mode.
+   *
+   * This method re-extracts deep features from the images using the TorchScript models
+   * when transitioning to a new pyramid level or after a specified feature update interval.
+   * This ensures that the feature maps are kept up-to-date for the registration process.
    */
   void
   UpdateFeaturesMaps();
 
-  /** Update the moving feature maps (static mode).
-   * Same as UpdateFeaturesMaps(), but applied to the moving image.
+  /**
+   * \brief Updates the moving feature maps in static mode.
+   *
+   * This method performs the same operation as `UpdateFeaturesMaps()`, but it applies to the moving image.
+   * It re-extracts deep features from the moving image using the TorchScript models, ensuring that the
+   * feature maps are updated when transitioning to a new pyramid level or after a feature update interval.
    */
   void
   UpdateMovingFeaturesMaps();
@@ -496,8 +542,11 @@ private:
 
   /**
    * \struct FeaturesMaps
-   * Encapsulates both the feature map image and its associated interpolator.
-   * This allows evaluating feature vectors (and derivatives) at arbitrary points.
+   * \brief Encapsulates a feature map image and its associated interpolator.
+   *
+   * This structure holds both the feature map image and the corresponding interpolator, enabling
+   * the evaluation of feature vectors (and their derivatives) at arbitrary points in the image.
+   * It is designed to facilitate feature extraction and interpolation during image registration in static mode.
    */
   struct FeaturesMaps
   {
@@ -515,8 +564,17 @@ private:
   using FeaturesMaps = typename ImpactImageToImageMetric<TFixedImage, TMovingImage>::FeaturesMaps;
 
   /**
-   * Extracts a fixed image patch tensor centered at a point, using the precomputed patchIndex.
-   * Interpolation is performed using the fixed image interpolator.
+   * \brief Extracts a fixed image patch tensor centered at a given point using the precomputed patch index.
+   *
+   * This method extracts a patch from the fixed image centered at the specified point,
+   * based on the provided `patchIndex` and `patchSize`. Interpolation is performed using
+   * the fixed image interpolator to sample the feature values at the specified coordinates.
+   *
+   * \param fixedImageCenterCoordinate The coordinate of the center point of the patch in the fixed image.
+   * \param patchIndex A vector defining the relative indices for extracting the patch.
+   * \param patchSize The size of the patch to extract.
+   *
+   * \return A tensor representing the extracted patch from the fixed image.
    */
   torch::Tensor
   EvaluateFixedImagesPatchValue(const FixedImagePointType &             fixedImageCenterCoordinate,
@@ -524,8 +582,17 @@ private:
                                 const std::vector<int64_t> &            patchSize) const;
 
   /**
-   * Extracts a moving image patch tensor (intensity values) corresponding to a fixed point,
-   * using the transform and moving image interpolator.
+   * \brief Extracts a moving image patch tensor (intensity values) corresponding to a fixed point.
+   *
+   * This method extracts a patch from the moving image, centered at the corresponding transformed
+   * point from the fixed image. The extraction is performed using the provided transform and
+   * the moving image interpolator to sample intensity values at the transformed coordinates.
+   *
+   * \param fixedImageCenterCoordinate The coordinate of the center point in the fixed image.
+   * \param patchIndex A 2D vector defining the relative indices for extracting the patch.
+   * \param patchSize The size of the patch to extract.
+   *
+   * \return A tensor representing the extracted patch from the moving image.
    */
   torch::Tensor
   EvaluateMovingImagesPatchValue(const FixedImagePointType &             fixedImageCenterCoordinate,
@@ -533,8 +600,19 @@ private:
                                  const std::vector<int64_t> &            patchSize) const;
 
   /**
-   * Extracts moving image patch values *and* computes the spatial Jacobians w.r.t. image coordinates.
-   * Used in Jacobian mode for backpropagating through the transform.
+   * \brief Extracts moving image patch values and computes the spatial Jacobians with respect to image coordinates.
+   *
+   * This method extracts a patch from the moving image centered at the corresponding transformed
+   * point from the fixed image. It also computes the image gradient. This is used in Jacobian mode to enable
+   * gradient computation via the chain rule during optimization.
+   *
+   * \param fixedImageCenterCoordinate The coordinate of the center point in the fixed image.
+   * \param movingImagesPatchesJacobians A tensor to store the computed Jacobians (image gradients) for each patch.
+   * \param patchIndex A vector defining the relative indices for extracting the patch.
+   * \param patchSize The size of the patch to extract.
+   * \param s An index to determine where to store the computed Jacobians in `movingImagesPatchesJacobians`.
+   *
+   * \return A tensor representing the extracted patch from the moving image.
    */
   torch::Tensor
   EvaluateMovingImagesPatchValuesAndJacobians(const FixedImagePointType &             fixedImageCenterCoordinate,
@@ -544,8 +622,18 @@ private:
                                               int                                     s) const;
 
   /**
-   * Given a list of fixed points and model configurations, generates valid patch indices
-   * and filters out invalid points (outside mask/boundary). Returns filtered fixed points.
+   * \brief Generates valid patch indices and filters out invalid points.
+   *
+   * This method takes a list of fixed points and model configurations to generate patch indices
+   * for each point. It filters out points that lie outside the mask or image boundaries, returning
+   * only the valid fixed points. The valid patch indices are stored in `patchIndex`.
+   *
+   * \param modelConfig A vector of model configurations, each specifying the properties of the models used.
+   * \param randomGenerator A random number generator used for random sampling in the patch generation process.
+   * \param fixedPointsTmp A vector of fixed points to generate patch indices for.
+   * \param patchIndex A reference to a 4D vector to store the generated patch indices for each valid fixed point.
+   *
+   * \return A vector of valid fixed points that are inside the mask or boundaries of the image.
    */
   template <typename ImagePointType>
   std::vector<ImagePointType>
@@ -589,6 +677,19 @@ private:
     return interpolator;
   }();
 
+  /**
+   * \brief Retrieves a subset of features based on the provided indices.
+   *
+   * This method selects a subset of features from the full set of features, based on the indices
+   * provided in `features_index`. It uses a random number generator for sampling a subset of the
+   * features, ensuring that the selected features are randomly chosen.
+   *
+   * \param features_index A vector of indices representing the features to be considered.
+   * \param randomGenerator A random number generator used for sampling the features.
+   * \param n The number of features to select from the provided list of indices.
+   *
+   * \return A vector containing the indices of the randomly selected features.
+   */
   std::vector<unsigned int>
   GetSubsetOfFeatures(const std::vector<unsigned int> & features_index, std::mt19937 & randomGenerator, int n) const;
 

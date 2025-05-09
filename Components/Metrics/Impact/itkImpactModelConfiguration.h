@@ -116,6 +116,19 @@ public:
     }
   }
 
+  // Disable (delete) copying, to avoid having multiple copies of the same model:
+  ImpactModelConfiguration(const ImpactModelConfiguration &) = delete;
+  ImpactModelConfiguration &
+  operator=(const ImpactModelConfiguration &) = delete;
+
+  // Enable (default) move semantics:
+  ImpactModelConfiguration(ImpactModelConfiguration &&) = default;
+  ImpactModelConfiguration &
+  operator=(ImpactModelConfiguration &&) = default;
+
+  // Destructor.
+  ~ImpactModelConfiguration() = default;
+
   bool
   operator==(const ImpactModelConfiguration & rhs) const
   {
@@ -172,10 +185,10 @@ public:
   {
     return m_layersMask;
   }
-  const std::shared_ptr<torch::jit::script::Module> &
+  torch::jit::script::Module &
   GetModel() const
   {
-    return m_model;
+    return *m_model;
   }
   const std::vector<std::vector<float>> &
   GetPatchIndex() const
@@ -193,6 +206,7 @@ public:
     this->m_centersIndexLayers = centersIndexLayers;
   }
 
+
 private:
   std::string                                            m_modelPath;
   unsigned int                                           m_dimension;
@@ -204,30 +218,8 @@ private:
   std::vector<std::vector<float>>                        m_patchIndex;
   std::vector<std::vector<torch::indexing::TensorIndex>> m_centersIndexLayers;
   torch::ScalarType                                      m_dtype;
-
-  static std::unordered_map<std::string, std::shared_ptr<torch::jit::script::Module>> modelCache;
-
-  static std::shared_ptr<torch::jit::script::Module>
-  loadModelFromCacheOrDisk(const std::string & modelPath, torch::ScalarType dtype)
-  {
-    // auto it = modelCache.find(modelPath);
-    // if (it != modelCache.end())
-    //{
-    //     return it->second;
-    // }
-
-    std::shared_ptr<torch::jit::script::Module> model =
-      std::make_shared<torch::jit::script::Module>(torch::jit::load(modelPath, torch::Device(torch::kCPU)));
-    model->eval();
-    model->to(dtype);
-
-    // modelCache[modelPath] = model;
-    return model;
-  }
 };
 
-inline std::unordered_map<std::string, std::shared_ptr<torch::jit::script::Module>>
-  ImpactModelConfiguration::modelCache;
 
 } // end namespace itk
 
