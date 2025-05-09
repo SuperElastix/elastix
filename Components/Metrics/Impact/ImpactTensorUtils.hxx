@@ -381,7 +381,7 @@ GetFeaturesMaps(
                                          .repeat({ torch::IntArrayRef(channelRepeat) })
                                          .unsqueeze(0)
                                          .to(device);
-            std::vector<torch::jit::IValue> outputsPatch = config.GetModel()->forward({ inputPatch }).toList().vec();
+            std::vector<torch::jit::IValue> outputsPatch = config.GetModel().forward({ inputPatch }).toList().vec();
 
 
             if (config.GetLayersMask().size() != outputsPatch.size())
@@ -455,7 +455,7 @@ GetFeaturesMaps(
                                        .unsqueeze(0)
                                        .to(device);
 
-          std::vector<torch::jit::IValue> outputsPatch = config.GetModel()->forward({ inputPatch }).toList().vec();
+          std::vector<torch::jit::IValue> outputsPatch = config.GetModel().forward({ inputPatch }).toList().vec();
 
           if (config.GetLayersMask().size() != outputsPatch.size())
           {
@@ -563,7 +563,7 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
                           .to(device);
       try
       {
-        outputsList = config.GetModel()->forward({ modelInput }).toList().vec();
+        outputsList = config.GetModel().forward({ modelInput }).toList().vec();
       }
       catch (const std::exception & e)
       {
@@ -600,17 +600,16 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
         }
       }
     }
-    for (int i = 0; i < modelsConfig.size(); ++i)
+    for (itk::ImpactModelConfiguration & config : modelsConfig)
     {
-      auto &                                                 config = modelsConfig[i];
       std::vector<std::vector<torch::indexing::TensorIndex>> centersIndexLayers;
-      for (int it = 0; it < outputsTensor.size(); ++it)
+      for (const torch::Tensor & tensor : outputsTensor)
       {
         std::vector<torch::indexing::TensorIndex> centersIndexLayer;
         centersIndexLayer.push_back("...");
-        for (int j = 2; j < outputsTensor[it].dim(); ++j)
+        for (int j = 2; j < tensor.dim(); ++j)
         {
-          centersIndexLayer.push_back(outputsTensor[it].size(j) / 2);
+          centersIndexLayer.push_back(tensor.size(j) / 2);
         }
         centersIndexLayers.push_back(centersIndexLayer);
       }
@@ -624,7 +623,9 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
  * ******************* GetPatchIndex ***********************
  */
 inline std::vector<std::vector<float>>
-GetPatchIndex(itk::ImpactModelConfiguration modelConfiguration, std::mt19937 & randomGenerator, unsigned int dimension)
+GetPatchIndex(const itk::ImpactModelConfiguration & modelConfiguration,
+              std::mt19937 &                        randomGenerator,
+              unsigned int                          dimension)
 {
   if (dimension == modelConfiguration.GetPatchSize().size())
   {
@@ -728,7 +729,7 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
       resizeVector[1] = config.GetNumberOfChannels();
       std::vector<torch::jit::IValue> outputsList =
         config.GetModel()
-          ->forward({ patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone() })
+          .forward({ patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone() })
           .toList()
           .vec();
 
@@ -799,7 +800,7 @@ GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &   
       patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone().set_requires_grad(true);
     imagesPatchesJacobians = imagesPatchesJacobians.to(device).repeat({ 1, config.GetNumberOfChannels(), 1 }).clone();
 
-    std::vector<torch::jit::IValue> outputsList = config.GetModel()->forward({ patchValueTensor }).toList().vec();
+    std::vector<torch::jit::IValue> outputsList = config.GetModel().forward({ patchValueTensor }).toList().vec();
     torch::Tensor                   layer, diffLayer, modelJacobian;
     for (int it = 0; it < outputsList.size(); ++it)
     {

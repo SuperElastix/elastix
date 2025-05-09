@@ -74,17 +74,12 @@ public:
     : m_modelPath(modelPath)
     , m_dimension(dimension)
     , m_numberOfChannels(numberOfChannels)
+    , m_patchSize(patchSize.begin(), patchSize.end())
     , m_voxelSize(voxelSize)
     , m_layersMask(layersMask)
     , m_dtype(useMixedPrecision ? torch::kFloat16 : torch::kFloat32)
   {
-    this->m_patchSize = std::vector<int64_t>(patchSize.size());
-    std::transform(patchSize.begin(), patchSize.end(), this->m_patchSize.begin(), [](unsigned int val) {
-      return static_cast<int64_t>(val);
-    });
-
     this->m_model = loadModelFromCacheOrDisk(this->m_modelPath, this->m_dtype);
-
     if (!is_static)
     {
       /** Initialize some variables precalculation for loop performance */
@@ -117,6 +112,19 @@ public:
       }
     }
   }
+
+  // Disable (delete) copying, to avoid having multiple copies of the same model:
+  ImpactModelConfiguration(const ImpactModelConfiguration &) = delete;
+  ImpactModelConfiguration &
+  operator=(const ImpactModelConfiguration &) = delete;
+
+  // Enable (default) move semantics:
+  ImpactModelConfiguration(ImpactModelConfiguration &&) = default;
+  ImpactModelConfiguration &
+  operator=(ImpactModelConfiguration &&) = default;
+
+  // Destructor.
+  ~ImpactModelConfiguration() = default;
 
   bool
   operator==(const ImpactModelConfiguration & rhs) const
@@ -174,10 +182,10 @@ public:
   {
     return m_layersMask;
   }
-  const std::shared_ptr<torch::jit::script::Module> &
+  torch::jit::script::Module &
   GetModel() const
   {
-    return m_model;
+    return *m_model;
   }
   const std::vector<std::vector<float>> &
   GetPatchIndex() const
