@@ -220,18 +220,18 @@ private:
   static std::shared_ptr<torch::jit::script::Module>
   loadModelFromCacheOrDisk(const std::string & modelPath, torch::ScalarType dtype)
   {
-    // auto it = modelCache.find(modelPath);
-    // if (it != modelCache.end())
-    //{
-    //     return it->second;
-    // }
+    auto it = modelCache.find(modelPath);
+    if (it != modelCache.end())
+    {
+      return it->second;
+    }
 
     std::shared_ptr<torch::jit::script::Module> model =
       std::make_shared<torch::jit::script::Module>(torch::jit::load(modelPath, torch::Device(torch::kCPU)));
     model->eval();
     model->to(dtype);
 
-    // modelCache[modelPath] = model;
+    modelCache[modelPath] = model;
     return model;
   }
 };
