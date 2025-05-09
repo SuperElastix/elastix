@@ -48,9 +48,9 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::Evaluate(typename 
                                                                        std::vector<unsigned int> subsetOfFeatures) const
 {
   std::vector<float> result;
-  for (int i = 0; i < subsetOfFeatures.size(); ++i)
+  for (const unsigned int feature : subsetOfFeatures)
   {
-    result.push_back(this->m_Interpolators[subsetOfFeatures[i]]->Evaluate(point));
+    result.push_back(this->m_Interpolators[feature]->Evaluate(point));
   }
   return torch::from_blob(result.data(), { static_cast<int64_t>(result.size()) }, torch::kFloat32).clone();
 }
