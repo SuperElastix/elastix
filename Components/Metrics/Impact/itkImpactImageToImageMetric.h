@@ -180,13 +180,13 @@ public:
    * Each model can target a different resolution, architecture, or semantic level.
    */
   itkSetMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
-  itkGetConstMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkGetConstReferenceMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
 
   /** Set/Get the list of TorchScript model configurations used to extract features from the moving image.
    * Allows using different models for fixed and moving images to support asymmetric or multimodal setups.
    */
   itkSetMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
-  itkGetConstMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkGetConstReferenceMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
 
   /** Set/Get the subset of feature indices to be used in the loss computation.
    * This allows dimensionality reduction or focusing on the most informative channels.

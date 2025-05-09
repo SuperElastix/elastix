@@ -114,6 +114,19 @@ public:
     }
   }
 
+  // Disable (delete) copying, to avoid having multiple copies of the same model:
+  ImpactModelConfiguration(const ImpactModelConfiguration &) = delete;
+  ImpactModelConfiguration &
+  operator=(const ImpactModelConfiguration &) = delete;
+
+  // Enable (default) move semantics:
+  ImpactModelConfiguration(ImpactModelConfiguration &&) = default;
+  ImpactModelConfiguration &
+  operator=(ImpactModelConfiguration &&) = default;
+
+  // Destructor.
+  ~ImpactModelConfiguration() = default;
+
   bool
   operator==(const ImpactModelConfiguration & rhs) const
   {
@@ -163,10 +176,10 @@ public:
   {
     return m_layersMask;
   }
-  const std::shared_ptr<torch::jit::script::Module> &
+  torch::jit::script::Module &
   GetModel() const
   {
-    return m_model;
+    return *m_model;
   }
   const std::vector<std::vector<float>> &
   GetPatchIndex() const

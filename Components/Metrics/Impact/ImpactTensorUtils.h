@@ -99,7 +99,9 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
  * This is used to extract local neighborhoods for each model (e.g., 5x5x5 patch).
  */
 std::vector<std::vector<float>>
-GetPatchIndex(itk::ImpactModelConfiguration modelConfiguration, std::mt19937 & randomGenerator, unsigned int dimension);
+GetPatchIndex(const itk::ImpactModelConfiguration & modelConfiguration,
+              std::mt19937 &                        randomGenerator,
+              unsigned int                          dimension);
 
 template <typename ImagePointType>
 using ImagesPatchValuesEvaluator = std::function<
