@@ -74,17 +74,15 @@ public:
     : m_modelPath(modelPath)
     , m_dimension(dimension)
     , m_numberOfChannels(numberOfChannels)
+    , m_patchSize(patchSize.begin(), patchSize.end())
     , m_voxelSize(voxelSize)
     , m_layersMask(layersMask)
     , m_dtype(useMixedPrecision ? torch::kFloat16 : torch::kFloat32)
   {
-    this->m_patchSize = std::vector<int64_t>(patchSize.size());
-    std::transform(patchSize.begin(), patchSize.end(), this->m_patchSize.begin(), [](unsigned int val) {
-      return static_cast<int64_t>(val);
-    });
-
-    this->m_model = loadModelFromCacheOrDisk(this->m_modelPath, this->m_dtype);
-
+    this->m_model =
+      std::make_shared<torch::jit::script::Module>(torch::jit::load(this->m_modelPath, torch::Device(torch::kCPU)));
+    this->m_model->eval();
+    this->m_model->to(torch::kFloat);
     if (!is_static)
     {
       /** Initialize some variables precalculation for loop performance */

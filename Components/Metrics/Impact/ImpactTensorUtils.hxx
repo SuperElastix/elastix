@@ -600,17 +600,16 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
         }
       }
     }
-    for (int i = 0; i < modelsConfig.size(); ++i)
+    for (itk::ImpactModelConfiguration & config : modelsConfig)
     {
-      auto &                                                 config = modelsConfig[i];
       std::vector<std::vector<torch::indexing::TensorIndex>> centersIndexLayers;
-      for (int it = 0; it < outputsTensor.size(); ++it)
+      for (const torch::Tensor & tensor : outputsTensor)
       {
         std::vector<torch::indexing::TensorIndex> centersIndexLayer;
         centersIndexLayer.push_back("...");
-        for (int j = 2; j < outputsTensor[it].dim(); ++j)
+        for (int j = 2; j < tensor.dim(); ++j)
         {
-          centersIndexLayer.push_back(outputsTensor[it].size(j) / 2);
+          centersIndexLayer.push_back(tensor.size(j) / 2);
         }
         centersIndexLayers.push_back(centersIndexLayer);
       }
