@@ -45,8 +45,11 @@ namespace ImpactTensorUtils
 
 /**
  * \brief Converts an ITK image to a Torch tensor using physical spacing.
- * \param voxelSize Target voxel size in mm (used to resample).
- * \param transformPoint Optional point-wise transform (e.g., deformation field).
+ *
+ * \param voxelSize Target voxel size in mm, used for resampling the image.
+ * \param transformPoint Optional point-wise transform to apply to the moving image.
+ *
+ * \return A Torch tensor representing the resampled ITK image.
  */
 template <typename TImage, typename TInterpolator>
 torch::Tensor
@@ -57,7 +60,12 @@ ImageToTensor(typename TImage::ConstPointer                                     
 
 /**
  * \brief Converts a tensor (C×D×H×W) to a multi-channel ITK image.
- * \details Uses the original image metadata (origin, spacing, direction).
+ * Converts the given tensor to an ITK image, preserving the original image metadata (origin, spacing, direction).
+ *
+ * \param image The original input image used to retrieve metadata.
+ * \param layers The tensor representing the feature layers.
+ *
+ * \return A multi-channel ITK image constructed from the tensor.
  */
 template <typename TImage, typename TFeatureImage>
 typename TFeatureImage::Pointer
@@ -65,8 +73,20 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers);
 
 /**
  * \brief Applies one or more models to an image to extract feature maps.
- * \param writeInputImage Optional function to export resampled input for debugging.
- * \return Vector of ITK feature images, one per layer and model.
+ *
+ * This function extracts feature maps from an image using one or more models. Optionally, it can
+ * export the resampled input image for debugging purposes.
+ *
+ * \param image The input image from which features are extracted.
+ * \param interpolator The interpolator used for resampling.
+ * \param modelsConfiguration The configuration of the models used for feature extraction.
+ * \param device The device (CPU or GPU) to perform the computation on.
+ * \param pca The number of principal components for dimensionality reduction.
+ * \param principal_components A vector to store the computed principal components.
+ * \param writeInputImage Optional function to export the resampled input image for debugging.
+ * \param transformPoint ptional function to transform a point, used for geometric transformations on the moving image.
+ *
+ * \return A vector of ITK feature images, one per layer and model.
  */
 template <typename TImage, typename FeaturesMaps, typename InterpolatorType, typename FeaturesImageType>
 std::vector<FeaturesMaps>
@@ -83,10 +103,15 @@ GetFeaturesMaps(
 /**
  * \brief Tests the configuration of each model by generating outputs from dummy input.
  *
- * This is useful for validating TorchScript model compatibility and inferring output structure
- * (e.g., number of layers, spatial shape, channels).
+ * This function validates the compatibility of TorchScript models and checks the output structure
+ * (e.g., number of layers, spatial shape, channels). It ensures that models are properly loaded
+ * and executable during initialization.
  *
- * Called during initialization to ensure models are properly loaded and executable.
+ * \param modelsConfig Vector of model configurations.
+ * \param modelType The type of the model being tested (fixed, moving) for logging errors.
+ * \param device The device (CPU or GPU) to perform the computation on.
+ *
+ * \return A vector of tensors with the generated outputs from dummy input.
  */
 std::vector<torch::Tensor>
 GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig,
@@ -94,12 +119,21 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
                        torch::Device                                device);
 
 /**
- * \brief Computes patch index offsets around a center point based on model config.
+ * \brief Computes patch index offsets around a center point based on model configuration.
  *
- * This is used to extract local neighborhoods for each model (e.g., 5x5x5 patch).
+ * This function generates the offsets for local patches (e.g., 5x5x5) around a center point
+ * using the model's configuration. It helps in extracting features from local neighborhoods.
+ *
+ * \param modelConfiguration Configuration of the model, including patch size and voxel size.
+ * \param randomGenerator Random generator used for randomizing 2D patch slices in a 3D volume.
+ * \param dimension The image dimension (2D or 3D).
+ *
+ * \return A vector of offsets for the patch around the center point.
  */
 std::vector<std::vector<float>>
-GetPatchIndex(itk::ImpactModelConfiguration modelConfiguration, std::mt19937 & randomGenerator, unsigned int dimension);
+GetPatchIndex(const itk::ImpactModelConfiguration & modelConfiguration,
+              std::mt19937 &                        randomGenerator,
+              unsigned int                          dimension);
 
 template <typename ImagePointType>
 using ImagesPatchValuesEvaluator = std::function<
@@ -108,11 +142,17 @@ using ImagesPatchValuesEvaluator = std::function<
 /**
  * \brief Computes feature outputs for all patches using each model.
  *
- * For each patch:
- *   - runs model forward pass
- *   - applies optional feature sub-selection
+ * This function computes feature outputs for each patch by running a forward pass through the model
+ * and applying optional feature sub-selection.
  *
- * \param evaluator  Callable to produce a tensor from a point + patch + subset
+ * \param modelConfig Vector of model configurations (dimensions, patch sizes, voxel sizes, etc.).
+ * \param fixedPoints Central points on the fixed image where features are computed.
+ * \param patchIndex Indices defining the local patches around each point.
+ * \param subsetsOfFeatures Tensors containing indices of feature channels to select.
+ * \param device The device (CPU or GPU) to perform the computation on.
+ * \param imagesPatchValuesEvaluator  Callable that evaluate image values.
+ *
+ * \return A vector of tensors containing the computed feature outputs for each patch.
  */
 template <class ImagePointType>
 std::vector<torch::Tensor>
@@ -131,12 +171,21 @@ using ImagesPatchValuesAndJacobiansEvaluator = std::function<torch::Tensor(const
                                                                            int)>;
 
 /**
- * \brief Computes both feature outputs and their spatial Jacobians.
+ * \brief Computes feature outputs and their spatial Jacobians for image registration.
  *
- * For use in Jacobian-based optimization mode. Requires backpropagation through TorchScript.
+ * This function calculates the feature outputs and their corresponding Jacobians at given points
+ * to aid in optimization. The Jacobians are used for gradient computation during image registration.
  *
- * \param evaluator Callable that returns a pair (features, jacobian) from a point.
- * \param losses    Mutable references to per-layer loss objects (updated incrementally).
+ * \param modelConfig Vector of model configurations (dimensions, patch sizes, voxel sizes, etc.).
+ * \param fixedPoints Central points on the fixed image where features are computed.
+ * \param patchIndex  Indices defining the local patches around each point for feature extraction.
+ * \param subsetsOfFeatures Tensors containing indices of feature channels to select.
+ * \param fixedOutputsTensor Tensor containing feature outputs from the fixed image.
+ * \param device The device (CPU or GPU) to perform the computation on.
+ * \param losses Vector of loss objects to be updated incrementally during optimization.
+ * \param imagesPatchValuesAndJacobiansEvaluator Callable that evaluate image values and Jacobians.
+ *
+ * \return A vector of tensors with computed feature outputs.
  */
 template <typename ImagePointType>
 std::vector<torch::Tensor>

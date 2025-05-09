@@ -45,8 +45,10 @@ public:
   /**
    * \brief Initializes one B-Spline interpolator per feature channel in the input VectorImage.
    *
-   * Each channel of the vector image is assigned its own BSpline interpolator. This is necessary
-   * since ITK's BSplineInterpolateImageFunction does not directly support VectorImages.
+   * Each channel of the vector image is assigned a separate B-Spline interpolator, as ITK's
+   * BSplineInterpolateImageFunction does not natively support VectorImages.
+   *
+   * \param vectorImage The input VectorImage to initialize the B-Spline interpolators for each channel.
    */
   void
   SetInputImage(typename ImageType::Pointer vectorImage);
@@ -56,6 +58,7 @@ public:
    *
    * \param point The physical coordinate where interpolation is performed.
    * \param subsetOfFeatures Indices of feature channels to interpolate.
+   *
    * \return A 1D torch::Tensor containing interpolated values for the requested channels.
    */
   torch::Tensor
@@ -69,6 +72,7 @@ public:
    *
    * \param point The physical coordinate at which derivatives are computed.
    * \param subsetOfFeatures Indices of feature channels to differentiate.
+   *
    * \return A 2D torch::Tensor (Channels × SpatialDimension) with spatial gradients per feature.
    */
   torch::Tensor
