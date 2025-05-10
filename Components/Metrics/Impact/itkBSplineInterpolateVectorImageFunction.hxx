@@ -22,6 +22,9 @@
 #include "itkBSplineInterpolateVectorImageFunction.h"
 #include <itkVectorIndexSelectionCastImageFilter.h>
 
+/**
+ * ******************* SetInputImage ***********************
+ */
 template <typename TImage, typename TInterpolator>
 void
 BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::SetInputImage(typename TImage::Pointer vectorImage)
@@ -40,8 +43,11 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::SetInputImage(type
     interpolator->SetSplineOrder(3);
     this->m_Interpolators.push_back(interpolator);
   }
-}
+} // end SetInputImage
 
+/**
+ * ******************* Evaluate ***********************
+ */
 template <typename TImage, typename TInterpolator>
 typename torch::Tensor
 BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::Evaluate(typename TImage::PointType point,
@@ -53,8 +59,11 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::Evaluate(typename 
     result.push_back(this->m_Interpolators[feature]->Evaluate(point));
   }
   return torch::from_blob(result.data(), { static_cast<int64_t>(result.size()) }, torch::kFloat32).clone();
-}
+} // end Evaluate
 
+/**
+ * ******************* EvaluateDerivative ***********************
+ */
 template <typename TImage, typename TInterpolator>
 typename torch::Tensor
 BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::EvaluateDerivative(
@@ -78,6 +87,6 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::EvaluateDerivative
                           { static_cast<int64_t>(subsetOfFeatures.size()), TImage::ImageDimension },
                           torch::kFloat32)
     .clone();
-}
+} // end EvaluateDerivative
 
 #endif // end #ifndef _itkBSplineInterpolateVectorImageFunction_hxx
