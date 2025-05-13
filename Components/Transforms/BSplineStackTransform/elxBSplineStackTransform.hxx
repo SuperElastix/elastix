@@ -492,7 +492,7 @@ BSplineStackTransform<TElastix>::ReadFromFile()
     {
       itkExceptionMacro("NumberOfSubTransforms, StackOrigin, StackSpacing, GridSize, GridIndex, GridSpacing and "
                         "GridOrigin is required by "
-                        << this->GetNameOfClass() << ".")
+                        << this->GetNameOfClass() << ".");
     }
 
     /** Set it all. */
