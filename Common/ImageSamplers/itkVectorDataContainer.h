@@ -293,7 +293,7 @@ public:
   /**
    * Get the number of elements currently stored in the vector.
    */
-  unsigned long
+  SizeValueType
   Size() const;
 
   /**

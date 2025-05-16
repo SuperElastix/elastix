@@ -1405,13 +1405,12 @@ TransformBase<TElastix>::AutomaticScalesEstimation(ScalesType & scales) const
   sampler->SetInputImageRegion(this->GetRegistration()->GetAsITKBaseType()->GetFixedImageRegion());
 
   /** Compute the grid spacing. */
-  unsigned long nrofsamples = 10000;
-  sampler->SetNumberOfSamples(nrofsamples);
+  sampler->SetNumberOfSamples(10000);
 
   /** Get samples and check the actually obtained number of samples. */
   sampler->Update();
   ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
-  nrofsamples = sampleContainer->Size();
+  const std::size_t           nrofsamples{ sampleContainer->size() };
   if (nrofsamples == 0)
   {
     /** \todo: should we demand a minimum number (~100) of voxels? */
@@ -1492,13 +1491,12 @@ TransformBase<TElastix>::AutomaticScalesEstimationStackTransform(const unsigned 
   sampler->SetInputImageRegion(desiredRegion);
 
   /** Compute the grid spacing. */
-  unsigned long nrofsamples = 10000;
-  sampler->SetNumberOfSamples(nrofsamples);
+  sampler->SetNumberOfSamples(10000);
 
   /** Get samples and check the actually obtained number of samples. */
   sampler->Update();
   ImageSampleContainerPointer sampleContainer = sampler->GetOutput();
-  nrofsamples = sampleContainer->Size();
+  const std::size_t           nrofsamples{ sampleContainer->size() };
   if (nrofsamples == 0)
   {
     /** \todo: should we demand a minimum number (~100) of voxels? */

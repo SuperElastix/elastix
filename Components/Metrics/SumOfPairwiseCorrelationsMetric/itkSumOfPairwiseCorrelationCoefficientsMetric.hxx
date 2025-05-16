@@ -146,8 +146,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValue(
   using MatrixType = vnl_matrix<RealType>;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType   datablock(NumberOfSamples, G, vnl_matrix_null);
+  size_t     NumberOfSamples{ sampleContainer->size() };
+  MatrixType datablock(NumberOfSamples, G, vnl_matrix_null);
 
   /** Initialize dummy loop variable */
   unsigned int pixelIndex = 0;
@@ -309,8 +309,8 @@ SumOfPairwiseCorrelationCoefficientsMetric<TFixedImage, TMovingImage>::GetValueA
   std::vector<FixedImagePointType> SamplesOK;
 
   /** The rows of the ImageSampleMatrix contain the samples of the images of the stack */
-  unsigned int NumberOfSamples = sampleContainer->Size();
-  MatrixType   datablock(NumberOfSamples, G, vnl_matrix_null);
+  size_t     NumberOfSamples{ sampleContainer->size() };
+  MatrixType datablock(NumberOfSamples, G, vnl_matrix_null);
 
   /** Initialize dummy loop variables */
   unsigned int pixelIndex = 0;

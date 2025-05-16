@@ -262,10 +262,10 @@ VectorDataContainer<TElement>::End() -> Iterator
  * Get the number of elements currently stored in the vector.
  */
 template <typename TElement>
-unsigned long
+SizeValueType
 VectorDataContainer<TElement>::Size() const
 {
-  return static_cast<unsigned long>(this->VectorType::size());
+  return SizeValueType{ this->VectorType::size() };
 }
 
 
