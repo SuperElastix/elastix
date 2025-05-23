@@ -1578,6 +1578,8 @@ GTEST_TEST(itkTransformixFilter, CheckMinimumMovingImageUsingAnyInternalPixelTyp
 
   check(TypeHolder<char>{});
   check(TypeHolder<unsigned int>{});
+  check(TypeHolder<std::int64_t>{});
+  check(TypeHolder<std::uint64_t>{});
   check(TypeHolder<double>{});
 }
 

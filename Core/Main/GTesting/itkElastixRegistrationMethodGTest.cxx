@@ -2439,6 +2439,8 @@ GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageUsingAnyInternal
 
   check(TypeHolder<char>{});
   check(TypeHolder<short>{});
+  check(TypeHolder<std::int64_t>{});
+  check(TypeHolder<std::uint64_t>{});
   check(TypeHolder<float>{});
   check(TypeHolder<double>{});
 }

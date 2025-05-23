@@ -22,6 +22,7 @@
 #include "elxMacro.h"
 
 #include "elxBaseComponentSE.h"
+#include "elxPixelTypeToString.h"
 #include "itkResampleImageFilter.h"
 #include "itkCastImageFilter.h"
 #include "elxProgressCommand.h"
@@ -61,8 +62,10 @@ namespace elastix
  *    using standard c-style casts, so TAKE CARE that you are not
  *    throwing away data (for example when going from unsigned to signed,
  *    or from float to char).\n
- *    Choose from (unsigned) char, (unsigned) short, float, double, etc.\n
- *    example: <tt>(ResultImagePixelType "unsigned short")</tt> \n
+ *    Choose from (unsigned) char, (unsigned) short, (unsigned) int, float, double, etc. Or choose a fixed width type:
+ *    "int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "uint64", "float32", or "float64". The width
+ *    (number of bits) of a fixed width type is guaranteed to be the same on all supported platforms. \n example:
+ * <tt>(ResultImagePixelType "unsigned short")</tt> \n
  *    The default is "short".
  * \parameter CompressResultImage: parameter to set if (lossless) compression
  *    of the written image is desired.\n
@@ -215,7 +218,7 @@ private:
   void
   ReleaseMemory();
 
-  /** Casts the specified input image to the image type with the specified pixel type. */
+  /** Casts the specified input image to the image type with the pixel type specified by the template argument. */
   template <typename TResultPixel>
   itk::SmartPointer<itk::ImageBase<ImageDimension>>
   CastImage(const InputImageType & inputImage) const
@@ -225,6 +228,37 @@ private:
     castFilter->SetInput(&inputImage);
     castFilter->Update();
     return castFilter->GetOutput();
+  }
+
+  /** Casts the specified input image to the image type with the specified pixel type, if the function argument
+   * `resultImagePixelType` matches the template argument `TResultPixel`. The function argument `resultImagePixelType`
+   * should be of the fixed width form: "intN", "uintN", or "floatN", with 'N' specifying the number of bits. */
+  template <typename TResultPixel>
+  bool
+  CastImageIfPixelTypesMatch(const std::string_view                              resultImagePixelType,
+                             const InputImageType &                              inputImage,
+                             itk::SmartPointer<itk::ImageBase<ImageDimension>> & outputImage) const
+  {
+    if (resultImagePixelType == PixelTypeToFixedWidthString<TResultPixel>())
+    {
+      outputImage = CastImage<TResultPixel>(inputImage);
+      return true;
+    }
+    return false;
+  }
+
+  /** Casts the specified input image to the image type with the specified fixed width pixel type. */
+  template <typename... TResultPixel>
+  itk::SmartPointer<itk::ImageBase<ImageDimension>>
+  CastImageAsSpecifiedByFixedWidthPixelType(const std::string_view resultImagePixelType,
+                                            const InputImageType & inputImage) const
+  {
+    if (itk::SmartPointer<itk::ImageBase<ImageDimension>> outputImage;
+        (CastImageIfPixelTypesMatch<TResultPixel>(resultImagePixelType, inputImage, outputImage) || ...))
+    {
+      return outputImage;
+    }
+    return nullptr;
   }
 };
 

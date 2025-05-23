@@ -19,6 +19,7 @@
 
 // First include the header file to be tested:
 #include "elastixlib.h"
+#include "transformixlib.h"
 #include "elxForEachSupportedImageType.h"
 
 #include "elxCoreMainGTestUtilities.h"
@@ -39,9 +40,12 @@
 
 // Using-declarations:
 using elx::CoreMainGTestUtilities::ConvertToOffset;
+using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::CreateParameterMap;
 using elx::CoreMainGTestUtilities::FillImageRegion;
 using elx::CoreMainGTestUtilities::GetTransformParametersFromMaps;
+using elx::CoreMainGTestUtilities::minimumImageSizeValue;
+using elx::CoreMainGTestUtilities::TypeHolder;
 
 
 namespace
@@ -311,4 +315,149 @@ GTEST_TEST(ElastixLib, SingleSliceMaskedTranslation3D)
 
   ASSERT_EQ(elastixObject.RegisterImages(fixedImage, movingImage, parameterMap, ".", false, false, maskImage), 0);
   ExpectRoundedTransformParametersEqualOffset(elastixObject, translationOffset);
+}
+
+
+// Tests the ResultImagePixelType parameter.
+GTEST_TEST(ElastixLib, ResultImagePixelType)
+{
+  static constexpr auto ImageDimension = 2;
+  using InputPixelType = float;
+
+  static constexpr auto imageSize = itk::Size<ImageDimension>::Filled(minimumImageSizeValue);
+  const auto            inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<InputPixelType>(imageSize);
+
+  const auto expectSpecifiedResultImagePixelType = [&inputImage](const char * const resultImagePixelType,
+                                                                 const auto expectedResultImagePixelTypeHolder) {
+    (void)expectedResultImagePixelTypeHolder;
+
+    elastix::ELASTIX elastixObject{};
+
+    const auto parameterMap = CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+                                                                   { "MaximumNumberOfIterations", "1" },
+                                                                   { "Metric", "AdvancedNormalizedCorrelation" },
+                                                                   { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                                   { "ResultImagePixelType", resultImagePixelType },
+                                                                   { "Transform", "TranslationTransform" } });
+
+    // Run a very simple registration, that should certainly succeed.
+    ASSERT_EQ(elastixObject.RegisterImages(inputImage, inputImage, parameterMap, ".", false, false), 0);
+
+    const auto resultImage = elastixObject.GetResultImage();
+    ASSERT_NE(resultImage, nullptr);
+
+    using ExpectedResultImagePixelType = typename decltype(expectedResultImagePixelTypeHolder)::Type;
+    using ExpectedResultImageType = itk::Image<ExpectedResultImagePixelType, ImageDimension>;
+
+    EXPECT_NE(dynamic_cast<const ExpectedResultImageType *>(resultImage.get()), nullptr);
+  };
+
+  // Check various legacy values for ResultImagePixelType:
+  expectSpecifiedResultImagePixelType("char", TypeHolder<char>{});
+  expectSpecifiedResultImagePixelType("short", TypeHolder<short>{});
+  expectSpecifiedResultImagePixelType("int", TypeHolder<int>{});
+  expectSpecifiedResultImagePixelType("long", TypeHolder<long>{});
+  expectSpecifiedResultImagePixelType("unsigned long", TypeHolder<unsigned long>{});
+  expectSpecifiedResultImagePixelType("float", TypeHolder<float>{});
+  expectSpecifiedResultImagePixelType("double", TypeHolder<double>{});
+
+  // Check various possible fixed width values for ResultImagePixelType:
+  expectSpecifiedResultImagePixelType("int8", TypeHolder<std::int8_t>{});
+  expectSpecifiedResultImagePixelType("uint8", TypeHolder<std::uint8_t>{});
+  expectSpecifiedResultImagePixelType("int64", TypeHolder<std::int64_t>{});
+  expectSpecifiedResultImagePixelType("uint64", TypeHolder<std::uint64_t>{});
+  expectSpecifiedResultImagePixelType("float32", TypeHolder<float>{});
+  expectSpecifiedResultImagePixelType("float64", TypeHolder<double>{});
+
+  for (const char * const invalidResultImagePixelType : { "", "void0", "not-a-valid-type" })
+  {
+    elastix::ELASTIX elastixObject{};
+
+    const auto parameterMap =
+      CreateParameterMap<ImageDimension>({ { "ImageSampler", "Full" },
+                                           { "MaximumNumberOfIterations", "1" },
+                                           { "Metric", "AdvancedNormalizedCorrelation" },
+                                           { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                           { "ResultImagePixelType", invalidResultImagePixelType },
+                                           { "Transform", "TranslationTransform" } });
+
+    // Run a very simple registration and expect it to fail (returning error code 1), for an invalid
+    // ResultImagePixelType.
+    EXPECT_EQ(elastixObject.RegisterImages(inputImage, inputImage, parameterMap, ".", false, false), 1);
+    EXPECT_EQ(elastixObject.GetResultImage(), nullptr);
+  }
+}
+
+
+// Tests the ResultImagePixelType parameter.
+GTEST_TEST(TransformixLib, ResultImagePixelType)
+{
+  static constexpr auto ImageDimension = 2;
+  using InputPixelType = float;
+
+  static constexpr auto imageSize = itk::Size<ImageDimension>::Filled(minimumImageSizeValue);
+  const auto            inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<InputPixelType>(imageSize);
+
+  const auto expectSpecifiedResultImagePixelType = [&inputImage](const char * const resultImagePixelType,
+                                                                 const auto expectedResultImagePixelTypeHolder) {
+    (void)expectedResultImagePixelTypeHolder;
+
+    transformix::TRANSFORMIX transformixObject{};
+
+    transformix::TRANSFORMIX::ParameterMapType transformParameterMap{
+      { "FixedImageDimension", { std::to_string(ImageDimension) } },
+      { "MovingImageDimension", { std::to_string(ImageDimension) } },
+      { "NumberOfParameters", { "2" } },
+      { "ResultImagePixelType", { resultImagePixelType } },
+      { "Transform", { "TranslationTransform" } },
+      { "TransformParameters", { "0", "0" } }
+    };
+
+    // Do a dummy identity transformation, that should certainly succeed.
+    ASSERT_EQ(transformixObject.TransformImage(inputImage, transformParameterMap, ".", false, false), 0);
+
+    const auto resultImage = transformixObject.GetResultImage();
+    ASSERT_NE(resultImage, nullptr);
+
+    using ExpectedResultImagePixelType = typename decltype(expectedResultImagePixelTypeHolder)::Type;
+    using ExpectedResultImageType = itk::Image<ExpectedResultImagePixelType, ImageDimension>;
+
+    EXPECT_NE(dynamic_cast<const ExpectedResultImageType *>(resultImage.get()), nullptr);
+  };
+
+  // Check various legacy values for ResultImagePixelType:
+  expectSpecifiedResultImagePixelType("char", TypeHolder<char>{});
+  expectSpecifiedResultImagePixelType("short", TypeHolder<short>{});
+  expectSpecifiedResultImagePixelType("int", TypeHolder<int>{});
+  expectSpecifiedResultImagePixelType("long", TypeHolder<long>{});
+  expectSpecifiedResultImagePixelType("unsigned long", TypeHolder<unsigned long>{});
+  expectSpecifiedResultImagePixelType("float", TypeHolder<float>{});
+  expectSpecifiedResultImagePixelType("double", TypeHolder<double>{});
+
+  // Check various possible fixed width values for ResultImagePixelType:
+  expectSpecifiedResultImagePixelType("int8", TypeHolder<std::int8_t>{});
+  expectSpecifiedResultImagePixelType("uint8", TypeHolder<std::uint8_t>{});
+  expectSpecifiedResultImagePixelType("int64", TypeHolder<std::int64_t>{});
+  expectSpecifiedResultImagePixelType("uint64", TypeHolder<std::uint64_t>{});
+  expectSpecifiedResultImagePixelType("float32", TypeHolder<float>{});
+  expectSpecifiedResultImagePixelType("float64", TypeHolder<double>{});
+
+  for (const char * const invalidResultImagePixelType : { "", "void0", "not-a-valid-type" })
+  {
+    transformix::TRANSFORMIX transformixObject{};
+
+    transformix::TRANSFORMIX::ParameterMapType transformParameterMap{
+      { "FixedImageDimension", { std::to_string(ImageDimension) } },
+      { "MovingImageDimension", { std::to_string(ImageDimension) } },
+      { "NumberOfParameters", { "2" } },
+      { "ResultImagePixelType", { invalidResultImagePixelType } },
+      { "Transform", { "TranslationTransform" } },
+      { "TransformParameters", { "0", "0" } }
+    };
+
+    // Do a dummy identity transformation and expect it to fail (returning error code 1), for an invalid
+    // ResultImagePixelType.
+    EXPECT_EQ(transformixObject.TransformImage(inputImage, transformParameterMap, ".", false, false), 1);
+    EXPECT_EQ(transformixObject.GetResultImage(), nullptr);
+  }
 }
