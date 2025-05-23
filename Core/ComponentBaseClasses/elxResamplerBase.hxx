@@ -425,8 +425,7 @@ template <typename TElastix>
 void
 ResamplerBase<TElastix>::CreateItkResultImage()
 {
-  itk::DataObject::Pointer resultImage;
-  ITKBaseType &            resampleImageFilter = this->GetSelf();
+  ITKBaseType & resampleImageFilter = this->GetSelf();
 
   /** Make sure the resampler is updated. */
   resampleImageFilter.Modified();
@@ -483,56 +482,55 @@ ResamplerBase<TElastix>::CreateItkResultImage()
 
   const OutputImageType & infoChangerOutputImage = itk::Deref(infoChanger->GetOutput());
 
-  /** cast the image to the correct output image Type */
-  if (resultImagePixelType == "char")
-  {
-    resultImage = CastImage<char>(infoChangerOutputImage);
-  }
-  if (resultImagePixelType == "unsigned char")
-  {
-    resultImage = CastImage<unsigned char>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "short")
-  {
-    resultImage = CastImage<short>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "ushort" ||
-           resultImagePixelType == "unsigned short") // <-- ushort for backwards compatibility
-  {
-    resultImage = CastImage<unsigned short>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "int")
-  {
-    resultImage = CastImage<int>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "unsigned int")
-  {
-    resultImage = CastImage<unsigned int>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "long")
-  {
-    resultImage = CastImage<long>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "unsigned long")
-  {
-    resultImage = CastImage<unsigned long>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "float")
-  {
-    resultImage = CastImage<float>(infoChangerOutputImage);
-  }
-  else if (resultImagePixelType == "double")
-  {
-    resultImage = CastImage<double>(infoChangerOutputImage);
-  }
+  const itk::DataObject::Pointer resultImage = [this, &resultImagePixelType, &infoChangerOutputImage] {
+    /** cast the image to the correct output image Type */
+    if (resultImagePixelType == "char")
+    {
+      return CastImage<char>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "unsigned char")
+    {
+      return CastImage<unsigned char>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "short")
+    {
+      return CastImage<short>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "ushort" ||
+        resultImagePixelType == "unsigned short") // <-- ushort for backwards compatibility
+    {
+      return CastImage<unsigned short>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "int")
+    {
+      return CastImage<int>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "unsigned int")
+    {
+      return CastImage<unsigned int>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "long")
+    {
+      return CastImage<long>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "unsigned long")
+    {
+      return CastImage<unsigned long>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "float")
+    {
+      return CastImage<float>(infoChangerOutputImage);
+    }
+    if (resultImagePixelType == "double")
+    {
+      return CastImage<double>(infoChangerOutputImage);
+    }
 
-  if (resultImage.IsNull())
-  {
     itkExceptionMacro("Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned "
                       "char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", "
                       "\"unsigned long\", \"float\" or \"double\" but was \""
                       << resultImagePixelType << "\".");
-  }
+  }();
 
   // put image in container
   this->m_Elastix->SetResultImage(resultImage);
