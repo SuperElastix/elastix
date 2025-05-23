@@ -218,11 +218,11 @@ private:
   /** Casts the specified input image to the image type with the specified pixel type. */
   template <typename TResultPixel>
   itk::SmartPointer<itk::ImageBase<ImageDimension>>
-  CastImage(const InputImageType * const inputImage) const
+  CastImage(const InputImageType & inputImage) const
   {
     const auto castFilter =
       itk::CastImageFilter<InputImageType, itk::Image<TResultPixel, InputImageType::ImageDimension>>::New();
-    castFilter->SetInput(inputImage);
+    castFilter->SetInput(&inputImage);
     castFilter->Update();
     return castFilter->GetOutput();
   }

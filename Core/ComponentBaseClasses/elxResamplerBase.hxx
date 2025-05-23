@@ -481,47 +481,49 @@ ResamplerBase<TElastix>::CreateItkResultImage()
   infoChanger->SetChangeDirection(retdc && !this->GetElastix()->GetUseDirectionCosines());
   infoChanger->SetInput(resampleImageFilter.GetOutput());
 
+  const OutputImageType & infoChangerOutputImage = itk::Deref(infoChanger->GetOutput());
+
   /** cast the image to the correct output image Type */
   if (resultImagePixelType == "char")
   {
-    resultImage = CastImage<char>(infoChanger->GetOutput());
+    resultImage = CastImage<char>(infoChangerOutputImage);
   }
   if (resultImagePixelType == "unsigned char")
   {
-    resultImage = CastImage<unsigned char>(infoChanger->GetOutput());
+    resultImage = CastImage<unsigned char>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "short")
   {
-    resultImage = CastImage<short>(infoChanger->GetOutput());
+    resultImage = CastImage<short>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "ushort" ||
            resultImagePixelType == "unsigned short") // <-- ushort for backwards compatibility
   {
-    resultImage = CastImage<unsigned short>(infoChanger->GetOutput());
+    resultImage = CastImage<unsigned short>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "int")
   {
-    resultImage = CastImage<int>(infoChanger->GetOutput());
+    resultImage = CastImage<int>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "unsigned int")
   {
-    resultImage = CastImage<unsigned int>(infoChanger->GetOutput());
+    resultImage = CastImage<unsigned int>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "long")
   {
-    resultImage = CastImage<long>(infoChanger->GetOutput());
+    resultImage = CastImage<long>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "unsigned long")
   {
-    resultImage = CastImage<unsigned long>(infoChanger->GetOutput());
+    resultImage = CastImage<unsigned long>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "float")
   {
-    resultImage = CastImage<float>(infoChanger->GetOutput());
+    resultImage = CastImage<float>(infoChangerOutputImage);
   }
   else if (resultImagePixelType == "double")
   {
-    resultImage = CastImage<double>(infoChanger->GetOutput());
+    resultImage = CastImage<double>(infoChangerOutputImage);
   }
 
   if (resultImage.IsNull())
