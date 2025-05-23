@@ -89,7 +89,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
   /** Extract the data as a raw buffer pointer and possibly convert.
    * Converting is only possible if the number of components equals 1 */
   if (m_OutputComponentType != ImageIOBase::GetComponentTypeAsString(imageIO.GetComponentType()) &&
-      numberOfComponents == 1)
+      m_OutputComponentType != elx::PixelTypeToString<ScalarType>() && numberOfComponents == 1)
   {
     const void * const convertedDataBuffer = [this, &input] {
       /** convert the scalar image to a scalar image with another componenttype
@@ -134,9 +134,24 @@ ImageFileCastWriter<TInputImage>::GenerateData()
       {
         return this->ConvertScalarImage<double>(input);
       }
+      return ConvertScalarImageAsSpecifiedByFixedWidthPixelType<std::int8_t,
+                                                                std::uint8_t,
+                                                                std::int16_t,
+                                                                std::uint16_t,
+                                                                std::int32_t,
+                                                                std::uint32_t,
+                                                                std::int64_t,
+                                                                std::uint64_t,
+                                                                float,
+                                                                double>(input);
+    }();
+
+    if (convertedDataBuffer == nullptr)
+    {
+
       itkExceptionMacro("Unable to convert the input image. An unknown or unsupported component type was specified: "
                         << std::quoted(m_OutputComponentType) << ".");
-    }();
+    }
 
     /** Do the writing */
     imageIO.Write(convertedDataBuffer);

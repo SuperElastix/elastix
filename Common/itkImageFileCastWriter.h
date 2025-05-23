@@ -25,6 +25,7 @@
 #include "itkImageIORegion.h"
 #include "itkCastImageFilter.h"
 #include "elxDefaultConstruct.h"
+#include "elxPixelTypeToString.h"
 
 namespace itk
 {
@@ -87,7 +88,7 @@ private:
    * The buffer data is valid until this->m_Caster is destroyed or assigned
    * a new caster. The ImageIO's PixelType is also adapted by this function */
   template <typename OutputComponentType>
-  void *
+  const void *
   ConvertScalarImage(const DataObject & inputImage)
   {
     using DiskImageType = Image<OutputComponentType, InputImageDimension>;
@@ -111,6 +112,35 @@ private:
     return caster->GetOutput()->GetBufferPointer();
   }
 
+
+  /** Converts the specified scalar input image to the image type with the specified pixel type, if the
+   * OutputComponentType matches the template argument `TResultPixel`. OutputComponentType should be of the fixed width
+   * form: "intN", "uintN", or "floatN", with 'N' specifying the number of bits, otherwise this function returns false.
+   */
+  template <typename TResultPixel>
+  bool
+  ConvertScalarImageIfPixelTypesMatch(const DataObject & inputImage, const void *& outputDataBuffer)
+  {
+    if (m_OutputComponentType == elx::PixelTypeToFixedWidthString<TResultPixel>())
+    {
+      outputDataBuffer = ConvertScalarImage<TResultPixel>(inputImage);
+      return true;
+    }
+    return false;
+  }
+
+  /** Converts the specified scalar input image to the image type with OutputComponentType as pixel type. */
+  template <typename... TResultPixel>
+  const void *
+  ConvertScalarImageAsSpecifiedByFixedWidthPixelType(const DataObject & inputImage)
+  {
+    if (const void * outputDataBuffer = nullptr;
+        (ConvertScalarImageIfPixelTypesMatch<TResultPixel>(inputImage, outputDataBuffer) || ...))
+    {
+      return outputDataBuffer;
+    }
+    return nullptr;
+  }
 
   ProcessObject::Pointer m_Caster{ nullptr };
 

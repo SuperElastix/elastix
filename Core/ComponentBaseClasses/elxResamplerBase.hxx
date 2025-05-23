@@ -526,11 +526,26 @@ ResamplerBase<TElastix>::CreateItkResultImage()
       return CastImage<double>(infoChangerOutputImage);
     }
 
-    itkExceptionMacro("Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned "
-                      "char\", \"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", "
-                      "\"unsigned long\", \"float\" or \"double\" but was \""
-                      << resultImagePixelType << "\".");
+    return CastImageAsSpecifiedByFixedWidthPixelType<std::int8_t,
+                                                     std::uint8_t,
+                                                     std::int16_t,
+                                                     std::uint16_t,
+                                                     std::int32_t,
+                                                     std::uint32_t,
+                                                     std::int64_t,
+                                                     std::uint64_t,
+                                                     float,
+                                                     double>(resultImagePixelType, infoChangerOutputImage);
   }();
+
+  if (resultImage == nullptr)
+  {
+    itkExceptionMacro("Unable to cast result image: ResultImagePixelType must be one of \"char\", \"unsigned char\", "
+                      "\"short\", \"ushort\", \"unsigned short\", \"int\", \"unsigned int\", \"long\", \"unsigned "
+                      "long\", \"float\", \"double\", or a fixed width type (\"intN\", \"uintN\", or \"floatN\" for a "
+                      "type of 'N' bits), but was \""
+                      << resultImagePixelType << "\".");
+  }
 
   // put image in container
   this->m_Elastix->SetResultImage(resultImage);
