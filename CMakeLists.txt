@@ -583,7 +583,7 @@ endforeach()
 # forward slashes before using the ITK bin directory.
 string(REPLACE "\\" "/" ELASTIX_ITK_DIR ${ITK_DIR})
 
-if (DEFINED Torch_DIR)
+if(DEFINED Torch_DIR AND NOT "${Torch_DIR}" STREQUAL "")
   string(REPLACE "\\" "/" ELASTIX_Torch_DIR ${Torch_DIR})
 endif()
 
@@ -593,6 +593,7 @@ set(ElastixConfig_TREE "build")
 set(ElastixConfig_CODE "if(NOT DEFINED ITK_DIR)
   set(ITK_DIR \"${ELASTIX_ITK_DIR}\")
 endif()
+
 if(NOT DEFINED Torch_DIR)
   set(Torch_DIR \"${ELASTIX_Torch_DIR}\")
 endif()")
