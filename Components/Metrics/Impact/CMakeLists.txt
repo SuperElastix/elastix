@@ -1,4 +1,4 @@
-ADD_ELXCOMPONENT(ImpactMetric USE_TORCH
+ADD_ELXCOMPONENT(ImpactMetric OFF
  elxImpactMetric.cxx
  elxImpactMetric.h
  elxImpactMetric.hxx
@@ -11,3 +11,8 @@ ADD_ELXCOMPONENT(ImpactMetric USE_TORCH
  itkImpactImageToImageMetric.hxx
  itkImpactModelConfiguration.h
  )
+
+if(USE_ImpactMetric)
+    find_package(Torch REQUIRED)
+    target_link_libraries(ImpactMetric ${TORCH_LIBRARIES})
+endif()
