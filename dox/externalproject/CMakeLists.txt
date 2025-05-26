@@ -16,7 +16,10 @@ find_package(ITK REQUIRED)
 if ( DEFINED ELASTIX_Torch_DIR)
   set(Torch_DIR "${ELASTIX_Torch_DIR}" CACHE PATH "Torch_DIR from Elastix" FORCE)
 endif()
-find_package(Torch REQUIRED)
+
+if ( DEFINED Torch_DIR)
+  find_package(Torch REQUIRED)
+endif()
 
 
 include(${ELASTIX_CONFIG_TARGETS_FILE})
