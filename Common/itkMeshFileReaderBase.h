@@ -20,7 +20,11 @@
 
 #include "itkMeshSource.h"
 #include "itkMacro.h"
-#include "itkMeshFileReader.h" // for MeshFileReaderException
+#ifndef ELX_NO_FILESYSTEM_ACCESS
+#  include "itkMeshFileReaderException.h"
+#else
+#  define MeshFileReaderException ExceptionObject
+#endif
 
 namespace itk
 {
