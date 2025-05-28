@@ -4,11 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-
     runs-on: ${{ matrix.os }}
     strategy:
       max-parallel: 3
@@ -18,270 +13,176 @@ jobs:
           - os: ubuntu-22.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip
+            libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip"
+            cuda-version: "cpu"
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
-            ANNLib: "libANNlib-5.2.so"
-            ANNLib2: "libANNlib-5.2.so.1"
-            TORCH_LIBS:
+            libs:
               - libtorch/libtorch/lib/libc10.so
               - libtorch/libtorch/lib/libgomp-98b21ff3.so.1
               - libtorch/libtorch/lib/libtorch.so
               - libtorch/libtorch/lib/libtorch_cpu.so
+              - elastix-build/bin/libANNlib-5.2.so
+              - elastix-build/bin/libANNlib-5.2.so.1
           - os: windows-2022
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.6.0%2Bcpu.zip
+            libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.6.0%2Bcpu.zip"
+            cuda-version: "cpu"
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
-            ANNLib: "ANNlib-5.2.dll"
-            TORCH_LIBS:
+            libs:
               - libtorch/libtorch/lib/c10.dll
               - libtorch/libtorch/lib/torch_cpu.dll
               - libtorch/libtorch/lib/torch.dll
+              - elastix-build/bin/ANNlib-5.2.dll
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-14
             c-compiler: "clang"
             cxx-compiler: "clang++"
-            libtorch_url: https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.6.0.zip
+            libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.6.0.zip"
+            cuda-version: "cpu"
             itk-git-tag: "v5.4.1"
             cmake-build-type: "Release"
-            ANNLib: "libANNlib-5.2.1.dylib"
-            ANNLib2: "libANNlib-5.2.dylib"
-            TORCH_LIBS:
+            libs:
               - libtorch/libtorch/lib/libtorch.dylib
               - libtorch/libtorch/lib/libc10.dylib
               - libtorch/libtorch/lib/libtorch_cpu.dylib
-
+              - elastix-build/bin/libANNlib-5.2.1.dylib
+              - elastix-build/bin/libANNlib-5.2.dylib
     steps:
-    - uses: actions/checkout@v3
+      - name: Clone elastix
+        uses: actions/checkout@v3
 
-    - name: Make directory structure
-      run: |
-        items=(*)
-        mkdir Elastix-source
-        mv ${items[*]} Elastix-source
-        mv .editorconfig Elastix-source
-        mv .clang-format Elastix-source
-        mv Elastix-source/Dockerfile .
-      shell: bash
+      - name: Make directory structure
+        run: |
+          items=(*)
+          mkdir elastix-source
+          mv ${items[*]} elastix-source
+          mv .editorconfig elastix-source
+          mv .clang-format elastix-source
+          mv elastix-source/Dockerfile .
+        shell: bash
 
-    - uses: actions/cache@v3
-      id: cache_ITK
-      with:
-        path: |
-          ITK-build
-          ITK-source
-        key: ${{ matrix.itk-git-tag }}-${{ matrix.os }}-${{ matrix.cmake-build-type }}-v2
+      - name: Clone and build ITK
+        uses: ./.github/actions/build_itk
+        with:
+          itk-git-tag: ${{ matrix.itk-git-tag }}
+          c-compiler: ${{ matrix.c-compiler }}
+          cxx-compiler: ${{ matrix.cxx-compiler }}
+          cmake-build-type: ${{ matrix.cmake-build-type }}
+          vcvars: ${{ matrix.vcvars64 }}
 
-    - name: Save libtorch URL to file
-      shell: bash
-      run: |
-        echo "${{ matrix.libtorch_url }}" > libtorch_url.txt
+      - name: Download and extract libtorch
+        uses: ./.github/actions/download_libtorch
+        with:
+          libtorch_url: ${{ matrix.libtorch-cpu-url }}
 
-    - uses: actions/cache@v3
-      id: cache_libtorch
-      with:
-        path: |
-          libtorch
-        key: libtorch-${{ hashFiles('libtorch_url.txt') }}-v2
+      - name: Set up Python
+        uses: actions/setup-python@v5.4.0
+        with:
+          python-version: 3.9
 
-    - name: Set up Python
-      # Use the version of setup-python that has just dropped Python 3.8.
-      uses: actions/setup-python@v5.4.0
-      with:
-        python-version: 3.9
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install ninja
 
-    - name: Install build dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install ninja
+      - name: Get specific version of CMake, Ninja
+        uses: lukka/get-cmake@latest
 
-    - name: Get specific version of CMake, Ninja
-      uses: lukka/get-cmake@latest
+      - name: Install requirements of PythonTests
+        run: python -m pip install -r ${{ github.workspace }}/elastix-source/Testing/PythonTests/requirements.txt
 
-    - name: Download libtorch CPU
-      if: ${{ steps.cache_libtorch.outputs.cache-hit != 'true' }}
-      shell: bash
-      run: |
-        curl -L ${{matrix.libtorch_url}} -o libtorch.zip
+      - name: Configure CTest script
+        shell: bash
+        run: |
+          operating_system="${{ matrix.os }}"
+          cat > dashboard.cmake << EOF
+          set(CTEST_SITE "GitHubActions")
+          file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}" CTEST_DASHBOARD_ROOT)
+          file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}/elastix-source" CTEST_SOURCE_DIRECTORY)
+          file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}/elastix-build" CTEST_BINARY_DIRECTORY)
+          set(dashboard_source_name "${GITHUB_REPOSITORY}")
+          set(branch "${GITHUB_REF#refs/heads/}")
+          set(sha "${GITHUB_SHA}")
+          set(dashboard_model "Experimental")
+          set(CTEST_BUILD_NAME "${GITHUB_REPOSITORY}-${operating_system}-\${branch}-\${sha}")
+          set(CTEST_UPDATE_VERSION_ONLY 1)
+          set(CTEST_TEST_ARGS \${CTEST_TEST_ARGS} PARALLEL_LEVEL \${PARALLEL_LEVEL})
+          set(CTEST_BUILD_CONFIGURATION "Release")
+          set(CTEST_CMAKE_GENERATOR "Ninja")
+          set(dashboard_no_clean 1)
+          set(ENV{CC} ${{ matrix.c-compiler }})
+          set(ENV{CXX} ${{ matrix.cxx-compiler }})
+          if(WIN32)
+            set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/lib;\$ENV{PATH}")
+          endif()
+          set(dashboard_cache "
+          ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
+          Torch_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/share/cmake/Torch
+          ELASTIX_USE_GTEST:BOOL=ON
+          USE_ALL_COMPONENTS:BOOL=ON
+          BUILD_TESTING:BOOL=ON
+          ")
+          string(TIMESTAMP build_date "%Y-%m-%d")
+          message("CDash Build Identifier: \${build_date} \${CTEST_BUILD_NAME}")
+          message("CTEST_SITE= \${CTEST_SITE}")
+          include(\${CTEST_SOURCE_DIRECTORY}/Testing/Dashboard/elxCommonCDash.cmake)
+          EOF
+          cat dashboard.cmake
 
-    - name: Extract libtorch
-      if: ${{ steps.cache_libtorch.outputs.cache-hit != 'true'}}
-      shell: bash
-      run: |
-        unzip -q libtorch.zip -d libtorch
+      - name: Test (MacOs)
+        if: startsWith(matrix.os, 'macos')
+        run: ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
 
-    - name: Download ITK
-      if: steps.cache_ITK.outputs.cache-hit != 'true'
-      run: |
-        git clone https://github.com/InsightSoftwareConsortium/ITK.git ITK-source
-        cd ITK-source
-        git checkout ${{ matrix.itk-git-tag }}
+      - name: Test (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          call "${{ matrix.vcvars64 }}"
+          ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
+        shell: cmd
 
-    - name: Build ITK
-      if: ${{ steps.cache_ITK.outputs.cache-hit != 'true' && !startsWith(matrix.os, 'windows') }}
-      run: |
-        mkdir ITK-build
-        cd ITK-build
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -DITK_LEGACY_REMOVE=ON -GNinja ../ITK-source
-        ninja
+      - name: Test (Ubuntu)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
 
-    - name: Build ITK
-      if: steps.cache_ITK.outputs.cache-hit != 'true' && startsWith(matrix.os, 'windows')
-      run: |
-        mkdir ITK-build
-        cd ITK-build
-        call "${{ matrix.vcvars64 }}"
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake-build-type }} -DBUILD_EXAMPLES=OFF -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK-source
-        ninja
-      shell: cmd
+      - name: Build externalproject example (non-Windows)
+        if: ${{ !startsWith(matrix.os, 'windows') }}
+        run: |
+          mkdir externalproject-build
+          cd externalproject-build
+          cmake -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} -DElastix_DIR=${{ github.workspace }}/elastix-build -GNinja ../elastix-source/dox/externalproject
+          ninja
 
-    - name: Install requirements of PythonTests
-      run: |
-        python -m pip install -r ${{ github.workspace }}/Elastix-source/Testing/PythonTests/requirements.txt
+      - name: Build externalproject example (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          mkdir externalproject-build
+          cd externalproject-build
+          call "${{ matrix.vcvars64 }}"
+          cmake -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} -DElastix_DIR=${{ github.workspace }}/Elastix-build -GNinja ../elastix-source/dox/externalproject
+          ninja
+        shell: cmd
 
-    - name: Configure CTest script
-      shell: bash
-      run: |
-        operating_system="${{ matrix.os }}"
-        cat > dashboard.cmake << EOF
-        set(CTEST_SITE "GitHubActions")
-        file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}" CTEST_DASHBOARD_ROOT)
-        file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}/Elastix-source" CTEST_SOURCE_DIRECTORY)
-        file(TO_CMAKE_PATH "\$ENV{GITHUB_WORKSPACE}/Elastix-build" CTEST_BINARY_DIRECTORY)
-        set(dashboard_source_name "${GITHUB_REPOSITORY}")
-        set(branch "${GITHUB_REF#refs/heads/}")
-        set(sha "${GITHUB_SHA}")
-        set(dashboard_model "Experimental")
-        set(CTEST_BUILD_NAME "${GITHUB_REPOSITORY}-${operating_system}-\${branch}-\${sha}")
-        set(CTEST_UPDATE_VERSION_ONLY 1)
-        set(CTEST_TEST_ARGS \${CTEST_TEST_ARGS} PARALLEL_LEVEL \${PARALLEL_LEVEL})
-        set(CTEST_BUILD_CONFIGURATION "Release")
-        set(CTEST_CMAKE_GENERATOR "Ninja")
-        set(dashboard_no_clean 1)
-        set(ENV{CC} ${{ matrix.c-compiler }})
-        set(ENV{CXX} ${{ matrix.cxx-compiler }})
-        if(WIN32)
-          set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/lib;\$ENV{PATH}")
-        endif()
-        set(dashboard_cache "
-        ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
-        Torch_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/share/cmake/Torch
-        ELASTIX_USE_GTEST:BOOL=ON
-        USE_ALL_COMPONENTS:BOOL=ON
-        BUILD_TESTING:BOOL=ON
-        ")
-        string(TIMESTAMP build_date "%Y-%m-%d")
-        message("CDash Build Identifier: \${build_date} \${CTEST_BUILD_NAME}")
-        message("CTEST_SITE= \${CTEST_SITE}")
-        include(\${CTEST_SOURCE_DIRECTORY}/Testing/Dashboard/elxCommonCDash.cmake)
-        EOF
-        cat dashboard.cmake
+      - name: Run externalproject example (non-Windows)
+        if: ${{ !startsWith(matrix.os, 'windows') }}
+        run: |
+          cd externalproject-build
+          ./elastix_impact_metric_example
 
-    - name: Test MacOs
-      if: startsWith(matrix.os, 'macos')
-      run: |
-       ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP|elastix_run_3DCT_lung.NMI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
+      - name: Run externalproject example (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          set PATH=${{ github.workspace }}\Elastix-build\bin;${{ github.workspace }}\libtorch\libtorch\lib;%PATH%
+          cd externalproject-build
+          .\elastix_impact_metric_example.exe
+        shell: cmd
 
-    - name: Test Windows
-      if: startsWith(matrix.os, 'windows')
-      run: |
-        call "${{ matrix.vcvars64 }}"
-        ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
-      shell: cmd
-
-    - name: Test Ubuntu
-      if: startsWith(matrix.os, 'ubuntu')
-      run: |
-        ctest --output-on-failure -VV -j 2 -E "elastix_run_example_COMPARE_IM|elastix_run_3DCT_lung.MI.bspline.ASGD.001_COMPARE_TP" -S dashboard.cmake
-
-    - name: Build externalproject example
-      if: ${{ !startsWith(matrix.os, 'windows') }}
-      run: |
-        mkdir externalproject-build
-        cd externalproject-build
-        cmake -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} -DElastix_DIR=${{ github.workspace }}/Elastix-build -GNinja ../Elastix-source/dox/externalproject
-        ninja
-
-    - name: Build externalproject example
-      if: startsWith(matrix.os, 'windows')
-      run: |
-        mkdir externalproject-build
-        cd externalproject-build
-        call "${{ matrix.vcvars64 }}"
-        cmake -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE=${{ matrix.cmake-build-type }} -DElastix_DIR=${{ github.workspace }}/Elastix-build -GNinja ../Elastix-source/dox/externalproject
-        ninja
-      shell: cmd
-
-    - name: Run externalproject example
-      if: ${{ !startsWith(matrix.os, 'windows') }}
-      run: |
-        cd externalproject-build
-        ./elastix_impact_metric_example
-
-    - name: Run externalproject example
-      if: startsWith(matrix.os, 'windows')
-      run: |
-        set PATH=${{ github.workspace }}\Elastix-build\bin;${{ github.workspace }}\libtorch\libtorch\lib;%PATH%
-        cd externalproject-build
-        .\elastix_impact_metric_example.exe
-      shell: cmd
-
-    - name: Prepare Artifacts Unix
-      if: ${{ !startsWith(matrix.os, 'windows') }}
-      shell: bash
-      env:
-        TORCH_LIBS: ${{ join(matrix.TORCH_LIBS, ' ') }}
-      run: |
-        mkdir bin
-        mkdir lib
-        mkdir uploads
-        mv Elastix-build/bin/elastix bin
-        mv Elastix-build/bin/transformix bin
-        mv Elastix-build/bin/${{ matrix.ANNLib }} lib
-        mv Elastix-build/bin/${{ matrix.ANNLib2 }} lib
-        for lib in $TORCH_LIBS; do
-          cp "$lib" lib
-        done
-        mv Elastix-source/NOTICE uploads
-        mv Elastix-source/LICENSE uploads
-        mv bin uploads
-        mv lib uploads
-
-    - name: Prepare Artifacts Windows
-      if: startsWith(matrix.os, 'windows')
-      shell: bash
-      env:
-        TORCH_LIBS: ${{ join(matrix.TORCH_LIBS, ' ') }}
-      run: |
-        mkdir uploads
-        mv Elastix-source/NOTICE uploads
-        mv Elastix-source/LICENSE uploads
-        mv Elastix-build/bin/elastix.exe uploads
-        mv Elastix-build/bin/transformix.exe uploads
-        mv Elastix-build/bin/${{ matrix.ANNLib }} uploads
-        for lib in $TORCH_LIBS; do
-          echo "Copying $lib"
-          cp "$lib" uploads
-        done
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v4.4.3
-      with:
-        name: "${{ matrix.os }}"
-        path: uploads
-
-    - name: Login to Docker Hub
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(matrix.os, 'ubuntu')
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-    - name: Build and push
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(matrix.os, 'ubuntu')
-      run: |
-        mkdir output
-        docker build -t superelastix/elastix:${GITHUB_REF#refs/tags/} .
-        docker run -u $UID:$GROUPS --mount type=bind,source="$(pwd)"/output,target=/out -v "$(pwd)"/Elastix-source/Testing/Data:/elastix/ superelastix/elastix:${GITHUB_REF#refs/tags/} elastix -out /out/ -p /elastix/parameters.3D.NC.euler.ASGD.001.txt -f /elastix/3DCT_lung_baseline.mha -m /elastix/3DCT_lung_followup.mha
-        docker push superelastix/elastix:${GITHUB_REF#refs/tags/}
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          libs: ${{ join(matrix.libs, ' ') }}
+          upload-name: ${{ matrix.os }}-${{ matrix.cuda-version }}
+          docker-username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          docker-password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
