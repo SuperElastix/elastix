@@ -1,0 +1,51 @@
+name: Build elastix
+description: "Build elastix cross-platform"
+
+inputs:
+  c-compiler:
+    required: true
+  cxx-compiler:
+    required: true
+  cmake-build-type:
+    required: true
+  vcvars:
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build elastix (non-Windows)
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        mkdir elastix-build
+        cd elastix-build
+        cmake -DCMAKE_C_COMPILER="${{ inputs.c-compiler }}" \
+              -DCMAKE_CXX_COMPILER="${{ inputs.cxx-compiler }}" \
+              -DCMAKE_BUILD_TYPE="${{ inputs.cmake-build-type }}" \
+              -DITK_DIR=../ITK-build \
+              -DTorch_DIR=../libtorch/libtorch/share/cmake/Torch \
+              -DUSE_ALL_COMPONENTS=ON \
+              -DBUILD_TESTING:BOOL=ON \
+              -DELASTIX_USE_GTEST=ON \
+              -GNinja ../elastix-source
+        ninja
+
+    - name: Build elastix (Windows)
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        call "${{ inputs.vcvars }}"
+        mkdir elastix-build
+        cd elastix-build
+        cmake -DCMAKE_C_COMPILER="${{ inputs.c-compiler }}" ^
+              -DCMAKE_CXX_COMPILER="${{ inputs.cxx-compiler }}" ^
+              -DCMAKE_BUILD_TYPE="${{ inputs.cmake-build-type }}" ^
+              -DITK_DIR=../ITK-build ^
+              -DTorch_DIR=../libtorch/libtorch/share/cmake/Torch ^
+              -DUSE_ALL_COMPONENTS=ON ^
+              -DBUILD_TESTING:BOOL=ON ^
+              -DELASTIX_USE_GTEST=ON ^
+              -GNinja ../elastix-source
+        ninja
