@@ -79,11 +79,11 @@ TRANSFORMIX::GetResultImage()
  */
 
 int
-TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
-                            std::vector<ParameterMapType> & parameterMaps,
-                            const std::string &             outputPath,
-                            bool                            performLogging,
-                            bool                            performCout)
+TRANSFORMIX::TransformImage(ImagePointer                          inputImage,
+                            const std::vector<ParameterMapType> & parameterMaps,
+                            const std::string &                   outputPath,
+                            bool                                  performLogging,
+                            bool                                  performCout)
 {
   /** Some typedef's.*/
   using TransformixMainType = elx::TransformixMain;
@@ -237,11 +237,11 @@ TRANSFORMIX::TransformImage(ImagePointer                    inputImage,
  */
 
 int
-TRANSFORMIX::TransformImage(ImagePointer       inputImage,
-                            ParameterMapType & parameterMap,
-                            std::string        outputPath,
-                            bool               performLogging,
-                            bool               performCout)
+TRANSFORMIX::TransformImage(ImagePointer             inputImage,
+                            const ParameterMapType & parameterMap,
+                            const std::string &      outputPath,
+                            bool                     performLogging,
+                            bool                     performCout)
 {
   // Transform single parameter map to a one-sized vector of parameter maps and call other
   // transform method.
