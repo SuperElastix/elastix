@@ -56,11 +56,11 @@ public:
    *   -2 = output folder does not exist
    */
   int
-  TransformImage(ImagePointer       inputImage,
-                 ParameterMapType & parameterMap,
-                 std::string        outputPath,
-                 bool               performLogging,
-                 bool               performCout);
+  TransformImage(ImagePointer             inputImage,
+                 const ParameterMapType & parameterMap,
+                 const std::string &      outputPath,
+                 bool                     performLogging,
+                 bool                     performCout);
 
   /** Return value: 0 is success in case not 0 an error occurred
    *    0 = success
@@ -68,11 +68,11 @@ public:
    *   -2 = output folder does not exist
    */
   int
-  TransformImage(ImagePointer                    inputImage,
-                 std::vector<ParameterMapType> & parameterMaps,
-                 const std::string &             outputPath,
-                 bool                            performLogging,
-                 bool                            performCout);
+  TransformImage(ImagePointer                          inputImage,
+                 const std::vector<ParameterMapType> & parameterMaps,
+                 const std::string &                   outputPath,
+                 bool                                  performLogging,
+                 bool                                  performCout);
 
   /** Getter for result image. */
   ConstImagePointer
