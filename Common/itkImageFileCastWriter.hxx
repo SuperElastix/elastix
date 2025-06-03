@@ -27,6 +27,7 @@
 #include "itkVectorImage.h"
 #include "itkDefaultConvertPixelTraits.h"
 #include "itkMetaImageIO.h"
+#include <iomanip>
 
 namespace itk
 {
@@ -90,51 +91,54 @@ ImageFileCastWriter<TInputImage>::GenerateData()
         this->GetImageIO()->GetComponentTypeAsString(this->GetImageIO()->GetComponentType()) &&
       numberOfComponents == 1)
   {
-    void *       convertedDataBuffer = nullptr;
     const auto * inputAsDataObject = dynamic_cast<const DataObject *>(input);
 
-    /** convert the scalar image to a scalar image with another componenttype
-     * The imageIO's PixelType is also changed */
-    if (this->m_OutputComponentType == "char")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<char>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "unsigned_char")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<unsigned char>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "short")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<short>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "unsigned_short")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<unsigned short>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "int")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<int>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "unsigned_int")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<unsigned int>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "long")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<long>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "unsigned_long")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<unsigned long>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "float")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<float>(inputAsDataObject);
-    }
-    else if (this->m_OutputComponentType == "double")
-    {
-      convertedDataBuffer = this->ConvertScalarImage<double>(inputAsDataObject);
-    }
+    const void * const convertedDataBuffer = [this, inputAsDataObject] {
+      /** convert the scalar image to a scalar image with another componenttype
+       * The imageIO's PixelType is also changed */
+      if (this->m_OutputComponentType == "char")
+      {
+        return this->ConvertScalarImage<char>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "unsigned_char")
+      {
+        return this->ConvertScalarImage<unsigned char>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "short")
+      {
+        return this->ConvertScalarImage<short>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "unsigned_short")
+      {
+        return this->ConvertScalarImage<unsigned short>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "int")
+      {
+        return this->ConvertScalarImage<int>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "unsigned_int")
+      {
+        return this->ConvertScalarImage<unsigned int>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "long")
+      {
+        return this->ConvertScalarImage<long>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "unsigned_long")
+      {
+        return this->ConvertScalarImage<unsigned long>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "float")
+      {
+        return this->ConvertScalarImage<float>(inputAsDataObject);
+      }
+      if (this->m_OutputComponentType == "double")
+      {
+        return this->ConvertScalarImage<double>(inputAsDataObject);
+      }
+      itkExceptionMacro("Unable to convert the input image. An unknown or unsupported component type was specified: "
+                        << std::quoted(m_OutputComponentType) << ".");
+    }();
 
     /** Do the writing */
     this->GetModifiableImageIO()->Write(convertedDataBuffer);
