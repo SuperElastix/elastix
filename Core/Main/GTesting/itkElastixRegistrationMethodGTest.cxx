@@ -838,7 +838,7 @@ GTEST_TEST(itkElastixRegistrationMethod, ResultImageName)
 
   const auto getOutputSubdirectoryPath = [rootOutputDirectoryPath](const bool useCustomResultImageName) {
     return rootOutputDirectoryPath + '/' +
-           (useCustomResultImageName ? "DefaultResultImageName" : "CustomResultImageName");
+           (useCustomResultImageName ? "CustomResultImageName" : "DefaultResultImageName");
   };
 
   for (const bool useCustomResultImageName : { true, false })
