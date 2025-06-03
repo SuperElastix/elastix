@@ -882,6 +882,15 @@ GTEST_TEST(itkElastixRegistrationMethod, ResultImageName)
     ASSERT_NE(actualImage, nullptr);
     EXPECT_EQ(*actualImage, *expectedImage);
   }
+
+  const auto fileNamePostFix = ".0.mhd";
+  const auto expectedImage = itk::ReadImage<ImageType>(getOutputSubdirectoryPath(false) + "/result" + fileNamePostFix);
+  const auto actualImage =
+    itk::ReadImage<ImageType>(getOutputSubdirectoryPath(true) + '/' + customResultImageName + fileNamePostFix);
+
+  ASSERT_NE(expectedImage, nullptr);
+  ASSERT_NE(actualImage, nullptr);
+  EXPECT_EQ(*actualImage, *expectedImage);
 }
 
 
