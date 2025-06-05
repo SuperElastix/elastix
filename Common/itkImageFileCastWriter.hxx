@@ -88,8 +88,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
 
   /** Extract the data as a raw buffer pointer and possibly convert.
    * Converting is only possible if the number of components equals 1 */
-  if (this->m_OutputComponentType !=
-        this->GetImageIO()->GetComponentTypeAsString(this->GetImageIO()->GetComponentType()) &&
+  if (this->m_OutputComponentType != ImageIOBase::GetComponentTypeAsString(this->GetImageIO()->GetComponentType()) &&
       numberOfComponents == 1)
   {
     const void * const convertedDataBuffer = [this, &input] {
