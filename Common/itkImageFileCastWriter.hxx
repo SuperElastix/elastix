@@ -91,50 +91,48 @@ ImageFileCastWriter<TInputImage>::GenerateData()
         this->GetImageIO()->GetComponentTypeAsString(this->GetImageIO()->GetComponentType()) &&
       numberOfComponents == 1)
   {
-    const auto * inputAsDataObject = dynamic_cast<const DataObject *>(input);
-
-    const void * const convertedDataBuffer = [this, inputAsDataObject] {
+    const void * const convertedDataBuffer = [this, input] {
       /** convert the scalar image to a scalar image with another componenttype
        * The imageIO's PixelType is also changed */
       if (this->m_OutputComponentType == "char")
       {
-        return this->ConvertScalarImage<char>(inputAsDataObject);
+        return this->ConvertScalarImage<char>(input);
       }
       if (this->m_OutputComponentType == "unsigned_char")
       {
-        return this->ConvertScalarImage<unsigned char>(inputAsDataObject);
+        return this->ConvertScalarImage<unsigned char>(input);
       }
       if (this->m_OutputComponentType == "short")
       {
-        return this->ConvertScalarImage<short>(inputAsDataObject);
+        return this->ConvertScalarImage<short>(input);
       }
       if (this->m_OutputComponentType == "unsigned_short")
       {
-        return this->ConvertScalarImage<unsigned short>(inputAsDataObject);
+        return this->ConvertScalarImage<unsigned short>(input);
       }
       if (this->m_OutputComponentType == "int")
       {
-        return this->ConvertScalarImage<int>(inputAsDataObject);
+        return this->ConvertScalarImage<int>(input);
       }
       if (this->m_OutputComponentType == "unsigned_int")
       {
-        return this->ConvertScalarImage<unsigned int>(inputAsDataObject);
+        return this->ConvertScalarImage<unsigned int>(input);
       }
       if (this->m_OutputComponentType == "long")
       {
-        return this->ConvertScalarImage<long>(inputAsDataObject);
+        return this->ConvertScalarImage<long>(input);
       }
       if (this->m_OutputComponentType == "unsigned_long")
       {
-        return this->ConvertScalarImage<unsigned long>(inputAsDataObject);
+        return this->ConvertScalarImage<unsigned long>(input);
       }
       if (this->m_OutputComponentType == "float")
       {
-        return this->ConvertScalarImage<float>(inputAsDataObject);
+        return this->ConvertScalarImage<float>(input);
       }
       if (this->m_OutputComponentType == "double")
       {
-        return this->ConvertScalarImage<double>(inputAsDataObject);
+        return this->ConvertScalarImage<double>(input);
       }
       itkExceptionMacro("Unable to convert the input image. An unknown or unsupported component type was specified: "
                         << std::quoted(m_OutputComponentType) << ".");
