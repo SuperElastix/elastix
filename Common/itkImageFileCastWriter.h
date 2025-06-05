@@ -88,7 +88,7 @@ private:
    * a new caster. The ImageIO's PixelType is also adapted by this function */
   template <typename OutputComponentType>
   void *
-  ConvertScalarImage(const DataObject * inputImage)
+  ConvertScalarImage(const DataObject & inputImage)
   {
     using DiskImageType = Image<OutputComponentType, InputImageDimension>;
     using InputImageComponentType = typename PixelTraits<InputImagePixelType>::ValueType;
@@ -102,7 +102,7 @@ private:
     this->m_Caster = caster;
     const auto localInputImage = ScalarInputImageType::New();
 
-    localInputImage->Graft(static_cast<const ScalarInputImageType *>(inputImage));
+    localInputImage->Graft(static_cast<const ScalarInputImageType *>(&inputImage));
 
     caster->SetInput(localInputImage);
     caster->Update();

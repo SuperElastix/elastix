@@ -20,6 +20,7 @@
 
 #include "itkImageFileCastWriter.h"
 #include "itkDataObject.h"
+#include "itkDeref.h"
 #include "itkObjectFactoryBase.h"
 #include "itkImageIOFactory.h"
 #include "itkCommand.h"
@@ -55,7 +56,7 @@ template <typename TInputImage>
 void
 ImageFileCastWriter<TInputImage>::GenerateData()
 {
-  const InputImageType * input = this->GetInput();
+  const InputImageType & input = Deref(this->GetInput());
 
   itkDebugMacro("Writing file: " << this->GetFileName());
 
@@ -63,14 +64,14 @@ ImageFileCastWriter<TInputImage>::GenerateData()
   // four components.
   using ScalarType = typename InputImageType::PixelType;
 
-  if (strcmp(input->GetNameOfClass(), "VectorImage") == 0)
+  if (strcmp(input.GetNameOfClass(), "VectorImage") == 0)
   {
     using VectorImageScalarType = typename InputImageType::InternalPixelType;
     // this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
     this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast<const VectorImageScalarType *>(nullptr));
 
     using AccessorFunctorType = typename InputImageType::AccessorFunctorType;
-    this->GetModifiableImageIO()->SetNumberOfComponents(AccessorFunctorType::GetVectorLength(input));
+    this->GetModifiableImageIO()->SetNumberOfComponents(AccessorFunctorType::GetVectorLength(&input));
   }
   else
   {
@@ -91,7 +92,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
         this->GetImageIO()->GetComponentTypeAsString(this->GetImageIO()->GetComponentType()) &&
       numberOfComponents == 1)
   {
-    const void * const convertedDataBuffer = [this, input] {
+    const void * const convertedDataBuffer = [this, &input] {
       /** convert the scalar image to a scalar image with another componenttype
        * The imageIO's PixelType is also changed */
       if (this->m_OutputComponentType == "char")
@@ -146,7 +147,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
   else
   {
     /** No casting needed or possible, just write */
-    const void * dataPtr = input->GetBufferPointer();
+    const void * dataPtr = input.GetBufferPointer();
     this->GetModifiableImageIO()->Write(dataPtr);
   }
 }
