@@ -67,7 +67,6 @@ ImageFileCastWriter<TInputImage>::GenerateData()
   if (strcmp(input.GetNameOfClass(), "VectorImage") == 0)
   {
     using VectorImageScalarType = typename InputImageType::InternalPixelType;
-    // this->GetImageIO()->SetPixelTypeInfo( typeid(VectorImageScalarType) );
     this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast<const VectorImageScalarType *>(nullptr));
 
     using AccessorFunctorType = typename InputImageType::AccessorFunctorType;
@@ -76,7 +75,6 @@ ImageFileCastWriter<TInputImage>::GenerateData()
   else
   {
     // Set the pixel and component type; the number of components.
-    // this->GetImageIO()->SetPixelTypeInfo(typeid(ScalarType));
     this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast<const ScalarType *>(nullptr));
   }
 
