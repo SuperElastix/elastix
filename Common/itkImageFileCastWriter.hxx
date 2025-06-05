@@ -88,49 +88,49 @@ ImageFileCastWriter<TInputImage>::GenerateData()
 
   /** Extract the data as a raw buffer pointer and possibly convert.
    * Converting is only possible if the number of components equals 1 */
-  if (this->m_OutputComponentType != ImageIOBase::GetComponentTypeAsString(imageIO.GetComponentType()) &&
+  if (m_OutputComponentType != ImageIOBase::GetComponentTypeAsString(imageIO.GetComponentType()) &&
       numberOfComponents == 1)
   {
     const void * const convertedDataBuffer = [this, &input] {
       /** convert the scalar image to a scalar image with another componenttype
        * The imageIO's PixelType is also changed */
-      if (this->m_OutputComponentType == "char")
+      if (m_OutputComponentType == "char")
       {
         return this->ConvertScalarImage<char>(input);
       }
-      if (this->m_OutputComponentType == "unsigned_char")
+      if (m_OutputComponentType == "unsigned_char")
       {
         return this->ConvertScalarImage<unsigned char>(input);
       }
-      if (this->m_OutputComponentType == "short")
+      if (m_OutputComponentType == "short")
       {
         return this->ConvertScalarImage<short>(input);
       }
-      if (this->m_OutputComponentType == "unsigned_short")
+      if (m_OutputComponentType == "unsigned_short")
       {
         return this->ConvertScalarImage<unsigned short>(input);
       }
-      if (this->m_OutputComponentType == "int")
+      if (m_OutputComponentType == "int")
       {
         return this->ConvertScalarImage<int>(input);
       }
-      if (this->m_OutputComponentType == "unsigned_int")
+      if (m_OutputComponentType == "unsigned_int")
       {
         return this->ConvertScalarImage<unsigned int>(input);
       }
-      if (this->m_OutputComponentType == "long")
+      if (m_OutputComponentType == "long")
       {
         return this->ConvertScalarImage<long>(input);
       }
-      if (this->m_OutputComponentType == "unsigned_long")
+      if (m_OutputComponentType == "unsigned_long")
       {
         return this->ConvertScalarImage<unsigned long>(input);
       }
-      if (this->m_OutputComponentType == "float")
+      if (m_OutputComponentType == "float")
       {
         return this->ConvertScalarImage<float>(input);
       }
-      if (this->m_OutputComponentType == "double")
+      if (m_OutputComponentType == "double")
       {
         return this->ConvertScalarImage<double>(input);
       }
@@ -141,7 +141,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
     /** Do the writing */
     imageIO.Write(convertedDataBuffer);
     /** Release the caster's memory */
-    this->m_Caster = nullptr;
+    m_Caster = nullptr;
   }
   else
   {

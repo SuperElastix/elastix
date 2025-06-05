@@ -99,7 +99,7 @@ private:
 
     /** cast the input image */
     const auto caster = CastImageFilter<ScalarInputImageType, DiskImageType>::New();
-    this->m_Caster = caster;
+    m_Caster = caster;
     const auto localInputImage = ScalarInputImageType::New();
 
     localInputImage->Graft(static_cast<const ScalarInputImageType *>(&inputImage));
