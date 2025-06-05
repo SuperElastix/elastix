@@ -60,6 +60,8 @@ ImageFileCastWriter<TInputImage>::GenerateData()
 
   itkDebugMacro("Writing file: " << this->GetFileName());
 
+  ImageIOBase & imageIO = Deref(this->GetModifiableImageIO());
+
   // Make sure that the image is the right type and no more than
   // four components.
   using ScalarType = typename InputImageType::PixelType;
@@ -67,26 +69,26 @@ ImageFileCastWriter<TInputImage>::GenerateData()
   if (strcmp(input.GetNameOfClass(), "VectorImage") == 0)
   {
     using VectorImageScalarType = typename InputImageType::InternalPixelType;
-    this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast<const VectorImageScalarType *>(nullptr));
+    imageIO.SetPixelTypeInfo(static_cast<const VectorImageScalarType *>(nullptr));
 
     using AccessorFunctorType = typename InputImageType::AccessorFunctorType;
-    this->GetModifiableImageIO()->SetNumberOfComponents(AccessorFunctorType::GetVectorLength(&input));
+    imageIO.SetNumberOfComponents(AccessorFunctorType::GetVectorLength(&input));
   }
   else
   {
     // Set the pixel and component type; the number of components.
-    this->GetModifiableImageIO()->SetPixelTypeInfo(static_cast<const ScalarType *>(nullptr));
+    imageIO.SetPixelTypeInfo(static_cast<const ScalarType *>(nullptr));
   }
 
   /** Setup the image IO for writing. */
-  this->GetModifiableImageIO()->SetFileName(this->GetFileName());
+  imageIO.SetFileName(this->GetFileName());
 
   /** Get the number of Components */
-  unsigned int numberOfComponents = this->GetImageIO()->GetNumberOfComponents();
+  unsigned int numberOfComponents = imageIO.GetNumberOfComponents();
 
   /** Extract the data as a raw buffer pointer and possibly convert.
    * Converting is only possible if the number of components equals 1 */
-  if (this->m_OutputComponentType != ImageIOBase::GetComponentTypeAsString(this->GetImageIO()->GetComponentType()) &&
+  if (this->m_OutputComponentType != ImageIOBase::GetComponentTypeAsString(imageIO.GetComponentType()) &&
       numberOfComponents == 1)
   {
     const void * const convertedDataBuffer = [this, &input] {
@@ -137,7 +139,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
     }();
 
     /** Do the writing */
-    this->GetModifiableImageIO()->Write(convertedDataBuffer);
+    imageIO.Write(convertedDataBuffer);
     /** Release the caster's memory */
     this->m_Caster = nullptr;
   }
@@ -145,7 +147,7 @@ ImageFileCastWriter<TInputImage>::GenerateData()
   {
     /** No casting needed or possible, just write */
     const void * dataPtr = input.GetBufferPointer();
-    this->GetModifiableImageIO()->Write(dataPtr);
+    imageIO.Write(dataPtr);
   }
 }
 
