@@ -796,7 +796,7 @@ main(int argc, char * argv[])
   // Construct and setup the resample filter
   cpuFilter = FilterType::New();
 
-  elastix::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  elx::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
   randomVariateGenerator.SetSeed(std::mt19937::default_seed);
 
   InputImageType::ConstPointer        inputImage = cpuReader->GetOutput();

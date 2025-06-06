@@ -528,7 +528,7 @@ ParameterFileParser::ReturnParameterFileAsString(const std::string & fileName)
 auto
 ParameterFileParser::ReadParameterMap(const std::string & fileName) -> ParameterMapType
 {
-  elastix::DefaultConstruct<ParameterFileParser> parameterFileParser;
+  elx::DefaultConstruct<ParameterFileParser> parameterFileParser;
   parameterFileParser.m_ParameterFileName = fileName;
   parameterFileParser.ReadParameterFile();
 

@@ -129,7 +129,7 @@ main(int argc, char * argv[])
   using RescaleScheduleType = FilterType::RescaleScheduleType;
   using SmoothingScheduleType = FilterType::SmoothingScheduleType;
 
-  elastix::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  elx::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
   randomVariateGenerator.SetSeed(std::mt19937::default_seed);
 
   RescaleScheduleType   rescaleSchedule(numberOfLevels, Dimension);

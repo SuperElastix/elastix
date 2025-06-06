@@ -31,7 +31,7 @@ GTEST_TEST(CorrespondingPointsEuclideanDistancePointMetric, DefaultConstruct)
 {
   using PointSetType = itk::PointSet<double>;
   using MetricType = CorrespondingPointsEuclideanDistancePointMetric<PointSetType, PointSetType>;
-  const elastix::DefaultConstruct<MetricType>                                   defaultConstructedMetric{};
+  const elx::DefaultConstruct<MetricType>                                       defaultConstructedMetric{};
   const itk::SingleValuedPointSetToPointSetMetric<PointSetType, PointSetType> & pointSetToPointSetMetric =
     defaultConstructedMetric;
 
@@ -54,17 +54,17 @@ GTEST_TEST(CorrespondingPointsEuclideanDistancePointMetric, MinimalPointSets)
   using PointsVectorContainerType = PointSetType::PointsVectorContainer;
   using MetricType = CorrespondingPointsEuclideanDistancePointMetric<PointSetType, PointSetType>;
 
-  elastix::DefaultConstruct<itk::AdvancedTranslationTransform<double, PointSetType::PointDimension>> transform{};
-  elastix::DefaultConstruct<PointsVectorContainerType> fixedPointsVectorContainer{};
+  elx::DefaultConstruct<itk::AdvancedTranslationTransform<double, PointSetType::PointDimension>> transform{};
+  elx::DefaultConstruct<PointsVectorContainerType> fixedPointsVectorContainer{};
 
   fixedPointsVectorContainer.resize(PointSetType::PointDimension);
-  elastix::DefaultConstruct<PointsVectorContainerType> movingPointsVectorContainer{};
+  elx::DefaultConstruct<PointsVectorContainerType> movingPointsVectorContainer{};
   movingPointsVectorContainer.CastToSTLContainer() = fixedPointsVectorContainer.CastToSTLConstContainer();
-  elastix::DefaultConstruct<PointSetType> fixedPointSet{};
+  elx::DefaultConstruct<PointSetType> fixedPointSet{};
   fixedPointSet.SetPoints(&fixedPointsVectorContainer);
-  elastix::DefaultConstruct<PointSetType> movingPointSet{};
+  elx::DefaultConstruct<PointSetType> movingPointSet{};
   movingPointSet.SetPoints(&movingPointsVectorContainer);
-  elastix::DefaultConstruct<MetricType> metric{};
+  elx::DefaultConstruct<MetricType> metric{};
   metric.SetFixedPointSet(&fixedPointSet);
   metric.SetMovingPointSet(&movingPointSet);
   metric.SetTransform(&transform);

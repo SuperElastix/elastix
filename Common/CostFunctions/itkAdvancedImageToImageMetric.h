@@ -648,8 +648,7 @@ private:
 
   MovingImageDerivativeScalesType m_MovingImageDerivativeScales{ MovingImageDerivativeScalesType::Filled(1.0) };
 
-  mutable elastix::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator>
-                                                      m_DefaultRandomVariateGenerator{};
+  mutable elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
   Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
 
   // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).

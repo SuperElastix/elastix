@@ -59,7 +59,7 @@ TestInterpolators()
 
   using IteratorType = itk::ImageRegionIterator<InputImageType>;
 
-  elastix::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  elx::DefaultConstruct<itk::Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
 
   /** Create random input image. */
   SizeType    size;
