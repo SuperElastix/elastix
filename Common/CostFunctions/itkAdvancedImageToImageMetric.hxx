@@ -304,7 +304,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::CheckForBSplineInterpolat
     {
       using CentralDifferenceGradientFilterType = GradientImageFilter<TMovingImage, RealType, RealType>;
 
-      elastix::DefaultConstruct<CentralDifferenceGradientFilterType> centralDifferenceGradientFilter{};
+      elx::DefaultConstruct<CentralDifferenceGradientFilterType> centralDifferenceGradientFilter{};
       centralDifferenceGradientFilter.SetUseImageSpacing(true);
       centralDifferenceGradientFilter.SetInput(Superclass::m_MovingImage);
       centralDifferenceGradientFilter.Update();

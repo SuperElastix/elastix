@@ -441,7 +441,7 @@ private:
   double        m_PositionToleranceMin{ 1e-12 };
   double        m_ValueTolerance{ 1e-12 };
 
-  elastix::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
+  elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
   Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
 };
 

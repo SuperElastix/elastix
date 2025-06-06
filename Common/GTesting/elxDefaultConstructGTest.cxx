@@ -23,7 +23,7 @@
 #include <type_traits> // For is_base_of and is_default_constructible.
 
 // The class template to be tested:
-using elastix::DefaultConstruct;
+using elx::DefaultConstruct;
 
 // Example type, to be used as template argument of DefaultConstruct.
 using ImageType = itk::Image<int>;

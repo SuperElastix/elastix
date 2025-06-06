@@ -348,7 +348,7 @@ GTEST_TEST(ComputeImageExtremaFilter, MaskSpacingAndDirectionAffectResults)
     maskSpatialObject->SetImage(maskImage);
     maskSpatialObject->Update();
 
-    elastix::DefaultConstruct<FilterType> filter{};
+    elx::DefaultConstruct<FilterType> filter{};
     filter.SetInput(image);
     filter.SetImageSpatialMask(maskSpatialObject);
     filter.Update();

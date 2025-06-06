@@ -193,7 +193,7 @@ private:
   using RecursiveBSplineWeightFunctionType =
     itk::RecursiveBSplineInterpolationWeightFunction<TScalarType, NDimensions, VSplineOrder>;
 
-  elastix::DefaultConstruct<RecursiveBSplineWeightFunctionType> m_RecursiveBSplineWeightFunction{};
+  elx::DefaultConstruct<RecursiveBSplineWeightFunctionType> m_RecursiveBSplineWeightFunction{};
 };
 
 } // end namespace itk
