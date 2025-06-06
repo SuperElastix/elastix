@@ -61,4 +61,8 @@ public:
 };
 } // namespace elastix
 
+
+// Alias copied from "elastix\Core\Install\elxBaseComponent.h"
+namespace elx = elastix;
+
 #endif
