@@ -61,7 +61,7 @@ public:
   using typename Superclass::InputImageRegionType;
   using typename Superclass::InputImagePixelType;
 
-  itkStaticConstMacro(InputImageDimension, unsigned int, InputImageType::ImageDimension);
+  itkStaticConstMacro(InputImageDimension, unsigned int, TInputImage::ImageDimension);
 
   /** Set the component type for writing to disk; default: the same as
    * the InputImagePixelType::ComponentType. This setting is ignored when
