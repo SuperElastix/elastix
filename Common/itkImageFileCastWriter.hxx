@@ -42,7 +42,7 @@ ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType()
   const auto dummyImageIO = MetaImageIO::New();
 
   /** Set the pixeltype. */
-  using ScalarType = typename InputImageType::InternalPixelType;
+  using ScalarType = typename TInputImage::InternalPixelType;
 
   dummyImageIO->SetPixelTypeInfo(static_cast<const ScalarType *>(nullptr));
 
@@ -56,7 +56,7 @@ template <typename TInputImage>
 void
 ImageFileCastWriter<TInputImage>::GenerateData()
 {
-  const InputImageType & input = Deref(this->GetInput());
+  const TInputImage & input = Deref(this->GetInput());
 
   itkDebugMacro("Writing file: " << this->GetFileName());
 
@@ -64,14 +64,14 @@ ImageFileCastWriter<TInputImage>::GenerateData()
 
   // Make sure that the image is the right type and no more than
   // four components.
-  using ScalarType = typename InputImageType::PixelType;
+  using ScalarType = typename TInputImage::PixelType;
 
   if (strcmp(input.GetNameOfClass(), "VectorImage") == 0)
   {
-    using VectorImageScalarType = typename InputImageType::InternalPixelType;
+    using VectorImageScalarType = typename TInputImage::InternalPixelType;
     imageIO.SetPixelTypeInfo(static_cast<const VectorImageScalarType *>(nullptr));
 
-    using AccessorFunctorType = typename InputImageType::AccessorFunctorType;
+    using AccessorFunctorType = typename TInputImage::AccessorFunctorType;
     imageIO.SetNumberOfComponents(AccessorFunctorType::GetVectorLength(&input));
   }
   else
