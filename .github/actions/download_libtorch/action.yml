@@ -1,0 +1,42 @@
+name: Download and extract libtorch
+description: "Download and extract LibTorch archive with cache"
+
+inputs:
+  libtorch_url:
+    required: true
+    description: "URL to the libtorch zip"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Save libtorch URL to file
+      shell: bash
+      run: echo "${{ inputs.libtorch_url }}" > libtorch_url.txt
+
+    - name: Attempt to restore libtorch cache
+      id: cache_libtorch
+      uses: actions/cache@v3
+      with:
+        path: libtorch
+        key: ${{ runner.os }}-${{ hashFiles('libtorch_url.txt') }}
+
+    - name: Check if cache was hit
+      shell: bash
+      run: |
+        if [ -d "libtorch" ]; then
+          echo "CACHED=true" >> $GITHUB_ENV
+        else
+          echo "CACHED=false" >> $GITHUB_ENV
+        fi
+
+    - name: Download libtorch
+      if: env.CACHED == 'false'
+      shell: bash
+      run: curl -L "${{ inputs.libtorch_url }}" -o libtorch.zip
+
+    - name: Extract libtorch
+      if: env.CACHED == 'false'
+      shell: bash
+      run: |
+        unzip -q libtorch.zip -d libtorch
+        rm libtorch.zip

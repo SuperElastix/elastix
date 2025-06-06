@@ -1,0 +1,65 @@
+name: Prepare artifact
+description: "Prepare and upload Elastix artifacts cross-platform"
+
+inputs:
+  libs:
+    required: true
+  upload-name:
+    required: true
+  docker-username:
+    required: true
+  docker-password:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Prepare Artifacts (non-Windows)
+      if: ${{ runner.os != 'Windows' }}
+      shell: bash
+      run: |
+        mkdir -p bin lib uploads
+        mv elastix-build/bin/elastix bin
+        mv elastix-build/bin/transformix bin
+        for lib in ${{ inputs.libs }}; do
+          cp "$lib" lib
+        done
+        mv elastix-source/NOTICE uploads
+        mv elastix-source/LICENSE uploads
+        mv bin uploads
+        mv lib uploads
+
+    - name: Prepare Artifacts (Windows)
+      if: ${{ runner.os == 'Windows' }}
+      shell: bash
+      run: |
+        mkdir -p uploads
+        mv elastix-source/NOTICE uploads
+        mv elastix-source/LICENSE uploads
+        mv elastix-build/bin/elastix.exe uploads
+        mv elastix-build/bin/transformix.exe uploads
+        for lib in ${{ inputs.libs }}; do
+          cp "$lib" uploads
+        done
+
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.upload-name }}
+        path: uploads
+
+    - name: Login to Docker Hub
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(runner.os, 'ubuntu')
+      uses: docker/login-action@v1
+      with:
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+
+    - name: Build and push
+      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') && startsWith(runner.os, 'ubuntu')
+      shell: bash
+      run: |
+        mkdir output
+        docker build -t superelastix/elastix:${upload-name} .
+        docker run -u $UID:$GROUPS --mount type=bind,source="$(pwd)"/output,target=/out -v "$(pwd)"/elastix-source/Testing/Data:/elastix/ superelastix/elastix:${upload-name} elastix -out /out/ -p /elastix/parameters.3D.NC.euler.ASGD.001.txt -f /elastix/3DCT_lung_baseline.mha -m /elastix/3DCT_lung_followup.mha
+        docker push superelastix/elastix:${upload-name}
