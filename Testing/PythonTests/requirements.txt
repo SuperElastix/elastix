@@ -1,3 +1,4 @@
+scikit-build
 itk
 SimpleITK
 numpy
