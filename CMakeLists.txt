@@ -31,6 +31,23 @@ if(ELASTIX_USE_OPENCL)
   list(APPEND _GPU_depends ITKGPUCommon)
 endif()
 
+set(_ITK_io_depends
+    ITKImageIO
+    ITKTransformIO
+    ITKMeshIO
+    ITKIOImageBase
+    ITKIOMeshBase
+    ITKIOMeshOBJ
+    ITKIOMeta
+    ITKIOTransformBase
+    ITKIOXML
+)
+
+if(WASI OR EMSCRIPTEN)
+  # Keep Wasm binaries small
+  set(_ITK_io_depends)
+endif()
+
 # Find ITK.
 find_package(ITK 5.4.1 REQUIRED COMPONENTS
     ITKCommon
@@ -43,12 +60,6 @@ find_package(ITK 5.4.1 REQUIRED COMPONENTS
     ITKImageGrid
     ITKImageIntensity
     ITKImageStatistics
-    ITKIOImageBase
-    ITKIOMeshBase
-    ITKIOMeshOBJ
-    ITKIOMeta
-    ITKIOTransformBase
-    ITKIOXML
     ITKMathematicalMorphology
     ITKMesh
     ITKOptimizers
@@ -61,9 +72,7 @@ find_package(ITK 5.4.1 REQUIRED COMPONENTS
     ITKTransform
     ITKTransformFactory
     ${_GPU_depends}
-    ITKImageIO
-    ITKTransformIO
-    ITKMeshIO
+    ${_ITK_io_depends}
     )
 include(${ITK_USE_FILE})
 

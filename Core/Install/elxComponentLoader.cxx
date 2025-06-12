@@ -23,9 +23,11 @@
 #include "elxInstallAllComponents.h"
 
 // ITKFactoryRegistration headers:
-#include <itkImageIOFactoryRegisterManager.h>
-#include <itkMeshIOFactoryRegisterManager.h>
-#include <itkTransformIOFactoryRegisterManager.h>
+#ifndef ELX_NO_FILESYSTEM_ACCESS
+#  include <itkImageIOFactoryRegisterManager.h>
+#  include <itkMeshIOFactoryRegisterManager.h>
+#  include <itkTransformIOFactoryRegisterManager.h>
+#endif
 
 #include <iostream>
 #include <string>
@@ -130,12 +132,14 @@ ComponentLoader::InstallSupportedImageTypes()
 int
 ComponentLoader::LoadComponents()
 {
+#ifndef ELX_NO_FILESYSTEM_ACCESS
   // Retrieve those IOFactoryRegisterManager instances, just to ensure that they are really constructed.
   const volatile auto ioFactoryRegisterManagerInstances =
     std::make_tuple(itk::ImageIOFactoryRegisterManagerInstance,
                     itk::MeshIOFactoryRegisterManagerInstance,
                     itk::TransformIOFactoryRegisterManagerInstance);
   (void)ioFactoryRegisterManagerInstances;
+#endif
 
   int installReturnCode = 0;
 
