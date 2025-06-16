@@ -29,9 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include <map>
 #include <type_traits>
-#include <typeindex>
 
 using elx::CoreMainGTestUtilities::CreateImageFilledWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::minimumImageSizeValue;
@@ -42,20 +40,38 @@ using elx::CoreMainGTestUtilities::TypeHolder;
 
 namespace
 {
-template <typename... T>
-auto
-CreateMapOfTypeTraits()
+// Expects that the specified types have the same type traits (unsignedness, floating point-ness, and size).
+template <typename T1, typename T2>
+void
+ExpectEqualTypeTraits()
 {
-  struct TypeTraits
-  {
-    bool        isSigned;
-    bool        isFloatingPoint;
-    std::size_t numberOfBits;
-  };
-  return std::map<std::type_index, TypeTraits>{
-    { typeid(T), TypeTraits{ std::is_signed_v<T>, std::is_floating_point_v<T>, sizeof(T) * CHAR_BIT } }...
-  };
+  EXPECT_EQ(std::is_unsigned_v<T1>, std::is_unsigned_v<T2>);
+  EXPECT_EQ(std::is_floating_point_v<T1>, std::is_floating_point_v<T2>);
+  EXPECT_EQ(sizeof(T1), sizeof(T2));
 }
+
+
+// Returns true iff there is a mapping from the type specified by the template argument to the function argument.
+template <typename TPixel>
+bool
+IsTypeMapping(const itk::IOComponentEnum componentEnum)
+{
+  return itk::ImageIOBase::MapPixelType<TPixel>::CType == componentEnum;
+}
+
+
+// Expects that the component type specified by the function argument has the same type traits as the first template
+// argument.
+template <typename TComponent, typename... TPixel>
+void
+ExpectEqualTypeTraits(const itk::IOComponentEnum componentEnum)
+{
+  // First check that there is a mapping from at least one of the pixel types to the enum value.
+  ASSERT_TRUE((IsTypeMapping<TPixel>(componentEnum) || ...));
+
+  ((IsTypeMapping<TPixel>(componentEnum) ? ExpectEqualTypeTraits<TComponent, TPixel>() : void()), ...);
+}
+
 } // namespace
 
 
@@ -111,20 +127,7 @@ GTEST_TEST(ImageFileCastWriter, SupportsFixedWidthComponentType)
   const auto inputImage = CreateImageFilledWithSequenceOfNaturalNumbers<InputPixelType>(
     itk::Size<imageDimension>::Filled(minimumImageSizeValue));
 
-  const auto mapOfTypeTraits = CreateMapOfTypeTraits<char,
-                                                     unsigned char,
-                                                     short,
-                                                     unsigned short,
-                                                     int,
-                                                     unsigned int,
-                                                     long,
-                                                     unsigned long,
-                                                     long long,
-                                                     unsigned long long,
-                                                     float,
-                                                     double>();
-
-  const auto check = [inputImage, &outputDirectoryPath, &mapOfTypeTraits](const auto componentTypeHolder) {
+  const auto check = [inputImage, &outputDirectoryPath](const auto componentTypeHolder) {
     using ComponentType = typename decltype(componentTypeHolder)::Type;
     const auto outputComponentType = elx::PixelTypeToFixedWidthString<ComponentType>();
 
@@ -139,11 +142,20 @@ GTEST_TEST(ImageFileCastWriter, SupportsFixedWidthComponentType)
     // Check that the component type in the image file has the expected type_info.
     const auto & imageIO = itk::Deref(reader->GetImageIO());
 
-    const auto typeTraits = mapOfTypeTraits.at(imageIO.GetComponentTypeInfo());
-
-    EXPECT_EQ(typeTraits.isSigned, std::is_signed_v<ComponentType>);
-    EXPECT_EQ(typeTraits.isFloatingPoint, std::is_floating_point_v<ComponentType>);
-    EXPECT_EQ(typeTraits.numberOfBits, sizeof(ComponentType) * CHAR_BIT);
+    ExpectEqualTypeTraits<ComponentType,
+                          signed char,
+                          char,
+                          unsigned char,
+                          short,
+                          unsigned short,
+                          int,
+                          unsigned int,
+                          long,
+                          unsigned long,
+                          long long,
+                          unsigned long long,
+                          float,
+                          double>(imageIO.GetComponentType());
 
     // Also check that the read image is equal to the written input image.
     EXPECT_EQ(itk::Deref(reader->GetOutput()), itk::Deref(inputImage.get()));
