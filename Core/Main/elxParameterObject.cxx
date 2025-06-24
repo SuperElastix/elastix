@@ -168,6 +168,39 @@ ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType &
 
 
 /**
+ * ********************* HasParameter *********************
+ */
+
+bool
+ParameterObject::HasParameter(const unsigned int index, const ParameterKeyType & key) const
+{
+  if (index >= m_ParameterMaps.size())
+  {
+    return false;
+  }
+  return m_ParameterMaps[index].count(key) > 0;
+}
+
+
+/**
+ * ********************* HasParameter *********************
+ */
+
+bool
+ParameterObject::HasParameter(const ParameterKeyType & key) const
+{
+  for (const auto & parameterMap : m_ParameterMaps)
+  {
+    if (parameterMap.find(key) != parameterMap.end())
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+/**
  * ********************* RemoveParameter *********************
  */
 
