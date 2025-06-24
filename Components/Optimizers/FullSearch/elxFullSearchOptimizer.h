@@ -133,6 +133,9 @@ protected:
   FullSearch();
   ~FullSearch() override = default;
 
+private:
+  elxOverrideGetSelfMacro;
+
   NDImagePointer m_OptimizationSurface;
 
   DimensionNameMapType m_SearchSpaceDimensionNames;
@@ -147,9 +150,6 @@ protected:
   CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
                                   const bool          found,
                                   const unsigned int  entry_nr) const;
-
-private:
-  elxOverrideGetSelfMacro;
 };
 
 } // end namespace elastix
