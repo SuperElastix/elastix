@@ -73,21 +73,19 @@ FullSearch<TElastix>::BeforeEachResolution()
   /** Read FullSearchRange from the parameter file. */
 
   /** declare variables */
-  std::string        name("");
-  unsigned int       param_nr = 0;
-  double             minimum = 0;
-  double             maximum = 0;
-  double             stepsize = 0;
-  const std::string  prefix = "FS";
-  unsigned int       entry_nr = 0;
-  unsigned int       nrOfSearchSpaceDimensions = 0;
-  bool               found = true;
-  bool               realGood = true;
-  std::ostringstream makeString;
+  std::string       name("");
+  unsigned int      param_nr = 0;
+  double            minimum = 0;
+  double            maximum = 0;
+  double            stepsize = 0;
+  const std::string prefix = "FS";
+  unsigned int      entry_nr = 0;
+  unsigned int      nrOfSearchSpaceDimensions = 0;
+  bool              found = true;
+  bool              realGood = true;
 
   /** Create fullFieldName, which is "FullSearchSpace0" at level 0. */
-  makeString << "FullSearchSpace" << level;
-  std::string fullFieldName = makeString.str();
+  const std::string fullFieldName = "FullSearchSpace" + std::to_string(level);
 
   /** Loop as long as search ranges are defined. */
   while (found)
@@ -133,7 +131,7 @@ FullSearch<TElastix>::BeforeEachResolution()
       this->AddSearchDimension(param_nr, minimum, maximum, stepsize);
 
       /** Create name of this dimension. */
-      makeString.str("");
+      std::ostringstream makeString;
       makeString << prefix << ((entry_nr / 5) - 1) << ":" << name << ":" << param_nr;
 
       /** Store the name and create a column in IterationInfo. */
@@ -167,7 +165,7 @@ FullSearch<TElastix>::BeforeEachResolution()
       std::string resultImageFormat = "mhd";
       configuration.ReadParameter(resultImageFormat, "ResultImageFormat", 0, false);
 
-      makeString.str("");
+      std::ostringstream makeString;
       makeString << outputDirectoryPath << "OptimizationSurface." << configuration.GetElastixLevel() << ".R" << level
                  << "." << resultImageFormat;
       this->m_OptimizationSurface->SetOutputFileName(makeString.str().c_str());
