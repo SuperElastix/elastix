@@ -145,3 +145,80 @@ GTEST_TEST(ParameterObject, PrintOriginalNumericValues)
   checkNumericLimits(TypeHolder<float>{});
   checkNumericLimits(TypeHolder<double>{});
 }
+
+
+// Tests HasParameter method with index parameter
+GTEST_TEST(ParameterObject, HasParameterWithIndex)
+{
+  elx::DefaultConstruct<elx::ParameterObject> parameterObject{};
+
+  // Test with empty parameter object
+  EXPECT_FALSE(parameterObject.HasParameter(0, "NonExistentParameter"));
+
+  // Create parameter maps
+  ParameterMapType parameterMap1;
+  parameterMap1["ExistingParameter1"] = { "value1" };
+  parameterMap1["ExistingParameter2"] = { "value2a", "value2b" };
+
+  ParameterMapType parameterMap2;
+  parameterMap2["ExistingParameter1"] = { "differentValue" };
+  parameterMap2["ExistingParameter3"] = { "value3" };
+
+  ParameterMapVectorType parameterMapVector = { parameterMap1, parameterMap2 };
+  parameterObject.SetParameterMaps(parameterMapVector);
+
+  // Test existing parameters in first map (index 0)
+  EXPECT_TRUE(parameterObject.HasParameter(0, "ExistingParameter1"));
+  EXPECT_TRUE(parameterObject.HasParameter(0, "ExistingParameter2"));
+  EXPECT_FALSE(parameterObject.HasParameter(0, "ExistingParameter3"));
+  EXPECT_FALSE(parameterObject.HasParameter(0, "NonExistentParameter"));
+
+  // Test existing parameters in second map (index 1)
+  EXPECT_TRUE(parameterObject.HasParameter(1, "ExistingParameter1"));
+  EXPECT_FALSE(parameterObject.HasParameter(1, "ExistingParameter2"));
+  EXPECT_TRUE(parameterObject.HasParameter(1, "ExistingParameter3"));
+  EXPECT_FALSE(parameterObject.HasParameter(1, "NonExistentParameter"));
+
+  // Test with out-of-bounds index
+  EXPECT_FALSE(parameterObject.HasParameter(2, "ExistingParameter1"));
+  EXPECT_FALSE(parameterObject.HasParameter(10, "ExistingParameter1"));
+}
+
+
+// Tests HasParameter method without index parameter (searches all maps)
+GTEST_TEST(ParameterObject, HasParameterWithoutIndex)
+{
+  elx::DefaultConstruct<elx::ParameterObject> parameterObject{};
+
+  // Test with empty parameter object
+  EXPECT_FALSE(parameterObject.HasParameter("NonExistentParameter"));
+
+  // Create parameter maps
+  ParameterMapType parameterMap1;
+  parameterMap1["OnlyInMap1"] = { "value1" };
+  parameterMap1["InBothMaps"] = { "value2" };
+
+  ParameterMapType parameterMap2;
+  parameterMap2["OnlyInMap2"] = { "value3" };
+  parameterMap2["InBothMaps"] = { "differentValue" };
+
+  ParameterMapVectorType parameterMapVector = { parameterMap1, parameterMap2 };
+  parameterObject.SetParameterMaps(parameterMapVector);
+
+  // Test parameters that exist in specific maps
+  EXPECT_TRUE(parameterObject.HasParameter("OnlyInMap1")); // Only in first map
+  EXPECT_TRUE(parameterObject.HasParameter("OnlyInMap2")); // Only in second map
+  EXPECT_TRUE(parameterObject.HasParameter("InBothMaps")); // In both maps
+
+  // Test non-existent parameter
+  EXPECT_FALSE(parameterObject.HasParameter("NonExistentParameter"));
+
+  // Test with single parameter map
+  ParameterMapVectorType singleMapVector = { parameterMap1 };
+  parameterObject.SetParameterMaps(singleMapVector);
+
+  EXPECT_TRUE(parameterObject.HasParameter("OnlyInMap1"));
+  EXPECT_TRUE(parameterObject.HasParameter("InBothMaps"));
+  EXPECT_FALSE(parameterObject.HasParameter("OnlyInMap2"));
+  EXPECT_FALSE(parameterObject.HasParameter("NonExistentParameter"));
+}

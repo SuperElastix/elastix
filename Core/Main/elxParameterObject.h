@@ -97,6 +97,10 @@ public:
   SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value);
   const ParameterValueVectorType &
   GetParameter(const unsigned int index, const ParameterKeyType & key);
+  bool
+  HasParameter(const unsigned int index, const ParameterKeyType & key) const;
+  bool
+  HasParameter(const ParameterKeyType & key) const;
   void
   RemoveParameter(const unsigned int index, const ParameterKeyType & key);
   void
