@@ -144,9 +144,9 @@ private:
    * ranges from the parameter file is a real error. Prints some
    * error message if so.
    */
-  // virtual int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
+  // int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
   //  int errorcode, unsigned int entry_nr);
-  virtual bool
+  bool
   CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
                                   const bool          found,
                                   const unsigned int  entry_nr) const;
