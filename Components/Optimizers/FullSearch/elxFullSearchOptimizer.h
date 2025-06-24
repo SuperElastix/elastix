@@ -147,9 +147,7 @@ private:
   // int CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
   //  int errorcode, unsigned int entry_nr);
   bool
-  CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
-                                  const bool          found,
-                                  const unsigned int  entry_nr) const;
+  CheckSearchSpaceRangeDefinition(const std::string & fullFieldName, const unsigned int entry_nr) const;
 };
 
 } // end namespace elastix

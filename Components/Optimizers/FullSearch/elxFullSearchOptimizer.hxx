@@ -98,31 +98,31 @@ FullSearch<TElastix>::BeforeEachResolution()
     if (realGood && found)
     {
       found = configuration.ReadParameter(name, fullFieldName, entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
+      realGood = found || this->CheckSearchSpaceRangeDefinition(fullFieldName, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
       found = configuration.ReadParameter(param_nr, fullFieldName, entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
+      realGood = found || this->CheckSearchSpaceRangeDefinition(fullFieldName, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
       found = configuration.ReadParameter(minimum, fullFieldName, entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
+      realGood = found || this->CheckSearchSpaceRangeDefinition(fullFieldName, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
       found = configuration.ReadParameter(maximum, fullFieldName, entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
+      realGood = found || this->CheckSearchSpaceRangeDefinition(fullFieldName, entry_nr);
       ++entry_nr;
     }
     if (realGood && found)
     {
       found = configuration.ReadParameter(stepsize, fullFieldName, entry_nr, false);
-      realGood = this->CheckSearchSpaceRangeDefinition(fullFieldName, found, entry_nr);
+      realGood = found || this->CheckSearchSpaceRangeDefinition(fullFieldName, entry_nr);
       ++entry_nr;
     }
 
@@ -320,13 +320,12 @@ FullSearch<TElastix>::AfterRegistration()
 template <typename TElastix>
 bool
 FullSearch<TElastix>::CheckSearchSpaceRangeDefinition(const std::string & fullFieldName,
-                                                      const bool          found,
                                                       const unsigned int  entry_nr) const
 {
   /** Complain if not at least one search space dimension has been found,
    * or if a search dimension is not fully specified.
    */
-  if (!found && (entry_nr == 0 || (entry_nr % 5 != 0)))
+  if (entry_nr == 0 || (entry_nr % 5 != 0))
   {
     log::error(std::ostringstream{} << "ERROR:\nNo (valid) range specified for the full search optimizer!\n"
                                     << "Please define the field (" << fullFieldName
