@@ -21,7 +21,7 @@
 
 #include "itkParameterFileParser.h"
 
-#include "itkFileTools.h"
+#include "itksys/SystemTools.hxx"
 #include <fstream>
 #include <iostream>
 #include <cmath>

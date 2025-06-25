@@ -35,8 +35,6 @@
 #ifndef itkTransformixFilter_hxx
 #define itkTransformixFilter_hxx
 
-#include "itkTransformixFilter.h"
-
 #include "elxLibUtilities.h"
 #include "elxPixelTypeToString.h"
 #include "elxTransformBase.h"
@@ -44,6 +42,7 @@
 #include "elxDefaultConstruct.h"
 
 #include <itkCompositeTransform.h>
+#include <itkNumberToString.h>
 
 #include <cassert>
 #include <memory> // For unique_ptr.
