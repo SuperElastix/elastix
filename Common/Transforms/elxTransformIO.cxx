@@ -195,9 +195,7 @@ void
 elastix::TransformIO::Write(const itk::Object & itkTransform, const std::string & fileName)
 {
 #ifdef ELX_NO_FILESYSTEM_ACCESS
-  const std::string message = "File IO not supported in WebAssembly builds.";
-  log::error(message);
-  throw std::runtime_error(message);
+  itkGenericExceptionMacro("File IO not supported in WebAssembly builds.");
 #else
   try
   {
@@ -219,10 +217,7 @@ itk::SmartPointer<itk::TransformBase>
 elastix::TransformIO::Read(const std::string & fileName)
 {
 #ifdef ELX_NO_FILESYSTEM_ACCESS
-  const std::string message = "File IO not supported in WebAssembly builds.";
-  log::error(message);
-  throw std::runtime_error(message);
-  return nullptr;
+  itkGenericExceptionMacro("File IO not supported in WebAssembly builds.");
 #else
 
   const auto reader = itk::TransformFileReader::New();
