@@ -361,7 +361,7 @@ GroupByDimensions(const std::vector<T> & values, const std::vector<unsigned int>
       }
       else if (!values.empty())
       {
-        group.push_back(values.back()); // répète la dernière valeur si débordement
+        group.push_back(values.back()); // repeats last value if overflow
       }
     }
     grouped.push_back(std::move(group));
