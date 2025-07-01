@@ -333,14 +333,21 @@ GetBooleanVectorFromString(std::string valueStr, bool defaultValue)
 } // end GetVectorFromString
 
 /**
- * \brief Group a flattened space-separated string into string blocks per dimension sizes.
+ * \brief Groups a flat vector into sub-vectors based on given dimension sizes.
  *
- * This function splits a string like `"1 2 3 4 5"` into grouped strings according to
- * the values in `dimensions`. If dimensions = {2, 3}, result is {"1 2", "3 4 5"}.
+ * Splits the input vector `values` into multiple groups, where the size of each group is specified
+ * by the corresponding entry in `dimensions`. If there are not enough elements in `values` to fill
+ * a group, the last available value is repeated to complete it.
  *
- * \param valueStr The space-separated values.
- * \param dimensions The sizes of each group.
- * \return A vector of grouped space-separated strings.
+ * Example:
+ *   values     = {1, 2, 3, 4, 5}
+ *   dimensions = {2, 3}
+ *   result     = {{1, 2}, {3, 4, 5}}
+ *
+ * \tparam T           The type of elements in the input vector.
+ * \param values       The flat input vector to be grouped.
+ * \param dimensions   A list of sizes specifying how to group the values.
+ * \return             A vector of groups, each being a sub-vector of `values`.
  */
 template <typename T>
 std::vector<std::vector<T>>
