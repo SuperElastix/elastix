@@ -24,6 +24,13 @@
  * via the `LossFactory` for use at runtime.
  *
  * Supports both static and Jacobian-based backpropagation modes.
+ *
+ * \author V. Boussot,  Univ. Rennes, INSERM, LTSI- UMR 1099, F-35000 Rennes, France
+ * \note This work was funded by the French National Research Agency as part of the VATSop project (ANR-20-CE19-0015).
+ * \note If you use the Impact anywhere we would appreciate if you cite the following article:\n
+ * V. Boussot et al., IMPACT: A Generic Semantic Loss for Multimodal Medical Image Registration, arXiv preprint
+ * arXiv:2503.24121 (2025). https://doi.org/10.48550/arXiv.2503.24121
+ *
  */
 
 #ifndef _ImpactLoss_h

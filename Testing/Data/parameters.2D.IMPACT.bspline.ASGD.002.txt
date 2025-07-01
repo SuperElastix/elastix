@@ -50,19 +50,30 @@
 
 
 // ********** Metric
-(ImpactModelsPath "./R1D2_2D.pt")
-(ImpactDimension 2)
-(ImpactNumberOfChannels 1)
-(ImpactPatchSize 0 0)
-(ImpactVoxelSize 3 3 1.5 1.5)
-(ImpactLayersMask "1")
- 
-(ImpactSubsetFeatures 4)
-(ImpactLayersWeight 1)
+(ImpactModelsPath0 "./R1D2_2D.pt")
+(ImpactDimension0 2)
+(ImpactNumberOfChannels0 1)
+(ImpactPatchSize0 0 0)
+(ImpactVoxelSize0 3 3)
+(ImpactLayersMask0 "1")
+(ImpactSubsetFeatures0 4)
+(ImpactLayersWeight0 1)
+(ImpactPCA0 0)
+(ImpactDistance0 "L2")
+
+(ImpactModelsPath1 "./R1D2_2D.pt")
+(ImpactDimension1 2)
+(ImpactNumberOfChannels1 1)
+(ImpactPatchSize1 0 0)
+(ImpactVoxelSize1 1.5 1.5)
+(ImpactLayersMask1 "1")
+(ImpactSubsetFeatures1 4)
+(ImpactLayersWeight1 1)
+(ImpactPCA1 0)
+(ImpactDistance1 "L2")
+
 (ImpactMode "Static")
 (ImpactGPU -1)
-(ImpactPCA 0)
-(ImpactDistance "L2")
 (ImpactFeaturesMapUpdateInterval -1)
 (ImpactWriteFeatureMaps "false")
 
