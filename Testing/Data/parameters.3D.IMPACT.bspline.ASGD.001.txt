@@ -50,19 +50,30 @@
 
 
 // ********** Metric
-(ImpactModelsPath "./M730_1_Layers.pt")
-(ImpactDimension 3)
-(ImpactNumberOfChannels 1)
-(ImpactPatchSize 5 5 5)
-(ImpactVoxelSize 3 3 3 1 1 1)
-(ImpactLayersMask "1")
- 
-(ImpactSubsetFeatures 32)
-(ImpactLayersWeight 1)
+(ImpactModelsPath0 "./M730_1_Layers.pt")
+(ImpactDimension0 3)
+(ImpactNumberOfChannels0 1)
+(ImpactPatchSize0 5 5 5)
+(ImpactVoxelSize0 3 3 3)
+(ImpactLayersMask0 "1")
+(ImpactSubsetFeatures0 32)
+(ImpactLayersWeight0 1)
+(ImpactDistance0 "L2")
+(ImpactPCA0 0)
+
+(ImpactModelsPath1 "./M730_1_Layers.pt")
+(ImpactDimension1 3)
+(ImpactNumberOfChannels1 1)
+(ImpactPatchSize1 5 5 5)
+(ImpactVoxelSize1 1 1 1)
+(ImpactLayersMask1 "1")
+(ImpactSubsetFeatures1 32)
+(ImpactLayersWeight1 1)
+(ImpactDistance1 "L2")
+(ImpactPCA1 0)
+
 (ImpactMode "Jacobian")
 (ImpactGPU -1)
-(ImpactPCA 0)
-(ImpactDistance "L2")
 (ImpactFeaturesMapUpdateInterval -1)
 (ImpactWriteFeatureMaps "false")
 

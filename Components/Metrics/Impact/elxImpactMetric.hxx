@@ -89,73 +89,70 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
                                                     bool         useMixedPrecision)
 {
   std::vector<itk::ImpactModelConfiguration> modelsConfiguration;
+  const Configuration &                      configuration = itk::Deref(this->GetConfiguration());
 
   /** Get and set the model path. */
-  std::string modelsPathStr;
-  this->GetConfiguration()->ReadParameter(modelsPathStr, prefix + "ModelsPath", this->GetComponentLabel(), level, 0);
-  std::vector<std::string> modelsPathVec = GetVectorFromString<std::string>(modelsPathStr, "Path");
+  const std::unique_ptr<std::vector<std::string>> modelsPathStr =
+    configuration.template RetrieveValuesOfParameter<std::string>(prefix + "ModelsPath" + std::to_string(level));
+  std::vector<std::string> modelsPathVec = std::move(*modelsPathStr);
+  unsigned int             numberOfModels = modelsPathVec.size();
 
   /** Get and set the model dimension. */
-  std::string modelDimension;
-  this->GetConfiguration()->ReadParameter(modelDimension, prefix + "Dimension", this->GetComponentLabel(), level, 0);
-  std::vector<unsigned int> modelsDimensionVec =
-    GetVectorFromString<unsigned int>(modelsPathVec.size(), modelDimension, 3);
+  std::vector<unsigned int> modelsDimensionVec(numberOfModels, 3);
+  if (!configuration.ReadParameter(
+        modelsDimensionVec, prefix + "Dimension" + std::to_string(level), 0, numberOfModels - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"" + prefix + "Dimension" + std::to_string(level) + "\".");
+  }
 
   /** Get and set the number of channels in model entry. */
-  std::string numberOfChannels;
-  this->GetConfiguration()->ReadParameter(
-    numberOfChannels, prefix + "NumberOfChannels", this->GetComponentLabel(), level, 0);
-  std::vector<unsigned int> numberOfChannelsVec =
-    GetVectorFromString<unsigned int>(modelsPathVec.size(), numberOfChannels, 1);
+  std::vector<unsigned int> numberOfChannelsVec(numberOfModels, 1);
+  if (!configuration.ReadParameter(
+        numberOfChannelsVec, prefix + "NumberOfChannels" + std::to_string(level), 0, numberOfModels - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"" + prefix + "NumberOfChannels" + std::to_string(level) + "\".");
+  }
 
   /** Get and set the voxel size. */
   std::string               patchSizeStr;
   std::vector<unsigned int> dimensions;
-  if (mode == "Static")
+  unsigned int              num = 0;
+  for (unsigned int dimension : modelsDimensionVec)
   {
-    patchSizeStr =
-      formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", level, imageDimension);
-    for (int i = 0; i < modelsPathVec.size(); ++i)
+    if (mode == "Static")
+    {
+      num += dimension;
+      dimensions.push_back(dimension);
+    }
+    else
+    {
+      num += imageDimension;
       dimensions.push_back(imageDimension);
-    if (patchSizeStr.empty() && level > 0)
-    {
-      patchSizeStr =
-        formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", 0, imageDimension);
     }
   }
-  else
-  {
-    patchSizeStr = formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", level);
-    dimensions = modelsDimensionVec;
-    if (patchSizeStr.empty() && level > 0)
-    {
-      patchSizeStr = formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "PatchSize", 0);
-    }
-  }
-  std::vector<std::string> patchSizeVec = groupStrByDimensions(patchSizeStr, dimensions);
 
-  std::string              voxelSizeStr;
-  std::vector<std::string> voxelSizeVec;
-  if (mode == "Static")
+  std::vector<unsigned int> patchSizeVec(num, 5);
+  if (!configuration.ReadParameter(patchSizeVec, prefix + "PatchSize" + std::to_string(level), 0, num - 1, 1))
   {
-    voxelSizeStr =
-      formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "VoxelSize", level, imageDimension);
-    std::vector<unsigned int> imageDimensions;
-    for (int i = 0; i < modelsPathVec.size(); ++i)
-      imageDimensions.push_back(imageDimension);
-    voxelSizeVec = groupStrByDimensions(voxelSizeStr, imageDimensions);
+    itkExceptionMacro("Missing required parameter: \"" + prefix + "PatchSize" + std::to_string(level) + "\".");
   }
-  else
-  {
-    voxelSizeStr = formatParameterStringByDimensionAndLevel(this->GetConfiguration(), prefix, "VoxelSize", level);
-    voxelSizeVec = groupStrByDimensions(voxelSizeStr, modelsDimensionVec);
-  }
+  std::vector<std::vector<unsigned int>> patchSizeVecByModel =
+    GroupByDimensions<unsigned int>(patchSizeVec, dimensions);
 
+  std::vector<float> voxelSizeVec(num, 5);
+  if (!configuration.ReadParameter(voxelSizeVec, prefix + "VoxelSize" + std::to_string(level), 0, num - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"" + prefix + "VoxelSize" + std::to_string(level) + "\".");
+  }
+  std::vector<std::vector<float>> voxelSizeVecByModel = GroupByDimensions<float>(voxelSizeVec, dimensions);
 
   /** Get and set the Strides. */
-  std::string layersMaskStr;
-  this->GetConfiguration()->ReadParameter(layersMaskStr, prefix + "LayersMask", this->GetComponentLabel(), level, 0);
-  std::vector<std::string> layersMaskVec = GetVectorFromString<std::string>(modelsPathVec.size(), layersMaskStr, "1");
+  std::vector<std::string> layersMaskVec(numberOfModels, "1");
+  if (!configuration.ReadParameter(
+        layersMaskVec, prefix + "LayersMask" + std::to_string(level), 0, numberOfModels - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"" + prefix + "LayersMask" + std::to_string(level) + "\".");
+  }
 
   // Build the ModelConfiguration object for each model.
   // Each configuration includes model path, input dimension, channel count,
@@ -165,16 +162,14 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   {
     try
     {
-
-      modelsConfiguration.emplace_back(
-        modelsPathVec[i],
-        modelsDimensionVec[i],
-        numberOfChannelsVec[i],
-        GetVectorFromString<unsigned int>(modelsDimensionVec[i], patchSizeVec[i], 5),
-        GetVectorFromString<float>(mode == "Static" ? imageDimension : modelsDimensionVec[i], voxelSizeVec[i], 1.5),
-        GetBooleanVectorFromString(layersMaskVec[i], false),
-        mode == "Static",
-        useMixedPrecision);
+      modelsConfiguration.emplace_back(modelsPathVec[i],
+                                       modelsDimensionVec[i],
+                                       numberOfChannelsVec[i],
+                                       patchSizeVecByModel[i],
+                                       voxelSizeVecByModel[i],
+                                       GetBooleanVectorFromString(layersMaskVec[i], false),
+                                       mode == "Static",
+                                       useMixedPrecision);
     }
     catch (const c10::Error & e)
     {
@@ -195,24 +190,25 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 {
   this->m_CurrentIteration = 0;
 
+  const Configuration & configuration = itk::Deref(this->GetConfiguration());
+
   /** Get the current resolution level. */
   unsigned int level = (this->m_Registration->GetAsITKBaseType())->GetCurrentLevel();
   this->SetCurrentLevel(level);
 
   unsigned int randomSeed = 0;
-  this->GetConfiguration()->ReadParameter(randomSeed, "RandomSeed", 0, false);
+  configuration.ReadParameter(randomSeed, "RandomSeed", 0, false);
   this->SetSeed(randomSeed);
 
   bool useMixedPrecision = false;
-  this->GetConfiguration()->ReadParameter(
-    useMixedPrecision, "ImpactUseMixedPrecision", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(useMixedPrecision, "ImpactUseMixedPrecision", this->GetComponentLabel(), level, 0);
   this->SetUseMixedPrecision(useMixedPrecision);
 
   // Read the mode of operation for the metric: "Jacobian" or "Static".
   // - Static: features are precomputed and optionally saved.
   // - Jacobian: gradients are propagated through the models.
   std::string mode = "Jacobian";
-  this->GetConfiguration()->ReadParameter(mode, "ImpactMode", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(mode, "ImpactMode", this->GetComponentLabel(), level, 0);
   if (mode != "Jacobian" && mode != "Static")
   {
     itkExceptionMacro(
@@ -225,14 +221,11 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   // This allows shared or asymmetric feature extractors.
   // Try to read shared model path (used if FixedModelsPath / MovingModelsPath are not provided)
   std::string modelsPath;
-  bool        hasSharedModel =
-    this->GetConfiguration()->ReadParameter(modelsPath, "ImpactModelsPath", this->GetComponentLabel(), level, 0);
+  bool        hasSharedModel = configuration.HasParameter("ImpactModelsPath" + std::to_string(level));
 
   // Generate fixed model configuration (fallback to shared if FixedModelsPath is missing)
-  bool hasFixed =
-    this->GetConfiguration()->ReadParameter(modelsPath, "ImpactFixedModelsPath", this->GetComponentLabel(), level, 0);
-  bool hasMoving =
-    this->GetConfiguration()->ReadParameter(modelsPath, "ImpactMovingModelsPath", this->GetComponentLabel(), level, 0);
+  bool hasFixed = configuration.HasParameter("ImpactFixedModelsPath" + std::to_string(level));
+  bool hasMoving = configuration.HasParameter("ImpactMovingModelsPath" + std::to_string(level));
 
   if (hasFixed)
   {
@@ -246,7 +239,8 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
   else
   {
-    itkExceptionMacro("Missing parameter: FixedModelsPath or shared ModelsPath must be provided.");
+    itkExceptionMacro("Missing parameter: FixedModelsPath" + std::to_string(level) + " or shared ModelsPath" +
+                      std::to_string(level) + " must be provided.");
   }
 
   // Generate moving model configuration (fallback to shared if MovingModelsPath is missing)
@@ -263,7 +257,8 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
   else
   {
-    itkExceptionMacro("Missing parameter: MovingModelsPath or shared ModelsPath must be provided.");
+    itkExceptionMacro("Missing parameter: MovingModelsPath" + std::to_string(level) + " or shared ModelsPath" +
+                      std::to_string(level) + " must be provided.");
   }
 
   // Sanity check: models must not exceed image dimensionality
@@ -308,7 +303,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   // Choose GPU device if available and requested, fallback to CPU otherwise.
   // Raise explicit errors if user-requested GPU index is invalid.
   int device = -1;
-  this->GetConfiguration()->ReadParameter(device, "ImpactGPU", this->GetComponentLabel(), level, 0);
+  configuration.ReadParameter(device, "ImpactGPU", this->GetComponentLabel(), level, 0);
 
   // Select computation device (GPU or CPU) based on availability and config
   if (device >= 0)
@@ -342,7 +337,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   if (mode == "Static")
   {
     int featuresMapUpdateInterval = -1;
-    this->GetConfiguration()->ReadParameter(
+    configuration.ReadParameter(
       featuresMapUpdateInterval, "ImpactFeaturesMapUpdateInterval", this->GetComponentLabel(), level, 0);
     this->SetFeaturesMapUpdateInterval(featuresMapUpdateInterval);
   }
@@ -376,27 +371,37 @@ ImpactMetric<TElastix>::BeforeEachResolution()
                       "Please ensure that the configuration includes at least one layer to be compared.");
   }
   /** Get and set the SubsetFeatures. */
-  std::string subsetFeaturesStr;
-  this->GetConfiguration()->ReadParameter(
-    subsetFeaturesStr, "ImpactSubsetFeatures", this->GetComponentLabel(), level, 0);
-  this->SetSubsetFeatures(GetVectorFromString<unsigned int>(fixedNumberOfLayers, subsetFeaturesStr, 32));
+  std::vector<unsigned int> subsetFeaturesVec(fixedNumberOfLayers, 3);
+  if (!configuration.ReadParameter(
+        subsetFeaturesVec, "ImpactSubsetFeatures" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"ImpactSubsetFeatures" + std::to_string(level) + "\".");
+  }
+  this->SetSubsetFeatures(subsetFeaturesVec);
 
-  /** Get and set the SubsetFeatures. */
-  std::string pcaStr;
-  this->GetConfiguration()->ReadParameter(pcaStr, "ImpactPCA", this->GetComponentLabel(), level, 0);
-  this->SetPCA(GetVectorFromString<unsigned int>(fixedNumberOfLayers, pcaStr, 0));
+  /** Get and set the PCA. */
+  std::vector<unsigned int> pcaVec(fixedNumberOfLayers, 0);
+  if (!configuration.ReadParameter(pcaVec, "ImpactPCA" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"ImpactPCA" + std::to_string(level) + "\".");
+  }
+  this->SetPCA(pcaVec);
 
   /** Get and set the LayersWeight. */
-  std::string layersWeightStr;
-  this->GetConfiguration()->ReadParameter(layersWeightStr, "ImpactLayersWeight", this->GetComponentLabel(), level, 0);
-  this->SetLayersWeight(GetVectorFromString<float>(fixedNumberOfLayers, layersWeightStr, 1.0));
+  std::vector<float> layersWeightVec(fixedNumberOfLayers, 1);
+  if (!configuration.ReadParameter(
+        layersWeightVec, "ImpactLayersWeight" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"ImpactLayersWeight" + std::to_string(level) + "\".");
+  }
+  this->SetLayersWeight(layersWeightVec);
+
   this->SetWriteFeatureMaps(false);
 
   if (mode == "Static")
   {
     std::string writeFeatureMapsStr = "false";
-    this->GetConfiguration()->ReadParameter(
-      writeFeatureMapsStr, "ImpactWriteFeatureMaps", this->GetComponentLabel(), level, 0);
+    configuration.ReadParameter(writeFeatureMapsStr, "ImpactWriteFeatureMaps", this->GetComponentLabel(), level, 0);
     if (writeFeatureMapsStr != "false")
     {
       // If enabled, prepare output directory for feature map export (Static mode)
@@ -427,9 +432,14 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
 
   // Get and set the distances.
-  std::string distanceStr;
-  this->GetConfiguration()->ReadParameter(distanceStr, "ImpactDistance", this->GetComponentLabel(), level, 0);
-  this->SetDistance(GetVectorFromString<std::string>(fixedNumberOfLayers, distanceStr, "L2"));
+  std::vector<std::string> distanceVec(fixedNumberOfLayers, "L2");
+  if (!configuration.ReadParameter(
+        distanceVec, "ImpactDistance" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
+  {
+    itkExceptionMacro("Missing required parameter: \"ImpactDistance" + std::to_string(level) + "\".");
+  }
+  this->SetDistance(distanceVec);
+
 } // end BeforeEachResolution()
 
 
