@@ -46,5 +46,5 @@ target_link_libraries(elastix_impact_metric_example
   PRIVATE ${ITK_LIBRARIES} elastix_lib)
 
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Identity_2D.pt
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Conv2D_ChannelReplicator.pt
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

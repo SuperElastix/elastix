@@ -36,18 +36,18 @@ namespace elastix
  * such as L1, L2, NCC, Cosine, Dice, or L1Cosine.
  *
  * ### Minimal Example
- * Example configuration for a single model:
+ * Example configuration for a single model and for one resolution 0:
  * \code
- * (ImpactModelsPath "/Data/Models/TS/M291_1_Layers.pt")
- * (ImpactDimension 3)
- * (ImpactNumberOfChannels 1)
- * (ImpactPatchSize 5 5 5)
- * (ImpactVoxelSize 1.5 1.5 1.5)
- * (ImpactLayersMask "1")
- * (ImpactSubsetFeatures 32)
- * (ImpactPCA 0)
- * (ImpactDistance "L2")
- * (ImpactLayersWeight 1)
+ * (ImpactModelsPath0 "/Data/Models/TS/M291_1_Layers.pt")
+ * (ImpactDimension0 3)
+ * (ImpactNumberOfChannels0 1)
+ * (ImpactPatchSize0 5 5 5)
+ * (ImpactVoxelSize0 1.5 1.5 1.5)
+ * (ImpactLayersMask0 "1")
+ * (ImpactSubsetFeatures0 32)
+ * (ImpactPCA0 0)
+ * (ImpactDistance0 "L2")
+ * (ImpactLayersWeight0 1)
  * (ImpactMode "Jacobian")
  * (ImpactGPU 0)
  * (ImpactUseMixedPrecision "true")
@@ -56,7 +56,8 @@ namespace elastix
  * \endcode
  *
  * ### Parameter Descriptions
- * The parameters used in this class are as follows:
+ * The following parameters can be configured independently for each resolution level, using the corresponding index
+ * (e.g., ImpactPatchSize0 for level 0, ImpactPatchSize1 for level 1, etc
  *
  * \param ImpactModelsPath Path to TorchScript model used for feature extraction.
  *
@@ -108,20 +109,30 @@ namespace elastix
  *
  * ### Advanced Use: Multi-resolution and Multi-model Setup
  *
- * IMPACT supports parallel use of multiple models and per-resolution customization. The following configurations are
- * supported:
+ * IMPACT supports parallel use of multiple models and per-resolution customization. The following example illustrates
+ * the configuration for two resolution levels: level 0 and level 1
  *
  * \code
- * (ImpactModelsPath "/Data/Models/TS/M291_1_Layers.pt" "/Data/Models/SAM/Tiny_2_Layers.pt")
- * (ImpactDimension 3 2)
- * (ImpactNumberOfChannels 1 3)
- * (ImpactPatchSize 5 5 5 29 29 29)
- * (ImpactVoxelSize 3 3 3 1.5 1.5 1.5)
- * (ImpactLayersMask "1" "01")
- * (ImpactPCA 0 3)
- * (ImpactSubsetFeatures 32 3)
- * (ImpactDistance "L2" "L1")
- * (ImpactLayersWeight 1 1)
+ * (ImpactModelsPath0 "/Data/Models/TS/M291_1_Layers.pt")
+ * (ImpactModelsPath1 "/Data/Models/SAM/Tiny_2_Layers.pt")
+ * (ImpactDimension0 3)
+ * (ImpactDimension1 2)
+ * (ImpactNumberOfChannels0 1)
+ * (ImpactNumberOfChannels1 3)
+ * (ImpactPatchSize0 5 5 5)
+ * (ImpactPatchSize1 29 29 29)
+ * (ImpactVoxelSize0 3 3 3)
+ * (ImpactVoxelSize1 1.5 1.5 1.5)
+ * (ImpactLayersMask0 "1")
+ * (ImpactLayersMask1 "01")
+ * (ImpactPCA0 0)
+ * (ImpactPCA1 3)
+ * (ImpactSubsetFeatures0 32)
+ * (ImpactSubsetFeatures1 3)
+ * (ImpactDistance0 "L2")
+ * (ImpactDistance1 "L1")
+ * (ImpactLayersWeight0 1)
+ * (ImpactLayersWeight1 1)
  * (ImpactMode "Static" "Jacobian")
  * (ImpactGPU 0 0)
  * (ImpactUseMixedPrecision "true" "true")
@@ -130,28 +141,36 @@ namespace elastix
  * \endcode
  *
  * **Multi-model Setup**:
- * Use space-separated lists for different models:
+ * You can assign multiple models in parallel at a given resolution level by providing space-separated lists for each
+ * parameter. In the following example, a 3D model with 8 output layers and a 3D MIND model are both used at resolution
+ * level 0. Each entry in the lists corresponds to one of the two models
  * \code
- * (ImpactModelsPath "/Models/M850_8_Layers.pt /Models/MIND/R1D2.pt")
- * (ImpactDimension "3 3")
- * (ImpactNumberOfChannels "1 1")
- * (ImpactPatchSize "5 5 5 7 7 7")
- * (ImpactVoxelSize "1.5 1.5 1.5 6 6 6")
- * (ImpactLayersMask "00000001 1")
- * (ImpactPCA "0 0")
- * (ImpactSubsetFeatures "64 16")
- * (ImpactDistance "Dice L2")
- * (ImpactLayersWeight "1.0 0.5")
+ * (ImpactModelsPath0 "/Models/M850_8_Layers.pt" "/Models/MIND/R1D2.pt")
+ * (ImpactDimension0 3 3)
+ * (ImpactNumberOfChannels0 1 1)
+ * (ImpactPatchSize0 5 5 5 7 7 7)
+ * (ImpactVoxelSize0 1.5 1.5 1.5 6 6 6)
+ * (ImpactLayersMask0 "00000001" "1")
+ * (ImpactPCA0 0 0)
+ * (ImpactSubsetFeatures0 64 16)
+ * (ImpactDistance0 "Dice" "L2")
+ * (ImpactLayersWeight0 1.0 0.5)
  * \endcode
  *
  * **Fixed and Moving-Specific Models**:
  * Assign different models to the fixed and moving images:
  * \code
- * (FixedModelsPath "/Models/TS/M850_8_Layers.pt")
- * (MovingModelsPath "/Models/MIND/R1D2.pt")
+ * (FixedModelsPath0 "/Models/TS/M850_8_Layers.pt")
+ * (MovingModelsPath0 "/Models/MIND/R1D2.pt")
  * \endcode
  *
  * This allows asymmetric model configurations for different image modalities or anatomical content.
+ *
+ * \author V. Boussot,  Univ. Rennes, INSERM, LTSI- UMR 1099, F-35000 Rennes, France
+ * \note This work was funded by the French National Research Agency as part of the VATSop project (ANR-20-CE19-0015).
+ * \note If you use the Impact anywhere we would appreciate if you cite the following article:\n
+ * V. Boussot et al., IMPACT: A Generic Semantic Loss for Multimodal Medical Image Registration, arXiv preprint
+ * arXiv:2503.24121 (2025). https://doi.org/10.48550/arXiv.2503.24121
  *
  * \ingroup Metrics
  */
@@ -279,144 +298,6 @@ private:
 };
 
 /**
- * \brief Convert a string token to a typed value with bounds checking.
- *
- * This function parses a string and converts it to the specified type `T`.
- * For booleans, only "1" and "0" are accepted. For numeric types, the value
- * is checked against type limits, and exceptions are thrown if the value
- * is out of range or the conversion fails.
- *
- * \tparam T The type to convert to.
- * \param token A string representing a value of type T.
- * \return The parsed value.
- *
- * \exception itk::ExceptionObject if parsing fails or value is out of bounds.
- */
-template <typename T>
-T
-GetValueFromString(std::string token)
-{
-  T value;
-  if constexpr (std::is_same_v<T, std::string>)
-  {
-    value = token;
-  }
-  else if constexpr (std::is_same_v<T, bool>)
-  {
-    if (token == "1")
-    {
-      value = true;
-    }
-    else if (token == "0")
-    {
-      value = false;
-    }
-    else
-    {
-      itkGenericExceptionMacro("Invalid boolean string: '" << token << "'. Expected '1'/'0'.");
-    }
-  }
-  else
-  {
-    std::stringstream tokenStream(token);
-    long double       parsedValue;
-    if (tokenStream >> parsedValue && tokenStream.eof())
-    {
-      if constexpr (std::is_integral_v<T>)
-      {
-        if (parsedValue < static_cast<long double>(std::numeric_limits<T>::min()))
-        {
-          itkGenericExceptionMacro("Value '" << parsedValue << "' is below min value of type " << typeid(T).name());
-        }
-        if (parsedValue > static_cast<long double>(std::numeric_limits<T>::max()))
-        {
-          itkGenericExceptionMacro("Value '" << parsedValue << "' exceeds max value of type " << typeid(T).name());
-        }
-      }
-      else if constexpr (std::is_floating_point_v<T>)
-      {
-        if (parsedValue < -std::numeric_limits<T>::max())
-        {
-          itkGenericExceptionMacro("Value '" << parsedValue << "' is below -max of float type " << typeid(T).name());
-        }
-        if (parsedValue > std::numeric_limits<T>::max())
-        {
-          itkGenericExceptionMacro("Value '" << parsedValue << "' exceeds max float value of type "
-                                             << typeid(T).name());
-        }
-      }
-      value = static_cast<T>(parsedValue);
-    }
-    else
-    {
-      itkGenericExceptionMacro("Could not parse token '" << token << "' as type " << typeid(T).name());
-    }
-  }
-  return value;
-} // end GetValueFromString
-
-/**
- * \brief Convert a space-delimited string into a vector of typed values.
- *
- * Each token is parsed using GetValueFromString<T>(). If the string is empty,
- * the default value is returned in a single-element vector.
- *
- * \tparam T The type to parse.
- * \param valueStr The input string.
- * \param defaultValue The fallback value if input is empty.
- * \return A vector of parsed values.
- */
-template <typename T>
-std::vector<T>
-GetVectorFromString(std::string valueStr, T defaultValue)
-{
-  std::stringstream ss(valueStr);
-  std::vector<T>    values;
-  std::string       token;
-
-  while (ss >> token)
-  {
-    values.push_back(GetValueFromString<T>(token));
-  }
-
-  if (values.empty())
-  {
-    values.push_back(defaultValue);
-  }
-  return values;
-} // end GetVectorFromString
-
-/**
- * \brief Parse a space-delimited string into a vector of a fixed size.
- *
- * Each token is parsed using GetValueFromString<T>().
- * If not enough values are provided, the first value is duplicated.
- * If too many values are provided, the result is truncated.
- *
- * \tparam T The type to parse.
- * \param size Target size of the output vector.
- * \param valueStr The input string.
- * \param defaultValue Fallback if parsing fails.
- * \return A fixed-size vector of parsed values.
- */
-template <typename T>
-std::vector<T>
-GetVectorFromString(int size, std::string valueStr, T defaultValue)
-{
-  std::vector<T> values = GetVectorFromString<T>(valueStr, defaultValue);
-  if (values.size() > size)
-  {
-    values.resize(size);
-  }
-  while (values.size() < size)
-  {
-    values.push_back(values[0]);
-  }
-  return values;
-} // end GetVectorFromString
-
-
-/**
  * \brief Parse a string into typed values using a custom delimiter.
  *
  * If `delimiter == '\0'`, characters are split one by one.
@@ -432,14 +313,16 @@ GetVectorFromString(int size, std::string valueStr, T defaultValue)
 inline std::vector<bool>
 GetBooleanVectorFromString(std::string valueStr, bool defaultValue)
 {
-  std::vector<bool> values;
+  std::vector<bool> values(defaultValue, valueStr.size());
   for (char c : valueStr)
   {
     std::stringstream tokenStream(std::string(1, c));
     std::string       subToken;
     if (tokenStream >> subToken)
     {
-      values.push_back(GetValueFromString<bool>(subToken));
+      /** Cast the string to type bool. */
+      bool value = subToken == "1";
+      values.push_back(value);
     }
   }
   if (values.empty())
@@ -459,163 +342,33 @@ GetBooleanVectorFromString(std::string valueStr, bool defaultValue)
  * \param dimensions The sizes of each group.
  * \return A vector of grouped space-separated strings.
  */
-inline std::vector<std::string>
-groupStrByDimensions(std::string valueStr, std::vector<unsigned int> dimensions)
+template <typename T>
+std::vector<std::vector<T>>
+GroupByDimensions(const std::vector<T> & values, const std::vector<unsigned int> & dimensions)
 {
-  std::stringstream        ss(valueStr);
-  std::vector<std::string> flatValues;
-  std::string              value;
+  std::vector<std::vector<T>> grouped;
+  size_t                      currentIndex = 0;
+  size_t                      n = values.size();
 
-  while (ss >> value)
+  for (unsigned int dim : dimensions)
   {
-    flatValues.push_back(value);
-  }
-
-  std::vector<std::string> groups;
-  size_t                   index = 0;
-
-  for (unsigned int & dim : dimensions)
-  {
-    std::ostringstream groupStream;
-    for (unsigned int i = 0; i < dim && index < flatValues.size(); ++i, ++index)
+    std::vector<T> group;
+    for (unsigned int i = 0; i < dim; ++i)
     {
-      if (i > 0)
-        groupStream << " ";
-      groupStream << flatValues[index];
+      if (currentIndex < n)
+      {
+        group.push_back(values[currentIndex++]);
+      }
+      else if (!values.empty())
+      {
+        group.push_back(values.back()); // répète la dernière valeur si débordement
+      }
     }
-    groups.push_back(groupStream.str());
+    grouped.push_back(std::move(group));
   }
 
-  return groups;
+  return grouped;
 }
-
-/**
- * \brief Format parameter values by level and model dimension (Jacobian mode).
- *
- * This version infers model dimension per level from the parameter `<prefix>Dimension`.
- * The output collects parameters for the requested level. If a value at that level
- * contains multiple space-separated entries, it is returned directly.
- *
- * \param config Pointer to configuration object.
- * \param prefix Parameter prefix (e.g., "Impact").
- * \param parameterName Name of the parameter suffix (e.g., "PatchSize").
- * \param level Level index to extract values from.
- * \return Formatted string containing values.
- */
-inline std::string
-formatParameterStringByDimensionAndLevel(const Configuration * config,
-                                         const std::string &   prefix,
-                                         const std::string &   parameterName,
-                                         int                   level)
-{
-  std::ostringstream paramStream;
-  std::ostringstream paramDefault;
-  int                paramIndex = 0;
-  bool               stop = false;
-
-  for (int l = 0; l <= level && !stop; ++l)
-  {
-    std::string modelDimension;
-    config->ReadParameter(modelDimension, prefix + "Dimension", l, 0);
-    std::vector<unsigned int> modelsDimensionVec = GetVectorFromString<unsigned int>(1, modelDimension, 3);
-
-    for (unsigned int d = 0; d < modelsDimensionVec[0] && !stop; ++d)
-    {
-      std::string paramStrTmp;
-      bool        hasParam = config->ReadParameter(paramStrTmp, prefix + parameterName, paramIndex, 0);
-
-      if (!hasParam)
-      {
-        stop = true;
-        break;
-      }
-      if (l == level)
-      {
-        if (paramStrTmp.find(" ") == std::string::npos)
-        {
-          paramStream << (paramStream.str().empty() ? paramStrTmp : " " + paramStrTmp);
-        }
-        else
-        {
-          if (paramStream.str().empty())
-          {
-            paramStream << paramStrTmp;
-          }
-          stop = true;
-        }
-      }
-      ++paramIndex;
-      if (paramStrTmp.find(" ") != std::string::npos)
-      {
-        break;
-      }
-    }
-  }
-
-  return paramStream.str();
-} // end formatParameterStringByDimensionAndLevel
-
-/**
- * \brief Format parameter values by level with a fixed image dimension (static mode).
- *
- * Similar to the above function but uses a constant dimension instead of a per-level model dimension.
- *
- * \param config Pointer to configuration object.
- * \param prefix Parameter prefix (e.g., "Impact").
- * \param parameterName Name of the parameter (e.g., "PatchSize").
- * \param level Level index to extract values from.
- * \param dimension Fixed dimension used to select parameters.
- * \return Formatted string containing values.
- */
-inline std::string
-formatParameterStringByDimensionAndLevel(const Configuration * config,
-                                         const std::string &   prefix,
-                                         const std::string &   parameterName,
-                                         int                   level,
-                                         unsigned int          dimension)
-{
-  std::ostringstream paramStream;
-  int                paramIndex = 0;
-  bool               stop = false;
-
-  for (int l = 0; l <= level && !stop; ++l)
-  {
-    for (unsigned int d = 0; d < dimension && !stop; ++d)
-    {
-      std::string paramStrTmp;
-      bool        hasParam = config->ReadParameter(paramStrTmp, prefix + parameterName, paramIndex, 0);
-
-      if (!hasParam)
-      {
-        stop = true;
-        break;
-      }
-
-      if (l == level)
-      {
-        if (paramStrTmp.find(" ") == std::string::npos)
-        {
-          paramStream << (paramStream.str().empty() ? paramStrTmp : " " + paramStrTmp);
-        }
-        else
-        {
-          if (paramStream.str().empty())
-          {
-            paramStream << paramStrTmp;
-          }
-          stop = true;
-        }
-      }
-      ++paramIndex;
-      if (paramStrTmp.find(" ") != std::string::npos)
-      {
-        break;
-      }
-    }
-  }
-
-  return paramStream.str();
-} // end formatParameterStringByDimensionAndLevel
 
 } // end namespace elastix
 
