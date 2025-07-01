@@ -520,12 +520,12 @@ protected:
    * This ensures that the feature maps are kept up-to-date for the registration process.
    */
   void
-  UpdateFeaturesMaps();
+  UpdateFixedFeaturesMaps();
 
   /**
    * \brief Updates the moving feature maps in static mode.
    *
-   * This method performs the same operation as `UpdateFeaturesMaps()`, but it applies to the moving image.
+   * This method performs the same operation as `UpdateFixedFeaturesMaps()`, but it applies to the moving image.
    * It re-extracts deep features from the moving image using the TorchScript models, ensuring that the
    * feature maps are updated when transitioning to a new pyramid level or after a feature update interval.
    */
