@@ -45,13 +45,13 @@ GTEST_TEST(GroupByDimensions, Basic)
   std::vector<std::vector<float>> resultVec2 = GroupByDimensions<float>(values2, dimensions);
 
   EXPECT_EQ(resultVec2.size(), 2);
-  ExpectVectorEqual(resultVec2[0], { 5, 5, 5 });
-  ExpectVectorEqual(resultVec2[1], { 8, 6, 8 });
+  ExpectVectorEqual(resultVec2[0], { 5.0, 5.0, 5.0 });
+  ExpectVectorEqual(resultVec2[1], { 8.0, 6.0, 6.0 });
 
-  std::vector<float>              values3 = { 5, 5, 5, 8, 6, 7, 8 };
+  std::vector<float>              values3 = { 5.0, 5.0, 5.0, 8.0, 6.0, 7.0, 8.0 };
   std::vector<std::vector<float>> resultVec3 = GroupByDimensions<float>(values3, dimensions);
 
   EXPECT_EQ(resultVec3.size(), 2);
-  ExpectVectorEqual(resultVec3[0], { 5, 5, 5 });
-  ExpectVectorEqual(resultVec3[1], { 8, 6, 7 });
+  ExpectVectorEqual(resultVec3[0], { 5.0, 5.0, 5.0 });
+  ExpectVectorEqual(resultVec3[1], { 8.0, 6.0, 7.0 });
 }
