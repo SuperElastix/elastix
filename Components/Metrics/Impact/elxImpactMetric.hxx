@@ -99,7 +99,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
 
   /** Get and set the model dimension. */
   std::vector<unsigned int> modelsDimensionVec(numberOfModels, 3);
-  if (!configuration.ReadParameter(
+  if (!configuration.ReadParameter<unsigned int>(
         modelsDimensionVec, prefix + "Dimension" + std::to_string(level), 0, numberOfModels - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "Dimension" + std::to_string(level) + "\".");
@@ -107,7 +107,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
 
   /** Get and set the number of channels in model entry. */
   std::vector<unsigned int> numberOfChannelsVec(numberOfModels, 1);
-  if (!configuration.ReadParameter(
+  if (!configuration.ReadParameter<unsigned int>(
         numberOfChannelsVec, prefix + "NumberOfChannels" + std::to_string(level), 0, numberOfModels - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "NumberOfChannels" + std::to_string(level) + "\".");
@@ -132,7 +132,8 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   }
 
   std::vector<unsigned int> patchSizeVec(num, 5);
-  if (!configuration.ReadParameter(patchSizeVec, prefix + "PatchSize" + std::to_string(level), 0, num - 1, 1))
+  if (!configuration.ReadParameter<unsigned int>(
+        patchSizeVec, prefix + "PatchSize" + std::to_string(level), 0, num - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "PatchSize" + std::to_string(level) + "\".");
   }
@@ -140,7 +141,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
     GroupByDimensions<unsigned int>(patchSizeVec, dimensions);
 
   std::vector<float> voxelSizeVec(num, 5);
-  if (!configuration.ReadParameter(voxelSizeVec, prefix + "VoxelSize" + std::to_string(level), 0, num - 1, 1))
+  if (!configuration.ReadParameter<float>(voxelSizeVec, prefix + "VoxelSize" + std::to_string(level), 0, num - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "VoxelSize" + std::to_string(level) + "\".");
   }
@@ -148,7 +149,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
 
   /** Get and set the Strides. */
   std::vector<std::string> layersMaskVec(numberOfModels, "1");
-  if (!configuration.ReadParameter(
+  if (!configuration.ReadParameter<std::string>(
         layersMaskVec, prefix + "LayersMask" + std::to_string(level), 0, numberOfModels - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "LayersMask" + std::to_string(level) + "\".");
@@ -372,7 +373,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
   /** Get and set the SubsetFeatures. */
   std::vector<unsigned int> subsetFeaturesVec(fixedNumberOfLayers, 3);
-  if (!configuration.ReadParameter(
+  if (!configuration.ReadParameter<unsigned int>(
         subsetFeaturesVec, "ImpactSubsetFeatures" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"ImpactSubsetFeatures" + std::to_string(level) + "\".");
@@ -381,7 +382,8 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   /** Get and set the PCA. */
   std::vector<unsigned int> pcaVec(fixedNumberOfLayers, 0);
-  if (!configuration.ReadParameter(pcaVec, "ImpactPCA" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
+  if (!configuration.ReadParameter<unsigned int>(
+        pcaVec, "ImpactPCA" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"ImpactPCA" + std::to_string(level) + "\".");
   }
@@ -389,7 +391,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   /** Get and set the LayersWeight. */
   std::vector<float> layersWeightVec(fixedNumberOfLayers, 1);
-  if (!configuration.ReadParameter(
+  if (!configuration.ReadParameter<float>(
         layersWeightVec, "ImpactLayersWeight" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"ImpactLayersWeight" + std::to_string(level) + "\".");
@@ -433,7 +435,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   // Get and set the distances.
   std::vector<std::string> distanceVec(fixedNumberOfLayers, "L2");
-  if (!configuration.ReadParameter(
+  if (!configuration.ReadParameter<std::string>(
         distanceVec, "ImpactDistance" + std::to_string(level), 0, fixedNumberOfLayers - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"ImpactDistance" + std::to_string(level) + "\".");
