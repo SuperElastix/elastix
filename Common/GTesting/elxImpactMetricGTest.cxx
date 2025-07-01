@@ -6,10 +6,7 @@
 #include <sstream>
 #include "itkParameterMapInterface.h"
 
-using elx::formatParameterStringByDimensionAndLevel;
-using elx::GetBooleanVectorFromString;
-using elx::GetVectorFromString;
-using elx::groupStrByDimensions;
+using elx::GroupByDimensions;
 
 namespace
 {
@@ -34,157 +31,27 @@ ExpectVectorEqual(const std::vector<T> & actual, const std::vector<T> & expected
 }
 } // namespace
 
-
-GTEST_TEST(GetVectorFromString, LimitsAndParsing)
+GTEST_TEST(GroupByDimensions, Basic)
 {
-  // ---------- std::string ----------
-  ExpectVectorEqual(GetVectorFromString<std::string>("a 2   -1c", "default"), { "a", "2", "-1c" });
-  ExpectVectorEqual(GetVectorFromString<std::string>("", "default"), { "default" });
-  ExpectVectorEqual(GetVectorFromString<std::string>(5, "a b", "default"), { "a", "b", "a", "a", "a" });
-  ExpectVectorEqual(GetVectorFromString<std::string>(3, "", "default"), { "default", "default", "default" });
+  std::vector<unsigned int>              dimensions = { 3, 3 };
+  std::vector<unsigned int>              values1 = { 5, 5, 5, 8, 6, 7 };
+  std::vector<std::vector<unsigned int>> resultVec1 = GroupByDimensions<unsigned int>(values1, dimensions);
 
-  // ---------- unsigned int ----------
-  ExpectVectorEqual(GetVectorFromString<unsigned int>("6 18", 42), { 6, 18 });
-  ExpectVectorEqual(GetVectorFromString<unsigned int>("", 42), { 42 });
-  ExpectVectorEqual(GetVectorFromString<unsigned int>(4, "1", 99), { 1, 1, 1, 1 });
-  ExpectVectorEqual(GetVectorFromString<unsigned int>(3, "9 8 7 6", 0), { 9, 8, 7 });
-  EXPECT_THROW(GetVectorFromString<unsigned int>("-1", 0), itk::ExceptionObject);                  // negative value
-  EXPECT_THROW(GetVectorFromString<unsigned int>("9999999999999999999", 0), itk::ExceptionObject); // overflow
-  EXPECT_THROW(GetVectorFromString<unsigned int>("1a", 0), itk::ExceptionObject);                  // parse fail
+  EXPECT_EQ(resultVec1.size(), 2);
+  ExpectVectorEqual(resultVec1[0], { 5, 5, 5 });
+  ExpectVectorEqual(resultVec1[1], { 8, 6, 7 });
 
-  // ---------- float ----------
-  ExpectVectorEqual(GetVectorFromString<float>("1.5 -2.5", 0.0f), { 1.5f, -2.5f });
-  ExpectVectorEqual(GetVectorFromString<float>("", 42.0f), { 42.0f });
-  ExpectVectorEqual(GetVectorFromString<float>(4, "3.14", 0.0f), { 3.14f, 3.14f, 3.14f, 3.14f });
-  EXPECT_THROW(GetVectorFromString<float>("1e1000", 0.0f), itk::ExceptionObject);  // overflow
-  EXPECT_THROW(GetVectorFromString<float>("-1e1000", 0.0f), itk::ExceptionObject); // underflow
-  EXPECT_THROW(GetVectorFromString<float>("nan abc", 0.0f), itk::ExceptionObject); // parse fail
-  EXPECT_THROW(GetVectorFromString<float>("hello", 0.0f), itk::ExceptionObject);   // not numeric
+  std::vector<float>              values2 = { 5, 5, 5, 8, 6 };
+  std::vector<std::vector<float>> resultVec2 = GroupByDimensions<float>(values2, dimensions);
 
-  // ---------- bool ----------
-  ExpectVectorEqual(GetVectorFromString<bool>("1 0", false), { true, false });
-  ExpectVectorEqual(GetBooleanVectorFromString("10", false), { true, false });
-  EXPECT_THROW(GetVectorFromString<bool>("maybe", false), itk::ExceptionObject); // parse fail
-  EXPECT_THROW(GetVectorFromString<bool>("10", false), itk::ExceptionObject);    // not space-separated
-}
+  EXPECT_EQ(resultVec2.size(), 2);
+  ExpectVectorEqual(resultVec2[0], { 5, 5, 5 });
+  ExpectVectorEqual(resultVec2[1], { 8, 6, 8 });
 
-GTEST_TEST(groupStrByDimensions, Basic)
-{
-  std::vector<std::string> resultVec = groupStrByDimensions("5 5 5 8 6", { 3, 3 });
+  std::vector<float>              values3 = { 5, 5, 5, 8, 6, 7, 8 };
+  std::vector<std::vector<float>> resultVec3 = GroupByDimensions<float>(values3, dimensions);
 
-  EXPECT_EQ(resultVec.size(), 2);
-  EXPECT_EQ(resultVec[0], "5 5 5");
-  EXPECT_EQ(resultVec[1], "8 6");
-
-  resultVec = groupStrByDimensions("5 5", { 3, 3 });
-
-  EXPECT_EQ(resultVec.size(), 2);
-  EXPECT_EQ(resultVec[0], "5 5");
-  EXPECT_EQ(resultVec[1], "");
-
-  resultVec = groupStrByDimensions("5 5 6 8 9 10 11 12", { 3, 3 });
-
-  EXPECT_EQ(resultVec.size(), 2);
-  EXPECT_EQ(resultVec[0], "5 5 6");
-  EXPECT_EQ(resultVec[1], "8 9 10");
-}
-
-GTEST_TEST(FormatParameterStringByDimensionAndLevel, Basic)
-{
-  // Create and initialize the elastix configuration
-  auto                                               config = elastix::Configuration::New();
-  elastix::Configuration::CommandLineArgumentMapType argMap;
-  itk::ParameterFileParser::ParameterMapType         parameterMap;
-
-  // --- First case: PatchSize as unsigned int ---
-
-  // Set PatchSize for 3 resolution levels
-  parameterMap["ImpactPatchSize"] = { "5", "5", "5", "11 11 11 29 29", "13", "13" };
-  config->Initialize(argMap, parameterMap);
-
-  // Level 0: read 3 individual values → expect "5 5 5"
-  std::string resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
-  EXPECT_EQ(resultStr, "5 5 5");
-
-  // Level 1: one line with 5 values → "11 11 11 29 29"
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1, 3);
-  EXPECT_EQ(resultStr, "11 11 11 29 29");
-
-  // Level 2: only "13" twice → expect fallback to fill 3 values
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 2, 3);
-  EXPECT_EQ(resultStr, "13 13");
-
-  // --- Second case: VoxelSize as float ---
-
-  parameterMap["ImpactVoxelSize"] = { "6.0", "6.0", "3.0 3.0 1.5 1.5 1.5", "1.0", "1.0" };
-  config->Initialize(argMap, parameterMap);
-
-  // Level 0: two values → repeat to fill 3
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 0, 3);
-  EXPECT_EQ(resultStr, "6.0 6.0");
-
-  // Level 1: only "1.0 1.0"
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 1, 3);
-  EXPECT_EQ(resultStr, "1.0 1.0");
-
-  // --- Third case: all entries are "6.0", just checking fallback filling ---
-
-  parameterMap["ImpactVoxelSize"] = { "6.0", "6.0", "6.0", "6.0", "3.0 3.0 1.5 1.5 1.5", "1.0", "1.0" };
-  config->Initialize(argMap, parameterMap);
-
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 0, 3);
-  EXPECT_EQ(resultStr, "6.0 6.0 6.0");
-
-  // Check fallback with single value
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 1, 3);
-  EXPECT_EQ(resultStr, "6.0");
-
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "VoxelSize", 2, 3);
-  EXPECT_EQ(resultStr, "1.0 1.0");
-
-  // --- Fourth case: test imageDimension auto-detection via ImpactDimension ---
-
-  parameterMap["ImpactDimension"] = { "2", "3", "2 3" };
-  parameterMap["ImpactPatchSize"] = { "5", "5", "13", "13", "13", "11 11 11 29 29" };
-  config->Initialize(argMap, parameterMap);
-
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0);
-  EXPECT_EQ(resultStr, "5 5");
-
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 1);
-  EXPECT_EQ(resultStr, "13 13 13");
-
-  resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 2);
-  EXPECT_EQ(resultStr, "11 11 11 29 29");
-}
-
-GTEST_TEST(FormatParameterStringByDimensionAndLevel, EarlyStopDueToMissingParam)
-{
-  auto config = elastix::Configuration::New();
-
-  elastix::Configuration::CommandLineArgumentMapType argMap;
-  itk::ParameterFileParser::ParameterMapType         parameterMap;
-
-  // Only 2 values provided instead of 3
-  parameterMap["ImpactPatchSize"] = { "5", "5" };
-  config->Initialize(argMap, parameterMap);
-
-  std::string resultStr = formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 0, 3);
-
-  // Should stop early and return "5 5" (not enough to fill 3)
-  EXPECT_EQ(resultStr, "5 5");
-}
-
-GTEST_TEST(FormatParameterStringByDimensionAndLevel, LevelBeyondAvailable)
-{
-  auto                                               config = elastix::Configuration::New();
-  elastix::Configuration::CommandLineArgumentMapType argMap;
-  itk::ParameterFileParser::ParameterMapType         parameterMap;
-
-  parameterMap["ImpactPatchSize"] = { "5", "5" }; // Only 2 values
-  config->Initialize(argMap, parameterMap);
-
-  std::string resultStr =
-    formatParameterStringByDimensionAndLevel(config.GetPointer(), "Impact", "PatchSize", 5, 3); // ask level 5
-  EXPECT_EQ(resultStr, "");
+  EXPECT_EQ(resultVec3.size(), 2);
+  ExpectVectorEqual(resultVec3[0], { 5, 5, 5 });
+  ExpectVectorEqual(resultVec3[1], { 8, 6, 7 });
 }
