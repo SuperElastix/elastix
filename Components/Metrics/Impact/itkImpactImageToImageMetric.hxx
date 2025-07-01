@@ -43,32 +43,14 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ImpactImageToImageMetric()
 } // end Constructor
 
 /**
- * ********************* UpdateFeaturesMaps ****************************
+ * ********************* UpdateFixedFeaturesMaps ****************************
  */
 template <typename TFixedImage, typename TMovingImage>
 void
-ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
+ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFixedFeaturesMaps()
 {
   this->m_fixedFeaturesMaps.clear();
-  this->m_movingFeaturesMaps.clear();
   this->m_principal_components.clear();
-
-  auto movingWriter = std::function<void(typename TMovingImage::ConstPointer, torch::Tensor &, const std::string &)>(
-    [this](typename TMovingImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
-      unsigned int level = this->GetCurrentLevel();
-      using WriterType = itk::ImageFileWriter<FeaturesImageType>;
-      typename WriterType::Pointer writer = WriterType::New();
-      writer->SetFileName(this->GetFeatureMapsPath() + "/Moving_" + std::to_string(level) + "_" + filename + ".mha");
-      writer->SetInput(ImpactTensorUtils::TensorToImage<TMovingImage, FeaturesImageType>(image, data.unsqueeze(0)));
-      try
-      {
-        writer->Update();
-      }
-      catch (itk::ExceptionObject & error)
-      {
-        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << " ITK Exception: " << error);
-      }
-    });
 
   auto fixedWriter = std::function<void(typename TFixedImage::ConstPointer, torch::Tensor &, const std::string &)>(
     [this](typename TFixedImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
@@ -87,16 +69,6 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       }
     });
 
-  this->m_movingFeaturesMaps =
-    ImpactTensorUtils::GetFeaturesMaps<TMovingImage, FeaturesMaps, InterpolatorType, FeaturesImageType>(
-      Superclass::m_MovingImage,
-      Superclass::m_Interpolator,
-      this->GetMovingModelsConfiguration(),
-      this->GetDevice(),
-      this->GetPCA(),
-      this->m_principal_components,
-      this->GetWriteFeatureMaps() ? movingWriter : nullptr);
-
   this->m_fixedFeaturesMaps =
     ImpactTensorUtils::GetFeaturesMaps<TFixedImage, FeaturesMaps, InterpolatorType, FeaturesImageType>(
       Superclass::m_FixedImage,
@@ -111,22 +83,6 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
   {
     unsigned int level = this->GetCurrentLevel();
     using WriterType = itk::ImageFileWriter<FeaturesImageType>;
-    for (int i = 0; i < m_movingFeaturesMaps.size(); ++i)
-    {
-      typename WriterType::Pointer writer = WriterType::New();
-
-      writer->SetFileName(this->GetFeatureMapsPath() + "/Moving_" + std::to_string(level) + "_" + std::to_string(i) +
-                          ".mha");
-      writer->SetInput(this->m_movingFeaturesMaps[i].m_featuresMaps);
-      try
-      {
-        writer->Update();
-      }
-      catch (itk::ExceptionObject & error)
-      {
-        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << " ITK Exception: " << error);
-      }
-    }
     for (int i = 0; i < m_fixedFeaturesMaps.size(); ++i)
     {
       typename WriterType::Pointer writer = WriterType::New();
@@ -144,7 +100,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       }
     }
   }
-} // end UpdateFeaturesMaps
+} // end UpdateFixedFeaturesMaps
 
 /**
  * ********************* UpdateMovingFeaturesMaps ****************************
@@ -153,6 +109,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
 {
+  this->m_movingFeaturesMaps.clear();
   auto movingWriter = std::function<void(typename TMovingImage::ConstPointer, torch::Tensor &, const std::string &)>(
     [this](typename TMovingImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
       unsigned int level = this->GetCurrentLevel();
@@ -170,7 +127,6 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
       }
     });
 
-  this->m_movingFeaturesMaps.clear();
   this->m_movingFeaturesMaps =
     ImpactTensorUtils::GetFeaturesMaps<TMovingImage, FeaturesMaps, InterpolatorType, FeaturesImageType>(
       Superclass::m_MovingImage,
@@ -221,7 +177,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
   if (this->GetMode() == "Static")
   {
-    this->UpdateFeaturesMaps();
+    this->UpdateFixedFeaturesMaps();
+    this->UpdateMovingFeaturesMaps();
 
     if (this->m_fixedFeaturesMaps.size() != this->m_movingFeaturesMaps.size())
     {
