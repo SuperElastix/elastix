@@ -43,11 +43,11 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ImpactImageToImageMetric()
 } // end Constructor
 
 /**
- * ********************* UpdateFeaturesMaps ****************************
+ * ********************* UpdateFixedFeaturesMaps ****************************
  */
 template <typename TFixedImage, typename TMovingImage>
 void
-ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
+ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFixedFeaturesMaps()
 {
   this->m_fixedFeaturesMaps.clear();
   this->m_principal_components.clear();
@@ -100,8 +100,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFeaturesMaps()
       }
     }
   }
-  this->UpdateMovingFeaturesMaps();
-} // end UpdateFeaturesMaps
+} // end UpdateFixedFeaturesMaps
 
 /**
  * ********************* UpdateMovingFeaturesMaps ****************************
@@ -110,6 +109,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
 {
+  this->m_movingFeaturesMaps.clear();
   auto movingWriter = std::function<void(typename TMovingImage::ConstPointer, torch::Tensor &, const std::string &)>(
     [this](typename TMovingImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
       unsigned int level = this->GetCurrentLevel();
@@ -127,7 +127,6 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
       }
     });
 
-  this->m_movingFeaturesMaps.clear();
   this->m_movingFeaturesMaps =
     ImpactTensorUtils::GetFeaturesMaps<TMovingImage, FeaturesMaps, InterpolatorType, FeaturesImageType>(
       Superclass::m_MovingImage,
@@ -178,7 +177,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
   if (this->GetMode() == "Static")
   {
-    this->UpdateFeaturesMaps();
+    this->UpdateFixedFeaturesMaps();
+    this->UpdateMovingFeaturesMaps();
 
     if (this->m_fixedFeaturesMaps.size() != this->m_movingFeaturesMaps.size())
     {
