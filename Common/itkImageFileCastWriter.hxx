@@ -27,7 +27,6 @@
 #include <vnl/vnl_vector.h>
 #include "itkVectorImage.h"
 #include "itkDefaultConvertPixelTraits.h"
-#include "itkMetaImageIO.h"
 #include <iomanip>
 
 namespace itk
@@ -38,16 +37,9 @@ template <typename TInputImage>
 std::string
 ImageFileCastWriter<TInputImage>::GetDefaultOutputComponentType()
 {
-  /** Make a dummy imageIO object, which has some handy functions */
-  const auto dummyImageIO = MetaImageIO::New();
+  using PixelType = typename TInputImage::InternalPixelType;
 
-  /** Set the pixeltype. */
-  using ScalarType = typename TInputImage::InternalPixelType;
-
-  dummyImageIO->SetPixelTypeInfo(static_cast<const ScalarType *>(nullptr));
-
-  /** Get its description. */
-  return ImageIOBase::GetComponentTypeAsString(dummyImageIO->GetComponentType());
+  return ImageIOBase::GetComponentTypeAsString(ImageIOBase::MapPixelType<PixelType>::CType);
 }
 
 
