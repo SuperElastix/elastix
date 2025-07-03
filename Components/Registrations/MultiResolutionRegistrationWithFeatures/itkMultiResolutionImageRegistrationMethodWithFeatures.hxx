@@ -52,7 +52,7 @@ MultiResolutionImageRegistrationMethodWithFeatures<TFixedImage, TMovingImage>::C
     itkExceptionMacro("Moving image pyramid is not present");
   }
 
-  /** Check if the number if fixed/moving pyramids == nr of fixed/moving images,
+  /** Check if the number of fixed/moving pyramids == nr of fixed/moving images,
    * and whether the number of fixed image regions == the number of fixed images.
    */
   if (this->GetNumberOfFixedImagePyramids() != this->GetNumberOfFixedImages())
