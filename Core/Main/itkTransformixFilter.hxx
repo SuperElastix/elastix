@@ -42,7 +42,6 @@
 #include "elxDefaultConstruct.h"
 
 #include <itkCompositeTransform.h>
-#include <itkNumberToString.h>
 
 #include <cassert>
 #include <memory> // For unique_ptr.
