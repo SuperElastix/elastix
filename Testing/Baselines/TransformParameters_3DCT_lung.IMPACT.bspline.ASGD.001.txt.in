@@ -9,7 +9,7 @@
 (GridSpacing 10.65715275538774 10.823667324398393 10.416178792125002)
 (HowToCombineTransforms "Compose")
 (Index 0 0 0)
-(InitialTransformParameterFileName "/home/vorps/Documents/lib/ImpactElastix/Testing/Data/transformparameters.3DCT_lung.affine.txt")
+(InitialTransformParameterFileName "@ELASTIX_DATA_DIR@/transformparameters.3DCT_lung.affine.txt")
 (MovingImageDimension 3)
 (MovingInternalImagePixelType "float")
 (NumberOfParameters 51300)
