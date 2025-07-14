@@ -27,7 +27,6 @@
 
 #include "itkPointSet.h"
 #include "itkDefaultStaticMeshTraits.h"
-#include "itkTransformixInputPointFileReader.h"
 #include <itksys/SystemTools.hxx>
 #include "itkVector.h"
 #include "itkTransformToDisplacementFieldFilter.h"
@@ -39,6 +38,7 @@
 #include "itkChangeInformationImageFilter.h"
 #include "itkMesh.h"
 #ifndef ELX_NO_FILESYSTEM_ACCESS
+#  include "itkTransformixInputPointFileReader.h"
 #  include "itkMeshFileReader.h"
 #  include "itkMeshFileWriter.h"
 #endif
@@ -722,6 +722,7 @@ template <typename TElastix>
 void
 TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename) const
 {
+#ifndef ELX_NO_FILESYSTEM_ACCESS
   /** Typedef's. */
   using FixedImageRegionType = typename FixedImageType::RegionType;
   using FixedImageIndexType = typename FixedImageType::IndexType;
@@ -905,6 +906,9 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
     } // end for nrofpoints
   }
 
+#else
+  itkGenericExceptionMacro("Elastix built with ELX_NO_FILESYSTEM_ACCESS");
+#endif
 } // end TransformPointsSomePoints()
 
 
