@@ -140,6 +140,9 @@ add_library(elxCore STATIC
   ${ComponentBaseClassFiles}
   ${ProgressCommandFiles}
 )
+if (WASI OR EMSCRIPTEN)
+  target_compile_definitions(elxCore PUBLIC ELX_NO_FILESYSTEM_ACCESS)
+endif()
 
 elastix_export_target(elxCore)
 

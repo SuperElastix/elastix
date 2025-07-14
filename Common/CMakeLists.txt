@@ -207,6 +207,9 @@ if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
     COMPONENT Development
     )
 endif()
+if (WASI OR EMSCRIPTEN)
+  target_compile_definitions(elxCommon PUBLIC ELX_NO_FILESYSTEM_ACCESS)
+endif()
 
 #---------------------------------------------------------------------
 # Link against other libraries.

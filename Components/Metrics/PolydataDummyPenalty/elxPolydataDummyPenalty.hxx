@@ -389,6 +389,7 @@ unsigned int
 PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &          filename,
                                                       typename MeshType::Pointer & mesh) // const
 {
+#ifndef ELX_NO_FILESYSTEM_ACCESS
   /*
   Floris: Mainly copied from elxTransformBase.hxx
   */
@@ -544,6 +545,9 @@ PolydataDummyPenalty<TElastix>::ReadTransformixPoints(const std::string &       
     }
   }
   return nrofpoints;
+#else
+  itkGenericExceptionMacro("Elastix compiled with ELX_NO_FILESYSTEM_ACCESS");
+#endif
 } // end ReadTransformixPoints()
 
 
