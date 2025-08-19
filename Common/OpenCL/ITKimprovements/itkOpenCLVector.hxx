@@ -93,20 +93,6 @@ OpenCLVector<T>::operator[](const std::size_t index)
 
 //------------------------------------------------------------------------------
 template <typename T>
-const T &
-OpenCLVector<T>::operator[](const std::size_t index) const
-{
-  itkAssertOrThrowMacro((index < this->m_Size), "OpenCLVector<T>::operator[" << index << "] index out of range");
-  if (!this->m_Mapped)
-  {
-    const_cast<OpenCLVector<T> *>(this)->map();
-  }
-  return (reinterpret_cast<T *>(this->m_Mapped))[index];
-}
-
-
-//------------------------------------------------------------------------------
-template <typename T>
 void
 OpenCLVector<T>::Write(const T * data, const std::size_t count, const std::size_t offset /*= 0 */)
 {
