@@ -28,6 +28,8 @@
 #include "itkTimeProbe.h"
 #include <itkDeref.h>
 
+#include <algorithm> // For fill_n.
+
 namespace elastix
 {
 
@@ -383,20 +385,14 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
     if (count == 0)
     {
       /** In this case the first option is used. */
-      for (unsigned int i = 0; i < rotationPart; ++i)
-      {
-        newscales[i] = defaultScalingvalue;
-      }
+      std::fill_n(newscales.begin(), rotationPart, defaultScalingvalue);
     }
     else if (count == 1)
     {
       /** In this case the second option is used. */
       double scale = defaultScalingvalue;
       configuration.ReadParameter(scale, "Scales", 0);
-      for (unsigned int i = 0; i < rotationPart; ++i)
-      {
-        newscales[i] = scale;
-      }
+      std::fill_n(newscales.begin(), rotationPart, scale);
     }
     else if (count == numberOfParameters)
     {
