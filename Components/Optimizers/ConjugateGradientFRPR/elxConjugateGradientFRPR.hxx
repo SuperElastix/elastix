@@ -255,13 +255,9 @@ ConjugateGradientFRPR<TElastix>::SetInitialPosition(const ParametersType & param
   this->Superclass1::SetInitialPosition(param);
 
   /** Set the scales array to the same size if the size has been changed */
-  ScalesType   scales = this->GetScales();
-  unsigned int paramsize = param.Size();
-
-  if ((scales.Size()) != paramsize)
+  if (const std::size_t paramsize{ param.Size() }; this->GetScales().Size() != paramsize)
   {
-    ScalesType newscales(paramsize, 1.0);
-    this->SetScales(newscales);
+    this->SetScales(ScalesType(paramsize, 1.0));
   }
 
   /** \todo to optimizerbase? */
