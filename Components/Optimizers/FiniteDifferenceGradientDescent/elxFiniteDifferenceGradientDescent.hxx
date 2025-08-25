@@ -215,18 +215,10 @@ FiniteDifferenceGradientDescent<TElastix>::StartOptimization()
 {
 
   /** Check if the entered scales are correct and != [ 1 1 1 ...] */
-
-  this->SetUseScales(false);
   const ScalesType & scales = this->GetScales();
-  if (scales.GetSize() == this->GetInitialPosition().GetSize())
-  {
-    ScalesType unit_scales(scales.GetSize(), 1.0);
-    if (scales != unit_scales)
-    {
-      /** only then: */
-      this->SetUseScales(true);
-    }
-  }
+  const std::size_t  numberOfScales{ scales.GetSize() };
+  this->SetUseScales(numberOfScales == this->GetInitialPosition().GetSize() &&
+                     scales != ScalesType(numberOfScales, 1.0));
 
   this->Superclass1::StartOptimization();
 
