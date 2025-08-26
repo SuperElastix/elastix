@@ -89,8 +89,6 @@ public:
 
   /** Evaluate the weights at specified ContinousIndex position.
    * The weights are returned in the user specified container.
-   * This function assume that the weights has a correct size. For efficiency,
-   * no size checking is done.
    * On return, startIndex contains the start index of the
    * support region over which the weights are defined.
    */
