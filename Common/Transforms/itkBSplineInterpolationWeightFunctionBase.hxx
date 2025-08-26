@@ -96,17 +96,20 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
  */
 
 template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-void
+auto
 BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrder>::ComputeStartIndex(
-  const ContinuousIndexType & cindex,
-  IndexType &                 startIndex) const
+  const ContinuousIndexType & cindex) const -> IndexType
 {
+  IndexType startIndex;
+
   /** Find the starting index of the support region. */
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     startIndex[i] = static_cast<typename IndexType::IndexValueType>(
       std::floor(cindex[i] - static_cast<double>(VSplineOrder - 1.0) / 2.0));
   }
+
+  return startIndex;
 
 } // end ComputeStartIndex()
 
@@ -122,7 +125,7 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
 {
   /** Construct arguments for the Evaluate function that really does the work. */
   IndexType startIndex;
-  this->ComputeStartIndex(cindex, startIndex);
+  startIndex = this->ComputeStartIndex(cindex);
 
   /** Call the Evaluate function that really does the work. */
   return this->Evaluate(cindex, startIndex);
