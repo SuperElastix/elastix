@@ -159,8 +159,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   }
 
   // Compute interpolation weights
-  IndexType supportIndex;
-  supportIndex = m_WeightsFunction->ComputeStartIndex(cindex);
+  IndexType         supportIndex = m_WeightsFunction->ComputeStartIndex(cindex);
   const WeightsType weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   // For each dimension, correlate coefficient with weights
@@ -280,8 +279,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
    */
 
   /** Compute the weights. */
-  IndexType supportIndex;
-  supportIndex = m_WeightsFunction->ComputeStartIndex(cindex);
+  IndexType         supportIndex = m_WeightsFunction->ComputeStartIndex(cindex);
   const WeightsType weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** Setup support region */
@@ -339,8 +337,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
    */
 
   /** Compute the B-spline derivative weights. */
-  IndexType supportIndex;
-  supportIndex = m_WeightsFunction->ComputeStartIndex(cindex);
+  IndexType         supportIndex = m_WeightsFunction->ComputeStartIndex(cindex);
   const WeightsType weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** Compute the inner product. */
@@ -394,8 +391,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   /** Array for CoefficientImage values */
   std::array<typename WeightsType::ValueType, NumberOfWeights * SpaceDimension> coeffs;
 
-  IndexType supportIndex;
-  supportIndex = m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
+  IndexType        supportIndex = m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Copy values from coefficient image to linear coeffs array. */
@@ -493,8 +489,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   /** Array for CoefficientImage values */
   std::array<WeightsValueType, NumberOfWeights * SpaceDimension> coeffs;
 
-  IndexType supportIndex;
-  supportIndex = m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex);
+  IndexType        supportIndex = m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Copy values from coefficient image to linear coeffs array. */
@@ -606,8 +601,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   /** Helper variables. */
 
-  IndexType supportIndex;
-  supportIndex = m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
+  IndexType        supportIndex = m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** On the stack instead of heap is faster. */
@@ -696,8 +690,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   }
 
   /** Helper variables. */
-  IndexType supportIndex;
-  supportIndex = m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
+  IndexType        supportIndex = m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   using WeightsValueType = typename WeightsType::ValueType;
@@ -846,8 +839,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   /** Compute the number of affected B-spline parameters. */
 
-  IndexType supportIndex;
-  supportIndex = m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex);
+  IndexType        supportIndex = m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** For all derivative directions, compute the derivatives of the
@@ -956,8 +948,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   }
 
   /** Get the support region. */
-  IndexType supportIndex;
-  supportIndex = m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex);
+  IndexType        supportIndex = m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Allocate weight on the stack. */

@@ -235,9 +235,8 @@ main()
   std::cerr << "\nFunction TESTING:\n" << std::endl;
 
   /** Just call all available public functions. */
-  WeightFunction2Type2D::IndexType startIndex;
   auto                             trueStartIndex = WeightFunction2Type2D::IndexType::Filled(-1);
-  startIndex = weight2Function2D->ComputeStartIndex(cindex);
+  WeightFunction2Type2D::IndexType startIndex = weight2Function2D->ComputeStartIndex(cindex);
   if (startIndex != trueStartIndex)
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;

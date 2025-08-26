@@ -239,11 +239,10 @@ main()
   std::cerr << "\nFunction TESTING:\n" << std::endl;
 
   /** Just call all available public functions. */
-  SODerivativeWeightFunctionType::IndexType startIndex;
   SODerivativeWeightFunctionType::IndexType trueStartIndex;
   trueStartIndex[0] = 2;
   trueStartIndex[1] = -4;
-  startIndex = soWeightFunction->ComputeStartIndex(cindex);
+  SODerivativeWeightFunctionType::IndexType startIndex = soWeightFunction->ComputeStartIndex(cindex);
   if (startIndex != trueStartIndex)
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;
