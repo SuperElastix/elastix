@@ -35,7 +35,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
   -> OutputPointType
 {
   /** Check if the coefficient image has been set. */
-  if (!this->m_CoefficientImages[0])
+  if (!Superclass::m_CoefficientImages[0])
   {
     itkWarningMacro("B-spline coefficients have not been set");
     return point;
@@ -56,7 +56,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
   const WeightsType weights1D = this->m_RecursiveBSplineWeightFunction.Evaluate(cindex, supportIndex);
 
   /** Initialize (helper) variables. */
-  const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[0]->GetOffsetTable();
+  const OffsetValueType * bsplineOffsetTable = Superclass::m_CoefficientImages[0]->GetOffsetTable();
   OffsetValueType         totalOffsetToSupportIndex = 0;
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
@@ -66,7 +66,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::TransformPoint(co
   ScalarType * mu[SpaceDimension];
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
-    mu[j] = this->m_CoefficientImages[j]->GetBufferPointer() + totalOffsetToSupportIndex;
+    mu[j] = Superclass::m_CoefficientImages[j]->GetBufferPointer() + totalOffsetToSupportIndex;
   }
 
   /** Call the recursive TransformPoint function. */
@@ -232,7 +232,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
     this->m_RecursiveBSplineWeightFunction.EvaluateDerivative(cindex, supportIndex);
 
   /** Compute the offset to the start index. */
-  const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[0]->GetOffsetTable();
+  const OffsetValueType * bsplineOffsetTable = Superclass::m_CoefficientImages[0]->GetOffsetTable();
   OffsetValueType         totalOffsetToSupportIndex = 0;
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
@@ -243,7 +243,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
   ScalarType * mu[SpaceDimension];
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
-    mu[j] = this->m_CoefficientImages[j]->GetBufferPointer() + totalOffsetToSupportIndex;
+    mu[j] = Superclass::m_CoefficientImages[j]->GetBufferPointer() + totalOffsetToSupportIndex;
   }
 
   /** Recursively compute the spatial Jacobian. */
@@ -264,7 +264,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialJacobia
   }
 
   /** Take into account grid spacing and direction cosines. */
-  sj *= this->m_PointToIndexMatrix2;
+  sj *= Superclass::m_PointToIndexMatrix2;
 
   /** Add the identity matrix, as this is a transformation, not displacement. */
   for (unsigned int j = 0; j < SpaceDimension; ++j)
@@ -312,7 +312,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian
     this->m_RecursiveBSplineWeightFunction.EvaluateSecondOrderDerivative(cindex, supportIndex);
 
   /** Compute the offset to the start index. */
-  const OffsetValueType * bsplineOffsetTable = this->m_CoefficientImages[0]->GetOffsetTable();
+  const OffsetValueType * bsplineOffsetTable = Superclass::m_CoefficientImages[0]->GetOffsetTable();
   OffsetValueType         totalOffsetToSupportIndex = 0;
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
@@ -323,7 +323,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian
   ScalarType * mu[SpaceDimension];
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
-    mu[j] = this->m_CoefficientImages[j]->GetBufferPointer() + totalOffsetToSupportIndex;
+    mu[j] = Superclass::m_CoefficientImages[j]->GetBufferPointer() + totalOffsetToSupportIndex;
   }
 
   /** Recursively compute the spatial Hessian. */
@@ -363,7 +363,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetSpatialHessian
   /** Take into account grid spacing and direction matrix. */
   for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
   {
-    sh[dim] = this->m_PointToIndexMatrixTransposed2 * (sh[dim] * this->m_PointToIndexMatrix2);
+    sh[dim] = Superclass::m_PointToIndexMatrixTransposed2 * (sh[dim] * Superclass::m_PointToIndexMatrix2);
   }
 
 } // end GetSpatialHessian()
@@ -382,7 +382,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if (this->m_InputParametersPointer == nullptr)
+  if (Superclass::m_InputParametersPointer == nullptr)
   {
     itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
@@ -422,7 +422,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
   const double dummy[1] = { 1.0 };
 
   /** Recursively expand all weights (destroys dummy), and multiply with dc. */
-  const double * dc = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
+  const double * dc = Superclass::m_PointToIndexMatrix2.GetVnlMatrix().data_block();
   double *       jsjPtr2 = jsj[0].GetVnlMatrix().data_block();
   ImplementationType::GetJacobianOfSpatialJacobian(jsjPtr2, weights1D.data(), derivativeWeights1D.data(), dc, dummy);
 
@@ -465,7 +465,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
 {
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if (this->m_InputParametersPointer == nullptr)
+  if (Superclass::m_InputParametersPointer == nullptr)
   {
     itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
@@ -511,7 +511,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::GetJacobianOfSpat
    * And the results are directly written to the final jsh, avoiding an additional copy.
    */
   double *       jshPtr = jsh[0][0].GetVnlMatrix().data_block();
-  const double * dc = this->m_PointToIndexMatrix2.GetVnlMatrix().data_block();
+  const double * dc = Superclass::m_PointToIndexMatrix2.GetVnlMatrix().data_block();
   const double   dummy[1] = { 1.0 };
   ImplementationType::GetJacobianOfSpatialHessian(
     jshPtr, weights1D.data(), derivativeWeights1D.data(), hessianWeights1D.data(), dc, dummy);
@@ -558,7 +558,7 @@ RecursiveBSplineTransform<TScalar, NDimensions, VSplineOrder>::ComputeNonZeroJac
 
   /** Compute total offset at start index. */
   const IndexType         startIndex = supportRegion.GetIndex();
-  const OffsetValueType * gridOffsetTable = this->m_CoefficientImages[0]->GetOffsetTable();
+  const OffsetValueType * gridOffsetTable = Superclass::m_CoefficientImages[0]->GetOffsetTable();
   OffsetValueType         totalOffsetToSupportIndex = 0;
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
