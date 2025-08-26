@@ -160,7 +160,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   }
 
   /** Compute interpolation weights. */
-  IndexType         supportIndex = Superclass::m_WeightsFunction->ComputeStartIndex(cindex);
+  const IndexType   supportIndex = Superclass::m_WeightsFunction->ComputeStartIndex(cindex);
   const WeightsType weights = Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** For each dimension, correlate coefficient with weights. */
@@ -240,7 +240,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
   }
 
   /** Compute interpolation weights. */
-  IndexType supportIndex = Superclass::m_WeightsFunction->ComputeStartIndex(cindex);
+  const IndexType supportIndex = Superclass::m_WeightsFunction->ComputeStartIndex(cindex);
   weights = Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   supportRegion.SetIndex(supportIndex);
@@ -301,7 +301,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
 
   /** Compute the number of affected B-spline parameters. */
 
-  IndexType        supportIndex = Superclass::m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
+  const IndexType  supportIndex = Superclass::m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Split support region into two parts. */
