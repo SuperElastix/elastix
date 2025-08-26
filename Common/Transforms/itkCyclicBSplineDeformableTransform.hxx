@@ -335,7 +335,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
       /** Compute the sum for this dimension. */
       double sum = 0.0;
 
-      typename WeightsType::const_iterator itWeights = weights.begin();
+      typename WeightsType::const_iterator itWeights = weights.cbegin();
 
       for (const auto & region : supportRegions)
       {
