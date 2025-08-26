@@ -162,8 +162,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   /** Compute interpolation weights. */
   IndexType   supportIndex;
   WeightsType weights;
-  this->m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  this->m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
+  Superclass::m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
+  Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
 
   /** For each dimension, correlate coefficient with weights. */
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -243,8 +243,8 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
 
   /** Compute interpolation weights. */
   IndexType supportIndex;
-  this->m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  this->m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
+  Superclass::m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
+  Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
 
   supportRegion.SetIndex(supportIndex);
   /** Split support region into two parts. */
@@ -307,7 +307,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   WeightsType weights;
 
   IndexType supportIndex;
-  this->m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
+  Superclass::m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
   /** Split support region into two parts. */
@@ -325,7 +325,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    this->m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex, weights);
+    Superclass::m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex, weights);
 
     /** Compute the spatial Jacobian sj:
      *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.
