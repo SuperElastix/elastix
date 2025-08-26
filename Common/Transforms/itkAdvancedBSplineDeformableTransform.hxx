@@ -159,10 +159,9 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   }
 
   // Compute interpolation weights
-  IndexType   supportIndex;
-  WeightsType weights;
+  IndexType supportIndex;
   m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
+  const WeightsType weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   // For each dimension, correlate coefficient with weights
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -278,14 +277,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   }
 
   /** Compute the number of affected B-spline parameters.
-   * Allocate memory on the stack.
    */
-  WeightsType weights;
 
   /** Compute the weights. */
   IndexType supportIndex;
   m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
+  const WeightsType weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** Setup support region */
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -339,14 +336,12 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
   }
 
   /** Compute the number of affected B-spline parameters.
-   * Allocate memory on the stack.
    */
-  WeightsType weights;
 
   /** Compute the B-spline derivative weights. */
   IndexType supportIndex;
   m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
+  const WeightsType weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** Compute the inner product. */
   NumberOfParametersType counter = 0;
@@ -395,8 +390,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   }
 
   /** Compute the number of affected B-spline parameters. */
-  /** Allocate memory on the stack: */
-  WeightsType weights;
 
   /** Array for CoefficientImage values */
   std::array<typename WeightsType::ValueType, NumberOfWeights * SpaceDimension> coeffs;
@@ -430,7 +423,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
+    const WeightsType weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
 
     /** Create an iterator over the coeffs vector.  */
     auto itCoeffs = coeffs.cbegin();
@@ -496,8 +489,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   }
 
   /** Helper variables. */
-  /** Allocate memory on the stack: */
-  WeightsType weights;
 
   /** Array for CoefficientImage values */
   std::array<WeightsValueType, NumberOfWeights * SpaceDimension> coeffs;
@@ -535,7 +526,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
     for (unsigned int j = 0; j <= i; ++j)
     {
       /** Compute the derivative weights. */
-      weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
+      const WeightsType weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
 
       /** Create an iterator over the coeffs vector.  */
       auto itCoeffs = coeffs.cbegin();
@@ -615,9 +606,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   /** Helper variables. */
 
-  /** Allocate memory on the stack: */
-  WeightsType weights;
-
   IndexType supportIndex;
   m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -632,7 +620,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
+    const WeightsType weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
 
     /** Remember the weights. */
     std::copy_n(weights.cbegin(), NumberOfWeights, weightVector + i * NumberOfWeights);
@@ -712,9 +700,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   m_DerivativeWeightsFunctions[0]->ComputeStartIndex(cindex, supportIndex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
 
-  /** Allocate weight on the stack. */
   using WeightsValueType = typename WeightsType::ValueType;
-  WeightsType weights;
 
   /** Allocate coefficients on the stack. */
   std::array<WeightsValueType, NumberOfWeights * SpaceDimension> coeffs;
@@ -751,7 +737,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
+    const WeightsType weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
     /** \todo: we can realise some speedup here to compute the derivative
      * weights at once for all dimensions */
 
@@ -860,9 +846,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   /** Compute the number of affected B-spline parameters. */
 
-  /** Allocate memory on the stack: */
-  WeightsType weights;
-
   IndexType supportIndex;
   m_SODerivativeWeightsFunctions[0][0]->ComputeStartIndex(cindex, supportIndex);
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -882,7 +865,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       for (unsigned int j = 0; j <= i; ++j)
       {
         /** Compute the derivative weights. */
-        weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
+        const WeightsType weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
 
         /** Remember the weights. */
         weightVector[count] = weights;
@@ -982,7 +965,6 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
 
   /** Allocate weight on the stack. */
   using WeightsValueType = typename WeightsType::ValueType;
-  WeightsType weights;
 
   /** Allocate coefficients on the stack. */
   std::array<WeightsValueType, NumberOfWeights * SpaceDimension> coeffs;
@@ -1023,7 +1005,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       for (unsigned int j = 0; j <= i; ++j)
       {
         /** Compute the derivative weights. */
-        weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
+        const WeightsType weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
 
         /** Remember the weights. */
         std::copy_n(weights.cbegin(), NumberOfWeights, weightVector + count * NumberOfWeights);
