@@ -65,17 +65,17 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
    *     Grid Direction
    *  The size of these is equal to the  NInputDimensions
    */
-  this->m_FixedParameters.SetSize(NumberOfFixedParameters);
-  this->m_FixedParameters.Fill(0.0);
+  Superclass::m_FixedParameters.SetSize(NumberOfFixedParameters);
+  Superclass::m_FixedParameters.Fill(0.0);
   for (unsigned int i = 0; i < NDimensions; ++i)
   {
-    this->m_FixedParameters[2 * NDimensions + i] = m_GridSpacing[i];
+    Superclass::m_FixedParameters[2 * NDimensions + i] = m_GridSpacing[i];
   }
   for (unsigned int di = 0; di < NDimensions; ++di)
   {
     for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
-      this->m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = m_GridDirection[di][dj];
+      Superclass::m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = m_GridDirection[di][dj];
     }
   }
 
@@ -441,25 +441,25 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetFixedParame
 
   for (unsigned int i = 0; i < NDimensions; ++i)
   {
-    this->m_FixedParameters[i] = (resRegion.GetSize())[i];
+    Superclass::m_FixedParameters[i] = (resRegion.GetSize())[i];
   }
   for (unsigned int i = 0; i < NDimensions; ++i)
   {
-    this->m_FixedParameters[NDimensions + i] = (this->GetGridOrigin())[i];
+    Superclass::m_FixedParameters[NDimensions + i] = (this->GetGridOrigin())[i];
   }
   for (unsigned int i = 0; i < NDimensions; ++i)
   {
-    this->m_FixedParameters[2 * NDimensions + i] = (this->GetGridSpacing())[i];
+    Superclass::m_FixedParameters[2 * NDimensions + i] = (this->GetGridSpacing())[i];
   }
   for (unsigned int di = 0; di < NDimensions; ++di)
   {
     for (unsigned int dj = 0; dj < NDimensions; ++dj)
     {
-      this->m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = (this->GetGridDirection())[di][dj];
+      Superclass::m_FixedParameters[3 * NDimensions + (di * NDimensions + dj)] = (this->GetGridDirection())[di][dj];
     }
   }
 
-  return (this->m_FixedParameters);
+  return (Superclass::m_FixedParameters);
 }
 
 // Set the B-Spline coefficients using input images
