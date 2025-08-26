@@ -52,6 +52,8 @@ RecursiveBSplineInterpolationWeightFunction<TCoordinate, VSpaceDimension, VSplin
   const ContinuousIndexType & cindex,
   IndexType &                 startIndex) const -> WeightsType
 {
+  static_assert(WeightsType::Dimension == Math::UnsignedPower(VSplineOrder + 1, VSpaceDimension));
+
   WeightsType weights;
 
   typename WeightsType::ValueType * weightsPtr = &weights[0];

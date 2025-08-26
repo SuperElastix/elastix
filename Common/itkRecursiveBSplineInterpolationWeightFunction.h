@@ -103,9 +103,6 @@ private:
 
   /** Evaluate the weights at specified ContinousIndex position.
    * The weights are returned in the user specified container.
-   * This function assume that weights can hold
-   * (SplineOrder + 1)^(SpaceDimension) elements. For efficiency,
-   * no size checking is done.
    * On return, startIndex contains the start index of the
    * support region over which the weights are defined.
    */

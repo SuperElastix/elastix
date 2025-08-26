@@ -144,12 +144,7 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
   const IndexType &           startIndex,
   WeightsType &               weights) const
 {
-  /** Don't initialize the weights!
-   * weights.SetSize( NumberOfWeights );
-   * This will result in a big performance penalty (50%). In Evaluate( index )
-   * we have set the size correctly anyway. We just assume that when this
-   * function is called directly, the user has set the size correctly.
-   */
+  static_assert(WeightsType::Dimension == NumberOfWeights);
 
   /** Compute the 1D weights. */
   OneDWeightsType weights1D;
