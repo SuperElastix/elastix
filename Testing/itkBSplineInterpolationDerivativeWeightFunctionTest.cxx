@@ -150,11 +150,10 @@ main()
   std::cerr << "\nFunction TESTING:\n" << std::endl;
 
   /** Just call all available public functions. */
-  DerivativeWeightFunctionType::IndexType startIndex;
   DerivativeWeightFunctionType::IndexType trueStartIndex;
   trueStartIndex[0] = 2;
   trueStartIndex[1] = -4;
-  startIndex = foWeightFunction->ComputeStartIndex(cindex);
+  DerivativeWeightFunctionType::IndexType startIndex = foWeightFunction->ComputeStartIndex(cindex);
   if (startIndex != trueStartIndex)
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;

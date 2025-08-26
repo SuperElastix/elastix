@@ -124,8 +124,7 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
   const ContinuousIndexType & cindex) const -> WeightsType
 {
   /** Construct arguments for the Evaluate function that really does the work. */
-  IndexType startIndex;
-  startIndex = this->ComputeStartIndex(cindex);
+  IndexType startIndex = this->ComputeStartIndex(cindex);
 
   /** Call the Evaluate function that really does the work. */
   return this->Evaluate(cindex, startIndex);
