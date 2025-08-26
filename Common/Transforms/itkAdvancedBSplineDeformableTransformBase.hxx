@@ -48,16 +48,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
     m_CoefficientImages[j] = nullptr;
   }
 
-  // Initialize Jacobian images
-  //   for ( unsigned int j = 0; j < SpaceDimension; j++ )
-  //     {
-  //     m_JacobianImage[j] = ImageType::New();
-  //     m_JacobianImage[j]->SetRegions( m_GridRegion );
-  //     m_JacobianImage[j]->SetOrigin( m_GridOrigin.GetDataPointer() );
-  //     m_JacobianImage[j]->SetSpacing( m_GridSpacing.GetDataPointer() );
-  //     m_JacobianImage[j]->SetDirection( m_GridDirection );
-  //     }
-
   /** Fixed Parameters store the following information:
    *     Grid Size
    *     Grid Origin

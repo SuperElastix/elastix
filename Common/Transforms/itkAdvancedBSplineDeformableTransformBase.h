@@ -395,8 +395,6 @@ protected:
   using JacobianPixelType = typename JacobianType::ValueType;
   using JacobianImageType = Image<JacobianPixelType, Self::SpaceDimension>;
 
-  typename JacobianImageType::Pointer m_JacobianImage[NDimensions]{};
-
   /** Array holding images wrapped from the flat parameters. */
   ImagePointer m_WrappedImage[NDimensions]{};
 

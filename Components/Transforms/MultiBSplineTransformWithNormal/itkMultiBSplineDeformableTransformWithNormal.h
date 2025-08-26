@@ -462,15 +462,6 @@ protected:
   /** Keep a pointer to the input parameters. */
   const ParametersType * m_InputParametersPointer{};
 
-  /** Jacobian as SpaceDimension number of images. */
-  /*
-  using JacobianPixelType = typename JacobianType::ValueType;
-  using JacobianImageType = Image< JacobianPixelType,
-    itkGetStaticConstMacro( SpaceDimension ) >;
-
-  typename JacobianImageType::Pointer m_JacobianImage[ NDimensions ]{};
-  */
-
   /** Keep track of last support region used in computing the Jacobian
    * for fast resetting of Jacobian to zero.
    */
