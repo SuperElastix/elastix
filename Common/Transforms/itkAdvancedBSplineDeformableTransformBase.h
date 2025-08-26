@@ -203,7 +203,7 @@ public:
   virtual const ImagePointer *
   GetCoefficientImages() const
   {
-    return this->m_CoefficientImages;
+    return m_CoefficientImages;
   }
 
   /** Set the array of coefficient images.
