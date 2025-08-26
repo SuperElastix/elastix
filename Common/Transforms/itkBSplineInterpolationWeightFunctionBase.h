@@ -94,7 +94,7 @@ public:
    * On return, startIndex contains the start index of the
    * support region over which the weights are defined.
    */
-  virtual void
+  void
   Evaluate(const ContinuousIndexType & cindex, const IndexType & startIndex, WeightsType & weights) const;
 
   /** Compute the start index of the support region. */
