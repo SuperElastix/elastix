@@ -864,11 +864,8 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     {
       for (unsigned int j = 0; j <= i; ++j)
       {
-        /** Compute the derivative weights. */
-        const WeightsType weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
-
-        /** Remember the weights. */
-        weightVector[count] = weights;
+        // Compute the derivative weights and remember them.
+        weightVector[count] = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
         ++count;
 
       } // end for j
