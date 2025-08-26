@@ -295,7 +295,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   for (unsigned int d = 0; d < SpaceDimension; ++d)
   {
     unsigned long offset = d * SpaceDimension * NumberOfWeights + d * NumberOfWeights;
-    std::copy_n(weights.begin(), NumberOfWeights, jacobianPointer + offset);
+    std::copy_n(weights.cbegin(), NumberOfWeights, jacobianPointer + offset);
   }
 
   /** Compute the nonzero Jacobian indices.
@@ -443,7 +443,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
       /** Create an iterator over the correct part of the coefficient
        * image. Create an iterator over the weights vector.
        */
-      typename WeightsType::const_iterator itWeights = weights.begin();
+      typename WeightsType::const_iterator itWeights = weights.cbegin();
 
       /** Compute the sum for this dimension. */
       for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
@@ -544,7 +544,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
       for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
       {
         /** Create an iterator over the weights vector.  */
-        typename WeightsType::const_iterator itWeights = weights.begin();
+        typename WeightsType::const_iterator itWeights = weights.cbegin();
 
         /** Compute the sum for this dimension. */
         double sum = 0.0;
@@ -635,7 +635,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
 
     /** Remember the weights. */
-    std::copy_n(weights.begin(), NumberOfWeights, weightVector + i * NumberOfWeights);
+    std::copy_n(weights.cbegin(), NumberOfWeights, weightVector + i * NumberOfWeights);
 
   } // end for i
 
@@ -756,7 +756,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
      * weights at once for all dimensions */
 
     /** Remember the weights. */
-    std::copy_n(weights.begin(), NumberOfWeights, weightVector + i * NumberOfWeights);
+    std::copy_n(weights.cbegin(), NumberOfWeights, weightVector + i * NumberOfWeights);
 
     /** Reset coeffs iterator */
     auto itCoeffs = coeffs.cbegin();
@@ -767,7 +767,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
     {
       /** Reset weights iterator. */
-      typename WeightsType::const_iterator itWeights = weights.begin();
+      typename WeightsType::const_iterator itWeights = weights.cbegin();
 
       /** Compute the sum for this dimension. */
       for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
@@ -1026,7 +1026,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
         weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
 
         /** Remember the weights. */
-        std::copy_n(weights.begin(), NumberOfWeights, weightVector + count * NumberOfWeights);
+        std::copy_n(weights.cbegin(), NumberOfWeights, weightVector + count * NumberOfWeights);
         ++count;
 
         /** Reset coeffs iterator */
@@ -1038,7 +1038,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
         for (unsigned int dim = 0; dim < SpaceDimension; ++dim)
         {
           /** Reset weights iterator. */
-          typename WeightsType::const_iterator itWeights = weights.begin();
+          typename WeightsType::const_iterator itWeights = weights.cbegin();
 
           /** Compute the sum for this dimension. */
           double sum = 0.0;
