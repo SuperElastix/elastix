@@ -126,7 +126,7 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
   this->ComputeStartIndex(cindex, startIndex);
 
   /** Call the Evaluate function that really does the work. */
-  this->Evaluate(cindex, startIndex, weights);
+  weights = this->Evaluate(cindex, startIndex);
 
   return weights;
 
@@ -138,13 +138,14 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
  */
 
 template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-void
+auto
 BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrder>::Evaluate(
   const ContinuousIndexType & cindex,
-  const IndexType &           startIndex,
-  WeightsType &               weights) const
+  const IndexType &           startIndex) const -> WeightsType
 {
   static_assert(WeightsType::Dimension == NumberOfWeights);
+
+  WeightsType weights;
 
   /** Compute the 1D weights. */
   OneDWeightsType weights1D;
@@ -161,6 +162,8 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
     }
     weights[k] = tmp1;
   }
+
+  return weights;
 
 } // end Evaluate()
 

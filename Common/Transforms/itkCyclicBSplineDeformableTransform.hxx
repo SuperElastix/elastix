@@ -163,7 +163,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Transf
   IndexType   supportIndex;
   WeightsType weights;
   Superclass::m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
+  weights = Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** For each dimension, correlate coefficient with weights. */
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -244,7 +244,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJac
   /** Compute interpolation weights. */
   IndexType supportIndex;
   Superclass::m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
+  weights = Superclass::m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   supportRegion.SetIndex(supportIndex);
   /** Split support region into two parts. */
@@ -325,7 +325,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    Superclass::m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex, weights);
+    weights = Superclass::m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
 
     /** Compute the spatial Jacobian sj:
      *    dT_{dim} / dx_i = \sum coefs_{dim} * weights.

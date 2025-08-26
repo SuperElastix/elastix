@@ -162,7 +162,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
   IndexType   supportIndex;
   WeightsType weights;
   m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
+  weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   // For each dimension, correlate coefficient with weights
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -285,7 +285,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   /** Compute the weights. */
   IndexType supportIndex;
   m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
+  weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** Setup support region */
   const RegionType supportRegion(supportIndex, WeightsFunctionType::SupportSize);
@@ -346,7 +346,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Eval
   /** Compute the B-spline derivative weights. */
   IndexType supportIndex;
   m_WeightsFunction->ComputeStartIndex(cindex, supportIndex);
-  m_WeightsFunction->Evaluate(cindex, supportIndex, weights);
+  weights = m_WeightsFunction->Evaluate(cindex, supportIndex);
 
   /** Compute the inner product. */
   NumberOfParametersType counter = 0;
@@ -430,7 +430,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex, weights);
+    weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
 
     /** Create an iterator over the coeffs vector.  */
     auto itCoeffs = coeffs.cbegin();
@@ -535,7 +535,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
     for (unsigned int j = 0; j <= i; ++j)
     {
       /** Compute the derivative weights. */
-      m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
+      weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
 
       /** Create an iterator over the coeffs vector.  */
       auto itCoeffs = coeffs.cbegin();
@@ -632,7 +632,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex, weights);
+    weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
 
     /** Remember the weights. */
     std::copy_n(weights.begin(), NumberOfWeights, weightVector + i * NumberOfWeights);
@@ -751,7 +751,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
     /** Compute the derivative weights. */
-    m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex, weights);
+    weights = m_DerivativeWeightsFunctions[i]->Evaluate(cindex, supportIndex);
     /** \todo: we can realise some speedup here to compute the derivative
      * weights at once for all dimensions */
 
@@ -882,7 +882,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       for (unsigned int j = 0; j <= i; ++j)
       {
         /** Compute the derivative weights. */
-        m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
+        weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
 
         /** Remember the weights. */
         weightVector[count] = weights;
@@ -1023,7 +1023,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       for (unsigned int j = 0; j <= i; ++j)
       {
         /** Compute the derivative weights. */
-        m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex, weights);
+        weights = m_SODerivativeWeightsFunctions[i][j]->Evaluate(cindex, supportIndex);
 
         /** Remember the weights. */
         std::copy_n(weights.begin(), NumberOfWeights, weightVector + count * NumberOfWeights);
