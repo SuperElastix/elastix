@@ -153,7 +153,7 @@ main()
   DerivativeWeightFunctionType::IndexType trueStartIndex;
   trueStartIndex[0] = 2;
   trueStartIndex[1] = -4;
-  const DerivativeWeightFunctionType::IndexType startIndex = foWeightFunction->ComputeStartIndex(cindex);
+  const DerivativeWeightFunctionType::IndexType startIndex = DerivativeWeightFunctionType::ComputeStartIndex(cindex);
   if (startIndex != trueStartIndex)
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;

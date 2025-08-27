@@ -242,7 +242,8 @@ main()
   SODerivativeWeightFunctionType::IndexType trueStartIndex;
   trueStartIndex[0] = 2;
   trueStartIndex[1] = -4;
-  const SODerivativeWeightFunctionType::IndexType startIndex = soWeightFunction->ComputeStartIndex(cindex);
+  const SODerivativeWeightFunctionType::IndexType startIndex =
+    SODerivativeWeightFunctionType::ComputeStartIndex(cindex);
   if (startIndex != trueStartIndex)
   {
     std::cerr << "ERROR: wrong start index was computed." << std::endl;

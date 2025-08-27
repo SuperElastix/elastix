@@ -202,6 +202,7 @@ public:
   TransformPoint(const InputPointType & point) const override;
 
   /** Interpolation weights function type. */
+  using WeightFunctionBaseType = BSplineInterpolationWeightFunctionBase<TScalarType, NDimensions, VSplineOrder>;
   using WeightsFunctionType = BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, VSplineOrder>;
   using WeightsFunctionPointer = typename WeightsFunctionType::Pointer;
   using WeightsType = typename WeightsFunctionType::WeightsType;
@@ -212,6 +213,10 @@ public:
   using SODerivativeWeightsFunctionType =
     BSplineInterpolationSecondOrderDerivativeWeightFunction<ScalarType, Self::SpaceDimension, VSplineOrder>;
   using SODerivativeWeightsFunctionPointer = typename SODerivativeWeightsFunctionType::Pointer;
+
+  static_assert(std::is_base_of_v<WeightFunctionBaseType, WeightsFunctionType>);
+  static_assert(std::is_base_of_v<WeightFunctionBaseType, DerivativeWeightsFunctionType>);
+  static_assert(std::is_base_of_v<WeightFunctionBaseType, SODerivativeWeightsFunctionType>);
 
   /** Parameter index array type. */
   using typename Superclass::ParameterIndexArrayType;
