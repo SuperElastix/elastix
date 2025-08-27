@@ -84,10 +84,6 @@ public:
   using typename Superclass::JacobianOfSpatialHessianType;
   using typename Superclass::InternalMatrixType;
 
-  /** Interpolation weights function type. */
-  using WeightsFunctionType = BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension, VSplineOrder>;
-  using WeightsType = typename WeightsFunctionType::WeightsType;
-
   /** This method sets the parameters of the transform.
    * For a BSpline deformation transform, the parameters are the BSpline
    * coefficients on a sparse grid.
