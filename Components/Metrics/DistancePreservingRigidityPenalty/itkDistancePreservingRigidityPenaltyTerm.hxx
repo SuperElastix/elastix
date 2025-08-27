@@ -316,9 +316,8 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDeri
   typename PenaltyGridImageType::PointType penaltyGridPoint, neighborPenaltyGridPoint, xn, xf;
 
   using BSplineKernelFunctionType = itk::BSplineKernelFunction<3>;
-  using WeightsFunctionType = itk::BSplineInterpolationWeightFunction<double, ImageDimension, 3>;
-  using ContinuousIndexType = typename WeightsFunctionType::ContinuousIndexType;
   using ContinuousIndexValueType = double;
+  using ContinuousIndexType = ContinuousIndex<ContinuousIndexValueType, ImageDimension>;
 
   ContinuousIndexValueType tx, ty, tz;
 
