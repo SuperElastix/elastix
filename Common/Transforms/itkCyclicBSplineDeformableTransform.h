@@ -95,6 +95,7 @@ public:
   using typename Superclass::ScalarType;
   using typename Superclass::JacobianImageType;
   using typename Superclass::JacobianPixelType;
+  using typename Superclass::WeightFunctionBaseType;
   using typename Superclass::WeightsFunctionType;
   using RedWeightsFunctionType =
     BSplineInterpolationWeightFunction2<ScalarType, Self::SpaceDimension - 1, VSplineOrder>;

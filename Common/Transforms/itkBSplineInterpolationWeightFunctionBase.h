@@ -96,8 +96,8 @@ public:
   Evaluate(const ContinuousIndexType & cindex, const IndexType & startIndex) const;
 
   /** Compute the start index of the support region. */
-  IndexType
-  ComputeStartIndex(const ContinuousIndexType & index) const;
+  static IndexType
+  ComputeStartIndex(const ContinuousIndexType & index);
 
   /** The support region size: a hypercube of length SplineOrder + 1 */
   static constexpr SizeType SupportSize{ SizeType::Filled(VSplineOrder + 1) };

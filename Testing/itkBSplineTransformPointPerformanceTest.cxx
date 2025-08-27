@@ -106,7 +106,7 @@ public:
     }
 
     // Compute interpolation weights
-    const IndexType supportIndex = this->m_WeightsFunction->ComputeStartIndex(cindex);
+    const IndexType supportIndex = WeightsFunctionType::ComputeStartIndex(cindex);
     weights = this->m_WeightsFunction->Evaluate(cindex, supportIndex);
 
     // For each dimension, correlate coefficient with weights
