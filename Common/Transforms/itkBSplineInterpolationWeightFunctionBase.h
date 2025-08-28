@@ -20,8 +20,7 @@
 
 #include "itkFunctionBase.h"
 #include "itkContinuousIndex.h"
-#include "itkArray.h"
-#include "itkArray2D.h"
+#include "itkIndexRange.h"
 #include "itkMath.h"
 #include "itkMatrix.h"
 #include "itkBSplineKernelFunction2.h"
@@ -103,7 +102,7 @@ public:
   static constexpr SizeType SupportSize{ SizeType::Filled(VSplineOrder + 1) };
 
 protected:
-  BSplineInterpolationWeightFunctionBase();
+  BSplineInterpolationWeightFunctionBase() = default;
   ~BSplineInterpolationWeightFunctionBase() override = default;
 
   /** Interpolation kernel types. */
@@ -131,16 +130,16 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  /** Member variables. */
-  vnl_matrix<unsigned long> m_OffsetToIndexTable{};
-
 private:
-  /** Function to initialize the offset table.
-   * The offset table is a convenience table, just to
-   * keep track where is what.
-   */
-  void
-  InitializeOffsetToIndexTable();
+  /** Lookup table type. */
+  using TableType = FixedArray<IndexType, NumberOfWeights>;
+
+  /** Table mapping linear offset to indices. */
+  const TableType m_OffsetToIndexTable{ [] {
+    TableType     table;
+    std::copy_n(ZeroBasedIndexRange<SpaceDimension>(SupportSize).cbegin(), NumberOfWeights, table.begin());
+    return table;
+  }() };
 };
 
 } // end namespace itk
