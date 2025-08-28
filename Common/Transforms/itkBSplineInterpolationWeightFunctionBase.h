@@ -103,7 +103,7 @@ public:
   static constexpr SizeType SupportSize{ SizeType::Filled(VSplineOrder + 1) };
 
 protected:
-  BSplineInterpolationWeightFunctionBase();
+  BSplineInterpolationWeightFunctionBase() = default;
   ~BSplineInterpolationWeightFunctionBase() override = default;
 
   /** Interpolation kernel types. */
@@ -126,21 +126,6 @@ protected:
   Compute1DWeights(const ContinuousIndexType & index,
                    const IndexType &           startIndex,
                    OneDWeightsType &           weights1D) const = 0;
-
-  /** Print the member variables. */
-  void
-  PrintSelf(std::ostream & os, Indent indent) const override;
-
-  /** Member variables. */
-  vnl_matrix<unsigned long> m_OffsetToIndexTable{};
-
-private:
-  /** Function to initialize the offset table.
-   * The offset table is a convenience table, just to
-   * keep track where is what.
-   */
-  void
-  InitializeOffsetToIndexTable();
 };
 
 } // end namespace itk

@@ -19,77 +19,12 @@
 #define itkBSplineInterpolationWeightFunctionBase_hxx
 
 #include "itkBSplineInterpolationWeightFunctionBase.h"
+#include "itkIndexRange.h"
 #include "itkImage.h"
 #include "itkMatrix.h"
-#include "itkImageRegionConstIteratorWithIndex.h"
 
 namespace itk
 {
-
-/**
- * ****************** Constructor *******************************
- */
-
-template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrder>::
-  BSplineInterpolationWeightFunctionBase()
-{
-  /** Initialize members. */
-  this->InitializeOffsetToIndexTable();
-
-} // end Constructor
-
-
-/**
- * ******************* InitializeOffsetToIndexTable *******************
- */
-
-template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-void
-BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrder>::InitializeOffsetToIndexTable()
-{
-  /** Create a temporary image. */
-  using CharImageType = Image<char, SpaceDimension>;
-  auto tempImage = CharImageType::New();
-  tempImage->SetRegions(SupportSize);
-  tempImage->Allocate();
-
-  /** Create an iterator over the image. */
-  ImageRegionConstIteratorWithIndex<CharImageType> it(tempImage, tempImage->GetBufferedRegion());
-
-  /** Fill the OffsetToIndexTable. */
-  this->m_OffsetToIndexTable.set_size(NumberOfWeights, SpaceDimension);
-  unsigned long counter = 0;
-  while (!it.IsAtEnd())
-  {
-    IndexType ind = it.GetIndex();
-    for (unsigned int i = 0; i < SpaceDimension; ++i)
-    {
-      this->m_OffsetToIndexTable[counter][i] = ind[i];
-    }
-
-    ++counter;
-    ++it;
-  }
-
-} // end InitializeOffsetToIndexTable()
-
-
-/**
- * ******************* PrintSelf *******************
- */
-
-template <typename TCoordinate, unsigned int VSpaceDimension, unsigned int VSplineOrder>
-void
-BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrder>::PrintSelf(std::ostream & os,
-                                                                                              Indent indent) const
-{
-  Superclass::PrintSelf(os, indent);
-
-  os << indent << "OffsetToIndexTable: " << this->m_OffsetToIndexTable << std::endl;
-
-} // end PrintSelf()
-
 
 /**
  * ******************* ComputeStartIndex *******************
@@ -142,6 +77,18 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
   const ContinuousIndexType & cindex,
   const IndexType &           startIndex) const -> WeightsType
 {
+  static constexpr auto offsetToIndexTable = [] {
+    FixedArray<IndexType, NumberOfWeights> table{};
+    auto                                   indexIterator = ZeroBasedIndexRange<SpaceDimension>(SupportSize).cbegin();
+
+    for (size_t i{}; i < NumberOfWeights; ++i)
+    {
+      table[i] = *indexIterator;
+      ++indexIterator;
+    }
+    return table;
+  }();
+
   static_assert(WeightsType::Dimension == NumberOfWeights);
 
   WeightsType weights;
@@ -153,8 +100,8 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
   /** Compute the vector of weights. */
   for (unsigned int k = 0; k < NumberOfWeights; ++k)
   {
-    double                tmp1 = 1.0;
-    const unsigned long * tmp2 = this->m_OffsetToIndexTable[k];
+    double     tmp1 = 1.0;
+    const auto tmp2 = offsetToIndexTable[k];
     for (unsigned int j = 0; j < SpaceDimension; ++j)
     {
       tmp1 *= weights1D[j][tmp2[j]];
