@@ -404,7 +404,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
     {
       while (!itCoef.IsAtEndOfLine())
       {
-        (*itCoeffsLinear) = itCoef.Value();
+        *itCoeffsLinear = itCoef.Value();
         ++itCoeffsLinear;
         ++itCoef;
       }
@@ -437,7 +437,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
       /** Compute the sum for this dimension. */
       for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
       {
-        sj(dim, i) += (*itCoeffs) * (*itWeights);
+        sj(dim, i) += *itCoeffs * *itWeights;
         ++itWeights;
         ++itCoeffs;
       } // end for mu
@@ -503,7 +503,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
     {
       while (!itCoef.IsAtEndOfLine())
       {
-        (*itCoeffsLinear) = itCoef.Value();
+        *itCoeffsLinear = itCoef.Value();
         ++itCoeffsLinear;
         ++itCoef;
       }
@@ -537,7 +537,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetS
 
         for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
         {
-          sum += (*itCoeffs) * (*itWeights);
+          sum += *itCoeffs * *itWeights;
           ++itWeights;
           ++itCoeffs;
         }
@@ -709,7 +709,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     {
       while (!itCoef.IsAtEndOfLine())
       {
-        (*itCoeffsLinear) = itCoef.Value();
+        *itCoeffsLinear = itCoef.Value();
         ++itCoeffsLinear;
         ++itCoef;
       }
@@ -751,7 +751,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
       /** Compute the sum for this dimension. */
       for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
       {
-        sj(dim, i) += (*itCoeffs) * (*itWeights);
+        sj(dim, i) += *itCoeffs * *itWeights;
         ++itWeights;
         ++itCoeffs;
       }
@@ -968,7 +968,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
     {
       while (!itCoef.IsAtEndOfLine())
       {
-        (*itCoeffsLinear) = itCoef.Value();
+        *itCoeffsLinear = itCoef.Value();
         ++itCoeffsLinear;
         ++itCoef;
       }
@@ -1014,7 +1014,7 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetJ
           double sum = 0.0;
           for (unsigned int mu = 0; mu < NumberOfWeights; ++mu)
           {
-            sum += (*itCoeffs) * (*itWeights);
+            sum += *itCoeffs * *itWeights;
             ++itWeights;
             ++itCoeffs;
           }

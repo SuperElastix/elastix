@@ -187,7 +187,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
       typename VnlVectorType::iterator lambdaIt = pcaCovariance.lambdas().begin();
       typename VnlVectorType::iterator lambdaEnd = pcaCovariance.lambdas().end();
       unsigned int                     nonZeroLength = 0;
-      for (; lambdaIt != lambdaEnd && (*lambdaIt) > 1e-14; ++lambdaIt, ++nonZeroLength)
+      for (; lambdaIt != lambdaEnd && *lambdaIt > 1e-14; ++lambdaIt, ++nonZeroLength)
       {
       }
       if (this->m_EigenValues != nullptr)
@@ -276,7 +276,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::Initialize()
         typename VnlVectorType::iterator lambdaIt = pcaCovariance.lambdas().begin();
         typename VnlVectorType::iterator lambdaEnd = pcaCovariance.lambdas().end();
         unsigned int                     nonZeroLength = 0;
-        for (; lambdaIt != lambdaEnd && (*lambdaIt) > 1e-14; ++lambdaIt, ++nonZeroLength)
+        for (; lambdaIt != lambdaEnd && *lambdaIt > 1e-14; ++lambdaIt, ++nonZeroLength)
         {
         }
 
@@ -509,7 +509,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::GetValueAndDeriva
     {
       if (*proposalDerivativeIt != nullptr)
       {
-        delete (*proposalDerivativeIt);
+        delete *proposalDerivativeIt;
       }
     }
   }
@@ -771,7 +771,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateValue(Me
     }
     case 1: // decomposed covariance (uniform regularization)
     {
-      centerrotated = differenceVector * (*m_EigenVectors);                /** diff^T * V */
+      centerrotated = differenceVector * *m_EigenVectors;                  /** diff^T * V */
       eigrot = element_quotient(centerrotated, *m_EigenValuesRegularized); /** diff^T * V * Lambda^-1 */
       if (this->m_ShrinkageIntensity != 0)
       {
@@ -882,7 +882,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateDerivati
           for (unsigned int propDerivElementIndex = 0; propDerivElementIndex < shapeLength;
                ++propDerivElementIndex, ++propDerivElementIt)
           {
-            (*propDerivElementIt) /= this->m_BaseStd;
+            *propDerivElementIt /= this->m_BaseStd;
           }
           (**proposalDerivativeIt)[shapeLength] /= this->m_CentroidXStd;
           (**proposalDerivativeIt)[shapeLength + 1] /= this->m_CentroidYStd;
@@ -910,7 +910,7 @@ StatisticalShapePointPenalty<TFixedPointSet, TMovingPointSet>::CalculateDerivati
         {
         }
 
-          delete (*proposalDerivativeIt);
+          delete *proposalDerivativeIt;
           // nzjacs++;
       }
     }

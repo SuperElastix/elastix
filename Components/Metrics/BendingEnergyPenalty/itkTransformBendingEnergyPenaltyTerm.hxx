@@ -254,7 +254,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
             typename InternalMatrixType::const_iterator itAend = A[k].end();
             while (itA != itAend)
             {
-              matrixProduct += (*itA) * (*itB);
+              matrixProduct += *itA * *itB;
               ++itA;
               ++itB;
             }
@@ -294,7 +294,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivati
             typename InternalMatrixType::const_iterator itAend = A[k].end();
             while (itA != itAend)
             {
-              matrixElementProduct += (*itA) * (*itB);
+              matrixElementProduct += *itA * *itB;
               ++itA;
               ++itB;
             }
@@ -476,7 +476,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
             typename InternalMatrixType::const_iterator itAend = A[k].end();
             while (itA != itAend)
             {
-              matrixElementProduct += (*itA) * (*itB);
+              matrixElementProduct += *itA * *itB;
               ++itA;
               ++itB;
             }
@@ -510,7 +510,7 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
             typename InternalMatrixType::const_iterator itAend = A[k].end();
             while (itA != itAend)
             {
-              matrixElementProduct += (*itA) * (*itB);
+              matrixElementProduct += *itA * *itB;
               ++itA;
               ++itB;
             }

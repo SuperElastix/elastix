@@ -663,7 +663,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::E
 
     for (auto & imageJacobianElement : imageJacobian)
     {
-      imageJacobianElement += (*jac) * imDeriv;
+      imageJacobianElement += *jac * imDeriv;
       ++jac;
     }
   }
@@ -706,9 +706,9 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::U
     typename DerivativeType::iterator       derivit = deriv.begin();
     for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
-      (*derivit) +=
+      *derivit +=
         diff_2 * spatialJacobianDeterminant *
-        ((*jsjdit) * (movingImageValue - this->m_AirValue) / (this->m_TissueValue - this->m_AirValue) + (*imjacit));
+        (*jsjdit * (movingImageValue - this->m_AirValue) / (this->m_TissueValue - this->m_AirValue) + *imjacit);
       ++imjacit;
       ++jsjdit;
       ++derivit;
@@ -758,7 +758,7 @@ SumSquaredTissueVolumeDifferenceImageToImageMetric<TFixedImage, TMovingImage>::
     {
       for (unsigned int idx = 0; idx < FixedImageDimension; ++idx)
       {
-        (*jsjdit) += inverseSpatialJacobian(diag, idx) * (*jsjit)(idx, diag);
+        *jsjdit += inverseSpatialJacobian(diag, idx) * (*jsjit)(idx, diag);
       }
     }
     ++jsjdit;

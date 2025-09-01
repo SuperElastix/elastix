@@ -85,8 +85,8 @@ bool inside_valid_region_1d( float * cindex, const uint spline_order,
 
   // x
   float max_limit = coefficients_image_size_x - max_helper;
-  float cind = (*cindex); float diff = cind - max_limit;
-  if( diff > 0.0f && diff < eps ){ (*cindex) -= eps; }
+  float cind = *cindex; float diff = cind - max_limit;
+  if( diff > 0.0f && diff < eps ){ *cindex -= eps; }
   else if( cind >= max_limit ) return false;
   else if( cind <  min_limit ) return false;
 

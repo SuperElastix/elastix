@@ -418,7 +418,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetParameters(
                       "SetCoefficientImages() has been called causing the NULL pointer.");
   }
 
-  return (*m_InputParametersPointer);
+  return *m_InputParametersPointer;
 }
 
 // Get the parameters

@@ -740,9 +740,9 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::UpdateValue
     {
       if (usableFixedSample)
       {
-        (*sum1it) += 2.0 * (*imjacit);
+        *sum1it += 2.0 * *imjacit;
       }
-      (*sum2it) += (*imjacit);
+      *sum2it += *imjacit;
 
       /** Increase iterators. */
       ++imjacit;
