@@ -340,7 +340,7 @@ CyclicBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::GetSpa
 
         while (!itCoef.IsAtEnd())
         {
-          sum += itCoef.Value() * (*itWeights);
+          sum += itCoef.Value() * *itWeights;
           ++itWeights;
           ++itCoef;
         }

@@ -324,7 +324,7 @@ EvaluateInnerProduct(const vnl_matrix<TScalarType> &                        inpu
   {
     for (auto & outputVectorElement : outputVector)
     {
-      outputVectorElement += (*inputMatrixIterator) * inputVectorElement;
+      outputVectorElement += *inputMatrixIterator * inputVectorElement;
       ++inputMatrixIterator;
     }
   }

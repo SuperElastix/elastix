@@ -110,9 +110,9 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Upda
 
     for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
-      (*derivativeFit) += fixedImageValue * (*imjacit);
-      (*derivativeMit) += movingImageValue * (*imjacit);
-      (*differentialit) += (*imjacit);
+      *derivativeFit += fixedImageValue * *imjacit;
+      *derivativeMit += movingImageValue * *imjacit;
+      *differentialit += *imjacit;
       ++imjacit;
       ++derivativeFit;
       ++derivativeMit;

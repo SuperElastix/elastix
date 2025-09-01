@@ -586,7 +586,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
     typename DerivativeType::const_iterator imjac = imageJacobian.begin();
     for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
-      *(derivPtr) -= static_cast<PDFDerivativeValueType>((*imjac) * factor);
+      *(derivPtr) -= static_cast<PDFDerivativeValueType>(*imjac * factor);
       ++derivPtr;
       ++imjac;
     }

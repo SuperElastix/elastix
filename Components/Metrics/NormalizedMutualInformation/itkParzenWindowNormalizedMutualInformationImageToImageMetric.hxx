@@ -65,13 +65,13 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
   /** do it! */
   while (PDFit != PDFend)
   {
-    if ((*PDFit) > 1e-16)
+    if (*PDFit > 1e-16)
     {
-      (*PDFit) = std::log(*PDFit);
+      *PDFit = std::log(*PDFit);
     }
     else
     {
-      (*PDFit) = 0.0;
+      *PDFit = 0.0;
     }
     ++PDFit;
   }
@@ -258,7 +258,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
         derivit = derivative.begin();
         while (derivit != derivend)
         {
-          (*derivit) -= jointPDFDerivativesConstit.Get() * pRatioAlpha;
+          *derivit -= jointPDFDerivativesConstit.Get() * pRatioAlpha;
           ++derivit;
           ++jointPDFDerivativesConstit;
         } // end while-loop over parameters

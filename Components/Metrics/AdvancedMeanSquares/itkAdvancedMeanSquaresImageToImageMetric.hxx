@@ -705,7 +705,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::UpdateValueAnd
     typename DerivativeType::iterator       derivit = deriv.begin();
     for (unsigned int mu = 0; mu < numberOfParameters; ++mu)
     {
-      (*derivit) += diff_2 * (*imjacit);
+      *derivit += diff_2 * *imjacit;
       ++imjacit;
       ++derivit;
     }

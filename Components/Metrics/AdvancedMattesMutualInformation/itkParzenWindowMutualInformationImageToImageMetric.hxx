@@ -207,7 +207,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
         while (derivit != derivend)
         {
           /**  Ref: eq 23 of Thevenaz & Unser paper [3]. */
-          (*derivit) -= jointPDFDerivativesit.Get() * pRatioAlpha;
+          *derivit -= jointPDFDerivativesit.Get() * pRatioAlpha;
           ++derivit;
           ++jointPDFDerivativesit;
         } // end while-loop over parameters
@@ -346,7 +346,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
         {
           while (imjacit != imageJacobian.end())
           {
-            (*imjacit) *= (*jacprecit);
+            *imjacit *= *jacprecit;
             ++imjacit;
             ++jacprecit;
           }
@@ -371,7 +371,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     const double normalizationFactor = preconditioningDivisor.mean();
     while (derivit != derivative.end())
     {
-      (*derivit) *= normalizationFactor / ((*divisit) + 1e-14);
+      *derivit *= normalizationFactor / (*divisit + 1e-14);
       ++derivit;
       ++divisit;
     }
@@ -507,7 +507,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
         {
           while (imjacit != imageJacobian.end())
           {
-            (*imjacit) *= (*jacprecit);
+            *imjacit *= *jacprecit;
             ++imjacit;
             ++jacprecit;
           }
@@ -532,7 +532,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
     const double normalizationFactor = preconditioningDivisor.mean();
     while (derivit != derivative.end())
     {
-      (*derivit) *= normalizationFactor / ((*divisit) + 1e-14);
+      *derivit *= normalizationFactor / (*divisit + 1e-14);
       ++derivit;
       ++divisit;
     }
@@ -914,7 +914,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
         }
 
         /** Update the derivative component. */
-        (*derivit) += contrib;
+        *derivit += contrib;
 
         /** Move the iterators to the next parameter. */
         ++derivit;
@@ -956,7 +956,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::GetV
   derivit = derivative.begin();
   while (derivit != derivend)
   {
-    (*derivit) *= delta2;
+    *derivit *= delta2;
     ++derivit;
   }
 
@@ -990,7 +990,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
       double                             sum = 0.0;
       for (unsigned int mu = 0; mu < M; ++mu)
       {
-        sum += (*jacit1) * (*jacit2);
+        sum += *jacit1 * *jacit2;
         ++jacit1;
         ++jacit2;
       }
@@ -1025,7 +1025,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
       const double m = fac * jacjact(drow, dcol);
       for (unsigned int mu = 0; mu < M; ++mu)
       {
-        *precondit += m * (*jacit1) * (*jacit2);
+        *precondit += m * *jacit1 * *jacit2;
         ++precondit;
         ++jacit1;
         ++jacit2;
