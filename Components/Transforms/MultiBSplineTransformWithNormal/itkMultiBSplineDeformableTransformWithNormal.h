@@ -408,6 +408,7 @@ protected:
   MultiBSplineDeformableTransformWithNormal();
   ~MultiBSplineDeformableTransformWithNormal() override = default;
 
+private:
   /** Wrap flat array into images of coefficients. */
   // void WrapAsImages();
 
@@ -480,7 +481,6 @@ protected:
   mutable int                                  m_LastJacobian{};
   ImageBasePointer                             m_LocalBases{};
 
-private:
   // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4).
   using Superclass::TransformCovariantVector;
   using Superclass::TransformVector;
