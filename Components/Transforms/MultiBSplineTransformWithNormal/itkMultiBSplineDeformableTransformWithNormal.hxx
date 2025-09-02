@@ -42,18 +42,18 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   : Superclass(SpaceDimension)
 {
   // By default this class handle a unique Transform
-  this->m_NbLabels = 0;
-  this->m_Labels = nullptr;
-  this->m_LabelsInterpolator = nullptr;
-  this->m_Trans.resize(1);
+  m_NbLabels = 0;
+  m_Labels = nullptr;
+  m_LabelsInterpolator = nullptr;
+  m_Trans.resize(1);
   // keep transform 0 to store parameters that are not kept here (GridSize, ...)
-  this->m_Trans[0] = TransformType::New();
-  this->m_LastJacobian = -1;
-  this->m_LocalBases = ImageBaseType::New();
+  m_Trans[0] = TransformType::New();
+  m_LastJacobian = -1;
+  m_LocalBases = ImageBaseType::New();
 
-  this->m_InternalParametersBuffer = ParametersType(0);
+  m_InternalParametersBuffer = ParametersType(0);
   // Make sure the parameters pointer is not NULL after construction.
-  this->m_InputParametersPointer = &(this->m_InternalParametersBuffer);
+  m_InputParametersPointer = &(m_InternalParametersBuffer);
 }
 
 
@@ -149,23 +149,23 @@ void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetLabels(ImageLabelType * labels)
 {
   using StatisticsType = StatisticsImageFilter<ImageLabelType>;
-  if (labels != this->m_Labels)
+  if (labels != m_Labels)
   {
     // Save current settings
-    this->m_Labels = labels;
+    m_Labels = labels;
     ParametersType para = this->GetFixedParameters();
     auto           stat = StatisticsType::New();
-    stat->SetInput(this->m_Labels);
+    stat->SetInput(m_Labels);
     stat->Update();
-    this->m_NbLabels = stat->GetMaximum() + 1;
-    this->m_Trans.resize(this->m_NbLabels + 1);
-    this->m_Para.resize(this->m_NbLabels + 1);
-    for (unsigned i = 0; i <= this->m_NbLabels; ++i)
+    m_NbLabels = stat->GetMaximum() + 1;
+    m_Trans.resize(m_NbLabels + 1);
+    m_Para.resize(m_NbLabels + 1);
+    for (unsigned i = 0; i <= m_NbLabels; ++i)
     {
-      this->m_Trans[i] = TransformType::New();
+      m_Trans[i] = TransformType::New();
     }
-    this->m_LabelsInterpolator = ImageLabelInterpolator::New();
-    this->m_LabelsInterpolator->SetInputImage(this->m_Labels);
+    m_LabelsInterpolator = ImageLabelInterpolator::New();
+    m_LabelsInterpolator->SetInputImage(m_Labels);
     // Restore settings
     this->SetFixedParameters(para);
   }
@@ -360,9 +360,9 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
     transEnd[i] = transOrig[i] + (GetGridRegion().GetSize()[i] - GetGridRegion().GetIndex()[i]) * GetGridSpacing()[i];
   }
 
-  PointType   labelOrig = this->m_Labels->GetOrigin();
-  RegionType  labelReg = this->m_Labels->GetLargestPossibleRegion();
-  SpacingType labelSpac = this->m_Labels->GetSpacing();
+  PointType   labelOrig = m_Labels->GetOrigin();
+  RegionType  labelReg = m_Labels->GetLargestPossibleRegion();
+  SpacingType labelSpac = m_Labels->GetSpacing();
   PointType   labelEnd;
   for (unsigned i = 0; i < NDimensions; ++i)
   {
@@ -382,12 +382,12 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   auto padFilter = PadFilterType::New();
-  padFilter->SetInput(this->m_Labels);
+  padFilter->SetInput(m_Labels);
   padFilter->SetPadLowerBound(lowerExtend);
   padFilter->SetPadUpperBound(upperExtend);
   padFilter->SetConstant(0);
 
-  for (int l = 0; l < this->m_NbLabels; ++l)
+  for (int l = 0; l < m_NbLabels; ++l)
   {
     auto labelExtractor = LabelExtractorType::New();
     labelExtractor->SetInput(padFilter->GetOutput());
@@ -420,15 +420,15 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
     if (l == 0)
     {
-      this->m_LabelsNormals = maskFilter->GetOutput();
+      m_LabelsNormals = maskFilter->GetOutput();
     }
     else
     {
       auto addFilter = AddVectorImageType::New();
-      addFilter->SetInput1(this->m_LabelsNormals);
+      addFilter->SetInput1(m_LabelsNormals);
       addFilter->SetInput2(maskFilter->GetOutput());
       addFilter->Update();
-      this->m_LabelsNormals = addFilter->GetOutput();
+      m_LabelsNormals = addFilter->GetOutput();
     }
   }
 
@@ -438,7 +438,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   m_LocalBases->SetOrigin(GetGridOrigin());
   m_LocalBases->SetDirection(GetGridDirection());
   m_LocalBases->Allocate();
-  UpdateLocalBases_impl<TScalarType, NDimensions>::Do(this->m_LocalBases, this->m_LabelsNormals);
+  UpdateLocalBases_impl<TScalarType, NDimensions>::Do(m_LocalBases, m_LabelsNormals);
 }
 
 
@@ -448,9 +448,9 @@ void
 MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder>::SetIdentity()
 {
   LOOP_ON_LABELS(SetIdentity, );
-  if (this->m_InputParametersPointer)
+  if (m_InputParametersPointer)
   {
-    ParametersType * parameters = const_cast<ParametersType *>(this->m_InputParametersPointer);
+    ParametersType * parameters = const_cast<ParametersType *>(m_InputParametersPointer);
     parameters->Fill(0.0);
     this->Modified();
   }
@@ -524,10 +524,10 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   // Clean up buffered parameters
-  this->m_InternalParametersBuffer = ParametersType(0);
+  m_InternalParametersBuffer = ParametersType(0);
 
   // Keep a reference to the input parameters
-  this->m_InputParametersPointer = &parameters;
+  m_InputParametersPointer = &parameters;
 
   DispatchParameters(parameters);
 
@@ -563,8 +563,8 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   }
 
   // copy it
-  this->m_InternalParametersBuffer = parameters;
-  this->m_InputParametersPointer = &(this->m_InternalParametersBuffer);
+  m_InternalParametersBuffer = parameters;
+  m_InputParametersPointer = &(m_InternalParametersBuffer);
 
   DispatchParameters(parameters);
 
@@ -583,13 +583,13 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   /** NOTE: For efficiency, this class does not keep a copy of the parameters -
    * it just keeps pointer to input parameters.
    */
-  if (nullptr == this->m_InputParametersPointer)
+  if (nullptr == m_InputParametersPointer)
   {
     itkExceptionMacro("Cannot GetParameters() because m_InputParametersPointer is NULL. Perhaps "
                       "SetCoefficientImages() has been called causing the NULL pointer.");
   }
 
-  return (*this->m_InputParametersPointer);
+  return (*m_InputParametersPointer);
 }
 
 // Get the parameters
@@ -631,12 +631,12 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   int &                  l) const
 {
   l = 0;
-  assert(this->m_Labels);
+  assert(m_Labels);
   typename ImageLabelInterpolator::IndexType idx;
-  this->m_LabelsInterpolator->ConvertPointToNearestIndex(p, idx);
-  if (this->m_LabelsInterpolator->IsInsideBuffer(idx))
+  m_LabelsInterpolator->ConvertPointToNearestIndex(p, idx);
+  if (m_LabelsInterpolator->IsInsideBuffer(idx))
   {
-    l = static_cast<int>(this->m_LabelsInterpolator->EvaluateAtIndex(idx)) + 1;
+    l = static_cast<int>(m_LabelsInterpolator->EvaluateAtIndex(idx)) + 1;
   }
 }
 
@@ -703,7 +703,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // This implements a sparse version of the Jacobian.
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if (this->m_InputParametersPointer == nullptr)
+  if (m_InputParametersPointer == nullptr)
   {
     itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
@@ -792,7 +792,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if (this->m_InputParametersPointer == nullptr)
+  if (m_InputParametersPointer == nullptr)
   {
     itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
@@ -828,7 +828,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
 
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if (this->m_InputParametersPointer == nullptr)
+  if (m_InputParametersPointer == nullptr)
   {
     itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
@@ -894,7 +894,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // This implements a sparse version of the Jacobian.
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if (this->m_InputParametersPointer == nullptr)
+  if (m_InputParametersPointer == nullptr)
   {
     itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
@@ -991,7 +991,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   // This implements a sparse version of the Jacobian.
   // Can only compute Jacobian if parameters are set via
   // SetParameters or SetParametersByValue
-  if (this->m_InputParametersPointer == nullptr)
+  if (m_InputParametersPointer == nullptr)
   {
     itkExceptionMacro("Cannot compute Jacobian: parameters not set");
   }
