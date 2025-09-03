@@ -33,7 +33,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
   : Superclass(SpaceDimension)
   , m_SplineOrder(splineOrder)
 {
-  m_InternalParametersBuffer = ParametersType(0);
   // Make sure the parameters pointer is not NULL after construction.
   m_InputParametersPointer = &(m_InternalParametersBuffer);
 
@@ -45,7 +44,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
     m_WrappedImage[j]->SetOrigin(m_GridOrigin.GetDataPointer());
     m_WrappedImage[j]->SetSpacing(m_GridSpacing.GetDataPointer());
     m_WrappedImage[j]->SetDirection(m_GridDirection);
-    m_CoefficientImages[j] = nullptr;
   }
 
   /** Fixed Parameters store the following information:
