@@ -203,7 +203,7 @@ public:
   virtual const ImagePointer *
   GetCoefficientImages() const
   {
-    return m_CoefficientImages;
+    return m_CoefficientImages.data();
   }
 
   /** Set the array of coefficient images.
@@ -366,7 +366,7 @@ protected:
   /** Array of images representing the B-spline coefficients
    *  in each dimension.
    */
-  ImagePointer m_CoefficientImages[NDimensions]{};
+  FixedArray<ImagePointer, NDimensions> m_CoefficientImages{};
 
   /** Variables defining the coefficient grid extend. */
   RegionType     m_GridRegion{};
@@ -396,7 +396,7 @@ protected:
   using JacobianImageType = Image<JacobianPixelType, Self::SpaceDimension>;
 
   /** Array holding images wrapped from the flat parameters. */
-  ImagePointer m_WrappedImage[NDimensions]{};
+  FixedArray<ImagePointer, NDimensions> m_WrappedImage{};
 
   /** Internal parameters buffer. */
   ParametersType m_InternalParametersBuffer{};
