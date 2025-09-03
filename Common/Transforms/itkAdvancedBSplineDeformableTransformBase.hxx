@@ -363,8 +363,8 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::WrapAsImages()
   {
     m_WrappedImage[j]->GetPixelContainer()->SetImportPointer(dataPointer, numberOfPixels);
     dataPointer += numberOfPixels;
-    m_CoefficientImages[j] = m_WrappedImage[j];
   }
+  m_CoefficientImages = m_WrappedImage;
 }
 
 
