@@ -200,7 +200,7 @@ public:
   using ImagePointer = typename ImageType::Pointer;
 
   /** Get the array of coefficient images. */
-  virtual const ImagePointer *
+  const ImagePointer *
   GetCoefficientImages() const
   {
     return m_CoefficientImages.data();
@@ -217,7 +217,7 @@ public:
    * Warning: use either the SetParameters() or SetCoefficientImages()
    * API. Mixing the two modes may results in unexpected results.
    */
-  virtual void
+  void
   SetCoefficientImages(ImagePointer images[]);
 
   /** Typedefs for specifying the extend to the grid. */
