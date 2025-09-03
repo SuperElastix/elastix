@@ -388,9 +388,6 @@ protected:
   ContinuousIndexType m_ValidRegionBegin{};
   ContinuousIndexType m_ValidRegionEnd{};
 
-  /** Keep a pointer to the input parameters. */
-  const ParametersType * m_InputParametersPointer{};
-
   /** Jacobian as SpaceDimension number of images. */
   using JacobianPixelType = typename JacobianType::ValueType;
   using JacobianImageType = Image<JacobianPixelType, Self::SpaceDimension>;
@@ -400,6 +397,9 @@ protected:
 
   /** Internal parameters buffer. */
   ParametersType m_InternalParametersBuffer{};
+
+  /** Keep a pointer to the input parameters. Made sure the pointer is not NULL after construction. */
+  const ParametersType * m_InputParametersPointer{ &m_InternalParametersBuffer };
 
   void
   UpdateGridOffsetTable();
