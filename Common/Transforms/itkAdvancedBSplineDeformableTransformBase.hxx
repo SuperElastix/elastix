@@ -33,9 +33,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
   : Superclass(SpaceDimension)
   , m_SplineOrder(splineOrder)
 {
-  // Make sure the parameters pointer is not NULL after construction.
-  m_InputParametersPointer = &(m_InternalParametersBuffer);
-
   // Initialize coeffient images
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
