@@ -73,7 +73,7 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::GetNumberOfPar
 
   // The number of parameters equal SpaceDimension * number of
   // of pixels in the grid region.
-  return (static_cast<NumberOfParametersType>(SpaceDimension) *
+  return (NumberOfParametersType{ SpaceDimension } *
           static_cast<NumberOfParametersType>(m_GridRegion.GetNumberOfPixels()));
 }
 
