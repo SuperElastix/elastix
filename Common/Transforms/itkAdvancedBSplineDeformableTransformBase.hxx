@@ -37,10 +37,6 @@ AdvancedBSplineDeformableTransformBase<TScalarType, NDimensions>::AdvancedBSplin
   for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
     m_WrappedImage[j] = ImageType::New();
-    m_WrappedImage[j]->SetRegions(m_GridRegion);
-    m_WrappedImage[j]->SetOrigin(m_GridOrigin.GetDataPointer());
-    m_WrappedImage[j]->SetSpacing(m_GridSpacing.GetDataPointer());
-    m_WrappedImage[j]->SetDirection(m_GridDirection);
   }
 
   /** Fixed Parameters store the following information:
