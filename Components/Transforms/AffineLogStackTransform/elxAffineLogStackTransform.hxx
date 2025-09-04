@@ -28,20 +28,6 @@ namespace elastix
 {
 
 /**
- * ********************* InitializeAffineTransform ****************************
- */
-template <typename TElastix>
-unsigned int
-AffineLogStackTransform<TElastix>::InitializeAffineLogTransform()
-{
-  /** Initialize the m_DummySubTransform */
-  m_DummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
-
-  return 0;
-}
-
-
-/**
  * ******************* BeforeAll ***********************
  */
 
@@ -50,7 +36,7 @@ int
 AffineLogStackTransform<TElastix>::BeforeAll()
 {
   /** Initialize affine transform. */
-  return InitializeAffineLogTransform();
+  m_DummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
 }
 
 
@@ -122,7 +108,7 @@ AffineLogStackTransform<TElastix>::ReadFromFile()
       itkExceptionMacro("Transform parameter file is corrupt.");
     }
 
-    this->InitializeAffineLogTransform();
+    m_DummySubTransform = ReducedDimensionAffineLogTransformBaseType::New();
 
     m_DummySubTransform->SetCenter(RDcenterOfRotationPoint);
 

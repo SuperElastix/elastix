@@ -187,10 +187,6 @@ private:
   /** Stack variables. */
   unsigned int m_NumberOfSubTransforms;
   double       m_StackOrigin, m_StackSpacing;
-
-  /** Initialize the affine transform. */
-  unsigned int
-  InitializeAffineLogTransform();
 };
 
 } // end namespace elastix
