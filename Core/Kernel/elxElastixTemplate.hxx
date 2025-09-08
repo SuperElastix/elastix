@@ -200,7 +200,7 @@ ElastixTemplate<TFixedImage, TMovingImage>::Run()
   /** START! */
   try
   {
-    (this->GetElxRegistrationBase()->GetAsITKBaseType())->StartRegistration();
+    (this->GetElxRegistrationBase()->GetAsITKBaseType())->Update();
   }
   catch (itk::ExceptionObject & excp)
   {

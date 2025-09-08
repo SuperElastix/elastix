@@ -253,93 +253,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
 
 
 /*
- * Starts the Registration Process
- */
-template <typename TFixedImage, typename TMovingImage>
-void
-MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::StartRegistration()
-{
-
-  // StartRegistration is an old API from before
-  // this egistrationMethod was a subclass of ProcessObject.
-  // Historically, one could call StartRegistration() instead of
-  // calling Update().  However, when called directly by the user, the
-  // inputs to the RegistrationMethod may not be up to date.  This
-  // may cause an unexpected behavior.
-  //
-  // Since we cannot eliminate StartRegistration for backward
-  // compability reasons, we check whether StartRegistration was
-  // called directly or whether Update() (which in turn called
-  // StartRegistration()).
-  if (!this->m_Updating)
-  {
-    this->Update();
-  }
-  else
-  {
-    this->m_Stop = false;
-
-    this->PreparePyramids();
-
-    for (this->m_CurrentLevel = 0; this->m_CurrentLevel < this->m_NumberOfLevels; this->m_CurrentLevel++)
-    {
-
-      // Invoke an iteration event.
-      // This allows a UI to reset any of the components between
-      // resolution level.
-      this->InvokeEvent(IterationEvent());
-
-      // Check if there has been a stop request
-      if (this->m_Stop)
-      {
-        break;
-      }
-
-      try
-      {
-        // initialize the interconnects between components
-        this->Initialize();
-      }
-      catch (const ExceptionObject &)
-      {
-        this->m_LastTransformParameters = ParametersType(1);
-        this->m_LastTransformParameters.Fill(0.0f);
-
-        // pass exception to caller
-        throw;
-      }
-
-      try
-      {
-        // do the optimization
-        this->m_Optimizer->StartOptimization();
-      }
-      catch (const ExceptionObject &)
-      {
-        // An error has occurred in the optimization.
-        // Update the parameters
-        this->m_LastTransformParameters = this->m_Optimizer->GetCurrentPosition();
-
-        // Pass exception to caller
-        throw;
-      }
-
-      // get the results
-      this->m_LastTransformParameters = this->m_Optimizer->GetCurrentPosition();
-      this->m_Transform->SetParameters(this->m_LastTransformParameters);
-
-      // setup the initial parameters for next level
-      if (this->m_CurrentLevel < this->m_NumberOfLevels - 1)
-      {
-        this->m_InitialTransformParametersOfNextLevel = this->m_LastTransformParameters;
-      }
-    }
-  }
-
-} // end StartRegistration()
-
-
-/*
  * PrintSelf
  */
 template <typename TFixedImage, typename TMovingImage>
@@ -381,7 +294,63 @@ template <typename TFixedImage, typename TMovingImage>
 void
 MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::GenerateData()
 {
-  this->StartRegistration();
+  this->m_Stop = false;
+
+  this->PreparePyramids();
+
+  for (this->m_CurrentLevel = 0; this->m_CurrentLevel < this->m_NumberOfLevels; this->m_CurrentLevel++)
+  {
+
+    // Invoke an iteration event.
+    // This allows a UI to reset any of the components between
+    // resolution level.
+    this->InvokeEvent(IterationEvent());
+
+    // Check if there has been a stop request
+    if (this->m_Stop)
+    {
+      break;
+    }
+
+    try
+    {
+      // initialize the interconnects between components
+      this->Initialize();
+    }
+    catch (const ExceptionObject &)
+    {
+      this->m_LastTransformParameters = ParametersType(1);
+      this->m_LastTransformParameters.Fill(0.0f);
+
+      // pass exception to caller
+      throw;
+    }
+
+    try
+    {
+      // do the optimization
+      this->m_Optimizer->StartOptimization();
+    }
+    catch (const ExceptionObject &)
+    {
+      // An error has occurred in the optimization.
+      // Update the parameters
+      this->m_LastTransformParameters = this->m_Optimizer->GetCurrentPosition();
+
+      // Pass exception to caller
+      throw;
+    }
+
+    // get the results
+    this->m_LastTransformParameters = this->m_Optimizer->GetCurrentPosition();
+    this->m_Transform->SetParameters(this->m_LastTransformParameters);
+
+    // setup the initial parameters for next level
+    if (this->m_CurrentLevel < this->m_NumberOfLevels - 1)
+    {
+      this->m_InitialTransformParametersOfNextLevel = this->m_LastTransformParameters;
+    }
+  }
 }
 
 

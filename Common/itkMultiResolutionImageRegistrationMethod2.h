@@ -65,7 +65,7 @@ namespace itk
  * See documentation for ImageRegistrationMethod for a description
  * of the registration framework components.
  *
- * The registration process is initiated by method StartRegistration().
+ * The registration process is initiated by method Update().
  * The user must set the parameters of each component before calling
  * this method.
  *
@@ -77,7 +77,7 @@ namespace itk
  *
  * The downsampled images are provided by user specified
  * MultiResolutionPyramidImageFilters. User must specify the schedule
- * for each pyramid externally prior to calling StartRegistration().
+ * for each pyramid externally prior to calling Update().
  *
  * \warning If there is discrepancy between the number of level requested
  * and a pyramid schedule. The pyramid schedule will be overridden
@@ -158,10 +158,6 @@ public:
 
   /** Smart Pointer type to a DataObject. */
   using DataObjectPointer = typename DataObject::Pointer;
-
-  /** Method that initiates the registration. */
-  virtual void
-  StartRegistration();
 
   /** Method to stop the registration. */
   virtual void
