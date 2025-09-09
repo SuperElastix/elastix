@@ -36,6 +36,7 @@
 // Type aliases:
 using ParameterMapType = elx::ParameterObject::ParameterMapType;
 using ParameterMapVectorType = elx::ParameterObject::ParameterMapVectorType;
+using ParameterValueVectorType = elx::ParameterObject::ParameterValueVectorType;
 using ParameterFileNameVectorType = elx::ParameterObject::ParameterFileNameVectorType;
 
 // Using-declarations:
@@ -228,4 +229,16 @@ GTEST_TEST(ParameterObject, HasParameterWithoutIndex)
 GTEST_TEST(ParameterObject, GetDefaultParameterMapThrowsExceptionOnTransformNameNonrigid)
 {
   EXPECT_THROW(elx::ParameterObject::GetDefaultParameterMap("nonrigid"), itk::ExceptionObject);
+}
+
+
+// Tests that the GridSpacingSchedule of a map returned by GetDefaultParameterMap is as expected.
+GTEST_TEST(ParameterObject, GridSpacingScheduleOfDefaultParameterMap)
+{
+  for (const std::string transformName : { "bspline", "groupwise" })
+  {
+    const auto parameterMap = elx::ParameterObject::GetDefaultParameterMap(transformName);
+    EXPECT_EQ(parameterMap.at("GridSpacingSchedule"),
+              (ParameterValueVectorType{ "2.803221", "1.988100", "1.410000", "1.000000" }));
+  }
 }
