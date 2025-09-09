@@ -222,3 +222,10 @@ GTEST_TEST(ParameterObject, HasParameterWithoutIndex)
   EXPECT_FALSE(parameterObject.HasParameter("OnlyInMap2"));
   EXPECT_FALSE(parameterObject.HasParameter("NonExistentParameter"));
 }
+
+
+//  Tests that ParameterObject::GetDefaultParameterMap("nonrigid") throws an exception.
+GTEST_TEST(ParameterObject, GetDefaultParameterMapThrowsExceptionOnTransformNameNonrigid)
+{
+  EXPECT_THROW(elx::ParameterObject::GetDefaultParameterMap("nonrigid"), itk::ExceptionObject);
+}
