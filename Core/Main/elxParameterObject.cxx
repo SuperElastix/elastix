@@ -21,7 +21,9 @@
 
 #include "itkParameterFileParser.h"
 
+#include <itkNumberToString.h>
 #include "itksys/SystemTools.hxx"
+
 #include <fstream>
 #include <iostream>
 #include <cmath>
@@ -539,7 +541,8 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
     ParameterValueVectorType gridSpacingSchedule{};
     for (double resolution = 0; resolution < numberOfResolutions; ++resolution)
     {
-      gridSpacingSchedule.insert(gridSpacingSchedule.begin(), std::to_string(std::pow(1.41, resolution)));
+      gridSpacingSchedule.insert(gridSpacingSchedule.begin(),
+                                 itk::ConvertNumberToString(std::pow(2.0, resolution / 2.0)));
     }
 
     parameterMap["GridSpacingSchedule"] = gridSpacingSchedule;

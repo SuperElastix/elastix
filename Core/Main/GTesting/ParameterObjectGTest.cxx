@@ -235,10 +235,24 @@ GTEST_TEST(ParameterObject, GetDefaultParameterMapThrowsExceptionOnTransformName
 // Tests that the GridSpacingSchedule of a map returned by GetDefaultParameterMap is as expected.
 GTEST_TEST(ParameterObject, GridSpacingScheduleOfDefaultParameterMap)
 {
+  const unsigned int expectedNumberOfResolutions = 4;
+
   for (const std::string transformName : { "bspline", "groupwise" })
   {
-    const auto parameterMap = elx::ParameterObject::GetDefaultParameterMap(transformName);
-    EXPECT_EQ(parameterMap.at("GridSpacingSchedule"),
-              (ParameterValueVectorType{ "2.803221", "1.988100", "1.410000", "1.000000" }));
+    const ParameterMapType parameterMap = elx::ParameterObject::GetDefaultParameterMap(transformName);
+
+    const ParameterValueVectorType & parameterValues = parameterMap.at("GridSpacingSchedule");
+    ASSERT_EQ(parameterValues.size(), expectedNumberOfResolutions);
+
+    for (unsigned int resolution{}; resolution < expectedNumberOfResolutions; ++resolution)
+    {
+      const std::string & parameterValue = parameterValues.at(resolution);
+
+      std::size_t  numberOfProcessedChars{};
+      const double floatingPointValue{ std::stod(parameterValue, &numberOfProcessedChars) };
+      EXPECT_EQ(numberOfProcessedChars, parameterValue.size());
+
+      EXPECT_FLOAT_EQ(floatingPointValue, std::pow(2.0, (expectedNumberOfResolutions - resolution - 1) / 2.0));
+    }
   }
 }
