@@ -25,6 +25,7 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <iomanip> // For quoted.
 
 namespace elastix
 {
@@ -438,6 +439,14 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
                                         const unsigned int  numberOfResolutions,
                                         const double        finalGridSpacingInPhysicalUnits)
 {
+  if (transformName == "nonrigid")
+  {
+    itkGenericExceptionMacro("The transform name "
+                             << std::quoted(transformName)
+                             << " is no longer supported, after elastix version 5.2.0. It was originally equivalent to "
+                                "\"bspline\" (which is the preferred transform name).");
+  }
+
   // Parameters that depend on size and number of resolutions
   ParameterMapType parameterMap{};
 
@@ -493,7 +502,7 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
     parameterMap["MaximumNumberOfIterations"] = ParameterValueVectorType(1, "256");
     parameterMap["AutomaticScalesEstimation"] = ParameterValueVectorType(1, "true");
   }
-  else if (transformName == "bspline" || transformName == "nonrigid") // <-- nonrigid for backwards compatibility
+  else if (transformName == "bspline")
   {
     parameterMap["Registration"] = ParameterValueVectorType(1, "MultiMetricMultiResolutionRegistration");
     parameterMap["Transform"] = ParameterValueVectorType(1, "BSplineTransform");
@@ -525,8 +534,7 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
   }
 
   // B-spline transform settings
-  if (transformName == "bspline" || transformName == "nonrigid" ||
-      transformName == "groupwise") // <-- nonrigid for backwards compatibility
+  if (transformName == "bspline" || transformName == "groupwise")
   {
     ParameterValueVectorType gridSpacingSchedule{};
     for (double resolution = 0; resolution < numberOfResolutions; ++resolution)
