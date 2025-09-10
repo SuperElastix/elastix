@@ -160,7 +160,7 @@ public:
   using DataObjectPointer = typename DataObject::Pointer;
 
   /** Method to stop the registration. */
-  virtual void
+  void
   StopRegistration();
 
   /** Set/Get the Fixed image. */
