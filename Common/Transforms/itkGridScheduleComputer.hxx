@@ -37,14 +37,13 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::GridScheduleCompute
 {
   m_BSplineOrder = 3;
   m_InitialTransform = nullptr;
-  m_UpsamplingFactor = 2.0;
 
   m_ImageOrigin.Fill(0.0);
   m_ImageSpacing.Fill(1.0);
   m_ImageDirection.Fill(0.0);
   m_FinalGridSpacing.Fill(0.0);
 
-  this->SetDefaultSchedule(3, 2.0);
+  this->SetDefaultSchedule(3);
 
 } // end Constructor()
 
@@ -55,24 +54,24 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::GridScheduleCompute
 
 template <typename TTransformScalarType, unsigned int VImageDimension>
 void
-GridScheduleComputer<TTransformScalarType, VImageDimension>::SetDefaultSchedule(unsigned int levels,
-                                                                                double       upsamplingFactor)
+GridScheduleComputer<TTransformScalarType, VImageDimension>::SetDefaultSchedule(unsigned int levels)
 {
   /** Set member variables. */
   m_NumberOfLevels = levels;
-  this->SetUpsamplingFactor(upsamplingFactor);
 
   /** Initialize the schedule. */
   auto factors = MakeFilled<GridSpacingFactorType>(1.0);
   m_GridSpacingFactors.clear();
   m_GridSpacingFactors.resize(levels, factors);
 
+  static constexpr float upsamplingFactor{ 2.0 };
+
   /** Setup a default schedule. */
-  float factor = m_UpsamplingFactor;
+  float factor = upsamplingFactor;
   for (int i = levels - 2; i > -1; --i)
   {
     m_GridSpacingFactors[i] *= factor;
-    factor *= m_UpsamplingFactor;
+    factor *= upsamplingFactor;
   }
 
 } // end SetDefaultSchedule()
@@ -388,8 +387,6 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::PrintSelf(std::ostr
   {
     os << indent.GetNextIndent() << m_GridRegions[i] << std::endl;
   }
-
-  os << indent << "UpsamplingFactor: " << m_UpsamplingFactor << std::endl;
 
 } // end PrintSelf()
 

@@ -116,7 +116,7 @@ public:
 
   /** Set a default grid spacing schedule. */
   void
-  SetDefaultSchedule(unsigned int levels, double upsamplingFactor);
+  SetDefaultSchedule(unsigned int levels);
 
   /** Set a grid spacing schedule. */
   virtual void
@@ -179,12 +179,6 @@ private:
   unsigned int  m_BSplineOrder{};
   unsigned int  m_NumberOfLevels{};
   SpacingType   m_FinalGridSpacing{};
-
-  /** Clamp the upsampling factor. */
-  itkSetClampMacro(UpsamplingFactor, float, 1.0, NumericTraits<float>::max());
-
-  /** Declare member variables, needed internally. */
-  float m_UpsamplingFactor{};
 };
 
 } // end namespace itk
