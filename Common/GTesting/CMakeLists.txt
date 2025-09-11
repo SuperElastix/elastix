@@ -12,6 +12,7 @@ add_executable(CommonGTest
   itkAdvancedMeanSquaresImageToImageMetricGTest.cxx
   itkComputeImageExtremaFilterGTest.cxx
   itkCorrespondingPointsEuclideanDistancePointMetricGTest.cxx
+  itkGridScheduleComputerGTest.cxx
   itkImageFileCastWriterGTest.cxx
   itkImageFullSamplerGTest.cxx
   itkImageGridSamplerGTest.cxx
