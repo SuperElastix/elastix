@@ -115,7 +115,7 @@ public:
   itkGetConstMacro(FinalGridSpacing, SpacingType);
 
   /** Set a default grid spacing schedule. */
-  virtual void
+  void
   SetDefaultSchedule(unsigned int levels, double upsamplingFactor);
 
   /** Set a grid spacing schedule. */
