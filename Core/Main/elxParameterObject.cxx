@@ -538,14 +538,18 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
   // B-spline transform settings
   if (transformName == "bspline" || transformName == "groupwise")
   {
-    ParameterValueVectorType gridSpacingSchedule{};
-    for (double resolution = 0; resolution < numberOfResolutions; ++resolution)
-    {
-      gridSpacingSchedule.insert(gridSpacingSchedule.begin(),
-                                 itk::ConvertNumberToString(std::pow(2.0, resolution / 2.0)));
-    }
+    parameterMap["GridSpacingSchedule"] = [numberOfResolutions] {
+      ParameterValueVectorType gridSpacingSchedule{};
+      gridSpacingSchedule.reserve(numberOfResolutions);
 
-    parameterMap["GridSpacingSchedule"] = gridSpacingSchedule;
+      for (unsigned int resolution = 0; resolution < numberOfResolutions; ++resolution)
+      {
+        gridSpacingSchedule.push_back(
+          itk::ConvertNumberToString(std::pow(2.0, (numberOfResolutions - resolution - 1) / 2.0)));
+      }
+      return gridSpacingSchedule;
+    }();
+
     parameterMap["FinalGridSpacingInPhysicalUnits"] =
       ParameterValueVectorType(1, std::to_string(finalGridSpacingInPhysicalUnits));
   }
