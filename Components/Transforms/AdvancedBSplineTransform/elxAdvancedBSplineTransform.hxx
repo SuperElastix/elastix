@@ -241,7 +241,7 @@ AdvancedBSplineTransform<TElastix>::PreComputeGridInformation()
   }
 
   /** Set up a default grid spacing schedule. */
-  this->m_GridScheduleComputer->SetDefaultSchedule(nrOfResolutions, 2.0);
+  this->m_GridScheduleComputer->SetDefaultSchedule(nrOfResolutions);
   GridScheduleType gridSchedule;
   this->m_GridScheduleComputer->GetSchedule(gridSchedule);
 
