@@ -54,21 +54,21 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::GridScheduleCompute
 
 template <typename TTransformScalarType, unsigned int VImageDimension>
 void
-GridScheduleComputer<TTransformScalarType, VImageDimension>::SetDefaultSchedule(unsigned int levels)
+GridScheduleComputer<TTransformScalarType, VImageDimension>::SetDefaultSchedule(unsigned int numberOfLevels)
 {
   /** Set member variables. */
-  m_NumberOfLevels = levels;
+  m_NumberOfLevels = numberOfLevels;
 
   /** Initialize the schedule. */
   auto factors = MakeFilled<GridSpacingFactorType>(1.0);
   m_GridSpacingFactors.clear();
-  m_GridSpacingFactors.resize(levels, factors);
+  m_GridSpacingFactors.resize(numberOfLevels, factors);
 
   static constexpr float upsamplingFactor{ 2.0 };
 
   /** Setup a default schedule. */
   float factor = upsamplingFactor;
-  for (int i = levels - 2; i > -1; --i)
+  for (int i = numberOfLevels - 2; i > -1; --i)
   {
     m_GridSpacingFactors[i] *= factor;
     factor *= upsamplingFactor;
