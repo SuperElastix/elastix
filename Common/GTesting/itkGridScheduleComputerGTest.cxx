@@ -36,8 +36,7 @@ GTEST_TEST(GridScheduleComputer, SetDefaultSchedule)
   for (unsigned int numberOfLevels{}; numberOfLevels < 10; ++numberOfLevels)
   {
     gridScheduleComputer.SetDefaultSchedule(numberOfLevels);
-    GridScheduleComputerType::VectorGridSpacingFactorType schedule{};
-    gridScheduleComputer.GetSchedule(schedule);
+    const GridScheduleComputerType::VectorGridSpacingFactorType schedule = gridScheduleComputer.GetSchedule();
     EXPECT_EQ(schedule.size(), numberOfLevels);
 
     for (unsigned int level = 0; level < numberOfLevels; ++level)

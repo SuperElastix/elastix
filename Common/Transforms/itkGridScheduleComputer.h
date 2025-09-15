@@ -123,8 +123,8 @@ public:
   SetSchedule(const VectorGridSpacingFactorType & schedule);
 
   /** Get the grid spacing schedule. */
-  virtual void
-  GetSchedule(VectorGridSpacingFactorType & schedule) const;
+  VectorGridSpacingFactorType
+  GetSchedule() const;
 
   /** Set an initial Transform. Only set one if composition is used. */
   itkSetConstObjectMacro(InitialTransform, TransformType);

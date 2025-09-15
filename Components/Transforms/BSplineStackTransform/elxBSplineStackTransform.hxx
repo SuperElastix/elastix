@@ -284,8 +284,7 @@ BSplineStackTransform<TElastix>::PreComputeGridInformation()
 
   /** Set up a default grid spacing schedule. */
   m_GridScheduleComputer->SetDefaultSchedule(nrOfResolutions);
-  GridScheduleType gridSchedule;
-  m_GridScheduleComputer->GetSchedule(gridSchedule);
+  GridScheduleType gridSchedule = m_GridScheduleComputer->GetSchedule();
 
   /** Read what the user has specified. This overrules everything. */
   count2 = configuration.CountNumberOfParameterEntries("GridSpacingSchedule");

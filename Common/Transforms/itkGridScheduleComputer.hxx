@@ -92,10 +92,10 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::SetSchedule(const V
  */
 
 template <typename TTransformScalarType, unsigned int VImageDimension>
-void
-GridScheduleComputer<TTransformScalarType, VImageDimension>::GetSchedule(VectorGridSpacingFactorType & schedule) const
+auto
+GridScheduleComputer<TTransformScalarType, VImageDimension>::GetSchedule() const -> VectorGridSpacingFactorType
 {
-  schedule = m_GridSpacingFactors;
+  return m_GridSpacingFactors;
 
 } // end GetSchedule()
 
