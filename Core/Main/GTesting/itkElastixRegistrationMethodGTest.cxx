@@ -2290,6 +2290,74 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
 }
 
 
+// Tests registering two small (8x8) images, which are translated with respect to each other. Using bspline.
+GTEST_TEST(itkElastixRegistrationMethod, BSplineTranslation2D)
+{
+  using PixelType = float;
+  static constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const auto imageSizeValue = 8;
+  const auto imageSize = SizeType::Filled(imageSizeValue);
+  const auto fixedImageRegionIndex = IndexType::Filled(imageSizeValue / 2 - 1);
+
+  const auto setPixelsOfSquareRegion = [](ImageType & image, const IndexType & regionIndex) {
+    // Set a different value to each of the pixels of a little square region, to ensure that no rotation is assumed.
+    const itk::ImageRegionRange<ImageType> imageRegionRange{ image, { regionIndex, SizeType::Filled(2) } };
+    std::iota(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
+  };
+
+  const auto fixedImage = CreateImage<PixelType>(imageSize);
+  setPixelsOfSquareRegion(*fixedImage, fixedImageRegionIndex);
+
+  for (const char * const transformName : { "BSplineTransform", "RecursiveBSplineTransform" })
+  {
+    SCOPED_TRACE(testing::Message() << "transformName = " << std::quoted(transformName));
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+    registration.SetFixedImage(fixedImage);
+    registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                            { "AutomaticTransformInitialization", "false" },
+                                                            { "ImageSampler", "Full" },
+                                                            // Five iterations appears sufficient for this simple test.
+                                                            { "MaximumNumberOfIterations", "8" },
+                                                            { "Metric", "AdvancedNormalizedCorrelation" },
+                                                            { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                            { "Transform", transformName } }));
+
+    const auto movingImage = CreateImage<PixelType>(imageSize);
+
+    // Test translation for each direction from (-1, -1) to (1, 1).
+    for (const auto & index : itk::ZeroBasedIndexRange<ImageDimension>(SizeType::Filled(3)))
+    {
+      movingImage->FillBuffer(0);
+      const OffsetType translation = index - IndexType::Filled(1);
+      setPixelsOfSquareRegion(*movingImage, fixedImageRegionIndex + translation);
+
+      registration.SetMovingImage(movingImage);
+      registration.Update();
+
+      const auto transformParameters = GetTransformParametersFromFilter(registration);
+
+      static constexpr std::size_t expectedNumberOfParametersPerDimension{ 16 };
+      static constexpr std::size_t expectedNumberOfParameters{ expectedNumberOfParametersPerDimension *
+                                                               ImageDimension };
+      const std::size_t            actualNumberOfParameters = transformParameters.size();
+
+      ASSERT_EQ(actualNumberOfParameters, expectedNumberOfParameters);
+
+      for (std::size_t i{}; i < actualNumberOfParameters; ++i)
+      {
+        EXPECT_DOUBLE_EQ(std::round(transformParameters[i]),
+                         translation.at(i / expectedNumberOfParametersPerDimension));
+      }
+    }
+  }
+}
+
+
 // Checks a minimum size moving image having the same pixel type as any of the supported internal pixel types.
 GTEST_TEST(itkElastixRegistrationMethod, CheckMinimumMovingImageHavingInternalPixelType)
 {
