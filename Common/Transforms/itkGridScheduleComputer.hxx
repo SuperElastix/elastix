@@ -24,6 +24,7 @@
 #include "itkConfigure.h"
 #include <vnl/vnl_inverse.h>
 #include "itkBoundingBox.h"
+#include <cmath> // For pow.
 
 namespace itk
 {
@@ -56,22 +57,16 @@ template <typename TTransformScalarType, unsigned int VImageDimension>
 void
 GridScheduleComputer<TTransformScalarType, VImageDimension>::SetDefaultSchedule(unsigned int numberOfLevels)
 {
-  /** Set member variables. */
+  // Set member variable.
   m_NumberOfLevels = numberOfLevels;
 
-  /** Initialize the schedule. */
-  auto factors = MakeFilled<GridSpacingFactorType>(1.0);
-  m_GridSpacingFactors.clear();
-  m_GridSpacingFactors.resize(numberOfLevels, factors);
+  // Initialize the schedule.
+  m_GridSpacingFactors.resize(numberOfLevels);
 
-  static constexpr float upsamplingFactor{ 2.0 };
-
-  /** Setup a default schedule. */
-  float factor = upsamplingFactor;
-  for (int i = numberOfLevels - 2; i > -1; --i)
+  // Set up a default schedule, having consecutive decreasing powers of two as sampling factors.
+  for (unsigned int level{}; level < numberOfLevels; ++level)
   {
-    m_GridSpacingFactors[i] *= factor;
-    factor *= upsamplingFactor;
+    m_GridSpacingFactors[level] = MakeFilled<GridSpacingFactorType>(std::pow(2.0, numberOfLevels - level - 1));
   }
 
 } // end SetDefaultSchedule()
