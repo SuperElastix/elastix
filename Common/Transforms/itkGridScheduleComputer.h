@@ -116,7 +116,7 @@ public:
 
   /** Set a default grid spacing schedule. */
   void
-  SetDefaultSchedule(unsigned int levels);
+  SetDefaultSchedule(unsigned int numberOfLevels);
 
   /** Set a grid spacing schedule. */
   virtual void
