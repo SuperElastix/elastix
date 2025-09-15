@@ -243,8 +243,7 @@ RecursiveBSplineTransform<TElastix>::PreComputeGridInformation()
 
   /** Set up a default grid spacing schedule. */
   this->m_GridScheduleComputer->SetDefaultSchedule(nrOfResolutions);
-  GridScheduleType gridSchedule;
-  this->m_GridScheduleComputer->GetSchedule(gridSchedule);
+  GridScheduleType gridSchedule = m_GridScheduleComputer->GetSchedule();
 
   /** Read what the user has specified. This overrules everything. */
   count2 = this->m_Configuration->CountNumberOfParameterEntries("GridSpacingSchedule");
