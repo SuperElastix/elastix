@@ -36,14 +36,6 @@ namespace itk
 template <typename TTransformScalarType, unsigned int VImageDimension>
 GridScheduleComputer<TTransformScalarType, VImageDimension>::GridScheduleComputer()
 {
-  m_BSplineOrder = 3;
-  m_InitialTransform = nullptr;
-
-  m_ImageOrigin.Fill(0.0);
-  m_ImageSpacing.Fill(1.0);
-  m_ImageDirection.SetIdentity();
-  m_FinalGridSpacing.Fill(0.0);
-
   this->SetDefaultSchedule(3);
 
 } // end Constructor()

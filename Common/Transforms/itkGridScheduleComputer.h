@@ -153,7 +153,7 @@ protected:
   VectorOriginType            m_GridOrigins{};
   VectorDirectionType         m_GridDirections{};
   VectorRegionType            m_GridRegions{};
-  TransformConstPointer       m_InitialTransform{};
+  TransformConstPointer       m_InitialTransform{ nullptr };
   VectorGridSpacingFactorType m_GridSpacingFactors{};
 
   /** PrintSelf. */
@@ -173,10 +173,10 @@ protected:
 private:
   /** Declare member variables, needed in functions. */
   OriginType    m_ImageOrigin{};
-  SpacingType   m_ImageSpacing{};
+  SpacingType   m_ImageSpacing{ MakeFilled<SpacingType>(1.0) };
   RegionType    m_ImageRegion{};
-  DirectionType m_ImageDirection{};
-  unsigned int  m_BSplineOrder{};
+  DirectionType m_ImageDirection{ DirectionType::GetIdentity() };
+  unsigned int  m_BSplineOrder{ 3 };
   unsigned int  m_NumberOfLevels{};
   SpacingType   m_FinalGridSpacing{};
 };
