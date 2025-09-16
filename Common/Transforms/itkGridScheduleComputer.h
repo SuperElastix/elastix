@@ -119,7 +119,7 @@ public:
   SetDefaultSchedule(unsigned int numberOfLevels);
 
   /** Set a grid spacing schedule. */
-  virtual void
+  void
   SetSchedule(const VectorGridSpacingFactorType & schedule);
 
   /** Get the grid spacing schedule. */
@@ -134,7 +134,7 @@ public:
   ComputeBSplineGrid();
 
   /** Get the B-spline grid at some level. */
-  virtual void
+  void
   GetBSplineGrid(unsigned int    level,
                  RegionType &    gridRegion,
                  SpacingType &   gridSpacing,
@@ -164,7 +164,7 @@ protected:
   itkGetConstMacro(NumberOfLevels, unsigned int);
 
   /** Function to apply the initial transform, if it exists. */
-  virtual void
+  void
   ApplyInitialTransform(OriginType &    imageOrigin,
                         SpacingType &   imageSpacing,
                         DirectionType & imageDirection,
