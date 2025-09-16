@@ -40,7 +40,7 @@ GridScheduleComputer<TTransformScalarType, VImageDimension>::GridScheduleCompute
 
   m_ImageOrigin.Fill(0.0);
   m_ImageSpacing.Fill(1.0);
-  m_ImageDirection.Fill(0.0);
+  m_ImageDirection.SetIdentity();
   m_FinalGridSpacing.Fill(0.0);
 
   this->SetDefaultSchedule(3);
