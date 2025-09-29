@@ -143,6 +143,20 @@ FillImageRegion(itk::Image<TPixel, VImageDimension> & image,
 }
 
 
+/// Fills the specified image region with pixel values 1, 2, 3, ...
+template <typename TPixel, unsigned int VImageDimension>
+void
+FillImageRegionWithSequenceOfNaturalNumbers(itk::Image<TPixel, VImageDimension> & image,
+                                            const itk::Index<VImageDimension> &   regionIndex,
+                                            const itk::Size<VImageDimension> &    regionSize)
+{
+  const itk::ImageRegionRange<itk::Image<TPixel, VImageDimension>> imageRegionRange{
+    image, itk::ImageRegion<VImageDimension>{ regionIndex, regionSize }
+  };
+  std::iota(std::begin(imageRegionRange), std::end(imageRegionRange), TPixel{ 1 });
+}
+
+
 // Converts the specified strings to a vector of double.
 // Assumes that each string represents a floating point number.
 inline std::vector<double>

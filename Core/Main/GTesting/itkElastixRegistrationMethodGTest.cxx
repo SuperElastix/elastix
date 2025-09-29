@@ -70,6 +70,7 @@ using elx::CoreMainGTestUtilities::CreateParameterObject;
 using elx::CoreMainGTestUtilities::CreateRandomImageDomain;
 using elx::CoreMainGTestUtilities::DerefSmartPointer;
 using elx::CoreMainGTestUtilities::FillImageRegion;
+using elx::CoreMainGTestUtilities::FillImageRegionWithSequenceOfNaturalNumbers;
 using elx::CoreMainGTestUtilities::Front;
 using elx::CoreMainGTestUtilities::GetCurrentBinaryDirectoryPath;
 using elx::CoreMainGTestUtilities::GetDataDirectoryPath;
@@ -2032,15 +2033,8 @@ GTEST_TEST(itkElastixRegistrationMethod, SimilarityTranslation2D)
   const auto imageSizeValue = 8;
   const auto imageSize = SizeType::Filled(imageSizeValue);
   const auto fixedImageRegionIndex = IndexType::Filled(imageSizeValue / 2 - 1);
-
-  const auto setPixelsOfSquareRegion = [](ImageType & image, const IndexType & regionIndex) {
-    // Set a different value to each of the pixels of a little square region, to ensure that no rotation is assumed.
-    const itk::ImageRegionRange<ImageType> imageRegionRange{ image, { regionIndex, SizeType::Filled(2) } };
-    std::iota(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
-  };
-
   const auto fixedImage = CreateImage<PixelType>(imageSize);
-  setPixelsOfSquareRegion(*fixedImage, fixedImageRegionIndex);
+  FillImageRegionWithSequenceOfNaturalNumbers(*fixedImage, fixedImageRegionIndex, SizeType::Filled(2));
 
   elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(fixedImage);
@@ -2059,7 +2053,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SimilarityTranslation2D)
   {
     movingImage->FillBuffer(0);
     const OffsetType translation = index - IndexType::Filled(1);
-    setPixelsOfSquareRegion(*movingImage, fixedImageRegionIndex + translation);
+    FillImageRegionWithSequenceOfNaturalNumbers(*movingImage, fixedImageRegionIndex + translation, SizeType::Filled(2));
 
     registration.SetMovingImage(movingImage);
     registration.Update();
@@ -2168,14 +2162,8 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
   const auto imageSize = SizeType::Filled(imageSizeValue);
   const auto fixedImageRegionIndex = IndexType::Filled(imageSizeValue / 2 - 1);
 
-  const auto setPixelsOfSquareRegion = [](ImageType & image, const IndexType & regionIndex) {
-    // Set a different value to each of the pixels of a little square region, to ensure that no rotation is assumed.
-    const itk::ImageRegionRange<ImageType> imageRegionRange{ image, { regionIndex, SizeType::Filled(2) } };
-    std::iota(std::begin(imageRegionRange), std::end(imageRegionRange), 1);
-  };
-
   const auto fixedImage = CreateImage<PixelType>(imageSize);
-  setPixelsOfSquareRegion(*fixedImage, fixedImageRegionIndex);
+  FillImageRegionWithSequenceOfNaturalNumbers(*fixedImage, fixedImageRegionIndex, SizeType::Filled(2));
 
   elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
   registration.SetFixedImage(fixedImage);
@@ -2194,7 +2182,7 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
   {
     movingImage->FillBuffer(0);
     const OffsetType translation = index - IndexType::Filled(1);
-    setPixelsOfSquareRegion(*movingImage, fixedImageRegionIndex + translation);
+    FillImageRegionWithSequenceOfNaturalNumbers(*movingImage, fixedImageRegionIndex + translation, SizeType::Filled(2));
 
     registration.SetMovingImage(movingImage);
     registration.Update();
