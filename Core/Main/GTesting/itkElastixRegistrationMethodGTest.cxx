@@ -90,6 +90,45 @@ using ElastixRegistrationMethodType = itk::ElastixRegistrationMethod<TImage, TIm
 
 namespace
 {
+double
+ConvertDegreesToRadians(double degrees)
+{
+  return degrees * M_PI / 180.0;
+};
+
+double
+ConvertRadiansToDegrees(double radians)
+{
+  return radians * 180.0 / M_PI;
+};
+
+
+auto
+CreateRotationMatrix(const double radians)
+{
+  const double cosAngle = std::cos(radians);
+  const double sinAngle = std::sin(radians);
+  return itk::Matrix<double, 2, 2>({ { cosAngle, -sinAngle }, { sinAngle, cosAngle } });
+};
+
+
+// Adjusts the origin of the image in order to make the image center coincide with the world center.
+template <unsigned int VDimension>
+void
+AdjustOriginToMakeImageCenterCoincideWithWorldCenter(itk::ImageBase<VDimension> & image)
+{
+  const auto [imageIndex, imageSize] = image.GetBufferedRegion();
+
+  itk::ContinuousIndex<double, VDimension> centerIndex = imageIndex;
+
+  for (unsigned int i = 0; i < VDimension; ++i)
+  {
+    centerIndex[i] += (imageSize[i] - 1) / 2.0;
+  }
+
+  const auto centerPoint = image.template TransformContinuousIndexToPhysicalPoint<double>(centerIndex);
+  image.SetOrigin(image.GetOrigin() - centerPoint.GetVectorFromOrigin());
+}
 
 auto
 ParameterToCurlyBracedString(const ParameterMapType::value_type & parameter)
@@ -2274,6 +2313,81 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerDiscRotation2D)
     EXPECT_EQ(std::round(transformParameters[0] / radiansPerDegree), -degree); // rotation angle
     EXPECT_EQ(std::round(transformParameters[1]), 0.0);                        // translation X
     EXPECT_EQ(std::round(transformParameters[2]), 0.0);                        // translation Y
+  }
+}
+
+
+// Tests registering two images which just have a different direction matrix.
+GTEST_TEST(itkElastixRegistrationMethod, EulerDirection2D)
+{
+  using PixelType = float;
+  static constexpr unsigned int ImageDimension{ 2 };
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+
+  // Sets the pixels of a disc object in the center of the image, with each pixel value corresponding to its direction
+  // angle with respect to the image center.
+  const auto testImage = [] {
+    static constexpr itk::SizeValueType imageSizeValue{ 32 };
+    static constexpr auto               imageSize = itk::Size<ImageDimension>::Filled(imageSizeValue);
+
+    const auto image = CreateImage<PixelType>(imageSize);
+    for (const auto & index : itk::ZeroBasedIndexRange<ImageDimension>(imageSize))
+    {
+      itk::Vector<double, ImageDimension> vectorFromImageCenter;
+
+      for (int i{}; i < ImageDimension; ++i)
+      {
+        vectorFromImageCenter[i] = static_cast<double>(index[i]) - (double{ imageSizeValue - 1 } / 2.0);
+      }
+
+      static constexpr auto radius = (double{ imageSizeValue } / 2.0) - 1.0;
+
+      if (vectorFromImageCenter.GetSquaredNorm() < itk::Math::sqr(radius))
+      {
+        // Set pixel value according to its direction angle, in radians between -PI and PI.
+        image->SetPixel(index, std::atan2(vectorFromImageCenter[1], vectorFromImageCenter[0]));
+      }
+    }
+    return image;
+  }();
+
+  elx::DefaultConstruct<ImageType> fixedImage{};
+  fixedImage.Graft(testImage);
+  AdjustOriginToMakeImageCenterCoincideWithWorldCenter(fixedImage);
+
+  // Note: the test may fail when getting closer to 180 degrees.
+  for (const auto degrees : { -90, -1, 0, 1, 2, 30, 90 })
+  {
+    SCOPED_TRACE(testing::Message() << "degrees = " << degrees);
+
+    elx::DefaultConstruct<ImageType> movingImage{};
+    movingImage.Graft(testImage);
+    movingImage.SetDirection(CreateRotationMatrix(ConvertDegreesToRadians(degrees)));
+
+    // For this test, it's essential to adjust the origin _after_ setting the direction.
+    AdjustOriginToMakeImageCenterCoincideWithWorldCenter(movingImage);
+
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+
+    registration.SetFixedImage(&fixedImage);
+    registration.SetMovingImage(&movingImage);
+    registration.SetParameterObject(
+      CreateParameterObject(ParameterMapType{ // Parameters in alphabetic order:
+                                              { "AutomaticScalesEstimation", { "true" } },
+                                              { "ImageSampler", { "Full" } },
+                                              { "MaximumNumberOfIterations", { "50" } },
+                                              { "Metric", { "AdvancedNormalizedCorrelation" } },
+                                              { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                              { "Transform", { "EulerTransform" } },
+                                              { "WriteResultImage", { "false" } } }));
+    registration.Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
+    ASSERT_EQ(transformParameters.size(), 3);
+
+    EXPECT_NEAR(ConvertRadiansToDegrees(transformParameters[0]), degrees, 0.5);
+    EXPECT_NEAR(transformParameters[1], 0.0, 0.5); // translation Y
+    EXPECT_NEAR(transformParameters[2], 0.0, 0.5); // translation Y
   }
 }
 
