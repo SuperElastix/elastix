@@ -697,6 +697,64 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 }
 
 
+// Tests registering two images, which have the same pixel data, but different origin.
+GTEST_TEST(itkElastixRegistrationMethod, TranslationOrigin)
+{
+  static constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using PointType = ImageType::PointType;
+  using SizeType = itk::Size<ImageDimension>;
+
+  const auto testImage = CreateImage<PixelType>(SizeType{ 5, 6 });
+  FillImageRegion(*testImage, { 1, 3 }, SizeType::Filled(2));
+
+  const PointType points[] = { PointType(),
+                               itk::MakeFilled<PointType>(-0.5),
+                               itk::MakePoint(0.0, 1.0),
+                               itk::MakePoint(1.0, 0.0),
+                               itk::MakePoint(0.25, 0.75) };
+
+  for (const auto originOfFixedImage : points)
+  {
+    elx::DefaultConstruct<ImageType> fixedImage{};
+    fixedImage.Graft(testImage);
+    fixedImage.SetOrigin(originOfFixedImage);
+
+    for (const auto originOfMovingImage : points)
+    {
+      elx::DefaultConstruct<ImageType> movingImage{};
+      movingImage.Graft(testImage);
+      movingImage.SetOrigin(originOfMovingImage);
+
+      elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+      registration.SetFixedImage(&fixedImage);
+      registration.SetMovingImage(&movingImage);
+      registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                              { "ImageSampler", "Full" },
+                                                              { "MaximumNumberOfIterations", "50" },
+                                                              { "Metric", "AdvancedNormalizedCorrelation" },
+                                                              { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                              { "Transform", "TranslationTransform" } }));
+      registration.Update();
+      const auto transformParameters = GetTransformParametersFromFilter(registration);
+
+      ASSERT_EQ(transformParameters.size(), ImageDimension);
+
+      const auto expectedTransformParameters = originOfMovingImage - originOfFixedImage;
+
+      SCOPED_TRACE(testing::Message() << "Origins: " << originOfMovingImage << " and " << originOfFixedImage);
+
+      for (unsigned int i = 0; i < ImageDimension; ++i)
+      {
+        // The argument for `abs_error` is chosen just large enough to pass the tests.
+        EXPECT_NEAR(transformParameters[i], expectedTransformParameters[i], 2.0 * DBL_EPSILON) << " with i = " << i;
+      }
+    }
+  }
+}
+
+
 // Tests "MaximumNumberOfIterations" value "0"
 GTEST_TEST(itkElastixRegistrationMethod, MaximumNumberOfIterationsZero)
 {
