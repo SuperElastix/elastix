@@ -1710,11 +1710,7 @@ GTEST_TEST(itkElastixRegistrationMethod, SetInitialTransformParameterObjectVersu
     const auto createRandomImageDomain = [&randomNumberEngine] {
       const auto createRandomDirection = [&randomNumberEngine] {
         const auto randomRotation = std::uniform_real_distribution<>{ -M_PI / 8, M_PI / 8 }(randomNumberEngine);
-        const auto cosRandomRotation = std::cos(randomRotation);
-        const auto sinRandomRotation = std::sin(randomRotation);
-        const itk::SpacePrecisionType randomDirectionMatrix[][2] = { { cosRandomRotation, sinRandomRotation },
-                                                                     { -sinRandomRotation, cosRandomRotation } };
-        return ImageDomainType::DirectionType{ randomDirectionMatrix };
+        return CreateRotationMatrix(randomRotation);
       };
       const auto createRandomIndex = [&randomNumberEngine] {
         ImageDomainType::IndexType randomIndex{};
