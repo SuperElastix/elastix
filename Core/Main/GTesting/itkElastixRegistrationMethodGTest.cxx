@@ -2327,6 +2327,81 @@ GTEST_TEST(itkElastixRegistrationMethod, SimilaritySpacing2D)
 }
 
 
+// Tests registering two small images, which have different spacing, using the default "affine" registration parameter
+// map.
+GTEST_TEST(itkElastixRegistrationMethod, DefaultAffineSpacing2D)
+{
+  using PixelType = float;
+  static constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+
+  // Sets the pixels of a disc object in the center of the image, with each pixel value corresponding to its direction
+  // angle with respect to the image center.
+  const auto testImage = [] {
+    static constexpr itk::SizeValueType imageSizeValue{ 32 };
+    static constexpr auto               imageSize = itk::Size<ImageDimension>::Filled(imageSizeValue);
+
+    const auto image = CreateImage<PixelType>(imageSize);
+
+    for (const auto & index : itk::ZeroBasedIndexRange<ImageDimension>(imageSize))
+    {
+      // The vector from the image center to the pixel.
+      itk::Vector<double, ImageDimension> vectorFromImageCenter;
+
+      for (int i{}; i < ImageDimension; ++i)
+      {
+        vectorFromImageCenter[i] = static_cast<double>(index[i]) - (double{ imageSizeValue - 1 } / 2.0);
+      }
+
+      static constexpr auto radius = (double{ imageSizeValue } / 2.0) - 1.0;
+
+      if (vectorFromImageCenter.GetSquaredNorm() < itk::Math::sqr(radius))
+      {
+        // Set pixel value according to its direction angle, in radians between -PI and PI.
+        image->SetPixel(index, std::atan2(vectorFromImageCenter[1], vectorFromImageCenter[0]));
+      }
+    }
+    return image;
+  }();
+
+  for (const auto movingImageSpacing : { itk::MakeVector(1.5, 1.0), itk::MakeVector(0.75, 1.5) })
+  {
+    elx::DefaultConstruct<ImageType> fixedImage{};
+    fixedImage.Graft(testImage);
+    AdjustOriginToMakeImageCenterCoincideWithWorldCenter(fixedImage);
+
+    elx::DefaultConstruct<ImageType> movingImage{};
+    movingImage.Graft(testImage);
+    movingImage.SetSpacing(movingImageSpacing);
+    AdjustOriginToMakeImageCenterCoincideWithWorldCenter(movingImage);
+
+    elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+    registration.SetFixedImage(&fixedImage);
+    registration.SetMovingImage(&movingImage);
+    registration.SetParameterObject(CreateParameterObject(elx::ParameterObject::GetDefaultParameterMap("affine")));
+    registration.Update();
+
+    const auto transformParameters = GetTransformParametersFromFilter(registration);
+    ASSERT_EQ(transformParameters.size(), itk::Math::sqr(ImageDimension) + ImageDimension);
+
+    for (unsigned int i{}; i < ImageDimension; ++i)
+    {
+      for (unsigned int j{}; j < ImageDimension; ++j)
+      {
+        EXPECT_NEAR(transformParameters[(i * ImageDimension) + j], (i == j) ? movingImageSpacing[j] : 0.0, 0.01)
+          << "with i, j = " << i << ", " << j;
+      }
+    }
+
+    for (unsigned int i{}; i < ImageDimension; ++i)
+    {
+      EXPECT_NEAR(transformParameters[itk::Math::sqr(ImageDimension) + i], 0.0, 0.25)
+        << "translation[" << i << "] should be near zero";
+    }
+  }
+}
+
+
 // Tests registering two small (8x8) images, which are translated with respect to each other.
 GTEST_TEST(itkElastixRegistrationMethod, EulerTranslation2D)
 {
