@@ -1,0 +1,102 @@
+name: Build libtorch
+description: "Build LibTorch from source with cache (CPU by default)"
+inputs:
+  pytorch_repo:
+    description: "PyTorch repo URL"
+    default: "https://github.com/pytorch/pytorch.git"
+    required: false
+  pytorch_ref:
+    description: "Git ref (branch, tag, or commit SHA)"
+    default: "v2.8.0"
+    required: false
+  install_prefix:
+    description: "CMAKE_INSTALL_PREFIX for LibTorch"
+    default: ${{ github.workspace }}/libtorch-install
+    required: false
+  build_dir:
+    description: "Out-of-source build directory"
+    default: ${{ runner.temp }}/libtorch-build
+    required: false
+  build_type:
+    description: "CMAKE_BUILD_TYPE"
+    default: "Release"
+    required: false
+  use_cuda:
+    description: "Enable CUDA build (ON/OFF)"
+    default: "OFF"
+    required: false
+  use_mps:
+    description: "Enable MPS (Apple) build (ON/OFF)"
+    default: "OFF"
+    required: false
+  extra_cmake_flags:
+    description: "Extra CMake flags"
+    default: ""
+    required: false
+  python_version:
+    description: "Python version to setup"
+    default: "3.11"
+    required: false
+
+outputs:
+  install_prefix:
+    description: "Where LibTorch was installed"
+    value: ${{ inputs.install_prefix }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python_version }}
+
+    - name: Install Python tooling
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install ninja
+
+    - name: Clone PyTorch
+      shell: bash
+      run: |
+        git clone ${{ inputs.pytorch_repo }} "${{ github.workspace }}/pytorch"
+        cd "${{ github.workspace }}/pytorch"
+        git checkout --recurse-submodules ${{ inputs.pytorch_ref }}
+        git submodule sync --recursive
+        git submodule update --init --recursive
+
+    - name: Install PyTorch requirements (build only)
+      shell: bash
+      working-directory: ${{ github.workspace }}/pytorch
+      run: |
+        python -m pip install -r requirements.txt
+
+    - name: Cache libtorch install
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.install_prefix }}
+        key: libtorch-install-${{ runner.os }}-${{ inputs.pytorch_ref }}-${{ inputs.build_type }}-cuda${{ inputs.use_cuda }}-mps${{ inputs.use_mps }}
+
+    - name: Configure (CMake)
+      shell: bash
+      run: |
+        cmake -S "${{ github.workspace }}/pytorch" \
+              -B "${{ inputs.build_dir }}" \
+              -G Ninja \
+              -DCMAKE_BUILD_TYPE=${{ inputs.build_type }} \
+              -DCMAKE_INSTALL_PREFIX="${{ inputs.install_prefix }}" \
+              -DBUILD_PYTHON=OFF \
+              -DBUILD_TEST=OFF \
+              -DUSE_CUDA=${{ inputs.use_cuda }} \
+              -DUSE_MPS=${{ inputs.use_mps }} \
+              -DUSE_MKLDNN=OFF \
+              -DUSE_QNNPACK=OFF \
+              -DUSE_XNNPACK=OFF \
+              -DUSE_FBGEMM=OFF \
+              ${{ inputs.extra_cmake_flags }}
+
+    - name: Build & Install
+      shell: bash
+      run: |
+        ninja -C "${{ inputs.build_dir }}" install
