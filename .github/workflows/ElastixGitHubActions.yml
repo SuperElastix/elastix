@@ -74,9 +74,16 @@ jobs:
           vcvars: ${{ matrix.vcvars64 }}
 
       - name: Download and extract libtorch
+        if: matrix.os != 'macos-13'
         uses: ./.github/actions/download_libtorch
         with:
           libtorch_url: ${{ matrix.libtorch-cpu-url }}
+
+      - name: Build libtorch
+        if: matrix.os == 'macos-13'
+        uses: ./.github/actions/build_libtorch
+        with:
+          install_prefix: ${{ github.workspace }}/libtorch/libtorch
 
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
