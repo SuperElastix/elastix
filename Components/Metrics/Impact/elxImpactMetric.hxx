@@ -240,7 +240,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
   else
   {
-    itkExceptionMacro("Missing parameter: FixedModelsPath" + std::to_string(level) + " or shared ModelsPath" +
+    itkExceptionMacro("Missing parameter: ImpactFixedModelsPath" + std::to_string(level) + " or shared ModelsPath" +
                       std::to_string(level) + " must be provided.");
   }
 
@@ -258,7 +258,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   }
   else
   {
-    itkExceptionMacro("Missing parameter: MovingModelsPath" + std::to_string(level) + " or shared ModelsPath" +
+    itkExceptionMacro("Missing parameter: ImpactMovingModelsPath" + std::to_string(level) + " or shared ModelsPath" +
                       std::to_string(level) + " must be provided.");
   }
 
