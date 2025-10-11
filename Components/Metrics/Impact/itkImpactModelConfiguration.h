@@ -82,7 +82,7 @@ public:
     this->m_model =
       std::make_shared<torch::jit::script::Module>(torch::jit::load(this->m_modelPath, torch::Device(torch::kCPU)));
     this->m_model->eval();
-    this->m_model->to(torch::kFloat);
+    this->m_model->to(this->m_dtype);
     if (!is_static)
     {
       /** Initialize some variables precalculation for loop performance */
