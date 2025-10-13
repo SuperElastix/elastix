@@ -79,36 +79,35 @@ public:
     , m_layersMask(layersMask)
     , m_dtype(useMixedPrecision ? torch::kFloat16 : torch::kFloat32)
   {
-    this->m_model =
-      std::make_shared<torch::jit::script::Module>(torch::jit::load(this->m_modelPath, torch::Device(torch::kCPU)));
-    this->m_model->eval();
-    this->m_model->to(this->m_dtype);
+    m_model = std::make_shared<torch::jit::script::Module>(torch::jit::load(m_modelPath, torch::Device(torch::kCPU)));
+    m_model->eval();
+    m_model->to(m_dtype);
     if (!is_static)
     {
       /** Initialize some variables precalculation for loop performance */
-      this->m_patchIndex.clear();
-      if (this->m_patchSize.size() == 2)
+      m_patchIndex.clear();
+      if (m_patchSize.size() == 2)
       {
-        for (int y = 0; y < this->m_patchSize[1]; ++y)
+        for (int y = 0; y < m_patchSize[1]; ++y)
         {
-          for (int x = 0; x < this->m_patchSize[0]; ++x)
+          for (int x = 0; x < m_patchSize[0]; ++x)
           {
-            this->m_patchIndex.push_back({ (x - this->m_patchSize[0] / 2) * this->m_voxelSize[0],
-                                           (y - this->m_patchSize[1] / 2) * this->m_voxelSize[1] });
+            m_patchIndex.push_back(
+              { (x - m_patchSize[0] / 2) * m_voxelSize[0], (y - m_patchSize[1] / 2) * m_voxelSize[1] });
           }
         }
       }
       else
       {
-        for (int z = 0; z < this->m_patchSize[2]; ++z)
+        for (int z = 0; z < m_patchSize[2]; ++z)
         {
-          for (int y = 0; y < this->m_patchSize[1]; ++y)
+          for (int y = 0; y < m_patchSize[1]; ++y)
           {
-            for (int x = 0; x < this->m_patchSize[0]; ++x)
+            for (int x = 0; x < m_patchSize[0]; ++x)
             {
-              this->m_patchIndex.push_back({ (x - this->m_patchSize[0] / 2) * this->m_voxelSize[0],
-                                             (y - this->m_patchSize[1] / 2) * this->m_voxelSize[1],
-                                             (z - this->m_patchSize[2] / 2) * this->m_voxelSize[2] });
+              m_patchIndex.push_back({ (x - m_patchSize[0] / 2) * m_voxelSize[0],
+                                       (y - m_patchSize[1] / 2) * m_voxelSize[1],
+                                       (z - m_patchSize[2] / 2) * m_voxelSize[2] });
             }
           }
         }
@@ -203,7 +202,7 @@ public:
   void
   SetCentersIndexLayers(std::vector<std::vector<torch::indexing::TensorIndex>> & centersIndexLayers)
   {
-    this->m_centersIndexLayers = centersIndexLayers;
+    m_centersIndexLayers = centersIndexLayers;
   }
 
 

@@ -189,7 +189,7 @@ template <typename TElastix>
 void
 ImpactMetric<TElastix>::BeforeEachResolution()
 {
-  this->m_CurrentIteration = 0;
+  m_CurrentIteration = 0;
 
   const Configuration & configuration = itk::Deref(this->GetConfiguration());
 
@@ -231,12 +231,12 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   if (hasFixed)
   {
     this->SetFixedModelsConfiguration(
-      this->GenerateModelsConfiguration(level, "ImpactFixed", mode, FixedImageDimension, useMixedPrecision));
+      GenerateModelsConfiguration(level, "ImpactFixed", mode, FixedImageDimension, useMixedPrecision));
   }
   else if (hasSharedModel)
   {
     this->SetFixedModelsConfiguration(
-      this->GenerateModelsConfiguration(level, "Impact", mode, FixedImageDimension, useMixedPrecision));
+      GenerateModelsConfiguration(level, "Impact", mode, FixedImageDimension, useMixedPrecision));
   }
   else
   {
@@ -249,12 +249,12 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   if (hasMoving)
   {
     this->SetMovingModelsConfiguration(
-      this->GenerateModelsConfiguration(level, "ImpactMoving", mode, MovingImageDimension, useMixedPrecision));
+      GenerateModelsConfiguration(level, "ImpactMoving", mode, MovingImageDimension, useMixedPrecision));
   }
   else if (hasSharedModel)
   {
     this->SetMovingModelsConfiguration(
-      this->GenerateModelsConfiguration(level, "Impact", mode, MovingImageDimension, useMixedPrecision));
+      GenerateModelsConfiguration(level, "Impact", mode, MovingImageDimension, useMixedPrecision));
   }
   else
   {
@@ -454,9 +454,9 @@ ImpactMetric<TElastix>::AfterEachIteration()
 {
   // In static mode, optionally update the moving feature maps during optimization.
   // This allows hybrid modes where features are refreshed every N iterations.
-  this->m_CurrentIteration++;
+  m_CurrentIteration++;
   if (this->GetMode() == "Static" && this->GetFeaturesMapUpdateInterval() > 0 &&
-      this->m_CurrentIteration % this->GetFeaturesMapUpdateInterval() == 0)
+      m_CurrentIteration % this->GetFeaturesMapUpdateInterval() == 0)
   {
     this->UpdateMovingFeaturesMaps();
   }
