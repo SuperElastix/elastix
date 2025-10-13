@@ -105,6 +105,10 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::Initialize()
     itkExceptionMacro("Interpolator is not present");
   }
 
+  // The transform parameters must be set before initializing the metric, in order to support the IMPACT metric in
+  // "Static" mode. The IMPACT metric is written by Valentin Boussot, pull request #1311.
+  m_Transform->SetParameters(m_InitialTransformParametersOfNextLevel);
+
   // Setup the metric
   m_Metric->SetMovingImage(m_MovingImagePyramid->GetOutput(m_CurrentLevel));
   m_Metric->SetFixedImage(m_FixedImagePyramid->GetOutput(m_CurrentLevel));

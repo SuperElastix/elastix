@@ -21,6 +21,7 @@
 #include "itkMultiMetricMultiResolutionImageRegistrationMethod.h"
 
 #include "itkContinuousIndex.h"
+#include "itkDeref.h"
 #include <vnl/vnl_math.h>
 
 /** Macro that implements the set methods. */
@@ -151,8 +152,14 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::In
 {
   this->CheckOnInitialize();
 
+  TransformType & transform = Deref(this->GetModifiableTransform());
+
+  // The transform parameters must be set before initializing the metric, in order to support the IMPACT metric in
+  // "Static" mode. The IMPACT metric is written by Valentin Boussot, pull request #1311.
+  transform.SetParameters(this->GetInitialTransformParametersOfNextLevel());
+
   /** Setup the metric. */
-  this->GetCombinationMetric()->SetTransform(this->GetModifiableTransform());
+  this->GetCombinationMetric()->SetTransform(&transform);
 
   this->GetCombinationMetric()->SetFixedImage(this->GetFixedImagePyramid()->GetOutput(this->GetCurrentLevel()));
   for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i)
