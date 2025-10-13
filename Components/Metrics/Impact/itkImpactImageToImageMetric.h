@@ -283,13 +283,13 @@ protected:
     {
       if (seed > 0)
       {
-        this->m_randomGenerator = std::mt19937(seed);
+        m_randomGenerator = std::mt19937(seed);
       }
       else
       {
-        this->m_randomGenerator = std::mt19937(time(nullptr));
+        m_randomGenerator = std::mt19937(time(nullptr));
       }
-      this->m_layersWeight = layersWeight;
+      m_layersWeight = layersWeight;
       for (std::string name : distance_name)
       {
         m_losses.push_back(ImpactLoss::LossFactory::Instance().Create(name));
@@ -299,17 +299,17 @@ protected:
     void
     set_nb_parameters(int nb_parameters)
     {
-      this->m_nb_parameters = nb_parameters;
-      for (int l = 0; l < this->m_layersWeight.size(); ++l)
+      m_nb_parameters = nb_parameters;
+      for (int l = 0; l < m_layersWeight.size(); ++l)
       {
-        this->m_losses[l]->set_nb_parameters(nb_parameters);
+        m_losses[l]->set_nb_parameters(nb_parameters);
       }
     }
 
     void
     reset()
     {
-      this->m_numberOfPixelsCounted = 0;
+      m_numberOfPixelsCounted = 0;
       for (std::unique_ptr<ImpactLoss::Loss> & loss : m_losses)
       {
         loss->reset();
@@ -320,10 +320,9 @@ protected:
     GetValue()
     {
       MeasureType value = MeasureType{};
-      for (int l = 0; l < this->m_layersWeight.size(); ++l)
+      for (int l = 0; l < m_layersWeight.size(); ++l)
       {
-        value +=
-          this->m_layersWeight[l] * this->m_losses[l]->GetValue(static_cast<double>(this->m_numberOfPixelsCounted));
+        value += m_layersWeight[l] * m_losses[l]->GetValue(static_cast<double>(m_numberOfPixelsCounted));
       }
       return value;
     }
@@ -331,12 +330,11 @@ protected:
     DerivativeType
     GetDerivative()
     {
-      DerivativeType derivative = DerivativeType(this->m_nb_parameters);
+      DerivativeType derivative = DerivativeType(m_nb_parameters);
       derivative.Fill(DerivativeValueType{});
-      for (int l = 0; l < this->m_layersWeight.size(); ++l)
+      for (int l = 0; l < m_layersWeight.size(); ++l)
       {
-        torch::Tensor d = this->m_layersWeight[l] *
-                          this->m_losses[l]->GetDerivative(static_cast<double>(this->m_numberOfPixelsCounted));
+        torch::Tensor d = m_layersWeight[l] * m_losses[l]->GetDerivative(static_cast<double>(m_numberOfPixelsCounted));
         for (int i = 0; i < d.size(0); ++i)
         {
           derivative[i] += d[i].item<float>();
@@ -558,8 +556,8 @@ private:
     FeaturesMaps(typename FeaturesImageType::Pointer featuresMaps)
       : m_featuresMaps(featuresMaps)
     {
-      this->m_featuresMapsInterpolator = FeaturesInterpolatorType();
-      this->m_featuresMapsInterpolator.SetInputImage(featuresMaps);
+      m_featuresMapsInterpolator = FeaturesInterpolatorType();
+      m_featuresMapsInterpolator.SetInputImage(featuresMaps);
     }
   };
 
