@@ -41,7 +41,7 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::SetInputImage(type
     auto interpolator = TInterpolator::New();
     interpolator->SetInputImage(selector->GetOutput());
     interpolator->SetSplineOrder(3);
-    this->m_Interpolators.push_back(interpolator);
+    m_Interpolators.push_back(interpolator);
   }
 } // end SetInputImage
 
@@ -56,7 +56,7 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::Evaluate(typename 
   std::vector<float> result;
   for (const unsigned int feature : subsetOfFeatures)
   {
-    result.push_back(this->m_Interpolators[feature]->Evaluate(point));
+    result.push_back(m_Interpolators[feature]->Evaluate(point));
   }
   return torch::from_blob(result.data(), { static_cast<int64_t>(result.size()) }, torch::kFloat32).clone();
 } // end Evaluate
@@ -77,7 +77,7 @@ BSplineInterpolateVectorImageFunction<TImage, TInterpolator>::EvaluateDerivative
   // Fill the derivative tensor with directional gradients for each selected feature
   for (int i = 0; i < subsetOfFeatures.size(); ++i)
   {
-    dev = this->m_Interpolators[subsetOfFeatures[i]]->EvaluateDerivative(point);
+    dev = m_Interpolators[subsetOfFeatures[i]]->EvaluateDerivative(point);
     for (unsigned int it = 0; it < TImage::ImageDimension; ++it)
     {
       derivative[i * TImage::ImageDimension + it] = static_cast<float>(dev[it]);
