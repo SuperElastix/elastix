@@ -73,30 +73,30 @@ public:
   {
     if (!isLossNormalized)
     {
-      this->m_normalization = 1.0;
+      m_normalization = 1.0;
     }
   }
 
   void
   set_nb_parameters(int nb_parameters)
   {
-    this->m_nb_parameters = nb_parameters;
+    m_nb_parameters = nb_parameters;
   }
   void
   reset()
   {
-    this->m_initialized = false;
+    m_initialized = false;
   }
 
   virtual void
   initialize(torch::Tensor & output)
   {
     // Lazy initialization of internal buffers based on output tensor shape and number of parameters
-    if (!this->m_initialized)
+    if (!m_initialized)
     {
-      this->m_value = 0;
-      this->m_derivative = torch::zeros({ this->m_nb_parameters }, output.options());
-      this->m_initialized = true;
+      m_value = 0;
+      m_derivative = torch::zeros({ m_nb_parameters }, output.options());
+      m_initialized = true;
     }
   }
 
@@ -108,33 +108,33 @@ public:
                                        torch::Tensor & jacobian,
                                        torch::Tensor & nonZeroJacobianIndices)
   {
-    this->m_derivative.index_add_(
+    m_derivative.index_add_(
       0,
       nonZeroJacobianIndices.flatten(),
-      (this->updateValueAndGetGradientModulator(fixedOutput, movingOutput).unsqueeze(-1) * jacobian).sum(1).flatten());
+      (updateValueAndGetGradientModulator(fixedOutput, movingOutput).unsqueeze(-1) * jacobian).sum(1).flatten());
   }
   virtual torch::Tensor
   updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) = 0;
   void
   updateDerivativeInJacobianMode(torch::Tensor & jacobian, torch::Tensor & nonZeroJacobianIndices)
   {
-    this->m_derivative.index_add_(0, nonZeroJacobianIndices.flatten(), jacobian.flatten());
+    m_derivative.index_add_(0, nonZeroJacobianIndices.flatten(), jacobian.flatten());
   }
 
   virtual double
   GetValue(double N) const
   {
-    if (this->m_normalization == 0)
+    if (m_normalization == 0)
     {
-      this->m_normalization = 1 / (this->m_value / N);
+      m_normalization = 1 / (m_value / N);
     }
-    return this->m_normalization * this->m_value / N;
+    return m_normalization * m_value / N;
   }
 
   virtual torch::Tensor
   GetDerivative(double N) const
   {
-    return this->m_normalization * this->m_derivative.to(torch::kCPU) / N;
+    return m_normalization * m_derivative.to(torch::kCPU) / N;
   }
 
   virtual ~Loss() = default;
@@ -142,16 +142,16 @@ public:
   virtual Loss &
   operator+=(const Loss & other)
   {
-    if (!this->m_initialized && other.m_initialized)
+    if (!m_initialized && other.m_initialized)
     {
-      this->m_value = other.m_value;
-      this->m_derivative = other.m_derivative;
-      this->m_initialized = true;
+      m_value = other.m_value;
+      m_derivative = other.m_derivative;
+      m_initialized = true;
     }
     else if (other.m_initialized)
     {
-      this->m_value += other.m_value;
-      this->m_derivative += other.m_derivative;
+      m_value += other.m_value;
+      m_derivative += other.m_derivative;
     }
     return *this;
   }
@@ -324,13 +324,13 @@ inline RegisterLoss<Dice> Dice_reg("Dice"); // Register the loss under its strin
 class L1Cosine : public Loss
 {
 private:
-  double lambda;
+  double m_lambda;
 
 public:
   L1Cosine()
     : Loss(false)
   {
-    this->lambda = 0.1;
+    m_lambda = 0.1;
   }
 
   void
@@ -341,7 +341,7 @@ public:
     torch::Tensor norm_fixed = torch::norm(fixedOutput, 2, 1);
     torch::Tensor norm_moving = torch::norm(movingOutput, 2, 1);
     torch::Tensor cosine = dot_product / (norm_fixed * norm_moving);
-    torch::Tensor expL1 = torch::exp(-this->lambda * (fixedOutput - movingOutput).abs());
+    torch::Tensor expL1 = torch::exp(-m_lambda * (fixedOutput - movingOutput).abs());
     this->m_value -= (cosine.unsqueeze(-1) * expL1).mean(1).sum().item<double>();
   }
 
@@ -356,7 +356,7 @@ public:
     torch::Tensor v = (norm_fixed * norm_moving);
 
     torch::Tensor cosine = dot_product / (v);
-    torch::Tensor expL1 = torch::exp(-this->lambda * (fixedOutput - movingOutput).abs());
+    torch::Tensor expL1 = torch::exp(-m_lambda * (fixedOutput - movingOutput).abs());
 
     torch::Tensor dCossine = -(fixedOutput / v.unsqueeze(-1) -
                                (fixedOutput * movingOutput * movingOutput) / (v * norm_moving.pow(2)).unsqueeze(-1));
@@ -460,12 +460,12 @@ public:
   {
     if (!this->m_initialized)
     {
-      this->m_sff = torch::zeros({ output.size(1) }, output.options());
-      this->m_smm = torch::zeros({ output.size(1) }, output.options());
-      this->m_sfm = torch::zeros({ output.size(1) }, output.options());
-      this->m_sf = torch::zeros({ output.size(1) }, output.options());
-      this->m_sm = torch::zeros({ output.size(1) }, output.options());
-      this->m_initialized = true;
+      m_sff = torch::zeros({ output.size(1) }, output.options());
+      m_smm = torch::zeros({ output.size(1) }, output.options());
+      m_sfm = torch::zeros({ output.size(1) }, output.options());
+      m_sf = torch::zeros({ output.size(1) }, output.options());
+      m_sm = torch::zeros({ output.size(1) }, output.options());
+      m_initialized = true;
     }
   }
 
@@ -473,11 +473,11 @@ public:
   updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
   {
     this->initialize(fixedOutput);
-    this->m_sff += (fixedOutput * fixedOutput).sum(0);
-    this->m_smm += (movingOutput * movingOutput).sum(0);
-    this->m_sfm += (fixedOutput * movingOutput).sum(0);
-    this->m_sf += fixedOutput.sum(0);
-    this->m_sm += movingOutput.sum(0);
+    m_sff += (fixedOutput * fixedOutput).sum(0);
+    m_smm += (movingOutput * movingOutput).sum(0);
+    m_sfm += (fixedOutput * movingOutput).sum(0);
+    m_sf += fixedOutput.sum(0);
+    m_sm += movingOutput.sum(0);
   }
 
   void
@@ -490,16 +490,16 @@ public:
     // sfdm: sum(fixed * dM), smdm: sum(moving * dM), sdm: sum(dM)
     if (!this->m_initialized)
     {
-      this->m_sfdm = torch::zeros({ fixedOutput.size(1), this->m_nb_parameters }, fixedOutput.options());
-      this->m_smdm = torch::zeros({ fixedOutput.size(1), this->m_nb_parameters }, fixedOutput.options());
-      this->m_sdm = torch::zeros({ fixedOutput.size(1), this->m_nb_parameters }, fixedOutput.options());
+      m_sfdm = torch::zeros({ fixedOutput.size(1), m_nb_parameters }, fixedOutput.options());
+      m_smdm = torch::zeros({ fixedOutput.size(1), m_nb_parameters }, fixedOutput.options());
+      m_sdm = torch::zeros({ fixedOutput.size(1), m_nb_parameters }, fixedOutput.options());
     }
     this->updateValue(fixedOutput, movingOutput);
-    this->m_sfdm.index_add_(
+    m_sfdm.index_add_(
       1, nonZeroJacobianIndices.flatten(), (fixedOutput.unsqueeze(-1) * jacobian).permute({ 1, 0, 2 }).flatten(1, 2));
-    this->m_smdm.index_add_(
+    m_smdm.index_add_(
       1, nonZeroJacobianIndices.flatten(), (movingOutput.unsqueeze(-1) * jacobian).permute({ 1, 0, 2 }).flatten(1, 2));
-    this->m_sdm.index_add_(1, nonZeroJacobianIndices.flatten(), (jacobian).permute({ 1, 0, 2 }).flatten(1, 2));
+    m_sdm.index_add_(1, nonZeroJacobianIndices.flatten(), (jacobian).permute({ 1, 0, 2 }).flatten(1, 2));
   }
 
   torch::Tensor
@@ -518,11 +518,11 @@ public:
     torch::Tensor sf = fixedOutput.sum(0);
     torch::Tensor sm = movingOutput.sum(0);
 
-    this->m_sff += sff;
-    this->m_smm += smm;
-    this->m_sfm += sfm;
-    this->m_sf += sf;
-    this->m_sm += sm;
+    m_sff += sff;
+    m_smm += smm;
+    m_sfm += sfm;
+    m_sf += sf;
+    m_sm += sm;
 
     torch::Tensor u = sfm - (sf * sm / N);
     torch::Tensor v = torch::sqrt(sff - sf * sf / N) * torch::sqrt(smm - sm * sm / N); // v = a*b
@@ -539,9 +539,8 @@ public:
     // Compute NCC loss from accumulated statistics: mean( -NCC(channel) )
     if (N <= 0)
       return 0.0;
-    torch::Tensor u = this->m_sfm - (this->m_sf * this->m_sm / N);
-    torch::Tensor v =
-      torch::sqrt(this->m_sff - this->m_sf * this->m_sf / N) * torch::sqrt(this->m_smm - this->m_sm * this->m_sm / N);
+    torch::Tensor u = m_sfm - (m_sf * m_sm / N);
+    torch::Tensor v = torch::sqrt(m_sff - m_sf * m_sf / N) * torch::sqrt(m_smm - m_sm * m_sm / N);
     return -(u / v).mean().item<double>();
   }
 
@@ -553,12 +552,11 @@ public:
       return this->m_derivative.to(torch::kCPU);
     }
 
-    torch::Tensor u = this->m_sfm - (this->m_sf * this->m_sm / N);
-    torch::Tensor v =
-      torch::sqrt(this->m_sff - this->m_sf * this->m_sf / N) * torch::sqrt(this->m_smm - this->m_sm * this->m_sm / N);
-    torch::Tensor u_p = this->m_sfdm - this->m_sf.unsqueeze(-1) * this->m_sdm / N;
-    return -((u_p - u.unsqueeze(-1) * (this->m_smdm - this->m_sm.unsqueeze(-1) * this->m_sdm / N) /
-                      (this->m_smm - this->m_sm * this->m_sm / N).unsqueeze(-1)) /
+    torch::Tensor u = m_sfm - (m_sf * m_sm / N);
+    torch::Tensor v = torch::sqrt(m_sff - m_sf * m_sf / N) * torch::sqrt(m_smm - m_sm * m_sm / N);
+    torch::Tensor u_p = m_sfdm - m_sf.unsqueeze(-1) * m_sdm / N;
+    return -((u_p -
+              u.unsqueeze(-1) * (m_smdm - m_sm.unsqueeze(-1) * m_sdm / N) / (m_smm - m_sm * m_sm / N).unsqueeze(-1)) /
              v.unsqueeze(-1))
               .mean(0)
               .to(torch::kCPU);
@@ -570,20 +568,20 @@ public:
     const auto * nccOther = dynamic_cast<const NCC *>(&other);
     if (nccOther)
     {
-      this->m_sff += nccOther->m_sff;
-      this->m_smm += nccOther->m_smm;
-      this->m_sfm += nccOther->m_sfm;
-      this->m_sf += nccOther->m_sf;
-      this->m_sm += nccOther->m_sm;
-      if (this->m_sfdm.defined())
+      m_sff += nccOther->m_sff;
+      m_smm += nccOther->m_smm;
+      m_sfm += nccOther->m_sfm;
+      m_sf += nccOther->m_sf;
+      m_sm += nccOther->m_sm;
+      if (m_sfdm.defined())
       {
-        this->m_sfdm += nccOther->m_sfdm;
-        this->m_smdm += nccOther->m_smdm;
-        this->m_sdm += nccOther->m_sdm;
+        m_sfdm += nccOther->m_sfdm;
+        m_smdm += nccOther->m_smdm;
+        m_sdm += nccOther->m_sdm;
       }
-      if (this->m_derivative.defined())
+      if (m_derivative.defined())
       {
-        this->m_derivative += nccOther->m_derivative;
+        m_derivative += nccOther->m_derivative;
       }
     }
     return *this;

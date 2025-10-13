@@ -86,7 +86,6 @@ public:
   EvaluateDerivative(typename ImageType::PointType point, std::vector<unsigned int> subsetOfFeatures) const;
 
 private:
-  typename ImageType::Pointer                     m_VectorImage;
   std::vector<typename InterpolatorType::Pointer> m_Interpolators;
 };
 
