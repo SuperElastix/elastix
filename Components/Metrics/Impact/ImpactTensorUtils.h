@@ -89,7 +89,7 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers);
  * \param modelsConfiguration The configuration of the models used for feature extraction.
  * \param device The device (CPU or GPU) to perform the computation on.
  * \param pca The number of principal components for dimensionality reduction.
- * \param principal_components A vector to store the computed principal components.
+ * \param principalComponents A vector to store the computed principal components.
  * \param writeInputImage Optional function to export the resampled input image for debugging.
  * \param transformPoint ptional function to transform a point, used for geometric transformations on the moving image.
  *
@@ -103,7 +103,7 @@ GetFeaturesMaps(
   const std::vector<itk::ImpactModelConfiguration> &                                               modelsConfiguration,
   torch::Device                                                                                    device,
   std::vector<unsigned int>                                                                        pca,
-  std::vector<torch::Tensor> &                                                                     principal_components,
+  std::vector<torch::Tensor> &                                                                     principalComponents,
   const std::function<void(typename TImage::ConstPointer, torch::Tensor &, const std::string &)> & writeInputImage,
   const std::function<typename TImage::PointType(const typename TImage::PointType &)> & transformPoint = nullptr);
 
