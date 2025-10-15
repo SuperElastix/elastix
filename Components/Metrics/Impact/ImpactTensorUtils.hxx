@@ -24,7 +24,12 @@
 #include <ATen/autocast_mode.h>
 
 /**
- * ******************* ImageToTensor ***********************
+ * ImageToTensor: Converts ITK image to torch tensor with spatial resampling
+ *
+ * @tparam TImage ITK image type with GetLargestPossibleRegion(), GetSpacing(), GetOrigin()
+ * @tparam TInterpolator Interpolator type supporting Evaluate(point)
+ * @param transformPoint Optional transformation function for each sampled point
+ * @returns torch::Tensor with shape (D,H,W) for 3D or (H,W) for 2D
  */
 namespace ImpactTensorUtils
 {
@@ -74,7 +79,12 @@ ImageToTensor(typename TImage::ConstPointer                                     
 } // end ImageToTensor
 
 /**
- * ******************* TensorToImage ***********************
+ * TensorToImage: Maps torch tensor back to ITK vector image
+ *
+ * @tparam TImage Reference image type for geometry info
+ * @tparam TFeatureImage Output vector image type (typically itk::VectorImage)
+ * @param layers Input tensor shape (C,D,H,W) or (C,H,W)
+ * @returns ITK image preserving spatial properties with C-channel vectors
  */
 template <typename TImage, typename TFeatureImage>
 typename TFeatureImage::Pointer
@@ -140,7 +150,15 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
 } // end TensorToImage
 
 /**
- * ******************* generateCartesianProduct ***********************
+ * generateCartesianProduct: Computes n-dimensional Cartesian product of index sets
+ *
+ * @param startIndex Vector of 1D index arrays to combine
+ * @param current Working array for current combination
+ * @param depth Current recursion depth
+ * @param result Output vector storing all index combinations
+ *
+ * Recursively builds all possible combinations by selecting one value from each input array
+ * For N input arrays of lengths L1,L2,...,LN, generates L1*L2*...*LN total combinations
  */
 inline void
 generateCartesianProduct(const std::vector<std::vector<int>> & startIndex,
@@ -163,7 +181,15 @@ generateCartesianProduct(const std::vector<std::vector<int>> & startIndex,
 } // end generateCartesianProduct
 
 /**
- * ******************* getPatch ***********************
+ * getPatch: Extracts and pads image patch from input tensor
+ *
+ * @param slice Starting coordinates for patch extraction
+ * @param patchSize Desired output patch dimensions
+ * @param input Source tensor to extract patch from
+ * @returns Tensor containing extracted and padded patch
+ *
+ * Handles both 2D and 3D input tensors
+ * Zero-pads extracted patch if smaller than patchSize
  */
 inline torch::Tensor
 getPatch(std::vector<int> slice, std::vector<int64_t> patchSize, torch::Tensor input)
@@ -191,7 +217,13 @@ getPatch(std::vector<int> slice, std::vector<int64_t> patchSize, torch::Tensor i
 } // end getPatch
 
 /**
- * ******************* pcaFit ***********************
+ * pcaFit: Computes top principal components for dimensionality reduction
+ *
+ * @param input Tensor of shape (C,N) where C=channels, N=flattened spatial dims
+ * @param new_C Target number of components to keep
+ * @returns Principal component matrix shape (C,new_C) in descending eigenvalue order
+ *
+ * Note: Centers data and uses SVD for numerical stability
  */
 inline torch::Tensor
 pcaFit(torch::Tensor input, int new_C)
@@ -213,7 +245,17 @@ pcaFit(torch::Tensor input, int new_C)
 } // end pcaFit
 
 /**
- * ******************* pca_transform ***********************
+ * pcaTransform: Project data onto principal component basis
+ *
+ * @param input Tensor of shape (C,D,H,W) or (C,H,W) to transform
+ * @param principalComponents Principal component matrix from pcaFit
+ * @returns Transformed tensor with reduced channels, preserving spatial dims
+ *
+ * Implementation:
+ * 1. Reshapes input to (C,N) where N=prod(spatial_dims)
+ * 2. Centers data by channel mean
+ * 3. Projects using principal component matrix
+ * 4. Reshapes back to original spatial dimensions
  */
 inline torch::Tensor
 pcaTransform(torch::Tensor input, torch::Tensor principalComponents)
@@ -229,7 +271,30 @@ pcaTransform(torch::Tensor input, torch::Tensor principalComponents)
 } // end pcaTransform
 
 /**
- * ******************* GetFeaturesMaps ***********************
+ * GetFeaturesMaps: Extract deep features from image using configured models
+ *
+ * @tparam TImage Input image type
+ * @tparam FeaturesMaps Output feature maps container type
+ * @tparam InterpolatorType Interpolator for image sampling
+ * @tparam FeaturesImageType Output feature image type
+ * @param image Input image to extract features from
+ * @param interpolator Interpolator instance for sampling
+ * @param modelsConfiguration List of deep model configurations
+ * @param device Computation device (CPU/GPU)
+ * @param pca Dimensions for PCA reduction per layer
+ * @param principalComponents PCA matrices for dimensionality reduction
+ * @param writeInputImage Optional callback to save input patches
+ * @param transformPoint Optional point transformation
+ * @returns Vector of feature maps, one per selected model layer
+ *
+ * Processing workflow:
+ * 1. Converts input to tensor with proper spacing
+ * 2. Extracts patches according to model config
+ * 3. Processes patches through models
+ * 4. Optionally reduces dimensionality via PCA
+ * 5. Converts results back to ITK images
+ *
+ * Handles both 2D and 3D inputs with proper dimension management
  */
 template <typename TImage, typename FeaturesMaps, typename InterpolatorType, typename FeaturesImageType>
 std::vector<FeaturesMaps>
@@ -462,7 +527,25 @@ GetFeaturesMaps(
 
 
 /**
- * **************** GetModelOutputsExample ****************
+ * GetModelOutputsExample: Validate model configurations with dummy inputs
+ *
+ * @param modelsConfig Vector of model configurations to validate
+ * @param modelType String identifier for error reporting
+ * @param device Computation device (CPU/GPU)
+ * @returns Vector of example output tensors from each model
+ *
+ * Validation steps:
+ * 1. Creates zero-filled dummy patches matching config specs
+ * 2. Runs patches through models to verify layer structure
+ * 3. Verifies layer mask compatibility
+ * 4. Computes center indices for feature extraction
+ *
+ * Error handling:
+ * - Validates dimension/channel compatibility
+ * - Checks layer mask alignment with outputs
+ * - Reports detailed configuration issues
+ *
+ * Note: Uses no_grad mode for efficiency
  */
 inline std::vector<torch::Tensor>
 GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig,
@@ -470,6 +553,7 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
                        torch::Device                                device)
 {
 
+  // For each model, create dummy patch and get output layers to check structure
   std::vector<torch::Tensor> outputsTensor;
   {
     torch::NoGradGuard noGrad;
@@ -544,7 +628,14 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
 } // end GetModelOutputsExample
 
 /**
- * ******************* GetPatchIndex ***********************
+ * GetPatchIndex: Generates sampling grid for patch extraction
+ *
+ * @param modelConfiguration Model-specific patch configuration
+ * @param randomGenerator RNG for stochastic patch orientation
+ * @param dimension Target space dimension
+ * @returns List of sampling coordinates per patch point
+ *
+ * For 2D patches: Applies random rotation to sampling
  */
 inline std::vector<std::vector<float>>
 GetPatchIndex(const itk::ImpactModelConfiguration & modelConfiguration,
@@ -612,7 +703,15 @@ GetPatchIndex(const itk::ImpactModelConfiguration & modelConfiguration,
 } // end GetPatchIndex
 
 /**
- * ******************* GenerateOutputs ***********************
+ * GenerateOutputs: Batch processing of image patches through deep models
+ *
+ * @param modelConfig Configuration per model including architecture and layers
+ * @param fixedPoints List of control points to extract patches around
+ * @param patchIndex Pre-computed sampling indices for each patch
+ * @param subsetsOfFeatures Selected feature channels per layer
+ * @returns List of output tensors, one per selected layer per model
+ *
+ * Performance note: Processes patches in batches to maximize GPU utilization
  */
 template <typename ImagePointType>
 std::vector<torch::Tensor>
@@ -675,7 +774,20 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
 } // end GenerateOutputs
 
 /**
- * ******************* GenerateOutputsAndJacobian ***********************
+ * GenerateOutputsAndJacobian: Computes model outputs and their Jacobians
+ *
+ * @param modelConfig List of model configurations with architectures
+ * @param fixedPoints Control points for patch extraction
+ * @param patchIndex Sampling grid coordinates per patch
+ * @param subsetsOfFeatures Feature channel selections
+ * @param fixedOutputsTensor Reference outputs for loss calculation
+ * @param device Computation device (CPU/GPU)
+ * @param losses Loss function objects per output layer
+ * @param imagesPatchValuesAndJacobiansEvaluator Callback for patch and gradient evaluation
+ * @returns List of Jacobian tensors for each model output
+ *
+ * Performance note: Batches computation and uses autograd for efficiency
+ * Handles multiple models and multiple output layers per model
  */
 template <typename ImagePointType>
 std::vector<torch::Tensor>
