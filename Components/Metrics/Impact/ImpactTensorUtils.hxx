@@ -267,10 +267,10 @@ getPatch(std::vector<int> slice, std::vector<int64_t> patchSize, torch::Tensor i
 } // end getPatch
 
 /**
- * ******************* pca_fit ***********************
+ * ******************* pcaFit ***********************
  */
 inline torch::Tensor
-pca_fit(torch::Tensor input, int new_C)
+pcaFit(torch::Tensor input, int new_C)
 {
 
   int     C = input.size(0);
@@ -286,23 +286,23 @@ pca_fit(torch::Tensor input, int new_C)
   std::tie(eigenvalues, eigenvectors) = torch::linalg_eigh(covariance);
   // Select top-k eigenvectors as principal components
   return eigenvectors.narrow(1, C - new_C, new_C);
-} // end pca_fit
+} // end pcaFit
 
 /**
  * ******************* pca_transform ***********************
  */
 inline torch::Tensor
-pca_transform(torch::Tensor input, torch::Tensor principal_components)
+pcaTransform(torch::Tensor input, torch::Tensor principalComponents)
 {
   int           C = input.size(0);
   int64_t       N = std::accumulate(input.sizes().begin() + 1, input.sizes().end(), 1LL, std::multiplies<int64_t>());
   torch::Tensor reshaped = input.view({ C, N });
-  torch::Tensor projected = torch::matmul(principal_components.t(), reshaped - reshaped.mean(1, true));
+  torch::Tensor projected = torch::matmul(principalComponents.t(), reshaped - reshaped.mean(1, true));
 
-  std::vector<int64_t> final_shape = { principal_components.size(1) };
-  final_shape.insert(final_shape.end(), input.sizes().begin() + 1, input.sizes().end());
-  return projected.view(final_shape);
-} // end pca_transform
+  std::vector<int64_t> finalShape = { principalComponents.size(1) };
+  finalShape.insert(finalShape.end(), input.sizes().begin() + 1, input.sizes().end());
+  return projected.view(finalShape);
+} // end pcaTransform
 
 /**
  * ******************* GetFeaturesMaps ***********************
@@ -315,19 +315,19 @@ GetFeaturesMaps(
   const std::vector<itk::ImpactModelConfiguration> &                                               modelsConfiguration,
   torch::Device                                                                                    device,
   std::vector<unsigned int>                                                                        pca,
-  std::vector<torch::Tensor> &                                                                     principal_components,
+  std::vector<torch::Tensor> &                                                                     principalComponents,
   const std::function<void(typename TImage::ConstPointer, torch::Tensor &, const std::string &)> & writeInputImage,
   const std::function<typename TImage::PointType(const typename TImage::PointType &)> &            transformPoint)
 {
   std::vector<FeaturesMaps> featuresMaps;
   {
-    torch::NoGradGuard no_grad;
+    torch::NoGradGuard noGrad;
     for (const auto & config : modelsConfiguration)
     {
       // Convert image to tensor representation for deep feature extraction
       torch::Tensor inputTensor =
         ImageToTensor<TImage, InterpolatorType>(image, interpolator, config.GetVoxelSize(), transformPoint)
-          .to(config.Getdtype());
+          .to(config.GetDataType());
 
       if (writeInputImage)
       {
@@ -426,7 +426,7 @@ GetFeaturesMaps(
                   layersSlices.push_back(std::vector<std::vector<int>>());
                   generateCartesianProduct(layerStartIndices, layerCurrent, 0, layersSlices[realLayerIndex]);
 
-                  layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, config.Getdtype()));
+                  layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, config.GetDataType()));
                 }
                 layers[realLayerIndex].index_put_(
                   { torch::indexing::Slice(),
@@ -495,7 +495,7 @@ GetFeaturesMaps(
                 layersSlices.push_back(std::vector<std::vector<int>>());
                 generateCartesianProduct(layerStartIndices, layerCurrent, 0, layersSlices[realLayerIndex]);
 
-                layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, config.Getdtype()));
+                layers.push_back(torch::zeros({ torch::IntArrayRef(layerSize) }, config.GetDataType()));
               }
               const auto & slice = layersSlices[realLayerIndex][sliceIndex];
 
@@ -522,11 +522,11 @@ GetFeaturesMaps(
         torch::Tensor result = layers[i].index(cutting[i]);
         if (pca[i] > 0)
         {
-          if (principal_components.size() <= a)
+          if (principalComponents.size() <= a)
           {
-            principal_components.emplace_back(pca_fit(result, pca[i]));
+            principalComponents.emplace_back(pcaFit(result, pca[i]));
           }
-          result = pca_transform(result, principal_components[a]);
+          result = pcaTransform(result, principalComponents[a]);
           a++;
         }
         featuresMaps.emplace_back(TensorToImage<TImage, FeaturesImageType>(image, result));
@@ -548,14 +548,14 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
 
   std::vector<torch::Tensor> outputsTensor;
   {
-    torch::NoGradGuard no_grad;
+    torch::NoGradGuard noGrad;
     for (int i = 0; i < modelsConfig.size(); ++i)
     {
       const auto &         config = modelsConfig[i];
       std::vector<int64_t> resizeVector(config.GetPatchSize().size() + 1, 1);
       resizeVector[0] = config.GetNumberOfChannels();
       std::vector<torch::jit::IValue> outputsList;
-      auto modelInput = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.Getdtype())
+      auto modelInput = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.GetDataType())
                           .unsqueeze(0)
                           .repeat({ torch::IntArrayRef(resizeVector) })
                           .unsqueeze(0)
@@ -636,11 +636,11 @@ GetPatchIndex(const itk::ImpactModelConfiguration & modelConfiguration,
 
     using MatrixType = itk::Matrix<float, 3, 3>;
     using Point3D = itk::Point<float, 3>;
-    std::uniform_real_distribution<double> angle_dist(0.0, 2.0 * M_PI);
+    std::uniform_real_distribution<double> angleDist(0.0, 2.0 * M_PI);
 
-    double radX = angle_dist(randomGenerator);
-    double radY = angle_dist(randomGenerator);
-    double radZ = angle_dist(randomGenerator);
+    double radX = angleDist(randomGenerator);
+    double radY = angleDist(randomGenerator);
+    double radZ = angleDist(randomGenerator);
 
     MatrixType rotationX;
     MatrixType rotationY;
@@ -702,7 +702,7 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
 
   std::vector<torch::Tensor> outputsTensor;
   {
-    torch::NoGradGuard no_grad;
+    torch::NoGradGuard noGrad;
     unsigned int       nbSample = fixedPoints.size();
 
     int a = 0;
@@ -713,7 +713,7 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
       std::vector<int64_t> sizes(config.GetPatchSize().size() + 1, -1);
       sizes[0] = nbSample;
 
-      torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.Getdtype())
+      torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.GetDataType())
                                          .unsqueeze(0)
                                          .expand(sizes)
                                          .unsqueeze(1)
@@ -722,7 +722,7 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
       for (unsigned int s = 0; s < nbSample; ++s)
       {
         patchValueTensor[s] =
-          imagesPatchValuesEvaluator(fixedPoints[s], patchIndex[i][s], config.GetPatchSize()).to(config.Getdtype());
+          imagesPatchValuesEvaluator(fixedPoints[s], patchIndex[i][s], config.GetPatchSize()).to(config.GetDataType());
       }
 
       std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
@@ -778,7 +778,7 @@ GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &   
     std::vector<int64_t> sizes(config.GetPatchSize().size() + 1, -1);
     sizes[0] = nbSample;
 
-    torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.Getdtype())
+    torch::Tensor patchValueTensor = torch::zeros({ torch::IntArrayRef(config.GetPatchSize()) }, config.GetDataType())
                                        .unsqueeze(0)
                                        .expand(sizes)
                                        .unsqueeze(1)
@@ -790,7 +790,7 @@ GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &   
     {
       patchValueTensor[s] = imagesPatchValuesAndJacobiansEvaluator(
                               fixedPoints[s], imagesPatchesJacobians, patchIndex[i][s], config.GetPatchSize(), s)
-                              .to(config.Getdtype());
+                              .to(config.GetDataType());
     }
 
 

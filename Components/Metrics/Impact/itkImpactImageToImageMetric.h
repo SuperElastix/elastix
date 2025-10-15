@@ -272,45 +272,45 @@ protected:
    */
   struct LossPerThreadStruct
   {
-    std::vector<std::unique_ptr<ImpactLoss::Loss>> m_losses;
-    std::vector<float>                             m_layersWeight;
-    SizeValueType                                  m_numberOfPixelsCounted;
-    int                                            m_nb_parameters;
-    std::mt19937                                   m_randomGenerator;
+    std::vector<std::unique_ptr<ImpactLoss::Loss>> m_Losses;
+    std::vector<float>                             m_LayersWeight;
+    SizeValueType                                  m_NumberOfPixelsCounted;
+    int                                            m_NumberOfParameters;
+    std::mt19937                                   m_RandomGenerator;
 
     void
-    init(std::vector<std::string> distance_name, std::vector<float> layersWeight, unsigned int seed)
+    init(std::vector<std::string> distanceName, std::vector<float> layersWeight, unsigned int seed)
     {
       if (seed > 0)
       {
-        m_randomGenerator = std::mt19937(seed);
+        m_RandomGenerator = std::mt19937(seed);
       }
       else
       {
-        m_randomGenerator = std::mt19937(time(nullptr));
+        m_RandomGenerator = std::mt19937(time(nullptr));
       }
-      m_layersWeight = layersWeight;
-      for (std::string name : distance_name)
+      m_LayersWeight = layersWeight;
+      for (std::string name : distanceName)
       {
-        m_losses.push_back(ImpactLoss::LossFactory::Instance().Create(name));
+        m_Losses.push_back(ImpactLoss::LossFactory::Instance().Create(name));
       }
     }
 
     void
-    set_nb_parameters(int nb_parameters)
+    setNumberOfParameters(int numberOfParameters)
     {
-      m_nb_parameters = nb_parameters;
-      for (int l = 0; l < m_layersWeight.size(); ++l)
+      m_NumberOfParameters = numberOfParameters;
+      for (int l = 0; l < m_LayersWeight.size(); ++l)
       {
-        m_losses[l]->set_nb_parameters(nb_parameters);
+        m_Losses[l]->setNumberOfParameters(numberOfParameters);
       }
     }
 
     void
     reset()
     {
-      m_numberOfPixelsCounted = 0;
-      for (std::unique_ptr<ImpactLoss::Loss> & loss : m_losses)
+      m_NumberOfPixelsCounted = 0;
+      for (std::unique_ptr<ImpactLoss::Loss> & loss : m_Losses)
       {
         loss->reset();
       }
@@ -320,9 +320,9 @@ protected:
     GetValue()
     {
       MeasureType value = MeasureType{};
-      for (int l = 0; l < m_layersWeight.size(); ++l)
+      for (int l = 0; l < m_LayersWeight.size(); ++l)
       {
-        value += m_layersWeight[l] * m_losses[l]->GetValue(static_cast<double>(m_numberOfPixelsCounted));
+        value += m_LayersWeight[l] * m_Losses[l]->GetValue(static_cast<double>(m_NumberOfPixelsCounted));
       }
       return value;
     }
@@ -330,11 +330,11 @@ protected:
     DerivativeType
     GetDerivative()
     {
-      DerivativeType derivative = DerivativeType(m_nb_parameters);
+      DerivativeType derivative = DerivativeType(m_NumberOfParameters);
       derivative.Fill(DerivativeValueType{});
-      for (int l = 0; l < m_layersWeight.size(); ++l)
+      for (int l = 0; l < m_LayersWeight.size(); ++l)
       {
-        torch::Tensor d = m_layersWeight[l] * m_losses[l]->GetDerivative(static_cast<double>(m_numberOfPixelsCounted));
+        torch::Tensor d = m_LayersWeight[l] * m_Losses[l]->GetDerivative(static_cast<double>(m_NumberOfPixelsCounted));
         for (int i = 0; i < d.size(0); ++i)
         {
           derivative[i] += d[i].item<float>();
@@ -349,10 +349,10 @@ protected:
       const auto * lossPerThreadStructOther = dynamic_cast<const LossPerThreadStruct *>(&other);
       if (lossPerThreadStructOther)
       {
-        m_numberOfPixelsCounted += lossPerThreadStructOther->m_numberOfPixelsCounted;
-        for (int i = 0; i < lossPerThreadStructOther->m_losses.size(); ++i)
+        m_NumberOfPixelsCounted += lossPerThreadStructOther->m_NumberOfPixelsCounted;
+        for (int i = 0; i < lossPerThreadStructOther->m_Losses.size(); ++i)
         {
-          *m_losses[i] += *lossPerThreadStructOther->m_losses[i];
+          *m_Losses[i] += *lossPerThreadStructOther->m_Losses[i];
         }
       }
       return *this;
@@ -550,14 +550,14 @@ private:
    */
   struct FeaturesMaps
   {
-    typename FeaturesImageType::Pointer m_featuresMaps;
-    FeaturesInterpolatorType            m_featuresMapsInterpolator;
+    typename FeaturesImageType::Pointer m_FeaturesMaps;
+    FeaturesInterpolatorType            m_FeaturesMapsInterpolator;
 
     FeaturesMaps(typename FeaturesImageType::Pointer featuresMaps)
-      : m_featuresMaps(featuresMaps)
+      : m_FeaturesMaps(featuresMaps)
     {
-      m_featuresMapsInterpolator = FeaturesInterpolatorType();
-      m_featuresMapsInterpolator.SetInputImage(featuresMaps);
+      m_FeaturesMapsInterpolator = FeaturesInterpolatorType();
+      m_FeaturesMapsInterpolator.SetInputImage(featuresMaps);
     }
   };
 
@@ -660,18 +660,18 @@ private:
   unsigned int              m_Seed;
 
 
-  std::vector<FeaturesMaps>  m_fixedFeaturesMaps;
-  std::vector<FeaturesMaps>  m_movingFeaturesMaps;
-  std::vector<torch::Tensor> m_principal_components;
+  std::vector<FeaturesMaps>  m_FixedFeaturesMaps;
+  std::vector<FeaturesMaps>  m_MovingFeaturesMaps;
+  std::vector<torch::Tensor> m_PrincipalComponents;
 
-  std::vector<std::vector<unsigned int>> m_features_indexes;
+  std::vector<std::vector<unsigned int>> m_FeaturesIndexes;
 
 
   /**
    * Interpolator for fixed image intensity values, set once at initialization.
    * Uses 3rd-order B-spline interpolation.
    */
-  InterpolatorPointer m_fixedInterpolator = [this] {
+  InterpolatorPointer m_FixedInterpolator = [this] {
     const auto interpolator = FixedInterpolatorType::New();
     interpolator->SetSplineOrder(3);
     return interpolator;
@@ -681,17 +681,17 @@ private:
    * \brief Retrieves a subset of features based on the provided indices.
    *
    * This method selects a subset of features from the full set of features, based on the indices
-   * provided in `features_index`. It uses a random number generator for sampling a subset of the
+   * provided in `featuresIndex`. It uses a random number generator for sampling a subset of the
    * features, ensuring that the selected features are randomly chosen.
    *
-   * \param features_index A vector of indices representing the features to be considered.
+   * \param featuresIndex A vector of indices representing the features to be considered.
    * \param randomGenerator A random number generator used for sampling the features.
    * \param n The number of features to select from the provided list of indices.
    *
    * \return A vector containing the indices of the randomly selected features.
    */
   std::vector<unsigned int>
-  GetSubsetOfFeatures(const std::vector<unsigned int> & features_index, std::mt19937 & randomGenerator, int n) const;
+  GetSubsetOfFeatures(const std::vector<unsigned int> & featuresIndex, std::mt19937 & randomGenerator, int n) const;
 
   /** Thread-safe wrapper for per-thread loss computation (padded to avoid false sharing). */
   itkPadStruct(ITK_CACHE_LINE_ALIGNMENT, LossPerThreadStruct, PaddedLossPerThreadStruct);
