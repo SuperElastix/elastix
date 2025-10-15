@@ -46,18 +46,28 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Cache libtorch install
+      id: cache-libtorch
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.install_prefix }}
+        key: libtorch-install-${{ runner.os }}-${{ inputs.pytorch_ref }}-${{ inputs.build_type }}-cuda${{ inputs.use_cuda }}-mps${{ inputs.use_mps }}
+
     - name: Setup Python
+      if: ${{ steps['cache-libtorch'].outputs['cache-hit'] != 'true' }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python_version }}
 
     - name: Install Python tooling
+      if: ${{ steps['cache-libtorch'].outputs['cache-hit'] != 'true' }}
       shell: bash
       run: |
         python -m pip install --upgrade pip
         python -m pip install ninja
 
     - name: Clone PyTorch
+      if: ${{ steps['cache-libtorch'].outputs['cache-hit'] != 'true' }}
       shell: bash
       run: |
         git clone ${{ inputs.pytorch_repo }} "${{ github.workspace }}/pytorch"
@@ -67,18 +77,15 @@ runs:
         git submodule update --init --recursive
 
     - name: Install PyTorch requirements (build only)
+      if: ${{ steps['cache-libtorch'].outputs['cache-hit'] != 'true' }}
       shell: bash
       working-directory: ${{ github.workspace }}/pytorch
       run: |
         python -m pip install -r requirements.txt
 
-    - name: Cache libtorch install
-      uses: actions/cache@v4
-      with:
-        path: ${{ inputs.install_prefix }}
-        key: libtorch-install-${{ runner.os }}-${{ inputs.pytorch_ref }}-${{ inputs.build_type }}-cuda${{ inputs.use_cuda }}-mps${{ inputs.use_mps }}
 
     - name: Configure (CMake)
+      if: ${{ steps['cache-libtorch'].outputs['cache-hit'] != 'true' }}
       shell: bash
       run: |
         cmake -S "${{ github.workspace }}/pytorch" \
@@ -97,6 +104,7 @@ runs:
               ${{ inputs.extra_cmake_flags }}
 
     - name: Build & Install
+      if: ${{ steps['cache-libtorch'].outputs['cache-hit'] != 'true' }}
       shell: bash
       run: |
         ninja -C "${{ inputs.build_dir }}" install
