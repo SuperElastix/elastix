@@ -588,8 +588,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
   unsigned int  numberOfSample = fixedPoints.size();
   const int     numNonZeroJacobianIndices = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   torch::Tensor nonZeroJacobianIndices = torch::zeros({ numberOfSample, numNonZeroJacobianIndices }, torch::kLong);
-  torch::Tensor transformsJacobian =
-    torch::zeros({ numberOfSample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat32);
+  torch::Tensor transformsJacobian = torch::zeros(
+    { numberOfSample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat32);
 
   TransformJacobianType      flatTransformJacobian; // class itk::Array2D<double>
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(
@@ -690,8 +690,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
   const int     numNonZeroJacobianIndices = this->m_AdvancedTransform->GetNumberOfNonZeroJacobianIndices();
   torch::Tensor nonZeroJacobianIndices = torch::zeros({ numberOfSample, numNonZeroJacobianIndices }, torch::kLong);
 
-  torch::Tensor transformsJacobian =
-    torch::zeros({ numberOfSample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat32);
+  torch::Tensor transformsJacobian = torch::zeros(
+    { numberOfSample, MovingImageDimension, static_cast<int64_t>(numNonZeroJacobianIndices) }, torch::kFloat32);
 
   TransformJacobianType      flatTransformJacobian; // class itk::Array2D<double>
   NonZeroJacobianIndicesType flatNonZeroJacobianIndices(
