@@ -359,7 +359,7 @@ public:
     torch::Tensor expL1 = torch::exp(-m_Lambda * (fixedOutput - movingOutput).abs());
 
     torch::Tensor dCosine = -(fixedOutput / v.unsqueeze(-1) -
-                               (fixedOutput * movingOutput * movingOutput) / (v * normMoving.pow(2)).unsqueeze(-1));
+                              (fixedOutput * movingOutput * movingOutput) / (v * normMoving.pow(2)).unsqueeze(-1));
     torch::Tensor dexpL1 = -torch::sign(diffOutput) * expL1 / fixedOutput.size(1);
     this->m_Value -= (cosine.unsqueeze(-1) * expL1).mean(1).sum().item<double>();
     return dCosine * dexpL1 + cosine.unsqueeze(-1) * dexpL1;

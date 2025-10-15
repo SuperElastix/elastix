@@ -36,75 +36,41 @@ ImageToTensor(typename TImage::ConstPointer                                     
               const std::function<typename TImage::PointType(const typename TImage::PointType &)> & transformPoint)
 {
   constexpr unsigned int Dimension = TImage::ImageDimension;
-
   // Compute the resampled image size based on target voxel spacing
-  auto                 oldSize = image->GetLargestPossibleRegion().GetSize();
-  std::vector<int64_t> newSize(Dimension);
+  typename TImage::SizeType oldSize = image->GetLargestPossibleRegion().GetSize();
+  typename TImage::SizeType newSize;
   for (unsigned int i = 0; i < Dimension; ++i)
-  {
     newSize[i] = static_cast<int>(oldSize[i] * image->GetSpacing()[i] / voxelSize[i] + 0.5);
-  }
+
   // Allocate buffer to hold interpolated intensity values
   std::vector<float> fixedImagesPatchValues;
-
-
   if (Dimension == 2)
-  {
     fixedImagesPatchValues.resize(newSize[0] * newSize[1], 0.0f);
-// For each target voxel, compute physical coordinates and interpolate intensity
-#pragma omp parallel for collapse(2) schedule(dynamic)
-    for (int y = 0; y < newSize[1]; ++y)
-    {
-      for (int x = 0; x < newSize[0]; ++x)
-      {
-        unsigned int               index = y * newSize[0] + x;
-        typename TImage::PointType imagePoint;
-        imagePoint[0] = image->GetOrigin()[0] + x * voxelSize[0];
-        imagePoint[1] = image->GetOrigin()[1] + y * voxelSize[1];
-        if (transformPoint)
-        {
-          fixedImagesPatchValues[index] = interpolator->Evaluate(transformPoint(imagePoint));
-        }
-        else
-        {
-          fixedImagesPatchValues[index] = interpolator->Evaluate(imagePoint);
-        }
-      }
-    }
-    // Wrap raw buffer into a torch tensor and clone to detach from underlying data
-    return torch::from_blob(fixedImagesPatchValues.data(), { newSize[0], newSize[1] }, torch::kFloat32).clone();
-  }
   else
-  {
     fixedImagesPatchValues.resize(newSize[0] * newSize[1] * newSize[2], 0.0f);
-// For each target voxel, compute physical coordinates and interpolate intensity
-#pragma omp parallel for collapse(3) schedule(dynamic)
-    for (int z = 0; z < newSize[2]; ++z)
-    {
-      for (int y = 0; y < newSize[1]; ++y)
-      {
-        for (int x = 0; x < newSize[0]; ++x)
-        {
-          unsigned int               index = z * newSize[1] * newSize[0] + y * newSize[0] + x;
-          typename TImage::PointType imagePoint;
-          imagePoint[0] = image->GetOrigin()[0] + x * voxelSize[0];
-          imagePoint[1] = image->GetOrigin()[1] + y * voxelSize[1];
-          imagePoint[2] = image->GetOrigin()[2] + z * voxelSize[2];
-          if (transformPoint)
-          {
-            fixedImagesPatchValues[index] = interpolator->Evaluate(transformPoint(imagePoint));
-          }
-          else
-          {
-            fixedImagesPatchValues[index] = interpolator->Evaluate(imagePoint);
-          }
-        }
-      }
-    }
-    // Wrap raw buffer into a torch tensor and clone to detach from underlying data
-    return torch::from_blob(fixedImagesPatchValues.data(), { newSize[2], newSize[1], newSize[0] }, torch::kFloat32)
-      .clone();
+
+  // For each target voxel, compute physical coordinates and interpolate intensity
+  const itk::ZeroBasedIndexRange<Dimension> indexRange(newSize);
+  unsigned int                              index = 0;
+  typename TImage::PointType                imagePoint;
+  for (const auto & itkIndex : indexRange)
+  {
+    for (unsigned int d = 0; d < Dimension; ++d)
+      imagePoint[d] = image->GetOrigin()[d] + itkIndex[d] * voxelSize[d];
+    fixedImagesPatchValues[index++] = interpolator->Evaluate(transformPoint ? transformPoint(imagePoint) : imagePoint);
   }
+  // Wrap raw buffer into a torch tensor and clone to detach from underlying data
+  if (Dimension == 2)
+    return torch::from_blob(fixedImagesPatchValues.data(),
+                            { static_cast<int>(newSize[0]), static_cast<int>(newSize[1]) },
+                            torch::kFloat32)
+      .clone();
+  else
+    return torch::from_blob(
+             fixedImagesPatchValues.data(),
+             { static_cast<int>(newSize[2]), static_cast<int>(newSize[1]), static_cast<int>(newSize[0]) },
+             torch::kFloat32)
+      .clone();
 } // end ImageToTensor
 
 /**
@@ -117,15 +83,10 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   constexpr unsigned int Dimension = TImage::ImageDimension;
   // Rearrange tensor dimensions to match ITK vector image layout
   if (Dimension == 2)
-  {
     layers = layers.permute({ 1, 2, 0 }).contiguous().to(torch::kFloat32);
-    ;
-  }
   else
-  {
     layers = layers.permute({ 1, 2, 3, 0 }).contiguous().to(torch::kFloat32);
-    ;
-  }
+
   const unsigned int numberOfChannels = layers.size(Dimension);
 
   typename TFeatureImage::Pointer    itkImage = TFeatureImage::New();
@@ -137,9 +98,8 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   itk::Matrix<double, Dimension, Dimension> direction;
 
   for (int s = 0; s < Dimension; ++s)
-  {
     size[s] = layers.size(Dimension - 1 - s);
-  }
+
   region.SetSize(size);
   itkImage->SetRegions(region);
   itkImage->SetVectorLength(numberOfChannels);
@@ -163,54 +123,18 @@ TensorToImage(typename TImage::ConstPointer image, torch::Tensor layers)
   itkImage->SetDirection(direction);
   itkImage->Allocate();
 
-  const float *      layersData = layers.data_ptr<float>();
-  const unsigned int rowStride = size[0] * numberOfChannels;
-  const unsigned int sliceStride = size[0] * size[1] * numberOfChannels;
+  const float * layersData = layers.data_ptr<float>();
 
   // Write each pixel vector from the tensor into the ITK vector image format
-  if (Dimension == 2)
+  itk::VariableLengthVector<float>          variableLengthVector(numberOfChannels);
+  const itk::ZeroBasedIndexRange<Dimension> indexRange(size);
+  unsigned int                              index = 0;
+  for (const auto & itkIndex : indexRange)
   {
-#pragma omp parallel for collapse(2) schedule(dynamic)
-    for (int x = 0; x < size[1]; ++x)
-    {
-      for (int y = 0; y < size[0]; ++y)
-      {
-        const float *                    pixelPtr = layersData + x * rowStride + y * numberOfChannels;
-        itk::VariableLengthVector<float> variableLengthVector(numberOfChannels);
-        for (unsigned int i = 0; i < numberOfChannels; ++i)
-        {
-          variableLengthVector[i] = pixelPtr[i];
-        }
-        typename TFeatureImage::IndexType index;
-        index[0] = y;
-        index[1] = x;
-        itkImage->SetPixel(index, variableLengthVector);
-      }
-    }
-  }
-  else
-  {
-#pragma omp parallel for collapse(3) schedule(dynamic)
-    for (int x = 0; x < size[2]; ++x)
-    {
-      for (int y = 0; y < size[1]; ++y)
-      {
-        for (int z = 0; z < size[0]; ++z)
-        {
-          const float * pixelPtr = layersData + x * sliceStride + y * rowStride + z * numberOfChannels;
-          itk::VariableLengthVector<float> variableLengthVector(numberOfChannels);
-          for (unsigned int i = 0; i < numberOfChannels; ++i)
-          {
-            variableLengthVector[i] = pixelPtr[i]; // layers[x][y][z][i].item<float>();
-          }
-          typename TFeatureImage::IndexType index;
-          index[0] = z;
-          index[1] = y;
-          index[2] = x;
-          itkImage->SetPixel(index, variableLengthVector);
-        }
-      }
-    }
+    const float * pixelPtr = layersData + (index++ * numberOfChannels);
+    for (unsigned int i = 0; i < numberOfChannels; ++i)
+      variableLengthVector[i] = pixelPtr[i];
+    itkImage->SetPixel(itkIndex, variableLengthVector);
   }
   return itkImage;
 } // end TensorToImage
