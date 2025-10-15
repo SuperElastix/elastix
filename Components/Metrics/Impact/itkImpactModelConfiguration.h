@@ -69,45 +69,45 @@ public:
                            std::vector<unsigned int> patchSize,
                            std::vector<float>        voxelSize,
                            std::vector<bool>         layersMask,
-                           bool                      is_static,
+                           bool                      isStatic,
                            bool                      useMixedPrecision)
-    : m_modelPath(modelPath)
-    , m_dimension(dimension)
-    , m_numberOfChannels(numberOfChannels)
-    , m_patchSize(patchSize.begin(), patchSize.end())
-    , m_voxelSize(voxelSize)
-    , m_layersMask(layersMask)
-    , m_dtype(useMixedPrecision ? torch::kFloat16 : torch::kFloat32)
+    : m_ModelPath(modelPath)
+    , m_Dimension(dimension)
+    , m_NumberOfChannels(numberOfChannels)
+    , m_PatchSize(patchSize.begin(), patchSize.end())
+    , m_VoxelSize(voxelSize)
+    , m_LayersMask(layersMask)
+    , m_DataType(useMixedPrecision ? torch::kFloat16 : torch::kFloat32)
   {
-    m_model = std::make_shared<torch::jit::script::Module>(torch::jit::load(m_modelPath, torch::Device(torch::kCPU)));
-    m_model->eval();
-    m_model->to(m_dtype);
-    if (!is_static)
+    m_Model = std::make_shared<torch::jit::script::Module>(torch::jit::load(m_ModelPath, torch::Device(torch::kCPU)));
+    m_Model->eval();
+    m_Model->to(m_DataType);
+    if (!isStatic)
     {
       /** Initialize some variables precalculation for loop performance */
-      m_patchIndex.clear();
-      if (m_patchSize.size() == 2)
+      m_PatchIndex.clear();
+      if (m_PatchSize.size() == 2)
       {
-        for (int y = 0; y < m_patchSize[1]; ++y)
+        for (int y = 0; y < m_PatchSize[1]; ++y)
         {
-          for (int x = 0; x < m_patchSize[0]; ++x)
+          for (int x = 0; x < m_PatchSize[0]; ++x)
           {
-            m_patchIndex.push_back(
-              { (x - m_patchSize[0] / 2) * m_voxelSize[0], (y - m_patchSize[1] / 2) * m_voxelSize[1] });
+            m_PatchIndex.push_back(
+              { (x - m_PatchSize[0] / 2) * m_VoxelSize[0], (y - m_PatchSize[1] / 2) * m_VoxelSize[1] });
           }
         }
       }
       else
       {
-        for (int z = 0; z < m_patchSize[2]; ++z)
+        for (int z = 0; z < m_PatchSize[2]; ++z)
         {
-          for (int y = 0; y < m_patchSize[1]; ++y)
+          for (int y = 0; y < m_PatchSize[1]; ++y)
           {
-            for (int x = 0; x < m_patchSize[0]; ++x)
+            for (int x = 0; x < m_PatchSize[0]; ++x)
             {
-              m_patchIndex.push_back({ (x - m_patchSize[0] / 2) * m_voxelSize[0],
-                                       (y - m_patchSize[1] / 2) * m_voxelSize[1],
-                                       (z - m_patchSize[2] / 2) * m_voxelSize[2] });
+              m_PatchIndex.push_back({ (x - m_PatchSize[0] / 2) * m_VoxelSize[0],
+                                       (y - m_PatchSize[1] / 2) * m_VoxelSize[1],
+                                       (z - m_PatchSize[2] / 2) * m_VoxelSize[2] });
             }
           }
         }
@@ -131,92 +131,92 @@ public:
   bool
   operator==(const ImpactModelConfiguration & rhs) const
   {
-    return m_modelPath == rhs.m_modelPath && m_dimension == rhs.m_dimension &&
-           m_numberOfChannels == rhs.m_numberOfChannels && m_patchSize == rhs.m_patchSize &&
-           m_voxelSize == rhs.m_voxelSize && m_layersMask == rhs.m_layersMask;
+    return m_ModelPath == rhs.m_ModelPath && m_Dimension == rhs.m_Dimension &&
+           m_NumberOfChannels == rhs.m_NumberOfChannels && m_PatchSize == rhs.m_PatchSize &&
+           m_VoxelSize == rhs.m_VoxelSize && m_LayersMask == rhs.m_LayersMask;
   }
 
   friend std::ostream &
   operator<<(std::ostream & os, const ImpactModelConfiguration & config)
   {
-    os << "\t\tPath : " << config.m_modelPath << "\n\t\tDimension : " << config.m_dimension
-       << "\n\t\tNumberOfChannels : " << config.m_numberOfChannels
-       << "\n\t\tPatchSize : " << GetStringFromVector<int64_t>(config.m_patchSize)
-       << "\n\t\tVoxelSize : " << GetStringFromVector<float>(config.m_voxelSize)
-       << "\n\t\tLayersMask : " << GetStringFromVector<bool>(config.m_layersMask);
+    os << "\t\tPath : " << config.m_ModelPath << "\n\t\tDimension : " << config.m_Dimension
+       << "\n\t\tNumberOfChannels : " << config.m_NumberOfChannels
+       << "\n\t\tPatchSize : " << GetStringFromVector<int64_t>(config.m_PatchSize)
+       << "\n\t\tVoxelSize : " << GetStringFromVector<float>(config.m_VoxelSize)
+       << "\n\t\tLayersMask : " << GetStringFromVector<bool>(config.m_LayersMask);
     return os;
   }
 
   const std::string &
   GetModelPath() const
   {
-    return m_modelPath;
+    return m_ModelPath;
   }
 
   const torch::ScalarType &
-  Getdtype() const
+  GetDataType() const
   {
-    return m_dtype;
+    return m_DataType;
   }
 
   unsigned int
   GetDimension() const
   {
-    return m_dimension;
+    return m_Dimension;
   }
   unsigned int
   GetNumberOfChannels() const
   {
-    return m_numberOfChannels;
+    return m_NumberOfChannels;
   }
   const std::vector<int64_t> &
   GetPatchSize() const
   {
-    return m_patchSize;
+    return m_PatchSize;
   }
   const std::vector<float> &
   GetVoxelSize() const
   {
-    return m_voxelSize;
+    return m_VoxelSize;
   }
   const std::vector<bool> &
   GetLayersMask() const
   {
-    return m_layersMask;
+    return m_LayersMask;
   }
   torch::jit::script::Module &
   GetModel() const
   {
-    return *m_model;
+    return *m_Model;
   }
   const std::vector<std::vector<float>> &
   GetPatchIndex() const
   {
-    return m_patchIndex;
+    return m_PatchIndex;
   }
   const std::vector<std::vector<torch::indexing::TensorIndex>> &
   GetCentersIndexLayers() const
   {
-    return m_centersIndexLayers;
+    return m_CentersIndexLayers;
   }
   void
   SetCentersIndexLayers(std::vector<std::vector<torch::indexing::TensorIndex>> & centersIndexLayers)
   {
-    m_centersIndexLayers = centersIndexLayers;
+    m_CentersIndexLayers = centersIndexLayers;
   }
 
 
 private:
-  std::string                                            m_modelPath;
-  unsigned int                                           m_dimension;
-  unsigned int                                           m_numberOfChannels;
-  std::vector<int64_t>                                   m_patchSize;
-  std::vector<float>                                     m_voxelSize;
-  std::vector<bool>                                      m_layersMask;
-  std::shared_ptr<torch::jit::script::Module>            m_model;
-  std::vector<std::vector<float>>                        m_patchIndex;
-  std::vector<std::vector<torch::indexing::TensorIndex>> m_centersIndexLayers;
-  torch::ScalarType                                      m_dtype;
+  std::string                                            m_ModelPath;
+  unsigned int                                           m_Dimension;
+  unsigned int                                           m_NumberOfChannels;
+  std::vector<int64_t>                                   m_PatchSize;
+  std::vector<float>                                     m_VoxelSize;
+  std::vector<bool>                                      m_LayersMask;
+  std::shared_ptr<torch::jit::script::Module>            m_Model;
+  std::vector<std::vector<float>>                        m_PatchIndex;
+  std::vector<std::vector<torch::indexing::TensorIndex>> m_CentersIndexLayers;
+  torch::ScalarType                                      m_DataType;
 };
 
 
