@@ -462,6 +462,7 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
   parameterMap["FinalBSplineInterpolationOrder"] = { "3" };
   parameterMap["NumberOfResolutions"] = { std::to_string(numberOfResolutions) };
   parameterMap["WriteIterationInfo"] = { "false" };
+  parameterMap["MaximumNumberOfIterations"] = { "256" };
 
   // Image Sampler
   parameterMap["ImageSampler"] = { "RandomCoordinate" };
@@ -485,7 +486,6 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
     parameterMap["Registration"] = { "MultiResolutionRegistration" };
     parameterMap["Transform"] = { "TranslationTransform" };
     parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
-    parameterMap["MaximumNumberOfIterations"] = { "256" };
     parameterMap["AutomaticTransformInitialization"] = { "true" };
   }
   else if (transformName == "rigid")
@@ -493,7 +493,6 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
     parameterMap["Registration"] = { "MultiResolutionRegistration" };
     parameterMap["Transform"] = { "EulerTransform" };
     parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
-    parameterMap["MaximumNumberOfIterations"] = { "256" };
     parameterMap["AutomaticScalesEstimation"] = { "true" };
   }
   else if (transformName == "affine")
@@ -501,7 +500,6 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
     parameterMap["Registration"] = { "MultiResolutionRegistration" };
     parameterMap["Transform"] = { "AffineTransform" };
     parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
-    parameterMap["MaximumNumberOfIterations"] = { "256" };
     parameterMap["AutomaticScalesEstimation"] = { "true" };
   }
   else if (transformName == "bspline")
@@ -511,21 +509,18 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
     parameterMap["Metric"] = { "AdvancedMattesMutualInformation", "TransformBendingEnergyPenalty" };
     parameterMap["Metric0Weight"] = { "1.0" };
     parameterMap["Metric1Weight"] = { "1.0" };
-    parameterMap["MaximumNumberOfIterations"] = { "256" };
   }
   else if (transformName == "spline")
   {
     parameterMap["Registration"] = { "MultiResolutionRegistration" };
     parameterMap["Transform"] = { "SplineKernelTransform" };
     parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
-    parameterMap["MaximumNumberOfIterations"] = { "256" };
   }
   else if (transformName == "groupwise")
   {
     parameterMap["Registration"] = { "MultiResolutionRegistration" };
     parameterMap["Transform"] = { "BSplineStackTransform" };
     parameterMap["Metric"] = { "VarianceOverLastDimensionMetric" };
-    parameterMap["MaximumNumberOfIterations"] = { "256" };
     parameterMap["Interpolator"] = { "ReducedDimensionBSplineInterpolator" };
     parameterMap["ResampleInterpolator"] = { "FinalReducedDimensionBSplineInterpolator" };
   }
