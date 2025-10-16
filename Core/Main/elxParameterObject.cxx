@@ -114,7 +114,7 @@ ParameterObject::GetParameterMap(const unsigned int index) const
 void
 ParameterObject::SetParameter(const unsigned int index, const ParameterKeyType & key, const ParameterValueType & value)
 {
-  m_ParameterMaps[index][key] = ParameterValueVectorType(1, value);
+  m_ParameterMaps[index][key] = { value };
 }
 
 
@@ -140,7 +140,7 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
 {
   for (auto & parameterMap : m_ParameterMaps)
   {
-    parameterMap[key] = ParameterValueVectorType(1, value);
+    parameterMap[key] = { value };
   }
 }
 
@@ -453,82 +453,82 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
   ParameterMapType parameterMap{};
 
   // Common Components
-  parameterMap["FixedImagePyramid"] = ParameterValueVectorType(1, "FixedSmoothingImagePyramid");
-  parameterMap["MovingImagePyramid"] = ParameterValueVectorType(1, "MovingSmoothingImagePyramid");
-  parameterMap["Interpolator"] = ParameterValueVectorType(1, "LinearInterpolator");
-  parameterMap["Optimizer"] = ParameterValueVectorType(1, "AdaptiveStochasticGradientDescent");
-  parameterMap["Resampler"] = ParameterValueVectorType(1, "DefaultResampler");
-  parameterMap["ResampleInterpolator"] = ParameterValueVectorType(1, "FinalBSplineInterpolator");
-  parameterMap["FinalBSplineInterpolationOrder"] = ParameterValueVectorType(1, "3");
-  parameterMap["NumberOfResolutions"] = ParameterValueVectorType(1, std::to_string(numberOfResolutions));
-  parameterMap["WriteIterationInfo"] = ParameterValueVectorType(1, "false");
+  parameterMap["FixedImagePyramid"] = { "FixedSmoothingImagePyramid" };
+  parameterMap["MovingImagePyramid"] = { "MovingSmoothingImagePyramid" };
+  parameterMap["Interpolator"] = { "LinearInterpolator" };
+  parameterMap["Optimizer"] = { "AdaptiveStochasticGradientDescent" };
+  parameterMap["Resampler"] = { "DefaultResampler" };
+  parameterMap["ResampleInterpolator"] = { "FinalBSplineInterpolator" };
+  parameterMap["FinalBSplineInterpolationOrder"] = { "3" };
+  parameterMap["NumberOfResolutions"] = { std::to_string(numberOfResolutions) };
+  parameterMap["WriteIterationInfo"] = { "false" };
 
   // Image Sampler
-  parameterMap["ImageSampler"] = ParameterValueVectorType(1, "RandomCoordinate");
-  parameterMap["NumberOfSpatialSamples"] = ParameterValueVectorType(1, "2048");
-  parameterMap["CheckNumberOfSamples"] = ParameterValueVectorType(1, "true");
-  parameterMap["MaximumNumberOfSamplingAttempts"] = ParameterValueVectorType(1, "8");
-  parameterMap["NewSamplesEveryIteration"] = ParameterValueVectorType(1, "true");
+  parameterMap["ImageSampler"] = { "RandomCoordinate" };
+  parameterMap["NumberOfSpatialSamples"] = { "2048" };
+  parameterMap["CheckNumberOfSamples"] = { "true" };
+  parameterMap["MaximumNumberOfSamplingAttempts"] = { "8" };
+  parameterMap["NewSamplesEveryIteration"] = { "true" };
 
   // Optimizer
-  parameterMap["NumberOfSamplesForExactGradient"] = ParameterValueVectorType(1, "4096");
-  parameterMap["DefaultPixelValue"] = ParameterValueVectorType(1, "0");
-  parameterMap["AutomaticParameterEstimation"] = ParameterValueVectorType(1, "true");
+  parameterMap["NumberOfSamplesForExactGradient"] = { "4096" };
+  parameterMap["DefaultPixelValue"] = { "0" };
+  parameterMap["AutomaticParameterEstimation"] = { "true" };
 
   // Output
-  parameterMap["WriteResultImage"] = ParameterValueVectorType(1, "true");
-  parameterMap["ResultImageFormat"] = ParameterValueVectorType(1, "nii");
+  parameterMap["WriteResultImage"] = { "true" };
+  parameterMap["ResultImageFormat"] = { "nii" };
 
   // transformNames
   if (transformName == "translation")
   {
-    parameterMap["Registration"] = ParameterValueVectorType(1, "MultiResolutionRegistration");
-    parameterMap["Transform"] = ParameterValueVectorType(1, "TranslationTransform");
-    parameterMap["Metric"] = ParameterValueVectorType(1, "AdvancedMattesMutualInformation");
-    parameterMap["MaximumNumberOfIterations"] = ParameterValueVectorType(1, "256");
-    parameterMap["AutomaticTransformInitialization"] = ParameterValueVectorType(1, "true");
+    parameterMap["Registration"] = { "MultiResolutionRegistration" };
+    parameterMap["Transform"] = { "TranslationTransform" };
+    parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
+    parameterMap["MaximumNumberOfIterations"] = { "256" };
+    parameterMap["AutomaticTransformInitialization"] = { "true" };
   }
   else if (transformName == "rigid")
   {
-    parameterMap["Registration"] = ParameterValueVectorType(1, "MultiResolutionRegistration");
-    parameterMap["Transform"] = ParameterValueVectorType(1, "EulerTransform");
-    parameterMap["Metric"] = ParameterValueVectorType(1, "AdvancedMattesMutualInformation");
-    parameterMap["MaximumNumberOfIterations"] = ParameterValueVectorType(1, "256");
-    parameterMap["AutomaticScalesEstimation"] = ParameterValueVectorType(1, "true");
+    parameterMap["Registration"] = { "MultiResolutionRegistration" };
+    parameterMap["Transform"] = { "EulerTransform" };
+    parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
+    parameterMap["MaximumNumberOfIterations"] = { "256" };
+    parameterMap["AutomaticScalesEstimation"] = { "true" };
   }
   else if (transformName == "affine")
   {
-    parameterMap["Registration"] = ParameterValueVectorType(1, "MultiResolutionRegistration");
-    parameterMap["Transform"] = ParameterValueVectorType(1, "AffineTransform");
-    parameterMap["Metric"] = ParameterValueVectorType(1, "AdvancedMattesMutualInformation");
-    parameterMap["MaximumNumberOfIterations"] = ParameterValueVectorType(1, "256");
-    parameterMap["AutomaticScalesEstimation"] = ParameterValueVectorType(1, "true");
+    parameterMap["Registration"] = { "MultiResolutionRegistration" };
+    parameterMap["Transform"] = { "AffineTransform" };
+    parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
+    parameterMap["MaximumNumberOfIterations"] = { "256" };
+    parameterMap["AutomaticScalesEstimation"] = { "true" };
   }
   else if (transformName == "bspline")
   {
-    parameterMap["Registration"] = ParameterValueVectorType(1, "MultiMetricMultiResolutionRegistration");
-    parameterMap["Transform"] = ParameterValueVectorType(1, "BSplineTransform");
-    parameterMap["Metric"] = ParameterValueVectorType(1, "AdvancedMattesMutualInformation");
+    parameterMap["Registration"] = { "MultiMetricMultiResolutionRegistration" };
+    parameterMap["Transform"] = { "BSplineTransform" };
+    parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
     parameterMap["Metric"].push_back("TransformBendingEnergyPenalty");
-    parameterMap["Metric0Weight"] = ParameterValueVectorType(1, "1.0");
-    parameterMap["Metric1Weight"] = ParameterValueVectorType(1, "1.0");
-    parameterMap["MaximumNumberOfIterations"] = ParameterValueVectorType(1, "256");
+    parameterMap["Metric0Weight"] = { "1.0" };
+    parameterMap["Metric1Weight"] = { "1.0" };
+    parameterMap["MaximumNumberOfIterations"] = { "256" };
   }
   else if (transformName == "spline")
   {
-    parameterMap["Registration"] = ParameterValueVectorType(1, "MultiResolutionRegistration");
-    parameterMap["Transform"] = ParameterValueVectorType(1, "SplineKernelTransform");
-    parameterMap["Metric"] = ParameterValueVectorType(1, "AdvancedMattesMutualInformation");
-    parameterMap["MaximumNumberOfIterations"] = ParameterValueVectorType(1, "256");
+    parameterMap["Registration"] = { "MultiResolutionRegistration" };
+    parameterMap["Transform"] = { "SplineKernelTransform" };
+    parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
+    parameterMap["MaximumNumberOfIterations"] = { "256" };
   }
   else if (transformName == "groupwise")
   {
-    parameterMap["Registration"] = ParameterValueVectorType(1, "MultiResolutionRegistration");
-    parameterMap["Transform"] = ParameterValueVectorType(1, "BSplineStackTransform");
-    parameterMap["Metric"] = ParameterValueVectorType(1, "VarianceOverLastDimensionMetric");
-    parameterMap["MaximumNumberOfIterations"] = ParameterValueVectorType(1, "256");
-    parameterMap["Interpolator"] = ParameterValueVectorType(1, "ReducedDimensionBSplineInterpolator");
-    parameterMap["ResampleInterpolator"] = ParameterValueVectorType(1, "FinalReducedDimensionBSplineInterpolator");
+    parameterMap["Registration"] = { "MultiResolutionRegistration" };
+    parameterMap["Transform"] = { "BSplineStackTransform" };
+    parameterMap["Metric"] = { "VarianceOverLastDimensionMetric" };
+    parameterMap["MaximumNumberOfIterations"] = { "256" };
+    parameterMap["Interpolator"] = { "ReducedDimensionBSplineInterpolator" };
+    parameterMap["ResampleInterpolator"] = { "FinalReducedDimensionBSplineInterpolator" };
   }
   else
   {
@@ -550,8 +550,7 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
       return gridSpacingSchedule;
     }();
 
-    parameterMap["FinalGridSpacingInPhysicalUnits"] =
-      ParameterValueVectorType(1, std::to_string(finalGridSpacingInPhysicalUnits));
+    parameterMap["FinalGridSpacingInPhysicalUnits"] = { std::to_string(finalGridSpacingInPhysicalUnits) };
   }
 
   return parameterMap;
