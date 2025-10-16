@@ -130,7 +130,7 @@ public:
   virtual void
   StopMultiMetricRegistration()
   {
-    this->m_Stop = true;
+    m_Stop = true;
   }
 
 
@@ -150,7 +150,7 @@ public:
   virtual CombinationMetricType *
   GetCombinationMetric() const
   {
-    return this->m_CombinationMetric.GetPointer();
+    return m_CombinationMetric.GetPointer();
   }
 
 
@@ -293,7 +293,7 @@ public:
   const ParametersType &
   GetLastTransformParameters() const override
   {
-    return this->m_LastTransformParameters;
+    return m_LastTransformParameters;
   }
 
 
