@@ -87,9 +87,9 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage,
                                                   TMovingImage>::MultiMetricMultiResolutionImageRegistrationMethod()
 {
   this->SetMetric(CombinationMetricType::New());
-  this->m_Stop = false;
-  this->m_LastTransformParameters = ParametersType(1);
-  this->m_LastTransformParameters.Fill(0.0f);
+  m_Stop = false;
+  m_LastTransformParameters = ParametersType(1);
+  m_LastTransformParameters.Fill(0.0f);
 
 } // end Constructor
 
@@ -106,11 +106,11 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ge
   if (pos >= this->GetNumberOfFixedImageRegions())
   {
     /** Return a dummy fixed image region. */
-    return this->m_NullFixedImageRegion;
+    return m_NullFixedImageRegion;
   }
   else
   {
-    return this->m_FixedImageRegions[pos];
+    return m_FixedImageRegions[pos];
   }
 
 } // end GetFixedImageRegion()
@@ -127,10 +127,10 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Se
   auto * testPtr = dynamic_cast<CombinationMetricType *>(_arg);
   if (testPtr)
   {
-    if (this->m_CombinationMetric != testPtr)
+    if (m_CombinationMetric != testPtr)
     {
-      this->m_CombinationMetric = testPtr;
-      this->Superclass::SetMetric(this->m_CombinationMetric);
+      m_CombinationMetric = testPtr;
+      this->Superclass::SetMetric(m_CombinationMetric);
       this->Modified();
     }
   }
@@ -179,10 +179,10 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::In
     this->GetCombinationMetric()->SetInterpolator(this->GetInterpolator(i), i);
   }
 
-  this->GetCombinationMetric()->SetFixedImageRegion(this->m_FixedImageRegionPyramids[0][this->GetCurrentLevel()]);
-  for (unsigned int i = 0; i < this->m_FixedImageRegionPyramids.size(); ++i)
+  this->GetCombinationMetric()->SetFixedImageRegion(m_FixedImageRegionPyramids[0][this->GetCurrentLevel()]);
+  for (unsigned int i = 0; i < m_FixedImageRegionPyramids.size(); ++i)
   {
-    this->GetCombinationMetric()->SetFixedImageRegion(this->m_FixedImageRegionPyramids[i][this->GetCurrentLevel()], i);
+    this->GetCombinationMetric()->SetFixedImageRegion(m_FixedImageRegionPyramids[i][this->GetCurrentLevel()], i);
   }
 
   // this->GetMetric()->Initialize();
@@ -215,7 +215,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
   using IndexType = typename FixedImageRegionType::IndexType;
   using ScheduleType = typename FixedImagePyramidType::ScheduleType;
 
-  this->m_FixedImageRegionPyramids.resize(this->GetNumberOfFixedImagePyramids());
+  m_FixedImageRegionPyramids.resize(this->GetNumberOfFixedImagePyramids());
   for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i)
   {
     // Setup the fixed image pyramid
@@ -252,8 +252,8 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
         inputEnd[dim] += (inputSize[dim] - 1);
       }
 
-      this->m_FixedImageRegionPyramids[i].reserve(this->GetNumberOfLevels());
-      this->m_FixedImageRegionPyramids[i].resize(this->GetNumberOfLevels());
+      m_FixedImageRegionPyramids[i].reserve(this->GetNumberOfLevels());
+      m_FixedImageRegionPyramids[i].resize(this->GetNumberOfLevels());
 
       // Compute the FixedImageRegion corresponding to each level of the
       // pyramid.
@@ -294,8 +294,8 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
             static_cast<SizeValueType>(static_cast<SizeValueType>(std::floor(endcindex[dim])) - start[dim] + 1));
         }
 
-        this->m_FixedImageRegionPyramids[i][level].SetSize(size);
-        this->m_FixedImageRegionPyramids[i][level].SetIndex(start);
+        m_FixedImageRegionPyramids[i][level].SetSize(size);
+        m_FixedImageRegionPyramids[i][level].SetIndex(start);
 
       } // end for loop over res levels
 
@@ -347,7 +347,7 @@ template <typename TFixedImage, typename TMovingImage>
 void
 MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
 {
-  this->m_Stop = false;
+  m_Stop = false;
 
   /** Check the transform and set the initial parameters. */
   if (this->GetTransform() == nullptr)
@@ -376,7 +376,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ge
     this->InvokeEvent(IterationEvent());
 
     // Check if there has been a stop request
-    if (this->m_Stop)
+    if (m_Stop)
     {
       break;
     }
@@ -388,8 +388,8 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ge
     }
     catch (const ExceptionObject &)
     {
-      this->m_LastTransformParameters = ParametersType(1);
-      this->m_LastTransformParameters.Fill(0.0f);
+      m_LastTransformParameters = ParametersType(1);
+      m_LastTransformParameters.Fill(0.0f);
 
       // pass exception to caller
       throw;
@@ -404,20 +404,20 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ge
     {
       // An error has occurred in the optimization.
       // Update the parameters
-      this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
+      m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
 
       // Pass exception to caller
       throw;
     }
 
     // get the results
-    this->m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
-    this->GetModifiableTransform()->SetParameters(this->m_LastTransformParameters);
+    m_LastTransformParameters = this->GetOptimizer()->GetCurrentPosition();
+    this->GetModifiableTransform()->SetParameters(m_LastTransformParameters);
 
     // setup the initial parameters for next level
     if (this->GetCurrentLevel() < this->GetNumberOfLevels() - 1)
     {
-      this->SetInitialTransformParametersOfNextLevel(this->m_LastTransformParameters);
+      this->SetInitialTransformParametersOfNextLevel(m_LastTransformParameters);
     }
 
   } // end for loop over res levels
