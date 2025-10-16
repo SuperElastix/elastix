@@ -256,3 +256,19 @@ GTEST_TEST(ParameterObject, GridSpacingScheduleOfDefaultParameterMap)
     }
   }
 }
+
+
+// Tests that the MaximumNumberOfIterations of a map returned by GetDefaultParameterMap is as expected.
+GTEST_TEST(ParameterObject, MaximumNumberOfIterationsOfDefaultParameterMap)
+{
+  static constexpr unsigned int expectedMaximumNumberOfIterations{ 256 };
+
+  for (const std::string transformName : { "translation", "rigid", "affine", "bspline", "spline", "groupwise" })
+  {
+    const ParameterMapType           parameterMap = elx::ParameterObject::GetDefaultParameterMap(transformName);
+    const ParameterValueVectorType & parameterValues = parameterMap.at("MaximumNumberOfIterations");
+
+    ASSERT_EQ(parameterValues.size(), 1);
+    EXPECT_EQ(parameterValues.at(0), std::to_string(expectedMaximumNumberOfIterations));
+  }
+}
