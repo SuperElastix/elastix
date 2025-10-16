@@ -508,8 +508,7 @@ ParameterObject::GetDefaultParameterMap(const std::string & transformName,
   {
     parameterMap["Registration"] = { "MultiMetricMultiResolutionRegistration" };
     parameterMap["Transform"] = { "BSplineTransform" };
-    parameterMap["Metric"] = { "AdvancedMattesMutualInformation" };
-    parameterMap["Metric"].push_back("TransformBendingEnergyPenalty");
+    parameterMap["Metric"] = { "AdvancedMattesMutualInformation", "TransformBendingEnergyPenalty" };
     parameterMap["Metric0Weight"] = { "1.0" };
     parameterMap["Metric1Weight"] = { "1.0" };
     parameterMap["MaximumNumberOfIterations"] = { "256" };
