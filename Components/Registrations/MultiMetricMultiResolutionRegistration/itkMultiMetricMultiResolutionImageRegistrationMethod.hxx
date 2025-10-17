@@ -159,34 +159,34 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::In
   transform.SetParameters(this->GetInitialTransformParametersOfNextLevel());
 
   /** Setup the metric. */
-  this->GetCombinationMetric()->SetTransform(&transform);
+  m_CombinationMetric->SetTransform(&transform);
 
-  this->GetCombinationMetric()->SetFixedImage(this->GetFixedImagePyramid()->GetOutput(this->GetCurrentLevel()));
+  m_CombinationMetric->SetFixedImage(this->GetFixedImagePyramid()->GetOutput(this->GetCurrentLevel()));
   for (unsigned int i = 0; i < this->GetNumberOfFixedImagePyramids(); ++i)
   {
-    this->GetCombinationMetric()->SetFixedImage(this->GetFixedImagePyramid(i)->GetOutput(this->GetCurrentLevel()), i);
+    m_CombinationMetric->SetFixedImage(this->GetFixedImagePyramid(i)->GetOutput(this->GetCurrentLevel()), i);
   }
 
-  this->GetCombinationMetric()->SetMovingImage(this->GetMovingImagePyramid()->GetOutput(this->GetCurrentLevel()));
+  m_CombinationMetric->SetMovingImage(this->GetMovingImagePyramid()->GetOutput(this->GetCurrentLevel()));
   for (unsigned int i = 0; i < this->GetNumberOfMovingImagePyramids(); ++i)
   {
-    this->GetCombinationMetric()->SetMovingImage(this->GetMovingImagePyramid(i)->GetOutput(this->GetCurrentLevel()), i);
+    m_CombinationMetric->SetMovingImage(this->GetMovingImagePyramid(i)->GetOutput(this->GetCurrentLevel()), i);
   }
 
-  this->GetCombinationMetric()->SetInterpolator(this->GetInterpolator());
+  m_CombinationMetric->SetInterpolator(this->GetInterpolator());
   for (unsigned int i = 0; i < this->GetNumberOfInterpolators(); ++i)
   {
-    this->GetCombinationMetric()->SetInterpolator(this->GetInterpolator(i), i);
+    m_CombinationMetric->SetInterpolator(this->GetInterpolator(i), i);
   }
 
-  this->GetCombinationMetric()->SetFixedImageRegion(m_FixedImageRegionPyramids[0][this->GetCurrentLevel()]);
+  m_CombinationMetric->SetFixedImageRegion(m_FixedImageRegionPyramids[0][this->GetCurrentLevel()]);
   for (unsigned int i = 0; i < m_FixedImageRegionPyramids.size(); ++i)
   {
-    this->GetCombinationMetric()->SetFixedImageRegion(m_FixedImageRegionPyramids[i][this->GetCurrentLevel()], i);
+    m_CombinationMetric->SetFixedImageRegion(m_FixedImageRegionPyramids[i][this->GetCurrentLevel()], i);
   }
 
   // this->GetMetric()->Initialize();
-  this->GetCombinationMetric()->Initialize();
+  m_CombinationMetric->Initialize();
 
   /** Setup the optimizer. */
   this->GetModifiableOptimizer()->SetCostFunction(this->GetModifiableMetric());
@@ -566,7 +566,7 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
   }
 
   /** nrofmetrics >= nrofinterpolators >= nrofpyramids >= nofimages */
-  unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
+  unsigned int nrOfMetrics = m_CombinationMetric->GetNumberOfMetrics();
   if (this->GetNumberOfInterpolators() > nrOfMetrics)
   {
     itkExceptionMacro("NumberOfInterpolators can not exceed the NumberOfMetrics in the CombinationMetric!");
