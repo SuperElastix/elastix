@@ -147,8 +147,8 @@ public:
    * Use this method to setup the combination metric (set weights,
    * nrofmetrics, submetrics, etc.
    */
-  virtual CombinationMetricType *
-  GetCombinationMetric() const
+  CombinationMetricType *
+  GetCombinationMetric()
   {
     return m_CombinationMetric.GetPointer();
   }
