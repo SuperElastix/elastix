@@ -81,10 +81,12 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration()
     this->SetFixedImageRegion(this->GetElastix()->GetFixedImage(i)->GetBufferedRegion(), i);
   }
 
+  CombinationMetricType & combinationMetric = itk::Deref(this->GetCombinationMetric());
+
   /** Add the target cells "Metric<i>" and "||Gradient<i>||" to IterationInfo
    * and format as floats.
    */
-  const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
+  const unsigned int nrOfMetrics = combinationMetric.GetNumberOfMetrics();
   unsigned int       width = 0;
   for (unsigned int i = nrOfMetrics; i > 0; i /= 10)
   {
@@ -112,11 +114,11 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeRegistration()
   std::string tmp = this->m_Configuration->GetCommandLineArgument("-mtcombo");
   if (tmp == "true" || tmp.empty())
   {
-    this->GetCombinationMetric()->SetUseMultiThread(true);
+    combinationMetric.SetUseMultiThread(true);
   }
   else
   {
-    this->GetCombinationMetric()->SetUseMultiThread(false);
+    combinationMetric.SetUseMultiThread(false);
   }
 
 } // end BeforeRegistration()
@@ -130,8 +132,10 @@ template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration()
 {
+  const CombinationMetricType & combinationMetric = itk::Deref(this->GetCombinationMetric());
+
   /** Print the submetric values and gradients to IterationInfo. */
-  const unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
+  const unsigned int nrOfMetrics = combinationMetric.GetNumberOfMetrics();
   unsigned int       width = 0;
   for (unsigned int i = nrOfMetrics; i > 0; i /= 10)
   {
@@ -141,16 +145,15 @@ MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration()
   {
     std::ostringstream makestring1;
     makestring1 << "2:Metric" << std::setfill('0') << std::setw(width) << i;
-    this->GetIterationInfoAt(makestring1.str().c_str()) << this->GetCombinationMetric()->GetMetricValue(i);
+    this->GetIterationInfoAt(makestring1.str().c_str()) << combinationMetric.GetMetricValue(i);
 
     std::ostringstream makestring2;
     makestring2 << "4:||Gradient" << std::setfill('0') << std::setw(width) << i << "||";
-    this->GetIterationInfoAt(makestring2.str().c_str())
-      << this->GetCombinationMetric()->GetMetricDerivativeMagnitude(i);
+    this->GetIterationInfoAt(makestring2.str().c_str()) << combinationMetric.GetMetricDerivativeMagnitude(i);
 
     std::ostringstream makestring3;
     makestring3 << "Time" << std::setfill('0') << std::setw(width) << i << "[ms]";
-    this->GetIterationInfoAt(makestring3.str().c_str()) << this->GetCombinationMetric()->GetMetricComputationTime(i);
+    this->GetIterationInfoAt(makestring3.str().c_str()) << combinationMetric.GetMetricComputationTime(i);
   }
 
   if (this->m_ShowExactMetricValue)
@@ -159,11 +162,11 @@ MultiMetricMultiResolutionRegistration<TElastix>::AfterEachIteration()
 
     for (unsigned int i = 0; i < nrOfMetrics; ++i)
     {
-      if (this->GetCombinationMetric()->GetUseMetric(i))
+      if (combinationMetric.GetUseMetric(i))
       {
         const double currentExactMetricValue_i = this->GetElastix()->GetElxMetricBase(i)->GetCurrentExactMetricValue();
 
-        const double weight_i = this->GetCombinationMetric()->GetMetricWeight(i);
+        const double weight_i = combinationMetric.GetMetricWeight(i);
 
         currentExactMetricValue += weight_i * currentExactMetricValue_i;
       }
@@ -183,13 +186,14 @@ template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
 {
-  const Configuration & configuration = itk::Deref(Superclass2::GetConfiguration());
+  const Configuration &   configuration = itk::Deref(Superclass2::GetConfiguration());
+  CombinationMetricType & combinationMetric = itk::Deref(this->GetCombinationMetric());
 
   /** Get the current resolution level. */
   unsigned int level = this->GetCurrentLevel();
 
   /** Get the number of metrics. */
-  unsigned int nrOfMetrics = this->GetCombinationMetric()->GetNumberOfMetrics();
+  unsigned int nrOfMetrics = combinationMetric.GetNumberOfMetrics();
 
   /** Set the masks in the metric. */
   this->UpdateFixedMasks(level);
@@ -198,7 +202,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
   /** Set the use of relative metric weights. */
   bool useRelativeWeights = false;
   configuration.ReadParameter(useRelativeWeights, "UseRelativeWeights", 0);
-  this->GetCombinationMetric()->SetUseRelativeWeights(useRelativeWeights);
+  combinationMetric.SetUseRelativeWeights(useRelativeWeights);
 
   /** Set the metric weights. The default metric weight is 1.0 / nrOfMetrics. */
   if (!useRelativeWeights)
@@ -210,7 +214,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "Weight";
       configuration.ReadParameter(weight, makestring.str(), "", level, 0);
-      this->GetCombinationMetric()->SetMetricWeight(weight, metricnr);
+      combinationMetric.SetMetricWeight(weight, metricnr);
     }
   }
   else
@@ -225,7 +229,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
       std::ostringstream makestring;
       makestring << "Metric" << metricnr << "RelativeWeight";
       configuration.ReadParameter(weight, makestring.str(), "", level, 0);
-      this->GetCombinationMetric()->SetMetricRelativeWeight(weight, metricnr);
+      combinationMetric.SetMetricRelativeWeight(weight, metricnr);
     }
   }
 
@@ -236,7 +240,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::BeforeEachResolution()
     std::ostringstream makestring;
     makestring << "Metric" << metricnr << "Use";
     configuration.ReadParameter(use, makestring.str(), "", level, 0, false);
-    this->GetCombinationMetric()->SetUseMetric(use, metricnr);
+    combinationMetric.SetUseMetric(use, metricnr);
   }
 
   /** Check if the exact metric value, computed on all pixels, should be shown.
@@ -274,14 +278,16 @@ template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::SetComponents()
 {
+  CombinationMetricType & combinationMetric = itk::Deref(this->GetCombinationMetric());
+
   /** Get the component from this->GetElastix() (as elx::...BaseType *),
    * cast it to the appropriate type and set it in 'this'.
    */
   const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
-  this->GetCombinationMetric()->SetNumberOfMetrics(nrOfMetrics);
+  combinationMetric.SetNumberOfMetrics(nrOfMetrics);
   for (unsigned int i = 0; i < nrOfMetrics; ++i)
   {
-    this->GetCombinationMetric()->SetMetric(this->GetElastix()->GetElxMetricBase(i)->GetAsITKBaseType(), i);
+    combinationMetric.SetMetric(this->GetElastix()->GetElxMetricBase(i)->GetAsITKBaseType(), i);
   }
 
   for (unsigned int i = 0; i < this->GetElastix()->GetNumberOfFixedImages(); ++i)
@@ -363,6 +369,8 @@ template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int level)
 {
+  CombinationMetricType & combinationMetric = itk::Deref(this->GetCombinationMetric());
+
   /** some shortcuts */
   const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
   const unsigned int nrOfFixedMasks = this->GetElastix()->GetNumberOfFixedMasks();
@@ -393,7 +401,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int 
      */
     FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
       this->GetElastix()->GetFixedMask(), useMaskErosion, this->GetFixedImagePyramid(), level);
-    this->GetCombinationMetric()->SetFixedImageMask(fixedMask);
+    combinationMetric.SetFixedImageMask(fixedMask);
   }
   else if ((nrOfFixedImages == 1) && (nrOfFixedMasks == 1))
   {
@@ -406,7 +414,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int 
     {
       FixedMaskSpatialObjectPointer fixedMask = this->GenerateFixedMaskSpatialObject(
         this->GetElastix()->GetFixedMask(), useMaskErosion, this->GetFixedImagePyramid(i), level);
-      this->GetCombinationMetric()->SetFixedImageMask(fixedMask, i);
+      combinationMetric.SetFixedImageMask(fixedMask, i);
     }
   }
   else
@@ -431,7 +439,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateFixedMasks(unsigned int 
       }
       FixedMaskSpatialObjectPointer fixedMask =
         this->GenerateFixedMaskSpatialObject(this->GetElastix()->GetFixedMask(i), useMask_i, pyramid_i, level);
-      this->GetCombinationMetric()->SetFixedImageMask(fixedMask, i);
+      combinationMetric.SetFixedImageMask(fixedMask, i);
     }
   } // end else
 
@@ -451,6 +459,8 @@ template <typename TElastix>
 void
 MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int level)
 {
+  CombinationMetricType & combinationMetric = itk::Deref(this->GetCombinationMetric());
+
   /** Some shortcuts. */
   const unsigned int nrOfMetrics = this->GetElastix()->GetNumberOfMetrics();
   const unsigned int nrOfMovingMasks = this->GetElastix()->GetNumberOfMovingMasks();
@@ -481,7 +491,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int
      */
     MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
       this->GetElastix()->GetMovingMask(), useMaskErosion, this->GetMovingImagePyramid(), level);
-    this->GetCombinationMetric()->SetMovingImageMask(movingMask);
+    combinationMetric.SetMovingImageMask(movingMask);
   }
   else if ((nrOfMovingImages == 1) && (nrOfMovingMasks == 1))
   {
@@ -494,7 +504,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int
     {
       MovingMaskSpatialObjectPointer movingMask = this->GenerateMovingMaskSpatialObject(
         this->GetElastix()->GetMovingMask(), useMaskErosion, this->GetMovingImagePyramid(i), level);
-      this->GetCombinationMetric()->SetMovingImageMask(movingMask, i);
+      combinationMetric.SetMovingImageMask(movingMask, i);
     }
   }
   else
@@ -519,7 +529,7 @@ MultiMetricMultiResolutionRegistration<TElastix>::UpdateMovingMasks(unsigned int
       }
       MovingMaskSpatialObjectPointer movingMask =
         this->GenerateMovingMaskSpatialObject(this->GetElastix()->GetMovingMask(i), useMask_i, pyramid_i, level);
-      this->GetCombinationMetric()->SetMovingImageMask(movingMask, i);
+      combinationMetric.SetMovingImageMask(movingMask, i);
     }
   } // end else
 
