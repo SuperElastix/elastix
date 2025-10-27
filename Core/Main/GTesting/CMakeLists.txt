@@ -2,6 +2,7 @@ add_executable(ElastixLibGTest
   elxCoreMainGTestUtilities.h
   elxCoreMainGTestUtilities.cxx
   ElastixLibGTest.cxx
+  GetDefaultParameterMapGTest.cxx
   itkElastixRegistrationMethodGTest.cxx
   itkTransformixFilterGTest.cxx
   ParameterObjectGTest.cxx
