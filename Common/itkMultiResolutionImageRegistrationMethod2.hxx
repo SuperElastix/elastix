@@ -209,7 +209,6 @@ MultiResolutionImageRegistrationMethod2<TFixedImage, TMovingImage>::PreparePyram
     inputEnd[dim] += (inputSize[dim] - 1);
   }
 
-  m_FixedImageRegionPyramid.reserve(m_NumberOfLevels);
   m_FixedImageRegionPyramid.resize(m_NumberOfLevels);
 
   // Compute the FixedImageRegion corresponding to each level of the

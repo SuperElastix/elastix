@@ -373,7 +373,6 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
         inputEnd[dim] += (inputSize[dim] - 1);
       }
 
-      this->m_FixedImageRegionPyramids[i].reserve(this->GetNumberOfLevels());
       this->m_FixedImageRegionPyramids[i].resize(this->GetNumberOfLevels());
 
       // Compute the FixedImageRegion corresponding to each level of the

@@ -252,7 +252,6 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Pr
         inputEnd[dim] += (inputSize[dim] - 1);
       }
 
-      m_FixedImageRegionPyramids[i].reserve(this->GetNumberOfLevels());
       m_FixedImageRegionPyramids[i].resize(this->GetNumberOfLevels());
 
       // Compute the FixedImageRegion corresponding to each level of the
