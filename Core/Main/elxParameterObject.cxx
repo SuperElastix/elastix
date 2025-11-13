@@ -221,9 +221,9 @@ ParameterObject::RemoveParameter(const unsigned int index, const ParameterKeyTyp
 void
 ParameterObject::RemoveParameter(const ParameterKeyType & key)
 {
-  for (unsigned int index = 0; index < this->GetNumberOfParameterMaps(); ++index)
+  for (auto & parameterMap : m_ParameterMaps)
   {
-    this->RemoveParameter(index, key);
+    parameterMap.erase(key);
   }
 }
 
@@ -563,14 +563,12 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
   for (unsigned int i = 0; i < m_ParameterMaps.size(); ++i)
   {
     os << "ParameterMap " << i << ": " << std::endl;
-    auto parameterMapIterator = m_ParameterMaps[i].begin();
-    auto parameterMapIteratorEnd = m_ParameterMaps[i].end();
-    while (parameterMapIterator != parameterMapIteratorEnd)
-    {
-      os << "  (" << parameterMapIterator->first;
-      ParameterValueVectorType parameterMapValueVector = parameterMapIterator->second;
 
-      for (const std::string & value : parameterMapValueVector)
+    for (const auto & parameter : m_ParameterMaps[i])
+    {
+      os << "  (" << parameter.first;
+
+      for (const std::string & value : parameter.second)
       {
         if (Conversion::IsNumber(value))
         {
@@ -583,7 +581,6 @@ ParameterObject::PrintSelf(std::ostream & os, itk::Indent indent) const
       }
 
       os << ')' << std::endl;
-      ++parameterMapIterator;
     }
   }
 }
