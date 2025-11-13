@@ -336,25 +336,6 @@ protected:
     itk::AdvancedBSplineDeformableTransformBase<CoordinateRepresentationType, Self::FixedImageDimension>;
   using BSplineTransformBasePointer = typename AdvancedBSplineDeformableTransformType::Pointer;
 
-  /** Variable to store the automatically determined settings for each resolution. */
-  SettingsVectorType m_SettingsVector;
-
-  /** Some options for automatic parameter estimation. */
-  SizeValueType m_NumberOfGradientMeasurements;
-  SizeValueType m_NumberOfJacobianMeasurements;
-  SizeValueType m_NumberOfSamplesForNoiseCompensationFactor;
-  SizeValueType m_NumberOfSamplesForPrecondition;
-  SizeValueType m_NumberOfSpatialSamples;
-
-  /** The transform stored as AdvancedTransform */
-  AdvancedTransformPointer m_AdvancedTransform;
-
-  double m_SigmoidScaleFactor;
-  double m_NoiseFactor;
-  double m_GlobalStepSize;
-  double m_RegularizationKappa;
-  double m_ConditionNumber;
-
   /** Select different method to estimate some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
    * SigmoidScale.
@@ -386,6 +367,25 @@ protected:
 
 private:
   elxOverrideGetSelfMacro;
+
+  /** Variable to store the automatically determined settings for each resolution. */
+  SettingsVectorType m_SettingsVector;
+
+  /** Some options for automatic parameter estimation. */
+  SizeValueType m_NumberOfGradientMeasurements;
+  SizeValueType m_NumberOfJacobianMeasurements;
+  SizeValueType m_NumberOfSamplesForNoiseCompensationFactor;
+  SizeValueType m_NumberOfSamplesForPrecondition;
+  SizeValueType m_NumberOfSpatialSamples;
+
+  /** The transform stored as AdvancedTransform */
+  AdvancedTransformPointer m_AdvancedTransform;
+
+  double m_SigmoidScaleFactor;
+  double m_NoiseFactor;
+  double m_GlobalStepSize;
+  double m_RegularizationKappa;
+  double m_ConditionNumber;
 
   bool   m_AutomaticParameterEstimation;
   double m_MaximumStepLength;
