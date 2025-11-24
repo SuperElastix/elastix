@@ -30,8 +30,8 @@ namespace elastix
  *   itk::MultiResolutionImageRegistrationMethodWithFeatures.
  *
  * This MultiResolutionRegistrationWithFeatures gives a framework for registration with a
- * multi-resolution approach, using ...
- * Like this for example:\n
+ * multi-resolution approach, using images representing multiple features
+ * of the same underlying fixed versus moving images. Like this for example:\n
  * <tt>(Interpolator "BSplineInterpolator" "BSplineInterpolator")</tt>
  *
  *
