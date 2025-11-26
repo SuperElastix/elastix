@@ -26,17 +26,6 @@ namespace elastix
 {
 
 /**
- * ******************* Constructor ***********************
- */
-
-template <typename TElastix>
-MultiMetricMultiResolutionRegistration<TElastix>::MultiMetricMultiResolutionRegistration()
-{
-  this->m_ShowExactMetricValue = false;
-} // end constructor
-
-
-/**
  * ******************* BeforeRegistration ***********************
  */
 

@@ -204,7 +204,7 @@ public:
 
 protected:
   /** The constructor. */
-  MultiMetricMultiResolutionRegistration();
+  MultiMetricMultiResolutionRegistration() = default;
   /** The destructor. */
   ~MultiMetricMultiResolutionRegistration() override = default;
 
@@ -233,7 +233,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  bool m_ShowExactMetricValue;
+  bool m_ShowExactMetricValue{ false };
 };
 
 } // end namespace elastix
