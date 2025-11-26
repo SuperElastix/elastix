@@ -337,6 +337,7 @@ protected:
   virtual void
   CheckOnInitialize();
 
+private:
   /** Variables already defined in the superclass, but as private...  */
   bool           m_Stop{};
   ParametersType m_LastTransformParameters{};

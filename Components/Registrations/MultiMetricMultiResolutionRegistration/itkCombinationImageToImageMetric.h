@@ -450,6 +450,7 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
+private:
   /** Store the metrics and the corresponding weights. */
   unsigned int                                 m_NumberOfMetrics{ 0 };
   std::vector<SingleValuedCostFunctionPointer> m_Metrics{};
@@ -466,7 +467,6 @@ protected:
   FixedImageRegionType m_NullFixedImageRegion{};
   DerivativeType       m_NullDerivative{};
 
-private:
   // Private using-declarations, to avoid `-Woverloaded-virtual` warnings from GCC (GCC 11.4) or clang (macos-12).
   using Superclass::SetFixedImageMask;
   using Superclass::SetMovingImageMask;
