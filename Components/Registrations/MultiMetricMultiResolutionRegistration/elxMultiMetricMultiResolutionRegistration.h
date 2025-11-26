@@ -230,10 +230,10 @@ protected:
   virtual void
   SetComponents();
 
-  bool m_ShowExactMetricValue;
-
 private:
   elxOverrideGetSelfMacro;
+
+  bool m_ShowExactMetricValue;
 };
 
 } // end namespace elastix
