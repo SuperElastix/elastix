@@ -78,7 +78,6 @@ macro(REMOVE_ELXCOMPONENT name)
 endmacro(REMOVE_ELXCOMPONENT)
 
 macro(ADD_ELXCOMPONENT name)
-
   # Compile this component or not
   set(defaultValue ON)
   if(${ARGV1} STREQUAL "OFF")
