@@ -70,7 +70,7 @@ jobs:
         python -m pip install ninja
 
     - name: Get specific version of CMake, Ninja
-      uses: lukka/get-cmake@v3.24.2
+      uses: lukka/get-cmake@v4.2.0
 
     - name: Download ITK
       if: steps.cache.outputs.cache-hit != 'true'
