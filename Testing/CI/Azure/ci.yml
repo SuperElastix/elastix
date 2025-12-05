@@ -27,7 +27,7 @@ jobs:
 - job: Windows
   timeoutInMinutes: 0
   pool:
-    vmImage: 'windows-2022'
+    vmImage: 'windows-latest'
   strategy:
     matrix:
       ITKv5:
@@ -82,7 +82,7 @@ jobs:
 - job: Ubuntu
   timeoutInMinutes: 0
   pool:
-    vmImage: 'ubuntu-22.04'
+    vmImage: 'ubuntu-latest'
   strategy:
     matrix:
       ITKv5:
@@ -135,7 +135,7 @@ jobs:
 - job: macOS
   timeoutInMinutes: 0
   pool:
-    vmImage: 'macOS-14'
+    vmImage: 'macOS-latest'
   strategy:
     matrix:
       ITKv5:
