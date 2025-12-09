@@ -8,7 +8,7 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-13]
+        os: [ubuntu-22.04, windows-2022, macos-14]
         include:
           - os: ubuntu-22.04
             c-compiler: "gcc"
@@ -37,7 +37,7 @@ jobs:
               - libtorch/libtorch/lib/torch.dll
               - elastix-build/bin/ANNlib-5.2.dll
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-          - os: macos-13
+          - os: macos-14
             c-compiler: "clang"
             cxx-compiler: "clang++"
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.8.0.zip"
@@ -74,13 +74,13 @@ jobs:
           vcvars: ${{ matrix.vcvars64 }}
 
       - name: Download and extract libtorch
-        if: matrix.os != 'macos-13'
+        if: matrix.os != 'macos-14'
         uses: ./.github/actions/download_libtorch
         with:
           libtorch_url: ${{ matrix.libtorch-cpu-url }}
 
       - name: Build libtorch
-        if: matrix.os == 'macos-13'
+        if: matrix.os == 'macos-14'
         uses: ./.github/actions/build_libtorch
         with:
           install_prefix: ${{ github.workspace }}/libtorch/libtorch
