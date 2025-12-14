@@ -127,6 +127,8 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
   double       stdev[ImageDimension];
   SpacingType  spacing = inputPtr->GetSpacing();
 
+  const itk::Size<ImageDimension> imageSize = inputPtr->GetRequestedRegion().GetSize();
+
   for (ilevel = 0; ilevel < this->m_NumberOfLevels; ++ilevel)
   {
 
@@ -159,7 +161,7 @@ MultiResolutionGaussianSmoothingPyramidImageFilter<TInputImage, TOutputImage>::G
       smootherArray[idim]->Modified();
 
       // Update smoother pointer array for this dimension
-      if (factors[idim] == 0.0)
+      if (factors[idim] == 0.0 || imageSize[idim] == 1)
       {
         // Bypass the filter for this dimension
         if (idim > 0)
