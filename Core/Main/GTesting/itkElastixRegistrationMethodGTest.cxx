@@ -697,6 +697,47 @@ GTEST_TEST(itkElastixRegistrationMethod, Translation)
 }
 
 
+// Tests registering a 5x5x1 slice (fixed image) and a 5x5x5 volume (moving image). In the past (elastix <= 5.2.0),
+// doing so might cause an exception, saying something like "ITK ERROR: RecursiveGaussianImageFilter(...): The number of
+// pixels along direction 2 is less than 4. This filter requires a minimum of four pixels along the dimension to be
+// processed". The exception occurred in the past, when using "FixedSmoothingImagePyramid" (the default).
+GTEST_TEST(itkElastixRegistrationMethod, FromSliceTo3DVolume)
+{
+  static constexpr auto ImageDimension = 3U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using IndexType = itk::Index<ImageDimension>;
+
+  static constexpr itk::SizeValueType  imageSizeValue{ 5 };
+  static constexpr itk::SizeValueType  objectSizeValue{ 3 };
+  static constexpr itk::IndexValueType objectIndexValue{ (imageSizeValue - objectSizeValue) / 2 };
+  static constexpr SizeType            objectSize{ { objectSizeValue, objectSizeValue, 1 } };
+
+  const auto fixedImage = CreateImage<PixelType>(SizeType{ imageSizeValue, imageSizeValue, 1 });
+  FillImageRegion(*fixedImage, IndexType{ objectIndexValue, objectIndexValue, 0 }, objectSize);
+  const auto movingImage = CreateImage<PixelType>(SizeType::Filled(imageSizeValue));
+  FillImageRegion(*movingImage, IndexType::Filled(objectIndexValue), objectSize);
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+  registration.SetFixedImage(fixedImage);
+  registration.SetMovingImage(movingImage);
+  registration.SetParameterObject(
+    CreateParameterObject(ParameterMapType{ // Parameters in alphabetic order:
+                                            { "AutomaticTransformInitialization", { "true" } },
+                                            { "ImageSampler", { "Full" } },
+                                            { "MaximumNumberOfIterations", { "2" } },
+                                            { "Metric", { "AdvancedNormalizedCorrelation" } },
+                                            { "NumberOfResolutions", { "1" } },
+                                            { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+                                            { "Transform", { "TranslationTransform" } } }));
+  registration.Update();
+  const auto transformParameters = GetTransformParametersFromFilter(registration);
+  EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters),
+            itk::Offset<ImageDimension>({ 0, 0, imageSizeValue / 2 }));
+}
+
+
 // Tests registering two images, which have the same pixel data, but different origin.
 GTEST_TEST(itkElastixRegistrationMethod, TranslationOrigin)
 {
