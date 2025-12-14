@@ -107,6 +107,10 @@ namespace itk
  * To generate each output image, Gaussian smoothing is first performed
  * using a series of RecursiveGaussianImageFilter with standard deviation
  * (shrink factor / 2)*imagespacing.
+ *
+ * When either a shrink factor is set to zero for a particular dimension, or when the dimension itself is `1`, or both,
+ * no smoothing is performed along that dimension.
+ *
  * The smoothed images are NOT downsampled, in contrast to the superclass's
  * behaviour.
  *
