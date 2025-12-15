@@ -1,11 +1,10 @@
-add_executable(CommonGTest
+set(ELX_COMMON_GTEST_SOURCES
   ../../Core/Main/GTesting/elxCoreMainGTestUtilities.h
   ../../Core/Main/GTesting/elxCoreMainGTestUtilities.cxx
   elxConversionGTest.cxx
   elxDefaultConstructGTest.cxx
   elxElastixMainGTest.cxx
   elxGTestUtilities.h
-  elxImpactMetricGTest.cxx
   elxResampleInterpolatorGTest.cxx
   elxResamplerGTest.cxx
   elxTransformIOGTest.cxx
@@ -22,7 +21,13 @@ add_executable(CommonGTest
   itkImageRandomSamplerSparseMaskGTest.cxx
   itkImageSamplerGTest.cxx
   itkParameterMapInterfaceTest.cxx
-  )
+)
+
+if(USE_ImpactMetric)
+    list(APPEND ELX_COMMON_GTEST_SOURCES elxImpactMetricGTest.cxx)
+endif()
+
+add_executable(CommonGTest ${ELX_COMMON_GTEST_SOURCES})
 
 target_compile_definitions(CommonGTest PRIVATE
   _USE_MATH_DEFINES # For M_PI.
