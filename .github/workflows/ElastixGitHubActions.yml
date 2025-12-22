@@ -190,6 +190,6 @@ jobs:
         uses: ./.github/actions/publish
         with:
           libs: ${{ join(matrix.libs, ' ') }}
-          upload-name: ${{ matrix.os }}-${{ matrix.cuda-version }}
+          upload-name: ${{ matrix.os }}-libtorch-2.8.0-${{ matrix.cuda-version }}
           docker-username: ${{ secrets.DOCKER_HUB_USERNAME }}
           docker-password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}

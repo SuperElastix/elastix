@@ -22,7 +22,7 @@ runs:
         mv elastix-build/bin/elastix bin
         mv elastix-build/bin/transformix bin
         for lib in ${{ inputs.libs }}; do
-          cp "$lib" lib
+          mv "$lib" lib
         done
         mv elastix-source/NOTICE uploads
         mv elastix-source/LICENSE uploads
@@ -39,7 +39,7 @@ runs:
         mv elastix-build/bin/elastix.exe uploads
         mv elastix-build/bin/transformix.exe uploads
         for lib in ${{ inputs.libs }}; do
-          cp "$lib" uploads
+          mv "$lib" uploads
         done
 
     - name: Publish Artifacts
