@@ -338,8 +338,8 @@ private:
   GetSigmas(const unsigned int level) const;
 
   /** Get shrink factors from m_Schedule for the level. */
-  void
-  GetShrinkFactors(const unsigned int level, RescaleFactorArrayType & shrinkFactors) const;
+  RescaleFactorArrayType
+  GetShrinkFactors(const unsigned int level) const;
 
   /** Returns true if smooth has been used in pipeline, otherwise return false. */
   bool
