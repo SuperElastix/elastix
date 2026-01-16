@@ -363,9 +363,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   typename SmootherType::Pointer & smoother,
   const InputImageConstPointer &   input)
 {
-  SigmaArrayType sigmaArray;
-  this->GetSigma(level, sigmaArray);
-  if (sigmaArray != SigmaArrayType{})
+  if (const SigmaArrayType sigmaArray = this->GetSigmas(level); sigmaArray != SigmaArrayType{})
   {
     // First construct the smoother if has not been created and set input.
     if (smoother.IsNull())
@@ -740,20 +738,20 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 
 
 /**
- * ******************* GetSigma ***********************
+ * ******************* GetSigmas ***********************
  */
 
 template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
-void
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GetSigma(
-  const unsigned int level,
-  SigmaArrayType &   sigmaArray) const
+auto
+GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GetSigmas(
+  const unsigned int level) const -> SigmaArrayType
 {
-  sigmaArray.Fill(0);
+  SigmaArrayType sigmaArray;
   for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     sigmaArray[dim] = this->m_SmoothingSchedule[level][dim];
   }
+  return sigmaArray;
 } // end GetSigma()
 
 
@@ -811,11 +809,9 @@ bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::IsSmoothingUsed() const
 {
   // If for any level all sigma elements are not zeros then smooth are used in pipeline
-  SigmaArrayType sigmaArray;
   for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
-    this->GetSigma(level, sigmaArray);
-    if (sigmaArray != SigmaArrayType{})
+    if (this->GetSigmas(level) != SigmaArrayType{})
     {
       return true;
     }
