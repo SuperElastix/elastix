@@ -395,8 +395,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   typename ImageToImageFilterSameTypes::Pointer &      rescaleSameTypes,
   typename ImageToImageFilterDifferentTypes::Pointer & rescaleDifferentTypes)
 {
-  RescaleFactorArrayType shrinkFactors;
-  this->GetShrinkFactors(level, shrinkFactors);
+  const RescaleFactorArrayType shrinkFactors = this->GetShrinkFactors(level);
 
   // No shrinking or resampling needed: return 0
   if (shrinkFactors == RescaleFactorArrayType::Filled(1.0))
@@ -759,12 +758,11 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
  */
 
 template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
-void
+auto
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::GetShrinkFactors(
-  const unsigned int       level,
-  RescaleFactorArrayType & shrinkFactors) const
+  const unsigned int level) const -> RescaleFactorArrayType
 {
-  shrinkFactors.Fill(0);
+  RescaleFactorArrayType shrinkFactors;
   for (unsigned int dim = 0; dim < ImageDimension; ++dim)
   {
     /** Here we would prefer to use m_RescaleSchedule.
@@ -774,6 +772,8 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
      */
     shrinkFactors[dim] = this->m_Schedule[level][dim];
   }
+  return shrinkFactors;
+
 } // end GetShrinkFactors()
 
 
@@ -806,11 +806,9 @@ bool
 GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::IsRescaleUsed() const
 {
   // If for any level all rescale factors are not ones then rescale are used in pipeline
-  RescaleFactorArrayType rescaleFactors;
   for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
-    this->GetShrinkFactors(level, rescaleFactors);
-    if (rescaleFactors != RescaleFactorArrayType::Filled(1.0))
+    if (this->GetShrinkFactors(level) != RescaleFactorArrayType::Filled(1.0))
     {
       return true;
     }
