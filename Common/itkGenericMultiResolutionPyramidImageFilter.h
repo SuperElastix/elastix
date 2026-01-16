@@ -334,8 +334,8 @@ private:
                   const SpacingType &  spacing) const;
 
   /** Get sigmas from m_SmoothingSchedule for the level. */
-  void
-  GetSigma(const unsigned int level, SigmaArrayType & sigmaArray) const;
+  SigmaArrayType
+  GetSigmas(const unsigned int level) const;
 
   /** Get shrink factors from m_Schedule for the level. */
   void
