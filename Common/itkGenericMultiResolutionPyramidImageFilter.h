@@ -341,12 +341,6 @@ private:
   void
   GetShrinkFactors(const unsigned int level, RescaleFactorArrayType & shrinkFactors) const;
 
-  /** Returns true if all elements of rescaleFactorArray are ones,
-   * otherwise return false.
-   */
-  bool
-  AreRescaleFactorsAllOnes(const RescaleFactorArrayType & rescaleFactorArray) const;
-
   /** Returns true if smooth has been used in pipeline, otherwise return false. */
   bool
   IsSmoothingUsed() const;

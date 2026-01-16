@@ -397,10 +397,9 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 {
   RescaleFactorArrayType shrinkFactors;
   this->GetShrinkFactors(level, shrinkFactors);
-  const bool rescaleFactorsAllOnes = this->AreRescaleFactorsAllOnes(shrinkFactors);
 
   // No shrinking or resampling needed: return 0
-  if (rescaleFactorsAllOnes)
+  if (shrinkFactors == RescaleFactorArrayType::Filled(1.0))
   {
     return 0;
   }
@@ -779,28 +778,6 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 
 
 /**
- * ******************* AreRescaleFactorsAllOnes ***********************
- */
-
-template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
-bool
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::AreRescaleFactorsAllOnes(
-  const RescaleFactorArrayType & rescaleFactors) const
-{
-  const ScalarRealType one = NumericTraits<ScalarRealType>::One;
-  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
-  {
-    if (rescaleFactors[dim] != one)
-    {
-      return false;
-    }
-  }
-
-  return true;
-} // end AreRescaleFactorsAllOnes()
-
-
-/**
  * ******************* IsSmoothingUsed ***********************
  */
 
@@ -833,7 +810,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
     this->GetShrinkFactors(level, rescaleFactors);
-    if (!this->AreRescaleFactorsAllOnes(rescaleFactors))
+    if (rescaleFactors != RescaleFactorArrayType::Filled(1.0))
     {
       return true;
     }
