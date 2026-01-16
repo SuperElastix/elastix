@@ -341,12 +341,6 @@ private:
   void
   GetShrinkFactors(const unsigned int level, RescaleFactorArrayType & shrinkFactors) const;
 
-  /** Returns true if all elements of sigmaArray are zeros,
-   * otherwise return false.
-   */
-  bool
-  AreSigmasAllZeros(const SigmaArrayType & sigmaArray) const;
-
   /** Returns true if all elements of rescaleFactorArray are ones,
    * otherwise return false.
    */

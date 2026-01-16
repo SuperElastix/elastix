@@ -246,8 +246,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   //    m_UseMultiResolutionRescaleSchedule = false
   //    Then pipeline is: input -> copy -> output
   //
-  // 1.a) The smoother can be skipped if AreSigmasAllZeros(...)
-  //      returns true for the current level.
+  // 1.a) The smoother can be skipped if are sigmas are zero for the current level.
   // 1.b) The shrinker/resampler can be skipped if AreRescaleFactorsAllOnes(...)
   //      returns true for the current level.
   //
@@ -366,8 +365,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 {
   SigmaArrayType sigmaArray;
   this->GetSigma(level, sigmaArray);
-  const bool sigmasAllZeros = this->AreSigmasAllZeros(sigmaArray);
-  if (!sigmasAllZeros)
+  if (sigmaArray != SigmaArrayType{})
   {
     // First construct the smoother if has not been created and set input.
     if (smoother.IsNull())
@@ -783,27 +781,6 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
 
 
 /**
- * ******************* AreSigmasAllZeros ***********************
- */
-
-template <typename TInputImage, typename TOutputImage, typename TPrecisionType>
-bool
-GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionType>::AreSigmasAllZeros(
-  const SigmaArrayType & sigmaArray) const
-{
-  for (unsigned int dim = 0; dim < ImageDimension; ++dim)
-  {
-    if (sigmaArray[dim] != 0.0)
-    {
-      return false;
-    }
-  }
-
-  return true;
-} // end AreSigmasAllZeros()
-
-
-/**
  * ******************* AreRescaleFactorsAllOnes ***********************
  */
 
@@ -838,7 +815,7 @@ GenericMultiResolutionPyramidImageFilter<TInputImage, TOutputImage, TPrecisionTy
   for (unsigned int level = 0; level < this->m_NumberOfLevels; ++level)
   {
     this->GetSigma(level, sigmaArray);
-    if (!this->AreSigmasAllZeros(sigmaArray))
+    if (sigmaArray != SigmaArrayType{})
     {
       return true;
     }
