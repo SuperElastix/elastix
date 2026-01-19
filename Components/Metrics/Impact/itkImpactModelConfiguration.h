@@ -28,6 +28,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "itkStatisticsImageFilter.h"
 
 /**
  * ******************* GetStringFromVector ***********************
@@ -82,6 +83,9 @@ public:
     m_Model = std::make_shared<torch::jit::script::Module>(torch::jit::load(m_ModelPath, torch::Device(torch::kCPU)));
     m_Model->eval();
     m_Model->to(m_DataType);
+    m_nArgs = m_Model->get_method("forward").function().getSchema().arguments().size();
+    m_nLayers = torch::tensor(static_cast<int64_t>(m_LayersMask.size()), torch::kInt16);
+
     if (!isStatic)
     {
       /** Initialize some variables precalculation for loop performance */
@@ -184,11 +188,65 @@ public:
   {
     return m_LayersMask;
   }
-  torch::jit::script::Module &
-  GetModel() const
+
+  void
+  to(torch::Device device) const
   {
-    return *m_Model;
+    m_Model->to(device);
   }
+
+  template <class TImage>
+  void
+  setup(typename TImage::ConstPointer image)
+  {
+    auto imageStats = itk::StatisticsImageFilter<TImage>::New();
+    imageStats->SetInput(image);
+    imageStats->Update();
+
+    torch::Tensor imageStatsTensor = torch::tensor({ static_cast<float>(imageStats->GetMinimum()),
+                                                     static_cast<float>(imageStats->GetMaximum()),
+                                                     static_cast<float>(imageStats->GetMean()),
+                                                     static_cast<float>(imageStats->GetSigma()) },
+                                                   torch::kFloat32);
+
+    const auto & imageDirection = image->GetDirection(); // itk::Matrix<double,TImage::Dimension,TImage::Dimension>
+
+    constexpr unsigned int imageDimension = TImage::ImageDimension;
+    torch::Tensor          imageDirectionTensor = torch::empty({ imageDimension, imageDimension }, torch::kInt16);
+
+    for (unsigned int r = 0; r < imageDimension; ++r)
+    {
+      for (unsigned int c = 0; c < imageDimension; ++c)
+      {
+        imageDirectionTensor[r][c] = static_cast<int16_t>(std::llround(imageDirection(r, c)));
+      }
+    }
+    m_imageStatsTensor = imageStatsTensor;
+    m_imageDirectionTensor = imageDirectionTensor;
+  }
+
+  std::vector<torch::jit::IValue>
+  forward(torch::Tensor inputPatch) const
+  {
+
+    std::vector<torch::jit::IValue> args;
+    args.reserve(m_nArgs);
+    args.emplace_back(inputPatch);
+
+    if (m_nArgs >= 3)
+    { // number of requested layers (retrocompatible models may not have it)
+      args.emplace_back(m_nLayers);
+    }
+
+    if (m_nArgs >= 5)
+    { // Arg 2-3: optional image metadata (image stats + direction)
+      args.emplace_back(m_imageStatsTensor);
+      args.emplace_back(m_imageDirectionTensor);
+    }
+
+    return m_Model->forward(args).toList().vec();
+  }
+
   const std::vector<std::vector<float>> &
   GetPatchIndex() const
   {
@@ -217,6 +275,10 @@ private:
   std::vector<std::vector<float>>                        m_PatchIndex;
   std::vector<std::vector<torch::indexing::TensorIndex>> m_CentersIndexLayers;
   torch::ScalarType                                      m_DataType;
+  torch::Tensor                                          m_imageStatsTensor;
+  torch::Tensor                                          m_imageDirectionTensor;
+  std::size_t                                            m_nArgs;
+  torch::Tensor                                          m_nLayers;
 };
 
 

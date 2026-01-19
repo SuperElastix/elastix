@@ -173,6 +173,16 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   m_FixedInterpolator->SetInputImage(Superclass::m_FixedImage);
   m_FeaturesIndexes.clear();
 
+  for (auto & config : m_FixedModelsConfiguration)
+  {
+    config.template setup<TFixedImage>(Superclass::m_FixedImage);
+  }
+
+  for (auto & config : m_MovingModelsConfiguration)
+  {
+    config.template setup<TMovingImage>(Superclass::m_MovingImage);
+  }
+
   if (GetMode() == "Static")
   {
     UpdateFixedFeaturesMaps();

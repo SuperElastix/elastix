@@ -277,6 +277,9 @@ public:
   void
   BeforeEachResolution() override;
 
+  /** Do some things before registration. */
+  void
+  BeforeRegistration() override;
 
 protected:
   /** The constructor. */
