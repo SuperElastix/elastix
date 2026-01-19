@@ -370,12 +370,15 @@ GetFeaturesMaps(
                                          .repeat({ torch::IntArrayRef(channelRepeat) })
                                          .unsqueeze(0)
                                          .to(device);
-            std::vector<torch::jit::IValue> outputsPatch = config.GetModel().forward({ inputPatch }).toList().vec();
+            std::vector<torch::jit::IValue> outputsPatch = config.forward(inputPatch);
 
 
             if (config.GetLayersMask().size() != outputsPatch.size())
             {
-              itkGenericExceptionMacro("Mismatch between layersMask size and model output layers.");
+              itkGenericExceptionMacro("Mismatch between LayersMask and model outputs: "
+                                       << "LayersMask has " << config.GetLayersMask().size()
+                                       << " entries, but the model returned " << outputsPatch.size()
+                                       << " output layers. These two values must match.");
             }
             for (int layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); ++layerIndex)
             {
@@ -443,12 +446,14 @@ GetFeaturesMaps(
                                        .repeat({ torch::IntArrayRef(channelRepeat) })
                                        .unsqueeze(0)
                                        .to(device);
-
-          std::vector<torch::jit::IValue> outputsPatch = config.GetModel().forward({ inputPatch }).toList().vec();
+          std::vector<torch::jit::IValue> outputsPatch = config.forward(inputPatch);
 
           if (config.GetLayersMask().size() != outputsPatch.size())
           {
-            itkGenericExceptionMacro("Mismatch between layersMask size and model output layers.");
+            itkGenericExceptionMacro("Mismatch between LayersMask and model outputs: "
+                                     << "LayersMask has " << config.GetLayersMask().size()
+                                     << " entries, but the model returned " << outputsPatch.size()
+                                     << " output layers. These two values must match.");
           }
           for (int layerIndex = 0, realLayerIndex = 0; layerIndex < outputsPatch.size(); ++layerIndex)
           {
@@ -490,7 +495,7 @@ GetFeaturesMaps(
 
 
               std::vector<at::indexing::TensorIndex> slices = {
-                torch::indexing::Slice(), // batch/channel dimension
+                torch::indexing::Slice(), // channel dimension
                 torch::indexing::Slice(static_cast<int>(slice[0]), static_cast<int>(slice[0] + layerPatch.size(1))),
                 torch::indexing::Slice(static_cast<int>(slice[1]), static_cast<int>(slice[1] + layerPatch.size(2)))
               };
@@ -508,7 +513,7 @@ GetFeaturesMaps(
       unsigned int a = 0;
       for (int i = 0; i < layers.size(); ++i)
       {
-        torch::Tensor result = layers[i].index(cutting[i]);
+        torch::Tensor result = layers[i].index(cutting[i]).contiguous();
         if (pca[i] > 0)
         {
           if (principalComponents.size() <= a)
@@ -571,7 +576,7 @@ GetModelOutputsExample(std::vector<itk::ImpactModelConfiguration> & modelsConfig
                           .to(device);
       try
       {
-        outputsList = config.GetModel().forward({ modelInput }).toList().vec();
+        outputsList = config.forward(modelInput);
       }
       catch (const std::exception & e)
       {
@@ -751,10 +756,7 @@ GenerateOutputs(const std::vector<itk::ImpactModelConfiguration> &              
       std::vector<int64_t> resizeVector(patchValueTensor.dim(), 1);
       resizeVector[1] = config.GetNumberOfChannels();
       std::vector<torch::jit::IValue> outputsList =
-        config.GetModel()
-          .forward({ patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone() })
-          .toList()
-          .vec();
+        config.forward(patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone());
 
       for (int it = 0; it < outputsList.size(); ++it)
       {
@@ -836,7 +838,7 @@ GenerateOutputsAndJacobian(const std::vector<itk::ImpactModelConfiguration> &   
       patchValueTensor.to(device).repeat({ torch::IntArrayRef(resizeVector) }).clone().set_requires_grad(true);
     imagesPatchesJacobians = imagesPatchesJacobians.to(device).repeat({ 1, config.GetNumberOfChannels(), 1 }).clone();
 
-    std::vector<torch::jit::IValue> outputsList = config.GetModel().forward({ patchValueTensor }).toList().vec();
+    std::vector<torch::jit::IValue> outputsList = config.forward(patchValueTensor);
     torch::Tensor                   layer, diffLayer, modelJacobian;
     for (int it = 0; it < outputsList.size(); ++it)
     {
