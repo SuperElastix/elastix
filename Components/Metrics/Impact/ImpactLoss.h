@@ -285,30 +285,26 @@ public:
   updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
   {
     this->initialize(fixedOutput);
-    fixedOutput = torch::round(fixedOutput).clamp(0);
-    movingOutput = torch::round(movingOutput).clamp(0);
+    double eps = 1e-6;
 
-    torch::Tensor intersection = (fixedOutput * movingOutput).sum(1);
-    torch::Tensor unionSum = (fixedOutput + movingOutput).sum(1);
-    torch::Tensor diceScore = (2 * intersection + 1e-6) / (unionSum + 1e-6);
+    torch::Tensor u = (fixedOutput * movingOutput).sum(1) + eps;
+    torch::Tensor v = (fixedOutput + movingOutput).sum(1) + eps;
 
-    this->m_Value += (1 - diceScore.mean()).item<double>();
+    this->m_Value -= 2 * (u / v).sum().item<double>();
   }
 
   torch::Tensor
   updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
   {
     this->initialize(fixedOutput);
-    fixedOutput = torch::round(fixedOutput).clamp(0);
-    movingOutput = torch::round(movingOutput).clamp(0);
-    torch::Tensor intersection = (fixedOutput * movingOutput).sum(1);
-    torch::Tensor unionSum = (fixedOutput + movingOutput).sum(1);
-    torch::Tensor diceScore = (2 * intersection + 1e-6) / (unionSum + 1e-6);
+    double eps = 1e-6;
 
-    this->m_Value += (1 - diceScore.mean()).item<double>();
+    torch::Tensor u = (fixedOutput * movingOutput).sum(1) + eps;
+    torch::Tensor v = (fixedOutput + movingOutput).sum(1) + eps;
 
-    return -(2 * (fixedOutput * unionSum.unsqueeze(-1) - intersection.unsqueeze(-1)) /
-             (unionSum * unionSum + 1e-6).unsqueeze(-1));
+    this->m_Value -= 2 * (u / v).sum().item<double>();
+
+    return -2 * (fixedOutput * v.unsqueeze(-1) - u.unsqueeze(-1)) / (v * v).unsqueeze(-1);
   }
 };
 
