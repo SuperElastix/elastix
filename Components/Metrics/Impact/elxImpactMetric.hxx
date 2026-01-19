@@ -25,10 +25,33 @@
 #include <sstream>
 #include <filesystem>
 #include <algorithm>
-
+#include <torch/csrc/jit/passes/tensorexpr_fuser.h>
+#include <torch/csrc/jit/runtime/profiling_graph_executor_impl.h>
 
 namespace elastix
 {
+
+
+template <typename TElastix>
+void
+ImpactMetric<TElastix>::BeforeRegistration()
+{
+  // Disable Torch runtime optimizations.
+  //
+  // By default, Torch profiles the first executions of a model and may
+  // replace the graph with an optimized version when the same input shapes are
+  // seen multiple times. On GPU, this can trigger TensorExpr fusion and runtime
+  // CUDA code generation (via NVRTC).
+  //
+  // In our context, this behavior is undesirable because it introduces late
+  // runtime dependencies and non-deterministic behavior across resolutions.
+  // We therefore disable profiling and TensorExpr fusion to keep a stable and
+  // deterministic execution, while still running on CUDA.
+  torch::jit::setTensorExprFuserEnabled(false);
+  torch::jit::getProfilingMode() = false;
+  torch::jit::getExecutorMode() = false;
+  torch::jit::setGraphExecutorOptimize(false);
+}
 
 /**
  * ******************* Initialize ***********************
@@ -115,45 +138,57 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
 
   /** Get and set the voxel size. */
   std::string               patchSizeStr;
-  std::vector<unsigned int> dimensions;
-  unsigned int              num = 0;
+  std::vector<unsigned int> numberOfPatchSizeParameterPerModel;
+  std::vector<unsigned int> numberOfVoxelParameterPerModel;
+  unsigned int              totalNumberOfPatchSizeParameterPerModel = 0;
+  unsigned int              totalNumberOfVoxelParameterPerModel = 0;
+
   for (unsigned int dimension : modelsDimensionVec)
   {
+    // PatchSize always depends on the model dimensionality
+    numberOfPatchSizeParameterPerModel.push_back(dimension);
+    totalNumberOfPatchSizeParameterPerModel += dimension;
+    // VoxelSize depends on the operating mode
     if (mode == "Static")
     {
-      num += dimension;
-      dimensions.push_back(dimension);
+      // Static mode: voxel size defined in image space
+      numberOfVoxelParameterPerModel.push_back(imageDimension);
+      totalNumberOfVoxelParameterPerModel += imageDimension;
     }
     else
     {
-      num += imageDimension;
-      dimensions.push_back(imageDimension);
+      // Jacobian mode: voxel size defined in model input space
+      numberOfVoxelParameterPerModel.push_back(dimension);
+      totalNumberOfVoxelParameterPerModel += dimension;
     }
   }
 
-  std::vector<unsigned int> patchSizeVec(num, 5);
+  std::vector<unsigned int> patchSizeVec(totalNumberOfPatchSizeParameterPerModel, 5);
   if (!configuration.ReadParameter<unsigned int>(
-        patchSizeVec, prefix + "PatchSize" + std::to_string(level), 0, num - 1, 1))
+        patchSizeVec, prefix + "PatchSize" + std::to_string(level), 0, totalNumberOfPatchSizeParameterPerModel - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "PatchSize" + std::to_string(level) + "\".");
   }
   std::vector<std::vector<unsigned int>> patchSizeVecByModel =
-    GroupByDimensions<unsigned int>(patchSizeVec, dimensions);
+    GroupByDimensions<unsigned int>(patchSizeVec, numberOfPatchSizeParameterPerModel);
 
-  std::vector<float> voxelSizeVec(num, 5);
-  if (!configuration.ReadParameter<float>(voxelSizeVec, prefix + "VoxelSize" + std::to_string(level), 0, num - 1, 1))
+  std::vector<float> voxelSizeVec(totalNumberOfVoxelParameterPerModel, 5);
+  if (!configuration.ReadParameter<float>(
+        voxelSizeVec, prefix + "VoxelSize" + std::to_string(level), 0, totalNumberOfVoxelParameterPerModel - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "VoxelSize" + std::to_string(level) + "\".");
   }
-  std::vector<std::vector<float>> voxelSizeVecByModel = GroupByDimensions<float>(voxelSizeVec, dimensions);
+  std::vector<std::vector<float>> voxelSizeVecByModel =
+    GroupByDimensions<float>(voxelSizeVec, numberOfVoxelParameterPerModel);
 
-  /** Get and set the Strides. */
+  /** Get and set the layers selection. */
   std::vector<std::string> layersMaskVec(numberOfModels, "1");
   if (!configuration.ReadParameter<std::string>(
         layersMaskVec, prefix + "LayersMask" + std::to_string(level), 0, numberOfModels - 1, 1))
   {
     itkExceptionMacro("Missing required parameter: \"" + prefix + "LayersMask" + std::to_string(level) + "\".");
   }
+
 
   // Build the ModelConfiguration object for each model.
   // Each configuration includes model path, input dimension, channel count,
@@ -201,9 +236,40 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   configuration.ReadParameter(randomSeed, "RandomSeed", 0, false);
   this->SetSeed(randomSeed);
 
+  // Choose GPU device if available and requested, fallback to CPU otherwise.
+  // Raise explicit errors if user-requested GPU index is invalid.
+  int device = -1;
+  configuration.ReadParameter(device, "ImpactGPU", this->GetComponentLabel(), level, 0);
+
+  // Select computation device (GPU or CPU) based on availability and config
+  if (device >= 0)
+  {
+    if (torch::cuda::is_available())
+    {
+      int availableGPUs = torch::cuda::device_count();
+      if (device < availableGPUs)
+      {
+        this->SetDevice(torch::Device(torch::kCUDA, device));
+      }
+      else
+      {
+        itkExceptionMacro("Requested GPU " << device << " is out of range. Only " << availableGPUs
+                                           << " GPUs are available.");
+      }
+    }
+    else
+    {
+      itkExceptionMacro("CUDA is not available. Please check your CUDA installation or run on a compatible device.");
+    }
+  }
+  else
+  {
+    this->SetDevice(torch::Device(torch::kCPU));
+  }
+
   bool useMixedPrecision = false;
   configuration.ReadParameter(useMixedPrecision, "ImpactUseMixedPrecision", this->GetComponentLabel(), level, 0);
-  this->SetUseMixedPrecision(useMixedPrecision);
+  this->SetUseMixedPrecision(useMixedPrecision && (device >= 0));
 
   // Read the mode of operation for the metric: "Jacobian" or "Static".
   // - Static: features are precomputed and optionally saved.
@@ -301,37 +367,6 @@ ImpactMetric<TElastix>::BeforeEachResolution()
     }
   }
 
-  // Choose GPU device if available and requested, fallback to CPU otherwise.
-  // Raise explicit errors if user-requested GPU index is invalid.
-  int device = -1;
-  configuration.ReadParameter(device, "ImpactGPU", this->GetComponentLabel(), level, 0);
-
-  // Select computation device (GPU or CPU) based on availability and config
-  if (device >= 0)
-  {
-    if (torch::cuda::is_available())
-    {
-      int availableGPUs = torch::cuda::device_count();
-      if (device < availableGPUs)
-      {
-        this->SetDevice(torch::Device(torch::kCUDA, device));
-      }
-      else
-      {
-        itkExceptionMacro("Requested GPU " << device << " is out of range. Only " << availableGPUs
-                                           << " GPUs are available.");
-      }
-    }
-    else
-    {
-      itkExceptionMacro("CUDA is not available. Please check your CUDA installation or run on a compatible device.");
-    }
-  }
-  else
-  {
-    this->SetDevice(torch::Device(torch::kCPU));
-  }
-
   // Handle feature map export setup.
   // If WriteFeatureMaps is set (either "true" or a path), create the directory.
   // Store the path to be reused during feature writing.
@@ -349,7 +384,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetFixedModelsConfiguration()[i].GetLayersMask();
     fixedNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetFixedModelsConfiguration()[i].GetModel().to(this->GetDevice());
+    this->GetFixedModelsConfiguration()[i].to(this->GetDevice());
   }
 
   int movingNumberOfLayers = 0;
@@ -357,7 +392,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetMovingModelsConfiguration()[i].GetLayersMask();
     movingNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetMovingModelsConfiguration()[i].GetModel().to(this->GetDevice());
+    this->GetMovingModelsConfiguration()[i].to(this->GetDevice());
   }
 
   if (fixedNumberOfLayers != movingNumberOfLayers)
