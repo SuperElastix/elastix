@@ -379,6 +379,10 @@ private:
   void
   ReadInitialTransformFromConfiguration(const Configuration::ConstPointer);
 
+  /** Read an initial ITK transform from a pointer. */
+  void
+  ReadInitialItkTransformFromConfiguration(const itk::TransformBase::ConstPointer itkTransform);
+
   /** Execute stuff before everything else:
    * \li Check the appearance of an initial transform.
    */
