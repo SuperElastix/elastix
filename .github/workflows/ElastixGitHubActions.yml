@@ -22,8 +22,8 @@ jobs:
               - libtorch/libtorch/lib/libgomp-98b21ff3.so.1
               - libtorch/libtorch/lib/libtorch.so
               - libtorch/libtorch/lib/libtorch_cpu.so
-              - elastix-build/bin/libANNlib-5.2.so
-              - elastix-build/bin/libANNlib-5.2.so.1
+              - elastix-build/bin/libelxANNlib.so
+              - elastix-build/bin/libelxANNlib.so.1
           - os: windows-2022
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
@@ -35,7 +35,7 @@ jobs:
               - libtorch/libtorch/lib/c10.dll
               - libtorch/libtorch/lib/torch_cpu.dll
               - libtorch/libtorch/lib/torch.dll
-              - elastix-build/bin/ANNlib-5.2.dll
+              - elastix-build/bin/elxANNlib.dll
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-14
             c-compiler: "clang"
@@ -48,8 +48,8 @@ jobs:
               - libtorch/libtorch/lib/libtorch.dylib
               - libtorch/libtorch/lib/libc10.dylib
               - libtorch/libtorch/lib/libtorch_cpu.dylib
-              - elastix-build/bin/libANNlib-5.2.1.dylib
-              - elastix-build/bin/libANNlib-5.2.dylib
+              - elastix-build/bin/libelxANNlib.1.dylib
+              - elastix-build/bin/libelxANNlib.dylib
     steps:
       - name: Clone elastix
         uses: actions/checkout@v3

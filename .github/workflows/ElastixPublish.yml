@@ -21,8 +21,8 @@ jobs:
             cxx-compiler: "g++"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/libANNlib-5.2.so
-              - elastix-build/bin/libANNlib-5.2.so.1
+              - elastix-build/bin/libelxANNlib.so
+              - elastix-build/bin/libelxANNlib.so.1
           - cuda-version: cu126
             os: ubuntu-22.04
             cuda_toolkit_version: '12.6.1'
@@ -32,8 +32,8 @@ jobs:
             cxx-compiler: "g++"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/libANNlib-5.2.so
-              - elastix-build/bin/libANNlib-5.2.so.1
+              - elastix-build/bin/libelxANNlib.so
+              - elastix-build/bin/libelxANNlib.so.1
           - cuda-version: cu128
             os: ubuntu-22.04
             cuda_toolkit_version: '12.8.1'
@@ -43,8 +43,8 @@ jobs:
             cxx-compiler: "g++"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/libANNlib-5.2.so
-              - elastix-build/bin/libANNlib-5.2.so.1
+              - elastix-build/bin/libelxANNlib.so
+              - elastix-build/bin/libelxANNlib.so.1
     steps:
       - name: Clone elastix
         uses: actions/checkout@v3
