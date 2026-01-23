@@ -20,8 +20,13 @@ function(elastix_export_target tgt)
       set_property(TARGET ${tgt} PROPERTY
         OUTPUT_NAME transformix-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR})
     else()
-      set_property(TARGET ${tgt} PROPERTY
-        OUTPUT_NAME ${tgt}-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR})
+      if("${tgt}" MATCHES "elx.*")
+        set_property(TARGET ${tgt} PROPERTY
+          OUTPUT_NAME ${tgt})
+      else()
+        set_property(TARGET ${tgt} PROPERTY
+          OUTPUT_NAME elx${tgt})
+      endif()
     endif()
 
     if(type STREQUAL "STATIC_LIBRARY")
