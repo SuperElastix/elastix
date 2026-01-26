@@ -36,7 +36,7 @@ OUTPUTPOINTS_FILENAME = "outputpoints.txt"
 class TransformixTestCase(unittest.TestCase):
     """Tests transformix from https://elastix.dev"""
 
-    version_string = "5.2.0"
+    version_string = "5.3.0"
     transformix_exe_file_path = pathlib.Path(os.environ["TRANSFORMIX_EXE"])
     temporary_directory_path = pathlib.Path(os.environ["TRANSFORMIX_TEST_TEMP_DIR"])
 
