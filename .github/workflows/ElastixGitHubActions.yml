@@ -15,7 +15,7 @@ jobs:
             cxx-compiler: "g++"
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.8.0%2Bcpu.zip"
             cuda-version: "cpu"
-            itk-git-tag: "v5.4.1"
+            itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
               - libtorch/libtorch/lib/libc10.so
@@ -29,7 +29,7 @@ jobs:
             cxx-compiler: "cl.exe"
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.8.0%2Bcpu.zip"
             cuda-version: "cpu"
-            itk-git-tag: "v5.4.1"
+            itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
               - libtorch/libtorch/lib/c10.dll
@@ -42,7 +42,7 @@ jobs:
             cxx-compiler: "clang++"
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.8.0.zip"
             cuda-version: "cpu"
-            itk-git-tag: "v5.4.1"
+            itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
               - libtorch/libtorch/lib/libtorch.dylib
