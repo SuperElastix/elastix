@@ -24,7 +24,7 @@ set(ELX_COMMON_GTEST_SOURCES
 )
 
 if(USE_ImpactMetric)
-    list(APPEND ELX_COMMON_GTEST_SOURCES elxImpactMetricGTest.cxx)
+  list(APPEND ELX_COMMON_GTEST_SOURCES elxImpactMetricGTest.cxx)
 endif()
 
 add_executable(CommonGTest ${ELX_COMMON_GTEST_SOURCES})
@@ -35,9 +35,19 @@ target_compile_definitions(CommonGTest PRIVATE
   ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-target_link_libraries(CommonGTest
-  GTest::GTest GTest::Main
-  ${ITK_LIBRARIES}
-  elastix_lib
-  )
+if(USE_ImpactMetric)
+  find_package(Torch REQUIRED)
+  target_link_libraries(CommonGTest
+   GTest::GTest GTest::Main
+    ${ITK_LIBRARIES}
+    elastix_lib
+    "${TORCH_LIBRARIES}")
+else()
+  target_link_libraries(CommonGTest
+    GTest::GTest GTest::Main
+    ${ITK_LIBRARIES}
+    elastix_lib
+    )
+endif()
+
 add_test(NAME CommonGTest_test COMMAND CommonGTest)

@@ -120,11 +120,15 @@ macro(ADD_ELXCOMPONENT name)
   if(USE_${name})
     # Create the list of files which create the library
     set(filelist ${ARGN})
-    list(REMOVE_ITEM filelist "ON" "OFF")
+    list(REMOVE_ITEM filelist "ON" "OFF" "PLUGIN")
 
     # Create project and static library
     project(${name})
-    add_library(${name} STATIC ${filelist})
+    if(${ARGV2} STREQUAL "PLUGIN")
+      add_library(${name} MODULE ${filelist})
+    else()
+      add_library(${name} STATIC ${filelist})
+    endif()
     target_link_libraries(${name} ${elxLinkLibs})
     if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
       install(TARGETS ${name}
@@ -138,23 +142,25 @@ macro(ADD_ELXCOMPONENT name)
     string(REGEX MATCH "[a-zA-Z]+" comp_group ${relative_path_to_comp})
     set_property(TARGET ${name} PROPERTY FOLDER ${comp_group})
 
-    # Update AllComponentLibs, while avoiding duplicates:
-    if(DEFINED AllComponentLibs)
-      set(dummy ${AllComponentLibs})
-      if(NOT "${dummy}" STREQUAL "")
-        list(REMOVE_ITEM dummy ${name})
-      endif()
-      set(dummy ${dummy} ${name})
-    else()
-      set(dummy ${name})
-    endif()
-    set(AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix")
 
-    # Write lines to two files
-    file(APPEND ${InstallFunctionDeclarationFile}
-      "elxInstallComponentFunctionDeclarationMacro(" ${name} ");\n\n")
-    file(APPEND ${InstallFunctionCallFile}
-      "elxInstallComponentFunctionCallMacro(" ${name} ");\n\n")
+    if(NOT "${ARGV2}" STREQUAL "PLUGIN")
+      # Update AllComponentLibs, while avoiding duplicates:
+      if(DEFINED AllComponentLibs)
+        set(dummy ${AllComponentLibs})
+        if(NOT "${dummy}" STREQUAL "")
+          list(REMOVE_ITEM dummy ${name})
+        endif()
+        set(dummy ${dummy} ${name})
+      else()
+        set(dummy ${name})
+      endif()
+      set(AllComponentLibs ${dummy} CACHE INTERNAL "All component libraries for elastix/transformix")
+        # Write lines to two files
+      file(APPEND ${InstallFunctionDeclarationFile}
+        "elxInstallComponentFunctionDeclarationMacro(" ${name} ");\n\n")
+      file(APPEND ${InstallFunctionCallFile}
+        "elxInstallComponentFunctionCallMacro(" ${name} ");\n\n")
+    endif()
 
   else(USE_${name})
     # Remove from link list

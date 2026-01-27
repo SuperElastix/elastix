@@ -75,7 +75,7 @@
 (ImpactMode "Static")
 (ImpactGPU -1)
 (ImpactFeaturesMapUpdateInterval -1)
-(ImpactWriteFeatureMaps "./Features/")
+(ImpactWriteFeatureMaps "false")
 
 
 

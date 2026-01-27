@@ -8,6 +8,15 @@ if(BUILD_SHARED_LIBS)
   message(FATAL_ERROR "Elastix does not support BUILD_SHARED_LIBS")
 endif()
 
+# On Linux, force Position Independent Code for all targets.
+# This is required to allow building loadable modules (.so plugins),
+# such as IMPACT, even though elastix itself is built with static libraries.
+# macOS does not need this, and Windows handles it differently.
+if(UNIX AND NOT APPLE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
+
 #---------------------------------------------------------------------
 cmake_policy(SET CMP0012 NEW) # "if() recognizes numbers and boolean constants"
 cmake_policy(SET CMP0042 NEW) # "MACOSX_RPATH is enabled by default."

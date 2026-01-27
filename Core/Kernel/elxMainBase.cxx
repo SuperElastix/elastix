@@ -22,6 +22,8 @@
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #  include <windows.h>
+#else
+#  include <dlfcn.h>
 #endif
 
 #include "elxMainBase.h"
@@ -35,6 +37,9 @@
 #  include "itkOpenCLSetup.h"
 #endif
 
+#include <cstdlib>
+#include <sstream>
+
 namespace elastix
 {
 
@@ -45,11 +50,10 @@ namespace elastix
 MainBase::MainBase() = default;
 
 /**
- * ****************** GetComponentDatabase *********
+ * ********************* GetComponentDatabaseMutable ****************************
  */
-
-const ComponentDatabase &
-MainBase::GetComponentDatabase()
+ComponentDatabase &
+MainBase::GetComponentDatabaseMutable()
 {
   // Improved thread-safety by using C++11 "magic statics".
   static const auto staticComponentDatabase = [] {
@@ -61,10 +65,20 @@ MainBase::GetComponentDatabase()
     {
       log::error("Loading components failed");
     }
-    return componentDatabase;
+    return componentDatabase; // SmartPointer
   }();
+
   return *staticComponentDatabase;
-}
+} // end GetComponentDatabaseMutable
+
+/**
+ * ********************* GetComponentDatabase ****************************
+ */
+const ComponentDatabase &
+MainBase::GetComponentDatabase()
+{
+  return GetComponentDatabaseMutable();
+} // end GetComponentDatabase()
 
 
 /**
@@ -138,15 +152,118 @@ MainBase::GetElastixBase() const
 
 } // end GetElastixBase()
 
-
 /**
- * ************************* CreateComponent ***************************
+ * ************************* TryLoadComponentPlugin ***************************
  */
+
+bool
+MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
+{
+  // Only lazy-load for IMPACT (keep it minimal).
+  if (componentName != "Impact")
+  {
+    return false;
+  }
+
+  // Try CUDA first, then CPU.
+  const std::vector<std::string> pluginCandidates = { "ImpactMetricCuda", "ImpactMetric" };
+
+  // Keep the most recent loader error, to report something useful at the end.
+  std::string lastError;
+
+  for (const auto & pluginName : pluginCandidates)
+  {
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    const std::string libFileName = pluginName + ".dll";
+#elif defined(__APPLE__)
+    const std::string libFileName = "lib" + pluginName + ".so";
+#else
+    const std::string libFileName = "lib" + pluginName + ".so";
+#endif
+
+    // Note: this is the symbol name exported by the plugin (extern "C").
+    const std::string installSymbol = "ImpactMetricInstallComponent";
+
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    HMODULE handle = LoadLibraryA(libFileName.c_str());
+    if (!handle)
+    {
+      lastError = "LoadLibrary failed for " + libFileName;
+      continue;
+    }
+
+    using InstallFunc = int (*)(elastix::ComponentDatabase *);
+    auto fn = reinterpret_cast<InstallFunc>(GetProcAddress(handle, installSymbol.c_str()));
+    if (!fn)
+    {
+      lastError = "GetProcAddress failed for symbol " + installSymbol + " in " + libFileName;
+      continue;
+    }
+
+    const int ret = fn(&GetComponentDatabaseMutable());
+    if (ret != 0)
+    {
+      lastError = "InstallComponent returned non-zero (" + std::to_string(ret) + ") for " + libFileName;
+      continue;
+    }
+
+    log::info(std::ostringstream{} << "Lazy-loaded IMPACT plugin '" << pluginName << "'.");
+    return true;
+
+#else
+    dlerror(); // clear any old error state
+
+    void * handle = dlopen(libFileName.c_str(), RTLD_NOW | RTLD_LOCAL);
+    if (!handle)
+    {
+      const char * e = dlerror();
+      lastError = std::string("dlopen failed for ") + libFileName + ": " + (e ? e : "");
+      continue;
+    }
+
+    dlerror(); // clear before dlsym
+    using InstallFunc = int (*)(elastix::ComponentDatabase *);
+    auto fn = reinterpret_cast<InstallFunc>(dlsym(handle, installSymbol.c_str()));
+
+    if (const char * e = dlerror())
+    {
+      lastError = std::string("dlsym failed for symbol ") + installSymbol + " in " + libFileName + ": " + e;
+      continue;
+    }
+
+    if (!fn)
+    {
+      lastError = "dlsym returned null for symbol " + installSymbol + " in " + libFileName;
+      continue;
+    }
+
+    const int ret = fn(&GetComponentDatabaseMutable());
+    if (ret != 0)
+    {
+      lastError = "InstallComponent returned non-zero (" + std::to_string(ret) + ") for " + libFileName;
+      continue;
+    }
+
+    log::info(std::ostringstream{} << "Lazy-loaded IMPACT plugin '" << pluginName << "'.");
+    return true;
+#endif
+  }
+
+  log::error(
+    std::ostringstream{} << "IMPACT requested but could not be loaded.\n"
+                         << "Tried plugins: ImpactMetricCuda, ImpactMetric\n"
+                         << "Last error: " << (lastError.empty() ? "(none)" : lastError) << "\n"
+                         << "Hint: ensure the plugin is on the loader search path and that the corresponding LibTorch "
+                         << "dependencies are available (LD_LIBRARY_PATH / PATH).");
+
+  return false;
+} // TryLoadComponentPlugin()
 
 MainBase::ObjectPointer
 MainBase::CreateComponent(const ComponentDescriptionType & name)
 {
-  /** A pointer to the New() function. */
+
+  /** 1) Try to create the component from the already installed database. */
   if (const PtrToCreator creator = GetComponentDatabase().GetCreator(name, m_DBIndex))
   {
     if (const ObjectPointer component = creator())
@@ -154,9 +271,21 @@ MainBase::CreateComponent(const ComponentDescriptionType & name)
       return component;
     }
   }
-
+  /** 2) Not found: try to lazy-load a plugin that may provide this component,
+   *     and retry exactly once.
+   */
+  if (this->TryLoadComponentPlugin(name))
+  {
+    if (const PtrToCreator creator = GetComponentDatabase().GetCreator(name, m_DBIndex))
+    {
+      if (const ObjectPointer component = creator())
+      {
+        return component;
+      }
+    }
+  }
+  /** 3) Still not available: give a clear and fatal error. */
   itkExceptionMacro("The following component could not be created: " << name);
-
 } // end CreateComponent()
 
 
