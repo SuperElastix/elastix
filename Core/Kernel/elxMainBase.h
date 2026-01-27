@@ -160,9 +160,54 @@ public:
   virtual void
   SetMaximumNumberOfThreads() const;
 
-  /** Function to get the ComponentDatabase. */
+  /**
+   * ****************** GetComponentDatabase *********
+   *
+   * Returns the global ComponentDatabase instance.
+   *
+   * This function provides *mutable* access to the database. It is required for
+   * the lazy plugin mechanism: when a plugin is loaded at runtime, it must be
+   * able to *register new components* into the database. That registration
+   * modifies the database, hence a non-const reference is needed.
+   *
+   * The database itself is created exactly once using a C++11 “magic static”.
+   * This guarantees:
+   *  - thread-safe initialization,
+   *  - a single shared ComponentDatabase for the whole process,
+   *  - identical behavior to the previous static-initialization design.
+   *
+   * At construction time, the ComponentLoader installs all statically linked
+   * components. Later, TryLoadComponentPlugin() may add more entries by calling
+   * into this same mutable instance.
+   */
   static const ComponentDatabase &
   GetComponentDatabase();
+
+  /**
+   * Tries to load a component as a runtime plugin and register it in the
+   * ComponentDatabase.
+   *
+   * This function is called when a component cannot be created because it is
+   * not yet present in the ComponentDatabase. It attempts to dynamically load
+   * a shared library whose name is derived from `componentName`
+   * (e.g. `libImpactMetric.so`, `ImpactMetric.dll`, …), locate the exported
+   * `<PluginName>InstallComponent` symbol inside that library, and call it.
+   *
+   * The install function is expected to register one or more components into
+   * the provided ComponentDatabase. After a successful call, the caller can
+   * retry component creation using the same name.
+   *
+   * The plugin is searched using the system dynamic loader mechanisms
+   * (RPATH/RUNPATH, LD_LIBRARY_PATH on Unix, PATH on Windows), exactly like a
+   * regular shared library.
+   *
+   * \param componentName  Name of the component as used in the parameter file
+   *                       (e.g. "Impact").
+   * \return true if a plugin was successfully loaded and installed, false
+   *         otherwise.
+   */
+  bool
+  TryLoadComponentPlugin(const ComponentDescriptionType & componentName);
 
 protected:
   MainBase();
@@ -196,8 +241,33 @@ protected:
   virtual int
   InitDBIndex() = 0;
 
-  /** Create a component. Make sure InitDBIndex has been called before.
-   * The input is a string, e.g. "MattesMutualInformation".
+  /**
+   * Creates an elastix component by name. Make sure InitDBIndex has been called
+   * before invoking this function.
+   *
+   * The input is a string identifying the component, for example:
+   *   "MattesMutualInformation" or "Impact".
+   *
+   * Component creation follows a two-step strategy:
+   *
+   *  1) Fast path — static components
+   *     First, the function queries the already populated ComponentDatabase.
+   *     This covers all components that are statically linked into elastix and
+   *     is the normal, zero-overhead code path.
+   *
+   *  2) Lazy plugin path — optional components
+   *     If the component is not found, elastix attempts to *lazy-load* a plugin
+   *     that may provide it (for example, the IMPACT metric). When the plugin
+   *     is successfully loaded, it registers its components into the database,
+   *     and the lookup is retried exactly once.
+   *
+   * This design allows elastix to:
+   *  - run out of the box without heavy optional dependencies (e.g. LibTorch),
+   *  - keep startup time minimal,
+   *  - enable optional components only when they are actually requested.
+   *
+   * If both attempts fail, an exception is thrown with a clear diagnostic
+   * message explaining which component could not be created.
    */
   virtual ObjectPointer
   CreateComponent(const ComponentDescriptionType & name);
@@ -222,6 +292,16 @@ protected:
                    const ComponentDescriptionType & defaultComponentName,
                    int &                            errorcode,
                    bool                             mandatoryComponent = true);
+
+  /**
+   * Const accessor for the ComponentDatabase.
+   *
+   * Most of elastix only needs *read-only* access to the database
+   * (querying creators). This overload preserves const-correctness while
+   * still sharing the same underlying singleton instance.
+   */
+  static ComponentDatabase &
+  GetComponentDatabaseMutable();
 
 private:
   /** The configuration object, containing the parameters and command-line arguments. */
