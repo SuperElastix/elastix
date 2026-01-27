@@ -15,13 +15,9 @@ jobs:
             cxx-compiler: "g++"
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.8.0%2Bcpu.zip"
             cuda-version: "cpu"
-            itk-git-tag: "v5.4.1"
+            itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
-              - libtorch/libtorch/lib/libc10.so
-              - libtorch/libtorch/lib/libgomp-98b21ff3.so.1
-              - libtorch/libtorch/lib/libtorch.so
-              - libtorch/libtorch/lib/libtorch_cpu.so
               - elastix-build/bin/libelxANNlib.so
               - elastix-build/bin/libelxANNlib.so.1
           - os: windows-2022
@@ -29,12 +25,9 @@ jobs:
             cxx-compiler: "cl.exe"
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.8.0%2Bcpu.zip"
             cuda-version: "cpu"
-            itk-git-tag: "v5.4.1"
+            itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
-              - libtorch/libtorch/lib/c10.dll
-              - libtorch/libtorch/lib/torch_cpu.dll
-              - libtorch/libtorch/lib/torch.dll
               - elastix-build/bin/elxANNlib.dll
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-14
@@ -42,12 +35,9 @@ jobs:
             cxx-compiler: "clang++"
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.8.0.zip"
             cuda-version: "cpu"
-            itk-git-tag: "v5.4.1"
+            itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
-              - libtorch/libtorch/lib/libtorch.dylib
-              - libtorch/libtorch/lib/libc10.dylib
-              - libtorch/libtorch/lib/libtorch_cpu.dylib
               - elastix-build/bin/libelxANNlib.1.dylib
               - elastix-build/bin/libelxANNlib.dylib
     steps:
@@ -190,6 +180,6 @@ jobs:
         uses: ./.github/actions/publish
         with:
           libs: ${{ join(matrix.libs, ' ') }}
-          upload-name: ${{ matrix.os }}-${{ matrix.cuda-version }}
+          upload-name: ${{ matrix.os }}-libtorch-2.8.0-${{ matrix.cuda-version }}
           docker-username: ${{ secrets.DOCKER_HUB_USERNAME }}
           docker-password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
