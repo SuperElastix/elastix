@@ -285,26 +285,62 @@ public:
   updateValue(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
   {
     this->initialize(fixedOutput);
-    double eps = 1e-6;
+    torch::Tensor intersectionSum = (fixedOutput * movingOutput).sum(1); // [N, ...]
+    torch::Tensor unionSum = (fixedOutput + movingOutput).sum(1);        // [N, ...]
 
-    torch::Tensor u = (fixedOutput * movingOutput).sum(1) + eps;
-    torch::Tensor v = (fixedOutput + movingOutput).sum(1) + eps;
+    // Detect degenerate case: no structure in either output (union == 0)
+    torch::Tensor isEmpty = (unionSum == 0);
 
-    this->m_Value -= 2 * (u / v).sum().item<double>();
+    // Make the denominator safe:
+    //   - where unionSum != 0  -> keep unionSum
+    //   - where unionSum == 0  -> replace by 1
+    // Even though the degenerate positions are overwritten later
+    // (dice.masked_fill_(isEmpty, 1.0)), we must avoid forming 0/0 here,
+    // because the division is evaluated eagerly and would otherwise
+    // create NaNs in intermediate tensors.
+    torch::Tensor unionSumSafe = unionSum + isEmpty.to(unionSum.scalar_type());
+
+    // Standard Dice formulation: 2 * intersection / union
+    torch::Tensor dice = 2.0 * intersectionSum / unionSumSafe;
+
+    // Convention for the degenerate case:
+    // if both outputs are empty, force Dice = 1 (perfect similarity)
+    dice.masked_fill_(isEmpty, 1.0);
+
+    // Accumulate the loss value
+    this->m_Value -= dice.sum().item<double>();
   }
 
   torch::Tensor
   updateValueAndGetGradientModulator(torch::Tensor & fixedOutput, torch::Tensor & movingOutput) override
   {
     this->initialize(fixedOutput);
-    double eps = 1e-6;
 
-    torch::Tensor u = (fixedOutput * movingOutput).sum(1) + eps;
-    torch::Tensor v = (fixedOutput + movingOutput).sum(1) + eps;
+    torch::Tensor intersectionSum = (fixedOutput * movingOutput).sum(1); // [N, ...]
+    torch::Tensor unionSum = (fixedOutput + movingOutput).sum(1);        // [N, ...]
 
-    this->m_Value -= 2 * (u / v).sum().item<double>();
+    // Detect degenerate case: no structure in either output (union == 0)
+    torch::Tensor isEmpty = (unionSum == 0);
 
-    return -2 * (fixedOutput * v.unsqueeze(-1) - u.unsqueeze(-1)) / (v * v).unsqueeze(-1);
+    // Make the denominator safe (see updateValue for rationale)
+    torch::Tensor unionSumSafe = unionSum + isEmpty.to(unionSum.scalar_type());
+
+    // Value: standard Dice formulation
+    torch::Tensor dice = 2.0 * intersectionSum / unionSumSafe;
+
+    // Convention for the degenerate case: empty/empty => Dice = 1
+    dice.masked_fill_(isEmpty, 1.0);
+    this->m_Value -= dice.sum().item<double>();
+
+    // Gradient modulator:
+    // standard: -2 * (fixedOutput * v - u) / v^2
+    torch::Tensor grad = -2.0 * (fixedOutput * unionSumSafe.unsqueeze(-1) - intersectionSum.unsqueeze(-1)) /
+                         (unionSumSafe * unionSumSafe).unsqueeze(-1);
+
+    // empty/empty => gradient = 0
+    grad.masked_fill_(isEmpty.unsqueeze(-1), 0.0);
+
+    return grad;
   }
 };
 

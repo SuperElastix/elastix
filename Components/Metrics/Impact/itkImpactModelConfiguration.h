@@ -244,7 +244,7 @@ public:
       args.emplace_back(m_imageDirectionTensor);
     }
 
-    return m_Model->forward(args).toList().vec();
+    return m_Model->forward(std::move(args)).toList().vec();
   }
 
   const std::vector<std::vector<float>> &
