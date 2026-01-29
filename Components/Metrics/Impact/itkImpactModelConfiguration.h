@@ -83,7 +83,7 @@ public:
     m_Model = std::make_shared<torch::jit::script::Module>(torch::jit::load(m_ModelPath, torch::Device(torch::kCPU)));
     m_Model->eval();
     m_Model->to(m_DataType);
-    m_nArgs = m_Model->get_method("forward").function().getSchema().arguments().size();
+    m_nArgs = m_Model->get_method("forward").function().getSchema().arguments().size() - 1;
     m_nLayers = torch::tensor(static_cast<int64_t>(m_LayersMask.size()), torch::kInt16);
 
     if (!isStatic)
@@ -233,12 +233,12 @@ public:
     args.reserve(m_nArgs);
     args.emplace_back(inputPatch);
 
-    if (m_nArgs >= 3)
+    if (m_nArgs >= 2)
     { // number of requested layers (retrocompatible models may not have it)
       args.emplace_back(m_nLayers);
     }
 
-    if (m_nArgs >= 5)
+    if (m_nArgs >= 4)
     { // Arg 2-3: optional image metadata (image stats + direction)
       args.emplace_back(m_imageStatsTensor);
       args.emplace_back(m_imageDirectionTensor);
