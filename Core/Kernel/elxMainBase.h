@@ -160,25 +160,13 @@ public:
   virtual void
   SetMaximumNumberOfThreads() const;
 
+
   /**
-   * ****************** GetComponentDatabase *********
+   * Const accessor for the ComponentDatabase.
    *
-   * Returns the global ComponentDatabase instance.
-   *
-   * This function provides *mutable* access to the database. It is required for
-   * the lazy plugin mechanism: when a plugin is loaded at runtime, it must be
-   * able to *register new components* into the database. That registration
-   * modifies the database, hence a non-const reference is needed.
-   *
-   * The database itself is created exactly once using a C++11 “magic static”.
-   * This guarantees:
-   *  - thread-safe initialization,
-   *  - a single shared ComponentDatabase for the whole process,
-   *  - identical behavior to the previous static-initialization design.
-   *
-   * At construction time, the ComponentLoader installs all statically linked
-   * components. Later, TryLoadComponentPlugin() may add more entries by calling
-   * into this same mutable instance.
+   * Most of elastix only needs *read-only* access to the database
+   * (querying creators). This overload preserves const-correctness while
+   * still sharing the same underlying singleton instance.
    */
   static const ComponentDatabase &
   GetComponentDatabase();
@@ -293,12 +281,26 @@ protected:
                    int &                            errorcode,
                    bool                             mandatoryComponent = true);
 
+
   /**
-   * Const accessor for the ComponentDatabase.
+   * ****************** GetComponentDatabase *********
    *
-   * Most of elastix only needs *read-only* access to the database
-   * (querying creators). This overload preserves const-correctness while
-   * still sharing the same underlying singleton instance.
+   * Returns the global ComponentDatabase instance.
+   *
+   * This function provides *mutable* access to the database. It is required for
+   * the lazy plugin mechanism: when a plugin is loaded at runtime, it must be
+   * able to *register new components* into the database. That registration
+   * modifies the database, hence a non-const reference is needed.
+   *
+   * The database itself is created exactly once using a C++11 "magic static".
+   * This guarantees:
+   *  - thread-safe initialization,
+   *  - a single shared ComponentDatabase for the whole process,
+   *  - identical behavior to the previous static-initialization design.
+   *
+   * At construction time, the ComponentLoader installs all statically linked
+   * components. Later, TryLoadComponentPlugin() may add more entries by calling
+   * into this same mutable instance.
    */
   static ComponentDatabase &
   GetComponentDatabaseMutable();
