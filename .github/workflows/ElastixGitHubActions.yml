@@ -128,7 +128,11 @@ jobs:
         set(dashboard_cache "
         ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
         ELASTIX_USE_GTEST:BOOL=ON
-        USE_ALL_COMPONENTS:BOOL=ON
+        USE_ALL_COMPONENTS:BOOL=OFF
+        USE_AdaGrad:BOOL=ON
+        USE_AdaptiveStochasticLBFGS:BOOL=ON
+        USE_AdaptiveStochasticVarianceReducedGradient:BOOL=ON
+        USE_BSplineTransformWithDiffusion:BOOL=ON
         BUILD_TESTING:BOOL=ON
         ")
         string(TIMESTAMP build_date "%Y-%m-%d")
