@@ -1002,33 +1002,35 @@ elx_add_test(TransformixFilterTest "" "Transformix"
 target_link_libraries(itkTransformixFilterTest elastix_lib transformix_lib)
 
 
-# Test Impact metric
-file(COPY ${TestDataDir}/M730_1_Layers.pt
+if(USE_ImpactMetric)
+  # Test Impact metric
+  file(COPY ${TestDataDir}/M730_1_Layers.pt
      DESTINATION ${TestOutputDir})
-file(COPY ${TestDataDir}/R1D2_2D.pt
+  file(COPY ${TestDataDir}/R1D2_2D.pt
      DESTINATION ${TestOutputDir})
 
-# 3D Jacobian
-elx_add_run_test(3DCT_lung.IMPACT.bspline.ASGD.001
-  "OVERLAP;LANDMARKS"
-  -f ${TestDataDir}/3DCT_lung_baseline.mha
-  -m ${TestDataDir}/3DCT_lung_followup.mha
-  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.001.txt)
+  # 3D Jacobian
+  elx_add_run_test(3DCT_lung.IMPACT.bspline.ASGD.001
+    "OVERLAP;LANDMARKS"
+    -f ${TestDataDir}/3DCT_lung_baseline.mha
+    -m ${TestDataDir}/3DCT_lung_followup.mha
+    -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+    -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.001.txt)
 
-# 3D Static
-elx_add_run_test(3DCT_lung.IMPACT.bspline.ASGD.002
-  "OVERLAP;LANDMARKS"
-  -f ${TestDataDir}/3DCT_lung_baseline.mha
-  -m ${TestDataDir}/3DCT_lung_followup.mha
-  -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
-  -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.002.txt)
+  # 3D Static
+  elx_add_run_test(3DCT_lung.IMPACT.bspline.ASGD.002
+    "OVERLAP;LANDMARKS"
+    -f ${TestDataDir}/3DCT_lung_baseline.mha
+    -m ${TestDataDir}/3DCT_lung_followup.mha
+    -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+    -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.002.txt)
 
-# 2D Static
-elx_add_run_test(2DBrain.IMPACT.bspline.ASGD.002
-  "IMAGE" "${TestBaselineDir}/Impact2DStaticBaseline.mhd"
-  -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
-  -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
-  -p ${TestDataDir}/parameters.2D.IMPACT.bspline.ASGD.002.txt)
+  # 2D Static
+  elx_add_run_test(2DBrain.IMPACT.bspline.ASGD.002
+    "IMAGE" "${TestBaselineDir}/Impact2DStaticBaseline.mhd"
+    -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
+    -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
+    -p ${TestDataDir}/parameters.2D.IMPACT.bspline.ASGD.002.txt)
+endif()
 
 add_subdirectory(PythonTests)
