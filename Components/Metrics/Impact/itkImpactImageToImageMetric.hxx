@@ -27,6 +27,8 @@
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkResampleImageFilter.h"
 #include "itkScaleTransform.h"
+#include "itkObjectFactoryBase.h"
+#include "itkMetaImageIOFactory.h"
 
 namespace itk
 {
@@ -51,7 +53,6 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFixedFeaturesMaps()
 {
   m_FixedFeaturesMaps.clear();
   m_PrincipalComponents.clear();
-
   auto fixedWriter = std::function<void(typename TFixedImage::ConstPointer, torch::Tensor &, const std::string &)>(
     [this](typename TFixedImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
       unsigned int level = this->GetCurrentLevel();
@@ -175,6 +176,10 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
   if (GetMode() == "Static")
   {
+    // Explicitly register MetaImageIO to enable writing .mha files when IMPACT
+    // is loaded as a dynamically linked component (IO factories may not be
+    // auto-registered in this case, especially on macOS).
+    itk::ObjectFactoryBase::RegisterFactory(itk::MetaImageIOFactory::New());
     UpdateFixedFeaturesMaps();
     UpdateMovingFeaturesMaps();
 
