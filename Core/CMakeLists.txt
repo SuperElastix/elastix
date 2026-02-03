@@ -277,8 +277,14 @@ set(ELASTIX_LIBRARIES elastix_lib transformix_lib PARENT_SCOPE)
 
 if(ELASTIX_BUILD_EXECUTABLE AND NOT WIN32)
   # Tell the executables where to find the required .so files.
-  set_target_properties(elastix_exe transformix_exe
-    PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}")
+  # Supports having the executables in bin, and the .so files in the lib directory next to the bin.
+  if (APPLE)
+    set_target_properties(elastix_exe transformix_exe
+      PROPERTIES BUILD_RPATH "@executable_path/../lib" INSTALL_RPATH "@executable_path/../lib:${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}")
+  else()
+    set_target_properties(elastix_exe transformix_exe
+      PROPERTIES BUILD_RPATH "\$ORIGIN/../lib" INSTALL_RPATH "\$ORIGIN/../lib:${CMAKE_INSTALL_PREFIX}/lib:${ITK_DIR}")
+  endif()
 endif()
 
 if(ELASTIX_BUILD_EXECUTABLE AND NOT ELASTIX_NO_INSTALL_EXECUTABLES)
