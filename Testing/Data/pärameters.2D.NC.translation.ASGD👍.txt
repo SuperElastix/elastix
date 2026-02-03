@@ -1,0 +1,14 @@
+// This parameter file is used to register the images
+// 2D_2x2_square_object_at_(1,3) and 2D_2x2_square_object_at_(1,3):
+// elastix -p parameters.2D.NC.translation.ASGD.txt -f 2D_2x2_square_object_at_(1,3).mhd -m 2D_2x2_square_object_at_(1,3).mhd -out out
+
+(FixedInternalImagePixelType "float")
+(FixedImageDimension 2)
+(MovingInternalImagePixelType "float")
+(MovingImageDimension 2)
+
+(Metric "AdvancedNormalizedCorrelation")
+(Optimizer "AdaptiveStochasticGradientDescent")
+(Transform "TranslationTransform")
+(MaximumNumberOfIterations 2)
+(ImageSampler "Full")

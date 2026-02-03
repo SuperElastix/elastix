@@ -90,6 +90,10 @@ main(int argc, char ** argv)
     elastix::BaseComponent::InitializeElastixExecutable();
     assert(!elastix::BaseComponent::IsElastixLibrary());
 
+#ifdef _MSC_VER
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+
     /** Check if "--help" or "--version" was asked for. */
     if (argc == 1)
     {

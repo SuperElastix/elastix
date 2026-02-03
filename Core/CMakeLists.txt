@@ -201,6 +201,9 @@ if(ELASTIX_BUILD_EXECUTABLE)
     target_compile_definitions(elastix_exe PUBLIC ELX_NO_FILESYSTEM_ACCESS)
   endif()
   target_link_libraries(elastix_exe ${ELASTIX_TARGET_LINK_LIBRARIES})
+  if (MSVC)
+    target_sources(elastix_exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utf8.manifest)
+  endif()
 endif()
 
 # The library type (STATIC or SHARED) is determined by the parameter
@@ -246,6 +249,9 @@ if(ELASTIX_BUILD_EXECUTABLE)
     target_compile_definitions(transformix_exe PUBLIC ELX_NO_FILESYSTEM_ACCESS)
   endif()
   target_link_libraries(transformix_exe ${ELASTIX_TARGET_LINK_LIBRARIES})
+  if (MSVC)
+    target_sources(transformix_exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utf8.manifest)
+  endif()
 endif()
 
 # The library type (STATIC or SHARED) is determined by the parameter
