@@ -451,6 +451,34 @@ if(ELASTIX_BUILD_EXECUTABLE)
     -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
     -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
     -out "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
+
+  set(SPECIALCHARACTER_OUTPUTDIR "${TestOutputDir}/OutputDirectoryPathWithSpecialCharacters/speciäl/👌")
+  file(MAKE_DIRECTORY "${SPECIALCHARACTER_OUTPUTDIR}")
+  add_test(NAME SpecialCharactersOutputDirectoryPath
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+    -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
+    -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
+    -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
+    -out "${SPECIALCHARACTER_OUTPUTDIR}")
+
+  set(SPECIALCHARPARAMFILE_OUTPUTDIR "${TestOutputDir}/OutputDirectorySpecialCharParamFile")
+  file(MAKE_DIRECTORY "${SPECIALCHARPARAMFILE_OUTPUTDIR}")
+  add_test(NAME SpecialCharactersParameterFile
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+    -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
+    -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
+    -p "${TestDataDir}/pärameters.2D.NC.translation.ASGD👍.txt"
+    -out "${SPECIALCHARPARAMFILE_OUTPUTDIR}")
+
+  set(SPECIALCHARINITIALTRANSFORM_OUTPUTDIR "${TestOutputDir}/OutputDirectorySpecialCharInitialTransform")
+  file(MAKE_DIRECTORY "${SPECIALCHARINITIALTRANSFORM_OUTPUTDIR}")
+  add_test(NAME SpecialCharactersInitialTransform
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+    -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
+    -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
+    -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
+    -t0 "${TestDataDir}/transförmparameters.2D.NC.txt"
+    -out "${SPECIALCHARINITIALTRANSFORM_OUTPUTDIR}")
 endif()
 
 # Add a test for inverting an affine transform
