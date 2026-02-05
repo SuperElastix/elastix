@@ -1,4 +1,4 @@
-ADD_ELXCOMPONENT(ImpactMetric OFF
+ADD_ELXCOMPONENT(ImpactMetric OFF PLUGIN
  elxImpactMetric.cxx
  elxImpactMetric.h
  elxImpactMetric.hxx

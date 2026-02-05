@@ -94,12 +94,11 @@
  * supported image types).
  *
  */
-#define elxInstallMacro(_classname)                                                \
-  extern "C" int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb) \
-  {                                                                                \
-    return ::elastix::ComponentInstaller<::elastix::_classname>::DO(_cdb);         \
+#define elxInstallMacro(_classname)                                                                  \
+  extern "C" ELX_PLUGIN_EXPORT int _classname##InstallComponent(::elastix::ComponentDatabase * _cdb) \
+  {                                                                                                  \
+    return ::elastix::ComponentInstaller<::elastix::_classname>::DO(_cdb);                           \
   } // ignore semicolon
-
 
 /**
  * elxClassNameMacro(_name)
@@ -168,6 +167,12 @@
 #  else
 #    define ELASTIXLIB_API
 #  endif
+#endif
+
+#if defined(_WIN32) && !defined(__CYGWIN__)
+#  define ELX_PLUGIN_EXPORT __declspec(dllexport)
+#else
+#  define ELX_PLUGIN_EXPORT __attribute__((visibility("default")))
 #endif
 
 #endif // end #ifndef elxMacro_h
