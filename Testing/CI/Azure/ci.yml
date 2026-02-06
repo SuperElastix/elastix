@@ -1,5 +1,5 @@
 variables:
-  ITKv5_VERSION: v5.4.5
+  ITKv5_VERSION: v6.0b02
   ITK_GIT_URL: https://github.com/InsightSoftwareConsortium/ITK
   LIBTORCH_BINARY_URL_WIN: https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.6.0%2Bcpu.zip
   LIBTORCH_BINARY_URL_LINUX: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.6.0%2Bcpu.zip
