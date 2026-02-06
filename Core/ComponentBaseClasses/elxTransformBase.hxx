@@ -685,6 +685,11 @@ TransformBase<TElastix>::TransformPoints() const
       log::info("  The transform is evaluated on some points, specified in a VTK input point file.");
       this->TransformPointsSomePointsVTK(def);
     }
+    else if (itksys::SystemTools::StringEndsWith(def, ".bin") || itksys::SystemTools::StringEndsWith(def, ".BIN"))
+    {
+      log::info("  The transform is evaluated on some points, specified in a binary input point file.");
+      this->TransformPointsSomePoints(def, true);
+    }
     else
     {
       log::info("  The transform is evaluated on some points, specified in the input point file.");
@@ -720,7 +725,7 @@ TransformBase<TElastix>::TransformPoints() const
 
 template <typename TElastix>
 void
-TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename) const
+TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename, const bool binary) const
 {
 #ifndef ELX_NO_FILESYSTEM_ACCESS
   /** Typedef's. */
@@ -739,6 +744,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   /** Construct an ipp-file reader. */
   const auto ippReader = itk::TransformixInputPointFileReader<PointSetType>::New();
   ippReader->SetFileName(filename);
+  ippReader->SetBinary(binary);
 
   /** Read the input points. */
   log::info(std::ostringstream{} << "  Reading input point file: " << filename);
@@ -760,7 +766,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   {
     log::info("  Input points are specified in world coordinates.");
   }
-  const unsigned int nrofpoints = ippReader->GetNumberOfPoints();
+  const unsigned long nrofpoints = ippReader->GetNumberOfPoints();
   log::info(std::ostringstream{} << "  Number of specified input points: " << nrofpoints);
 
   /** Get the set of input points. */
@@ -794,7 +800,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   /** Read the input points, as index or as point. */
   if (ippReader->GetPointsAreIndices())
   {
-    for (unsigned int j = 0; j < nrofpoints; ++j)
+    for (unsigned long j = 0; j < nrofpoints; ++j)
     {
       /** The read point from the inutPointSet is actually an index
        * Cast to the proper type.
@@ -811,7 +817,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
   }
   else
   {
-    for (unsigned int j = 0; j < nrofpoints; ++j)
+    for (unsigned long j = 0; j < nrofpoints; ++j)
     {
       /** Compute index of nearest voxel in fixed image. */
       InputPointType point{};
@@ -827,7 +833,7 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
 
   /** Apply the transform. */
   log::info("  The input points are transformed.");
-  for (unsigned int j = 0; j < nrofpoints; ++j)
+  for (unsigned long j = 0; j < nrofpoints; ++j)
   {
     /** Call TransformPoint. */
     outputpointvec[j] = this->GetAsITKBaseType()->TransformPoint(inputpointvec[j]);
@@ -860,50 +866,85 @@ TransformBase<TElastix>::TransformPointsSomePoints(const std::string & filename)
       !outputDirectoryPath.empty())
   {
     /** Create filename and file stream. */
-    const std::string outputPointsFileName = outputDirectoryPath + "outputpoints.txt";
-    std::ofstream     outputPointsFile(outputPointsFileName);
+    const std::string extension = binary ? "bin" : "txt";
+    const std::string outputPointsFileName = outputDirectoryPath + "outputpoints." + extension;
+
+    std::ofstream     outputPointsFile(outputPointsFileName, binary ? std::ios_base::binary : std::ios_base::out );
     outputPointsFile << std::showpoint << std::fixed;
     log::info(std::ostringstream{} << "  The transformed points are saved in: " << outputPointsFileName);
 
-    const auto writeToFile = [&outputPointsFile](const auto & rangeOfElements) {
-      for (const auto element : rangeOfElements)
-      {
-        outputPointsFile << element << ' ';
-      }
-    };
+    /** Write the results. */
 
-    /** Print the results. */
-    for (unsigned int j = 0; j < nrofpoints; ++j)
+    if (binary) {  //Note: for speed, write the transformed points only
+      unsigned long isindex = ippReader->GetPointsAreIndices() ? 1 : 0;
+      outputPointsFile.write((char*) &isindex, sizeof(isindex));
+
+      unsigned long numberOfPoints = nrofpoints;
+      outputPointsFile.write((char*) &numberOfPoints, sizeof(numberOfPoints));
+
+      for( unsigned int j = 0; j < nrofpoints; j++ )
+      {
+        if ( ippReader->GetPointsAreIndices() )
+        {
+          /** The output index in fixed image. */
+          for( unsigned int i = 0; i < FixedImageDimension; i++ )
+          {
+            outputPointsFile.write((char*) &outputindexfixedvec[ j ][ i ], sizeof(outputindexfixedvec[ j ][ i ]) );
+          }
+        }
+        else
+        {
+          /** The output point. */
+          for( unsigned int i = 0; i < FixedImageDimension; i++ )
+          {
+            outputPointsFile.write((char*) &outputpointvec[ j ][ i ], sizeof(outputpointvec[ j ][ i ]) );
+          }
+        }
+      } // end for nrofpoints
+
+      outputPointsFile.close();
+    }
+    else //if (binary)
     {
-      /** The input index. */
-      outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
-      writeToFile(inputindexvec[j]);
+      const auto writeToFile = [&outputPointsFile](const auto & rangeOfElements) {
+        for (const auto element : rangeOfElements)
+        {
+          outputPointsFile << element << ' ';
+        }
+      };
 
-      /** The input point. */
-      outputPointsFile << "]\t; InputPoint = [ ";
-      writeToFile(inputpointvec[j]);
-
-      /** The output index in fixed image. */
-      outputPointsFile << "]\t; OutputIndexFixed = [ ";
-      writeToFile(outputindexfixedvec[j]);
-
-      /** The output point. */
-      outputPointsFile << "]\t; OutputPoint = [ ";
-      writeToFile(outputpointvec[j]);
-
-      /** The output point minus the input point. */
-      outputPointsFile << "]\t; Deformation = [ ";
-      writeToFile(deformationvec[j]);
-
-      if (alsoMovingIndices)
+      for (unsigned int j = 0; j < nrofpoints; ++j)
       {
-        /** The output index in moving image. */
-        outputPointsFile << "]\t; OutputIndexMoving = [ ";
-        writeToFile(outputindexmovingvec[j]);
-      }
+        /** The input index. */
+        outputPointsFile << "Point\t" << j << "\t; InputIndex = [ ";
+        writeToFile(inputindexvec[j]);
 
-      outputPointsFile << "]" << std::endl;
-    } // end for nrofpoints
+        /** The input point. */
+        outputPointsFile << "]\t; InputPoint = [ ";
+        writeToFile(inputpointvec[j]);
+
+        /** The output index in fixed image. */
+        outputPointsFile << "]\t; OutputIndexFixed = [ ";
+        writeToFile(outputindexfixedvec[j]);
+
+        /** The output point. */
+        outputPointsFile << "]\t; OutputPoint = [ ";
+        writeToFile(outputpointvec[j]);
+
+        /** The output point minus the input point. */
+        outputPointsFile << "]\t; Deformation = [ ";
+        writeToFile(deformationvec[j]);
+
+        if (alsoMovingIndices)
+        {
+          /** The output index in moving image. */
+          outputPointsFile << "]\t; OutputIndexMoving = [ ";
+          writeToFile(outputindexmovingvec[j]);
+        }
+
+        outputPointsFile << "]" << std::endl;
+      } // end for nrofpoints
+    }
   }
 
 #else
