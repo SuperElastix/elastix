@@ -13,8 +13,8 @@ target_compile_definitions(ElastixLibGTest PRIVATE
 )
 
 target_link_libraries(ElastixLibGTest
-  GTest::GTest
-  GTest::Main
+  GTest::gtest
+  GTest::gtest_main
   elastix_lib
   transformix_lib
   ${ITK_LIBRARIES}
