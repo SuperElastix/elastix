@@ -35,9 +35,20 @@ target_compile_definitions(CommonGTest PRIVATE
   ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-target_link_libraries(CommonGTest
-  GTest::GTest GTest::Main
-  ${ITK_LIBRARIES}
-  elastix_lib
+if (ITK_VERSION VERSION_LESS_EQUAL 5.4.5)
+  target_link_libraries(CommonGTest
+    GTest::GTest
+    GTest::Main
+    ${ITK_LIBRARIES}
+    elastix_lib
   )
+else()
+  target_link_libraries(CommonGTest
+    GTest::gtest
+    GTest::gtest_main
+    ${ITK_LIBRARIES}
+    elastix_lib
+  )
+endif()
+
 add_test(NAME CommonGTest_test COMMAND CommonGTest)
