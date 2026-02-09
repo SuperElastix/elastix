@@ -12,13 +12,24 @@ target_compile_definitions(ElastixLibGTest PRIVATE
   _USE_MATH_DEFINES # For M_PI.
 )
 
-target_link_libraries(ElastixLibGTest
-  GTest::GTest
-  GTest::Main
-  elastix_lib
-  transformix_lib
-  ${ITK_LIBRARIES}
-)
+if (ITK_VERSION VERSION_LESS_EQUAL 5.4.5)
+  target_link_libraries(ElastixLibGTest
+    GTest::GTest
+    GTest::Main
+    elastix_lib
+    transformix_lib
+    ${ITK_LIBRARIES}
+  )
+else()
+  target_link_libraries(ElastixLibGTest
+    GTest::gtest
+    GTest::gtest_main
+    elastix_lib
+    transformix_lib
+    ${ITK_LIBRARIES}
+  )
+endif()
+
 
 target_compile_definitions(ElastixLibGTest PRIVATE ELX_CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}" ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 
