@@ -234,7 +234,7 @@ main(int argc, char * argv[])
 
   // Generate a list of random points
   auto mersenneTwister = MersenneTwisterType::New();
-  mersenneTwister->Initialize(140377);
+  mersenneTwister->SetSeed(140377);
   std::vector<InputPointType>  pointList(N);
   std::vector<OutputPointType> transformedPointList1(N);
   std::vector<OutputPointType> transformedPointList2(N);

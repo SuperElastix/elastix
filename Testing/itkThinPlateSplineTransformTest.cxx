@@ -106,7 +106,7 @@ main(int argc, char * argv[])
   PointSetType::ConstPointer targetLandmarks = kernelTransform->GetTargetLandmarks();
   PointsContainerPointer     newTargetLandmarkPoints = PointsContainerType::New();
   auto                       mersenneTwister = MersenneTwisterType::New();
-  mersenneTwister->Initialize(140377);
+  mersenneTwister->SetSeed(140377);
   for (unsigned long j = 0; j < targetLandmarks->GetNumberOfPoints(); ++j)
   {
     PointType tmp = (*targetLandmarks->GetPoints())[j];
