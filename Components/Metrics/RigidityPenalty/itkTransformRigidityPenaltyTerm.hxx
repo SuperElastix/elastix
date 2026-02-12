@@ -20,6 +20,7 @@
 
 #include "itkTransformRigidityPenaltyTerm.h"
 
+#include "itkImageRegionIteratorWithIndex.h"
 #include "itkMath.h"
 #include "itkZeroFluxNeumannBoundaryCondition.h"
 
@@ -340,8 +341,8 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::FillRigidityCoefficientI
   this->m_Transform->SetParameters(parameters);
 
   /** Create and reset an iterator over m_RigidityCoefficientImage. */
-  RigidityImageIteratorType it(this->m_RigidityCoefficientImage,
-                               this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
+  ImageRegionIteratorWithIndex<RigidityImageType> it(this->m_RigidityCoefficientImage,
+                                                     this->m_RigidityCoefficientImage->GetLargestPossibleRegion());
 
   /** Fill m_RigidityCoefficientImage. */
   RigidityPixelType      fixedValue, movingValue, in;
