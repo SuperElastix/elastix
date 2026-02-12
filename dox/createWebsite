@@ -103,7 +103,7 @@ then
   # Create html help
   currentdir=`pwd`
   cd $exportdirwin/help
-  doxygen doxyfile.out &> doxygen.log
+  doxygen Doxyfile.out &> doxygen.log
   cd $currentdir
   exit
 fi
