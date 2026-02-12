@@ -20,7 +20,7 @@
 
 #include "itkComputeImageExtremaFilter.h"
 
-#include <itkImageRegionConstIterator.h>
+#include <itkImageRegionConstIteratorWithIndex.h>
 #include <itkImageScanlineIterator.h>
 
 #include "elxMaskHasSameImageDomain.h"
@@ -55,7 +55,7 @@ ComputeImageExtremaFilter<TInputImage>::RetrieveMinMax(const TInputImage &      
     {
       const auto & maskImage = *(imageSpatialMask->GetImage());
 
-      for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
+      for (ImageRegionConstIteratorWithIndex<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
       {
         if (maskImage.GetPixel(it.GetIndex()) != PixelType{})
         {
@@ -67,7 +67,7 @@ ComputeImageExtremaFilter<TInputImage>::RetrieveMinMax(const TInputImage &      
     }
     else
     {
-      for (ImageRegionConstIterator<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
+      for (ImageRegionConstIteratorWithIndex<TInputImage> it(&inputImage, regionForThread); !it.IsAtEnd(); ++it)
       {
         typename ImageSpatialMaskType::PointType point;
         inputImage.TransformIndexToPhysicalPoint(it.GetIndex(), point);
