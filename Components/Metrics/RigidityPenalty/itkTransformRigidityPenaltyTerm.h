@@ -167,7 +167,6 @@ public:
   using RigidityImageRegionType = typename RigidityImageType::RegionType;
   using RigidityImageIndexType = typename RigidityImageType::IndexType;
   using RigidityImagePointType = typename RigidityImageType::PointType;
-  using RigidityImageIteratorType = ImageRegionIterator<RigidityImageType>;
   using StructuringElementType = BinaryBallStructuringElement<RigidityPixelType, Self::FixedImageDimension>;
   using SERadiusType = typename StructuringElementType::RadiusType;
   using DilateFilterType = GrayscaleDilateImageFilter<RigidityImageType, RigidityImageType, StructuringElementType>;
