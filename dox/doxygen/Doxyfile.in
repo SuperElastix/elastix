@@ -363,6 +363,20 @@ EXTENSION_MAPPING      =
 
 MARKDOWN_SUPPORT       = YES
 
+# If the MARKDOWN_STRICT tag is enabled then Doxygen treats text in comments as
+# Markdown formatted also in cases where Doxygen's native markup format
+# conflicts with that of Markdown. This is only relevant in cases where
+# backticks are used. Doxygen's native markup style allows a single quote to end
+# a text fragment started with a backtick and then treat it as a piece of quoted
+# text, whereas in Markdown such text fragment is treated as verbatim and only
+# ends when a second matching backtick is found. Also, Doxygen's native markup
+# format requires double quotes to be escaped when they appear in a backtick
+# section, whereas this is not needed for Markdown.
+# The default value is: YES.
+# This tag requires that the tag MARKDOWN_SUPPORT is set to YES.
+
+MARKDOWN_STRICT        = YES
+
 # When the TOC_INCLUDE_HEADINGS tag is set to a non-zero value, all headings up
 # to that level are automatically included in the table of contents, even if
 # they do not have an id attribute.
@@ -391,6 +405,14 @@ MARKDOWN_ID_STYLE      = DOXYGEN
 # The default value is: YES.
 
 AUTOLINK_SUPPORT       = YES
+
+# This tag specifies a list of words that, when matching the start of a word in
+# the documentation, will suppress auto links generation, if it is enabled via
+# AUTOLINK_SUPPORT. This list does not affect links explicitly created using #
+# or the \link or \ref commands.
+# This tag requires that the tag AUTOLINK_SUPPORT is set to YES.
+
+AUTOLINK_IGNORE_WORDS  =
 
 # If you use STL classes (i.e. std::string, std::vector, etc.) but do not want
 # to include (a tag file for) the STL sources as input, then you should set this
@@ -603,6 +625,14 @@ HIDE_UNDOC_MEMBERS     = NO
 
 HIDE_UNDOC_CLASSES     = NO
 
+# If the HIDE_UNDOC_NAMESPACES tag is set to YES, Doxygen will hide all
+# undocumented namespaces that are normally visible in the namespace hierarchy.
+# If set to NO, these namespaces will be included in the various overviews. This
+# option has no effect if EXTRACT_ALL is enabled.
+# The default value is: YES.
+
+HIDE_UNDOC_NAMESPACES  = YES
+
 # If the HIDE_FRIEND_COMPOUNDS tag is set to YES, Doxygen will hide all friend
 # declarations. If set to NO, these declarations will be included in the
 # documentation.
@@ -765,6 +795,27 @@ GENERATE_BUGLIST       = YES
 
 GENERATE_DEPRECATEDLIST= YES
 
+# The GENERATE_REQUIREMENTS tag can be used to enable (YES) or disable (NO) the
+# requirements page. When enabled, this page is automatically created when at
+# least one comment block with a \requirement command appears in the input.
+# The default value is: YES.
+
+GENERATE_REQUIREMENTS  = YES
+
+# The REQ_TRACEABILITY_INFO tag controls if traceability information is shown on
+# the requirements page (only relevant when using \requirement comment blocks).
+# The setting NO will disable the traceablility information altogether. The
+# setting UNSATISFIED_ONLY will show a list of requirements that are missing a
+# satisfies relation (through the command: \satisfies). Similarly the setting
+# UNVERIFIED_ONLY will show a list of requirements that are missing a verifies
+# relation (through the command: \verifies). Setting the tag to YES (the
+# default) will show both lists if applicable.
+# Possible values are: YES, NO, UNSATISFIED_ONLY and UNVERIFIED_ONLY.
+# The default value is: YES.
+# This tag requires that the tag GENERATE_REQUIREMENTS is set to YES.
+
+REQ_TRACEABILITY_INFO  = YES
+
 # The ENABLED_SECTIONS tag can be used to enable conditional documentation
 # sections, marked by \if <section_label> ... \endif and \cond <section_label>
 # ... \endcond blocks.
@@ -837,6 +888,22 @@ LAYOUT_FILE            = "@ELASTIX_DOXYGEN_DIR@/doxygenlayout.xml"
 
 CITE_BIB_FILES         =
 
+# The EXTERNAL_TOOL_PATH tag can be used to extend the search path (PATH
+# environment variable) so that external tools such as latex and gs can be
+# found.
+# Note: Directories specified with EXTERNAL_TOOL_PATH are added in front of the
+# path already specified by the PATH variable, and are added in the order
+# specified.
+# Note: This option is particularly useful for macOS version 14 (Sonoma) and
+# higher, when running Doxygen from Doxywizard, because in this case any user-
+# defined changes to the PATH are ignored. A typical example on macOS is to set
+# EXTERNAL_TOOL_PATH = /Library/TeX/texbin /usr/local/bin
+# together with the standard path, the full search path used by doxygen when
+# launching external tools will then become
+# PATH=/Library/TeX/texbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+EXTERNAL_TOOL_PATH     =
+
 #---------------------------------------------------------------------------
 # Configuration options related to warning and progress messages
 #---------------------------------------------------------------------------
@@ -896,6 +963,14 @@ WARN_NO_PARAMDOC       = NO
 # The default value is: NO.
 
 WARN_IF_UNDOC_ENUM_VAL = NO
+
+# If WARN_LAYOUT_FILE option is set to YES, Doxygen will warn about issues found
+# while parsing the user defined layout file, such as missing or wrong elements.
+# See also LAYOUT_FILE for details. If set to NO, problems with the layout file
+# will be suppressed.
+# The default value is: YES.
+
+WARN_LAYOUT_FILE       = YES
 
 # If the WARN_AS_ERROR tag is set to YES then Doxygen will immediately stop when
 # a warning is encountered. If the WARN_AS_ERROR tag is set to FAIL_ON_WARNINGS
@@ -1162,6 +1237,15 @@ FILTER_SOURCE_PATTERNS =
 # and want to reuse the introduction page also for the Doxygen output.
 
 USE_MDFILE_AS_MAINPAGE =
+
+# If the IMPLICIT_DIR_DOCS tag is set to YES, any README.md file found in sub-
+# directories of the project's root, is used as the documentation for that sub-
+# directory, except when the README.md starts with a \dir, \page or \mainpage
+# command. If set to NO, the README.md file needs to start with an explicit \dir
+# command in order to be used as directory documentation.
+# The default value is: YES.
+
+IMPLICIT_DIR_DOCS      = YES
 
 # The Fortran standard specifies that for fixed formatted Fortran code all
 # characters from position 72 are to be considered as comment. A common
@@ -1754,6 +1838,16 @@ DISABLE_INDEX          = YES
 
 GENERATE_TREEVIEW      = NO
 
+# When GENERATE_TREEVIEW is set to YES, the PAGE_OUTLINE_PANEL option determines
+# if an additional navigation panel is shown at the right hand side of the
+# screen, displaying an outline of the contents of the main page, similar to
+# e.g. https://developer.android.com/reference If GENERATE_TREEVIEW is set to
+# NO, this option has no effect.
+# The default value is: YES.
+# This tag requires that the tag GENERATE_HTML is set to YES.
+
+PAGE_OUTLINE_PANEL     = YES
+
 # When GENERATE_TREEVIEW is set to YES, the FULL_SIDEBAR option determines if
 # the side bar is limited to only the treeview area (value NO) or if it should
 # extend to the full height of the window (value YES). Setting this to YES gives
@@ -1774,6 +1868,12 @@ FULL_SIDEBAR           = NO
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
 ENUM_VALUES_PER_LINE   = 4
+
+# When the SHOW_ENUM_VALUES tag is set doxygen will show the specified
+# enumeration values besides the enumeration mnemonics.
+# The default value is: NO.
+
+SHOW_ENUM_VALUES       = NO
 
 # If the treeview is enabled (see GENERATE_TREEVIEW) then this tag can be used
 # to set the initial width (in pixels) of the frame in which the tree is shown.
@@ -2715,6 +2815,15 @@ UML_LOOK               = NO
 
 UML_LIMIT_NUM_FIELDS   = 10
 
+# If the UML_LOOK tag is enabled, field labels are shown along the edge between
+# two class nodes. If there are many fields and many nodes the graph may become
+# too cluttered. The UML_MAX_EDGE_LABELS threshold limits the number of items to
+# make the size more manageable. Set this to 0 for no limit.
+# Minimum value: 0, maximum value: 100, default value: 10.
+# This tag requires that the tag UML_LOOK is set to YES.
+
+UML_MAX_EDGE_LABELS    = 10
+
 # If the DOT_UML_DETAILS tag is set to NO, Doxygen will show attributes and
 # methods without types and arguments in the UML graphs. If the DOT_UML_DETAILS
 # tag is set to YES, Doxygen will add type and arguments for attributes and
@@ -2893,6 +3002,12 @@ PLANTUML_CFG_FILE      =
 # the !include statement in a PlantUML block.
 
 PLANTUML_INCLUDE_PATH  =
+
+# The PLANTUMLFILE_DIRS tag can be used to specify one or more directories that
+# contain PlantUml files that are included in the documentation (see the
+# \plantumlfile command).
+
+PLANTUMLFILE_DIRS      =
 
 # The DOT_GRAPH_MAX_NODES tag can be used to set the maximum number of nodes
 # that will be shown in the graph. If the number of nodes in a graph becomes
