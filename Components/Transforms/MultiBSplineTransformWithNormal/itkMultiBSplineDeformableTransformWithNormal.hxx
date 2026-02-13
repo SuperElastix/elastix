@@ -28,6 +28,7 @@
 #include "itkAddImageFilter.h"
 #include "itkMaskImageFilter.h"
 #include "itkConstantPadImageFilter.h"
+#include "itkImageRegionIteratorWithIndex.h"
 
 #include <cassert>
 #include <numeric> // For iota.
@@ -211,7 +212,7 @@ struct UpdateLocalBases_impl<TScalarType, 2>
     ImageVectorInterpolatorPointer vinterp = ImageVectorInterpolator::New();
     vinterp->SetInputImage(normals);
 
-    for (ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion()); !it.IsAtEnd(); ++it)
+    for (ImageRegionIteratorWithIndex<ImageBaseType> it(bases, bases->GetLargestPossibleRegion()); !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
       typename ImageBaseType::PointType p;
@@ -270,7 +271,7 @@ struct UpdateLocalBases_impl<TScalarType, 3>
     ImageVectorInterpolatorPointer vinterp = ImageVectorInterpolator::New();
     vinterp->SetInputImage(normals);
 
-    for (ImageRegionIterator<ImageBaseType> it(bases, bases->GetLargestPossibleRegion()); !it.IsAtEnd(); ++it)
+    for (ImageRegionIteratorWithIndex<ImageBaseType> it(bases, bases->GetLargestPossibleRegion()); !it.IsAtEnd(); ++it)
     {
       BaseType                          b;
       typename ImageBaseType::PointType p;
