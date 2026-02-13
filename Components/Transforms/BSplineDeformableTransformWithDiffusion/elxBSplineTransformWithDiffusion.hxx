@@ -23,6 +23,7 @@
 
 #include "itkBSplineResampleImageFunction.h"
 #include "itkBSplineDecompositionImageFilter.h"
+#include "itkImageRegionConstIteratorWithOnlyIndex.h"
 
 #include <cmath>
 
@@ -1067,7 +1068,7 @@ BSplineTransformWithDiffusion<TElastix>::DiffuseDeformationField()
   dummyImage->SetSpacing(this->m_DeformationSpacing);
 
   /** Setup an iterator over dummyImage and outputImage. */
-  DummyIteratorType       iter(dummyImage, this->m_DeformationRegion);
+  itk::ImageRegionConstIteratorWithOnlyIndex<DummyImageType> iter(dummyImage, this->m_DeformationRegion);
   VectorImageIteratorType iterout(this->m_DeformationField, this->m_DeformationRegion);
 
   /** Declare stuff. */

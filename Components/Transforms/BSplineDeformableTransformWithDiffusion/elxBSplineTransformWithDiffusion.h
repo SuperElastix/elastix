@@ -252,7 +252,6 @@ public:
 
   /** Other typedef's.*/
   using DummyImageType = itk::Image<short, Self::SpaceDimension>;
-  using DummyIteratorType = itk::ImageRegionConstIterator<DummyImageType>;
   using BSplineTransformPointer = typename BSplineTransformType::Pointer;
   using GenericDeformationFieldRegulizer = typename Superclass1::Superclass;
 
