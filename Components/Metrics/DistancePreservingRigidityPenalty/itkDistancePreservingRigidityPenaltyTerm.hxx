@@ -21,7 +21,7 @@
 #include "itkDistancePreservingRigidityPenaltyTerm.h"
 
 #include "itkZeroFluxNeumannBoundaryCondition.h"
-#include "itkImageRegionIterator.h"
+#include "itkImageRegionConstIteratorWithOnlyIndex.h"
 
 namespace itk
 {
@@ -120,7 +120,7 @@ DistancePreservingRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
   /** compute number of knots in rigid regions */
   this->m_NumberOfRigidGrids = 0;
 
-  using PenaltyGridIteratorType = itk::ImageRegionIterator<PenaltyGridImageType>;
+  using PenaltyGridIteratorType = itk::ImageRegionConstIteratorWithOnlyIndex<PenaltyGridImageType>;
   PenaltyGridIteratorType ki(this->m_PenaltyGridImage, this->m_PenaltyGridImage->GetBufferedRegion());
 
   typename PenaltyGridImageType::IndexType penaltyGridIndex;
