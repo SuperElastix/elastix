@@ -1090,6 +1090,8 @@ EXCLUDE                = "@elastix_SOURCE_DIR@/Components/Metrics/KNNGraphAlphaM
                          "@elastix_SOURCE_DIR@/Components/Transforms/AffineDTITransform/itkAffineDTITransform.h" \
                          "@elastix_SOURCE_DIR@/Components/Transforms/EulerTransform/itkEulerTransform.h" \
                          "@elastix_SOURCE_DIR@/Components/Transforms/SimilarityTransform/itkSimilarityTransform.h" \
+                         "@elastix_SOURCE_DIR@/Common/GTesting" \
+                         "@elastix_SOURCE_DIR@/Core/Main/GTesting" \
                          "@elastix_SOURCE_DIR@/Testing"
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
