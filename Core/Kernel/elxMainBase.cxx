@@ -50,10 +50,10 @@ namespace elastix
 MainBase::MainBase() = default;
 
 /**
- * ********************* GetComponentDatabaseMutable ****************************
+ * ********************* GetMutableComponentDatabase ****************************
  */
 ComponentDatabase &
-MainBase::GetComponentDatabaseMutable()
+MainBase::GetMutableComponentDatabase()
 {
   // Improved thread-safety by using C++11 "magic statics".
   static const auto staticComponentDatabase = [] {
@@ -69,7 +69,7 @@ MainBase::GetComponentDatabaseMutable()
   }();
 
   return *staticComponentDatabase;
-} // end GetComponentDatabaseMutable
+} // end GetMutableComponentDatabase
 
 /**
  * ********************* GetComponentDatabase ****************************
@@ -77,7 +77,7 @@ MainBase::GetComponentDatabaseMutable()
 const ComponentDatabase &
 MainBase::GetComponentDatabase()
 {
-  return GetComponentDatabaseMutable();
+  return GetMutableComponentDatabase();
 } // end GetComponentDatabase()
 
 
@@ -200,7 +200,7 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
       continue;
     }
 
-    const int ret = fn(&GetComponentDatabaseMutable());
+    const int ret = fn(&GetMutableComponentDatabase());
     if (ret != 0)
     {
       lastError = "InstallComponent returned non-zero (" + std::to_string(ret) + ") for " + libFileName;
@@ -237,7 +237,7 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
       continue;
     }
 
-    const int ret = fn(&GetComponentDatabaseMutable());
+    const int ret = fn(&GetMutableComponentDatabase());
     if (ret != 0)
     {
       lastError = "InstallComponent returned non-zero (" + std::to_string(ret) + ") for " + libFileName;

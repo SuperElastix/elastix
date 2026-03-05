@@ -303,7 +303,7 @@ protected:
    * into this same mutable instance.
    */
   static ComponentDatabase &
-  GetComponentDatabaseMutable();
+  GetMutableComponentDatabase();
 
 private:
   /** The configuration object, containing the parameters and command-line arguments. */
