@@ -282,6 +282,7 @@ protected:
                    bool                             mandatoryComponent = true);
 
 
+private:
   /**
    * ****************** GetComponentDatabase *********
    *
@@ -305,7 +306,6 @@ protected:
   static ComponentDatabase &
   GetMutableComponentDatabase();
 
-private:
   /** The configuration object, containing the parameters and command-line arguments. */
   Configuration::Pointer m_Configuration{ Configuration::New() };
 };
