@@ -171,32 +171,6 @@ public:
   static const ComponentDatabase &
   GetComponentDatabase();
 
-  /**
-   * Tries to load a component as a runtime plugin and register it in the
-   * ComponentDatabase.
-   *
-   * This function is called when a component cannot be created because it is
-   * not yet present in the ComponentDatabase. It attempts to dynamically load
-   * a shared library whose name is derived from `componentName`
-   * (e.g. `libImpactMetric.so`, `ImpactMetric.dll`, ...), locate the exported
-   * `<PluginName>InstallComponent` symbol inside that library, and call it.
-   *
-   * The install function is expected to register one or more components into
-   * the provided ComponentDatabase. After a successful call, the caller can
-   * retry component creation using the same name.
-   *
-   * The plugin is searched using the system dynamic loader mechanisms
-   * (RPATH/RUNPATH, LD_LIBRARY_PATH on Unix, PATH on Windows), exactly like a
-   * regular shared library.
-   *
-   * \param componentName  Name of the component as used in the parameter file
-   *                       (e.g. "Impact").
-   * \return true if a plugin was successfully loaded and installed, false
-   *         otherwise.
-   */
-  bool
-  TryLoadComponentPlugin(const ComponentDescriptionType & componentName);
-
 protected:
   MainBase();
   ~MainBase() override = 0;
@@ -283,6 +257,32 @@ protected:
 
 
 private:
+  /**
+   * Tries to load a component as a runtime plugin and register it in the
+   * ComponentDatabase.
+   *
+   * This function is called when a component cannot be created because it is
+   * not yet present in the ComponentDatabase. It attempts to dynamically load
+   * a shared library whose name is derived from `componentName`
+   * (e.g. `libImpactMetric.so`, `ImpactMetric.dll`, ...), locate the exported
+   * `<PluginName>InstallComponent` symbol inside that library, and call it.
+   *
+   * The install function is expected to register one or more components into
+   * the provided ComponentDatabase. After a successful call, the caller can
+   * retry component creation using the same name.
+   *
+   * The plugin is searched using the system dynamic loader mechanisms
+   * (RPATH/RUNPATH, LD_LIBRARY_PATH on Unix, PATH on Windows), exactly like a
+   * regular shared library.
+   *
+   * \param componentName  Name of the component as used in the parameter file
+   *                       (e.g. "Impact").
+   * \return true if a plugin was successfully loaded and installed, false
+   *         otherwise.
+   */
+  bool
+  TryLoadComponentPlugin(const ComponentDescriptionType & componentName);
+
   /**
    * ****************** GetComponentDatabase *********
    *
