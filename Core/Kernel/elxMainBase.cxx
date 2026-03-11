@@ -274,7 +274,7 @@ MainBase::CreateComponent(const ComponentDescriptionType & name)
   /** 2) Not found: try to lazy-load a plugin that may provide this component,
    *     and retry exactly once.
    */
-  if (this->TryLoadComponentPlugin(name))
+  if (TryLoadComponentPlugin(name))
   {
     if (const PtrToCreator creator = GetComponentDatabase().GetCreator(name, m_DBIndex))
     {

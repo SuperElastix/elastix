@@ -280,7 +280,7 @@ private:
    * \return true if a plugin was successfully loaded and installed, false
    *         otherwise.
    */
-  bool
+  static bool
   TryLoadComponentPlugin(const ComponentDescriptionType & componentName);
 
   /**
