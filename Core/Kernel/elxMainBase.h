@@ -178,7 +178,7 @@ public:
    * This function is called when a component cannot be created because it is
    * not yet present in the ComponentDatabase. It attempts to dynamically load
    * a shared library whose name is derived from `componentName`
-   * (e.g. `libImpactMetric.so`, `ImpactMetric.dll`, …), locate the exported
+   * (e.g. `libImpactMetric.so`, `ImpactMetric.dll`, ...), locate the exported
    * `<PluginName>InstallComponent` symbol inside that library, and call it.
    *
    * The install function is expected to register one or more components into
