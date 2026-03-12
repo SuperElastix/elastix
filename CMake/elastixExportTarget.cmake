@@ -10,9 +10,6 @@ function(elastix_export_target tgt)
   if (type STREQUAL "STATIC_LIBRARY" OR
       type STREQUAL "MODULE_LIBRARY" OR
       type STREQUAL "SHARED_LIBRARY")
-    set_property(TARGET ${tgt} PROPERTY VERSION 1)
-    set_property(TARGET ${tgt} PROPERTY SOVERSION 1)
-
     if ("${tgt}" STREQUAL "elastix_lib")
       set_property(TARGET ${tgt} PROPERTY
         OUTPUT_NAME elastix-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR})

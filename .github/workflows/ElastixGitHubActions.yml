@@ -19,7 +19,6 @@ jobs:
             cmake-build-type: "Release"
             libs:
               - elastix-build/bin/libelxANNlib.so
-              - elastix-build/bin/libelxANNlib.so.1
               - elastix-build/bin/libImpactMetric.so
           - os: windows-2022
             c-compiler: "cl.exe"
@@ -40,7 +39,6 @@ jobs:
             itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/libelxANNlib.1.dylib
               - elastix-build/bin/libelxANNlib.dylib
               - elastix-build/bin/libImpactMetric.so
     steps:
