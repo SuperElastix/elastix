@@ -199,17 +199,6 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
       lastError = "GetProcAddress failed for symbol " + installSymbol + " in " + libFileName;
       continue;
     }
-
-    const int ret = fn(&GetMutableComponentDatabase());
-    if (ret != 0)
-    {
-      lastError = "InstallComponent returned non-zero (" + std::to_string(ret) + ") for " + libFileName;
-      continue;
-    }
-
-    log::info(std::ostringstream{} << "Lazy-loaded IMPACT plugin '" << pluginName << "'.");
-    return true;
-
 #else
     dlerror(); // clear any old error state
 
@@ -236,6 +225,7 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
       lastError = "dlsym returned null for symbol " + installSymbol + " in " + libFileName;
       continue;
     }
+#endif
 
     const int ret = fn(&GetMutableComponentDatabase());
     if (ret != 0)
@@ -246,7 +236,6 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
 
     log::info(std::ostringstream{} << "Lazy-loaded IMPACT plugin '" << pluginName << "'.");
     return true;
-#endif
   }
 
   log::error(
