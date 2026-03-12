@@ -20,7 +20,7 @@ jobs:
             cxx-compiler: "g++"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/libelxANNlib.so
+              - elastix-build/bin/libelx-ANNlib.so
           - os: windows-2022
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.8.0%2Bcpu.zip"
             libtorch-cuda-url: "https://download.pytorch.org/libtorch/cu128/libtorch-win-shared-with-deps-2.8.0%2Bcu128.zip"
@@ -30,7 +30,7 @@ jobs:
             cxx-compiler: "cl.exe"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/elxANNlib.dll
+              - elastix-build/bin/elx-ANNlib.dll
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-14
             c-compiler: "clang"
@@ -39,7 +39,7 @@ jobs:
             itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/libelxANNlib.dylib
+              - elastix-build/bin/libelx-ANNlib.dylib
     steps:
       - name: Free disk space
         if: matrix.os != 'windows-2022'
