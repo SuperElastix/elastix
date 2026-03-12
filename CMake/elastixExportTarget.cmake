@@ -22,7 +22,7 @@ function(elastix_export_target tgt)
           OUTPUT_NAME ${tgt})
       else()
         set_property(TARGET ${tgt} PROPERTY
-          OUTPUT_NAME elx${tgt})
+          OUTPUT_NAME elx-${tgt})
       endif()
     endif()
 
