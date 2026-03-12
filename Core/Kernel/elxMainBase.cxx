@@ -173,18 +173,12 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
 
   for (const auto & pluginName : pluginCandidates)
   {
-#if defined(_WIN32) && !defined(__CYGWIN__)
-    const std::string libFileName = pluginName + ".dll";
-#elif defined(__APPLE__)
-    const std::string libFileName = "lib" + pluginName + ".so";
-#else
-    const std::string libFileName = "lib" + pluginName + ".so";
-#endif
-
     // Note: this is the symbol name exported by the plugin (extern "C").
     const std::string installSymbol = "ImpactMetricInstallComponent";
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
+    const std::string libFileName = pluginName + ".dll";
+
     HMODULE handle = LoadLibraryA(libFileName.c_str());
     if (!handle)
     {
@@ -200,6 +194,9 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
       continue;
     }
 #else
+    // Linux and MacOS have the same convention for plugin file names.
+    const std::string libFileName = "lib" + pluginName + ".so";
+
     dlerror(); // clear any old error state
 
     void * handle = dlopen(libFileName.c_str(), RTLD_NOW | RTLD_LOCAL);
