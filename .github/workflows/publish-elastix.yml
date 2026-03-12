@@ -21,7 +21,6 @@ jobs:
             cmake-build-type: "Release"
             libs:
               - elastix-build/bin/libelxANNlib.so
-              - elastix-build/bin/libelxANNlib.so.1
           - os: windows-2022
             libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.8.0%2Bcpu.zip"
             libtorch-cuda-url: "https://download.pytorch.org/libtorch/cu128/libtorch-win-shared-with-deps-2.8.0%2Bcu128.zip"
@@ -40,7 +39,6 @@ jobs:
             itk-git-tag: "v5.4.5"
             cmake-build-type: "Release"
             libs:
-              - elastix-build/bin/libelxANNlib.1.dylib
               - elastix-build/bin/libelxANNlib.dylib
     steps:
       - name: Free disk space
