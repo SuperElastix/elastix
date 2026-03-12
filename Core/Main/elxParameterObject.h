@@ -96,7 +96,7 @@ public:
   void
   SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value);
   const ParameterValueVectorType &
-  GetParameter(const unsigned int index, const ParameterKeyType & key);
+  GetParameter(const unsigned int index, const ParameterKeyType & key) const;
   bool
   HasParameter(const unsigned int index, const ParameterKeyType & key) const;
   bool
@@ -156,6 +156,9 @@ protected:
 
 private:
   ParameterMapVectorType m_ParameterMaps;
+
+  // Dummy empty return value returned when the key passed to GetParameter is not there.
+  const ParameterValueVectorType m_EmptyValueVector{};
 };
 
 } // namespace elastix

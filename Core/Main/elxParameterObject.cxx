@@ -164,9 +164,11 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
  */
 
 const ParameterObject::ParameterValueVectorType &
-ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType & key)
+ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType & key) const
 {
-  return m_ParameterMaps[index][key];
+  const auto & parameterMap = m_ParameterMaps[index];
+  const auto   found = parameterMap.find(key);
+  return (found == parameterMap.cend()) ? m_EmptyValueVector : found->second;
 }
 
 
