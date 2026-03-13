@@ -55,21 +55,6 @@ ParameterObject::SetParameterMap(const unsigned int index, const ParameterMapTyp
 
 
 /**
- * ********************* SetParameterMap *********************
- */
-
-void
-ParameterObject::SetParameterMap(const ParameterMapVectorType & parameterMaps)
-{
-  if (m_ParameterMaps != parameterMaps)
-  {
-    m_ParameterMaps = parameterMaps;
-    this->Modified();
-  }
-}
-
-
-/**
  * ********************* SetParameterMaps *********************
  */
 
@@ -239,14 +224,6 @@ ParameterObject::ReadParameterFile(const ParameterFileNameType & parameterFileNa
 }
 
 
-// Deprecated, superseded by ReadParameterFiles.
-void
-ParameterObject::ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector)
-{
-  this->ReadParameterFiles(parameterFileNameVector);
-}
-
-
 /**
  * ********************* ReadParameterFiles *********************
  */
@@ -287,14 +264,6 @@ ParameterObject::AddParameterFile(const ParameterFileNameType & parameterFileNam
 /**
  * ********************* WriteParameterFile *********************
  */
-
-
-// Deprecated, superseded by WriteParameterFiles.
-void
-ParameterObject::WriteParameterFile() const
-{
-  this->WriteParameterFiles();
-}
 
 
 void
@@ -356,23 +325,6 @@ ParameterObject::WriteParameterFile(const ParameterFileNameType & parameterFileN
   }
 
   this->WriteParameterFile(m_ParameterMaps[0], parameterFileName);
-}
-
-
-// Deprecated, superseded by WriteParameterFiles.
-void
-ParameterObject::WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
-                                    const ParameterFileNameVectorType & parameterFileNameVector)
-{
-  Self::WriteParameterFiles(parameterMapVector, parameterFileNameVector);
-}
-
-
-// Deprecated, superseded by WriteParameterFiles.
-void
-ParameterObject::WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const
-{
-  this->WriteParameterFiles(parameterFileNameVector);
 }
 
 

@@ -58,9 +58,6 @@ public:
   void
   SetParameterMap(const unsigned int index, const ParameterMapType & parameterMap);
 
-  [[deprecated("Instead of calling this overload, please call SetParameterMaps")]] void
-  SetParameterMap(const ParameterMapVectorType & parameterMaps);
-
   void
   SetParameterMaps(const ParameterMapVectorType & parameterMaps);
 
@@ -68,12 +65,6 @@ public:
   AddParameterMap(const ParameterMapType & parameterMap);
   const ParameterMapType &
   GetParameterMap(const unsigned int index) const;
-
-  [[deprecated("Instead of calling this member function, please call GetParameterMaps")]] const ParameterMapVectorType &
-  GetParameterMap() const
-  {
-    return m_ParameterMaps;
-  }
 
   const ParameterMapVectorType &
   GetParameterMaps() const
@@ -110,29 +101,16 @@ public:
   void
   ReadParameterFile(const ParameterFileNameType & parameterFileName);
 
-  [[deprecated("Instead of calling this overload, please call ReadParameterFiles")]] void
-  ReadParameterFile(const ParameterFileNameVectorType & parameterFileNameVector);
-
   void
   ReadParameterFiles(const ParameterFileNameVectorType & parameterFileNameVector);
 
   void
   AddParameterFile(const ParameterFileNameType & parameterFileName);
 
-  [[deprecated("Instead of calling this overload, please call WriteParameterFiles")]] void
-  WriteParameterFile() const;
-
   static void
   WriteParameterFile(const ParameterMapType & parameterMap, const ParameterFileNameType & parameterFileName);
   void
   WriteParameterFile(const ParameterFileNameType & parameterFileName) const;
-
-  [[deprecated("Instead of calling this overload, please call WriteParameterFiles")]] void
-  WriteParameterFile(const ParameterFileNameVectorType & parameterFileNameVector) const;
-
-  [[deprecated("Instead of calling this overload, please call WriteParameterFiles")]] static void
-  WriteParameterFile(const ParameterMapVectorType &      parameterMapVector,
-                     const ParameterFileNameVectorType & parameterFileNameVector);
 
   void
   WriteParameterFiles() const;
