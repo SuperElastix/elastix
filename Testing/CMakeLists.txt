@@ -442,8 +442,6 @@ set_property(TARGET elxInvertTransform PROPERTY FOLDER "tests/Executable")
 
 # Add a test, having spaces in the output directory path.
 if(ELASTIX_BUILD_EXECUTABLE)
-  file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest")
-  file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces")
   file(MAKE_DIRECTORY "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
   add_test(NAME OutputDirectoryPathContainingSpacesTest
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
