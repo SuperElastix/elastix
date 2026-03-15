@@ -392,17 +392,8 @@ if(${BUILD_DOCUMENTATION})
     # Get the version number of doxygen
     exec_program(${DOXYGEN} ARGS "--version" OUTPUT_VARIABLE ELASTIX_DOXYGEN_VERSION)
 
-    # Get date
-    if(UNIX OR CYGWIN)
-      exec_program("date '+%d-%m-%Y'" OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATE)
-    endif()
-    if(WIN32)
-      if(NOT CYGWIN AND NOT MINGW)
-        execute_process(COMMAND "${ELASTIX_DOXYGEN_DIR}/doxdate.bat"
-          OUTPUT_VARIABLE ELASTIX_DOXYGEN_DATETEMP)
-        string(REPLACE "/" "-" ELASTIX_DOXYGEN_DATE ${ELASTIX_DOXYGEN_DATETEMP})
-      endif()
-    endif()
+    # Get the date and time in RFC 2822 format.
+    string(TIMESTAMP ELASTIX_DOXYGEN_DATE "%a, %d %b %Y %H:%M:%S +0000" UTC)
 
     # Configure the doxygen configuration
     configure_file(
