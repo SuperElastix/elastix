@@ -166,9 +166,16 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
  */
 
 const ParameterObject::ParameterValueVectorType &
-ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType & key)
+ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType & key) const
 {
-  return GetMutableParameterMap(index)[key];
+  const auto & parameterMap = GetParameterMap(index);
+
+  if (const auto found = parameterMap.find(key); found != parameterMap.end())
+  {
+    return found->second;
+  }
+
+  itkExceptionMacro("There is no parameter named " << std::quoted(key) << " in parameter map #" << index << "!");
 }
 
 
