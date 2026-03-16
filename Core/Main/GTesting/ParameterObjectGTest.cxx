@@ -223,3 +223,32 @@ GTEST_TEST(ParameterObject, HasParameterWithoutIndex)
   EXPECT_FALSE(parameterObject.HasParameter("OnlyInMap2"));
   EXPECT_FALSE(parameterObject.HasParameter("NonExistentParameter"));
 }
+
+
+// Tests that ParameterObject member functions throw an `itk::ExceptionObject` when the index specified as function
+// argument is out of range. Note: HasParameter(index, key) does not throw, when the index is out of range.
+GTEST_TEST(ParameterObject, ThrowsExceptionWhenIndexIsOutOfRange)
+{
+  const std::string              parameterName = "parameterName";
+  const std::string              parameterValue = "value";
+  const ParameterValueVectorType parameterValues = { "value1", "value2", "value3" };
+  const ParameterMapType         parameterMap{ { parameterName, parameterValues } };
+
+  for (const unsigned int numberOfParameterMaps : { 0, 1 })
+  {
+    elx::DefaultConstruct<elx::ParameterObject> parameterObject{};
+
+    parameterObject.SetParameterMaps(ParameterMapVectorType(numberOfParameterMaps, parameterMap));
+
+    for (const unsigned int index :
+         { numberOfParameterMaps, numberOfParameterMaps + 1, std::numeric_limits<unsigned int>::max() })
+    {
+      EXPECT_THROW(parameterObject.GetParameterMap(index), itk::ExceptionObject);
+      EXPECT_THROW(parameterObject.SetParameterMap(index, parameterMap), itk::ExceptionObject);
+      EXPECT_THROW(parameterObject.SetParameter(index, parameterName, parameterValue), itk::ExceptionObject);
+      EXPECT_THROW(parameterObject.SetParameter(index, parameterName, parameterValues), itk::ExceptionObject);
+      EXPECT_THROW(parameterObject.GetParameter(index, parameterName), itk::ExceptionObject);
+      EXPECT_THROW(parameterObject.RemoveParameter(index, parameterName), itk::ExceptionObject);
+    }
+  }
+}
