@@ -50,7 +50,7 @@ ParameterObject::SetParameterMap(const ParameterMapType & parameterMap)
 void
 ParameterObject::SetParameterMap(const unsigned int index, const ParameterMapType & parameterMap)
 {
-  m_ParameterMaps[index] = parameterMap;
+  GetMutableParameterMap(index) = parameterMap;
 }
 
 
@@ -82,13 +82,30 @@ ParameterObject::AddParameterMap(const ParameterMapType & parameterMap)
 
 
 /**
+ * ********************* GetMutableParameterMap *********************
+ */
+
+ParameterObject::ParameterMapType &
+ParameterObject::GetMutableParameterMap(const unsigned int index)
+{
+  if (const auto numberOfParameterMaps = m_ParameterMaps.size(); index >= m_ParameterMaps.size())
+  {
+    itkExceptionMacro("The index (" << index << ") is out of range! It must be less than the number of parameter maps ("
+                                    << numberOfParameterMaps << ")");
+  }
+  return m_ParameterMaps[index];
+}
+
+
+/**
  * ********************* GetParameterMap *********************
  */
 
 const ParameterObject::ParameterMapType &
 ParameterObject::GetParameterMap(const unsigned int index) const
 {
-  return m_ParameterMaps[index];
+  // Let the const version call the non-const version, as suggested by Scott Meyers (Effective C++).
+  return const_cast<Self &>(*this).GetMutableParameterMap(index);
 }
 
 
@@ -99,7 +116,7 @@ ParameterObject::GetParameterMap(const unsigned int index) const
 void
 ParameterObject::SetParameter(const unsigned int index, const ParameterKeyType & key, const ParameterValueType & value)
 {
-  m_ParameterMaps[index][key] = { value };
+  GetMutableParameterMap(index)[key] = { value };
 }
 
 
@@ -112,7 +129,7 @@ ParameterObject::SetParameter(const unsigned int               index,
                               const ParameterKeyType &         key,
                               const ParameterValueVectorType & value)
 {
-  m_ParameterMaps[index][key] = value;
+  GetMutableParameterMap(index)[key] = value;
 }
 
 
@@ -151,7 +168,7 @@ ParameterObject::SetParameter(const ParameterKeyType & key, const ParameterValue
 const ParameterObject::ParameterValueVectorType &
 ParameterObject::GetParameter(const unsigned int index, const ParameterKeyType & key)
 {
-  return m_ParameterMaps[index][key];
+  return GetMutableParameterMap(index)[key];
 }
 
 
@@ -195,7 +212,7 @@ ParameterObject::HasParameter(const ParameterKeyType & key) const
 void
 ParameterObject::RemoveParameter(const unsigned int index, const ParameterKeyType & key)
 {
-  m_ParameterMaps[index].erase(key);
+  GetMutableParameterMap(index).erase(key);
 }
 
 

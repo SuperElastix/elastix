@@ -133,6 +133,9 @@ protected:
   PrintSelf(std::ostream & os, itk::Indent indent) const override;
 
 private:
+  ParameterMapType &
+  GetMutableParameterMap(const unsigned int index);
+
   ParameterMapVectorType m_ParameterMaps;
 };
 
