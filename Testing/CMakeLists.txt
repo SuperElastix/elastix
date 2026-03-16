@@ -450,7 +450,7 @@ if(ELASTIX_BUILD_EXECUTABLE)
     -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
     -out "${TestOutputDir}/OutputDirectoryPathContainingSpacesTest/path with spaces/name with spaces")
 
-  set(SPECIALCHARACTER_OUTPUTDIR "${TestOutputDir}/OutputDirectoryPathWithSpecialCharacters/speciäl/👌")
+  set(SPECIALCHARACTER_OUTPUTDIR "${TestOutputDir}/OutputDirectoryPathWithSpecialCharacters/German-äüößÄÖÜ Chinese-的一了是我/👌")
   file(MAKE_DIRECTORY "${SPECIALCHARACTER_OUTPUTDIR}")
   add_test(NAME SpecialCharactersOutputDirectoryPath
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
@@ -465,7 +465,7 @@ if(ELASTIX_BUILD_EXECUTABLE)
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
     -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
     -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
-    -p "${TestDataDir}/pärameters.2D.NC.translation.ASGD👍.txt"
+    -p "${TestDataDir}/Parameter filename with German äüößÄÖÜ and Chinese 的一了是我 chars👍.txt"
     -out "${SPECIALCHARPARAMFILE_OUTPUTDIR}")
 
   set(SPECIALCHARINITIALTRANSFORM_OUTPUTDIR "${TestOutputDir}/OutputDirectorySpecialCharInitialTransform")
@@ -475,7 +475,7 @@ if(ELASTIX_BUILD_EXECUTABLE)
     -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
     -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
     -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
-    -t0 "${TestDataDir}/transförmparameters.2D.NC.txt"
+    -t0 "${TestDataDir}/Transform parameter filename with German äüößÄÖÜ and Chinese 的一了是我 chars👍.txt"
     -out "${SPECIALCHARINITIALTRANSFORM_OUTPUTDIR}")
 endif()
 
