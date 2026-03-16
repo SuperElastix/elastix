@@ -87,7 +87,7 @@ public:
   void
   SetParameter(const ParameterKeyType & key, const ParameterValueVectorType & value);
   const ParameterValueVectorType &
-  GetParameter(const unsigned int index, const ParameterKeyType & key);
+  GetParameter(const unsigned int index, const ParameterKeyType & key) const;
   bool
   HasParameter(const unsigned int index, const ParameterKeyType & key) const;
   bool

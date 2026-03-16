@@ -252,3 +252,14 @@ GTEST_TEST(ParameterObject, ThrowsExceptionWhenIndexIsOutOfRange)
     }
   }
 }
+
+
+// Tests that `parameterObject.GetParameter(index, parameterName)` throw an `itk::ExceptionObject` when the parameter
+// name is not there, in the specified parameter map.
+GTEST_TEST(ParameterObject, GetParameterThrowsExceptionWhenParameterNameIsNotThere)
+{
+  elx::DefaultConstruct<elx::ParameterObject> parameterObject{};
+  parameterObject.SetParameterMaps(ParameterMapVectorType(1));
+
+  EXPECT_THROW(parameterObject.GetParameter(0, "nonExistingParameterName"), itk::ExceptionObject);
+}
