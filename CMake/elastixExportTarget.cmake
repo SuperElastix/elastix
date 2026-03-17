@@ -12,10 +12,10 @@ function(elastix_export_target tgt)
       type STREQUAL "SHARED_LIBRARY")
     if ("${tgt}" STREQUAL "elastix_lib")
       set_property(TARGET ${tgt} PROPERTY
-        OUTPUT_NAME elastix-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR})
+        OUTPUT_NAME elastix-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}.${ELASTIX_VERSION_PATCH})
     elseif ("${tgt}" STREQUAL "transformix_lib")
       set_property(TARGET ${tgt} PROPERTY
-        OUTPUT_NAME transformix-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR})
+        OUTPUT_NAME transformix-${ELASTIX_VERSION_MAJOR}.${ELASTIX_VERSION_MINOR}.${ELASTIX_VERSION_PATCH})
     else()
       if("${tgt}" MATCHES "elx.*")
         set_property(TARGET ${tgt} PROPERTY
