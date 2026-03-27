@@ -1,4 +1,4 @@
-[project]
+[workspace]
 name = "elastix"
 channels = ["conda-forge"]
 platforms = ["linux-64", "linux-aarch64", "win-64", "osx-64", "osx-arm64"]
