@@ -160,6 +160,9 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream
 
   /** Add debugging information. */
   os << "NumberOfMetrics: " << this->m_NumberOfMetrics << std::endl;
+  os << "NumberOfImageMetrics: " << this->m_NumberOfImageMetrics << std::endl;
+  os << "NumberOfTransformMetrics: " << this->m_NumberOfTransformMetrics << std::endl;
+  os << "NumberOfPointSetMetrics: " << this->m_NumberOfPointSetMetrics << std::endl;
   for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     os << "Metric " << i << ":\n";
@@ -275,11 +278,50 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
     this->SetNumberOfMetrics(pos + 1);
   }
 
-  if (metric != this->m_Metrics[pos])
+  SingleValuedCostFunctionPointer oldMetricPtr = this->m_Metrics[pos];
+  if (metric == oldMetricPtr)
   {
-    this->m_Metrics[pos] = metric;
-    this->Modified();
+    return;
   }
+
+  PointSetMetricType * testPtr1 = dynamic_cast<PointSetMetricType *>(metric);
+  TransformMetricType * testPtr2 = dynamic_cast<TransformMetricType *>(metric);
+
+  // Increase newly defined numberOfMetric counters
+  if (testPtr1)
+  {
+    this->m_NumberOfPointSetMetrics++;
+  }
+  else if (testPtr2)
+  {
+    this->m_NumberOfTransformMetrics++;
+  }
+  else
+  {
+    this->m_NumberOfImageMetrics++;
+  }
+
+  // if the metric has already been set, decrease the correct counter
+  if (oldMetricPtr != nullptr)
+  {
+    PointSetMetricType * oldTestPtr1 = dynamic_cast<PointSetMetricType *>(oldMetricPtr.GetPointer());
+    TransformMetricType * oldTestPtr2 = dynamic_cast<TransformMetricType *>(oldMetricPtr.GetPointer());
+    if (oldTestPtr1)
+    {
+      this->m_NumberOfPointSetMetrics--;
+    }
+    else if (oldTestPtr2)
+    {
+      this->m_NumberOfTransformMetrics--;
+    }
+    else
+    {
+      this->m_NumberOfImageMetrics--;
+    }
+  }
+
+  this->m_Metrics[pos] = metric;
+  this->Modified();
 
 } // end SetMetric()
 
