@@ -8,3 +8,8 @@ ADD_ELXCOMPONENT( AdaptiveStochasticVarianceReducedGradient OFF # OFF by default
  itkStandardStochasticVarianceReducedGradientDescentOptimizer.cxx
  itkStochasticVarianceReducedGradientDescentOptimizer.cxx
 )
+
+if(USE_AdaptiveStochasticVarianceReducedGradient AND ELASTIX_USE_EIGEN)
+  target_include_directories(AdaptiveStochasticVarianceReducedGradient PRIVATE ${EIGEN3_INCLUDE_DIR})
+  target_compile_definitions(AdaptiveStochasticVarianceReducedGradient PRIVATE ELASTIX_USE_EIGEN)
+endif()

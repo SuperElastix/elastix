@@ -5,13 +5,16 @@ if(ELASTIX_USE_OPENCL)
     elxOpenCLMovingGenericPyramid.hxx
     elxOpenCLMovingGenericPyramid.cxx)
 
-  include_directories(../MovingGenericPyramid)
-
   if(USE_OpenCLMovingGenericPyramid)
+    target_include_directories(OpenCLMovingGenericPyramid PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/../MovingGenericPyramid)
+    target_include_directories(OpenCLMovingGenericPyramid BEFORE PRIVATE
+      ${elxCommon_OpenCL_INCLUDE_DIRECTORIES}
+      ${OPENCL_KERNELS_DEBUG_PATH})
     target_link_libraries(OpenCLMovingGenericPyramid elxOpenCL)
   endif()
 else()
-  # If the user set USE_OpenCLFixedGenericPyramid ON, but ELASTIX_USE_OPENCL was OFF,
+  # If the user set USE_OpenCLMovingGenericPyramid ON, but ELASTIX_USE_OPENCL was OFF,
   # then issue a warning.
   if(USE_OpenCLMovingGenericPyramid)
     message(WARNING "You selected to compile OpenCLMovingGenericPyramid, "

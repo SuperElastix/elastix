@@ -217,3 +217,40 @@ endif()
 target_link_libraries(elxCommon
   ${ITK_LIBRARIES}
 )
+
+target_include_directories(elxCommon PUBLIC
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Common>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Common/CostFunctions>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Common/ImageSamplers>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Common/LineSearchOptimizers>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Common/Transforms>
+  # Note: elxTransformIO.h (a public header in Common/Transforms) includes
+  # ExternalTransform/elxAdvancedTransformAdapter.h from Components/Transforms.
+  # This is a circular dependency but must be PUBLIC since downstream targets
+  # also include elxTransformIO.h.
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Components/Transforms>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/CostFunctions>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/ImageSamplers>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/LineSearchOptimizers>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/Transforms>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Components/Transforms>
+)
+
+# Note: elxCommon sources have circular dependencies on Core and Components
+# headers (e.g. elxTransformFactoryRegistration.cxx includes Component transform
+# headers which in turn include Core headers, and elxTransformIO.h includes
+# ExternalTransform/elxAdvancedTransformAdapter.h from Components/Transforms).
+# These cannot be expressed as target_link_libraries without creating cycles,
+# so they are added as PRIVATE include directories.
+target_include_directories(elxCommon PRIVATE
+  ${elastix_SOURCE_DIR}/Core
+  ${elastix_SOURCE_DIR}/Core/Kernel
+  ${elastix_SOURCE_DIR}/Core/Install
+  ${elastix_SOURCE_DIR}/Core/ComponentBaseClasses
+  ${elastix_SOURCE_DIR}/Core/Configuration
+  ${elastix_SOURCE_DIR}/Core/Main
+  ${elastix_SOURCE_DIR}/Common/ParameterFileParser
+  ${elastix_SOURCE_DIR}/Common/MevisDicomTiff
+  ${elastix_BINARY_DIR}
+)

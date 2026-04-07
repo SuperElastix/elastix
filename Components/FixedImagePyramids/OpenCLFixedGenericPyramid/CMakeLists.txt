@@ -5,10 +5,12 @@ if(ELASTIX_USE_OPENCL)
     elxOpenCLFixedGenericPyramid.hxx
     elxOpenCLFixedGenericPyramid.cxx)
 
-  include_directories(
-  ../FixedGenericPyramid)
-
   if(USE_OpenCLFixedGenericPyramid)
+    target_include_directories(OpenCLFixedGenericPyramid PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/../FixedGenericPyramid)
+    target_include_directories(OpenCLFixedGenericPyramid BEFORE PRIVATE
+      ${elxCommon_OpenCL_INCLUDE_DIRECTORIES}
+      ${OPENCL_KERNELS_DEBUG_PATH})
     target_link_libraries(OpenCLFixedGenericPyramid elxOpenCL)
   endif()
 else()

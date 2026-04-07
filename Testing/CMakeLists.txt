@@ -71,12 +71,13 @@ macro(elx_add_test_core executable_name source_name test_name group)
     # Link against other libraries.
     target_link_libraries(${executable_name}
       param               # some test use the CommandLineArgumentParser
+      elxCommon            # provides Common headers (Transforms, CostFunctions, etc.)
       ${mevisdcmtifflib}  # is empty if not selected in CMake
       ${ITK_LIBRARIES}
     )
 
     if(ELASTIX_USE_OPENCL)
-      include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+      target_include_directories(${executable_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
       target_link_libraries(${executable_name} elxOpenCL)
     endif()
 
@@ -513,6 +514,10 @@ elx_add_test(ThinPlateSplineTransformPerformanceTest "" "Common"
 elx_add_test(ThinPlateSplineTransformTest "" "Common"
   ${TestDataDir}/parameters_TPSTransformTest.txt)
 elx_add_test(AdvanceOneStepParallellizationTest "" "Common")
+if(ELASTIX_USE_EIGEN)
+  target_include_directories(itkAdvanceOneStepParallellizationTest PRIVATE ${EIGEN3_INCLUDE_DIR})
+  target_compile_definitions(itkAdvanceOneStepParallellizationTest PRIVATE ELASTIX_USE_EIGEN)
+endif()
 elx_add_test(AccumulateDerivativesParallellizationTest "" "Common")
 elx_add_test(BSplineTransformPointPerformanceTest "" "Common"
   ${TestDataDir}/parameters_AdvancedBSplineDeformableTransformTest.txt)
