@@ -129,13 +129,12 @@ if(ELASTIX_USE_OPENCL)
   endif()
 
   # Include the OpenCL include directories to elastix
-  include_directories(${OPENCL_INCLUDE_DIRS})
+  # Note: OPENCL_INCLUDE_DIRS and -DELASTIX_USE_OPENCL are set as PUBLIC
+  # target properties on elxOpenCL (Common/OpenCL/CMakeLists.txt) and
+  # propagate transitively to all targets that link elxOpenCL.
 
   # Add some useful macro's
   include(elastixOpenCL)
-
-  # Add definition for the OpenCL
-  add_definitions(-DELASTIX_USE_OPENCL)
 endif()
 
 #---------------------------------------------------------------------
@@ -145,8 +144,6 @@ option(ELASTIX_USE_EIGEN "Use Eigen library." OFF)
 
 if(ELASTIX_USE_EIGEN)
   find_package(Eigen3 REQUIRED)
-  include_directories(${EIGEN3_INCLUDE_DIR})
-  add_definitions(-DELASTIX_USE_EIGEN)
 endif()
 
 #---------------------------------------------------------------------
@@ -235,6 +232,10 @@ endif()
 
 #---------------------------------------------------------------------
 # Include directories
+# Note: Target-based include directories are set in the individual
+# library CMakeLists.txt files using target_include_directories().
+# The variables below are kept for ElastixConfig.cmake generation
+# to support external projects that use the old-style include_directories().
 
 set(elxCommon_INCLUDE_DIRECTORIES
   ${elastix_SOURCE_DIR}/Common
@@ -284,15 +285,7 @@ set(elxINCLUDE_DIRECTORIES
   ${ELASTIX_USER_COMPONENT_DIRS}
 )
 
-include_directories(${elxINCLUDE_DIRECTORIES})
-
-# include the OpenCL directories
-# The key-word BEFORE is important here, because the elastix distribution
-# contains some files with the same name as in the ITK distribution.
-# Some bugs were fixed and features added. When these are contributed back
-# to the ITK the BEFORE keyword is not needed anymore.
 if(ELASTIX_USE_OPENCL)
-  include_directories(BEFORE ${elxCommon_OpenCL_INCLUDE_DIRECTORIES})
   list(APPEND elxINCLUDE_DIRECTORIES ${elxCommon_OpenCL_INCLUDE_DIRECTORIES})
 endif()
 

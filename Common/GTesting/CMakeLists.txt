@@ -50,4 +50,11 @@ else()
     )
 endif()
 
+target_include_directories(CommonGTest PRIVATE
+  ${elastix_SOURCE_DIR}/Components/Metrics
+  ${elastix_SOURCE_DIR}/Components/ResampleInterpolators
+  ${elastix_SOURCE_DIR}/Components/Resamplers
+  ${elastix_SOURCE_DIR}/Components/Transforms
+)
+
 add_test(NAME CommonGTest_test COMMAND CommonGTest)

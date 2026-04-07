@@ -161,6 +161,23 @@ target_link_libraries(elxCore
 target_include_directories(elxCore PRIVATE
   ${ITK_CMAKE_DIR}/../Modules/ThirdParty/DoubleConversion/src/double-conversion)
 
+target_include_directories(elxCore PUBLIC
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Core>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Core/Install>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Core/Kernel>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Core/ComponentBaseClasses>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Core/Configuration>
+  $<BUILD_INTERFACE:${elastix_SOURCE_DIR}/Core/Main>
+  $<BUILD_INTERFACE:${elastix_BINARY_DIR}>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Core>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Core/Install>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Core/Kernel>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Core/ComponentBaseClasses>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Core/Configuration>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Core/Main>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}>
+)
+
 elastix_export_target(elxCommon)
 elastix_export_target(param)
 

@@ -61,6 +61,27 @@ target_link_libraries(elxOpenCL
   ${OPENCL_LIBRARIES}
 )
 
+target_include_directories(elxOpenCL PUBLIC ${OPENCL_INCLUDE_DIRS})
+target_compile_definitions(elxOpenCL PUBLIC ELASTIX_USE_OPENCL)
+
+# The key-word BEFORE is important here, because the elastix distribution
+# contains some files with the same name as in the ITK distribution.
+# Some bugs were fixed and features added. When these are contributed back
+# to the ITK the BEFORE keyword is not needed anymore.
+target_include_directories(elxOpenCL BEFORE PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Factories>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/ITKimprovements>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Filters>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Kernels>
+  $<BUILD_INTERFACE:${OPENCL_KERNELS_DEBUG_PATH}>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/OpenCL>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/OpenCL/Factories>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/OpenCL/ITKimprovements>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/OpenCL/Filters>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/OpenCL/Kernels>
+)
+
 # Group in IDE's like Visual Studio
 set_property(TARGET elxOpenCL PROPERTY FOLDER "libraries")
 

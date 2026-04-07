@@ -15,12 +15,6 @@ configure_file(
   ${elastix_BINARY_DIR}/ANN/ANN.h
   @ONLY)
 
-# Include these directories to look for header files.
-include_directories(
-  ${ANN_SOURCE_DIR}/include
-  ${ANN_SOURCE_DIR}/src
-)
-
 # Sources of non-templated classes.
 set(ANN_SRCS
   src/ANN.cpp
@@ -41,6 +35,15 @@ set(ANN_SRCS
 
 # Create the ANNlib library
 add_library(ANNlib SHARED ${ANN_SRCS})
+
+# Include these directories to look for header files.
+target_include_directories(ANNlib
+  PUBLIC
+    $<BUILD_INTERFACE:${ANN_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${elastix_BINARY_DIR}>
+  PRIVATE
+    ${ANN_SOURCE_DIR}/src
+)
 
 include(GenerateExportHeader)
 generate_export_header(ANNlib

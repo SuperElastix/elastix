@@ -25,6 +25,9 @@ if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
 endif()
 
 target_link_libraries(mevisdcmtiff ${ITK_LIBRARIES})
+target_include_directories(mevisdcmtiff PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/MevisDicomTiff>)
 
 # Group in IDE's like Visual Studio
 set_property(TARGET mevisdcmtiff PROPERTY FOLDER "libraries")
