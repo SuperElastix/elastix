@@ -217,7 +217,7 @@ public:
    * Warning: use either the SetParameters() or SetCoefficientImages()
    * API. Mixing the two modes may results in unexpected results.
    */
-  void
+  virtual void
   SetCoefficientImages(ImagePointer images[]);
 
   /** Typedefs for specifying the extend to the grid. */
