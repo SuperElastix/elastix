@@ -7,7 +7,7 @@ if(ELASTIX_USE_OPENCL)
 
   include_directories(../MovingGenericPyramid)
 
-  if(USE_OpenCLMovingdGenericPyramid)
+  if(USE_OpenCLMovingGenericPyramid)
     target_link_libraries(OpenCLMovingGenericPyramid elxOpenCL)
   endif()
 else()
