@@ -27,7 +27,7 @@
 #include "itkGPUResampleImageFilterFactory.h"
 #include "itkGPUShrinkImageFilterFactory.h"
 
-#include "itkOpenCLContextScopeGuard.h"
+#include "../ITKimprovements/itkOpenCLContextScopeGuard.h"
 
 // Interpolate includes
 #include "itkGPULinearInterpolateImageFunctionFactory.h"

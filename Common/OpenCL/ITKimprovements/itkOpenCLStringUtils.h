@@ -18,7 +18,7 @@
 #ifndef itkOpenCLStringUtils_h
 #define itkOpenCLStringUtils_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 
 #include <list>
 #include <string>

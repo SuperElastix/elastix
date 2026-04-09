@@ -15,9 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLPlatform.h"
-#include "itkOpenCLExtension.h"
-#include "itkOpenCLStringUtils.h"
+#include "../ITKimprovements/itkOpenCLPlatform.h"
+#include "../ITKimprovements/itkOpenCLExtension.h"
+#include "../ITKimprovements/itkOpenCLStringUtils.h"
 
 #include <vector>
 #include <iostream>

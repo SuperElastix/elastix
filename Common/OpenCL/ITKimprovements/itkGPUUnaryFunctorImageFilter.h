@@ -35,8 +35,8 @@
 #ifndef itkGPUUnaryFunctorImageFilter_h
 #define itkGPUUnaryFunctorImageFilter_h
 
-#include "itkGPUFunctorBase.h"
-#include "itkGPUInPlaceImageFilter.h"
+#include "../ITKimprovements/itkGPUFunctorBase.h"
+#include "../ITKimprovements/itkGPUInPlaceImageFilter.h"
 #include "itkUnaryFunctorImageFilter.h"
 
 namespace itk

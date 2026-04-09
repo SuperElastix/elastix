@@ -15,9 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLImage.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLBuffer.h"
+#include "../ITKimprovements/itkOpenCLImage.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLBuffer.h"
 
 namespace itk
 {

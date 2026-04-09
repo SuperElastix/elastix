@@ -18,7 +18,7 @@
 #ifndef itkGPUTransformBase_h
 #define itkGPUTransformBase_h
 
-#include "itkGPUDataManager.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
 
 namespace itk
 {

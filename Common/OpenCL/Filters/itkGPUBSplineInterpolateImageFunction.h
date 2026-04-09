@@ -19,8 +19,8 @@
 #define itkGPUBSplineInterpolateImageFunction_h
 
 #include "itkGPUInterpolateImageFunction.h"
-#include "itkGPUDataManager.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
+#include "../ITKimprovements/itkGPUImage.h"
 
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkVersion.h"

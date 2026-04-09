@@ -18,8 +18,8 @@
 #ifndef itkOpenCLDevice_h
 #define itkOpenCLDevice_h
 
-#include "itkOpenCLPlatform.h"
-#include "itkOpenCLSize.h"
+#include "../ITKimprovements/itkOpenCLPlatform.h"
+#include "../ITKimprovements/itkOpenCLSize.h"
 
 namespace itk
 {

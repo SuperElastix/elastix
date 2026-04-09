@@ -32,9 +32,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLKernelManager.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLMacro.h"
+#include "../ITKimprovements/itkOpenCLKernelManager.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLMacro.h"
 
 namespace itk
 {

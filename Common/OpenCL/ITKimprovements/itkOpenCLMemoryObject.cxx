@@ -15,9 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLMemoryObject.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLMacro.h"
+#include "../ITKimprovements/itkOpenCLMemoryObject.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLMacro.h"
 
 namespace itk
 {

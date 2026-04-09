@@ -18,7 +18,7 @@
 #ifndef itkOpenCLProfilingTimeProbe_h
 #define itkOpenCLProfilingTimeProbe_h
 
-#include "itkOpenCLExport.h"
+#include "../ITKimprovements/itkOpenCLExport.h"
 #include "itkTimeProbe.h"
 
 #include <string>

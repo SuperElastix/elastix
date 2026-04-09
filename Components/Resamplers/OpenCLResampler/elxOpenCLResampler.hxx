@@ -19,7 +19,7 @@
 #define elxOpenCLResampler_hxx
 
 #include "elxOpenCLResampler.h"
-#include "itkOpenCLLogger.h"
+#include "../ITKimprovements/itkOpenCLLogger.h"
 
 namespace elastix
 {

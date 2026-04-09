@@ -32,7 +32,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLUtil.h"
+#include "../ITKimprovements/itkOpenCLUtil.h"
 #include <itkVector.h>
 
 namespace itk

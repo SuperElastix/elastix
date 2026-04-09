@@ -19,9 +19,9 @@
 #define itkGPURecursiveGaussianImageFilter_hxx
 
 #include "itkGPURecursiveGaussianImageFilter.h"
-#include "itkOpenCLUtil.h"
-#include "itkOpenCLEvent.h"
-#include "itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLUtil.h"
+#include "../ITKimprovements/itkOpenCLEvent.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
 
 namespace itk
 {

@@ -18,13 +18,13 @@
 #ifndef itkOpenCLKernel_h
 #define itkOpenCLKernel_h
 
-#include "itkOpenCL.h"
-#include "itkOpenCLGlobal.h"
-#include "itkOpenCLEvent.h"
-#include "itkOpenCLSize.h"
-#include "itkOpenCLMemoryObject.h"
-#include "itkOpenCLSampler.h"
-#include "itkOpenCLVector.h"
+#include "../ITKimprovements/itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCLGlobal.h"
+#include "../ITKimprovements/itkOpenCLEvent.h"
+#include "../ITKimprovements/itkOpenCLSize.h"
+#include "../ITKimprovements/itkOpenCLMemoryObject.h"
+#include "../ITKimprovements/itkOpenCLSampler.h"
+#include "../ITKimprovements/itkOpenCLVector.h"
 
 #include "itkIndex.h"
 #include "itkPoint.h"

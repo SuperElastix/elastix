@@ -23,7 +23,7 @@
 
 // GPU includes
 #include "itkGPUImageFactory.h"
-#include "itkOpenCLLogger.h"
+#include "../ITKimprovements/itkOpenCLLogger.h"
 
 // GPU factory includes
 #include "itkGPURecursiveGaussianImageFilterFactory.h"

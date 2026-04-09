@@ -19,7 +19,7 @@
 #define itkGPUImageFactory_h
 
 #include "itkGPUObjectFactoryBase.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUImage.h"
 
 namespace itk
 {

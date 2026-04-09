@@ -26,7 +26,7 @@
 #define itkOpenCLMacro_h
 
 #include "itkMacro.h"
-#include "itkOpenCLExport.h"
+#include "../ITKimprovements/itkOpenCLExport.h"
 
 #include <string>
 #include <sstream>

@@ -18,10 +18,10 @@
 #ifndef itkOpenCLImage_h
 #define itkOpenCLImage_h
 
-#include "itkOpenCLMemoryObject.h"
-#include "itkOpenCLImageFormat.h"
-#include "itkOpenCLEvent.h"
-#include "itkOpenCLSize.h"
+#include "../ITKimprovements/itkOpenCLMemoryObject.h"
+#include "../ITKimprovements/itkOpenCLImageFormat.h"
+#include "../ITKimprovements/itkOpenCLEvent.h"
+#include "../ITKimprovements/itkOpenCLSize.h"
 
 namespace itk
 {

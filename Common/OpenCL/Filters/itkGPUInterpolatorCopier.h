@@ -19,7 +19,7 @@
 #define itkGPUInterpolatorCopier_h
 
 #include "itkInterpolateImageFunction.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUImage.h"
 
 namespace itk
 {

@@ -18,7 +18,7 @@
 #ifndef itkOpenCLUserEvent_h
 #define itkOpenCLUserEvent_h
 
-#include "itkOpenCLEvent.h"
+#include "../ITKimprovements/itkOpenCLEvent.h"
 
 namespace itk
 {

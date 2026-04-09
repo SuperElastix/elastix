@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLCommandQueue.h"
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLCommandQueue.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 
 namespace itk
 {

@@ -17,7 +17,7 @@
  *=========================================================================*/
 #include "itkTestHelper.h"
 #include "itkOpenCLBufferTest.h"
-#include "itkOpenCLBuffer.h"
+#include "../ITKimprovements/itkOpenCLBuffer.h"
 #include <algorithm>
 
 //------------------------------------------------------------------------------

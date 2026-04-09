@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLLogger.h"
+#include "../ITKimprovements/itkOpenCLLogger.h"
 
 #include "itkLogger.h"
 #include <sstream>

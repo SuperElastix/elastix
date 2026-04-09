@@ -36,7 +36,7 @@
 #define itkGPUInPlaceImageFilter_h
 
 #include "itkInPlaceImageFilter.h"
-#include "itkGPUImageToImageFilter.h"
+#include "../ITKimprovements/itkGPUImageToImageFilter.h"
 
 namespace itk
 {

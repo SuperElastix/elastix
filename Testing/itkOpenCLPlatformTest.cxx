@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 #include "itkTestHelper.h"
-#include "itkOpenCLPlatform.h"
+#include "../ITKimprovements/itkOpenCLPlatform.h"
 
 int
 main()

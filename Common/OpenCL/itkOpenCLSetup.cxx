@@ -17,8 +17,8 @@
  *=========================================================================*/
 #include "itkOpenCLSetup.h"
 
-#include "itkOpenCLLogger.h"
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLLogger.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 #include <sstream>
 
 namespace itk

@@ -36,7 +36,7 @@
 #define itkGPUImage_h
 
 #include "itkImage.h"
-#include "itkGPUImageDataManager.h"
+#include "../ITKimprovements/itkGPUImageDataManager.h"
 #include "itkVersion.h"
 #include "itkObjectFactoryBase.h"
 

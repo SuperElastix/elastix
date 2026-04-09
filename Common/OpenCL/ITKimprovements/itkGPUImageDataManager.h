@@ -39,8 +39,8 @@
 #include <itkTimeStamp.h>
 #include <itkLightObject.h>
 #include <itkObjectFactory.h>
-#include "itkGPUImage.h"
-#include "itkGPUDataManager.h"
+#include "../ITKimprovements/itkGPUImage.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
 
 namespace itk
 {

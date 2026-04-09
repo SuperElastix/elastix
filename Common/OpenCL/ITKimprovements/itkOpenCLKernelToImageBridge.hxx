@@ -18,8 +18,8 @@
 #ifndef itkOpenCLKernelToImageBridge_hxx
 #define itkOpenCLKernelToImageBridge_hxx
 
-#include "itkOpenCLKernelToImageBridge.h"
-#include "itkOpenCLMacro.h"
+#include "../ITKimprovements/itkOpenCLKernelToImageBridge.h"
+#include "../ITKimprovements/itkOpenCLMacro.h"
 
 // begin of ITKOpenCLKernelToImageBridge namespace
 namespace ITKOpenCLKernelToImageBridge

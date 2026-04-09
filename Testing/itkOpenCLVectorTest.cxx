@@ -17,7 +17,7 @@
  *=========================================================================*/
 #include "itkTestHelper.h"
 #include "itkOpenCLVectorTest.h"
-#include "itkOpenCLVector.h"
+#include "../ITKimprovements/itkOpenCLVector.h"
 #include <algorithm>
 
 //------------------------------------------------------------------------------

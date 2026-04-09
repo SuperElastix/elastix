@@ -18,7 +18,7 @@
 #include "itkTestHelper.h"
 #include "itkOpenCLEventTest.h"
 
-#include "itkOpenCLContextScopeGuard.h"
+#include "../ITKimprovements/itkOpenCLContextScopeGuard.h"
 
 int
 main()

@@ -19,7 +19,7 @@
 #define itkGPURecursiveGaussianImageFilter_h
 
 #include "itkRecursiveGaussianImageFilter.h"
-#include "itkGPUInPlaceImageFilter.h"
+#include "../ITKimprovements/itkGPUInPlaceImageFilter.h"
 
 namespace itk
 {

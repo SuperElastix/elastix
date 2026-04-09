@@ -20,7 +20,7 @@
 // GPU include files
 #include "itkGPURecursiveGaussianImageFilter.h"
 
-#include "itkOpenCLContextScopeGuard.h"
+#include "../ITKimprovements/itkOpenCLContextScopeGuard.h"
 
 // ITK include files
 #include "itkImageFileReader.h"

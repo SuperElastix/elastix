@@ -18,7 +18,7 @@
 #ifndef itkOpenCLVectorBase_h
 #define itkOpenCLVectorBase_h
 
-#include "itkOpenCLMemoryObject.h"
+#include "../ITKimprovements/itkOpenCLMemoryObject.h"
 
 namespace itk
 {

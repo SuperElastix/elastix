@@ -35,8 +35,8 @@
 #ifndef itkGPUImageToImageFilter_hxx
 #define itkGPUImageToImageFilter_hxx
 
-#include "itkGPUImageToImageFilter.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUImageToImageFilter.h"
+#include "../ITKimprovements/itkGPUImage.h"
 
 namespace itk
 {

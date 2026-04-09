@@ -18,8 +18,8 @@
 #ifndef itkOpenCLEvent_h
 #define itkOpenCLEvent_h
 
-#include "itkOpenCL.h"
-#include "itkOpenCLExtension.h"
+#include "../ITKimprovements/itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCLExtension.h"
 #include <ostream>
 
 namespace itk

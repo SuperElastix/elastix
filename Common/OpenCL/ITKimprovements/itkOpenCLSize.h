@@ -18,7 +18,7 @@
 #ifndef itkOpenCLWorkSize_h
 #define itkOpenCLWorkSize_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 #include "itkSize.h"
 #include <string>
 

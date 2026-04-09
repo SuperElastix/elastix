@@ -22,7 +22,7 @@
 #include "itkVersion.h"
 
 #include "itkGPUInterpolateImageFunction.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUImage.h"
 
 namespace itk
 {

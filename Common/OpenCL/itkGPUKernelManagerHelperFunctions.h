@@ -26,11 +26,11 @@
 #ifndef itkGPUKernelManagerHelperFunctions_h
 #define itkGPUKernelManagerHelperFunctions_h
 
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUImage.h"
 
-#include "itkOpenCLKernelManager.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLOstreamSupport.h"
+#include "../ITKimprovements/itkOpenCLKernelManager.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLOstreamSupport.h"
 #include <string>
 
 namespace itk

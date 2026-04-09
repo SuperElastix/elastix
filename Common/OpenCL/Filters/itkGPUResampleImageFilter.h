@@ -20,7 +20,7 @@
 
 #include "itkResampleImageFilter.h"
 
-#include "itkGPUImageToImageFilter.h"
+#include "../ITKimprovements/itkGPUImageToImageFilter.h"
 #include "itkGPUInterpolateImageFunction.h"
 #include "itkGPUBSplineInterpolateImageFunction.h"
 #include "itkGPUBSplineBaseTransform.h"

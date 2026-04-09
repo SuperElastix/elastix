@@ -18,7 +18,7 @@
 #ifndef itkOpenCLEventList_h
 #define itkOpenCLEventList_h
 
-#include "itkOpenCLEvent.h"
+#include "../ITKimprovements/itkOpenCLEvent.h"
 #include <vector>
 
 namespace itk

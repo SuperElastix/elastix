@@ -19,7 +19,7 @@
 #define itkGPUShrinkImageFilter_hxx
 
 #include "itkGPUShrinkImageFilter.h"
-#include "itkOpenCLUtil.h"
+#include "../ITKimprovements/itkOpenCLUtil.h"
 
 namespace itk
 {

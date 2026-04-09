@@ -32,7 +32,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkGPUDataManager.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
 
 namespace itk
 {

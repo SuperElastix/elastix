@@ -15,9 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLDevice.h"
-#include "itkOpenCLExtension.h"
-#include "itkOpenCLStringUtils.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLExtension.h"
+#include "../ITKimprovements/itkOpenCLStringUtils.h"
 
 #include <vector>
 #include <set>

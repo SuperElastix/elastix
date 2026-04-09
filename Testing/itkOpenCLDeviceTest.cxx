@@ -15,9 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLDevice.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLProgram.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLProgram.h"
 
 int
 main()

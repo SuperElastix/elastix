@@ -43,9 +43,9 @@
 #include "itkImageToImageFilter.h"
 
 // OpenCL includes
-#include "itkOpenCLContext.h"
-#include "itkOpenCLDevice.h"
-#include "itkOpenCLLogger.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLLogger.h"
 #include "itkOpenCLKernels.h"
 
 #include "itkTestOutputWindow.h"

@@ -18,8 +18,8 @@
 #ifndef itkOpenCLVector_h
 #define itkOpenCLVector_h
 
-#include "itkOpenCLVectorBase.h"
-#include "itkOpenCLBuffer.h"
+#include "../ITKimprovements/itkOpenCLVectorBase.h"
+#include "../ITKimprovements/itkOpenCLBuffer.h"
 #include "itkMacro.h"
 
 namespace itk

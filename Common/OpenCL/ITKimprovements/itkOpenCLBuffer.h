@@ -35,8 +35,8 @@
 #ifndef itkOpenCLBuffer_h
 #define itkOpenCLBuffer_h
 
-#include "itkOpenCLMemoryObject.h"
-#include "itkOpenCLEvent.h"
+#include "../ITKimprovements/itkOpenCLMemoryObject.h"
+#include "../ITKimprovements/itkOpenCLEvent.h"
 
 namespace itk
 {

@@ -19,7 +19,7 @@
 #define itkGPUInterpolateImageFunction_hxx
 
 #include "itkGPUInterpolateImageFunction.h"
-#include "itkOpenCLOstreamSupport.h"
+#include "../ITKimprovements/itkOpenCLOstreamSupport.h"
 
 // begin of unnamed namespace
 namespace

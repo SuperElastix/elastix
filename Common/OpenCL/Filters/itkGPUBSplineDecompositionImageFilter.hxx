@@ -20,8 +20,8 @@
 
 #include "itkGPUBSplineDecompositionImageFilter.h"
 #include "itkGPUCastImageFilter.h"
-#include "itkOpenCLUtil.h"
-#include "itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLUtil.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
 
 namespace itk
 {

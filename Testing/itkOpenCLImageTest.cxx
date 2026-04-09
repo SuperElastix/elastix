@@ -17,7 +17,7 @@
  *=========================================================================*/
 #include "itkTestHelper.h"
 #include "itkOpenCLImageTest.h"
-#include "itkOpenCLImage.h"
+#include "../ITKimprovements/itkOpenCLImage.h"
 #include <algorithm>
 
 int
