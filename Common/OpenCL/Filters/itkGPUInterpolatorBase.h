@@ -18,7 +18,7 @@
 #ifndef itkGPUInterpolatorBase_h
 #define itkGPUInterpolatorBase_h
 
-#include "itkGPUDataManager.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
 
 namespace itk
 {

@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLImageFormat.h"
+#include "../ITKimprovements/itkOpenCLImageFormat.h"
 
 namespace itk
 {

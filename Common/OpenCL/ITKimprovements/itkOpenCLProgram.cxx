@@ -15,10 +15,10 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLProgram.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLProfilingTimeProbe.h"
-#include "itkOpenCLMacro.h"
+#include "../ITKimprovements/itkOpenCLProgram.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLProfilingTimeProbe.h"
+#include "../ITKimprovements/itkOpenCLMacro.h"
 
 // begin of OpenCLProgramSupport namespace
 namespace OpenCLProgramSupport

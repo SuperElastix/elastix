@@ -17,7 +17,7 @@
  *=========================================================================*/
 #include "itkTestHelper.h"
 #include "itkOpenCLKernelToImageBridgeTest.h"
-#include "itkOpenCLKernelToImageBridge.h"
+#include "../ITKimprovements/itkOpenCLKernelToImageBridge.h"
 
 int
 main()

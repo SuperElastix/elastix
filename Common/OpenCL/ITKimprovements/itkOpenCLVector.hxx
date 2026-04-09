@@ -18,7 +18,7 @@
 #ifndef itkOpenCLVector_hxx
 #define itkOpenCLVector_hxx
 
-#include "itkOpenCLVector.h"
+#include "../ITKimprovements/itkOpenCLVector.h"
 
 namespace itk
 {

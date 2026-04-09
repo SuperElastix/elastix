@@ -18,7 +18,7 @@
 #ifndef itkOpenCLExtension_h
 #define itkOpenCLExtension_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 
 // This file provides standard OpenCL definitions
 // that may not be present in the system headers.

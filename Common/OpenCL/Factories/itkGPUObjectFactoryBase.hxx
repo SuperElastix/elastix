@@ -19,7 +19,7 @@
 #define itkGPUObjectFactoryBase_hxx
 
 #include "itkGPUObjectFactoryBase.h"
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 
 namespace itk
 {

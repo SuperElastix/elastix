@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLSampler.h"
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLSampler.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 
 namespace itk
 {

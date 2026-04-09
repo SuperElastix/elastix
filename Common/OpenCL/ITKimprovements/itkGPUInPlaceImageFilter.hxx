@@ -35,7 +35,7 @@
 #ifndef itkGPUInPlaceImageFilter_hxx
 #define itkGPUInPlaceImageFilter_hxx
 
-#include "itkGPUInPlaceImageFilter.h"
+#include "../ITKimprovements/itkGPUInPlaceImageFilter.h"
 
 namespace itk
 {

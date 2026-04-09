@@ -20,8 +20,8 @@
 
 #include "itkShrinkImageFilter.h"
 
-#include "itkGPUImageToImageFilter.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUImageToImageFilter.h"
+#include "../ITKimprovements/itkGPUImage.h"
 #include "itkVersion.h"
 
 namespace itk

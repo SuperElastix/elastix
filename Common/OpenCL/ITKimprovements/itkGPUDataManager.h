@@ -38,7 +38,7 @@
 #include "itkObject.h"
 #include "itkDataObject.h"
 #include "itkObjectFactory.h"
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 #include <mutex>
 
 namespace itk

@@ -15,10 +15,10 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLBuffer.h"
-#include "itkOpenCLImage.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLExtension.h"
+#include "../ITKimprovements/itkOpenCLBuffer.h"
+#include "../ITKimprovements/itkOpenCLImage.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLExtension.h"
 
 namespace itk
 {

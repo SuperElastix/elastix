@@ -35,7 +35,7 @@
 #ifndef itkGPUFunctorBase_h
 #define itkGPUFunctorBase_h
 
-#include "itkOpenCLKernelManager.h"
+#include "../ITKimprovements/itkOpenCLKernelManager.h"
 
 namespace itk
 {

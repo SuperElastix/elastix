@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLStringUtils.h"
+#include "../ITKimprovements/itkOpenCLStringUtils.h"
 
 int
 main(int argc, char * argv[])

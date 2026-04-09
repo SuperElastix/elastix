@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 #include "itkTestHelper.h"
-#include "itkOpenCLSampler.h"
+#include "../ITKimprovements/itkOpenCLSampler.h"
 
 int
 main()

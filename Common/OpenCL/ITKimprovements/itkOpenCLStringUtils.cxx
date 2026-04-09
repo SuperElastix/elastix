@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLStringUtils.h"
+#include "../ITKimprovements/itkOpenCLStringUtils.h"
 
 #include <iosfwd>
 #include <sstream>

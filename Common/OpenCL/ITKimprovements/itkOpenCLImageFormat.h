@@ -18,7 +18,7 @@
 #ifndef itkOpenCLImageFormat_h
 #define itkOpenCLImageFormat_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 #include <ostream>
 
 namespace itk

@@ -15,12 +15,12 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLKernel.h"
-#include "itkOpenCLProgram.h"
-#include "itkOpenCLBuffer.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLExtension.h"
-#include "itkOpenCLMacro.h"
+#include "../ITKimprovements/itkOpenCLKernel.h"
+#include "../ITKimprovements/itkOpenCLProgram.h"
+#include "../ITKimprovements/itkOpenCLBuffer.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLExtension.h"
+#include "../ITKimprovements/itkOpenCLMacro.h"
 
 namespace itk
 {

@@ -19,7 +19,7 @@
 #define itkGPUCastImageFilter_hxx
 
 #include "itkGPUCastImageFilter.h"
-#include "itkOpenCLUtil.h"
+#include "../ITKimprovements/itkOpenCLUtil.h"
 
 namespace itk
 {

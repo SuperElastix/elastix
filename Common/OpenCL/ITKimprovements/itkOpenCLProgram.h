@@ -18,8 +18,8 @@
 #ifndef itkOpenCLProgram_h
 #define itkOpenCLProgram_h
 
-#include "itkOpenCLDevice.h"
-#include "itkOpenCLKernel.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLKernel.h"
 
 #include <string>
 

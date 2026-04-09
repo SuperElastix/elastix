@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLVectorBase.h"
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLVectorBase.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 
 // thread/SMP safe reference counter
 #include <vcl_atomic_count.h>

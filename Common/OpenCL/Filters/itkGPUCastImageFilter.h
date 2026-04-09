@@ -21,9 +21,9 @@
 #include "itkCastImageFilter.h"
 #include "itkSimpleDataObjectDecorator.h"
 
-#include "itkGPUFunctorBase.h"
-#include "itkOpenCLKernelManager.h"
-#include "itkGPUUnaryFunctorImageFilter.h"
+#include "../ITKimprovements/itkGPUFunctorBase.h"
+#include "../ITKimprovements/itkOpenCLKernelManager.h"
+#include "../ITKimprovements/itkGPUUnaryFunctorImageFilter.h"
 
 namespace itk
 {

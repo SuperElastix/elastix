@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLSize.h"
-#include "itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLSize.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
 
 namespace itk
 {

@@ -21,7 +21,7 @@
 #include "itkGPUImageFactory.h"
 #include "itkGPUShrinkImageFilterFactory.h"
 
-#include "itkOpenCLContextScopeGuard.h"
+#include "../ITKimprovements/itkOpenCLContextScopeGuard.h"
 
 // ITK include files
 #include "itkImageFileReader.h"

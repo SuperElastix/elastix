@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLSize.h"
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLSize.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 #include "itkTestHelper.h"
 
 int

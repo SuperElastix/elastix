@@ -22,7 +22,7 @@
 #include "itkGPURecursiveGaussianImageFilterFactory.h"
 #include "itkGPUCastImageFilterFactory.h" // used internally in smoothing filter
 
-#include "itkOpenCLContextScopeGuard.h"
+#include "../ITKimprovements/itkOpenCLContextScopeGuard.h"
 
 // ITK include files
 #include "itkSmoothingRecursiveGaussianImageFilter.h"

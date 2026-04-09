@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLKernelManager.h"
+#include "../ITKimprovements/itkOpenCLKernelManager.h"
 #include "itkTestHelper.h"
 
 int

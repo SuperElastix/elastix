@@ -18,8 +18,8 @@
 #ifndef itkOpenCLMemoryObject_h
 #define itkOpenCLMemoryObject_h
 
-#include "itkOpenCLEventList.h"
-#include "itkOpenCLSize.h"
+#include "../ITKimprovements/itkOpenCLEventList.h"
+#include "../ITKimprovements/itkOpenCLSize.h"
 #include "itkPoint.h"
 
 namespace itk

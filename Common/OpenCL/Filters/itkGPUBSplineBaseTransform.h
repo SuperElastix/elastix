@@ -18,8 +18,8 @@
 #ifndef itkGPUBSplineBaseTransform_h
 #define itkGPUBSplineBaseTransform_h
 
-#include "itkGPUDataManager.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
+#include "../ITKimprovements/itkGPUImage.h"
 #include "itkGPUTransformBase.h"
 
 namespace itk

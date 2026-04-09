@@ -28,8 +28,8 @@
 #include "itkTimeProbe.h"
 #include "itkImageRegionSplitterSlowDimension.h"
 
-#include "itkOpenCLUtil.h"
-#include "itkOpenCLKernelToImageBridge.h"
+#include "../ITKimprovements/itkOpenCLUtil.h"
+#include "../ITKimprovements/itkOpenCLKernelToImageBridge.h"
 
 namespace
 {

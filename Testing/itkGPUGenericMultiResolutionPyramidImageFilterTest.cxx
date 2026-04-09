@@ -27,7 +27,7 @@
 #include "itkGPUIdentityTransformFactory.h"
 #include "itkGPULinearInterpolateImageFunctionFactory.h"
 
-#include "itkOpenCLContextScopeGuard.h"
+#include "../ITKimprovements/itkOpenCLContextScopeGuard.h"
 
 #include "elxDefaultConstruct.h"
 

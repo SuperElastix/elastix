@@ -35,8 +35,8 @@
 #ifndef itkGPUUnaryFunctorImageFilter_hxx
 #define itkGPUUnaryFunctorImageFilter_hxx
 
-#include "itkGPUUnaryFunctorImageFilter.h"
-#include "itkOpenCLUtil.h"
+#include "../ITKimprovements/itkGPUUnaryFunctorImageFilter.h"
+#include "../ITKimprovements/itkOpenCLUtil.h"
 
 namespace itk
 {

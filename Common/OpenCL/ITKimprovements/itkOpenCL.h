@@ -18,7 +18,7 @@
 #ifndef itkOpenCL_h
 #define itkOpenCL_h
 
-#include "itkOpenCLExport.h"
+#include "../ITKimprovements/itkOpenCLExport.h"
 
 #ifndef CL_TARGET_OPENCL_VERSION
 #  define CL_TARGET_OPENCL_VERSION 120

@@ -26,10 +26,10 @@
 #ifndef itkOpenCLKernelToImageBridge_h
 #define itkOpenCLKernelToImageBridge_h
 
-#include "itkGPUImage.h"
-#include "itkGPUDataManager.h"
+#include "../ITKimprovements/itkGPUImage.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
 
-#include "itkOpenCLKernel.h"
+#include "../ITKimprovements/itkOpenCLKernel.h"
 
 namespace itk
 {

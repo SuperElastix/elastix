@@ -19,7 +19,7 @@
 #define itkGPUBSplineDecompositionImageFilter_h
 
 #include "itkBSplineDecompositionImageFilter.h"
-#include "itkGPUInPlaceImageFilter.h"
+#include "../ITKimprovements/itkGPUInPlaceImageFilter.h"
 
 namespace itk
 {

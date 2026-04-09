@@ -26,7 +26,7 @@
 #ifndef itkOpenCLOstreamSupport_h
 #define itkOpenCLOstreamSupport_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 
 #include <ostream>
 #include <iomanip>

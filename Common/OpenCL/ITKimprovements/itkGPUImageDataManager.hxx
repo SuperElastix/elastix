@@ -35,7 +35,7 @@
 #ifndef itkGPUImageDataManager_hxx
 #define itkGPUImageDataManager_hxx
 
-#include "itkGPUImageDataManager.h"
+#include "../ITKimprovements/itkGPUImageDataManager.h"
 
 // #define VERBOSE
 

@@ -15,9 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLEvent.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLMacro.h"
+#include "../ITKimprovements/itkOpenCLEvent.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLMacro.h"
 
 namespace itk
 {

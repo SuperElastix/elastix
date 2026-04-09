@@ -36,7 +36,7 @@
 #define itkGPUImageToImageFilter_h
 
 #include "itkImageToImageFilter.h"
-#include "itkOpenCLKernelManager.h"
+#include "../ITKimprovements/itkOpenCLKernelManager.h"
 
 namespace itk
 {

@@ -21,14 +21,14 @@
 #include "itkLightObject.h"
 #include "itkObjectFactory.h"
 
-#include "itkOpenCLDevice.h"
-#include "itkOpenCLCommandQueue.h"
-#include "itkOpenCLBuffer.h"
-#include "itkOpenCLVector.h"
-#include "itkOpenCLImage.h"
-#include "itkOpenCLSampler.h"
-#include "itkOpenCLProgram.h"
-#include "itkOpenCLUserEvent.h"
+#include "../ITKimprovements/itkOpenCLDevice.h"
+#include "../ITKimprovements/itkOpenCLCommandQueue.h"
+#include "../ITKimprovements/itkOpenCLBuffer.h"
+#include "../ITKimprovements/itkOpenCLVector.h"
+#include "../ITKimprovements/itkOpenCLImage.h"
+#include "../ITKimprovements/itkOpenCLSampler.h"
+#include "../ITKimprovements/itkOpenCLProgram.h"
+#include "../ITKimprovements/itkOpenCLUserEvent.h"
 
 namespace itk
 {

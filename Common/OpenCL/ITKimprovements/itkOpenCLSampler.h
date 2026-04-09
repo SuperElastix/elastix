@@ -18,7 +18,7 @@
 #ifndef itkOpenCLSampler_h
 #define itkOpenCLSampler_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 #include <ostream>
 
 namespace itk

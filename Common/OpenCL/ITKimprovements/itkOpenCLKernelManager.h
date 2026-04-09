@@ -38,9 +38,9 @@
 #include <itkLightObject.h>
 #include <itkObjectFactory.h>
 
-#include "itkGPUDataManager.h"
-#include "itkOpenCLContext.h"
-#include "itkOpenCLKernel.h"
+#include "../ITKimprovements/itkGPUDataManager.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLKernel.h"
 
 #include <vector>
 

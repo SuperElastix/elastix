@@ -20,7 +20,7 @@
 // GPU include files
 #include "itkGPUResampleImageFilter.h"
 
-#include "itkOpenCLContextScopeGuard.h"
+#include "../ITKimprovements/itkOpenCLContextScopeGuard.h"
 
 // GPU copiers
 #include "itkGPUTransformCopier.h"

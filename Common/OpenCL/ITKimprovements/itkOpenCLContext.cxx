@@ -15,15 +15,15 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLContext.h"
+#include "../ITKimprovements/itkOpenCLContext.h"
 #include "itkOpenCLKernels.h"
-#include "itkOpenCLProfilingTimeProbe.h"
+#include "../ITKimprovements/itkOpenCLProfilingTimeProbe.h"
 
 #include <iostream>
 #include <fstream>
 
 #include "itksys/MD5.h"
-#include "itkOpenCLMacro.h"
+#include "../ITKimprovements/itkOpenCLMacro.h"
 
 namespace itk
 {

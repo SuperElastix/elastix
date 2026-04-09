@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLKernel.h"
+#include "../ITKimprovements/itkOpenCLKernel.h"
 
 int
 main()

@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#include "itkOpenCLProfilingTimeProbe.h"
+#include "../ITKimprovements/itkOpenCLProfilingTimeProbe.h"
 
 namespace itk
 {

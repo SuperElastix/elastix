@@ -30,7 +30,7 @@
 #include "elxMacro.h"
 
 #ifdef ELASTIX_USE_OPENCL
-#  include "itkOpenCLContext.h"
+#  include "../ITKimprovements/itkOpenCLContext.h"
 #  include "itkOpenCLSetup.h"
 #endif
 

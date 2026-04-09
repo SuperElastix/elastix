@@ -20,7 +20,7 @@
 
 #include "elxIncludes.h" // include first to avoid MSVS warning
 #include "elxFixedGenericPyramid.h"
-#include "itkGPUImage.h"
+#include "../ITKimprovements/itkGPUImage.h"
 
 namespace elastix
 {

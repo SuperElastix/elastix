@@ -18,7 +18,7 @@
 #ifndef itkOpenCLCommandQueue_h
 #define itkOpenCLCommandQueue_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 #include <ostream>
 
 namespace itk

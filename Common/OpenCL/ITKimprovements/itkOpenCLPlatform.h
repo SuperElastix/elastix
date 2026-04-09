@@ -18,7 +18,7 @@
 #ifndef itkOpenCLPlatform_h
 #define itkOpenCLPlatform_h
 
-#include "itkOpenCL.h"
+#include "../ITKimprovements/itkOpenCL.h"
 
 #include <string>
 #include <list>

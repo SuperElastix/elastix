@@ -17,7 +17,7 @@
  *=========================================================================*/
 #include "itkTestHelper.h"
 #include "itkOpenCLSimpleTest.h"
-#include "itkOpenCLProgram.h"
+#include "../ITKimprovements/itkOpenCLProgram.h"
 
 //------------------------------------------------------------------------------
 // This test is mainly to test CMake generating process when two kernels are
