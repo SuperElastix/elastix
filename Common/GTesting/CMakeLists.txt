@@ -35,19 +35,25 @@ target_compile_definitions(CommonGTest PRIVATE
   ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-if(USE_ImpactMetric)
-  find_package(Torch REQUIRED)
+if (ITK_VERSION VERSION_LESS_EQUAL 5.4.5)
   target_link_libraries(CommonGTest
-   GTest::GTest GTest::Main
+    GTest::GTest
+    GTest::Main
     ${ITK_LIBRARIES}
     elastix_lib
-    "${TORCH_LIBRARIES}")
+  )
 else()
   target_link_libraries(CommonGTest
-    GTest::GTest GTest::Main
+    GTest::gtest
+    GTest::gtest_main
     ${ITK_LIBRARIES}
     elastix_lib
-    )
+  )
+endif()
+
+if(USE_ImpactMetric)
+  find_package(Torch REQUIRED)
+  target_link_libraries(CommonGTest "${TORCH_LIBRARIES}")
 endif()
 
 target_include_directories(CommonGTest PRIVATE
