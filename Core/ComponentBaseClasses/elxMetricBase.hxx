@@ -19,6 +19,7 @@
 #define elxMetricBase_hxx
 
 #include "elxMetricBase.h"
+#include "elxConversion.h"
 
 namespace elastix
 {
@@ -155,11 +156,17 @@ MetricBase<TElastix>::BeforeEachResolutionBase()
     thisAsAdvanced->SetUseMultiThread(useMultiThreading);
     if (useMultiThreading)
     {
-      std::string tmp = configuration.GetCommandLineArgument("-threads");
-      if (!tmp.empty())
+      if (const std::string commandLineArgument = configuration.GetCommandLineArgument("-threads");
+          !commandLineArgument.empty())
       {
-        const unsigned int nrOfThreads = atoi(tmp.c_str());
-        thisAsAdvanced->SetNumberOfWorkUnits(nrOfThreads);
+        if (itk::ThreadIdType numberOfThreads{}; Conversion::StringToValue(commandLineArgument, numberOfThreads))
+        {
+          thisAsAdvanced->SetNumberOfWorkUnits(numberOfThreads);
+        }
+        else
+        {
+          assert(!"This command-line argument should be checked already, by MainBase::SetMaximumNumberOfThreads()!");
+        }
       }
     }
 
