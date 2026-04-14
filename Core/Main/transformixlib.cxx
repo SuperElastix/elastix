@@ -169,9 +169,6 @@ TRANSFORMIX::TransformImage(ImagePointer                          inputImage,
     }
   }
 
-  /** The argv0 argument, required for finding the component.dll/so's. */
-  argMap.insert(ArgumentMapEntryType("-argv0", "transformix"));
-
   /** Setup the log system. */
   const elx::log::guard logGuard{};
   int                   returndummy2 = elx::log::setup(logFileName, performLogging, performCout) ? 0 : 1;

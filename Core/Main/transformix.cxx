@@ -187,9 +187,6 @@ main(int argc, char ** argv)
 
     } // end for loop
 
-    /** The argv0 argument, required for finding the component.dll/so's. */
-    argMap.insert(ArgumentMapEntryType("-argv0", argv[0]));
-
     /** Check that the option "-tp" is given. */
     if (argMap.count("-tp") == 0)
     {
