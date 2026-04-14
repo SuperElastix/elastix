@@ -162,10 +162,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
   /** Save this information. */
   const auto outFolder = value;
 
-  const ArgumentMapType argMap{ /** The argv0 argument, required for finding the component.dll/so's. */
-                                ArgumentMapEntryType("-argv0", "elastix"),
-                                ArgumentMapEntryType("-out", outFolder)
-  };
+  const ArgumentMapType argMap{ ArgumentMapEntryType("-out", outFolder) };
 
   /** Check if the output directory exists. */
   if (performLogging && !itksys::SystemTools::FileIsDirectory(outFolder))
