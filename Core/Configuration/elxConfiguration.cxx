@@ -71,6 +71,18 @@ AddDataFromExternalTransformFile(const std::string &                        para
   return parameterMap;
 }
 
+
+auto
+AllocateInitializedAtomicBools(const std::size_t numberOfElements)
+{
+  auto result = std::make_unique<std::atomic_bool[]>(numberOfElements);
+
+  // The default-constructor of std::atomic_bool does not yet guarantee value-initialization of the underlying bool
+  // value, with C++17. So fill those values explicitly, here:
+  std::fill_n(result.get(), numberOfElements, false);
+
+  return result;
+}
 } // namespace
 /**
  * ********************* Constructor ****************************
@@ -114,6 +126,58 @@ Configuration::PrintParameterMap() const
                         << "\n=============== end of ParameterMap ===============\n");
 
 } // end PrintParameterMap()
+
+
+/**
+ * ************************ AccessParameter ***************************
+ */
+
+void
+Configuration::AccessParameter(const std::string & parameterName) const
+{
+  std::size_t i{};
+
+  for (const auto & pair : m_ParameterMapInterface->GetParameterMap())
+  {
+    if (pair.first == parameterName)
+    {
+      // Conceptually, m_ParameterAccessFlags[i] is mutable.
+      m_ParameterAccessFlags[i] = true;
+      return;
+    }
+    ++i;
+  }
+}
+
+
+/**
+ * ************************ AfterRegistration ***************************
+ */
+
+void
+Configuration::AfterRegistration()
+{
+  const auto & parameterMap = m_ParameterMapInterface->GetParameterMap();
+
+  if (const auto numberOfUnusedParameters =
+        std::count(m_ParameterAccessFlags.get(), m_ParameterAccessFlags.get() + parameterMap.size(), false);
+      numberOfUnusedParameters > 0)
+  {
+    log::warn("WARNING: " + std::to_string(numberOfUnusedParameters) + " unused parameter(s) found!");
+    std::size_t i{};
+
+    for (const auto & pair : parameterMap)
+    {
+      if (!m_ParameterAccessFlags[i])
+      {
+        log::warn("  Unused parameter: " + pair.first);
+      }
+      ++i;
+    }
+  }
+}
+
+
 /**
  * ************************ BeforeAll ***************************
  */
@@ -218,6 +282,8 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   m_ParameterMapInterface->SetParameterMap(
     AddDataFromExternalTransformFile(m_ParameterFileName, parameterFileParser->GetParameterMap()));
 
+  m_ParameterAccessFlags = AllocateInitializedAtomicBools(m_ParameterMapInterface->GetParameterMap().size());
+
   /** Silently check in the parameter file if error messages should be printed. */
   m_ParameterMapInterface->SetPrintErrorMessages(false);
   bool printErrorMessages = true;
@@ -253,6 +319,8 @@ Configuration::Initialize(const CommandLineArgumentMapType &                 _ar
   m_CommandLineArgumentMap = _arg;
 
   m_ParameterMapInterface->SetParameterMap(AddDataFromExternalTransformFile(m_ParameterFileName, inputMap));
+
+  m_ParameterAccessFlags = AllocateInitializedAtomicBools(m_ParameterMapInterface->GetParameterMap().size());
 
   /** Silently check in the parameter file if error messages should be printed. */
   m_ParameterMapInterface->SetPrintErrorMessages(false);
