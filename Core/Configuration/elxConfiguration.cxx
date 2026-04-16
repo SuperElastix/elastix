@@ -114,6 +114,59 @@ Configuration::PrintParameterMap() const
                         << "\n=============== end of ParameterMap ===============\n");
 
 } // end PrintParameterMap()
+
+
+/**
+ * ************************ AccessParameter ***************************
+ */
+
+void
+Configuration::AccessParameter(const std::string & parameterName) const
+{
+  std::size_t i{};
+
+  for (const auto & pair : m_ParameterMapInterface->GetParameterMap())
+  {
+    if (pair.first == parameterName)
+    {
+      // Conceptually, m_ParameterAccessFlags[i] is mutable.
+      m_ParameterAccessFlags[i] = true;
+      return;
+    }
+    ++i;
+  }
+}
+
+
+/**
+ * ************************ AfterRegistration ***************************
+ */
+
+void
+Configuration::AfterRegistration()
+{
+  const auto &       parameterMap = m_ParameterMapInterface->GetParameterMap();
+  const bool * const parameterAccessFlags = m_ParameterAccessFlags.get();
+
+  if (const auto numberOfUnusedParameters =
+        std::count(parameterAccessFlags, parameterAccessFlags + parameterMap.size(), false);
+      numberOfUnusedParameters > 0)
+  {
+    log::warn("WARNING: " + std::to_string(numberOfUnusedParameters) + " unused parameter(s) found!");
+    std::size_t i{};
+
+    for (const auto & pair : parameterMap)
+    {
+      if (!parameterAccessFlags[i])
+      {
+        log::warn("  Unused parameter: " + pair.first);
+      }
+      ++i;
+    }
+  }
+}
+
+
 /**
  * ************************ BeforeAll ***************************
  */
@@ -218,6 +271,8 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
   m_ParameterMapInterface->SetParameterMap(
     AddDataFromExternalTransformFile(m_ParameterFileName, parameterFileParser->GetParameterMap()));
 
+  m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface->GetParameterMap().size());
+
   /** Silently check in the parameter file if error messages should be printed. */
   m_ParameterMapInterface->SetPrintErrorMessages(false);
   bool printErrorMessages = true;
@@ -253,6 +308,8 @@ Configuration::Initialize(const CommandLineArgumentMapType &                 _ar
   m_CommandLineArgumentMap = _arg;
 
   m_ParameterMapInterface->SetParameterMap(AddDataFromExternalTransformFile(m_ParameterFileName, inputMap));
+
+  m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface->GetParameterMap().size());
 
   /** Silently check in the parameter file if error messages should be printed. */
   m_ParameterMapInterface->SetPrintErrorMessages(false);
