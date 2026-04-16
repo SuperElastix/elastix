@@ -237,7 +237,7 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
  * ********************** Initialize ****************************
  */
 
-int
+void
 Configuration::Initialize(const CommandLineArgumentMapType &                 _arg,
                           const itk::ParameterFileParser::ParameterMapType & inputMap)
 {
@@ -262,9 +262,6 @@ Configuration::Initialize(const CommandLineArgumentMapType &                 _ar
 
   /** Set the initialized flag. */
   m_IsInitialized = true;
-
-  /** Return a value.*/
-  return 0;
 
 } // end Initialize()
 

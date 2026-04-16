@@ -127,11 +127,7 @@ MainBase::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
   /** Initialize the configuration object with the
    * command line parameters entered by the user.
    */
-  if (m_Configuration->Initialize(argmap, inputMap) != 0)
-  {
-    log::error("ERROR: Something went wrong during initialization of the configuration object.");
-  }
-
+  m_Configuration->Initialize(argmap, inputMap);
   return this->Run();
 } // end Run()
 

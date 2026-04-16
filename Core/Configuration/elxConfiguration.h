@@ -97,7 +97,7 @@ public:
   int
   Initialize(const CommandLineArgumentMapType & _arg);
 
-  int
+  void
   Initialize(const CommandLineArgumentMapType & _arg, const itk::ParameterFileParser::ParameterMapType & inputMap);
 
   /** True, if Initialize was successfully called. */

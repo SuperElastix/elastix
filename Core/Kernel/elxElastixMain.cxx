@@ -217,11 +217,7 @@ ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &       
                                                   const ParameterMapType &              inputMap,
                                                   const std::vector<ParameterMapType> & initialTransformParameterMaps)
 {
-  if (Deref(MainBase::GetConfiguration()).Initialize(argmap, inputMap) != 0)
-  {
-    log::error("ERROR: Something went wrong during initialization of the configuration object.");
-  }
-
+  Deref(MainBase::GetConfiguration()).Initialize(argmap, inputMap);
   const auto numberOfTransformParameterMaps = initialTransformParameterMaps.size();
   m_TransformConfigurations.clear();
   m_TransformConfigurations.resize(numberOfTransformParameterMaps);
@@ -232,13 +228,8 @@ ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &       
      * command line parameters entered by the user.
      */
     const auto configuration = Configuration::New();
-    int        dummy = configuration->Initialize(argmap, initialTransformParameterMaps[i]);
+    configuration->Initialize(argmap, initialTransformParameterMaps[i]);
     m_TransformConfigurations[i] = configuration;
-    if (dummy)
-    {
-      log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "
-                                      << i << ".");
-    }
   }
 
   return ElastixMain::Run();
