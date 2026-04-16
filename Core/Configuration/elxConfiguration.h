@@ -18,13 +18,18 @@
 #ifndef elxConfiguration_h
 #define elxConfiguration_h
 
-#include "itkObject.h"
 #include "elxBaseComponent.h"
+#include "elxlog.h"
 
 #include "itkParameterFileParser.h"
 #include "itkParameterMapInterface.h"
+
+#include <itkObject.h>
+
+#include <memory> // For unique_ptr.
 #include <map>
-#include "elxlog.h"
+#include <string>
+#include <vector>
 
 namespace elastix
 {
