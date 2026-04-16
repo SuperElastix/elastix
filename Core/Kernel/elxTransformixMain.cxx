@@ -302,13 +302,8 @@ TransformixMain::EnterCommandLineArgumentsWithTransformParameterMaps(
      * command line parameters entered by the user.
      */
     const auto configuration = Configuration::New();
-    int        dummy = configuration->Initialize(argmap, transformParameterMaps[i]);
+    configuration->Initialize(argmap, transformParameterMaps[i]);
     m_TransformConfigurations[i] = configuration;
-    if (dummy)
-    {
-      log::error(std::ostringstream{} << "ERROR: Something went wrong during initialization of configuration object "
-                                      << i << ".");
-    }
 
     if ((i + 1) == numberOfTransformParameterMaps)
     {
