@@ -26,6 +26,7 @@
 
 #include <itkObject.h>
 
+#include <atomic>
 #include <memory> // For unique_ptr.
 #include <map>
 #include <string>
@@ -145,6 +146,7 @@ public:
   std::size_t
   CountNumberOfParameterEntries(const std::string & parameterName) const
   {
+    AccessParameter(parameterName);
     return m_ParameterMapInterface->CountNumberOfParameterEntries(parameterName);
   }
 
@@ -157,6 +159,7 @@ public:
                 const unsigned int  entry_nr,
                 const bool          produceWarningMessage) const
   {
+    AccessParameter(parameterName);
     std::string warningMessage = "";
     bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, entry_nr, produceWarningMessage, warningMessage);
@@ -174,6 +177,7 @@ public:
   bool
   ReadParameter(T & parameterValue, const std::string & parameterName, const unsigned int entry_nr) const
   {
+    AccessParameter(parameterName);
     std::string warningMessage = "";
     bool        found = m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, warningMessage);
     if (!warningMessage.empty())
@@ -195,6 +199,7 @@ public:
                 const int           default_entry_nr,
                 const bool          produceWarningMessage) const
   {
+    AccessParameter(parameterName);
     std::string warningMessage = "";
     bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, produceWarningMessage, warningMessage);
@@ -216,6 +221,7 @@ public:
                 const unsigned int  entry_nr,
                 const int           default_entry_nr) const
   {
+    AccessParameter(parameterName);
     std::string warningMessage = "";
     bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, warningMessage);
@@ -232,6 +238,7 @@ public:
   bool
   HasParameter(const std::string & parameterName) const
   {
+    AccessParameter(parameterName);
     return m_ParameterMapInterface->HasParameter(parameterName);
   }
 
@@ -240,6 +247,7 @@ public:
   std::vector<std::string>
   GetValuesOfParameter(const std::string & parameterName) const
   {
+    AccessParameter(parameterName);
     return m_ParameterMapInterface->GetValues(parameterName);
   }
 
@@ -253,6 +261,7 @@ public:
   std::unique_ptr<std::vector<T>>
   RetrieveValuesOfParameter(const std::string & parameterName) const
   {
+    AccessParameter(parameterName);
     return m_ParameterMapInterface->RetrieveValues<T>(parameterName);
   }
 
@@ -292,6 +301,7 @@ public:
                 const unsigned int  entry_nr_end,
                 const bool          produceWarningMessage) const
   {
+    AccessParameter(parameterName);
     std::string warningMessage = "";
     bool        found = m_ParameterMapInterface->ReadParameter(
       parameterValues, parameterName, entry_nr_start, entry_nr_end, produceWarningMessage, warningMessage);
@@ -320,9 +330,18 @@ protected:
   PrintParameterMap() const;
 
 private:
+  void
+  AccessParameter(const std::string & parameterName) const;
+
+  void
+  AfterRegistration() override;
+
   CommandLineArgumentMapType                m_CommandLineArgumentMap{};
   std::string                               m_ParameterFileName{};
   const itk::ParameterMapInterface::Pointer m_ParameterMapInterface{ itk::ParameterMapInterface::New() };
+
+  // Tells for each parameter whether it is accessed.
+  std::unique_ptr<std::atomic_bool[]> m_ParameterAccessFlags;
 
   bool         m_IsInitialized{ false };
   unsigned int m_ElastixLevel{ 0 };
