@@ -293,26 +293,6 @@ protected:
   KernelFunctionPointer m_MovingKernel{ nullptr };
   KernelFunctionPointer m_DerivativeMovingKernel{ nullptr };
 
-  /** Initialize threading related parameters. */
-  void
-  InitializeThreadingParameters() const override;
-
-  /** Multi-threaded versions of the ComputePDF function. */
-  void
-  ThreadedComputePDFs(ThreadIdType threadId);
-
-  /** Single-threadedly accumulate results. */
-  void
-  AfterThreadedComputePDFs() const;
-
-  /** Helper function to launch the threads. */
-  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
-  ComputePDFsThreaderCallback(void * arg);
-
-  /** Helper function to launch the threads. */
-  void
-  LaunchComputePDFsThreaderCallback() const;
-
   /** Compute the Parzen values given an image value and a starting histogram index
    * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for
    * k = 0 ... kernelsize-1
@@ -324,54 +304,9 @@ protected:
                        const KernelFunctionType & kernel,
                        PDFValueType *             parzenValues);
 
-  /** Update the joint PDF with a pixel pair; on demand also updates the
-   * pdf derivatives (if the Jacobian pointers are nonzero).
-   */
-  virtual void
-  UpdateJointPDFAndDerivatives(const RealType                     fixedImageValue,
-                               const RealType                     movingImageValue,
-                               const DerivativeType *             imageJacobian,
-                               const NonZeroJacobianIndicesType * nzji,
-                               JointPDFType *                     jointPDF) const;
-
-  /** Update the joint PDF and the incremental pdfs.
-   * The input is a pixel pair (fixed, moving, moving mask) and
-   * a set of moving image/mask values when using mu+delta*e_k, for
-   * each k that has a nonzero Jacobian. And for mu-delta*e_k of course.
-   * Also updates the PerturbedAlpha's
-   * This function is used when UseFiniteDifferenceDerivative is true.
-   *
-   * \todo The IsInsideMovingMask return bools are converted to doubles (1 or 0) to
-   * simplify the computation. But this may not be necessary.
-   */
-  virtual void
-  UpdateJointPDFAndIncrementalPDFs(RealType                           fixedImageValue,
-                                   RealType                           movingImageValue,
-                                   RealType                           movingMaskValue,
-                                   const DerivativeType &             movingImageValuesRight,
-                                   const DerivativeType &             movingImageValuesLeft,
-                                   const DerivativeType &             movingMaskValuesRight,
-                                   const DerivativeType &             movingMaskValuesLeft,
-                                   const NonZeroJacobianIndicesType & nzji) const;
-
-  /** Update the pdf derivatives
-   * adds -image_jac[mu]*factor to the bin
-   * with index [ mu, pdfIndex[0], pdfIndex[1] ] for all mu.
-   * This function should only be called from UpdateJointPDFAndDerivatives.
-   */
-  void
-  UpdateJointPDFDerivatives(const JointPDFIndexType &          pdfIndex,
-                            double                             factor,
-                            const DerivativeType &             imageJacobian,
-                            const NonZeroJacobianIndicesType & nzji) const;
-
   /** Multiply the pdf entries by the given normalization factor. */
   void
   NormalizeJointPDF(JointPDFType * pdf, const double factor) const;
-
-  /** Multiply the pdf derivatives entries by the given normalization factor. */
-  void
-  NormalizeJointPDFDerivatives(JointPDFDerivativesType * pdf, const double factor) const;
 
   /** Compute marginal pdfs by summing over the joint pdf
    * direction = 0: fixed marginal pdf
@@ -426,26 +361,12 @@ protected:
   virtual void
   ComputePDFsAndIncrementalPDFs(const ParametersType & parameters) const;
 
-  /** Compute PDFs; Loops over the fixed image samples and constructs
-   * the m_JointPDF and m_Alpha
-   * The JointPDF and Alpha are related as follows:
-   * p = m_Alpha * m_JointPDF
-   * So, the JointPDF is more like a histogram than a true pdf...
-   * The histogram is left unnormalised since it may be faster to
-   * not do this explicitly.
-   */
-  virtual void
-  ComputePDFsSingleThreaded(const ParametersType & parameters) const;
-
   virtual void
   ComputePDFs(const ParametersType & parameters) const;
 
   /** Some initialization functions, called by Initialize. */
   virtual void
   InitializeHistograms();
-
-  virtual void
-  InitializeKernels();
 
   /** Get the value and analytic derivatives for single valued optimizers.
    * Called by GetValueAndDerivative if UseFiniteDifferenceDerivative == false
@@ -468,6 +389,85 @@ protected:
   {}
 
 private:
+  /** Initialize threading related parameters. */
+  void
+  InitializeThreadingParameters() const override;
+
+  /** Multi-threaded versions of the ComputePDF function. */
+  void
+  ThreadedComputePDFs(ThreadIdType threadId);
+
+  /** Single-threadedly accumulate results. */
+  void
+  AfterThreadedComputePDFs() const;
+
+  /** Helper function to launch the threads. */
+  static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+  ComputePDFsThreaderCallback(void * arg);
+
+  /** Helper function to launch the threads. */
+  void
+  LaunchComputePDFsThreaderCallback() const;
+
+  /** Update the joint PDF with a pixel pair; on demand also updates the
+   * pdf derivatives (if the Jacobian pointers are nonzero).
+   */
+  virtual void
+  UpdateJointPDFAndDerivatives(const RealType                     fixedImageValue,
+                               const RealType                     movingImageValue,
+                               const DerivativeType *             imageJacobian,
+                               const NonZeroJacobianIndicesType * nzji,
+                               JointPDFType *                     jointPDF) const;
+
+  /** Update the joint PDF and the incremental pdfs.
+   * The input is a pixel pair (fixed, moving, moving mask) and
+   * a set of moving image/mask values when using mu+delta*e_k, for
+   * each k that has a nonzero Jacobian. And for mu-delta*e_k of course.
+   * Also updates the PerturbedAlpha's
+   * This function is used when UseFiniteDifferenceDerivative is true.
+   *
+   * \todo The IsInsideMovingMask return bools are converted to doubles (1 or 0) to
+   * simplify the computation. But this may not be necessary.
+   */
+  virtual void
+  UpdateJointPDFAndIncrementalPDFs(RealType                           fixedImageValue,
+                                   RealType                           movingImageValue,
+                                   RealType                           movingMaskValue,
+                                   const DerivativeType &             movingImageValuesRight,
+                                   const DerivativeType &             movingImageValuesLeft,
+                                   const DerivativeType &             movingMaskValuesRight,
+                                   const DerivativeType &             movingMaskValuesLeft,
+                                   const NonZeroJacobianIndicesType & nzji) const;
+
+  /** Update the pdf derivatives
+   * adds -image_jac[mu]*factor to the bin
+   * with index [ mu, pdfIndex[0], pdfIndex[1] ] for all mu.
+   * This function should only be called from UpdateJointPDFAndDerivatives.
+   */
+  void
+  UpdateJointPDFDerivatives(const JointPDFIndexType &          pdfIndex,
+                            double                             factor,
+                            const DerivativeType &             imageJacobian,
+                            const NonZeroJacobianIndicesType & nzji) const;
+
+  /** Multiply the pdf derivatives entries by the given normalization factor. */
+  void
+  NormalizeJointPDFDerivatives(JointPDFDerivativesType * pdf, const double factor) const;
+
+  /** Compute PDFs; Loops over the fixed image samples and constructs
+   * the m_JointPDF and m_Alpha
+   * The JointPDF and Alpha are related as follows:
+   * p = m_Alpha * m_JointPDF
+   * So, the JointPDF is more like a histogram than a true pdf...
+   * The histogram is left unnormalised since it may be faster to
+   * not do this explicitly.
+   */
+  virtual void
+  ComputePDFsSingleThreaded(const ParametersType & parameters) const;
+
+  virtual void
+  InitializeKernels();
+
   /** Threading related parameters. */
   mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs{};
 
