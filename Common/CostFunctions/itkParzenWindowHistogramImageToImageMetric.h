@@ -450,10 +450,6 @@ private:
                             const DerivativeType &             imageJacobian,
                             const NonZeroJacobianIndicesType & nzji) const;
 
-  /** Multiply the pdf derivatives entries by the given normalization factor. */
-  void
-  NormalizeJointPDFDerivatives(JointPDFDerivativesType * pdf, const double factor) const;
-
   /** Compute PDFs; Loops over the fixed image samples and constructs
    * the m_JointPDF and m_Alpha
    * The JointPDF and Alpha are related as follows:

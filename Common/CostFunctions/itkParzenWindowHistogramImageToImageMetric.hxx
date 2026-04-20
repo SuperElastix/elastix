@@ -631,32 +631,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJoi
 
 
 /**
- * *********************** NormalizeJointPDFDerivatives ***********************
- */
-
-template <typename TFixedImage, typename TMovingImage>
-void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDFDerivatives(
-  JointPDFDerivativesType * pdf,
-  const double              factor) const
-{
-  using JointPDFDerivativesIteratorType = ImageScanlineIterator<JointPDFDerivativesType>;
-  JointPDFDerivativesIteratorType it(pdf, pdf->GetBufferedRegion());
-  const PDFValueType              castfac = static_cast<PDFValueType>(factor);
-  while (!it.IsAtEnd())
-  {
-    while (!it.IsAtEndOfLine())
-    {
-      it.Value() *= castfac;
-      ++it;
-    }
-    it.NextLine();
-  }
-
-} // end NormalizeJointPDFDerivatives()
-
-
-/**
  * ************************ ComputeMarginalPDF ***********************
  */
 
