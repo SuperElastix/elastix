@@ -332,7 +332,7 @@ protected:
    * The histograms are left unnormalized since it may be faster to
    * not do this explicitly.
    */
-  virtual void
+  void
   ComputePDFsAndPDFDerivatives(const ParametersType & parameters) const;
 
   /** Compute PDFs and incremental pdfs (which you can use to compute finite
@@ -358,10 +358,10 @@ protected:
    * p(mu+delta*e_k) = ( par(k) ) * jh(mu+delta*e_k)
    * p(mu-delta*e_k) = ( pal(k) ) * jh(mu-delta*e_k)
    */
-  virtual void
+  void
   ComputePDFsAndIncrementalPDFs(const ParametersType & parameters) const;
 
-  virtual void
+  void
   ComputePDFs(const ParametersType & parameters) const;
 
   /** Some initialization functions, called by Initialize. */
@@ -412,7 +412,7 @@ private:
   /** Update the joint PDF with a pixel pair; on demand also updates the
    * pdf derivatives (if the Jacobian pointers are nonzero).
    */
-  virtual void
+  void
   UpdateJointPDFAndDerivatives(const RealType                     fixedImageValue,
                                const RealType                     movingImageValue,
                                const DerivativeType *             imageJacobian,
@@ -429,7 +429,7 @@ private:
    * \todo The IsInsideMovingMask return bools are converted to doubles (1 or 0) to
    * simplify the computation. But this may not be necessary.
    */
-  virtual void
+  void
   UpdateJointPDFAndIncrementalPDFs(RealType                           fixedImageValue,
                                    RealType                           movingImageValue,
                                    RealType                           movingMaskValue,
@@ -462,10 +462,10 @@ private:
    * The histogram is left unnormalised since it may be faster to
    * not do this explicitly.
    */
-  virtual void
+  void
   ComputePDFsSingleThreaded(const ParametersType & parameters) const;
 
-  virtual void
+  void
   InitializeKernels();
 
   /** Threading related parameters. */
