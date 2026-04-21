@@ -18,7 +18,7 @@ if (ITK_VERSION VERSION_LESS_EQUAL 5.4.5)
     GTest::Main
     elastix_lib
     transformix_lib
-    ${ITK_LIBRARIES}
+    ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
   )
 else()
   target_link_libraries(ElastixLibGTest
@@ -26,7 +26,7 @@ else()
     GTest::gtest_main
     elastix_lib
     transformix_lib
-    ${ITK_LIBRARIES}
+    ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
   )
 endif()
 

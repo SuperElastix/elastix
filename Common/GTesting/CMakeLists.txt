@@ -39,14 +39,14 @@ if (ITK_VERSION VERSION_LESS_EQUAL 5.4.5)
   target_link_libraries(CommonGTest
     GTest::GTest
     GTest::Main
-    ${ITK_LIBRARIES}
+    ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
     elastix_lib
   )
 else()
   target_link_libraries(CommonGTest
     GTest::gtest
     GTest::gtest_main
-    ${ITK_LIBRARIES}
+    ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
     elastix_lib
   )
 endif()

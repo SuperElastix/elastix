@@ -36,7 +36,12 @@ add_subdirectory(ann_1.1)
 add_library(KNNlib STATIC ${KNN_Files})
 
 # Link it against the necessary libraries.
-target_link_libraries(KNNlib ANNlib ${ITK_LIBRARIES})
+elastix_link_itk(KNNlib MODULES
+  ITKCommon
+  ITKStatistics
+  ITKSpatialObjects
+)
+target_link_libraries(KNNlib ANNlib)
 
 # Group in IDE's like Visual Studio
 set_property(TARGET KNNlib PROPERTY FOLDER "libraries")

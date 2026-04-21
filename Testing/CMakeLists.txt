@@ -73,7 +73,8 @@ macro(elx_add_test_core executable_name source_name test_name group)
       param               # some test use the CommandLineArgumentParser
       elxCommon            # provides Common headers (Transforms, CostFunctions, etc.)
       ${mevisdcmtifflib}  # is empty if not selected in CMake
-      ${ITK_LIBRARIES}
+      ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
+      ${ELASTIX_ITK_TEST_LIBRARIES}
     )
 
     if(ELASTIX_USE_OPENCL)
@@ -420,22 +421,22 @@ endmacro()
 
 # Create elxComputeOverlap
 add_executable(elxComputeOverlap elxComputeOverlap.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxComputeOverlap ${ITK_LIBRARIES})
+target_link_libraries(elxComputeOverlap ${ELASTIX_ITK_ALL_LIBRARIES})
 set_property(TARGET elxComputeOverlap PROPERTY FOLDER "tests/Executable")
 
 # Create elxImageCompare
 add_executable(elxImageCompare elxImageCompare.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxImageCompare ${ITK_LIBRARIES})
+target_link_libraries(elxImageCompare ${ELASTIX_ITK_ALL_LIBRARIES})
 set_property(TARGET elxImageCompare PROPERTY FOLDER "tests/Executable")
 
 # Create elxTransformParametersCompare
 add_executable(elxTransformParametersCompare elxTransformParametersCompare.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxTransformParametersCompare elxCore param ${ITK_LIBRARIES})
+target_link_libraries(elxTransformParametersCompare elxCore param ${ELASTIX_ITK_EXECUTABLE_LIBRARIES})
 set_property(TARGET elxTransformParametersCompare PROPERTY FOLDER "tests/Executable")
 
 # Create elxInvertTransform
 add_executable(elxInvertTransform elxInvertTransform.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxInvertTransform elxCore param ${ITK_LIBRARIES})
+target_link_libraries(elxInvertTransform elxCore param ${ELASTIX_ITK_EXECUTABLE_LIBRARIES})
 set_property(TARGET elxInvertTransform PROPERTY FOLDER "tests/Executable")
 
 #---------------------------------------------------------------------
