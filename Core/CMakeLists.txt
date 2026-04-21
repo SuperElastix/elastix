@@ -185,13 +185,20 @@ elastix_export_target(param)
 # Define the mevis dcm tiff lib to which we should link.
 set(mevisdcmtifflib mevisdcmtiff)
 
+# For ITK 6+: executables link to the IO factory meta-module targets which carry
+# INTERFACE_INCLUDE_DIRECTORIES pointing to the generated factory registration
+# headers (itkImageIOFactoryRegisterManager.h, etc.) and INTERFACE_COMPILE_DEFINITIONS
+# enabling the registration managers. ELASTIX_ITK_EXECUTABLE_LIBRARIES is set
+# by CMake/ElastixITKDeps.cmake (included from the top-level CMakeLists.txt).
+# For ITK 5.x: ${ITK_LIBRARIES} is used (factory registration handled globally
+# by UseITK.cmake via directory-scoped COMPILE_DEFINITIONS).
 set(ELASTIX_TARGET_LINK_LIBRARIES
   param
   elxCommon
   elxCore
   ${mevisdcmtifflib}
   ${AllComponentLibs}
-  ${ITK_LIBRARIES}
+  ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
 )
 if(ELASTIX_USE_OPENCL)
   set(ELASTIX_TARGET_LINK_LIBRARIES  ${ELASTIX_TARGET_LINK_LIBRARIES} elxOpenCL)

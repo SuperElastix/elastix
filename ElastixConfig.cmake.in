@@ -25,6 +25,18 @@ if(NOT ITK_CONFIG_TARGETS_FILE)
   find_package(ITK "@ITK_VERSION@" EXACT REQUIRED)
 endif()
 
+# For ITK 6+: generate factory registration headers and configure factory
+# meta-module target properties in the downstream project's build scope.
+# Guards against double-invocation if the downstream project also calls this.
+get_property(_elastix_factory_reg_done GLOBAL PROPERTY ELASTIX_ITK_FACTORY_REGISTRATION_DONE)
+if(NOT _elastix_factory_reg_done)
+  set_property(GLOBAL PROPERTY ELASTIX_ITK_FACTORY_REGISTRATION_DONE TRUE)
+  if(ITK_VERSION_MAJOR GREATER_EQUAL 6)
+    itk_generate_factory_registration()
+  endif()
+endif()
+unset(_elastix_factory_reg_done)
+
 
 # Import ELASTIX targets.
 set( ELASTIX_CONFIG_TARGETS_FILE "${_ELASTIXConfig_DIR}/ElastixTargets.cmake")
