@@ -28,22 +28,33 @@ add_executable(elastix_translation_example ElastixTranslationExample.cxx)
 
 set_property(TARGET elastix_translation_example PROPERTY CXX_STANDARD 17)
 
-target_include_directories(elastix_translation_example
-  PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
-
-target_link_libraries(elastix_translation_example
-  PRIVATE ${ITK_LIBRARIES} elastix_lib)
+if(ITK_VERSION_MAJOR GREATER_EQUAL 6)
+  # ITK 6+: elastix_lib carries all ITK module dependencies and include paths
+  # transitively via its INTERFACE_LINK_LIBRARIES. No explicit ${ITK_INCLUDE_DIRS}
+  # or ${ITK_LIBRARIES} needed.
+  target_link_libraries(elastix_translation_example
+    PRIVATE elastix_lib)
+else()
+  target_include_directories(elastix_translation_example
+    PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
+  target_link_libraries(elastix_translation_example
+    PRIVATE ${ITK_LIBRARIES} elastix_lib)
+endif()
 
 # Build the example executable using Impact metric
 add_executable(elastix_impact_metric_example ElastixImpactMetricExample.cxx)
 
 set_property(TARGET elastix_impact_metric_example PROPERTY CXX_STANDARD 17)
 
-target_include_directories(elastix_impact_metric_example
-  PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
-
-target_link_libraries(elastix_impact_metric_example
-  PRIVATE ${ITK_LIBRARIES} elastix_lib)
+if(ITK_VERSION_MAJOR GREATER_EQUAL 6)
+  target_link_libraries(elastix_impact_metric_example
+    PRIVATE elastix_lib)
+else()
+  target_include_directories(elastix_impact_metric_example
+    PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
+  target_link_libraries(elastix_impact_metric_example
+    PRIVATE ${ITK_LIBRARIES} elastix_lib)
+endif()
 
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Conv2D_ChannelReplicator.pt

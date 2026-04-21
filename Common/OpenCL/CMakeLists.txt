@@ -56,10 +56,15 @@ set(OpenCL_Files
 add_library(elxOpenCL STATIC ${OpenCL_Files})
 
 # Link it against the necessary libraries.
-target_link_libraries(elxOpenCL
-  ${ITK_LIBRARIES}
-  ${OPENCL_LIBRARIES}
+elastix_link_itk(elxOpenCL MODULES
+  ITKCommon
+  ITKGPUCommon
+  ITKTransform
+  ITKImageGrid
+  ITKSmoothing
+  ITKImageFunction
 )
+target_link_libraries(elxOpenCL ${OPENCL_LIBRARIES})
 
 target_include_directories(elxOpenCL PUBLIC ${OPENCL_INCLUDE_DIRS})
 target_compile_definitions(elxOpenCL PUBLIC ELASTIX_USE_OPENCL)

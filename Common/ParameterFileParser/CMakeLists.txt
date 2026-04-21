@@ -17,7 +17,9 @@ if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
     COMPONENT Development)
 endif()
 
-target_link_libraries(param ${ITK_LIBRARIES})
+elastix_link_itk(param MODULES
+  ITKCommon
+)
 target_include_directories(param PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${ELASTIX_INCLUDE_DIR}/Common/ParameterFileParser>)

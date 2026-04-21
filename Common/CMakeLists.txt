@@ -214,8 +214,32 @@ endif()
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-target_link_libraries(elxCommon
-  ${ITK_LIBRARIES}
+elastix_link_itk(elxCommon PUBLIC MODULES
+  ITKCommon
+  ITKDisplacementField
+  ITKDistanceMap
+  ITKImageCompose
+  ITKImageFilterBase
+  ITKImageFunction
+  ITKImageGradient
+  ITKImageGrid
+  ITKImageIntensity
+  ITKImageStatistics
+  ITKIOImageBase
+  ITKIOMeshBase
+  ITKIOMeta
+  ITKIOTransformBase
+  ITKIOXML
+  ITKMathematicalMorphology
+  ITKMesh
+  ITKOptimizers
+  ITKRegistrationCommon
+  ITKSmoothing
+  ITKSpatialObjects
+  ITKStatistics
+  ITKThresholding
+  ITKTransform
+  ITKTransformFactory
 )
 
 target_include_directories(elxCommon PUBLIC
