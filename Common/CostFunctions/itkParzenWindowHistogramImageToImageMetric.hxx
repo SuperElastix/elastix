@@ -996,8 +996,10 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFs(
    */
   this->BeforeThreadedGetValueAndDerivative(parameters);
 
-  /** Launch multi-threading JointPDF computation. */
-  this->LaunchComputePDFsThreaderCallback();
+  // Set up threader and launch multi-threaded JointPDF computation:
+  this->m_Threader->SetSingleMethodAndExecute(
+    this->ComputePDFsThreaderCallback,
+    const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowHistogramThreaderParameters)));
 
   /** Gather the results from all threads. */
   this->AfterThreadedComputePDFs();
@@ -1165,22 +1167,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsT
   return ITK_THREAD_RETURN_DEFAULT_VALUE;
 
 } // end ComputePDFsThreaderCallback()
-
-
-/**
- * *********************** LaunchComputePDFsThreaderCallback***************
- */
-
-template <typename TFixedImage, typename TMovingImage>
-void
-ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::LaunchComputePDFsThreaderCallback() const
-{
-  /** Setup threader and launch. */
-  this->m_Threader->SetSingleMethodAndExecute(
-    this->ComputePDFsThreaderCallback,
-    const_cast<void *>(static_cast<const void *>(&this->m_ParzenWindowHistogramThreaderParameters)));
-
-} // end LaunchComputePDFsThreaderCallback()
 
 
 /**

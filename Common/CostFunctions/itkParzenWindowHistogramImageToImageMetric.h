@@ -405,10 +405,6 @@ private:
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ComputePDFsThreaderCallback(void * arg);
 
-  /** Helper function to launch the threads. */
-  void
-  LaunchComputePDFsThreaderCallback() const;
-
   /** Update the joint PDF with a pixel pair; on demand also updates the
    * pdf derivatives (if the Jacobian pointers are nonzero).
    */
