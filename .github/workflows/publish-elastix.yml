@@ -139,9 +139,9 @@ jobs:
         shell: cmd
         run: |
           cd elastix-build
-          cmake -DCMAKE_C_COMPILER="${{ inputs.c-compiler }}" ^
-              -DCMAKE_CXX_COMPILER="${{ inputs.cxx-compiler }}" ^
-              -DCMAKE_BUILD_TYPE="${{ inputs.cmake-build-type }}" ^
+          cmake -DCMAKE_C_COMPILER="${{ matrix.c-compiler }}" ^
+              -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" ^
+              -DCMAKE_BUILD_TYPE="${{ matrix.cmake-build-type }}" ^
               -DITK_DIR=../ITK-build ^
               -DCMAKE_CUDA_FLAGS="-allow-unsupported-compiler -Xcompiler \"/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH\"" ^
               -DTorch_DIR=../libtorch/libtorch/share/cmake/Torch ^
@@ -159,9 +159,9 @@ jobs:
         shell: bash
         run: |
           cd elastix-build
-          cmake -DCMAKE_C_COMPILER="${{ inputs.c-compiler }}" \
-              -DCMAKE_CXX_COMPILER="${{ inputs.cxx-compiler }}" \
-              -DCMAKE_BUILD_TYPE="${{ inputs.cmake-build-type }}" \
+          cmake -DCMAKE_C_COMPILER="${{ matrix.c-compiler }}" \
+              -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" \
+              -DCMAKE_BUILD_TYPE="${{ matrix.cmake-build-type }}" \
               -DITK_DIR=../ITK-build \
               -DTorch_DIR=../libtorch/libtorch/share/cmake/Torch \
               -DUSE_ALL_COMPONENTS=ON \

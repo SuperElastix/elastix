@@ -437,9 +437,10 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   if (mode == "Static")
   {
-    std::string writeFeatureMapsStr = "false";
-    configuration.ReadParameter(writeFeatureMapsStr, "ImpactWriteFeatureMaps", this->GetComponentLabel(), level, 0);
-    if (writeFeatureMapsStr != "false")
+    std::string writeFeatureMapsStr = "";
+    configuration.ReadParameter(
+      writeFeatureMapsStr, "ImpactFeatureMapOutputDirectory", this->GetComponentLabel(), level, 0);
+    if (!writeFeatureMapsStr.empty())
     {
       // If enabled, prepare output directory for feature map export (Static mode)
       if (!std::filesystem::exists(writeFeatureMapsStr))

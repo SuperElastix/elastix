@@ -52,7 +52,7 @@ namespace elastix
  * (ImpactGPU 0)
  * (ImpactUseMixedPrecision "true")
  * (ImpactFeaturesMapUpdateInterval -1)
- * (ImpactWriteFeatureMaps "false")
+ * (ImpactFeatureMapOutputDirectory "")
  * \endcode
  *
  * ### Parameter Descriptions
@@ -105,7 +105,8 @@ namespace elastix
  *   - Set to `-1` to compute once per resolution level.
  *   - Set to a positive integer to recompute every _N_ iterations.
  *
- * \param ImpactWriteFeatureMaps Enables saving both the input images and feature maps to disk (in Static mode).
+ * \param ImpactFeatureMapOutputDirectory Enables saving both the input images and feature maps to disk (in Static
+ * mode).
  *
  * ### Advanced Use: Multi-resolution and Multi-model Setup
  *
@@ -137,7 +138,7 @@ namespace elastix
  * (ImpactGPU 0 0)
  * (ImpactUseMixedPrecision "true" "true")
  * (ImpactFeaturesMapUpdateInterval -1 -1)
- * (ImpactWriteFeatureMaps "false" "false")
+ * (ImpactFeatureMapOutputDirectory "" "")
  * \endcode
  *
  * **Multi-model Setup**:
