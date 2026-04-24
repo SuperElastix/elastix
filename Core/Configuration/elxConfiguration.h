@@ -118,7 +118,7 @@ public:
   bool
   GetPrintErrorMessages() const
   {
-    return m_ParameterMapInterface->GetPrintErrorMessages();
+    return m_ParameterMapInterface.GetPrintErrorMessages();
   }
 
 
@@ -146,7 +146,7 @@ public:
   CountNumberOfParameterEntries(const std::string & parameterName) const
   {
     AccessParameter(parameterName);
-    return m_ParameterMapInterface->CountNumberOfParameterEntries(parameterName);
+    return m_ParameterMapInterface.CountNumberOfParameterEntries(parameterName);
   }
 
 
@@ -160,7 +160,7 @@ public:
   {
     AccessParameter(parameterName);
     std::string warningMessage = "";
-    bool        found = m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface.ReadParameter(
       parameterValue, parameterName, entry_nr, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
@@ -178,7 +178,7 @@ public:
   {
     AccessParameter(parameterName);
     std::string warningMessage = "";
-    bool        found = m_ParameterMapInterface->ReadParameter(parameterValue, parameterName, entry_nr, warningMessage);
+    bool        found = m_ParameterMapInterface.ReadParameter(parameterValue, parameterName, entry_nr, warningMessage);
     if (!warningMessage.empty())
     {
       log::warn(warningMessage);
@@ -200,7 +200,7 @@ public:
   {
     AccessParameter(parameterName);
     std::string warningMessage = "";
-    bool        found = m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface.ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
@@ -222,7 +222,7 @@ public:
   {
     AccessParameter(parameterName);
     std::string warningMessage = "";
-    bool        found = m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface.ReadParameter(
       parameterValue, parameterName, prefix, entry_nr, default_entry_nr, warningMessage);
     if (!warningMessage.empty())
     {
@@ -238,7 +238,7 @@ public:
   HasParameter(const std::string & parameterName) const
   {
     AccessParameter(parameterName);
-    return m_ParameterMapInterface->HasParameter(parameterName);
+    return m_ParameterMapInterface.HasParameter(parameterName);
   }
 
 
@@ -247,7 +247,7 @@ public:
   GetValuesOfParameter(const std::string & parameterName) const
   {
     AccessParameter(parameterName);
-    return m_ParameterMapInterface->GetValues(parameterName);
+    return m_ParameterMapInterface.GetValues(parameterName);
   }
 
 
@@ -261,7 +261,7 @@ public:
   RetrieveValuesOfParameter(const std::string & parameterName) const
   {
     AccessParameter(parameterName);
-    return m_ParameterMapInterface->RetrieveValues<T>(parameterName);
+    return m_ParameterMapInterface.RetrieveValues<T>(parameterName);
   }
 
   /** Retrieves the value of the specified parameter (from the parameter file). Returns the specified default parameter
@@ -302,7 +302,7 @@ public:
   {
     AccessParameter(parameterName);
     std::string warningMessage = "";
-    bool        found = m_ParameterMapInterface->ReadParameter(
+    bool        found = m_ParameterMapInterface.ReadParameter(
       parameterValues, parameterName, entry_nr_start, entry_nr_end, produceWarningMessage, warningMessage);
     if (!warningMessage.empty())
     {
@@ -335,9 +335,9 @@ private:
   void
   AfterRegistration() override;
 
-  CommandLineArgumentMapType                m_CommandLineArgumentMap{};
-  std::string                               m_ParameterFileName{};
-  const itk::ParameterMapInterface::Pointer m_ParameterMapInterface{ itk::ParameterMapInterface::New() };
+  CommandLineArgumentMapType m_CommandLineArgumentMap{};
+  std::string                m_ParameterFileName{};
+  itk::ParameterMapInterface m_ParameterMapInterface{};
 
   // Tells for each parameter whether it is accessed.
   std::unique_ptr<bool[]> m_ParameterAccessFlags;

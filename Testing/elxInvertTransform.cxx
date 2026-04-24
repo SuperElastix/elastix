@@ -95,13 +95,13 @@ main(int argc, char * argv[])
   // typedef BaseTransformType::OutputPointType               OutputPointType;
 
   /** Interface to the original transform parameters file. */
-  auto config = itk::ParameterMapInterface::New();
-  config->SetParameterMap(itk::ParameterFileParser::ReadParameterMap(inputTransformParametersName));
+  itk::ParameterMapInterface config{};
+  config.SetParameterMap(itk::ParameterFileParser::ReadParameterMap(inputTransformParametersName));
 
   /** Check no initial transform. */
   std::string initialTransform = "";
-  config->ReadParameter(initialTransform, "InitialTransformParameterFileName", 0, dummyErrorMessage) ||
-    config->ReadParameter(initialTransform, "InitialTransformParametersFileName", 0, dummyErrorMessage);
+  config.ReadParameter(initialTransform, "InitialTransformParameterFileName", 0, dummyErrorMessage) ||
+    config.ReadParameter(initialTransform, "InitialTransformParametersFileName", 0, dummyErrorMessage);
 
   if (initialTransform != "NoInitialTransform")
   {
@@ -113,7 +113,7 @@ main(int argc, char * argv[])
 
   /** Check dimension. */
   unsigned int dimF = 0;
-  config->ReadParameter(dimF, "FixedImageDimension", 0, dummyErrorMessage);
+  config.ReadParameter(dimF, "FixedImageDimension", 0, dummyErrorMessage);
   if (dimF != Dimension)
   {
     std::cerr << "ERROR: the program elxInvertTransform was compiled for images of dimension " << Dimension << ",\n"
@@ -155,11 +155,11 @@ main(int argc, char * argv[])
 
   /** Get the number of TransformParameters. */
   unsigned int numberOfParameters = 0;
-  config->ReadParameter(numberOfParameters, "NumberOfParameters", 0, dummyErrorMessage);
+  config.ReadParameter(numberOfParameters, "NumberOfParameters", 0, dummyErrorMessage);
 
   /** Read the TransformParameters as a vector. */
   std::vector<ScalarType> vecPar(numberOfParameters, ScalarType{});
-  config->ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true, dummyErrorMessage);
+  config.ReadParameter(vecPar, "TransformParameters", 0, numberOfParameters - 1, true, dummyErrorMessage);
 
   /** Convert to ParametersType. */
   const ParametersType transformParameters(vecPar.data(), numberOfParameters);
@@ -168,7 +168,7 @@ main(int argc, char * argv[])
   CenterType centerOfRotation;
   for (unsigned int i = 0; i < Dimension; ++i)
   {
-    config->ReadParameter(centerOfRotation[i], "CenterOfRotationPoint", i, dummyErrorMessage);
+    config.ReadParameter(centerOfRotation[i], "CenterOfRotationPoint", i, dummyErrorMessage);
   }
 
   /** Set up the transform. */
@@ -176,7 +176,7 @@ main(int argc, char * argv[])
   CenterType     centerOfRotationInv;
 
   std::string transformType = "";
-  config->ReadParameter(transformType, "Transform", 0, dummyErrorMessage);
+  config.ReadParameter(transformType, "Transform", 0, dummyErrorMessage);
 
   try
   {
@@ -223,20 +223,20 @@ main(int argc, char * argv[])
 
   /** Get some information from the input transform parameters file that needs to be copied. */
   std::string combinationMethod = "Compose";
-  config->ReadParameter(combinationMethod, "HowToCombineTransforms", 0, dummyErrorMessage);
+  config.ReadParameter(combinationMethod, "HowToCombineTransforms", 0, dummyErrorMessage);
 
   unsigned int FixDim = Dimension;
-  config->ReadParameter(FixDim, "FixedImageDimension", 0, dummyErrorMessage);
+  config.ReadParameter(FixDim, "FixedImageDimension", 0, dummyErrorMessage);
   unsigned int MovDim = Dimension;
-  config->ReadParameter(MovDim, "MovingImageDimension", 0, dummyErrorMessage);
+  config.ReadParameter(MovDim, "MovingImageDimension", 0, dummyErrorMessage);
 
   std::string fixpix = "float";
-  config->ReadParameter(fixpix, "FixedInternalImagePixelType", 0, dummyErrorMessage);
+  config.ReadParameter(fixpix, "FixedInternalImagePixelType", 0, dummyErrorMessage);
   std::string movpix = "float";
-  config->ReadParameter(movpix, "MovingInternalImagePixelType", 0, dummyErrorMessage);
+  config.ReadParameter(movpix, "MovingInternalImagePixelType", 0, dummyErrorMessage);
 
   std::string useDirectionCosines = "true";
-  config->ReadParameter(useDirectionCosines, "UseDirectionCosines", 0, dummyErrorMessage);
+  config.ReadParameter(useDirectionCosines, "UseDirectionCosines", 0, dummyErrorMessage);
 
   /** Open a file for writing. */
   std::ofstream outputTPFile(outputTransformParametersName);
@@ -336,28 +336,28 @@ main(int argc, char * argv[])
 
   /** Read from input transform parameter file. */
   std::string computeZYX = "true";
-  config->ReadParameter(computeZYX, "ComputeZYX", 0, dummyErrorMessage);
+  config.ReadParameter(computeZYX, "ComputeZYX", 0, dummyErrorMessage);
 
   std::string resampleInterpolator = "FinalBSplineInterpolator";
-  config->ReadParameter(resampleInterpolator, "ResampleInterpolator", 0, dummyErrorMessage);
+  config.ReadParameter(resampleInterpolator, "ResampleInterpolator", 0, dummyErrorMessage);
 
   unsigned int interpolationOrder = 3;
-  config->ReadParameter(interpolationOrder, "FinalBSplineInterpolationOrder", 0, dummyErrorMessage);
+  config.ReadParameter(interpolationOrder, "FinalBSplineInterpolationOrder", 0, dummyErrorMessage);
 
   std::string resampler = "DefaultResampler";
-  config->ReadParameter(resampler, "DefaultResampler", 0, dummyErrorMessage);
+  config.ReadParameter(resampler, "DefaultResampler", 0, dummyErrorMessage);
 
   float defaultPixelValue = 0.0;
-  config->ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, dummyErrorMessage);
+  config.ReadParameter(defaultPixelValue, "DefaultPixelValue", 0, dummyErrorMessage);
 
   std::string resultImageFormat = "mhd";
-  config->ReadParameter(resultImageFormat, "ResultImageFormat", 0, dummyErrorMessage);
+  config.ReadParameter(resultImageFormat, "ResultImageFormat", 0, dummyErrorMessage);
 
   std::string resultImagePixelType = "short";
-  config->ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, dummyErrorMessage);
+  config.ReadParameter(resultImagePixelType, "ResultImagePixelType", 0, dummyErrorMessage);
 
   std::string compressResultImage = "false";
-  config->ReadParameter(compressResultImage, "CompressResultImage", 0, dummyErrorMessage);
+  config.ReadParameter(compressResultImage, "CompressResultImage", 0, dummyErrorMessage);
 
   /** Write to file. */
   outputTPFile << "\n// " << transformType << " specific\n";

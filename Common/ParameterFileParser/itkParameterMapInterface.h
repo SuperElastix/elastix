@@ -21,7 +21,6 @@
 
 #include "elxConversion.h"
 
-#include "itkObject.h"
 #include "itkObjectFactory.h"
 #include "itkMacro.h"
 #include "itkNumericTraits.h"
@@ -58,14 +57,14 @@ namespace itk
  *
  * This class can be used in the following way:\n
  *
- * itk::ParameterMapInterface::Pointer p_interface = itk::ParameterMapInterface::New();
- * p_interface->SetParameterMap( parser->GetParameterMap() );
- * p_interface->PrintErrorMessages( true );
+ * itk::ParameterMapInterface p_interface{};
+ * p_interface.SetParameterMap( parser->GetParameterMap() );
+ * p_interface.PrintErrorMessages( true );
  * unsigned long parameterValue = 3;
  * unsigned int index = 2;
  * bool printWarning = true;
  * std::string warningMessage = "";
- * bool success = p_interface->ReadParameter( parameterValue,
+ * bool success = p_interface.ReadParameter( parameterValue,
  *   "ParameterName", index, printWarning, warningMessage );
  *
  *
@@ -75,26 +74,23 @@ namespace itk
  * \sa itk::ParameterFileParser
  */
 
-class ParameterMapInterface : public Object
+class ParameterMapInterface
 {
 public:
   ITK_DISALLOW_COPY_AND_MOVE(ParameterMapInterface);
 
   /** Standard ITK typedefs. */
   using Self = ParameterMapInterface;
-  using Superclass = Object;
-  using Pointer = SmartPointer<Self>;
-  using ConstPointer = SmartPointer<const Self>;
-
-  /** Method for creation through the object factory. */
-  itkNewMacro(Self);
-
-  /** Run-time type information (and related methods). */
-  itkOverrideGetNameOfClassMacro(ParameterMapInterface);
 
   /** Typedefs. */
   using ParameterValuesType = ParameterFileParser::ParameterValuesType;
   using ParameterMapType = ParameterFileParser::ParameterMapType;
+
+  /** Default-constructor. */
+  ParameterMapInterface();
+
+  /** Destructor. */
+  ~ParameterMapInterface();
 
   /** Set the parameter map. */
   void
@@ -112,8 +108,17 @@ public:
    */
   // \todo: we could think of a warning level. (maybe you want warnings, but
   // not when for example a parameter is not found at entry entry_nr but at entry 0 instead
-  itkSetMacro(PrintErrorMessages, bool);
-  itkGetConstMacro(PrintErrorMessages, bool);
+  void
+  SetPrintErrorMessages(const bool arg)
+  {
+    m_PrintErrorMessages = arg;
+  }
+
+  bool
+  GetPrintErrorMessages() const
+  {
+    return m_PrintErrorMessages;
+  }
 
   /** Tells whether this parameter map has the parameter with the given name. */
   bool
@@ -191,10 +196,10 @@ public:
     /** Check if the cast was successful. */
     if (!castSuccesful)
     {
-      itkExceptionMacro("ERROR: Casting entry number "
-                        << entry_nr << " for the parameter \"" << parameterName << "\" failed!\n"
-                        << "  You tried to cast \"" << vec[entry_nr] << "\" from std::string to "
-                        << typeid(parameterValue).name() << '\n');
+      itkGenericExceptionMacro("ERROR: Casting entry number "
+                               << entry_nr << " for the parameter \"" << parameterName << "\" failed!\n"
+                               << "  You tried to cast \"" << vec[entry_nr] << "\" from std::string to "
+                               << typeid(parameterValue).name() << '\n');
     }
 
     return true;
@@ -322,17 +327,17 @@ public:
     if (entry_nr_start > entry_nr_end)
     {
       /** Programming error: just throw an exception. */
-      itkExceptionMacro("WARNING: The entry number start ("
-                        << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
-                        << "). It was requested for parameter \"" << parameterName << "\".\n");
+      itkGenericExceptionMacro("WARNING: The entry number start ("
+                               << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
+                               << "). It was requested for parameter \"" << parameterName << "\".\n");
     }
 
     /** Check if it exists at the requested entry numbers. */
     if (entry_nr_end >= numberOfEntries)
     {
-      itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
-                                                    << entry_nr_end << ".\nThe default value \"" << T{}
-                                                    << "\" is used instead.");
+      itkGenericExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
+                                                           << entry_nr_end << ".\nThe default value \"" << T{}
+                                                           << "\" is used instead.");
     }
 
     /** Get the vector of parameters. */
@@ -355,10 +360,10 @@ public:
       /** Check if the cast was successful. */
       if (!castSuccesful)
       {
-        itkExceptionMacro("ERROR: Casting entry number "
-                          << i << " for the parameter \"" << parameterName << "\" failed!\n"
-                          << "  You tried to cast \"" << vec[i] << "\" from std::string to "
-                          << typeid(parameterValues[0]).name() << '\n');
+        itkGenericExceptionMacro("ERROR: Casting entry number "
+                                 << i << " for the parameter \"" << parameterName << "\" failed!\n"
+                                 << "  You tried to cast \"" << vec[i] << "\" from std::string to "
+                                 << typeid(parameterValues[0]).name() << '\n');
       }
     }
 
@@ -411,18 +416,14 @@ public:
       else
       {
         const auto entry_nr = &str - found->second.data();
-        itkExceptionMacro("Failed to cast parameter \"" << parameterName << "\" entry number " << entry_nr
-                                                        << " value \"" << str << "\" to type \"" << typeid(T).name()
-                                                        << "\"!");
+        itkGenericExceptionMacro("Failed to cast parameter \"" << parameterName << "\" entry number " << entry_nr
+                                                               << " value \"" << str << "\" to type \""
+                                                               << typeid(T).name() << "\"!");
       }
     }
     return std::make_unique<std::vector<T>>(std::move(result));
   }
 
-
-protected:
-  ParameterMapInterface();
-  ~ParameterMapInterface() override;
 
 private:
   /** Member variable to store the parameters. */

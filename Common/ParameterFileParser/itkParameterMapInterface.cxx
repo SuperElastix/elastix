@@ -98,10 +98,10 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
   if (!elastix::Conversion::StringToValue(parameterValueString, parameterValue))
   {
     /** Trying to read a string other than "true" or "false" as a boolean. */
-    itkExceptionMacro("ERROR: Entry number "
-                      << entry_nr << " for the parameter \"" << parameterName
-                      << "\" should be a boolean, i.e. either \"true\" or \"false\", but it reads \""
-                      << parameterValueString << "\".");
+    itkGenericExceptionMacro("ERROR: Entry number "
+                             << entry_nr << " for the parameter \"" << parameterName
+                             << "\" should be a boolean, i.e. either \"true\" or \"false\", but it reads \""
+                             << parameterValueString << "\".");
   }
 
   return dummy;
@@ -145,17 +145,17 @@ ParameterMapInterface::ReadParameter(std::vector<std::string> & parameterValues,
   if (entry_nr_start > entry_nr_end)
   {
     /** Programming error: just throw an exception. */
-    itkExceptionMacro("WARNING: The entry number start ("
-                      << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
-                      << "). It was requested for parameter \"" << parameterName << "\".\n");
+    itkGenericExceptionMacro("WARNING: The entry number start ("
+                             << entry_nr_start << ") should be smaller than entry number end (" << entry_nr_end
+                             << "). It was requested for parameter \"" << parameterName << "\".\n");
   }
 
   /** Check if it exists at the requested entry numbers. */
   if (entry_nr_end >= numberOfEntries)
   {
-    itkExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
-                                                  << entry_nr_end
-                                                  << ".\nThe default empty string \"\" is used instead.\n");
+    itkGenericExceptionMacro("WARNING: The parameter \"" << parameterName << "\" does not exist at entry number "
+                                                         << entry_nr_end
+                                                         << ".\nThe default empty string \"\" is used instead.\n");
   }
 
   /** Get the vector of parameters. */

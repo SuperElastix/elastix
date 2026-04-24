@@ -97,16 +97,16 @@ Expect_successful_round_trip_of_parameter_value(const TParameterValue & paramete
   const std::string                                  parameterName("Key");
   const itk::ParameterMapInterface::ParameterMapType parameterMap{ { parameterName,
                                                                      { Conversion::ToString(parameterValue) } } };
-  const auto                                         parameterMapInterface = CheckNew<itk::ParameterMapInterface>();
+  itk::ParameterMapInterface                         parameterMapInterface{};
 
-  parameterMapInterface->SetParameterMap(parameterMap);
+  parameterMapInterface.SetParameterMap(parameterMap);
 
   TParameterValue actualParameterValue{};
 
   std::string errorMessage;
   try
   {
-    EXPECT_TRUE(parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage));
+    EXPECT_TRUE(parameterMapInterface.ReadParameter(actualParameterValue, parameterName, 0, errorMessage));
   }
   catch (const itk::ExceptionObject & exceptionObject)
   {
@@ -203,13 +203,13 @@ Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer()
       const std::string parameterName("Key");
       const std::string parameterStringValue = std::to_string(integer) + '.' + std::string(numberOfTrailingZeros, '0');
 
-      const auto parameterMapInterface = CheckNew<itk::ParameterMapInterface>();
-      parameterMapInterface->SetParameterMap({ { parameterName, { parameterStringValue } } });
+      itk::ParameterMapInterface parameterMapInterface{};
+      parameterMapInterface.SetParameterMap({ { parameterName, { parameterStringValue } } });
 
       TInteger actualParameterValue{};
 
       std::string errorMessage;
-      EXPECT_TRUE(parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage));
+      EXPECT_TRUE(parameterMapInterface.ReadParameter(actualParameterValue, parameterName, 0, errorMessage));
       EXPECT_EQ(errorMessage, std::string{});
       EXPECT_EQ(actualParameterValue, integer);
     }
@@ -230,13 +230,13 @@ Expect_parameter_with_decimal_point_and_non_zero_trailing_chars_can_not_be_read_
       const std::string parameterName("Key");
       const std::string parameterStringValue = std::to_string(integer) + '.' + trail;
 
-      const auto parameterMapInterface = CheckNew<itk::ParameterMapInterface>();
-      parameterMapInterface->SetParameterMap({ { parameterName, { parameterStringValue } } });
+      itk::ParameterMapInterface parameterMapInterface{};
+      parameterMapInterface.SetParameterMap({ { parameterName, { parameterStringValue } } });
 
       TInteger actualParameterValue{};
 
       std::string errorMessage;
-      EXPECT_THROW(parameterMapInterface->ReadParameter(actualParameterValue, parameterName, 0, errorMessage),
+      EXPECT_THROW(parameterMapInterface.ReadParameter(actualParameterValue, parameterName, 0, errorMessage),
                    itk::ExceptionObject);
     }
   }
@@ -254,7 +254,7 @@ Expect_negative_parameter_value_can_not_be_read_as_unsigned()
     const std::string parameterName("Key");
     const std::string parameterStringValue = std::to_string(integer);
 
-    elx::DefaultConstruct<itk::ParameterMapInterface> parameterMapInterface;
+    itk::ParameterMapInterface parameterMapInterface{};
     parameterMapInterface.SetParameterMap({ { parameterName, { parameterStringValue } } });
 
     std::make_unsigned_t<TSignedInteger> actualParameterValue{};

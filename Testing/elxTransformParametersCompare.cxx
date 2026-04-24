@@ -120,8 +120,8 @@ main(int argc, char ** argv)
   using ScalarType = double;
   std::string dummyErrorMessage = "";
 
-  auto parameterFileParser = ParserType::New();
-  auto config = InterfaceType::New();
+  auto                       parameterFileParser = ParserType::New();
+  itk::ParameterMapInterface config{};
 
   /** Read test parameters. */
   parameterFileParser->SetParameterFileName(testFileName);
@@ -135,12 +135,12 @@ main(int argc, char ** argv)
     return EXIT_FAILURE;
   }
 
-  config->SetParameterMap(parameterFileParser->GetParameterMap());
+  config.SetParameterMap(parameterFileParser->GetParameterMap());
 
   unsigned int numberOfParametersTest = 0;
-  config->ReadParameter(numberOfParametersTest, "NumberOfParameters", 0, dummyErrorMessage);
+  config.ReadParameter(numberOfParametersTest, "NumberOfParameters", 0, dummyErrorMessage);
   std::vector<ScalarType> parametersTest(numberOfParametersTest, ScalarType{});
-  config->ReadParameter(parametersTest, "TransformParameters", 0, numberOfParametersTest - 1, true, dummyErrorMessage);
+  config.ReadParameter(parametersTest, "TransformParameters", 0, numberOfParametersTest - 1, true, dummyErrorMessage);
 
   /** Read baseline parameters. */
   parameterFileParser->SetParameterFileName(baselineFileName);
@@ -153,13 +153,13 @@ main(int argc, char ** argv)
     std::cerr << "Error during reading baseline transform parameters: " << err << std::endl;
     return EXIT_FAILURE;
   }
-  config->SetParameterMap(parameterFileParser->GetParameterMap());
+  config.SetParameterMap(parameterFileParser->GetParameterMap());
 
   unsigned int numberOfParametersBaseline = 0;
-  config->ReadParameter(numberOfParametersBaseline, "NumberOfParameters", 0, dummyErrorMessage);
+  config.ReadParameter(numberOfParametersBaseline, "NumberOfParameters", 0, dummyErrorMessage);
 
   std::vector<ScalarType> parametersBaseline(numberOfParametersBaseline, ScalarType{});
-  config->ReadParameter(
+  config.ReadParameter(
     parametersBaseline, "TransformParameters", 0, numberOfParametersBaseline - 1, true, dummyErrorMessage);
 
   /** The sizes of the baseline and test parameters must match. */
@@ -184,7 +184,7 @@ main(int argc, char ** argv)
    * Only the B-spline transform has mask support.
    */
   std::string transformName = "";
-  config->ReadParameter(transformName, "Transform", 0, true, dummyErrorMessage);
+  config.ReadParameter(transformName, "Transform", 0, true, dummyErrorMessage);
   if (transformName != "BSplineTransform")
   {
     /** Now compare the two parameter vectors. */
@@ -203,7 +203,7 @@ main(int argc, char ** argv)
 
     /** Get the true dimension. */
     unsigned int dimension = 2;
-    config->ReadParameter(dimension, "FixedImageDimension", 0, true, dummyErrorMessage);
+    config.ReadParameter(dimension, "FixedImageDimension", 0, true, dummyErrorMessage);
 
     /** Get coefficient image information. */
     auto       gridSize = SizeType::Filled(1);
@@ -213,13 +213,13 @@ main(int argc, char ** argv)
     auto       gridDirection = DirectionType::GetIdentity();
     for (unsigned int i = 0; i < dimension; ++i)
     {
-      config->ReadParameter(gridSize[i], "GridSize", i, true, dummyErrorMessage);
-      config->ReadParameter(gridIndex[i], "GridIndex", i, true, dummyErrorMessage);
-      config->ReadParameter(gridSpacing[i], "GridSpacing", i, true, dummyErrorMessage);
-      config->ReadParameter(gridOrigin[i], "GridOrigin", i, true, dummyErrorMessage);
+      config.ReadParameter(gridSize[i], "GridSize", i, true, dummyErrorMessage);
+      config.ReadParameter(gridIndex[i], "GridIndex", i, true, dummyErrorMessage);
+      config.ReadParameter(gridSpacing[i], "GridSpacing", i, true, dummyErrorMessage);
+      config.ReadParameter(gridOrigin[i], "GridOrigin", i, true, dummyErrorMessage);
       for (unsigned int j = 0; j < dimension; ++j)
       {
-        config->ReadParameter(gridDirection(j, i), "GridDirection", i * dimension + j, true, dummyErrorMessage);
+        config.ReadParameter(gridDirection(j, i), "GridDirection", i * dimension + j, true, dummyErrorMessage);
       }
     }
 
