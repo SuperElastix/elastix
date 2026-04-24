@@ -30,29 +30,29 @@ using itk::ParameterMapInterface;
 
 GTEST_TEST(ParameterMapInterface, RetrieveValuesReturnsNullWhenParameterMapIsEmpty)
 {
-  const auto parameterMapInterface = ParameterMapInterface::New();
-  EXPECT_EQ(parameterMapInterface->RetrieveValues<bool>("parameterName"), nullptr);
-  EXPECT_EQ(parameterMapInterface->RetrieveValues<double>("parameterName"), nullptr);
+  const ParameterMapInterface parameterMapInterface{};
+  EXPECT_EQ(parameterMapInterface.RetrieveValues<bool>("parameterName"), nullptr);
+  EXPECT_EQ(parameterMapInterface.RetrieveValues<double>("parameterName"), nullptr);
 }
 
 
 GTEST_TEST(ParameterMapInterface, RetrieveValuesReturnsNullWhenParameterNameIsMissing)
 {
-  const auto parameterMapInterface = ParameterMapInterface::New();
-  parameterMapInterface->SetParameterMap({ { "ParameterName", { "0", "1" } } });
+  ParameterMapInterface parameterMapInterface{};
+  parameterMapInterface.SetParameterMap({ { "ParameterName", { "0", "1" } } });
 
-  EXPECT_EQ(parameterMapInterface->RetrieveValues<bool>("MissingParameterName"), nullptr);
-  EXPECT_EQ(parameterMapInterface->RetrieveValues<double>("MissingParameterName"), nullptr);
+  EXPECT_EQ(parameterMapInterface.RetrieveValues<bool>("MissingParameterName"), nullptr);
+  EXPECT_EQ(parameterMapInterface.RetrieveValues<double>("MissingParameterName"), nullptr);
 }
 
 
 GTEST_TEST(ParameterMapInterface, RetrieveValuesSupportsZeroValues)
 {
-  const auto        parameterMapInterface = ParameterMapInterface::New();
-  const std::string parameterName("Key");
-  parameterMapInterface->SetParameterMap({ { parameterName, {} } });
+  ParameterMapInterface parameterMapInterface{};
+  const std::string     parameterName("Key");
+  parameterMapInterface.SetParameterMap({ { parameterName, {} } });
 
-  const auto retrievedValues = parameterMapInterface->RetrieveValues<double>(parameterName);
+  const auto retrievedValues = parameterMapInterface.RetrieveValues<double>(parameterName);
   ASSERT_NE(retrievedValues, nullptr);
   EXPECT_EQ(*retrievedValues, std::vector<double>{});
 }
@@ -60,22 +60,22 @@ GTEST_TEST(ParameterMapInterface, RetrieveValuesSupportsZeroValues)
 
 GTEST_TEST(ParameterMapInterface, RetrieveValuesSupportsSingleValue)
 {
-  const auto        parameterMapInterface = ParameterMapInterface::New();
-  const std::string parameterName("Key");
+  ParameterMapInterface parameterMapInterface{};
+  const std::string     parameterName("Key");
 
   for (const double testValue : { -1.0, 0.0, 1.0 })
   {
-    parameterMapInterface->SetParameterMap({ { parameterName, { itk::NumberToString<double>{}(testValue) } } });
+    parameterMapInterface.SetParameterMap({ { parameterName, { itk::NumberToString<double>{}(testValue) } } });
 
-    const auto retrievedValues = parameterMapInterface->RetrieveValues<double>(parameterName);
+    const auto retrievedValues = parameterMapInterface.RetrieveValues<double>(parameterName);
     ASSERT_NE(retrievedValues, nullptr);
     EXPECT_EQ(*retrievedValues, std::vector<double>{ testValue });
   }
   for (const bool testValue : { false, true })
   {
-    parameterMapInterface->SetParameterMap({ { parameterName, { testValue ? "true" : "false" } } });
+    parameterMapInterface.SetParameterMap({ { parameterName, { testValue ? "true" : "false" } } });
 
-    const auto retrievedValues = parameterMapInterface->RetrieveValues<bool>(parameterName);
+    const auto retrievedValues = parameterMapInterface.RetrieveValues<bool>(parameterName);
     ASSERT_NE(retrievedValues, nullptr);
     EXPECT_EQ(*retrievedValues, std::vector<bool>{ testValue });
   }
@@ -84,18 +84,18 @@ GTEST_TEST(ParameterMapInterface, RetrieveValuesSupportsSingleValue)
 
 GTEST_TEST(ParameterMapInterface, RetrieveValuesSupportsMultipleValues)
 {
-  const auto        parameterMapInterface = ParameterMapInterface::New();
-  const std::string parameterName("Key");
+  ParameterMapInterface parameterMapInterface{};
+  const std::string     parameterName("Key");
   using NumberToString = itk::NumberToString<double>;
 
   for (const double testValue1 : { 0.0, 1.0 })
   {
     for (const double testValue2 : { 0.0, 1.0 })
     {
-      parameterMapInterface->SetParameterMap(
+      parameterMapInterface.SetParameterMap(
         { { parameterName, { NumberToString{}(testValue1), NumberToString{}(testValue2) } } });
 
-      const auto retrievedValues = parameterMapInterface->RetrieveValues<double>(parameterName);
+      const auto retrievedValues = parameterMapInterface.RetrieveValues<double>(parameterName);
       ASSERT_NE(retrievedValues, nullptr);
       const std::vector<double> expectedValues{ testValue1, testValue2 };
       EXPECT_EQ(*retrievedValues, expectedValues);
@@ -106,35 +106,35 @@ GTEST_TEST(ParameterMapInterface, RetrieveValuesSupportsMultipleValues)
 
 GTEST_TEST(ParameterMapInterface, RetrieveValuesThrowsExceptionWhenConversionFails)
 {
-  const auto        parameterMapInterface = ParameterMapInterface::New();
-  const std::string parameterName("Key");
+  ParameterMapInterface parameterMapInterface{};
+  const std::string     parameterName("Key");
 
-  parameterMapInterface->SetParameterMap({ { parameterName, { "not-a-valid-bool-or-double-value" } } });
-  EXPECT_THROW(parameterMapInterface->RetrieveValues<bool>(parameterName), itk::ExceptionObject);
-  EXPECT_THROW(parameterMapInterface->RetrieveValues<double>(parameterName), itk::ExceptionObject);
+  parameterMapInterface.SetParameterMap({ { parameterName, { "not-a-valid-bool-or-double-value" } } });
+  EXPECT_THROW(parameterMapInterface.RetrieveValues<bool>(parameterName), itk::ExceptionObject);
+  EXPECT_THROW(parameterMapInterface.RetrieveValues<double>(parameterName), itk::ExceptionObject);
 
   // A typical input error where floating point value 1.25 might have been intended:
-  parameterMapInterface->SetParameterMap({ { parameterName, { "1,25" } } });
-  EXPECT_THROW(parameterMapInterface->RetrieveValues<double>(parameterName), itk::ExceptionObject);
+  parameterMapInterface.SetParameterMap({ { parameterName, { "1,25" } } });
+  EXPECT_THROW(parameterMapInterface.RetrieveValues<double>(parameterName), itk::ExceptionObject);
 
   // Either 2375 (using comma as thousands separator) or 2.375 might have been intended:
-  parameterMapInterface->SetParameterMap({ { parameterName, { "2,375" } } });
-  EXPECT_THROW(parameterMapInterface->RetrieveValues<double>(parameterName), itk::ExceptionObject);
+  parameterMapInterface.SetParameterMap({ { parameterName, { "2,375" } } });
+  EXPECT_THROW(parameterMapInterface.RetrieveValues<double>(parameterName), itk::ExceptionObject);
 }
 
 
 GTEST_TEST(ParameterMapInterface, HasParameter)
 {
-  const auto        parameterMapInterface = ParameterMapInterface::New();
-  const std::string parameterName("Key");
+  ParameterMapInterface parameterMapInterface{};
+  const std::string     parameterName("Key");
 
-  EXPECT_FALSE(parameterMapInterface->HasParameter(parameterName));
+  EXPECT_FALSE(parameterMapInterface.HasParameter(parameterName));
 
-  parameterMapInterface->SetParameterMap({ { parameterName, {} } });
-  EXPECT_TRUE(parameterMapInterface->HasParameter(parameterName));
+  parameterMapInterface.SetParameterMap({ { parameterName, {} } });
+  EXPECT_TRUE(parameterMapInterface.HasParameter(parameterName));
 
-  parameterMapInterface->SetParameterMap({ { parameterName, { "a", "b", "c" } } });
-  EXPECT_TRUE(parameterMapInterface->HasParameter(parameterName));
+  parameterMapInterface.SetParameterMap({ { parameterName, { "a", "b", "c" } } });
+  EXPECT_TRUE(parameterMapInterface.HasParameter(parameterName));
 
-  EXPECT_FALSE(parameterMapInterface->HasParameter("This-is-not-a-key-from-this-map-" + parameterName));
+  EXPECT_FALSE(parameterMapInterface.HasParameter("This-is-not-a-key-from-this-map-" + parameterName));
 }
