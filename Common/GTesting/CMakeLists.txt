@@ -35,7 +35,7 @@ target_compile_definitions(CommonGTest PRIVATE
   ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-if (ITK_VERSION VERSION_LESS_EQUAL 5.4.5)
+if (ITK_VERSION VERSION_LESS_EQUAL 5.4.6)
   target_link_libraries(CommonGTest
     GTest::GTest
     GTest::Main

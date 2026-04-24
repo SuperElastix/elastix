@@ -12,7 +12,7 @@ target_compile_definitions(ElastixLibGTest PRIVATE
   _USE_MATH_DEFINES # For M_PI.
 )
 
-if (ITK_VERSION VERSION_LESS_EQUAL 5.4.5)
+if (ITK_VERSION VERSION_LESS_EQUAL 5.4.6)
   target_link_libraries(ElastixLibGTest
     GTest::GTest
     GTest::Main
