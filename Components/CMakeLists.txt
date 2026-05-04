@@ -5,10 +5,22 @@ project(elxComponents)
 
 #---------------------------------------------------------------------
 # Set the libraries to be linked.
-
-set(elxLinkLibs
-  elxCore
-  ${ITK_LIBRARIES})
+#
+# For ITK 6+, component libraries inherit all ITK processing module dependencies
+# transitively via elxCore -> elxCommon (PUBLIC link). No additional direct
+# ITK module link is needed here.
+# For ITK 5.x, ${ITK_LIBRARIES} provides full coverage (factory registration
+# is handled globally by UseITK.cmake).
+if(ITK_VERSION_MAJOR GREATER_EQUAL 6)
+  set(elxLinkLibs
+    elxCore
+  )
+else()
+  set(elxLinkLibs
+    elxCore
+    ${ITK_LIBRARIES}
+  )
+endif()
 
 #--------------------------------------------------------------------
 # Prepare elxInstallComponentFunctionDeclarations.h and

@@ -6,6 +6,12 @@
 # find_package( Elastix REQUIRED )
 # include( ${ELASTIX_USE_FILE} )
 #
+# Note: for ITK 6+, prefer linking directly to the 'elastix_lib' or
+# 'transformix_lib' CMake targets instead of using this file.  Modern
+# targets carry include directories, compile definitions, and all ITK
+# interface library dependencies as transitive INTERFACE properties,
+# so include_directories() and link_directories() are no longer needed.
+#
 
 # Add include dirs
 include_directories( ${ELASTIX_INCLUDE_DIRS} )
