@@ -24,6 +24,7 @@
 #include "itkBSplineDerivativeKernelFunction2.h"
 #include "itkImageLinearIteratorWithIndex.h"
 #include "itkImageScanlineIterator.h"
+#include <itkImageBufferRange.h>
 #include <vnl/vnl_math.h>
 #include <cassert>
 
@@ -608,17 +609,9 @@ void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDF(JointPDFType * pdf,
                                                                                       const double   factor)
 {
-  using JointPDFIteratorType = ImageScanlineIterator<JointPDFType>;
-  JointPDFIteratorType it(pdf, pdf->GetBufferedRegion());
-  const auto           castfac = static_cast<PDFValueType>(factor);
-  while (!it.IsAtEnd())
+  for (PDFValueType & pdfValue : ImageBufferRange(*pdf))
   {
-    while (!it.IsAtEndOfLine())
-    {
-      it.Value() *= castfac;
-      ++it;
-    }
-    it.NextLine();
+    pdfValue *= factor;
   }
 
 } // end NormalizeJointPDF()
