@@ -305,8 +305,8 @@ protected:
                        PDFValueType *             parzenValues);
 
   /** Multiply the pdf entries by the given normalization factor. */
-  void
-  NormalizeJointPDF(JointPDFType * pdf, const double factor) const;
+  static void
+  NormalizeJointPDF(JointPDFType * pdf, const double factor);
 
   /** Compute marginal pdfs by summing over the joint pdf
    * direction = 0: fixed marginal pdf
