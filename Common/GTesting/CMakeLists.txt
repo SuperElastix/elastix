@@ -21,6 +21,7 @@ set(ELX_COMMON_GTEST_SOURCES
   itkImageRandomSamplerSparseMaskGTest.cxx
   itkImageSamplerGTest.cxx
   itkParameterMapInterfaceTest.cxx
+  itkParzenWindowHistogramImageToImageMetricGTest.cxx
 )
 
 if(USE_ImpactMetric)
