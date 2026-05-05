@@ -146,7 +146,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
   this->ComputePDFs(parameters);
 
   /** Normalize the pdfs: p = alpha h */
-  this->NormalizeJointPDF(this->m_JointPDF, this->m_Alpha);
+  Superclass::NormalizeJointPDF(this->m_JointPDF, this->m_Alpha);
 
   /** Compute the fixed and moving marginal pdfs, by summing over the joint pdf */
   this->ComputeMarginalPDF(this->m_JointPDF, this->m_FixedImageMarginalPDF, 0);
@@ -186,7 +186,7 @@ ParzenWindowNormalizedMutualInformationImageToImageMetric<TFixedImage, TMovingIm
   this->ComputePDFsAndPDFDerivatives(parameters);
 
   /** Normalize the pdfs: p = alpha h*/
-  this->NormalizeJointPDF(this->m_JointPDF, this->m_Alpha);
+  Superclass::NormalizeJointPDF(this->m_JointPDF, this->m_Alpha);
 
   /** Compute the fixed and moving marginal pdf by summing over the histogram */
   this->ComputeMarginalPDF(this->m_JointPDF, this->m_FixedImageMarginalPDF, 0);
