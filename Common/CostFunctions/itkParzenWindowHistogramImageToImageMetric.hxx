@@ -23,7 +23,6 @@
 #include "itkBSplineKernelFunction2.h"
 #include "itkBSplineDerivativeKernelFunction2.h"
 #include "itkImageLinearIteratorWithIndex.h"
-#include "itkImageScanlineIterator.h"
 #include <itkImageBufferRange.h>
 #include <vnl/vnl_math.h>
 #include <cassert>
@@ -1096,37 +1095,20 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreade
   m_Alpha = 1.0 / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
 
   /** Accumulate joint histogram. */
-  // could be multi-threaded too, by each thread updating only a part of the JointPDF.
-  using JointPDFIteratorType = ImageScanlineIterator<JointPDFType>;
-  JointPDFIteratorType              it(m_JointPDF, m_JointPDF->GetBufferedRegion());
-  std::vector<JointPDFIteratorType> itT(numberOfThreads);
-  for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-  {
-    itT[i] = JointPDFIteratorType(m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[i].st_JointPDF,
-                                  m_JointPDF->GetBufferedRegion());
-  }
+  const ImageBufferRange imageBufferRange(*m_JointPDF);
 
-  PDFValueType sum;
-  while (!it.IsAtEnd())
+  std::fill(imageBufferRange.begin(), imageBufferRange.end(), PDFValueType{});
+
+  for (const auto & perThreadStruct : m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables)
   {
-    while (!it.IsAtEndOfLine())
+    auto pdfValueIteratorPerThread = ImageBufferRange(*perThreadStruct.st_JointPDF).cbegin();
+
+    for (PDFValueType & pdfValue : imageBufferRange)
     {
-      sum = PDFValueType{};
-      for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-      {
-        sum += itT[i].Value();
-        ++itT[i];
-      }
-      it.Set(sum);
-      ++it;
-    }
-    it.NextLine();
-    for (ThreadIdType i = 0; i < numberOfThreads; ++i)
-    {
-      itT[i].NextLine();
+      pdfValue += *pdfValueIteratorPerThread;
+      ++pdfValueIteratorPerThread;
     }
   }
-
 } // end AfterThreadedComputePDFs()
 
 
