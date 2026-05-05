@@ -606,7 +606,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
 template <typename TFixedImage, typename TMovingImage>
 void
 ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::NormalizeJointPDF(JointPDFType * pdf,
-                                                                                      const double   factor) const
+                                                                                      const double   factor)
 {
   using JointPDFIteratorType = ImageScanlineIterator<JointPDFType>;
   JointPDFIteratorType it(pdf, pdf->GetBufferedRegion());
