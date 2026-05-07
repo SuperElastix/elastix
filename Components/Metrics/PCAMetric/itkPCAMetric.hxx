@@ -644,30 +644,17 @@ template <typename TFixedImage, typename TMovingImage>
 void
 PCAMetric<TFixedImage, TMovingImage>::ThreadedGetSamples(ThreadIdType threadId)
 {
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const size_t                sampleContainerSize{ sampleContainer->size() };
-
   /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
-
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = sampleContainer->cbegin();
-  const auto threader_fbegin = beginOfSampleContainer + pos_begin;
-  const auto threader_fend = beginOfSampleContainer + pos_end;
+  const auto & rangeOfSamples = this->Superclass::GetRangeOfSamples(threadId);
 
   std::vector<FixedImagePointType> SamplesOK;
-  MatrixType                       datablock(nrOfSamplesPerThreads, m_G);
+  MatrixType                       datablock(rangeOfSamples.end() - rangeOfSamples.begin(), m_G);
 
   unsigned int pixelIndex = 0;
-  for (auto threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for (const auto & sample : rangeOfSamples)
   {
     /** Read fixed coordinates. */
-    FixedImagePointType fixedPoint = threader_fiter->m_ImageCoordinates;
+    FixedImagePointType fixedPoint = sample.m_ImageCoordinates;
 
     /** Transform sampled point to voxel coordinates. */
     auto voxelCoord =
