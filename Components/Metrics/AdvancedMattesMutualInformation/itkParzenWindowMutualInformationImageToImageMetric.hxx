@@ -433,27 +433,11 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
     preconditioningDivisor = DerivativeType(this->GetNumberOfParameters(), 0.0);
   }
 
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const size_t                sampleContainerSize{ sampleContainer->size() };
-
-  /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
-
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = sampleContainer->cbegin();
-  const auto fbegin = beginOfSampleContainer + pos_begin;
-  const auto fend = beginOfSampleContainer + pos_end;
-
   /** Loop over sample container and compute contribution of each sample to pdfs. */
-  for (auto fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & sample : this->Superclass::GetRangeOfSamples(threadId))
   {
     /** Read fixed coordinates and create some variables. */
-    const FixedImagePointType & fixedPoint = fiter->m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = sample.m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -475,7 +459,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
     if (sampleOk)
     {
       /** Get the fixed image value. */
-      auto fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
+      auto fixedImageValue = static_cast<RealType>(sample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
       fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);

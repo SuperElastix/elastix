@@ -449,17 +449,6 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
   DerivativeType & vecSum1 = this->m_KappaGetValueAndDerivativePerThreadVariables[threadId].st_DerivativeSum1;
   DerivativeType & vecSum2 = this->m_KappaGetValueAndDerivativePerThreadVariables[threadId].st_DerivativeSum2;
 
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const size_t                sampleContainerSize{ sampleContainer->size() };
-
-  /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
-
   /** Some variables. */
   RealType      movingImageValue;
   std::size_t   fixedForegroundArea = 0; // or unsigned long
@@ -467,16 +456,11 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
   std::size_t   intersection = 0;
   unsigned long numberOfPixelsCounted = 0;
 
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = sampleContainer->cbegin();
-  const auto fbegin = beginOfSampleContainer + pos_begin;
-  const auto fend = beginOfSampleContainer + pos_end;
-
   /** Loop over the fixed image to calculate the kappa statistic. */
-  for (auto fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & sample : this->Superclass::GetRangeOfSamples(threadId))
   {
     /** Read fixed coordinates. */
-    const FixedImagePointType & fixedPoint = fiter->m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = sample.m_ImageCoordinates;
 
     /** Transform point. */
     const MovingImagePointType mappedPoint = this->TransformPoint(fixedPoint);
@@ -500,7 +484,7 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGet
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const auto fixedImageValue = static_cast<RealType>(fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(sample.m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

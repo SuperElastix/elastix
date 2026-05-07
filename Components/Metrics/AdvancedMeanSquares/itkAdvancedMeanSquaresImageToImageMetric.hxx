@@ -251,31 +251,15 @@ template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetValue(ThreadIdType threadId) const
 {
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const size_t                sampleContainerSize{ sampleContainer->size() };
-
-  /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
-
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = sampleContainer->cbegin();
-  const auto threader_fbegin = beginOfSampleContainer + pos_begin;
-  const auto threader_fend = beginOfSampleContainer + pos_end;
-
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
   MeasureType   measure{};
 
   /** Loop over the fixed image to calculate the mean squares. */
-  for (auto threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for (const auto & sample : this->Superclass::GetRangeOfSamples(threadId))
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = threader_fiter->m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = sample.m_ImageCoordinates;
     RealType                    movingImageValue;
 
     /** Transform point. */
@@ -297,7 +281,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const auto fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(sample.m_ImageValue);
 
       /** The difference squared. */
       const RealType diff = movingImageValue - fixedImageValue;
@@ -547,31 +531,15 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
    */
   DerivativeType & derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const size_t                sampleContainerSize{ sampleContainer->size() };
-
-  /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
-
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = sampleContainer->cbegin();
-  const auto threader_fbegin = beginOfSampleContainer + pos_begin;
-  const auto threader_fend = beginOfSampleContainer + pos_end;
-
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
   MeasureType   measure{};
 
   /** Loop over the fixed image to calculate the mean squares. */
-  for (auto threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for (const auto & sample : this->Superclass::GetRangeOfSamples(threadId))
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = threader_fiter->m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = sample.m_ImageCoordinates;
     RealType                    movingImageValue;
     MovingImageDerivativeType   movingImageDerivative;
 
@@ -595,7 +563,7 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::ThreadedGetVal
       ++numberOfPixelsCounted;
 
       /** Get the fixed image value. */
-      const auto fixedImageValue = static_cast<RealType>(threader_fiter->m_ImageValue);
+      const auto fixedImageValue = static_cast<RealType>(sample.m_ImageValue);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

@@ -397,31 +397,15 @@ TransformBendingEnergyPenaltyTerm<TFixedImage, TScalarType>::ThreadedGetValueAnd
    */
   DerivativeType & derivative = Superclass::m_GetValueAndDerivativePerThreadVariables[threadId].st_Derivative;
 
-  /** Get a handle to the sample container. */
-  ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
-  const size_t                sampleContainerSize{ sampleContainer->size() };
-
-  /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(Self::GetNumberOfWorkUnits())));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
-
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = sampleContainer->cbegin();
-  const auto fbegin = beginOfSampleContainer + pos_begin;
-  const auto fend = beginOfSampleContainer + pos_end;
-
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
   MeasureType   measure{};
 
   /** Loop over the fixed image to calculate the penalty term and its derivative. */
-  for (auto fiter = fbegin; fiter != fend; ++fiter)
+  for (const auto & sample : this->Superclass::GetRangeOfSamples(threadId))
   {
     /** Read fixed coordinates and initialize some variables. */
-    const FixedImagePointType & fixedPoint = fiter->m_ImageCoordinates;
+    const FixedImagePointType & fixedPoint = sample.m_ImageCoordinates;
 
     /** Although the mapped point is not needed to compute the penalty term,
      * we compute in order to check if it maps inside the support region of
