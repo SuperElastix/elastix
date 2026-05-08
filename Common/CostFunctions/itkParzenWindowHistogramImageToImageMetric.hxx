@@ -376,10 +376,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeTh
   /** Construct region size for the joint histograms. */
   const JointPDFSizeType jointPDFSize{ m_NumberOfMovingHistogramBins, m_NumberOfFixedHistogramBins };
 
-  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
-
   /** Only resize the array of structs when needed. */
-  m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
+  m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables.resize(Self::GetNumberOfWorkUnits());
 
   /** Some initialization. */
   for (auto & perThreadVariable : m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables)

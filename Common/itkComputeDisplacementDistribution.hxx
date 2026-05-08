@@ -67,10 +67,9 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::InitializeThreadingPar
    * each iteration, in the accumulate functions, in a multi-threaded fashion.
    * This has performance benefits for larger vector sizes.
    */
-  const ThreadIdType numberOfThreads = m_Threader->GetNumberOfWorkUnits();
 
   // For each thread, assign a struct of zero-initialized values.
-  m_ComputePerThreadVariables.assign(numberOfThreads, AlignedComputePerThreadStruct());
+  m_ComputePerThreadVariables.assign(m_Threader->GetNumberOfWorkUnits(), AlignedComputePerThreadStruct());
 
 } // end InitializeThreadingParameters()
 

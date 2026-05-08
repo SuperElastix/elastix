@@ -49,8 +49,6 @@ template <typename TFixedImage, typename TMovingImage>
 void
 AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::InitializeThreadingParameters() const
 {
-  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
-
   /** Resize and initialize the threading related parameters.
    * The SetSize() functions do not resize the data when this is not
    * needed, which saves valuable re-allocation time.
@@ -59,7 +57,7 @@ AdvancedNormalizedCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
    */
 
   /** Only resize the array of structs when needed. */
-  m_CorrelationGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
+  m_CorrelationGetValueAndDerivativePerThreadVariables.resize(Self::GetNumberOfWorkUnits());
 
   /** Some initialization. */
   const auto numberOfParameters = this->GetNumberOfParameters();

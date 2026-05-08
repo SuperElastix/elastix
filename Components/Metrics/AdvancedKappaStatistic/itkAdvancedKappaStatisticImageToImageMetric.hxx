@@ -57,10 +57,8 @@ AdvancedKappaStatisticImageToImageMetric<TFixedImage, TMovingImage>::InitializeT
    * which has performance benefits for larger vector sizes.
    */
 
-  const ThreadIdType numberOfThreads = Self::GetNumberOfWorkUnits();
-
   /** Only resize the array of structs when needed. */
-  m_KappaGetValueAndDerivativePerThreadVariables.resize(numberOfThreads);
+  m_KappaGetValueAndDerivativePerThreadVariables.resize(Self::GetNumberOfWorkUnits());
 
   /** Some initialization. */
   for (auto & perThreadVariable : m_KappaGetValueAndDerivativePerThreadVariables)
