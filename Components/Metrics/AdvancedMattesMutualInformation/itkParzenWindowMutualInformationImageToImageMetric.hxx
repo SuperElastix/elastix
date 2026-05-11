@@ -327,8 +327,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
       auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
-      movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue, movingImageDerivative);
+      fixedImageValue = this->Superclass::GetFixedImageLimiter()->Evaluate(fixedImageValue);
+      movingImageValue = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValue, movingImageDerivative);
 
       /** Get the transform Jacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
@@ -462,8 +462,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
       auto fixedImageValue = static_cast<RealType>(sample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
-      movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue, movingImageDerivative);
+      fixedImageValue = this->Superclass::GetFixedImageLimiter()->Evaluate(fixedImageValue);
+      movingImageValue = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValue, movingImageDerivative);
 
 #if 0
       /** Get the TransformJacobian dT/dmu. */

@@ -932,8 +932,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
       auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
-      movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue);
+      fixedImageValue = this->Superclass::GetFixedImageLimiter()->Evaluate(fixedImageValue);
+      movingImageValue = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValue);
 
       /** Compute this sample's contribution to the joint distributions. */
       this->UpdateJointPDFAndDerivatives(fixedImageValue, movingImageValue, nullptr, nullptr, m_JointPDF.GetPointer());
@@ -1037,8 +1037,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
       auto fixedImageValue = static_cast<RealType>(sample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
-      movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue);
+      fixedImageValue = this->Superclass::GetFixedImageLimiter()->Evaluate(fixedImageValue);
+      movingImageValue = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValue);
 
       /** Compute this sample's contribution to the joint distributions. */
       this->UpdateJointPDFAndDerivatives(fixedImageValue, movingImageValue, nullptr, nullptr, jointPDF.GetPointer());
@@ -1187,8 +1187,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
 
       /** Make sure the values fall within the histogram range. */
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
-      movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue, movingImageDerivative);
+      fixedImageValue = this->Superclass::GetFixedImageLimiter()->Evaluate(fixedImageValue);
+      movingImageValue = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValue, movingImageDerivative);
 
       /** Get the TransformJacobian dT/dmu. */
       this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
@@ -1279,7 +1279,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
     {
       /** Get the fixed image value and make sure the value falls within the histogram range. */
       auto fixedImageValue = static_cast<RealType>(fixedImageSample.m_ImageValue);
-      fixedImageValue = this->GetFixedImageLimiter()->Evaluate(fixedImageValue);
+      fixedImageValue = this->Superclass::GetFixedImageLimiter()->Evaluate(fixedImageValue);
 
       /** Check if the point is inside the moving mask. */
       bool sampleOk = this->IsInsideMovingMask(mappedPoint);
@@ -1294,7 +1294,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
         sampleOk = this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPoint, movingImageValue, nullptr);
         if (sampleOk)
         {
-          movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue);
+          movingImageValue = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValue);
         }
         else
         {
@@ -1350,7 +1350,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
             this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPointRight, movingImageValueRight, nullptr);
           if (sampleOk)
           {
-            movingImageValueRight = this->GetMovingImageLimiter()->Evaluate(movingImageValueRight);
+            movingImageValueRight = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValueRight);
             movingImageValuesRight[i] = movingImageValueRight;
           }
           else
@@ -1371,7 +1371,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
             this->Superclass::EvaluateMovingImageValueAndDerivative(mappedPointLeft, movingImageValueLeft, nullptr);
           if (sampleOk)
           {
-            movingImageValueLeft = this->GetMovingImageLimiter()->Evaluate(movingImageValueLeft);
+            movingImageValueLeft = this->Superclass::GetMovingImageLimiter()->Evaluate(movingImageValueLeft);
             movingImageValuesLeft[i] = movingImageValueLeft;
           }
           else
