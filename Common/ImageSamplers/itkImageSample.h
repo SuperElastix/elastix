@@ -21,6 +21,9 @@
 #include "itkNumericTraits.h"
 #include "itkMath.h"
 
+#include <algorithm> // For min.
+#include <vector>
+
 namespace itk
 {
 
@@ -57,7 +60,46 @@ public:
   {
     return !(lhs == rhs);
   }
+
+
+  /** Retrieves a subrange of samples from the specified container, for the specified work unit. */
+  static auto
+  GetRangeOfSamples(const std::vector<ImageSample> & sampleContainer,
+                    const size_t                     numberOfWorkUnits,
+                    const size_t                     workUnitID)
+  {
+    const size_t sampleContainerSize{ sampleContainer.size() };
+
+    const auto numberOfSamplesPerWorkUnit =
+      static_cast<size_t>(std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfWorkUnits)));
+
+    using IteratorType = decltype(sampleContainer.cbegin());
+
+    struct Range
+    {
+      IteratorType Begin{};
+      IteratorType End{};
+
+      auto
+      begin() const
+      {
+        return Begin;
+      }
+
+      auto
+      end() const
+      {
+        return End;
+      }
+    };
+
+    const auto beginOfSampleContainer = sampleContainer.cbegin();
+    return Range{ beginOfSampleContainer + std::min(numberOfSamplesPerWorkUnit * workUnitID, sampleContainerSize),
+                  beginOfSampleContainer +
+                    std::min(numberOfSamplesPerWorkUnit * (workUnitID + 1), sampleContainerSize) };
+  }
 };
+
 
 } // end namespace itk
 
