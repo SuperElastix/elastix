@@ -391,37 +391,8 @@ protected:
   auto
   GetRangeOfSamples(const ThreadIdType workUnitID) const
   {
-    const auto & sampleContainer = m_ImageSampler->GetOutput()->CastToSTLConstContainer();
-
-    const size_t sampleContainerSize{ sampleContainer.size() };
-    const size_t numberOfWorkUnits{ this->Superclass::GetNumberOfWorkUnits() };
-    const auto   numberOfSamplesPerWorkUnit =
-      static_cast<size_t>(std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfWorkUnits)));
-
-    using IteratorType = decltype(sampleContainer.cbegin());
-
-    struct Range
-    {
-      IteratorType Begin{};
-      IteratorType End{};
-
-      auto
-      begin() const
-      {
-        return Begin;
-      }
-
-      auto
-      end() const
-      {
-        return End;
-      }
-    };
-
-    const auto beginOfSampleContainer = sampleContainer.cbegin();
-    return Range{ beginOfSampleContainer + std::min(numberOfSamplesPerWorkUnit * workUnitID, sampleContainerSize),
-                  beginOfSampleContainer +
-                    std::min(numberOfSamplesPerWorkUnit * (workUnitID + 1), sampleContainerSize) };
+    return ImageSample<TFixedImage>::GetRangeOfSamples(
+      m_ImageSampler->GetOutput()->CastToSTLConstContainer(), this->Superclass::GetNumberOfWorkUnits(), workUnitID);
   }
 
   /** Multi-threaded metric computation. */
