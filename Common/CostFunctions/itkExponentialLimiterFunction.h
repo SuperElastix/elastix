@@ -85,6 +85,7 @@ protected:
   virtual void
   ComputeLimiterSettings();
 
+private:
   double m_UTminUB{};
   double m_UTminUBinv{};
   double m_LTminLB{};
