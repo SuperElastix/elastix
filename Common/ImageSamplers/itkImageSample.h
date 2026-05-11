@@ -70,8 +70,9 @@ public:
   {
     const size_t sampleContainerSize{ sampleContainer.size() };
 
-    const auto numberOfSamplesPerWorkUnit =
-      static_cast<size_t>(std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfWorkUnits)));
+    // Equivalent to `ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfWorkUnits)))`.
+    const size_t numberOfSamplesPerWorkUnit{ (sampleContainerSize / numberOfWorkUnits) +
+                                             (sampleContainerSize % numberOfWorkUnits == 0 ? 0 : 1) };
 
     using IteratorType = decltype(sampleContainer.cbegin());
 
