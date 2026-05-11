@@ -267,27 +267,12 @@ AdvancedImageMomentsCalculator<TImage>::ThreadedCompute(ThreadIdType threadId)
   Cm.Fill(typename MatrixType::ValueType{});
   unsigned long numberOfPixelsCounted = 0;
 
-  /** Get sample container size, number of threads, and output space dimension. */
-  const size_t       sampleContainerSize{ this->m_SampleContainer->size() };
-  const ThreadIdType numberOfThreads = this->m_Threader->GetNumberOfWorkUnits();
-
-  /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfThreads)));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
-
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = this->m_SampleContainer->cbegin();
-  const auto threader_fbegin = beginOfSampleContainer + pos_begin;
-  const auto threader_fend = beginOfSampleContainer + pos_end;
-
-  for (auto threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for (const auto & sample : ImageSample<TImage>::GetRangeOfSamples(
+         m_SampleContainer->CastToSTLConstContainer(), m_Threader->GetNumberOfWorkUnits(), threadId))
   {
-    double value = threader_fiter->m_ImageValue;
-    // IndexType indexPosition = threader_fiter->GetIndex();
-    Point<double, ImageDimension> physicalPosition = threader_fiter->m_ImageCoordinates;
+    double value = sample.m_ImageValue;
+    // IndexType indexPosition = sample.GetIndex();
+    Point<double, ImageDimension> physicalPosition = sample.m_ImageCoordinates;
 
     if (m_SpatialObjectMask.IsNull() || m_SpatialObjectMask->IsInsideInWorldSpace(physicalPosition))
     {
