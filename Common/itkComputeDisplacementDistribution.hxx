@@ -307,20 +307,11 @@ template <typename TFixedImage, typename TTransform>
 void
 ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(ThreadIdType threadId)
 {
-  /** Get sample container size, number of threads, and output space dimension. */
-  const SizeValueType           sampleContainerSize = m_Samples.size();
-  const ThreadIdType            numberOfThreads = m_Threader->GetNumberOfWorkUnits();
+  /** Get output space dimension. */
   static constexpr unsigned int outdim{ TTransform::OutputSpaceDimension };
 
   /** Get a handle to the scales vector */
   const ScalesType & scales = this->GetScales();
-
-  /** Get the samples for this thread. */
-  const auto nrOfSamplesPerThreads = static_cast<unsigned long>(
-    std::ceil(static_cast<double>(sampleContainerSize) / static_cast<double>(numberOfThreads)));
-
-  const auto pos_begin = std::min<size_t>(nrOfSamplesPerThreads * threadId, sampleContainerSize);
-  const auto pos_end = std::min<size_t>(nrOfSamplesPerThreads * (threadId + 1), sampleContainerSize);
 
   /** Variables for nonzerojacobian indices and the Jacobian. */
   const SizeValueType        sizejacind = m_Transform->GetNumberOfNonZeroJacobianIndices();
@@ -339,16 +330,12 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   double         displacementSquared = 0.0;
   unsigned long  numberOfPixelsCounted = 0;
 
-  /** Create iterator over the sample container. */
-  const auto beginOfSampleContainer = m_Samples.cbegin();
-  const auto threader_fbegin = beginOfSampleContainer + pos_begin;
-  const auto threader_fend = beginOfSampleContainer + pos_end;
-
   /** Loop over the fixed image to calculate the mean squares. */
-  for (auto threader_fiter = threader_fbegin; threader_fiter != threader_fend; ++threader_fiter)
+  for (const auto & sample :
+       ImageSampleType::GetRangeOfSamples(m_Samples, m_Threader->GetNumberOfWorkUnits(), threadId))
   {
     /** Read fixed coordinates and get Jacobian. */
-    const FixedImagePointType & point = threader_fiter->m_ImageCoordinates;
+    const FixedImagePointType & point = sample.m_ImageCoordinates;
     m_Transform->GetJacobian(point, jacj, jacind);
 
     /** Apply scales, if necessary. */
