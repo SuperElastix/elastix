@@ -66,10 +66,6 @@ public:
   OutputType
   Evaluate(const InputType & input) const override;
 
-  /** Limit the input value and change the input function derivative accordingly */
-  OutputType
-  Evaluate(const InputType & input, DerivativeType & derivative) const override;
-
 protected:
   HardLimiterFunction() = default;
   ~HardLimiterFunction() override = default;

@@ -72,7 +72,7 @@ public:
 
   /** Limit the input value and change the input function derivative accordingly */
   OutputType
-  Evaluate(const InputType & input, DerivativeType & derivative) const override;
+  Evaluate(const InputType & input, DerivativeType & derivative) const;
 
   /** Initialize the limiter; calls the ComputeLimiterSettings() function */
   void

@@ -33,25 +33,6 @@ HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input) const
 } // end Evaluate()
 
 
-template <typename TInput, unsigned int NDimension>
-auto
-HardLimiterFunction<TInput, NDimension>::Evaluate(const InputType & input, DerivativeType & derivative) const
-  -> OutputType
-{
-  if (input > this->m_UpperBound)
-  {
-    derivative.Fill(OutputType{});
-    return (this->m_UpperBound);
-  }
-  if (input < this->m_LowerBound)
-  {
-    derivative.Fill(OutputType{});
-    return (this->m_LowerBound);
-  }
-  return (static_cast<OutputType>(input));
-} // end Evaluate()
-
-
 } // end namespace itk
 
 #endif
