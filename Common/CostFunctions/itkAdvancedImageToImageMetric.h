@@ -25,7 +25,8 @@
 #include "itkBSplineInterpolateImageFunction.h"
 #include "itkReducedDimensionBSplineInterpolateImageFunction.h"
 #include "itkAdvancedLinearInterpolateImageFunction.h"
-#include "itkLimiterFunctionBase.h"
+#include "itkExponentialLimiterFunction.h"
+#include "itkHardLimiterFunction.h"
 #include "itkFixedArray.h"
 #include "itkAdvancedTransform.h"
 
@@ -147,10 +148,10 @@ public:
   using ImageSampleContainerPointer = typename ImageSamplerType::OutputVectorContainerPointer;
 
   /** Typedefs for Limiter support. */
-  using FixedImageLimiterType = LimiterFunctionBase<RealType, FixedImageDimension>;
+  using FixedImageLimiterType = HardLimiterFunction<RealType, FixedImageDimension>;
   using FixedImageLimiterPointer = typename FixedImageLimiterType::Pointer;
   using FixedImageLimiterOutputType = typename FixedImageLimiterType::OutputType;
-  using MovingImageLimiterType = LimiterFunctionBase<RealType, MovingImageDimension>;
+  using MovingImageLimiterType = ExponentialLimiterFunction<RealType, MovingImageDimension>;
   using MovingImageLimiterPointer = typename MovingImageLimiterType::Pointer;
   using MovingImageLimiterOutputType = typename MovingImageLimiterType::OutputType;
 
