@@ -70,14 +70,6 @@ public:
   using DerivativeValueType = OutputType;
   using DerivativeType = CovariantVector<DerivativeValueType, Self::Dimension>;
 
-  /** Limit the input value. */
-  OutputType
-  Evaluate(const InputType & input) const override = 0;
-
-  /** Limit the input value and change the input function derivative accordingly */
-  virtual OutputType
-  Evaluate(const InputType & input, DerivativeType & derivative) const = 0;
-
   /** Set/Get the upper bound that the output should respect. Make sure it is higher
    * than the lower bound. */
   itkSetMacro(UpperBound, OutputType);
@@ -119,6 +111,15 @@ protected:
   OutputType m_LowerBound{};
   InputType  m_UpperThreshold{};
   InputType  m_LowerThreshold{};
+
+private:
+  /** Limit the input value. */
+  OutputType
+  Evaluate(const InputType & input) const override = 0;
+
+  /** Limit the input value and change the input function derivative accordingly */
+  virtual OutputType
+  Evaluate(const InputType & input, DerivativeType & derivative) const = 0;
 };
 
 } // end namespace itk
