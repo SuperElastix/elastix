@@ -424,7 +424,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
       else if (m_ReducedBSplineInterpolator && !Superclass::m_ComputeGradient)
       {
         /** Compute moving image value and gradient using the B-spline kernel. */
-        movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
+        movingImageValue = m_ReducedBSplineInterpolator->EvaluateAtContinuousIndex(cindex);
         *gradient = m_ReducedBSplineInterpolator->EvaluateDerivativeAtContinuousIndex(cindex);
         // m_ReducedBSplineInterpolator->EvaluateValueAndDerivativeAtContinuousIndex(
         //  cindex, movingImageValue, *gradient );
@@ -490,7 +490,11 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
     } // end if gradient
     else
     {
-      movingImageValue = Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
+      movingImageValue = m_BSplineInterpolator
+                           ? m_BSplineInterpolator->EvaluateAtContinuousIndex(cindex, optionalThreadId...)
+                         : m_BSplineInterpolatorFloat
+                           ? m_BSplineInterpolatorFloat->EvaluateAtContinuousIndex(cindex, optionalThreadId...)
+                           : Superclass::m_Interpolator->EvaluateAtContinuousIndex(cindex);
     }
   } // end if sampleOk
 
