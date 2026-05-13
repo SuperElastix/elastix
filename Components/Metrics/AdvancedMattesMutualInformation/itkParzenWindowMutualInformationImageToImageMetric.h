@@ -271,7 +271,8 @@ private:
                             const RealType                     movingImageValue,
                             const DerivativeType &             imageJacobian,
                             const NonZeroJacobianIndicesType & nzji,
-                            DerivativeType &                   derivative) const;
+                            DerivativeType &                   derivative,
+                            PDFValueType * const               parzenValues) const;
 
   /** Helper function to compute m_PRatioArray in case of low memory consumption. */
   void
