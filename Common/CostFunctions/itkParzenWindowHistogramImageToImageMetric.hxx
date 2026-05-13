@@ -469,7 +469,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   const RealType                     movingImageValue,
   const DerivativeType *             imageJacobian,
   const NonZeroJacobianIndicesType * nzji,
-  JointPDFType *                     jointPDF) const
+  JointPDFType *                     jointPDF,
+  PDFValueType * const               preallocatedParzenValues) const
 {
   using PDFIteratorType = ImageScanlineIterator<JointPDFType>;
 
@@ -487,11 +488,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   const auto numberOfFixedParzenValues = m_JointPDFWindow.GetSize()[1];
   const auto numberOfMovingParzenValues = m_JointPDFWindow.GetSize()[0];
 
-  // Create a buffer of Parzen values for both the fixed and the moving image.
-  const auto parzenValues = std::make_unique<PDFValueType[]>(numberOfFixedParzenValues + numberOfMovingParzenValues);
-
-  PDFValueType * const fixedParzenValues = parzenValues.get();
-  PDFValueType * const movingParzenValues = parzenValues.get() + numberOfFixedParzenValues;
+  PDFValueType * const fixedParzenValues = preallocatedParzenValues;
+  PDFValueType * const movingParzenValues = preallocatedParzenValues + numberOfFixedParzenValues;
 
   Self::EvaluateParzenValues(
     fixedImageParzenWindowTerm, fixedImageParzenWindowIndex, *m_FixedKernel, fixedParzenValues);
@@ -903,6 +901,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
+  const auto & jointPDFWindowSize = m_JointPDFWindow.GetSize();
+
+  // Create a buffer of Parzen values for both the fixed and the moving image.
+  const auto preallocatedParzenValues =
+    make_unique_for_overwrite<PDFValueType[]>(jointPDFWindowSize[0] + jointPDFWindowSize[1]);
+
   /** Loop over sample container and compute contribution of each sample to pdfs. */
   for (const auto & fixedImageSample : *sampleContainer)
   {
@@ -936,7 +940,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
       movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue);
 
       /** Compute this sample's contribution to the joint distributions. */
-      this->UpdateJointPDFAndDerivatives(fixedImageValue, movingImageValue, nullptr, nullptr, m_JointPDF.GetPointer());
+      this->UpdateJointPDFAndDerivatives(
+        fixedImageValue, movingImageValue, nullptr, nullptr, m_JointPDF.GetPointer(), preallocatedParzenValues.get());
     }
 
   } // end iterating over fixed image spatial sample container for loop
@@ -1005,6 +1010,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
   JointPDFPointer & jointPDF = m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[threadId].st_JointPDF;
   jointPDF->FillBuffer(PDFValueType{});
 
+  const auto & jointPDFWindowSize = m_JointPDFWindow.GetSize();
+
+  // Create a buffer of Parzen values for both the fixed and the moving image.
+  const auto preallocatedParzenValues =
+    make_unique_for_overwrite<PDFValueType[]>(jointPDFWindowSize[0] + jointPDFWindowSize[1]);
+
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
 
@@ -1041,7 +1052,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
       movingImageValue = this->GetMovingImageLimiter()->Evaluate(movingImageValue);
 
       /** Compute this sample's contribution to the joint distributions. */
-      this->UpdateJointPDFAndDerivatives(fixedImageValue, movingImageValue, nullptr, nullptr, jointPDF.GetPointer());
+      this->UpdateJointPDFAndDerivatives(
+        fixedImageValue, movingImageValue, nullptr, nullptr, jointPDF.GetPointer(), preallocatedParzenValues.get());
     }
   } // end iterating over fixed image spatial sample container for loop
 
@@ -1153,6 +1165,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
    */
   this->BeforeThreadedGetValueAndDerivative(parameters);
 
+  const auto & jointPDFWindowSize = m_JointPDFWindow.GetSize();
+
+  // Create a buffer of Parzen values for both the fixed and the moving image.
+  const auto preallocatedParzenValues =
+    make_unique_for_overwrite<PDFValueType[]>(jointPDFWindowSize[0] + jointPDFWindowSize[1]);
+
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
@@ -1197,8 +1215,12 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsA
       this->EvaluateTransformJacobianInnerProduct(jacobian, movingImageDerivative, imageJacobian);
 
       /** Update the joint pdf and the joint pdf derivatives. */
-      this->UpdateJointPDFAndDerivatives(
-        fixedImageValue, movingImageValue, &imageJacobian, &nzji, m_JointPDF.GetPointer());
+      this->UpdateJointPDFAndDerivatives(fixedImageValue,
+                                         movingImageValue,
+                                         &imageJacobian,
+                                         &nzji,
+                                         m_JointPDF.GetPointer(),
+                                         preallocatedParzenValues.get());
 
     } // end if-block check sampleOk
   } // end iterating over fixed image spatial sample container for loop
