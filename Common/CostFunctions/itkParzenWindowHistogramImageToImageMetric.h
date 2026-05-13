@@ -413,7 +413,8 @@ private:
                                const RealType                     movingImageValue,
                                const DerivativeType *             imageJacobian,
                                const NonZeroJacobianIndicesType * nzji,
-                               JointPDFType *                     jointPDF) const;
+                               JointPDFType *                     jointPDF,
+                               PDFValueType * const               preallocatedParzenValues) const;
 
   /** Update the joint PDF and the incremental pdfs.
    * The input is a pixel pair (fixed, moving, moving mask) and
