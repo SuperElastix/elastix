@@ -479,9 +479,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
 #endif
 
       /** If desired, apply the technique introduced by Tustison. */
-      TransformJacobianType jacobian;
       if (this->GetUseJacobianPreconditioning())
       {
+        TransformJacobianType jacobian;
         this->EvaluateTransformJacobian(fixedPoint, jacobian, nzji);
 
         this->ComputeJacobianPreconditioner(jacobian, nzji, jacobianPreconditioner, preconditioningDivisor);
