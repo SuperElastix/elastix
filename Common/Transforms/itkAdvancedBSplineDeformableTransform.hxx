@@ -38,6 +38,7 @@
 #include "itkAdvancedBSplineDeformableTransform.h"
 #include "itkContinuousIndex.h"
 #include "itkImageScanlineConstIterator.h"
+#include <itkImageRegionRange.h>
 #include "itkIdentityTransform.h"
 #include <vnl/vnl_math.h>
 
@@ -167,36 +168,20 @@ AdvancedBSplineDeformableTransform<TScalarType, NDimensions, VSplineOrder>::Tran
 
   OutputPointType outputPoint{};
 
-  /** Create iterators over the coefficient images. */
-  using IteratorType = ImageScanlineConstIterator<ImageType>;
-  IteratorType  iterators[SpaceDimension];
-  unsigned long counter = 0;
-
-  for (unsigned int j = 0; j < SpaceDimension; ++j)
-  {
-    iterators[j] = IteratorType(Superclass::m_CoefficientImages[j], supportRegion);
-  }
+  static constexpr auto n = WeightsFunctionType::SupportSize.CalculateProductOfElements();
 
   /** Loop over the support region. */
-  while (!iterators[0].IsAtEnd())
+  // multiply weight with coefficient to compute displacement
+  for (unsigned int j = 0; j < SpaceDimension; ++j)
   {
-    while (!iterators[0].IsAtEndOfLine())
-    {
-      // multiply weight with coefficient to compute displacement
-      for (unsigned int j = 0; j < SpaceDimension; ++j)
-      {
-        outputPoint[j] += static_cast<ScalarType>(weights[counter] * iterators[j].Value());
-        ++iterators[j];
-      }
-      ++counter;
-    } // end of scanline
+    auto it = ImageRegionRange<const ImageType>(*Superclass::m_CoefficientImages[j], supportRegion).cbegin();
 
-    for (auto & iterator : iterators)
+    for (size_t counter{}; counter < n; ++counter)
     {
-      iterator.NextLine();
+      outputPoint[j] += static_cast<ScalarType>(weights[counter] * *it);
+      ++it;
     }
-
-  } // end while
+  }
 
   // The output point is the start point + displacement.
   for (unsigned int j = 0; j < SpaceDimension; ++j)
