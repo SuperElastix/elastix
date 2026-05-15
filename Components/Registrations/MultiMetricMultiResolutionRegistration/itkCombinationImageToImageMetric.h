@@ -18,6 +18,7 @@
 #ifndef itkCombinationImageToImageMetric_h
 #define itkCombinationImageToImageMetric_h
 
+#include "itkTransformPenaltyTerm.h"
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 
@@ -131,6 +132,10 @@ public:
   using MovingImageRegionType = typename MovingImageType::RegionType;
   using MovingImageDerivativeScalesType = FixedArray<double, Self::MovingImageDimension>;
 
+  /** Typedef for transform penalty metrics. */
+  typedef TransformPenaltyTerm<TFixedImage>             TransformMetricType;
+  typedef typename TransformMetricType::Pointer         TransformMetricPointer;
+
   /** Typedef for the PointSetMetric. */
   using FixedPointSetType = PointSet<CoordinateRepresentationType,
                                      TFixedImage::ImageDimension,
@@ -163,6 +168,9 @@ public:
 
   /** Get the number of metrics to combine. */
   itkGetConstMacro(NumberOfMetrics, unsigned int);
+  itkGetConstMacro(NumberOfImageMetrics, unsigned int);
+  itkGetConstMacro(NumberOfTransformMetrics, unsigned int);
+  itkGetConstMacro(NumberOfPointSetMetrics, unsigned int);
 
   /** Set metric i. It may be a SingleValuedCostFunction, instead of
    * a ImageToImageMetric, but the first one should be an
@@ -453,6 +461,9 @@ protected:
 private:
   /** Store the metrics and the corresponding weights. */
   unsigned int                                 m_NumberOfMetrics{ 0 };
+  unsigned int                                 m_NumberOfImageMetrics{ 0 };
+  unsigned int                                 m_NumberOfTransformMetrics{ 0 };
+  unsigned int                                 m_NumberOfPointSetMetrics{ 0 };
   std::vector<SingleValuedCostFunctionPointer> m_Metrics{};
   std::vector<double>                          m_MetricWeights{};
   std::vector<double>                          m_MetricRelativeWeights{};
