@@ -178,7 +178,7 @@ MovingImagePyramidBase<TElastix>::WritePyramidImage(const std::string & filename
   configuration.ReadParameter(doCompression, "CompressResultImage", 0, false);
 
   /** Do the writing. */
-  log::to_stdout("  Writing moving pyramid image ...");
+  log::info("  Writing moving pyramid image ...");
 #ifndef ELX_NO_FILESYSTEM_ACCESS
   try
   {

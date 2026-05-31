@@ -395,7 +395,7 @@ ResamplerBase<TElastix>::WriteResultImage(OutputImageType *   image,
   /** Do the writing. */
   if (showProgress)
   {
-    log::to_stdout("  Writing image ...");
+    log::info("  Writing image ...");
   }
 #ifndef ELX_NO_FILESYSTEM_ACCESS
   try
