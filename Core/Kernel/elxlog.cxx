@@ -96,6 +96,12 @@ public:
   }
 
   auto
+  is_logging_to_stdout() const
+  {
+    return m_data.is_logging_to_stdout;
+  }
+
+  auto
   is_logging_to_any_output() const
   {
     return m_data.is_logging_to_file || m_data.is_logging_to_stdout;
@@ -270,15 +276,14 @@ log::info_to_log_file(const std::ostream & stream)
 }
 
 void
-log::to_stdout(const std::string & message)
+log::info_to_stdout(const std::string & message)
 {
-  get_logger().to_stdout(message);
-}
+  auto & logger = get_logger();
 
-void
-log::to_stdout(const std::ostream & stream)
-{
-  get_logger().to_stdout(get_string_from_stream(stream));
+  if (logger.is_logging_to_stdout() && (logger.get_log_level() == level::info))
+  {
+    logger.to_stdout(message);
+  }
 }
 
 } // end namespace elastix

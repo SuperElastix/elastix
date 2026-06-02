@@ -93,12 +93,10 @@ public:
   ///@}
 
   ///@{
-  /** Passes the message only to stdout, not to the log file. */
+  /** Passes the message only to stdout, not to the log file. Only when log level is `info`, and `do_log_to_stdout` is
+   * enabled */
   static void
-  to_stdout(const std::string & message);
-
-  static void
-  to_stdout(const std::ostream & stream);
+  info_to_stdout(const std::string & message);
   ///@}
 };
 
