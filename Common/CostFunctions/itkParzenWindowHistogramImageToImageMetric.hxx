@@ -339,10 +339,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeKe
    */
 
   /** Set the size of the Parzen window. */
-  JointPDFSizeType parzenWindowSize;
-  parzenWindowSize[0] = m_MovingKernelBSplineOrder + 1;
-  parzenWindowSize[1] = m_FixedKernelBSplineOrder + 1;
-  m_JointPDFWindowSize = parzenWindowSize;
+  m_JointPDFWindowSize = { m_MovingKernelBSplineOrder + 1, m_FixedKernelBSplineOrder + 1 };
 
   /** The ParzenIndex is the lowest bin number that is affected by a
    * pixel and computed as:
@@ -501,12 +498,8 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
   pdfWindowIndex[0] = movingImageParzenWindowIndex;
   pdfWindowIndex[1] = fixedImageParzenWindowIndex;
 
-  /** For thread-safety, make a local copy of the support region,
-   * and use that one. Because each thread will modify it.
-   */
-  JointPDFRegionType jointPDFWindow = m_JointPDFWindowSize;
-  jointPDFWindow.SetIndex(pdfWindowIndex);
-  PDFIteratorType it(jointPDF, jointPDFWindow);
+  const JointPDFRegionType jointPDFWindow{ pdfWindowIndex, m_JointPDFWindowSize };
+  PDFIteratorType          it(jointPDF, jointPDFWindow);
 
   if (!imageJacobian)
   {
@@ -901,11 +894,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ComputePDFsS
   /** Get a handle to the sample container. */
   ImageSampleContainerPointer sampleContainer = this->GetImageSampler()->GetOutput();
 
-  const auto & jointPDFWindowSize = m_JointPDFWindowSize;
-
   // Create a buffer of Parzen values for both the fixed and the moving image.
   const auto preallocatedParzenValues =
-    make_unique_for_overwrite<PDFValueType[]>(jointPDFWindowSize[0] + jointPDFWindowSize[1]);
+    make_unique_for_overwrite<PDFValueType[]>(m_JointPDFWindowSize[0] + m_JointPDFWindowSize[1]);
 
   /** Loop over sample container and compute contribution of each sample to pdfs. */
   for (const auto & fixedImageSample : *sampleContainer)
@@ -1010,11 +1001,9 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
   JointPDFPointer & jointPDF = m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[threadId].st_JointPDF;
   jointPDF->FillBuffer(PDFValueType{});
 
-  const auto & jointPDFWindowSize = m_JointPDFWindowSize;
-
   // Create a buffer of Parzen values for both the fixed and the moving image.
   const auto preallocatedParzenValues =
-    make_unique_for_overwrite<PDFValueType[]>(jointPDFWindowSize[0] + jointPDFWindowSize[1]);
+    make_unique_for_overwrite<PDFValueType[]>(m_JointPDFWindowSize[0] + m_JointPDFWindowSize[1]);
 
   /** Create variables to store intermediate results. circumvent false sharing */
   unsigned long numberOfPixelsCounted = 0;
