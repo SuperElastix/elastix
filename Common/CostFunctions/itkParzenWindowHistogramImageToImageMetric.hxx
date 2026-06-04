@@ -494,9 +494,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
     movingImageParzenWindowTerm, movingImageParzenWindowIndex, *m_MovingKernel, movingParzenValues);
 
   /** Position the JointPDFWindow. */
-  JointPDFIndexType pdfWindowIndex;
-  pdfWindowIndex[0] = movingImageParzenWindowIndex;
-  pdfWindowIndex[1] = fixedImageParzenWindowIndex;
+  const JointPDFIndexType pdfWindowIndex{ movingImageParzenWindowIndex, fixedImageParzenWindowIndex };
 
   const JointPDFRegionType jointPDFWindow{ pdfWindowIndex, m_JointPDFWindowSize };
   PDFIteratorType          it(jointPDF, jointPDFWindow);
@@ -729,9 +727,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::UpdateJointP
       movingImageParzenWindowTerm, movingImageParzenWindowIndex, *m_MovingKernel, movingParzenValues.data_block());
 
     /** Position the JointPDFWindow (set the start index). */
-    JointPDFIndexType pdfIndex;
-    pdfIndex[0] = movingImageParzenWindowIndex;
-    pdfIndex[1] = fixedImageParzenWindowIndex;
+    JointPDFIndexType pdfIndex{ movingImageParzenWindowIndex, fixedImageParzenWindowIndex };
 
     /** Loop over the Parzen window region and do the following update:
      *
