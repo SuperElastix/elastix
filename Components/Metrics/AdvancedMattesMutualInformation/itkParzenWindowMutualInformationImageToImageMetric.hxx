@@ -295,7 +295,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Comp
     preconditioningDivisor = DerivativeType(this->GetNumberOfParameters(), 0.0);
   }
 
-  const auto & jointPDFWindowSize = Superclass::m_JointPDFWindow.GetSize();
+  const auto & jointPDFWindowSize = Superclass::GetJointPDFWindowSize();
 
   // Create a buffer of Parzen values for both the fixed and the moving image.
   const auto parzenValues = make_unique_for_overwrite<PDFValueType[]>(jointPDFWindowSize[0] + jointPDFWindowSize[1]);
@@ -439,7 +439,7 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Thre
     preconditioningDivisor = DerivativeType(this->GetNumberOfParameters(), 0.0);
   }
 
-  const auto & jointPDFWindowSize = Superclass::m_JointPDFWindow.GetSize();
+  const auto & jointPDFWindowSize = Superclass::GetJointPDFWindowSize();
 
   // Create a buffer of Parzen values for both the fixed and the moving image.
   const auto parzenValues = make_unique_for_overwrite<PDFValueType[]>(jointPDFWindowSize[0] + jointPDFWindowSize[1]);
@@ -714,8 +714,8 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Upda
   const int movingParzenWindowIndex =
     static_cast<int>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset));
 
-  const auto numberOfFixedParzenValues = Superclass::m_JointPDFWindow.GetSize()[1];
-  const auto numberOfDerivedMovingParzenValues = Superclass::m_JointPDFWindow.GetSize()[0];
+  const auto numberOfFixedParzenValues = Superclass::GetJointPDFWindowSize()[1];
+  const auto numberOfDerivedMovingParzenValues = Superclass::GetJointPDFWindowSize()[0];
 
   /** Compute the fixed Parzen values. */
   PDFValueType * const fixedParzenValues = parzenValues;

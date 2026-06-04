@@ -280,7 +280,6 @@ protected:
   IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFRight{ nullptr };
   IncrementalMarginalPDFPointer m_FixedIncrementalMarginalPDFLeft{ nullptr };
   IncrementalMarginalPDFPointer m_MovingIncrementalMarginalPDFLeft{ nullptr };
-  mutable JointPDFRegionType    m_JointPDFWindow{}; // no need for mutable anymore?
   double                        m_MovingImageNormalizedMin{ 0.0 };
   double                        m_FixedImageNormalizedMin{ 0.0 };
   double                        m_FixedImageBinSize{ 0.0 };
@@ -292,6 +291,12 @@ protected:
   KernelFunctionPointer m_FixedKernel{ nullptr };
   KernelFunctionPointer m_MovingKernel{ nullptr };
   KernelFunctionPointer m_DerivativeMovingKernel{ nullptr };
+
+  const JointPDFSizeType &
+  GetJointPDFWindowSize() const
+  {
+    return m_JointPDFWindowSize;
+  }
 
   /** Compute the Parzen values given an image value and a starting histogram index
    * Compute the values at (parzenWindowIndex - parzenWindowTerm + k) for
@@ -460,6 +465,9 @@ private:
 
   void
   InitializeKernels();
+
+  /** The size of the Joint PDF Window (numberOfMovingParzenValues, numberOfFixedParzenValues). */
+  JointPDFSizeType m_JointPDFWindowSize{};
 
   /** Threading related parameters. */
   mutable std::vector<JointPDFPointer> m_ThreaderJointPDFs{};
