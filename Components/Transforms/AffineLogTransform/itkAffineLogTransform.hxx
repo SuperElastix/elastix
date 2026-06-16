@@ -18,7 +18,12 @@
 #ifndef itkAffineLogTransform_hxx
 #define itkAffineLogTransform_hxx
 
-#include <vnl/vnl_matrix_exp.h>
+// itk::Math::MatrixExponential exists in ITK >= 6 (ITK#6454); ITK 5.4.x lacks it, so fall back to vnl_matrix_exp.
+#if __has_include("itkMatrixExponential.h")
+#  include "itkMatrixExponential.h"
+#else
+#  include <vnl/vnl_matrix_exp.h>
+#endif
 #include "itkMath.h"
 #include "itkAffineLogTransform.h"
 
@@ -83,7 +88,11 @@ AffineLogTransform<TScalarType, Dimension>::SetParameters(const ParametersType &
     }
   }
 
+#if __has_include("itkMatrixExponential.h")
+  exponentMatrix = itk::Math::MatrixExponential(this->m_MatrixLogDomain);
+#else
   exponentMatrix = vnl_matrix_exp(this->m_MatrixLogDomain.GetVnlMatrix());
+#endif
 
   this->PrecomputeJacobianOfSpatialJacobian();
 
@@ -233,7 +242,11 @@ AffineLogTransform<TScalarType, Dimension>::PrecomputeJacobianOfSpatialJacobian(
           A_bar(k, l) = dA(k, (l - d));
         }
       }
+#if __has_include("itkMatrixExponential.h")
+      B_bar = itk::Math::MatrixExponential(A_bar);
+#else
       B_bar = vnl_matrix_exp(A_bar);
+#endif
       for (unsigned int k = 0; k < d; ++k)
       {
         for (unsigned int l = d; l < 2 * d; ++l)
