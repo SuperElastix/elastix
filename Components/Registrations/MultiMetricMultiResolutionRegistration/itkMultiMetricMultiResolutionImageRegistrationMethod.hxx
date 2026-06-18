@@ -602,11 +602,13 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
   {
     itkExceptionMacro("The NumberOfMovingImagePyramids should equal 1 or equal the nrOfImageMetrics");
   }
-  if ((this->GetNumberOfFixedImages() != 1) && (this->GetNumberOfFixedImages() != nrOfImageMetrics))
+  if (const unsigned int nrOfFixedImages{ this->GetNumberOfFixedImages() };
+      (nrOfFixedImages != 1) && (nrOfFixedImages != nrOfImageMetrics))
   {
     itkExceptionMacro("The NumberOfFixedImages should equal 1 or equal the nrOfImageMetrics");
   }
-  if ((this->GetNumberOfMovingImages() != 1) && (this->GetNumberOfMovingImages() != nrOfImageMetrics))
+  if (const unsigned int nrOfMovingImages{ this->GetNumberOfMovingImages() };
+      (nrOfMovingImages != 1) && (nrOfMovingImages != nrOfImageMetrics))
   {
     itkExceptionMacro("The NumberOfMovingImages should equal 1 or equal the nrOfImageMetrics");
   }
