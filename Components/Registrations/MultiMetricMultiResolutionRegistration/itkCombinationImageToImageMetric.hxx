@@ -287,15 +287,12 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
 
   using TransformMetricType = TransformPenaltyTerm<TFixedImage>;
 
-  PointSetMetricType *  testPtr1 = dynamic_cast<PointSetMetricType *>(metric);
-  TransformMetricType * testPtr2 = dynamic_cast<TransformMetricType *>(metric);
-
   // Increase newly defined numberOfMetric counters
-  if (testPtr1)
+  if (dynamic_cast<PointSetMetricType *>(metric))
   {
     this->m_NumberOfPointSetMetrics++;
   }
-  else if (testPtr2)
+  else if (dynamic_cast<TransformMetricType *>(metric))
   {
     this->m_NumberOfTransformMetrics++;
   }
@@ -307,13 +304,11 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
   // if the metric has already been set, decrease the correct counter
   if (oldMetricPtr != nullptr)
   {
-    PointSetMetricType *  oldTestPtr1 = dynamic_cast<PointSetMetricType *>(oldMetricPtr.GetPointer());
-    TransformMetricType * oldTestPtr2 = dynamic_cast<TransformMetricType *>(oldMetricPtr.GetPointer());
-    if (oldTestPtr1)
+    if (dynamic_cast<PointSetMetricType *>(oldMetricPtr.GetPointer()))
     {
       this->m_NumberOfPointSetMetrics--;
     }
-    else if (oldTestPtr2)
+    else if (dynamic_cast<TransformMetricType *>(oldMetricPtr.GetPointer()))
     {
       this->m_NumberOfTransformMetrics--;
     }
