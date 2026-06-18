@@ -18,7 +18,6 @@
 #ifndef itkCombinationImageToImageMetric_h
 #define itkCombinationImageToImageMetric_h
 
-#include "itkTransformPenaltyTerm.h"
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkSingleValuedPointSetToPointSetMetric.h"
 
@@ -131,10 +130,6 @@ public:
   using FixedImagePixelType = typename FixedImageType::PixelType;
   using MovingImageRegionType = typename MovingImageType::RegionType;
   using MovingImageDerivativeScalesType = FixedArray<double, Self::MovingImageDimension>;
-
-  /** Typedef for transform penalty metrics. */
-  typedef TransformPenaltyTerm<TFixedImage>     TransformMetricType;
-  typedef typename TransformMetricType::Pointer TransformMetricPointer;
 
   /** Typedef for the PointSetMetric. */
   using FixedPointSetType = PointSet<CoordinateRepresentationType,

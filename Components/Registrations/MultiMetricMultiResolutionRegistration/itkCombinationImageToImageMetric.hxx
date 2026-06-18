@@ -20,6 +20,7 @@
 
 #include "itkCombinationImageToImageMetric.h"
 #include "itkTimeProbe.h"
+#include "itkTransformPenaltyTerm.h"
 #include "itkMath.h"
 
 /** Macros to reduce some copy-paste work.
@@ -283,6 +284,8 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
   {
     return;
   }
+
+  using TransformMetricType = TransformPenaltyTerm<TFixedImage>;
 
   PointSetMetricType *  testPtr1 = dynamic_cast<PointSetMetricType *>(metric);
   TransformMetricType * testPtr2 = dynamic_cast<TransformMetricType *>(metric);
