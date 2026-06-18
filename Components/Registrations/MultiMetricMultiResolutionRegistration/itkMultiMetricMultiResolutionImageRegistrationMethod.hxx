@@ -572,15 +572,19 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
   {
     itkExceptionMacro("NumberOfInterpolators can not exceed the nrOfImageMetrics in the CombinationMetric!");
   }
-  if (this->GetNumberOfFixedImagePyramids() > nrOfImageMetrics)
+
+  const unsigned int nrOfFixedImagePyramids{ this->GetNumberOfFixedImagePyramids() };
+  const unsigned int nrOfMovingImagePyramids{ this->GetNumberOfMovingImagePyramids() };
+
+  if (nrOfFixedImagePyramids > nrOfImageMetrics)
   {
     itkExceptionMacro("NumberOfFixedImagePyramids can not exceed the nrOfImageMetrics in the CombinationMetric!");
   }
-  if (this->GetNumberOfMovingImagePyramids() > nrOfImageMetrics)
+  if (nrOfMovingImagePyramids > nrOfImageMetrics)
   {
     itkExceptionMacro("NumberOfMovingImagePyramids can not exceed the nrOfImageMetrics in the CombinationMetric!");
   }
-  if (this->GetNumberOfMovingImagePyramids() > nrOfInterpolators)
+  if (nrOfMovingImagePyramids > nrOfInterpolators)
   {
     itkExceptionMacro("NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!");
   }
@@ -590,11 +594,11 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
   {
     itkExceptionMacro("The NumberOfInterpolators should equal 1 or equal the nrOfImageMetrics");
   }
-  if ((this->GetNumberOfFixedImagePyramids() != 1) && (this->GetNumberOfFixedImagePyramids() != nrOfImageMetrics))
+  if ((nrOfFixedImagePyramids != 1) && (nrOfFixedImagePyramids != nrOfImageMetrics))
   {
     itkExceptionMacro("The NumberOfFixedImagePyramids should equal 1 or equal the nrOfImageMetrics");
   }
-  if ((this->GetNumberOfMovingImagePyramids() != 1) && (this->GetNumberOfMovingImagePyramids() != nrOfImageMetrics))
+  if ((nrOfMovingImagePyramids != 1) && (nrOfMovingImagePyramids != nrOfImageMetrics))
   {
     itkExceptionMacro("The NumberOfMovingImagePyramids should equal 1 or equal the nrOfImageMetrics");
   }
