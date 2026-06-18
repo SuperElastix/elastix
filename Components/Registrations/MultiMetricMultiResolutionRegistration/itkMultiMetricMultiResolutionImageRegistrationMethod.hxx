@@ -565,7 +565,8 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
   }
 
   /** nrofmetrics >= nrofinterpolators >= nrofpyramids >= nofimages */
-  unsigned int nrOfImageMetrics = this->GetCombinationMetric()->GetNumberOfImageMetrics();
+  const unsigned int nrOfImageMetrics{ this->GetCombinationMetric()->GetNumberOfImageMetrics() };
+
   if (this->GetNumberOfInterpolators() > nrOfImageMetrics)
   {
     itkExceptionMacro("NumberOfInterpolators can not exceed the nrOfImageMetrics in the CombinationMetric!");
