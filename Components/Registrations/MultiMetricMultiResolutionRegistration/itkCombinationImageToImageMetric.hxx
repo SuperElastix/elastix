@@ -290,15 +290,15 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
   // Increase newly defined numberOfMetric counters
   if (dynamic_cast<PointSetMetricType *>(metric))
   {
-    this->m_NumberOfPointSetMetrics++;
+    ++m_NumberOfPointSetMetrics;
   }
   else if (dynamic_cast<TransformMetricType *>(metric))
   {
-    this->m_NumberOfTransformMetrics++;
+    ++m_NumberOfTransformMetrics;
   }
   else
   {
-    this->m_NumberOfImageMetrics++;
+    ++m_NumberOfImageMetrics;
   }
 
   // if the metric has already been set, decrease the correct counter
@@ -306,15 +306,15 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
   {
     if (dynamic_cast<PointSetMetricType *>(oldMetricPtr.GetPointer()))
     {
-      this->m_NumberOfPointSetMetrics--;
+      --m_NumberOfPointSetMetrics;
     }
     else if (dynamic_cast<TransformMetricType *>(oldMetricPtr.GetPointer()))
     {
-      this->m_NumberOfTransformMetrics--;
+      --m_NumberOfTransformMetrics;
     }
     else
     {
-      this->m_NumberOfImageMetrics--;
+      --m_NumberOfImageMetrics;
     }
   }
 
