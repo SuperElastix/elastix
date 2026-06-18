@@ -3003,6 +3003,43 @@ GTEST_TEST(itkElastixRegistrationMethod, EulerStackTransformComputeZYX)
 }
 
 
+// Tests MultiMetricMultiResolutionRegistration when having two image-based metrics and a regularization term, based on
+// issue https://github.com/SuperElastix/elastix/issues/481 "Multiple metrics and regularization", Pablo Alvarez, Jun
+// 15, 2021
+GTEST_TEST(itkElastixRegistrationMethod, MultiMetric)
+{
+  static constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const SizeType imageSize{ { 5, 6 } };
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+
+  registration.SetFixedImage(CreateImage<PixelType>(imageSize));
+  registration.AddFixedImage(CreateImage<PixelType>(imageSize));
+  registration.SetMovingImage(CreateImage<PixelType>(imageSize));
+  registration.AddMovingImage(CreateImage<PixelType>(imageSize));
+  registration.SetParameterObject(CreateParameterObject(ParameterMapType{
+    // Parameters in alphabetic order:
+    { "FixedImagePyramid", { "FixedRecursiveImagePyramid", "FixedRecursiveImagePyramid" } },
+    { "ImageSampler", { "Random", "Random" } },
+    { "Interpolator", { "BSplineInterpolator", "BSplineInterpolator" } },
+    { "MaximumNumberOfIterations", { "2" } },
+    { "Metric", { "AdvancedNormalizedCorrelation", "AdvancedNormalizedCorrelation", "TransformBendingEnergyPenalty" } },
+    { "MovingImagePyramid", { "MovingRecursiveImagePyramid", "MovingRecursiveImagePyramid" } },
+    { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+    { "Registration", { "MultiMetricMultiResolutionRegistration" } },
+    { "Transform", { "TranslationTransform" } } }));
+  registration.Update();
+
+  const auto transformParameters = GetTransformParametersFromFilter(registration);
+  EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), OffsetType{});
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, EuclideanDistancePointMetric)
 {
   static constexpr auto ImageDimension = 2U;
