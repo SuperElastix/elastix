@@ -3040,6 +3040,50 @@ GTEST_TEST(itkElastixRegistrationMethod, MultiMetric)
 }
 
 
+// Tests MultiMetricMultiResolutionRegistration when having two image-based metrics and a regularization term, using the
+// legacy "hack" of adding extra dummy images.
+GTEST_TEST(itkElastixRegistrationMethod, MultiMetricLegacyHack)
+{
+  static constexpr auto ImageDimension = 2U;
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, ImageDimension>;
+  using SizeType = itk::Size<ImageDimension>;
+  using OffsetType = itk::Offset<ImageDimension>;
+
+  const SizeType imageSize{ { 5, 6 } };
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+
+  registration.SetFixedImage(CreateImage<PixelType>(imageSize));
+  registration.AddFixedImage(CreateImage<PixelType>(imageSize));
+
+  // Add extra fixed image, just as a dummy:
+  registration.AddFixedImage(CreateImage<PixelType>(imageSize));
+
+  registration.SetMovingImage(CreateImage<PixelType>(imageSize));
+  registration.AddMovingImage(CreateImage<PixelType>(imageSize));
+
+  // Add extra moving image, just as a dummy:
+  registration.AddMovingImage(CreateImage<PixelType>(imageSize));
+
+  registration.SetParameterObject(CreateParameterObject(ParameterMapType{
+    // Parameters in alphabetic order:
+    { "FixedImagePyramid", ParameterValuesType(3, "FixedRecursiveImagePyramid") },
+    { "ImageSampler", ParameterValuesType(3, "Random") },
+    { "Interpolator", ParameterValuesType(3, "BSplineInterpolator") },
+    { "MaximumNumberOfIterations", { "2" } },
+    { "Metric", { "AdvancedNormalizedCorrelation", "AdvancedNormalizedCorrelation", "TransformBendingEnergyPenalty" } },
+    { "MovingImagePyramid", ParameterValuesType(3, "MovingRecursiveImagePyramid") },
+    { "Optimizer", { "AdaptiveStochasticGradientDescent" } },
+    { "Registration", { "MultiMetricMultiResolutionRegistration" } },
+    { "Transform", { "TranslationTransform" } } }));
+  registration.Update();
+
+  const auto transformParameters = GetTransformParametersFromFilter(registration);
+  EXPECT_EQ(ConvertToOffset<ImageDimension>(transformParameters), OffsetType{});
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, EuclideanDistancePointMetric)
 {
   static constexpr auto ImageDimension = 2U;

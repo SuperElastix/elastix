@@ -565,52 +565,49 @@ MultiMetricMultiResolutionImageRegistrationMethod<TFixedImage, TMovingImage>::Ch
   }
 
   /** nrofmetrics >= nrofinterpolators >= nrofpyramids >= nofimages */
-  const unsigned int nrOfImageMetrics{ this->GetCombinationMetric()->GetNumberOfImageMetrics() };
+  const CombinationMetricType & combinationMetric = Deref(m_CombinationMetric.get());
+
+  const unsigned int nrOfMetrics{ combinationMetric.GetNumberOfMetrics() };
+  const unsigned int nrOfImageMetrics{ combinationMetric.GetNumberOfImageMetrics() };
   const unsigned int nrOfInterpolators{ this->GetNumberOfInterpolators() };
 
-  if (nrOfInterpolators > nrOfImageMetrics)
+  if (nrOfMetrics < nrOfImageMetrics)
   {
-    itkExceptionMacro("NumberOfInterpolators can not exceed the nrOfImageMetrics in the CombinationMetric!");
+    itkExceptionMacro("nrOfMetrics should not be less than nrOfImageMetrics!");
   }
 
   const unsigned int nrOfFixedImagePyramids{ this->GetNumberOfFixedImagePyramids() };
   const unsigned int nrOfMovingImagePyramids{ this->GetNumberOfMovingImagePyramids() };
 
-  if (nrOfFixedImagePyramids > nrOfImageMetrics)
-  {
-    itkExceptionMacro("NumberOfFixedImagePyramids can not exceed the nrOfImageMetrics in the CombinationMetric!");
-  }
-  if (nrOfMovingImagePyramids > nrOfImageMetrics)
-  {
-    itkExceptionMacro("NumberOfMovingImagePyramids can not exceed the nrOfImageMetrics in the CombinationMetric!");
-  }
   if (nrOfMovingImagePyramids > nrOfInterpolators)
   {
     itkExceptionMacro("NumberOfMovingImagePyramids can not exceed the NumberOfInterpolators!");
   }
 
-  /** For all components: ==nrOfImageMetrics of ==1. */
-  if ((nrOfInterpolators != 1) && (nrOfInterpolators != nrOfImageMetrics))
+  const auto isAllowedNumber = [nrOfMetrics, nrOfImageMetrics](const unsigned int n) {
+    // Allow nrOfMetrics for backward compatibility (allowing a "legacy hack" when having more metrics than images).
+    return n == 1 || n == nrOfImageMetrics || n == nrOfMetrics;
+  };
+
+  if (!isAllowedNumber(nrOfInterpolators))
   {
-    itkExceptionMacro("The NumberOfInterpolators should equal 1 or equal the nrOfImageMetrics");
+    itkExceptionMacro("The NumberOfInterpolators should equal 1, the nrOfMetrics, or nrOfImageMetrics");
   }
-  if ((nrOfFixedImagePyramids != 1) && (nrOfFixedImagePyramids != nrOfImageMetrics))
+  if (!isAllowedNumber(nrOfFixedImagePyramids))
   {
-    itkExceptionMacro("The NumberOfFixedImagePyramids should equal 1 or equal the nrOfImageMetrics");
+    itkExceptionMacro("The NumberOfFixedImagePyramids should equal 1, the nrOfMetrics, or nrOfImageMetrics");
   }
-  if ((nrOfMovingImagePyramids != 1) && (nrOfMovingImagePyramids != nrOfImageMetrics))
+  if (!isAllowedNumber(nrOfMovingImagePyramids))
   {
-    itkExceptionMacro("The NumberOfMovingImagePyramids should equal 1 or equal the nrOfImageMetrics");
+    itkExceptionMacro("The NumberOfMovingImagePyramids should equal 1, the nrOfMetrics, or nrOfImageMetrics");
   }
-  if (const unsigned int nrOfFixedImages{ this->GetNumberOfFixedImages() };
-      (nrOfFixedImages != 1) && (nrOfFixedImages != nrOfImageMetrics))
+  if (!isAllowedNumber(this->GetNumberOfFixedImages()))
   {
-    itkExceptionMacro("The NumberOfFixedImages should equal 1 or equal the nrOfImageMetrics");
+    itkExceptionMacro("The NumberOfFixedImages should equal 1, the nrOfMetrics, or nrOfImageMetrics");
   }
-  if (const unsigned int nrOfMovingImages{ this->GetNumberOfMovingImages() };
-      (nrOfMovingImages != 1) && (nrOfMovingImages != nrOfImageMetrics))
+  if (!isAllowedNumber(this->GetNumberOfMovingImages()))
   {
-    itkExceptionMacro("The NumberOfMovingImages should equal 1 or equal the nrOfImageMetrics");
+    itkExceptionMacro("The NumberOfMovingImages should equal  1, the nrOfMetrics, or nrOfImageMetrics");
   }
 
 } // end CheckOnInitialize()
