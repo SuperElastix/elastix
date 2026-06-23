@@ -164,8 +164,6 @@ public:
   /** Get the number of metrics to combine. */
   itkGetConstMacro(NumberOfMetrics, unsigned int);
   itkGetConstMacro(NumberOfImageMetrics, unsigned int);
-  itkGetConstMacro(NumberOfTransformMetrics, unsigned int);
-  itkGetConstMacro(NumberOfPointSetMetrics, unsigned int);
 
   /** Set metric i. It may be a SingleValuedCostFunction, instead of
    * a ImageToImageMetric, but the first one should be an
@@ -457,8 +455,6 @@ private:
   /** Store the metrics and the corresponding weights. */
   unsigned int                                 m_NumberOfMetrics{ 0 };
   unsigned int                                 m_NumberOfImageMetrics{ 0 };
-  unsigned int                                 m_NumberOfTransformMetrics{ 0 };
-  unsigned int                                 m_NumberOfPointSetMetrics{ 0 };
   std::vector<SingleValuedCostFunctionPointer> m_Metrics{};
   std::vector<double>                          m_MetricWeights{};
   std::vector<double>                          m_MetricRelativeWeights{};

@@ -162,8 +162,6 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::PrintSelf(std::ostream
   /** Add debugging information. */
   os << "NumberOfMetrics: " << this->m_NumberOfMetrics << std::endl;
   os << "NumberOfImageMetrics: " << this->m_NumberOfImageMetrics << std::endl;
-  os << "NumberOfTransformMetrics: " << this->m_NumberOfTransformMetrics << std::endl;
-  os << "NumberOfPointSetMetrics: " << this->m_NumberOfPointSetMetrics << std::endl;
   for (unsigned int i = 0; i < this->m_NumberOfMetrics; ++i)
   {
     os << "Metric " << i << ":\n";
@@ -287,16 +285,8 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
 
   using TransformMetricType = TransformPenaltyTerm<TFixedImage>;
 
-  // Increase newly defined numberOfMetric counters
-  if (dynamic_cast<PointSetMetricType *>(metric))
-  {
-    ++m_NumberOfPointSetMetrics;
-  }
-  else if (dynamic_cast<TransformMetricType *>(metric))
-  {
-    ++m_NumberOfTransformMetrics;
-  }
-  else
+  // Increase newly defined NumberOfImageMetrics counters
+  if (dynamic_cast<PointSetMetricType *>(metric) == nullptr && dynamic_cast<TransformMetricType *>(metric) == nullptr)
   {
     ++m_NumberOfImageMetrics;
   }
@@ -304,15 +294,8 @@ CombinationImageToImageMetric<TFixedImage, TMovingImage>::SetMetric(SingleValued
   // if the metric has already been set, decrease the correct counter
   if (oldMetricPtr != nullptr)
   {
-    if (dynamic_cast<PointSetMetricType *>(oldMetricPtr.GetPointer()))
-    {
-      --m_NumberOfPointSetMetrics;
-    }
-    else if (dynamic_cast<TransformMetricType *>(oldMetricPtr.GetPointer()))
-    {
-      --m_NumberOfTransformMetrics;
-    }
-    else
+    if (dynamic_cast<PointSetMetricType *>(oldMetricPtr.GetPointer()) == nullptr &&
+        dynamic_cast<TransformMetricType *>(oldMetricPtr.GetPointer()) == nullptr)
     {
       --m_NumberOfImageMetrics;
     }
