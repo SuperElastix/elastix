@@ -70,8 +70,6 @@ set(CostFunctionFiles
   CostFunctions/itkExponentialLimiterFunction.hxx
   CostFunctions/itkHardLimiterFunction.h
   CostFunctions/itkHardLimiterFunction.hxx
-  CostFunctions/itkImageToImageMetricWithFeatures.h
-  CostFunctions/itkImageToImageMetricWithFeatures.hxx
   CostFunctions/itkLimiterFunctionBase.h
   CostFunctions/itkMultiInputImageToImageMetricBase.h
   CostFunctions/itkMultiInputImageToImageMetricBase.hxx
