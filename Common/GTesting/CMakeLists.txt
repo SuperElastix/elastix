@@ -37,14 +37,14 @@ target_compile_definitions(CommonGTest PRIVATE
 )
 
 if (ITK_VERSION VERSION_LESS_EQUAL 5.4.6)
-  target_link_libraries(CommonGTest
+  target_link_libraries(CommonGTest PUBLIC
     GTest::GTest
     GTest::Main
     ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
     elastix_lib
   )
 else()
-  target_link_libraries(CommonGTest
+  target_link_libraries(CommonGTest PUBLIC
     GTest::gtest
     GTest::gtest_main
     ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
@@ -54,7 +54,7 @@ endif()
 
 if(USE_ImpactMetric)
   find_package(Torch REQUIRED)
-  target_link_libraries(CommonGTest "${TORCH_LIBRARIES}")
+  target_link_libraries(CommonGTest PUBLIC "${TORCH_LIBRARIES}")
 endif()
 
 target_include_directories(CommonGTest PRIVATE

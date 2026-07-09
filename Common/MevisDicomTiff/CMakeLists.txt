@@ -24,7 +24,7 @@ if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
     COMPONENT Development)
 endif()
 
-elastix_link_itk(mevisdcmtiff MODULES
+elastix_link_itk(mevisdcmtiff PUBLIC MODULES
   ITKCommon
   ITKGDCM
   ITKIOImageBase

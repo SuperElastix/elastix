@@ -123,7 +123,7 @@ macro(ADD_ELXCOMPONENT name)
     else()
       add_library(${name} STATIC ${filelist})
     endif()
-    target_link_libraries(${name} ${elxLinkLibs})
+    target_link_libraries(${name} PUBLIC ${elxLinkLibs})
     target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
       install(TARGETS ${name}

@@ -17,7 +17,7 @@ if(NOT ELASTIX_NO_INSTALL_DEVELOPMENT)
     COMPONENT Development)
 endif()
 
-elastix_link_itk(param MODULES
+elastix_link_itk(param PUBLIC MODULES
   ITKCommon
 )
 target_include_directories(param PUBLIC
