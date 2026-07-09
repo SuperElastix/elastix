@@ -69,7 +69,7 @@ macro(elx_add_test_core executable_name source_name test_name group)
     )
 
     # Link against other libraries.
-    target_link_libraries(${executable_name}
+    target_link_libraries(${executable_name} PUBLIC
       param               # some test use the CommandLineArgumentParser
       elxCommon            # provides Common headers (Transforms, CostFunctions, etc.)
       ${mevisdcmtifflib}  # is empty if not selected in CMake
@@ -79,7 +79,7 @@ macro(elx_add_test_core executable_name source_name test_name group)
 
     if(ELASTIX_USE_OPENCL)
       target_include_directories(${executable_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-      target_link_libraries(${executable_name} elxOpenCL)
+      target_link_libraries(${executable_name} PUBLIC elxOpenCL)
     endif()
 
     # Group in IDE's like Visual Studio
@@ -421,22 +421,22 @@ endmacro()
 
 # Create elxComputeOverlap
 add_executable(elxComputeOverlap elxComputeOverlap.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxComputeOverlap ${ELASTIX_ITK_ALL_LIBRARIES})
+target_link_libraries(elxComputeOverlap PUBLIC ${ELASTIX_ITK_ALL_LIBRARIES})
 set_property(TARGET elxComputeOverlap PROPERTY FOLDER "tests/Executable")
 
 # Create elxImageCompare
 add_executable(elxImageCompare elxImageCompare.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxImageCompare ${ELASTIX_ITK_ALL_LIBRARIES})
+target_link_libraries(elxImageCompare PUBLIC ${ELASTIX_ITK_ALL_LIBRARIES})
 set_property(TARGET elxImageCompare PROPERTY FOLDER "tests/Executable")
 
 # Create elxTransformParametersCompare
 add_executable(elxTransformParametersCompare elxTransformParametersCompare.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxTransformParametersCompare elxCore param ${ELASTIX_ITK_EXECUTABLE_LIBRARIES})
+target_link_libraries(elxTransformParametersCompare PUBLIC elxCore param ${ELASTIX_ITK_EXECUTABLE_LIBRARIES})
 set_property(TARGET elxTransformParametersCompare PROPERTY FOLDER "tests/Executable")
 
 # Create elxInvertTransform
 add_executable(elxInvertTransform elxInvertTransform.cxx itkCommandLineArgumentParser.cxx)
-target_link_libraries(elxInvertTransform elxCore param ${ELASTIX_ITK_EXECUTABLE_LIBRARIES})
+target_link_libraries(elxInvertTransform PUBLIC elxCore param ${ELASTIX_ITK_EXECUTABLE_LIBRARIES})
 set_property(TARGET elxInvertTransform PROPERTY FOLDER "tests/Executable")
 
 #---------------------------------------------------------------------
@@ -1031,7 +1031,7 @@ elx_add_test(TransformixFilterTest "" "Transformix"
   ${TestDataDir}/3DCT_lung_baseline_small.mha
   ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
   ${TestOutputDir}/TransformixFilterTest.mha)
-target_link_libraries(itkTransformixFilterTest elastix_lib transformix_lib)
+target_link_libraries(itkTransformixFilterTest PUBLIC elastix_lib transformix_lib)
 
 
 if(USE_ImpactMetric)

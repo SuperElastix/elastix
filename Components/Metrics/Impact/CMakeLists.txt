@@ -14,5 +14,5 @@ ADD_ELXCOMPONENT(ImpactMetric OFF PLUGIN
 
 if(USE_ImpactMetric)
     find_package(Torch REQUIRED)
-    target_link_libraries(ImpactMetric ${TORCH_LIBRARIES})
+    target_link_libraries(ImpactMetric PUBLIC ${TORCH_LIBRARIES})
 endif()

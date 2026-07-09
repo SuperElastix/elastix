@@ -149,7 +149,7 @@ elastix_export_target(elxCore)
 #---------------------------------------------------------------------
 # Link against other libraries.
 
-target_link_libraries(elxCore
+target_link_libraries(elxCore PUBLIC
   elxCommon
   param # Needed for elxConfiguration
   #  ${ITK_LIBRARIES}
@@ -224,7 +224,7 @@ if(ELASTIX_BUILD_EXECUTABLE)
   if (WASI OR EMSCRIPTEN)
     target_compile_definitions(elastix_exe PUBLIC ELX_NO_FILESYSTEM_ACCESS)
   endif()
-  target_link_libraries(elastix_exe ${ELASTIX_TARGET_LINK_LIBRARIES})
+  target_link_libraries(elastix_exe PUBLIC ${ELASTIX_TARGET_LINK_LIBRARIES})
   if (MSVC)
     target_sources(elastix_exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utf8.manifest)
   endif()
@@ -250,7 +250,7 @@ target_compile_definitions(elastix_lib PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSIO
 if (WASI OR EMSCRIPTEN)
   target_compile_definitions(elastix_lib PUBLIC ELX_NO_FILESYSTEM_ACCESS)
 endif()
-target_link_libraries(elastix_lib ${ELASTIX_TARGET_LINK_LIBRARIES})
+target_link_libraries(elastix_lib PUBLIC ${ELASTIX_TARGET_LINK_LIBRARIES})
 
 #---------------------------------------------------------------------
 # Create the transformix executable.
@@ -272,7 +272,7 @@ if(ELASTIX_BUILD_EXECUTABLE)
   if (WASI OR EMSCRIPTEN)
     target_compile_definitions(transformix_exe PUBLIC ELX_NO_FILESYSTEM_ACCESS)
   endif()
-  target_link_libraries(transformix_exe ${ELASTIX_TARGET_LINK_LIBRARIES})
+  target_link_libraries(transformix_exe PUBLIC ${ELASTIX_TARGET_LINK_LIBRARIES})
   if (MSVC)
     target_sources(transformix_exe PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utf8.manifest)
   endif()
@@ -294,7 +294,7 @@ add_library(transformix_lib
   ${InstallFilesForExecutables}
 )
 set_target_properties(transformix_lib PROPERTIES OUTPUT_NAME transformix)
-target_link_libraries(transformix_lib ${ELASTIX_TARGET_LINK_LIBRARIES})
+target_link_libraries(transformix_lib PUBLIC ${ELASTIX_TARGET_LINK_LIBRARIES})
 target_compile_definitions(transformix_lib PRIVATE ELX_CMAKE_VERSION="${CMAKE_VERSION}")
 if (WASI OR EMSCRIPTEN)
   target_compile_definitions(transformix_lib PUBLIC ELX_NO_FILESYSTEM_ACCESS)

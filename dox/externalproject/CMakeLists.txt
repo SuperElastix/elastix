@@ -32,12 +32,12 @@ if(ITK_VERSION_MAJOR GREATER_EQUAL 6)
   # ITK 6+: elastix_lib carries all ITK module dependencies and include paths
   # transitively via its INTERFACE_LINK_LIBRARIES. No explicit ${ITK_INCLUDE_DIRS}
   # or ${ITK_LIBRARIES} needed.
-  target_link_libraries(elastix_translation_example
+  target_link_libraries(elastix_translation_example PUBLIC
     PRIVATE elastix_lib)
 else()
   target_include_directories(elastix_translation_example
     PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
-  target_link_libraries(elastix_translation_example
+  target_link_libraries(elastix_translation_example PUBLIC
     PRIVATE ${ITK_LIBRARIES} elastix_lib)
 endif()
 
@@ -47,12 +47,12 @@ add_executable(elastix_impact_metric_example ElastixImpactMetricExample.cxx)
 set_property(TARGET elastix_impact_metric_example PROPERTY CXX_STANDARD 17)
 
 if(ITK_VERSION_MAJOR GREATER_EQUAL 6)
-  target_link_libraries(elastix_impact_metric_example
+  target_link_libraries(elastix_impact_metric_example PUBLIC
     PRIVATE elastix_lib)
 else()
   target_include_directories(elastix_impact_metric_example
     PRIVATE ${ELASTIX_INCLUDE_DIRS} ${ITK_INCLUDE_DIRS})
-  target_link_libraries(elastix_impact_metric_example
+  target_link_libraries(elastix_impact_metric_example PUBLIC
     PRIVATE ${ITK_LIBRARIES} elastix_lib)
 endif()
 

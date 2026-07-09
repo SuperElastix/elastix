@@ -9,7 +9,7 @@ if(ELASTIX_USE_OPENCL)
     target_include_directories(OpenCLResampler BEFORE PRIVATE
       ${elxCommon_OpenCL_INCLUDE_DIRECTORIES}
       ${OPENCL_KERNELS_DEBUG_PATH})
-    target_link_libraries(OpenCLResampler elxOpenCL)
+    target_link_libraries(OpenCLResampler PUBLIC elxOpenCL)
   endif()
 else()
   # If the user set USE_OpenCLResampler ON, but ELASTIX_USE_OPENCL was OFF,

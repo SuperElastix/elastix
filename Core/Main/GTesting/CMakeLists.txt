@@ -13,7 +13,7 @@ target_compile_definitions(ElastixLibGTest PRIVATE
 )
 
 if (ITK_VERSION VERSION_LESS_EQUAL 5.4.6)
-  target_link_libraries(ElastixLibGTest
+  target_link_libraries(ElastixLibGTest PUBLIC
     GTest::GTest
     GTest::Main
     elastix_lib
@@ -21,7 +21,7 @@ if (ITK_VERSION VERSION_LESS_EQUAL 5.4.6)
     ${ELASTIX_ITK_EXECUTABLE_LIBRARIES}
   )
 else()
-  target_link_libraries(ElastixLibGTest
+  target_link_libraries(ElastixLibGTest PUBLIC
     GTest::gtest
     GTest::gtest_main
     elastix_lib
@@ -34,7 +34,7 @@ endif()
 target_compile_definitions(ElastixLibGTest PRIVATE ELX_CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}" ELX_CMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 
 if(ELASTIX_USE_OPENCL)
-  target_link_libraries(ElastixLibGTest elxOpenCL)
+  target_link_libraries(ElastixLibGTest PUBLIC elxOpenCL)
 endif()
 
 add_test(NAME ElastixLibGTest_test COMMAND ElastixLibGTest)
