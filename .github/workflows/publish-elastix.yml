@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEFAULT_ITK_GIT_TAG: "v5.4.6"
+  DEFAULT_ITK_GIT_TAG: "v6.0b02"
 
 jobs:
   publish:
