@@ -29,22 +29,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <typename TElastix>
-ConjugateGradientFRPR<TElastix>::ConjugateGradientFRPR()
-{
-  this->m_LineBracketing = false;
-  this->m_LineOptimizing = false;
-  this->m_CurrentStepLength = 0.0;
-  this->m_CurrentSearchDirectionMagnitude = 0.0;
-  this->m_CurrentDerivativeMagnitude = 0.0;
-
-} // end Constructor
-
-
-/**
  * ***************** DeterminePhase *****************************
  *
  * This method gives only sensible output if it is called

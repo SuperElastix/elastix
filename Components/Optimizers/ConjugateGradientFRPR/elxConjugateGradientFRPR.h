@@ -143,17 +143,17 @@ public:
   itkGetConstReferenceMacro(CurrentSearchDirectionMagnitude, double);
 
 protected:
-  ConjugateGradientFRPR();
+  ConjugateGradientFRPR() = default;
   ~ConjugateGradientFRPR() override = default;
 
   /** To store the latest computed derivative's magnitude */
-  double m_CurrentDerivativeMagnitude;
+  double m_CurrentDerivativeMagnitude{ 0.0 };
 
   /** Variable to store the line search direction magnitude */
-  double m_CurrentSearchDirectionMagnitude;
+  double m_CurrentSearchDirectionMagnitude{ 0.0 };
 
   /** the current gain */
-  double m_CurrentStepLength;
+  double m_CurrentStepLength{ 0.0 };
 
   /** Set if the optimizer is currently bracketing the minimum, or is
    * optimizing along a line */
@@ -214,8 +214,8 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  bool m_LineOptimizing;
-  bool m_LineBracketing;
+  bool m_LineOptimizing{ false };
+  bool m_LineBracketing{ false };
 
   const char *
   DeterminePhase() const;
