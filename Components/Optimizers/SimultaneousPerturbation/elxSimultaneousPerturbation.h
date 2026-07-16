@@ -142,10 +142,10 @@ public:
   SetInitialPosition(const ParametersType & param) override;
 
 protected:
-  SimultaneousPerturbation();
+  SimultaneousPerturbation() = default;
   ~SimultaneousPerturbation() override = default;
 
-  bool m_ShowMetricValues;
+  bool m_ShowMetricValues{ false };
 
 private:
   elxOverrideGetSelfMacro;

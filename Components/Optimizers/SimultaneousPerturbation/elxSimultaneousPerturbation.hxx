@@ -29,17 +29,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <typename TElastix>
-SimultaneousPerturbation<TElastix>::SimultaneousPerturbation()
-{
-  this->m_ShowMetricValues = false;
-} // end Constructor
-
-
-/**
  * ***************** BeforeRegistration ***********************
  */
 
