@@ -291,7 +291,7 @@ public:
   itkGetConstReferenceMacro(MaximumNumberOfSamplingAttempts, SizeValueType);
 
 protected:
-  AdaGrad();
+  AdaGrad() = default;
   ~AdaGrad() override = default;
 
   /** Protected typedefs */
@@ -350,23 +350,23 @@ protected:
   using BSplineTransformBasePointer = typename AdvancedBSplineDeformableTransformType::Pointer;
 
   /** Variable to store the automatically determined settings for each resolution. */
-  SettingsVectorType m_SettingsVector;
+  SettingsVectorType m_SettingsVector{};
 
   /** Some options for automatic parameter estimation. */
-  SizeValueType m_NumberOfGradientMeasurements;
-  SizeValueType m_NumberOfJacobianMeasurements;
-  SizeValueType m_NumberOfSamplesForNoiseCompensationFactor;
-  SizeValueType m_NumberOfSamplesForPrecondition;
-  SizeValueType m_NumberOfSpatialSamples;
+  SizeValueType m_NumberOfGradientMeasurements{ 0 };
+  SizeValueType m_NumberOfJacobianMeasurements{ 0 };
+  SizeValueType m_NumberOfSamplesForNoiseCompensationFactor{ 0 };
+  SizeValueType m_NumberOfSamplesForPrecondition{ 0 };
+  SizeValueType m_NumberOfSpatialSamples{ 5000 };
 
   /** The transform stored as AdvancedTransform */
-  AdvancedTransformPointer m_AdvancedTransform;
+  AdvancedTransformPointer m_AdvancedTransform{ nullptr };
 
-  double m_SigmoidScaleFactor;
-  double m_NoiseFactor;
-  double m_GlobalStepSize;
-  double m_RegularizationKappa;
-  double m_ConditionNumber;
+  double m_SigmoidScaleFactor{ 0.1 };
+  double m_NoiseFactor{ 1.0 };
+  double m_GlobalStepSize{ 0 };
+  double m_RegularizationKappa{ 0.8 };
+  double m_ConditionNumber{ 2.0 };
 
   /** Select different method to estimate some reasonable values for the parameters
    * SP_a, SP_alpha (=1), SigmoidMin, SigmoidMax (=1), and
@@ -400,23 +400,23 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  bool   m_AutomaticParameterEstimation;
-  double m_MaximumStepLength;
-  double m_MaximumStepLengthRatio;
+  bool   m_AutomaticParameterEstimation{ false };
+  double m_MaximumStepLength{ 1.0 };
+  double m_MaximumStepLengthRatio{ 1.0 };
 
   /** Private variables for the sampling attempts. */
-  SizeValueType m_MaximumNumberOfSamplingAttempts;
-  SizeValueType m_CurrentNumberOfSamplingAttempts;
-  SizeValueType m_PreviousErrorAtIteration;
-  bool          m_AutomaticParameterEstimationDone;
+  SizeValueType m_MaximumNumberOfSamplingAttempts{ 0 };
+  SizeValueType m_CurrentNumberOfSamplingAttempts{ 0 };
+  SizeValueType m_PreviousErrorAtIteration{ 0 };
+  bool          m_AutomaticParameterEstimationDone{ false };
 
   /** Private variables for band size estimation of covariance matrix. */
-  SizeValueType m_MaxBandCovSize;
-  SizeValueType m_NumberOfBandStructureSamples;
+  SizeValueType m_MaxBandCovSize{};
+  SizeValueType m_NumberOfBandStructureSamples{};
 
   /** The flag of using noise compensation. */
-  bool m_UseNoiseCompensation;
-  bool m_OriginalButSigmoidToDefault;
+  bool m_UseNoiseCompensation{ true };
+  bool m_OriginalButSigmoidToDefault{};
 };
 
 } // end namespace elastix
