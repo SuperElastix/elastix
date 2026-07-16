@@ -468,8 +468,8 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
            * First the gradient is rotated backwards to a standardized axis.
            */
           using InternalMatrixType = typename MovingImageType::DirectionType::InternalMatrixType;
-          const InternalMatrixType M = this->GetMovingImage()->GetDirection().GetVnlMatrix();
-          vnl_vector<double>       rotated_gradient_vnl = M.transpose() * gradient->GetVnlVector();
+          const InternalMatrixType directionMatrix = this->GetMovingImage()->GetDirection().GetVnlMatrix();
+          vnl_vector<double>       rotated_gradient_vnl = directionMatrix.transpose() * gradient->GetVnlVector();
 
           /** Then scales are applied. */
           for (unsigned int i = 0; i < MovingImageDimension; ++i)
@@ -478,7 +478,7 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImageValueA
           }
 
           /** The scaled gradient is then rotated forwards again. */
-          rotated_gradient_vnl = M * rotated_gradient_vnl;
+          rotated_gradient_vnl = directionMatrix * rotated_gradient_vnl;
 
           /** Copy the vnl version back to the original. */
           for (unsigned int i = 0; i < MovingImageDimension; ++i)
