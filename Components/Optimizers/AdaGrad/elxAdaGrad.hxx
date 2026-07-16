@@ -35,40 +35,6 @@ namespace elastix
 {
 
 /**
- * ********************** Constructor ***********************
- */
-
-template <typename TElastix>
-AdaGrad<TElastix>::AdaGrad()
-{
-  this->m_MaximumNumberOfSamplingAttempts = 0;
-  this->m_CurrentNumberOfSamplingAttempts = 0;
-  this->m_PreviousErrorAtIteration = 0;
-  this->m_AutomaticParameterEstimationDone = false;
-
-  this->m_AutomaticParameterEstimation = false;
-  this->m_MaximumStepLength = 1.0;
-  this->m_MaximumStepLengthRatio = 1.0;
-  this->m_RegularizationKappa = 0.8;
-  this->m_ConditionNumber = 2.0;
-  this->m_NoiseFactor = 1.0;
-
-  this->m_NumberOfGradientMeasurements = 0;
-  this->m_NumberOfJacobianMeasurements = 0;
-  this->m_NumberOfSamplesForPrecondition = 0;
-  this->m_NumberOfSamplesForNoiseCompensationFactor = 0;
-  this->m_NumberOfSpatialSamples = 5000;
-  this->m_SigmoidScaleFactor = 0.1;
-  this->m_GlobalStepSize = 0;
-
-  this->m_AdvancedTransform = nullptr;
-
-  this->m_UseNoiseCompensation = true;
-
-} // Constructor
-
-
-/**
  * ***************** BeforeRegistration ***********************
  */
 
