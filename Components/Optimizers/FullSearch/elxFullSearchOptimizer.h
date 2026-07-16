@@ -130,15 +130,15 @@ public:
   itkGetModifiableObjectMacro(OptimizationSurface, NDImageType);
 
 protected:
-  FullSearch();
+  FullSearch() = default;
   ~FullSearch() override = default;
 
 private:
   elxOverrideGetSelfMacro;
 
-  NDImagePointer m_OptimizationSurface;
+  NDImagePointer m_OptimizationSurface{ nullptr };
 
-  DimensionNameMapType m_SearchSpaceDimensionNames;
+  DimensionNameMapType m_SearchSpaceDimensionNames{};
 
   /** Checks if an error generated while reading the search space
    * ranges from the parameter file is a real error. Prints some
