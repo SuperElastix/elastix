@@ -147,16 +147,16 @@ public:
   itkGetConstReferenceMacro(MaximumNumberOfSamplingAttempts, unsigned long);
 
 protected:
-  StandardGradientDescent();
+  StandardGradientDescent() = default;
   ~StandardGradientDescent() override = default;
 
 private:
   elxOverrideGetSelfMacro;
 
   /** Private variables for the sampling attempts. */
-  unsigned long m_MaximumNumberOfSamplingAttempts;
-  unsigned long m_CurrentNumberOfSamplingAttempts;
-  unsigned long m_PreviousErrorAtIteration;
+  unsigned long m_MaximumNumberOfSamplingAttempts{ 0 };
+  unsigned long m_CurrentNumberOfSamplingAttempts{ 0 };
+  unsigned long m_PreviousErrorAtIteration{ 0 };
 };
 
 } // end namespace elastix

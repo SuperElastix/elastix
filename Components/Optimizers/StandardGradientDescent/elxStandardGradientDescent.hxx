@@ -27,20 +27,6 @@ namespace elastix
 {
 
 /**
- * ***************** Constructor ***********************
- */
-
-template <typename TElastix>
-StandardGradientDescent<TElastix>::StandardGradientDescent()
-{
-  this->m_MaximumNumberOfSamplingAttempts = 0;
-  this->m_CurrentNumberOfSamplingAttempts = 0;
-  this->m_PreviousErrorAtIteration = 0;
-
-} // end Constructor()
-
-
-/**
  * ***************** BeforeRegistration ***********************
  */
 
