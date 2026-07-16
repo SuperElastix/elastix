@@ -138,10 +138,10 @@ public:
   StartOptimization() override;
 
 protected:
-  FiniteDifferenceGradientDescent();
+  FiniteDifferenceGradientDescent() = default;
   ~FiniteDifferenceGradientDescent() override = default;
 
-  bool m_ShowMetricValues;
+  bool m_ShowMetricValues{ false };
 
 private:
   elxOverrideGetSelfMacro;

@@ -29,17 +29,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <typename TElastix>
-FiniteDifferenceGradientDescent<TElastix>::FiniteDifferenceGradientDescent()
-{
-  this->m_ShowMetricValues = false;
-} // end Constructor
-
-
-/**
  * ***************** BeforeRegistration ***********************
  */
 
