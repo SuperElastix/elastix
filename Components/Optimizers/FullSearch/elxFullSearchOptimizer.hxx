@@ -29,18 +29,6 @@ namespace elastix
 {
 
 /**
- * ********************* Constructor ****************************
- */
-
-template <typename TElastix>
-FullSearch<TElastix>::FullSearch()
-{
-  this->m_OptimizationSurface = nullptr;
-
-} // end Constructor
-
-
-/**
  * ***************** BeforeRegistration ***********************
  */
 
