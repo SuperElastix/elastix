@@ -329,7 +329,7 @@ protected:
   using AdvancedTransformPointer = typename AdvancedTransformType::Pointer;
   using NonZeroJacobianIndicesType = typename AdvancedTransformType::NonZeroJacobianIndicesType;
 
-  AdaptiveStochasticGradientDescent();
+  AdaptiveStochasticGradientDescent() = default;
   ~AdaptiveStochasticGradientDescent() override = default;
 
   /** Select different method to estimate some reasonable values for the parameters
@@ -378,35 +378,35 @@ private:
   elxOverrideGetSelfMacro;
 
   /** Variable to store the automatically determined settings for each resolution. */
-  SettingsVectorType m_SettingsVector;
+  SettingsVectorType m_SettingsVector{};
 
   /** Some options for automatic parameter estimation. */
-  SizeValueType m_NumberOfGradientMeasurements;
-  SizeValueType m_NumberOfJacobianMeasurements;
-  SizeValueType m_NumberOfSamplesForExactGradient;
+  SizeValueType m_NumberOfGradientMeasurements{ 0 };
+  SizeValueType m_NumberOfJacobianMeasurements{ 0 };
+  SizeValueType m_NumberOfSamplesForExactGradient{ 100000 };
 
   /** The transform stored as AdvancedTransform */
-  AdvancedTransformPointer m_AdvancedTransform;
+  AdvancedTransformPointer m_AdvancedTransform{ nullptr };
 
-  double m_SigmoidScaleFactor;
+  double m_SigmoidScaleFactor{ 0.1 };
 
-  bool   m_AutomaticParameterEstimation;
-  double m_MaximumStepLength;
-  double m_MaximumStepLengthRatio;
+  bool   m_AutomaticParameterEstimation{ false };
+  double m_MaximumStepLength{ 1.0 };
+  double m_MaximumStepLengthRatio{ 1.0 };
 
   /** Private variables for the sampling attempts. */
-  SizeValueType m_MaximumNumberOfSamplingAttempts;
-  SizeValueType m_CurrentNumberOfSamplingAttempts;
-  SizeValueType m_PreviousErrorAtIteration;
-  bool          m_AutomaticParameterEstimationDone;
+  SizeValueType m_MaximumNumberOfSamplingAttempts{ 0 };
+  SizeValueType m_CurrentNumberOfSamplingAttempts{ 0 };
+  SizeValueType m_PreviousErrorAtIteration{ 0 };
+  bool          m_AutomaticParameterEstimationDone{ false };
 
   /** Private variables for band size estimation of covariance matrix. */
-  SizeValueType m_MaxBandCovSize;
-  SizeValueType m_NumberOfBandStructureSamples;
+  SizeValueType m_MaxBandCovSize{};
+  SizeValueType m_NumberOfBandStructureSamples{};
 
   /** The flag of using noise compensation. */
-  bool m_UseNoiseCompensation;
-  bool m_OriginalButSigmoidToDefault;
+  bool m_UseNoiseCompensation{ true };
+  bool m_OriginalButSigmoidToDefault{ false };
 };
 
 } // end namespace elastix
