@@ -163,7 +163,7 @@ jobs:
 - job: macOS
   timeoutInMinutes: 0
   pool:
-    vmImage: 'macos-14'
+    vmImage: 'macos-15-intel'
   strategy:
     matrix:
       ITKv5:
