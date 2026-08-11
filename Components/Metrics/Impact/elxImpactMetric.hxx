@@ -104,15 +104,15 @@ ImpactMetric<TElastix>::Initialize()
  * ******************* GenerateModelsConfiguration ***********************
  */
 template <typename TElastix>
-std::vector<itk::ImpactModelConfiguration>
+std::vector<itk::ModelConfiguration>
 ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
                                                     std::string  prefix,
                                                     std::string  mode,
                                                     unsigned int imageDimension,
                                                     bool         useMixedPrecision)
 {
-  std::vector<itk::ImpactModelConfiguration> modelsConfiguration;
-  const Configuration &                      configuration = itk::Deref(this->GetConfiguration());
+  std::vector<itk::ModelConfiguration> modelsConfiguration;
+  const Configuration &                configuration = itk::Deref(this->GetConfiguration());
 
   /** Get and set the model path. */
   const std::unique_ptr<std::vector<std::string>> modelsPathStr =
@@ -198,13 +198,17 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   {
     try
     {
+      // Backend itk::ModelConfiguration ctor order: (..., voxelSize, overlap, layersMask,
+      // useMixedPrecision). Elastix does not tile via the backend's Static path, so
+      // overlap is 0; the backend precomputes the online patch index unconditionally
+      // (only meaningful when patch and voxel dimensions match, i.e. non-Static).
       modelsConfiguration.emplace_back(modelsPathVec[i],
                                        modelsDimensionVec[i],
                                        numberOfChannelsVec[i],
                                        patchSizeVecByModel[i],
                                        voxelSizeVecByModel[i],
+                                       /*overlap*/ 0u,
                                        GetBooleanVectorFromString(layersMaskVec[i], false),
-                                       mode == "Static",
                                        useMixedPrecision);
     }
     catch (const c10::Error & e)
@@ -384,7 +388,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetFixedModelsConfiguration()[i].GetLayersMask();
     fixedNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetFixedModelsConfiguration()[i].to(this->GetDevice());
+    itk::ModelTo(this->GetFixedModelsConfiguration()[i], this->GetDevice());
   }
 
   int movingNumberOfLayers = 0;
@@ -392,7 +396,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     std::vector<bool> layersMask = this->GetMovingModelsConfiguration()[i].GetLayersMask();
     movingNumberOfLayers += std::count(layersMask.begin(), layersMask.end(), true);
-    this->GetMovingModelsConfiguration()[i].to(this->GetDevice());
+    itk::ModelTo(this->GetMovingModelsConfiguration()[i], this->GetDevice());
   }
 
   if (fixedNumberOfLayers != movingNumberOfLayers)
@@ -437,9 +441,10 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   if (mode == "Static")
   {
-    std::string writeFeatureMapsStr = "false";
-    configuration.ReadParameter(writeFeatureMapsStr, "ImpactWriteFeatureMaps", this->GetComponentLabel(), level, 0);
-    if (writeFeatureMapsStr != "false")
+    std::string writeFeatureMapsStr = "";
+    configuration.ReadParameter(
+      writeFeatureMapsStr, "ImpactFeatureMapOutputDirectory", this->GetComponentLabel(), level, 0);
+    if (!writeFeatureMapsStr.empty())
     {
       // If enabled, prepare output directory for feature map export (Static mode)
       if (!std::filesystem::exists(writeFeatureMapsStr))
