@@ -55,6 +55,7 @@ endif()
 if(USE_ImpactMetric)
   find_package(Torch REQUIRED)
   target_link_libraries(CommonGTest PUBLIC "${TORCH_LIBRARIES}")
+  target_include_directories(CommonGTest PRIVATE ${ITKIMPACT_INCLUDE_DIR})
 endif()
 
 target_include_directories(CommonGTest PRIVATE

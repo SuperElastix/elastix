@@ -53,32 +53,31 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFixedFeaturesMaps()
 {
   m_FixedFeaturesMaps.clear();
   m_PrincipalComponents.clear();
-  auto fixedWriter = std::function<void(typename TFixedImage::ConstPointer, torch::Tensor &, const std::string &)>(
-    [this](typename TFixedImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
-      unsigned int level = this->GetCurrentLevel();
-      using WriterType = itk::ImageFileWriter<FeaturesImageType>;
-      typename WriterType::Pointer writer = WriterType::New();
-      writer->SetFileName(GetFeatureMapsPath() + "/Fixed_" + std::to_string(level) + "_" + filename + ".mha");
-      writer->SetInput(ImpactTensorUtils::TensorToImage<TFixedImage, FeaturesImageType>(image, data.unsqueeze(0)));
-      try
-      {
-        writer->Update();
-      }
-      catch (itk::ExceptionObject & error)
-      {
-        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << " ITK Exception: " << error);
-      }
-    });
 
-  m_FixedFeaturesMaps =
-    ImpactTensorUtils::GetFeaturesMaps<TFixedImage, FeaturesMaps, InterpolatorType, FeaturesImageType>(
-      Superclass::m_FixedImage,
-      m_FixedInterpolator,
-      GetFixedModelsConfiguration(),
-      GetDevice(),
-      GetPCA(),
-      m_PrincipalComponents,
-      GetWriteFeatureMaps() ? fixedWriter : nullptr);
+  // Generate the feature maps with the backend itk::ImageToFeaturesMap filter (the
+  // framework-neutral Static feature extraction, with its patch tiling), one filter per
+  // model, one FeaturesMaps per kept layer; remember each model's PCA basis for the moving.
+  const auto & fixedConfigs = GetFixedModelsConfiguration();
+  for (unsigned int i = 0; i < fixedConfigs.size(); ++i)
+  {
+    auto featuresMap = itk::ImageToFeaturesMap<TFixedImage, InterpolatorType>::New();
+    featuresMap->SetModelConfiguration(fixedConfigs[i]);
+    featuresMap->SetInterpolator(m_FixedInterpolator);
+    featuresMap->AddInput(Superclass::m_FixedImage);
+    featuresMap->SetPCA(GetPCA()[i]);
+    featuresMap->SetDevice(GetDevice().str());
+    featuresMap->Update();
+
+    const std::vector<torch::Tensor> principalComponents = itk::GetPrincipalComponents(*featuresMap);
+    m_PrincipalComponents.insert(m_PrincipalComponents.end(), principalComponents.begin(), principalComponents.end());
+
+    const unsigned int numberOfLayers =
+      std::accumulate(fixedConfigs[i].GetLayersMask().begin(), fixedConfigs[i].GetLayersMask().end(), 0);
+    for (unsigned int layer = 0; layer < numberOfLayers; ++layer)
+    {
+      m_FixedFeaturesMaps.emplace_back(const_cast<FeaturesImageType *>(featuresMap->GetOutput(layer).GetPointer()));
+    }
+  }
 
   if (GetWriteFeatureMaps())
   {
@@ -110,34 +109,38 @@ void
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
 {
   m_MovingFeaturesMaps.clear();
-  auto movingWriter = std::function<void(typename TMovingImage::ConstPointer, torch::Tensor &, const std::string &)>(
-    [this](typename TMovingImage::ConstPointer image, torch::Tensor & data, const std::string & filename) {
-      unsigned int level = this->GetCurrentLevel();
-      using WriterType = itk::ImageFileWriter<FeaturesImageType>;
-      typename WriterType::Pointer writer = WriterType::New();
-      writer->SetFileName(GetFeatureMapsPath() + "/Moving_" + std::to_string(level) + "_" + filename + ".mha");
-      writer->SetInput(ImpactTensorUtils::TensorToImage<TMovingImage, FeaturesImageType>(image, data.unsqueeze(0)));
-      try
-      {
-        writer->Update();
-      }
-      catch (itk::ExceptionObject & error)
-      {
-        itkGenericExceptionMacro("Error writing image: " << writer->GetFileName() << "ITK Exception: " << error);
-      }
-    });
 
-  m_MovingFeaturesMaps =
-    ImpactTensorUtils::GetFeaturesMaps<TMovingImage, FeaturesMaps, InterpolatorType, FeaturesImageType>(
-      Superclass::m_MovingImage,
-      Superclass::m_Interpolator,
-      GetMovingModelsConfiguration(),
-      GetDevice(),
-      GetPCA(),
-      m_PrincipalComponents,
-      GetWriteFeatureMaps() ? movingWriter : nullptr,
-      std::function<typename TMovingImage::PointType(const typename TMovingImage::PointType &)>(
-        [this](const typename TMovingImage::PointType & point) { return this->TransformPoint(point); }));
+  // Same as the fixed image, but sampled at transformed points (the metric's current
+  // transform) and reusing the PCA basis fitted on the fixed image.
+  const auto & movingConfigs = GetMovingModelsConfiguration();
+  unsigned int pcaOffset = 0;
+  for (unsigned int i = 0; i < movingConfigs.size(); ++i)
+  {
+    auto featuresMap = itk::ImageToFeaturesMap<TMovingImage, InterpolatorType>::New();
+    featuresMap->SetModelConfiguration(movingConfigs[i]);
+    featuresMap->SetInterpolator(Superclass::m_Interpolator);
+    featuresMap->SetTransform(
+      [this](const typename TMovingImage::PointType & point) { return this->TransformPoint(point); });
+    featuresMap->AddInput(Superclass::m_MovingImage);
+    featuresMap->SetPCA(GetPCA()[i]);
+    featuresMap->SetDevice(GetDevice().str());
+
+    const unsigned int numberOfLayers =
+      std::accumulate(movingConfigs[i].GetLayersMask().begin(), movingConfigs[i].GetLayersMask().end(), 0);
+    if (GetPCA()[i] > 0 && pcaOffset + numberOfLayers <= m_PrincipalComponents.size())
+    {
+      std::vector<torch::Tensor> principalComponents(m_PrincipalComponents.begin() + pcaOffset,
+                                                     m_PrincipalComponents.begin() + pcaOffset + numberOfLayers);
+      itk::SetPrincipalComponents(*featuresMap, principalComponents);
+    }
+    featuresMap->Update();
+
+    for (unsigned int layer = 0; layer < numberOfLayers; ++layer)
+    {
+      m_MovingFeaturesMaps.emplace_back(const_cast<FeaturesImageType *>(featuresMap->GetOutput(layer).GetPointer()));
+    }
+    pcaOffset += numberOfLayers;
+  }
 
   using WriterType = itk::ImageFileWriter<FeaturesImageType>;
   if (GetWriteFeatureMaps())
@@ -176,12 +179,12 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
   for (auto & config : m_FixedModelsConfiguration)
   {
-    config.template setup<TFixedImage>(Superclass::m_FixedImage);
+    itk::SetupImageMetadata<TFixedImage>(config, Superclass::m_FixedImage);
   }
 
   for (auto & config : m_MovingModelsConfiguration)
   {
-    config.template setup<TMovingImage>(Superclass::m_MovingImage);
+    itk::SetupImageMetadata<TMovingImage>(config, Superclass::m_MovingImage);
   }
 
   if (GetMode() == "Static")
@@ -222,9 +225,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
   else
   {
     std::vector<torch::Tensor> fixedOutputsTensor =
-      ImpactTensorUtils::GetModelOutputsExample(m_FixedModelsConfiguration, "fixed", GetDevice());
+      itk::Impact::GetModelOutputsExample(m_FixedModelsConfiguration, "fixed", GetDevice());
     std::vector<torch::Tensor> movingOutputsTensor =
-      ImpactTensorUtils::GetModelOutputsExample(m_MovingModelsConfiguration, "moving", GetDevice());
+      itk::Impact::GetModelOutputsExample(m_MovingModelsConfiguration, "moving", GetDevice());
 
     if (fixedOutputsTensor.size() != movingOutputsTensor.size())
     {
@@ -289,14 +292,12 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::SampleCheck(
   const FixedImagePointType &             fixedImageCenterCoordinate,
   const std::vector<std::vector<float>> & patchIndex) const
 {
+  const auto &         direction = this->GetFixedImage()->GetDirection();
   FixedImagePointType  fixedImagePoint(fixedImageCenterCoordinate);
   MovingImagePointType mappedPoint;
   for (const std::vector<float> & patchIndexItem : patchIndex)
   {
-    for (int dim = 0; dim < patchIndexItem.size(); ++dim)
-    {
-      fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndexItem[dim];
-    }
+    fixedImagePoint = this->PatchPoint(fixedImageCenterCoordinate, direction, patchIndexItem);
     mappedPoint = this->TransformPoint(fixedImagePoint);
     if (Superclass::m_Interpolator->IsInsideBuffer(mappedPoint) == false)
     {
@@ -323,7 +324,7 @@ template <typename TFixedImage, typename TMovingImage>
 template <typename ImagePointType>
 std::vector<ImagePointType>
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
-  const std::vector<ImpactModelConfiguration> &               modelConfig,
+  const std::vector<ModelConfiguration> &                     modelConfig,
   std::mt19937 &                                              randomGenerator,
   const std::vector<ImagePointType> &                         fixedPointsTmp,
   std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const
@@ -338,7 +339,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
     for (int it = 0; it < fixedPointsTmp.size(); ++it)
     {
       std::vector<std::vector<float>> patch =
-        ImpactTensorUtils::GetPatchIndex(modelConfig[i], randomGenerator, FixedImageDimension);
+        itk::Impact::GetPatchIndex(modelConfig[i], randomGenerator, FixedImageDimension);
       if (SampleCheck(fixedPointsTmp[it], patch))
       {
         patchIndex[i].push_back(patch);
@@ -367,20 +368,18 @@ torch::Tensor
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateFixedImagesPatchValue(
   const FixedImagePointType &             fixedImageCenterCoordinate,
   const std::vector<std::vector<float>> & patchIndex,
-  const std::vector<int64_t> &            patchSize) const
+  const std::vector<int64_t> &            patchTensorShape) const
 {
   std::vector<float> fixedImagesPatchValues(patchIndex.size(), 0.0f);
 
+  const auto &        direction = this->GetFixedImage()->GetDirection();
   FixedImagePointType fixedImagePoint(fixedImageCenterCoordinate);
   for (int i = 0; i < patchIndex.size(); ++i)
   {
-    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
-    {
-      fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
-    }
+    fixedImagePoint = this->PatchPoint(fixedImageCenterCoordinate, direction, patchIndex[i]);
     fixedImagesPatchValues[i] = m_FixedInterpolator->Evaluate(fixedImagePoint);
   }
-  return torch::from_blob(fixedImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat32)
+  return torch::from_blob(fixedImagesPatchValues.data(), { torch::IntArrayRef(patchTensorShape) }, torch::kFloat32)
     .unsqueeze(0)
     .clone();
 } // end EvaluateFixedImagesPatchValue
@@ -393,22 +392,20 @@ torch::Tensor
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchValue(
   const FixedImagePointType &             fixedImageCenterCoordinate,
   const std::vector<std::vector<float>> & patchIndex,
-  const std::vector<int64_t> &            patchSize) const
+  const std::vector<int64_t> &            patchTensorShape) const
 {
   std::vector<float> movingImagesPatchValues(patchIndex.size(), 0.0f);
   RealType           movingImageValue;
 
+  const auto &        direction = this->GetFixedImage()->GetDirection();
   FixedImagePointType fixedImagePoint(fixedImageCenterCoordinate);
   for (int i = 0; i < patchIndex.size(); ++i)
   {
-    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
-    {
-      fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
-    }
+    fixedImagePoint = this->PatchPoint(fixedImageCenterCoordinate, direction, patchIndex[i]);
     this->EvaluateMovingImageValueAndDerivative(this->TransformPoint(fixedImagePoint), movingImageValue, nullptr);
     movingImagesPatchValues[i] = movingImageValue;
   }
-  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat32)
+  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchTensorShape) }, torch::kFloat32)
     .clone()
     .unsqueeze(0);
 } // end EvaluateFixedPatchValue
@@ -438,7 +435,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchVa
   const FixedImagePointType &             fixedImageCenterCoordinate,
   torch::Tensor &                         movingImagesPatchesJacobians,
   const std::vector<std::vector<float>> & patchIndex,
-  const std::vector<int64_t> &            patchSize,
+  const std::vector<int64_t> &            patchTensorShape,
   int                                     s) const
 {
 
@@ -448,13 +445,11 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchVa
   RealType                  movingImageValue;
   MovingImageDerivativeType movingImageJacobian;
 
+  const auto &        direction = this->GetFixedImage()->GetDirection();
   FixedImagePointType fixedImagePoint(fixedImageCenterCoordinate);
   for (int i = 0; i < patchIndex.size(); ++i)
   {
-    for (int dim = 0; dim < patchIndex[i].size(); ++dim)
-    {
-      fixedImagePoint[dim] = fixedImageCenterCoordinate[dim] + patchIndex[i][dim];
-    }
+    fixedImagePoint = this->PatchPoint(fixedImageCenterCoordinate, direction, patchIndex[i]);
     this->EvaluateMovingImageValueAndDerivative(
       this->TransformPoint(fixedImagePoint), movingImageValue, &movingImageJacobian);
     movingImagesPatchValues[i] = movingImageValue;
@@ -467,7 +462,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::EvaluateMovingImagesPatchVa
                                                      { static_cast<int64_t>(patchIndex.size()), MovingImageDimension },
                                                      torch::kFloat32)
                                       .clone();
-  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchSize) }, torch::kFloat32)
+  return torch::from_blob(movingImagesPatchValues.data(), { torch::IntArrayRef(patchTensorShape) }, torch::kFloat32)
     .unsqueeze(0)
     .clone();
 } // end EvaluateMovingPatchValueAndDerivative
@@ -505,34 +500,34 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
         .clone();
   }
 
-  const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> fixedimagesPatchValuesEvaluator =
+  const itk::Impact::ImagesPatchValuesEvaluator<FixedImagePointType> fixedimagesPatchValuesEvaluator =
     [this](const FixedImagePointType &             fixedImageCenterCoordinateLoc,
            const std::vector<std::vector<float>> & patchIndexLoc,
-           const std::vector<int64_t> &            patchSizeLoc) {
-      return EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
+           const std::vector<int64_t> &            patchTensorShapeLoc) {
+      return EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchTensorShapeLoc);
     };
 
 
-  fixedOutputsTensor = ImpactTensorUtils::GenerateOutputs<FixedImagePointType>(GetFixedModelsConfiguration(),
-                                                                               fixedPoints,
-                                                                               patchIndex,
-                                                                               subsetsOfFeatures,
-                                                                               GetDevice(),
-                                                                               fixedimagesPatchValuesEvaluator);
+  fixedOutputsTensor = itk::Impact::GenerateOutputs<FixedImagePointType>(GetFixedModelsConfiguration(),
+                                                                         fixedPoints,
+                                                                         patchIndex,
+                                                                         subsetsOfFeatures,
+                                                                         GetDevice(),
+                                                                         fixedimagesPatchValuesEvaluator);
 
-  const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> movingimagesPatchValuesEvaluator =
+  const itk::Impact::ImagesPatchValuesEvaluator<FixedImagePointType> movingimagesPatchValuesEvaluator =
     [this](const MovingImagePointType &            fixedImageCenterCoordinateLoc,
            const std::vector<std::vector<float>> & patchIndexLoc,
-           const std::vector<int64_t> &            patchSizeLoc) {
-      return EvaluateMovingImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
+           const std::vector<int64_t> &            patchTensorShapeLoc) {
+      return EvaluateMovingImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchTensorShapeLoc);
     };
 
-  movingOutputsTensor = ImpactTensorUtils::GenerateOutputs<MovingImagePointType>(GetMovingModelsConfiguration(),
-                                                                                 fixedPoints,
-                                                                                 patchIndex,
-                                                                                 subsetsOfFeatures,
-                                                                                 GetDevice(),
-                                                                                 movingimagesPatchValuesEvaluator);
+  movingOutputsTensor = itk::Impact::GenerateOutputs<MovingImagePointType>(GetMovingModelsConfiguration(),
+                                                                           fixedPoints,
+                                                                           patchIndex,
+                                                                           subsetsOfFeatures,
+                                                                           GetDevice(),
+                                                                           movingimagesPatchValuesEvaluator);
 
   for (int i = 0; i < fixedOutputsTensor.size(); ++i)
   {
@@ -574,9 +569,9 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueStatic(
     for (unsigned int s = 0; s < numberOfSample; ++s)
     {
       const auto & fixedPoint = fixedPoints[s];
-      fixedOutputTensor[s] = m_FixedFeaturesMaps[i].m_FeaturesMapsInterpolator.Evaluate(fixedPoint, subsetOfFeatures);
-      movingOutputTensor[s] =
-        m_MovingFeaturesMaps[i].m_FeaturesMapsInterpolator.Evaluate(this->TransformPoint(fixedPoint), subsetOfFeatures);
+      fixedOutputTensor[s] = m_FixedFeaturesMaps[i].m_FeaturesMapsInterpolator->Evaluate(fixedPoint, subsetOfFeatures);
+      movingOutputTensor[s] = m_MovingFeaturesMaps[i].m_FeaturesMapsInterpolator->Evaluate(
+        this->TransformPoint(fixedPoint), subsetOfFeatures);
     }
     loss.m_Losses[i]->updateValue(fixedOutputTensor, movingOutputTensor);
   }
@@ -639,37 +634,37 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
         .clone();
   }
 
-  const ImpactTensorUtils::ImagesPatchValuesEvaluator<FixedImagePointType> imagesPatchValuesEvaluator =
+  const itk::Impact::ImagesPatchValuesEvaluator<FixedImagePointType> imagesPatchValuesEvaluator =
     [this](const FixedImagePointType &             fixedImageCenterCoordinateLoc,
            const std::vector<std::vector<float>> & patchIndexLoc,
-           const std::vector<int64_t> &            patchSizeLoc) {
-      return EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchSizeLoc);
+           const std::vector<int64_t> &            patchTensorShapeLoc) {
+      return EvaluateFixedImagesPatchValue(fixedImageCenterCoordinateLoc, patchIndexLoc, patchTensorShapeLoc);
     };
 
   std::vector<torch::Tensor> fixedOutputsTensor, movingOutputsTensor;
-  fixedOutputsTensor = ImpactTensorUtils::GenerateOutputs<FixedImagePointType>(
+  fixedOutputsTensor = itk::Impact::GenerateOutputs<FixedImagePointType>(
     GetFixedModelsConfiguration(), fixedPoints, patchIndex, subsetsOfFeatures, GetDevice(), imagesPatchValuesEvaluator);
 
 
-  const ImpactTensorUtils::ImagesPatchValuesAndJacobiansEvaluator<MovingImagePointType>
+  const itk::Impact::ImagesPatchValuesAndJacobiansEvaluator<MovingImagePointType>
     imagesPatchValuesAndJacobiansEvaluator = [this](const MovingImagePointType & fixedImageCenterCoordinateLoc,
                                                     torch::Tensor &              movingImagesPatchesJacobiansLoc,
                                                     const std::vector<std::vector<float>> & patchIndexLoc,
-                                                    const std::vector<int64_t> &            patchSizeLoc,
+                                                    const std::vector<int64_t> &            patchTensorShapeLoc,
                                                     int                                     sLoc) {
       return EvaluateMovingImagesPatchValuesAndJacobians(
-        fixedImageCenterCoordinateLoc, movingImagesPatchesJacobiansLoc, patchIndexLoc, patchSizeLoc, sLoc);
+        fixedImageCenterCoordinateLoc, movingImagesPatchesJacobiansLoc, patchIndexLoc, patchTensorShapeLoc, sLoc);
     };
 
   std::vector<torch::Tensor> layersJacobian =
-    ImpactTensorUtils::GenerateOutputsAndJacobian<MovingImagePointType>(GetMovingModelsConfiguration(),
-                                                                        fixedPoints,
-                                                                        patchIndex,
-                                                                        subsetsOfFeatures,
-                                                                        fixedOutputsTensor,
-                                                                        GetDevice(),
-                                                                        loss.m_Losses,
-                                                                        imagesPatchValuesAndJacobiansEvaluator);
+    itk::Impact::GenerateOutputsAndJacobian<MovingImagePointType>(GetMovingModelsConfiguration(),
+                                                                  fixedPoints,
+                                                                  patchIndex,
+                                                                  subsetsOfFeatures,
+                                                                  fixedOutputsTensor,
+                                                                  GetDevice(),
+                                                                  loss.m_Losses,
+                                                                  imagesPatchValuesAndJacobiansEvaluator);
 
   for (int i = 0; i < fixedOutputsTensor.size(); ++i)
   {
@@ -740,11 +735,11 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeSt
     {
       const auto & fixedPoint = fixedPoints[s];
       mappedPoint = this->TransformPoint(fixedPoint);
-      fixedOutputTensor[s] = m_FixedFeaturesMaps[i].m_FeaturesMapsInterpolator.Evaluate(fixedPoint, subsetOfFeatures);
+      fixedOutputTensor[s] = m_FixedFeaturesMaps[i].m_FeaturesMapsInterpolator->Evaluate(fixedPoint, subsetOfFeatures);
       movingOutputTensor[s] =
-        m_MovingFeaturesMaps[i].m_FeaturesMapsInterpolator.Evaluate(mappedPoint, subsetOfFeatures);
+        m_MovingFeaturesMaps[i].m_FeaturesMapsInterpolator->Evaluate(mappedPoint, subsetOfFeatures);
       movingDerivativeTensor[s] =
-        m_MovingFeaturesMaps[i].m_FeaturesMapsInterpolator.EvaluateDerivative(mappedPoint, subsetOfFeatures);
+        m_MovingFeaturesMaps[i].m_FeaturesMapsInterpolator->EvaluateDerivative(mappedPoint, subsetOfFeatures);
     }
     torch::Tensor jacobian = torch::bmm(movingDerivativeTensor, transformsJacobian);
     loss.m_Losses[i]->updateValueAndDerivativeInStaticMode(

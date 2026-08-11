@@ -16,7 +16,6 @@ jobs:
           - os: ubuntu-22.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
-            libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.8.0%2Bcpu.zip"
             cuda-version: "cpu"
             itk-git-tag: $DEFAULT_ITK_GIT_TAG
             cmake-build-type: "Release"
@@ -26,7 +25,6 @@ jobs:
           - os: windows-2022
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-            libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.8.0%2Bcpu.zip"
             cuda-version: "cpu"
             itk-git-tag: $DEFAULT_ITK_GIT_TAG
             cmake-build-type: "Release"
@@ -37,7 +35,6 @@ jobs:
           - os: macos-14
             c-compiler: "clang"
             cxx-compiler: "clang++"
-            libtorch-cpu-url: "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.8.0.zip"
             cuda-version: "cpu"
             itk-git-tag: $DEFAULT_ITK_GIT_TAG
             cmake-build-type: "Release"
@@ -67,22 +64,35 @@ jobs:
           cmake-build-type: ${{ matrix.cmake-build-type }}
           vcvars: ${{ matrix.vcvars64 }}
 
-      - name: Download and extract libtorch
-        if: matrix.os != 'macos-14'
-        uses: ./.github/actions/download_libtorch
-        with:
-          libtorch_url: ${{ matrix.libtorch-cpu-url }}
-
-      - name: Build libtorch
-        if: matrix.os == 'macos-14'
-        uses: ./.github/actions/build_libtorch
-        with:
-          install_prefix: ${{ github.workspace }}/libtorch/libtorch
+      - name: Clone ITKIMPACT backend
+        # The Impact metric consumes the shared ITKIMPACT backend (headers in include/,
+        # itkModelConfiguration.cxx in src/). Consider pinning to a fixed commit for
+        # reproducible CI once ITKIMPACT publishes tagged releases.
+        run: git clone --depth 1 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "${{ github.workspace }}/ITKIMPACT"
+        shell: bash
 
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
         with:
-          python-version: '3.10'
+          python-version: "3.11"
+
+      - name: Install LibTorch via pip
+        # LibTorch is provided by the pip `torch` package -- the same mechanism the ITKIMPACT
+        # backend uses -- instead of downloading a standalone libtorch or building PyTorch from
+        # source (which the macOS job did, taking ~1-2h). torch 2.11 is used across all three
+        # OSes so the CI compiles the ITKIMPACT backend against the same torch as the release
+        # (publish-elastix.yml uses 2.11 because it is the last series that still ships CUDA
+        # cu128 -- broad GPU coverage incl. Blackwell). Export Torch_DIR for find_package(Torch)
+        # and TORCH_LIB_DIR for the Windows runtime DLL search (Linux/macOS resolve via RPATH).
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "torch==2.11.*" --index-url https://download.pytorch.org/whl/cpu
+          python - <<'PY' >> "$GITHUB_ENV"
+          import torch, pathlib
+          print("Torch_DIR=" + (pathlib.Path(torch.utils.cmake_prefix_path) / "Torch").as_posix())
+          print("TORCH_LIB_DIR=" + (pathlib.Path(torch.__file__).parent / "lib").as_posix())
+          PY
 
       - name: Install build dependencies
         run: |
@@ -117,11 +127,12 @@ jobs:
           set(ENV{CC} ${{ matrix.c-compiler }})
           set(ENV{CXX} ${{ matrix.cxx-compiler }})
           if(WIN32)
-            set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/lib;\$ENV{PATH}")
+            set(ENV{PATH} "\${CTEST_DASHBOARD_ROOT}/ITK-build/bin;${TORCH_LIB_DIR};\$ENV{PATH}")
           endif()
           set(dashboard_cache "
           ITK_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITK-build
-          Torch_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/libtorch/libtorch/share/cmake/Torch
+          Torch_DIR:PATH=${Torch_DIR}
+          ITKIMPACT_INCLUDE_DIR:PATH=\${CTEST_DASHBOARD_ROOT}/ITKIMPACT/include
           ELASTIX_USE_GTEST:BOOL=ON
           USE_ALL_COMPONENTS:BOOL=ON
           BUILD_TESTING:BOOL=ON
@@ -175,7 +186,7 @@ jobs:
       - name: Run externalproject example (Windows)
         if: startsWith(matrix.os, 'windows')
         run: |
-          set PATH=${{ github.workspace }}\Elastix-build\bin;${{ github.workspace }}\libtorch\libtorch\lib;%PATH%
+          set PATH=${{ github.workspace }}\Elastix-build\bin;%TORCH_LIB_DIR%;%PATH%
           cd externalproject-build
           .\elastix_impact_metric_example.exe
         shell: cmd
@@ -184,6 +195,6 @@ jobs:
         uses: ./.github/actions/publish
         with:
           libs: ${{ join(matrix.libs, ' ') }}
-          upload-name: ${{ matrix.os }}-libtorch-2.8.0-${{ matrix.cuda-version }}
+          upload-name: ${{ matrix.os }}-torch-2.11-${{ matrix.cuda-version }}
           docker-username: ${{ secrets.DOCKER_HUB_USERNAME }}
           docker-password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}

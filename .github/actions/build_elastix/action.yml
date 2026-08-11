@@ -25,7 +25,8 @@ runs:
               -DCMAKE_CXX_COMPILER="${{ inputs.cxx-compiler }}" \
               -DCMAKE_BUILD_TYPE="${{ inputs.cmake-build-type }}" \
               -DITK_DIR=../ITK-build \
-              -DTorch_DIR=../libtorch/libtorch/share/cmake/Torch \
+              -DTorch_DIR=$Torch_DIR \
+              -DITKIMPACT_INCLUDE_DIR=../ITKIMPACT/include \
               -DUSE_ALL_COMPONENTS=ON \
               -DBUILD_TESTING:BOOL=ON \
               -DELASTIX_USE_GTEST=ON \
@@ -44,7 +45,8 @@ runs:
               -DCMAKE_BUILD_TYPE="${{ inputs.cmake-build-type }}" ^
               -DITK_DIR=../ITK-build ^
               -DCMAKE_CUDA_FLAGS="-allow-unsupported-compiler -Xcompiler \"/D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH\"" ^
-              -DTorch_DIR=../libtorch/libtorch/share/cmake/Torch ^
+              -DTorch_DIR=%Torch_DIR% ^
+              -DITKIMPACT_INCLUDE_DIR=../ITKIMPACT/include ^
               -DUSE_ALL_COMPONENTS=ON ^
               -DBUILD_TESTING:BOOL=ON ^
               -DELASTIX_USE_GTEST=ON ^

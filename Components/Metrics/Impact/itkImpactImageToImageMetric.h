@@ -21,10 +21,17 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkBSplineInterpolateImageFunction.h"
-#include "itkBSplineInterpolateVectorImageFunction.h"
-#include "itkImpactModelConfiguration.h"
-#include "ImpactTensorUtils.h"
-#include "ImpactLoss.h"
+// Vector-image interpolator consumed from the ITKIMPACT backend (same per-component
+// B-spline interpolation as the former local itkBSplineInterpolateVectorImageFunction).
+#include "itkInterpolateVectorImageFunction.h"
+#include "itkModelConfiguration.h"
+#include "itkModelConfigurationDetail.h"
+// Static feature-map generation (itk::ImageToFeaturesMap) and online inference
+// (itk::Impact::GenerateOutputs/AndJacobian) are consumed from the ITKIMPACT backend.
+#include "itkImageToFeaturesMap.h"
+#include "itkImageToFeaturesMapInternals.h"
+#include "itkImpactOnlineInference.h"
+#include <ImpactLoss.h>
 
 #include <torch/script.h>
 #include <torch/torch.h>
@@ -165,14 +172,14 @@ public:
   /** Set/Get the list of TorchScript model configurations used to extract features from the fixed image.
    * Each model can target a different resolution, architecture, or semantic level.
    */
-  itkSetMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
-  itkGetConstReferenceMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkSetMacro(FixedModelsConfiguration, std::vector<ModelConfiguration>);
+  itkGetConstReferenceMacro(FixedModelsConfiguration, std::vector<ModelConfiguration>);
 
   /** Set/Get the list of TorchScript model configurations used to extract features from the moving image.
    * Allows using different models for fixed and moving images to support asymmetric or multimodal setups.
    */
-  itkSetMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
-  itkGetConstReferenceMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkSetMacro(MovingModelsConfiguration, std::vector<ModelConfiguration>);
+  itkGetConstReferenceMacro(MovingModelsConfiguration, std::vector<ModelConfiguration>);
 
   /** Set/Get the subset of feature indices to be used in the loss computation.
    * This allows dimensionality reduction or focusing on the most informative channels.
@@ -272,11 +279,11 @@ protected:
    */
   struct LossPerThreadStruct
   {
-    std::vector<std::unique_ptr<ImpactLoss::Loss>> m_Losses;
-    std::vector<float>                             m_LayersWeight;
-    SizeValueType                                  m_NumberOfPixelsCounted;
-    int                                            m_NumberOfParameters;
-    std::mt19937                                   m_RandomGenerator;
+    std::vector<std::unique_ptr<itk::Impact::Loss>> m_Losses;
+    std::vector<float>                              m_LayersWeight;
+    SizeValueType                                   m_NumberOfPixelsCounted;
+    int                                             m_NumberOfParameters;
+    std::mt19937                                    m_RandomGenerator;
 
     void
     init(std::vector<std::string> distanceName, std::vector<float> layersWeight, unsigned int seed)
@@ -292,7 +299,7 @@ protected:
       m_LayersWeight = layersWeight;
       for (std::string name : distanceName)
       {
-        m_Losses.push_back(ImpactLoss::LossFactory::Instance().Create(name));
+        m_Losses.push_back(itk::Impact::LossFactory::Instance().Create(name));
       }
     }
 
@@ -302,7 +309,7 @@ protected:
       m_NumberOfParameters = numberOfParameters;
       for (int l = 0; l < m_LayersWeight.size(); ++l)
       {
-        m_Losses[l]->setNumberOfParameters(numberOfParameters);
+        m_Losses[l]->SetNumberOfParameters(numberOfParameters);
       }
     }
 
@@ -310,7 +317,7 @@ protected:
     reset()
     {
       m_NumberOfPixelsCounted = 0;
-      for (std::unique_ptr<ImpactLoss::Loss> & loss : m_Losses)
+      for (std::unique_ptr<itk::Impact::Loss> & loss : m_Losses)
       {
         loss->reset();
       }
@@ -388,6 +395,43 @@ protected:
   bool
   SampleCheck(const FixedImagePointType &             fixedImageCenterCoordinate,
               const std::vector<std::vector<float>> & patchIndex) const;
+
+  /** The direction cosines of the fixed image, cached by the caller so the hot patch loop does
+   * not re-fetch them per voxel. */
+  using PatchDirectionType = typename FixedImageType::DirectionType;
+
+  /**
+   * \brief The world point reached by stepping `offset` away from `center` along the fixed image's own axes.
+   *
+   * A patchIndex entry is a displacement in millimetres along the fixed image's OWN axes --
+   * (index - patchSize/2) * voxelSize, axis by axis. It reaches world space through the image's
+   * direction cosines: one step along image axis j is column j of the direction matrix. Adding
+   * the entries to the world components one by one is correct only when that matrix is the
+   * identity; otherwise the network is handed a patch mirrored or rotated with respect to the
+   * grid it was trained on, and a diagonal direction carrying a -1 -- which most clinical CT and
+   * MR do -- is already enough to flip an axis. Same index-to-physical map itk-impact applies in
+   * its v4 threader and in ImageToTensorFilter for the Static feature maps.
+   */
+  FixedImagePointType
+  PatchPoint(const FixedImagePointType & center,
+             const PatchDirectionType &  direction,
+             const std::vector<float> &  offset) const
+  {
+    FixedImagePointType point(center);
+    const unsigned int  n = std::min<unsigned int>(FixedImageDimension, static_cast<unsigned int>(offset.size()));
+    for (unsigned int j = 0; j < n; ++j)
+    {
+      if (offset[j] == 0.0f)
+      {
+        continue;
+      }
+      for (unsigned int r = 0; r < FixedImageDimension; ++r)
+      {
+        point[r] += direction[r][j] * offset[j];
+      }
+    }
+    return point;
+  }
 
   /**
    * \brief Checks if the fixed image point lies within valid bounds for sampling.
@@ -536,7 +580,7 @@ private:
   /** Feature maps are stored as VectorImages of floats with same dimension as fixed image. */
   using FeaturesImageType = itk::VectorImage<float, FixedImageDimension>;
   /** Interpolator for feature maps (vector-valued), using scalar B-spline interpolation. */
-  using FeaturesInterpolatorType = BSplineInterpolateVectorImageFunction<
+  using FeaturesInterpolatorType = itk::InterpolateVectorImageFunction<
     FeaturesImageType,
     BSplineInterpolateImageFunction<itk::Image<float, FixedImageDimension>, CoordinateRepresentationType, float>>;
 
@@ -550,14 +594,14 @@ private:
    */
   struct FeaturesMaps
   {
-    typename FeaturesImageType::Pointer m_FeaturesMaps;
-    FeaturesInterpolatorType            m_FeaturesMapsInterpolator;
+    typename FeaturesImageType::Pointer        m_FeaturesMaps;
+    typename FeaturesInterpolatorType::Pointer m_FeaturesMapsInterpolator;
 
     FeaturesMaps(typename FeaturesImageType::Pointer featuresMaps)
       : m_FeaturesMaps(featuresMaps)
     {
-      m_FeaturesMapsInterpolator = FeaturesInterpolatorType();
-      m_FeaturesMapsInterpolator.SetInputImage(featuresMaps);
+      m_FeaturesMapsInterpolator = FeaturesInterpolatorType::New();
+      m_FeaturesMapsInterpolator->SetInputImage(featuresMaps);
     }
   };
 
@@ -567,19 +611,23 @@ private:
    * \brief Extracts a fixed image patch tensor centered at a given point using the precomputed patch index.
    *
    * This method extracts a patch from the fixed image centered at the specified point,
-   * based on the provided `patchIndex` and `patchSize`. Interpolation is performed using
+   * based on the provided `patchIndex` and `patchTensorShape`. Interpolation is performed using
    * the fixed image interpolator to sample the feature values at the specified coordinates.
    *
    * \param fixedImageCenterCoordinate The coordinate of the center point of the patch in the fixed image.
    * \param patchIndex A vector defining the relative indices for extracting the patch.
-   * \param patchSize The size of the patch to extract.
+   * \param patchTensorShape The shape the sampled patch must be given as a tensor. It is the
+   *   configured patch size REVERSED (itk::Impact::PatchTensorShape): the buffer below is
+   *   filled in patchIndex order, ITK axis 0 fastest, so ITK x is the tensor's last and
+   *   fastest axis. Reshaping that buffer to the un-reversed patch size re-partitions it,
+   *   which is invisible for an isotropic patch and garbles every other one.
    *
    * \return A tensor representing the extracted patch from the fixed image.
    */
   torch::Tensor
   EvaluateFixedImagesPatchValue(const FixedImagePointType &             fixedImageCenterCoordinate,
                                 const std::vector<std::vector<float>> & patchIndex,
-                                const std::vector<int64_t> &            patchSize) const;
+                                const std::vector<int64_t> &            patchTensorShape) const;
 
   /**
    * \brief Extracts a moving image patch tensor (intensity values) corresponding to a fixed point.
@@ -590,14 +638,18 @@ private:
    *
    * \param fixedImageCenterCoordinate The coordinate of the center point in the fixed image.
    * \param patchIndex A 2D vector defining the relative indices for extracting the patch.
-   * \param patchSize The size of the patch to extract.
+   * \param patchTensorShape The shape the sampled patch must be given as a tensor. It is the
+   *   configured patch size REVERSED (itk::Impact::PatchTensorShape): the buffer below is
+   *   filled in patchIndex order, ITK axis 0 fastest, so ITK x is the tensor's last and
+   *   fastest axis. Reshaping that buffer to the un-reversed patch size re-partitions it,
+   *   which is invisible for an isotropic patch and garbles every other one.
    *
    * \return A tensor representing the extracted patch from the moving image.
    */
   torch::Tensor
   EvaluateMovingImagesPatchValue(const FixedImagePointType &             fixedImageCenterCoordinate,
                                  const std::vector<std::vector<float>> & patchIndex,
-                                 const std::vector<int64_t> &            patchSize) const;
+                                 const std::vector<int64_t> &            patchTensorShape) const;
 
   /**
    * \brief Extracts moving image patch values and computes the spatial Jacobians with respect to image coordinates.
@@ -609,7 +661,11 @@ private:
    * \param fixedImageCenterCoordinate The coordinate of the center point in the fixed image.
    * \param movingImagesPatchesJacobians A tensor to store the computed Jacobians (image gradients) for each patch.
    * \param patchIndex A vector defining the relative indices for extracting the patch.
-   * \param patchSize The size of the patch to extract.
+   * \param patchTensorShape The shape the sampled patch must be given as a tensor. It is the
+   *   configured patch size REVERSED (itk::Impact::PatchTensorShape): the buffer below is
+   *   filled in patchIndex order, ITK axis 0 fastest, so ITK x is the tensor's last and
+   *   fastest axis. Reshaping that buffer to the un-reversed patch size re-partitions it,
+   *   which is invisible for an isotropic patch and garbles every other one.
    * \param s An index to determine where to store the computed Jacobians in `movingImagesPatchesJacobians`.
    *
    * \return A tensor representing the extracted patch from the moving image.
@@ -618,7 +674,7 @@ private:
   EvaluateMovingImagesPatchValuesAndJacobians(const FixedImagePointType &             fixedImageCenterCoordinate,
                                               torch::Tensor &                         movingImagesPatchesJacobians,
                                               const std::vector<std::vector<float>> & patchIndex,
-                                              const std::vector<int64_t> &            patchSize,
+                                              const std::vector<int64_t> &            patchTensorShape,
                                               int                                     s) const;
 
   /**
@@ -637,14 +693,14 @@ private:
    */
   template <typename ImagePointType>
   std::vector<ImagePointType>
-  GeneratePatchIndex(const std::vector<ImpactModelConfiguration> &               modelConfig,
+  GeneratePatchIndex(const std::vector<ModelConfiguration> &                     modelConfig,
                      std::mt19937 &                                              randomGenerator,
                      const std::vector<ImagePointType> &                         fixedPointsTmp,
                      std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const;
 
   /** TorchScript model configurations for fixed and moving image feature extraction. */
-  std::vector<ImpactModelConfiguration> m_FixedModelsConfiguration;
-  std::vector<ImpactModelConfiguration> m_MovingModelsConfiguration;
+  std::vector<ModelConfiguration> m_FixedModelsConfiguration;
+  std::vector<ModelConfiguration> m_MovingModelsConfiguration;
 
   std::vector<unsigned int> m_SubsetFeatures;
   std::vector<unsigned int> m_PCA;
