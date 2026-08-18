@@ -1052,6 +1052,24 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::ConvertToItkTransform(cons
   itkGenericExceptionMacro("Failed to convert transform object " << elxTransform);
 }
 
+
+template <typename TFixedImage, typename TMovingImage>
+auto
+ElastixRegistrationMethod<TFixedImage, TMovingImage>::ConvertCompositionToItkTransform(
+  const TransformType & elxTransform) -> SmartPointer<CompositeTransform<double, ImageDimension>>
+{
+  if (const auto * const combinationTransform =
+        dynamic_cast<const AdvancedCombinationTransform<double, FixedImageDimension> *>(&elxTransform))
+  {
+    if (const auto itkTransform = elx::TransformIO::ConvertToCompositionOfItkTransforms(*combinationTransform))
+    {
+      return itkTransform;
+    }
+    itkGenericExceptionMacro("Failed to convert transform object " << elxTransform);
+  }
+  itkGenericExceptionMacro("The argument must be a combination transform object. Argument: " << elxTransform);
+}
+
 } // namespace itk
 
 #endif
