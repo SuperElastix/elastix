@@ -329,6 +329,12 @@ public:
   static SmartPointer<TransformType>
   ConvertToItkTransform(const TransformType &);
 
+  /** Converts the specified elastix combination transform object to the corresponding ITK CompositeTransform object.
+   * Returns null if there is no corresponding ITK Transform type, or if the combination is not a composition (as may be
+   * specified by the "HowToCombineTransforms" parameter). */
+  static SmartPointer<CompositeTransform<double, ImageDimension>>
+  ConvertCompositionToItkTransform(const TransformType &);
+
 protected:
   ElastixRegistrationMethod();
 

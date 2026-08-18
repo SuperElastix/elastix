@@ -2040,6 +2040,47 @@ GTEST_TEST(itkElastixRegistrationMethod, ConvertToItkTransform)
   }
 }
 
+
+GTEST_TEST(itkElastixRegistrationMethod, ConvertCompositionToItkTransform)
+{
+  static constexpr auto ImageDimension = 2U;
+  using ImageType = itk::Image<float, ImageDimension>;
+  const auto image =
+    CreateImageFilledWithSequenceOfNaturalNumbers<ImageType::PixelType>(itk::Size<ImageDimension>{ 5, 6 });
+
+  elx::DefaultConstruct<ElastixRegistrationMethodType<ImageType>> registration{};
+
+  registration.SetFixedImage(image);
+  registration.SetMovingImage(image);
+
+  for (const bool useInitialTransform : { false, true })
+  {
+    registration.SetInitialTransformParameterFileName(
+      useInitialTransform ? (GetDataDirectoryPath() + "/Translation(1,-2)/TransformParameters.txt") : "");
+
+    const std::string nameOfLastTransform = "BSplineTransform";
+    registration.SetParameterObject(CreateParameterObject({ // Parameters in alphabetic order:
+                                                            { "AutomaticTransformInitialization", "false" },
+                                                            { "ImageSampler", "Full" },
+                                                            { "MaximumNumberOfIterations", "0" },
+                                                            { "Metric", "AdvancedNormalizedCorrelation" },
+                                                            { "Optimizer", "AdaptiveStochasticGradientDescent" },
+                                                            { "Transform", nameOfLastTransform } }));
+    registration.Update();
+
+    const unsigned int expectedNumberOfTransforms{ useInitialTransform ? 2U : 1U };
+
+    // TODO Check result
+    const auto result = ElastixRegistrationMethodType<ImageType>::ConvertCompositionToItkTransform(
+      itk::Deref(registration.GetCombinationTransform()));
+
+    ASSERT_NE(result, nullptr);
+    EXPECT_EQ(result->GetReferenceCount(), 1);
+    EXPECT_EQ(result->GetNumberOfTransforms(), expectedNumberOfTransforms);
+  }
+}
+
+
 GTEST_TEST(itkElastixRegistrationMethod, WriteCompositeTransform)
 {
   static constexpr auto ImageDimension = 2U;
