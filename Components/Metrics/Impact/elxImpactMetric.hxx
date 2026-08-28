@@ -189,6 +189,24 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
     itkExceptionMacro("Missing required parameter: \"" + prefix + "LayersMask" + std::to_string(level) + "\".");
   }
 
+  /** Get the patch overlap, per axis and per model, in voxels of the model's own grid, laid
+   * out like PatchSize. Optional. It is consumed only when the Static path tiles: a patch
+   * size of 0 runs the whole image in a single pass, where nothing is reassembled and the
+   * overlap is unused.
+   * The default is a quarter of each patch axis, so that a configuration tiled to fit in
+   * limited VRAM blends its patches instead of stitching visible seams. It is per axis
+   * rather than a single value because an anisotropic patch given the same overlap on every
+   * axis blends its short axis over a far larger fraction of itself than its long one. */
+  std::vector<unsigned int> overlapVec(totalNumberOfPatchSizeParameterPerModel, 0u);
+  for (unsigned int k = 0; k < totalNumberOfPatchSizeParameterPerModel; ++k)
+  {
+    overlapVec[k] = patchSizeVec[k] / 4u;
+  }
+  configuration.ReadParameter<unsigned int>(
+    overlapVec, prefix + "Overlap" + std::to_string(level), 0, totalNumberOfPatchSizeParameterPerModel - 1, 1);
+  std::vector<std::vector<unsigned int>> overlapVecByModel =
+    GroupByDimensions<unsigned int>(overlapVec, numberOfPatchSizeParameterPerModel);
+
 
   // Build the ImpactModelConfiguration object for each model.
   // Each configuration includes model path, input dimension, channel count,
@@ -199,17 +217,19 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
     try
     {
       // Backend itk::ImpactModelConfiguration ctor order: (..., voxelSize, overlap, layersMask,
-      // useMixedPrecision). Elastix does not tile via the backend's Static path, so
-      // overlap is 0; the backend precomputes the online patch index unconditionally
-      // (only meaningful when patch and voxel dimensions match, i.e. non-Static).
+      // useMixedPrecision). The overlap reaches the Static path, which tiles whenever the
+      // patch size is non-zero; the Jacobian path never reads it.
       modelsConfiguration.emplace_back(modelsPathVec[i],
                                        modelsDimensionVec[i],
                                        numberOfChannelsVec[i],
                                        patchSizeVecByModel[i],
                                        voxelSizeVecByModel[i],
-                                       /*overlap*/ 0u,
+                                       overlapVecByModel[i].front(),
                                        GetBooleanVectorFromString(layersMaskVec[i], false),
                                        useMixedPrecision);
+      // The reassembly reads the per-axis overlap, which the constructor can only broadcast
+      // from its scalar; set it explicitly so an anisotropic patch keeps its own per-axis one.
+      modelsConfiguration.back().SetOverlaps(overlapVecByModel[i]);
     }
     catch (const c10::Error & e)
     {
