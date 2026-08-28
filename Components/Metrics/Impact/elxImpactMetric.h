@@ -293,7 +293,7 @@ protected:
 private:
   elxOverrideGetSelfMacro;
 
-  std::vector<itk::ModelConfiguration>
+  std::vector<itk::ImpactModelConfiguration>
   GenerateModelsConfiguration(unsigned int level,
                               std::string  type,
                               std::string  mode,
