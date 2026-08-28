@@ -1,0 +1,8 @@
+
+ADD_ELXCOMPONENT( PointToSurfaceDistanceMetric ON
+ elxPointToSurfaceDistanceMetric.h
+ elxPointToSurfaceDistanceMetric.hxx
+ elxPointToSurfaceDistanceMetric.cxx
+ itkPointToSurfaceDistanceMetric.h
+ itkPointToSurfaceDistanceMetric.hxx )
+
