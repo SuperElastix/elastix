@@ -24,8 +24,8 @@
 // Vector-image interpolator consumed from the ITKIMPACT backend (same per-component
 // B-spline interpolation as the former local itkBSplineInterpolateVectorImageFunction).
 #include "itkInterpolateVectorImageFunction.h"
-#include "itkModelConfiguration.h"
-#include "itkModelConfigurationDetail.h"
+#include "itkImpactModelConfiguration.h"
+#include "itkImpactModelConfigurationDetail.h"
 // Static feature-map generation (itk::ImageToFeaturesMap) and online inference
 // (itk::Impact::GenerateOutputs/AndJacobian) are consumed from the ITKIMPACT backend.
 #include "itkImageToFeaturesMap.h"
@@ -172,14 +172,14 @@ public:
   /** Set/Get the list of TorchScript model configurations used to extract features from the fixed image.
    * Each model can target a different resolution, architecture, or semantic level.
    */
-  itkSetMacro(FixedModelsConfiguration, std::vector<ModelConfiguration>);
-  itkGetConstReferenceMacro(FixedModelsConfiguration, std::vector<ModelConfiguration>);
+  itkSetMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkGetConstReferenceMacro(FixedModelsConfiguration, std::vector<ImpactModelConfiguration>);
 
   /** Set/Get the list of TorchScript model configurations used to extract features from the moving image.
    * Allows using different models for fixed and moving images to support asymmetric or multimodal setups.
    */
-  itkSetMacro(MovingModelsConfiguration, std::vector<ModelConfiguration>);
-  itkGetConstReferenceMacro(MovingModelsConfiguration, std::vector<ModelConfiguration>);
+  itkSetMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
+  itkGetConstReferenceMacro(MovingModelsConfiguration, std::vector<ImpactModelConfiguration>);
 
   /** Set/Get the subset of feature indices to be used in the loss computation.
    * This allows dimensionality reduction or focusing on the most informative channels.
@@ -693,14 +693,14 @@ private:
    */
   template <typename ImagePointType>
   std::vector<ImagePointType>
-  GeneratePatchIndex(const std::vector<ModelConfiguration> &                     modelConfig,
+  GeneratePatchIndex(const std::vector<ImpactModelConfiguration> &               modelConfig,
                      std::mt19937 &                                              randomGenerator,
                      const std::vector<ImagePointType> &                         fixedPointsTmp,
                      std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const;
 
   /** TorchScript model configurations for fixed and moving image feature extraction. */
-  std::vector<ModelConfiguration> m_FixedModelsConfiguration;
-  std::vector<ModelConfiguration> m_MovingModelsConfiguration;
+  std::vector<ImpactModelConfiguration> m_FixedModelsConfiguration;
+  std::vector<ImpactModelConfiguration> m_MovingModelsConfiguration;
 
   std::vector<unsigned int> m_SubsetFeatures;
   std::vector<unsigned int> m_PCA;

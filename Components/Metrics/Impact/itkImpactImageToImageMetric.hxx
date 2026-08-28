@@ -324,7 +324,7 @@ template <typename TFixedImage, typename TMovingImage>
 template <typename ImagePointType>
 std::vector<ImagePointType>
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
-  const std::vector<ModelConfiguration> &                     modelConfig,
+  const std::vector<ImpactModelConfiguration> &               modelConfig,
   std::mt19937 &                                              randomGenerator,
   const std::vector<ImagePointType> &                         fixedPointsTmp,
   std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const

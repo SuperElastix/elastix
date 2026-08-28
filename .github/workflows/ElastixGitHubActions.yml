@@ -66,7 +66,7 @@ jobs:
 
       - name: Clone ITKIMPACT backend
         # The Impact metric consumes the shared ITKIMPACT backend (headers in include/,
-        # itkModelConfiguration.cxx in src/). Consider pinning to a fixed commit for
+        # itkImpactModelConfiguration.cxx in src/). Consider pinning to a fixed commit for
         # reproducible CI once ITKIMPACT publishes tagged releases.
         run: git clone --depth 1 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "${{ github.workspace }}/ITKIMPACT"
         shell: bash

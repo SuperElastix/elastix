@@ -104,15 +104,15 @@ ImpactMetric<TElastix>::Initialize()
  * ******************* GenerateModelsConfiguration ***********************
  */
 template <typename TElastix>
-std::vector<itk::ModelConfiguration>
+std::vector<itk::ImpactModelConfiguration>
 ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
                                                     std::string  prefix,
                                                     std::string  mode,
                                                     unsigned int imageDimension,
                                                     bool         useMixedPrecision)
 {
-  std::vector<itk::ModelConfiguration> modelsConfiguration;
-  const Configuration &                configuration = itk::Deref(this->GetConfiguration());
+  std::vector<itk::ImpactModelConfiguration> modelsConfiguration;
+  const Configuration &                      configuration = itk::Deref(this->GetConfiguration());
 
   /** Get and set the model path. */
   const std::unique_ptr<std::vector<std::string>> modelsPathStr =
@@ -190,7 +190,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   }
 
 
-  // Build the ModelConfiguration object for each model.
+  // Build the ImpactModelConfiguration object for each model.
   // Each configuration includes model path, input dimension, channel count,
   // patch size, voxel size, and layer mask.
   // In static mode, we flag the model to cache features at init.
@@ -198,7 +198,7 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
   {
     try
     {
-      // Backend itk::ModelConfiguration ctor order: (..., voxelSize, overlap, layersMask,
+      // Backend itk::ImpactModelConfiguration ctor order: (..., voxelSize, overlap, layersMask,
       // useMixedPrecision). Elastix does not tile via the backend's Static path, so
       // overlap is 0; the backend precomputes the online patch index unconditionally
       // (only meaningful when patch and voxel dimensions match, i.e. non-Static).
@@ -441,34 +441,34 @@ ImpactMetric<TElastix>::BeforeEachResolution()
 
   if (mode == "Static")
   {
-    std::string writeFeatureMapsStr = "";
+    std::string featureMapOutputDirectory = "";
     configuration.ReadParameter(
-      writeFeatureMapsStr, "ImpactFeatureMapOutputDirectory", this->GetComponentLabel(), level, 0);
-    if (!writeFeatureMapsStr.empty())
+      featureMapOutputDirectory, "ImpactFeatureMapOutputDirectory", this->GetComponentLabel(), level, 0);
+    if (!featureMapOutputDirectory.empty())
     {
       // If enabled, prepare output directory for feature map export (Static mode)
-      if (!std::filesystem::exists(writeFeatureMapsStr))
+      if (!std::filesystem::exists(featureMapOutputDirectory))
       {
         try
         {
-          std::filesystem::create_directories(writeFeatureMapsStr);
-          std::filesystem::permissions(writeFeatureMapsStr,
+          std::filesystem::create_directories(featureMapOutputDirectory);
+          std::filesystem::permissions(featureMapOutputDirectory,
                                        std::filesystem::perms::owner_all | std::filesystem::perms::group_all |
                                          std::filesystem::perms::others_all,
                                        std::filesystem::perm_options::replace);
           this->SetWriteFeatureMaps(true);
-          this->SetFeatureMapsPath(writeFeatureMapsStr);
+          this->SetFeatureMapsPath(featureMapOutputDirectory);
         }
         catch (std::filesystem::filesystem_error & e)
         {
-          itkExceptionMacro("Error creating directory for feature maps: " << writeFeatureMapsStr << "\n"
+          itkExceptionMacro("Error creating directory for feature maps: " << featureMapOutputDirectory << "\n"
                                                                           << "Exception: " << e.what());
         }
       }
       else
       {
         this->SetWriteFeatureMaps(true);
-        this->SetFeatureMapsPath(writeFeatureMapsStr);
+        this->SetFeatureMapsPath(featureMapOutputDirectory);
       }
     }
   }
