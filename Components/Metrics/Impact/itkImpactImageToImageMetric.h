@@ -25,11 +25,9 @@
 // B-spline interpolation as the former local itkBSplineInterpolateVectorImageFunction).
 #include "itkInterpolateVectorImageFunction.h"
 #include "itkImpactModelConfiguration.h"
-#include "itkImpactModelConfigurationDetail.h"
 // Static feature-map generation (itk::ImageToFeaturesMap) and online inference
 // (itk::Impact::GenerateOutputs/AndJacobian) are consumed from the ITKIMPACT backend.
 #include "itkImageToFeaturesMap.h"
-#include "itkImageToFeaturesMapInternals.h"
 #include "itkImpactOnlineInference.h"
 #include <ImpactLoss.h>
 
