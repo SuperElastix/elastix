@@ -454,12 +454,75 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transf
 
   if (configurationInitialTransform->Initialize({ { "-tp", transformParameterFileName } }) != 0)
   {
-    itkGenericExceptionMacro("ERROR: Reading initial transform parameters failed: " << transformParameterFileName);
+    /** Not an elastix transform parameter file. It may still be a transform written by ITK, in
+     * any of the formats its TransformIO supports. elastix produces such files itself, through
+     * ITKTransformOutputFileNameExtension, so `-t0` accepts its own ITK output here. */
+    const itk::TransformBase::ConstPointer itkTransform = [&transformParameterFileName] {
+      try
+      {
+        return itk::TransformBase::ConstPointer{ TransformIO::Read(transformParameterFileName) };
+      }
+      catch (const std::exception &)
+      {
+        // Not readable as an ITK transform either. The elastix error below is the relevant one.
+        return itk::TransformBase::ConstPointer{ nullptr };
+      }
+    }();
+
+    if (itkTransform == nullptr)
+    {
+      itkGenericExceptionMacro("ERROR: Reading initial transform parameters failed: " << transformParameterFileName);
+    }
+    this->ReadInitialTransformFromItkTransform(*itkTransform);
+    return;
   }
 
   this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
 
 } // end ReadInitialTransformFromFile()
+
+
+/**
+ * ******************* ReadInitialTransformFromItkTransform *****************************
+ */
+
+template <typename TElastix>
+void
+TransformBase<TElastix>::ReadInitialTransformFromItkTransform(const itk::TransformBase & itkTransform)
+{
+  const std::string elastixClassName =
+    TransformIO::ConvertITKNameOfClassToElastixClassName(itkTransform.GetNameOfClass());
+
+  const PtrToCreator creator =
+    ElastixMain::GetComponentDatabase().GetCreator(elastixClassName, this->m_Elastix->GetDBIndex());
+
+  if (!creator)
+  {
+    itkGenericExceptionMacro("ERROR: elastix has no transform component for the ITK transform class "
+                             << itkTransform.GetNameOfClass());
+  }
+
+  const itk::Object::Pointer elxTransformObject = creator();
+  auto * const               elxTransform = dynamic_cast<Self *>(elxTransformObject.GetPointer());
+
+  if (!elxTransform)
+  {
+    itkGenericExceptionMacro("ERROR: the component created for " << elastixClassName
+                                                                 << " is not an elastix transform.");
+  }
+
+  elxTransform->SetElastix(this->GetElastix());
+  elxTransform->SetConfiguration(this->GetConfiguration());
+  elxTransform->SetReadWriteTransformParameters(false);
+  elxTransform->SetTransformParameterFileName("");
+
+  const auto itkBaseType = elxTransform->GetAsITKBaseType();
+  itkBaseType->SetFixedParameters(itkTransform.GetFixedParameters());
+  itkBaseType->SetParameters(itkTransform.GetParameters());
+
+  this->SetInitialTransform(itkBaseType);
+
+} // end ReadInitialTransformFromItkTransform()
 
 
 /**
