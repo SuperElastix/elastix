@@ -224,12 +224,9 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
                                        numberOfChannelsVec[i],
                                        patchSizeVecByModel[i],
                                        voxelSizeVecByModel[i],
-                                       overlapVecByModel[i].front(),
+                                       overlapVecByModel[i],
                                        GetBooleanVectorFromString(layersMaskVec[i], false),
                                        useMixedPrecision);
-      // The reassembly reads the per-axis overlap, which the constructor can only broadcast
-      // from its scalar; set it explicitly so an anisotropic patch keeps its own per-axis one.
-      modelsConfiguration.back().SetOverlaps(overlapVecByModel[i]);
     }
     catch (const c10::Error & e)
     {
