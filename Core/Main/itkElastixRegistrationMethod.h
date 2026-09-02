@@ -36,6 +36,8 @@
 #define itkElastixRegistrationMethod_h
 
 #include "itkImageSource.h"
+#include "itkCompositeTransform.h"
+
 #include "itkAdvancedCombinationTransform.h"
 #include "itkElastixLogLevel.h"
 
