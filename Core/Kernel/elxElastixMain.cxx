@@ -217,7 +217,7 @@ ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &       
                                                   const ParameterMapType &              inputMap,
                                                   const std::vector<ParameterMapType> & initialTransformParameterMaps)
 {
-  Deref(MainBase::GetConfiguration()).Initialize(argmap, inputMap);
+  Deref(MainBase::GetConfiguration()).InitializeWithParameterMap(argmap, inputMap);
   const auto numberOfTransformParameterMaps = initialTransformParameterMaps.size();
   m_TransformConfigurations.clear();
   m_TransformConfigurations.resize(numberOfTransformParameterMaps);
@@ -228,7 +228,7 @@ ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &       
      * command line parameters entered by the user.
      */
     const auto configuration = Configuration::New();
-    configuration->Initialize(argmap, initialTransformParameterMaps[i]);
+    configuration->InitializeWithParameterMap(argmap, initialTransformParameterMaps[i]);
     m_TransformConfigurations[i] = configuration;
   }
 

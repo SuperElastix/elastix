@@ -302,7 +302,7 @@ TransformixMain::EnterCommandLineArgumentsWithTransformParameterMaps(
      * command line parameters entered by the user.
      */
     const auto configuration = Configuration::New();
-    configuration->Initialize(argmap, transformParameterMaps[i]);
+    configuration->InitializeWithParameterMap(argmap, transformParameterMaps[i]);
     m_TransformConfigurations[i] = configuration;
 
     if ((i + 1) == numberOfTransformParameterMaps)
