@@ -289,12 +289,12 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
 
 
 /**
- * ********************** Initialize ****************************
+ * ********************** InitializeWithParameterMap ****************************
  */
 
 void
-Configuration::Initialize(const CommandLineArgumentMapType &                 _arg,
-                          const itk::ParameterFileParser::ParameterMapType & inputMap)
+Configuration::InitializeWithParameterMap(const CommandLineArgumentMapType &                 _arg,
+                                          const itk::ParameterFileParser::ParameterMapType & inputMap)
 {
   TransformFactoryRegistration::RegisterTransforms();
 
