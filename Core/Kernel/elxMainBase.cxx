@@ -118,11 +118,11 @@ MainBase::Run(const ArgumentMapType & argmap)
 
 
 /**
- * **************************** Run *****************************
+ * **************************** RunWithParameterMap *****************************
  */
 
 int
-MainBase::Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
+MainBase::RunWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
 {
   /** Initialize the configuration object with the
    * command line parameters entered by the user.

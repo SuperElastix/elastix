@@ -264,7 +264,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     elx::log::info(std::ostringstream{} << "Current time: " << GetCurrentDateAndTime() << ".");
 
     /** Start registration. */
-    returndummy = elastixMain->Run(argMap, parameterMaps[i]);
+    returndummy = elastixMain->RunWithParameterMap(argMap, parameterMaps[i]);
 
     /** Check for errors. */
     if (returndummy != 0)

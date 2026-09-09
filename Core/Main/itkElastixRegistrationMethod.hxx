@@ -377,7 +377,7 @@ ElastixRegistrationMethod<TFixedImage, TMovingImage>::GenerateData()
       isError =
         ((i == 0) && !transformParameterMapVector.empty())
           ? elastixMain->RunWithInitialTransformParameterMaps(argumentMap, parameterMap, transformParameterMapVector)
-          : elastixMain->Run(argumentMap, parameterMap);
+          : elastixMain->RunWithParameterMap(argumentMap, parameterMap);
     }
     catch (const itk::ExceptionObject & e)
     {
