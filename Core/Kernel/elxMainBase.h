@@ -143,9 +143,6 @@ public:
   int
   Run(const ArgumentMapType & argmap);
 
-  int
-  RunWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
-
   /** Set process priority, which is read from the command line arguments.
    * Syntax:
    * -priority \<high, belownormal\>

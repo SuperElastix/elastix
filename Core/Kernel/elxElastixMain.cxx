@@ -212,6 +212,18 @@ ElastixMain::Run()
 
 } // end Run()
 
+
+int
+ElastixMain::RunWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
+{
+  /** Initialize the configuration object with the
+   * command line parameters entered by the user.
+   */
+  Deref(MainBase::GetConfiguration()).InitializeWithParameterMap(argmap, inputMap);
+  return ElastixMain::Run();
+}
+
+
 int
 ElastixMain::RunWithInitialTransformParameterMaps(const ArgumentMapType &               argmap,
                                                   const ParameterMapType &              inputMap,
