@@ -140,24 +140,24 @@ public:
    * this version of 'run' first calls this->EnterCommandLineParameters(argc,argv)
    * and then calls run().
    */
-  virtual int
+  int
   Run(const ArgumentMapType & argmap);
 
-  virtual int
+  int
   Run(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
 
   /** Set process priority, which is read from the command line arguments.
    * Syntax:
    * -priority \<high, belownormal\>
    */
-  virtual void
+  void
   SetProcessPriority() const;
 
   /** Set maximum number of threads, which is read from the command line arguments.
    * Syntax:
    * -threads \<int\>
    */
-  virtual void
+  void
   SetMaximumNumberOfThreads() const;
 
 
@@ -231,7 +231,7 @@ protected:
    * If both attempts fail, an exception is thrown with a clear diagnostic
    * message explaining which component could not be created.
    */
-  virtual ObjectPointer
+  ObjectPointer
   CreateComponent(const ComponentDescriptionType & name);
 
   /** Create components. Reads from the configuration object (using the provided key)
@@ -249,7 +249,7 @@ protected:
    * ( !mandatoryComponent && defaultComponentName != "" ) == true
    *
    */
-  virtual ObjectContainerPointer
+  ObjectContainerPointer
   CreateComponents(const ComponentDescriptionType & key,
                    const ComponentDescriptionType & defaultComponentName,
                    int &                            errorcode,
