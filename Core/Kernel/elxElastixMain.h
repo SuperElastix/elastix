@@ -148,6 +148,9 @@ public:
   Run() override;
 
   int
+  RunWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap);
+
+  int
   RunWithInitialTransformParameterMaps(const ArgumentMapType &               argmap,
                                        const ParameterMapType &              inputMap,
                                        const std::vector<ParameterMapType> & initialTransformParameterMaps);

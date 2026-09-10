@@ -118,21 +118,6 @@ MainBase::Run(const ArgumentMapType & argmap)
 
 
 /**
- * **************************** RunWithParameterMap *****************************
- */
-
-int
-MainBase::RunWithParameterMap(const ArgumentMapType & argmap, const ParameterMapType & inputMap)
-{
-  /** Initialize the configuration object with the
-   * command line parameters entered by the user.
-   */
-  m_Configuration->InitializeWithParameterMap(argmap, inputMap);
-  return this->Run();
-} // end Run()
-
-
-/**
  * ************************* GetElastixBase ***************************
  */
 
