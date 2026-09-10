@@ -252,24 +252,45 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
     return 1;
   }
 
-  const auto parameterFileParser = itk::ParameterFileParser::New();
-
-  /** Read the ParameterFile. */
-  parameterFileParser->SetParameterFileName(m_ParameterFileName);
-  try
+  if (itk::ParameterFileParser::HasParameterFileNameExtension(m_ParameterFileName))
   {
-    log::info("Reading the elastix parameters from file ...\n");
-    parameterFileParser->ReadParameterFile();
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    log::error(std::ostringstream{} << "ERROR: when reading the parameter file:\n" << excp);
-    return 1;
-  }
+    const auto parameterFileParser = itk::ParameterFileParser::New();
 
-  /** Connect the parameter file reader to the interface. */
-  m_ParameterMapInterface.SetParameterMap(
-    AddDataFromExternalTransformFile(m_ParameterFileName, parameterFileParser->GetParameterMap()));
+    /** Read the ParameterFile. */
+    parameterFileParser->SetParameterFileName(m_ParameterFileName);
+    try
+    {
+      log::info("Reading the elastix parameters from file ...\n");
+      parameterFileParser->ReadParameterFile();
+    }
+    catch (const itk::ExceptionObject & excp)
+    {
+      log::error(std::ostringstream{} << "ERROR: when reading the parameter file:\n" << excp);
+      return 1;
+    }
+
+    /** Connect the parameter file reader to the interface. */
+    m_ParameterMapInterface.SetParameterMap(
+      AddDataFromExternalTransformFile(m_ParameterFileName, parameterFileParser->GetParameterMap()));
+  }
+  else
+  {
+    if (const auto transform = TransformIO::Read(m_ParameterFileName))
+    {
+      const itk::ParameterFileParser::ParameterMapType transformParameterMap{
+        { "ITKTransformFixedParameters", elx::Conversion::ToVectorOfStrings(transform->GetFixedParameters()) },
+        { "ITKTransformParameters", elx::Conversion::ToVectorOfStrings(transform->GetParameters()) },
+        { "ITKTransformType", { transform->GetTransformTypeAsString() } },
+        { "Transform", { elx::TransformIO::ConvertITKNameOfClassToElastixClassName(transform->GetNameOfClass()) } }
+      };
+      m_ParameterMapInterface.SetParameterMap(transformParameterMap);
+    }
+    else
+    {
+      log::error("ERROR: failed to read the parameter file as transform file");
+      return 1;
+    }
+  }
 
   m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface.GetParameterMap().size());
 

@@ -123,6 +123,10 @@ public:
   static ParameterMapType
   ConvertToParameterMap(const std::string & text);
 
+  /** Tells whether the specified file name has the file extension of a parameter file. */
+  static bool
+  HasParameterFileNameExtension(const std::string & fileName);
+
 protected:
   ParameterFileParser();
   ~ParameterFileParser() override;
