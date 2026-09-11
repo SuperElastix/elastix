@@ -53,8 +53,8 @@ BSplineInterpolationWeightFunctionBase<TCoordinate, VSpaceDimension, VSplineOrde
   /** Find the starting index of the support region. */
   for (unsigned int i = 0; i < SpaceDimension; ++i)
   {
-    startIndex[i] = static_cast<typename IndexType::IndexValueType>(
-      std::floor(cindex[i] - static_cast<double>(VSplineOrder - 1.0) / 2.0));
+    startIndex[i] =
+      static_cast<typename IndexType::IndexValueType>(std::floor(cindex[i] - double{ VSplineOrder - 1.0 } / 2.0));
   }
 
   return startIndex;
