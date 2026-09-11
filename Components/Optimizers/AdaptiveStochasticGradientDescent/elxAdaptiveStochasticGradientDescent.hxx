@@ -172,7 +172,7 @@ AdaptiveStochasticGradientDescent<TElastix>::BeforeEachResolution()
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
     this->m_NumberOfJacobianMeasurements =
-      std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(numberOfParameters));
+      std::max(1000U, static_cast<unsigned int>(numberOfParameters));
     configuration.ReadParameter(
       this->m_NumberOfJacobianMeasurements, "NumberOfJacobianMeasurements", this->GetComponentLabel(), level, 0);
 

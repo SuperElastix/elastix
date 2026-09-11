@@ -168,8 +168,8 @@ MultiResolutionRegistration<TElastix>::UpdateMasks(unsigned int level)
   /** some shortcuts */
   const unsigned int nrOfFixedMasks = this->GetElastix()->GetNumberOfFixedMasks();
   const unsigned int nrOfMovingMasks = this->GetElastix()->GetNumberOfMovingMasks();
-  const unsigned int oneOrNoFixedMasks = std::min(static_cast<unsigned int>(1), nrOfFixedMasks);
-  const unsigned int oneOrNoMovingMasks = std::min(static_cast<unsigned int>(1), nrOfMovingMasks);
+  const unsigned int oneOrNoFixedMasks = std::min(1U, nrOfFixedMasks);
+  const unsigned int oneOrNoMovingMasks = std::min(1U, nrOfMovingMasks);
 
   /** Array of bools, that remembers for each mask if erosion is wanted.
    * dummy, we will not use it.
