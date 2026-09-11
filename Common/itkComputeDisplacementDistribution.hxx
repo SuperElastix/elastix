@@ -130,7 +130,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ComputeSingleThreaded(
   JGG_k.reserve(nrofsamples);
 
   double       globalDeformation = 0.0;
-  const double sqrt2 = std::sqrt(static_cast<double>(2.0));
+  const double sqrt2 = std::sqrt(2.0);
   JacobianType jacjjacj(outdim, outdim);
 
   samplenr = 0;
@@ -322,7 +322,7 @@ ComputeDisplacementDistribution<TFixedImage, TTransform>::ThreadedCompute(Thread
   /** Temporaries. */
   // std::vector< double > JGG_k; not here so only mean + 2 sigma is supported
   DerivativeType Jgg(outdim, 0.0);
-  const double   sqrt2 = std::sqrt(static_cast<double>(2.0));
+  const double   sqrt2 = std::sqrt(2.0);
   JacobianType   jacjjacj(outdim, outdim);
   double         maxJJ = 0.0;
   double         jggMagnitude = 0.0;

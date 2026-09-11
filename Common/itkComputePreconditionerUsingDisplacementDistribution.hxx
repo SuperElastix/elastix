@@ -105,7 +105,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   /** Declare temporary variables. Not needed for all methods. check later */
   DerivativeType      jacj_g(outdim, 0.0);
   JacobianType        jacjjacj(outdim, outdim);
-  const double        sqrt2 = std::sqrt(static_cast<double>(2.0));
+  const double        sqrt2 = std::sqrt(2.0);
   std::vector<double> localStepSizeSquared(numberOfParameters, 0.0);
   ParametersType      binCount(numberOfParameters, 0.0);
 
@@ -319,7 +319,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
   JacobianType        jacj(outdim, sizejacind);
   jacj.Fill(0.0);
   JacobianType               jacjjacj(outdim, outdim);
-  const double               sqrt2 = std::sqrt(static_cast<double>(2.0));
+  const double               sqrt2 = std::sqrt(2.0);
   NonZeroJacobianIndicesType jacind(sizejacind);
   ParametersType             binCount(numberOfParameters, 0.0);
 
