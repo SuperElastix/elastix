@@ -318,7 +318,7 @@ CMAEvolutionStrategyOptimizer::InitializeConstants()
   {
     this->m_UpdateBDPeriod = static_cast<unsigned int>(std::floor(1.0 / c_cov / Nd / 10.0));
   }
-  this->m_UpdateBDPeriod = std::max(static_cast<unsigned int>(1), this->m_UpdateBDPeriod);
+  this->m_UpdateBDPeriod = std::max(1U, this->m_UpdateBDPeriod);
   if (this->m_UpdateBDPeriod >= this->m_MaximumNumberOfIterations)
   {
     this->SetUseCovarianceMatrixAdaptation(false);

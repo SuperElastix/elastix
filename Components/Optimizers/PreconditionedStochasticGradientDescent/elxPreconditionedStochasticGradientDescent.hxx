@@ -163,8 +163,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
      * M = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfJacobianMeasurements =
-      std::max(static_cast<unsigned int>(5000), static_cast<unsigned int>(2 * numberOfParameters));
+    this->m_NumberOfJacobianMeasurements = std::max(5000U, static_cast<unsigned int>(2 * numberOfParameters));
     configuration.ReadParameter(
       this->m_NumberOfJacobianMeasurements, "NumberOfJacobianMeasurements", this->GetComponentLabel(), level, 0);
 
@@ -178,8 +177,7 @@ PreconditionedStochasticGradientDescent<TElastix>::BeforeEachResolution()
      * P = max( 1000, nrofparams );
      * This is a rather crude rule of thumb, which seems to work in practice.
      */
-    this->m_NumberOfSamplesForPrecondition =
-      std::max(static_cast<unsigned int>(1000), static_cast<unsigned int>(numberOfParameters));
+    this->m_NumberOfSamplesForPrecondition = std::max(1000U, static_cast<unsigned int>(numberOfParameters));
     configuration.ReadParameter(
       this->m_NumberOfSamplesForPrecondition, "NumberOfSamplesForPrecondition", this->GetComponentLabel(), level, 0);
 
