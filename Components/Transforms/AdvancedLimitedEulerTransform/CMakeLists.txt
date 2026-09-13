@@ -1,0 +1,9 @@
+
+ADD_ELXCOMPONENT( AdvancedLimitedEulerTransformElastix
+ itkLimitedEulerTransform.h
+ itkAdvancedLimitedEuler3DTransform.h
+ itkAdvancedLimitedEuler3DTransform.hxx
+ elxAdvancedLimitedEulerTransform.h
+ elxAdvancedLimitedEulerTransform.hxx
+ elxAdvancedLimitedEulerTransform.cxx )
+
