@@ -343,7 +343,7 @@ ComputeJacobianTerms<TFixedImage, TTransform>::Compute() const -> Terms
    */
   double       maxJJ = 0.0;
   double       maxJCJ = 0.0;
-  const double sqrt2 = std::sqrt(static_cast<double>(2.0));
+  const double sqrt2 = std::sqrt(2.0);
 
   JacobianType              jacjjacj(outdim, outdim);
   JacobianType              jacjcov(outdim, sizejacind);

@@ -111,19 +111,19 @@ GTEST_TEST(ParameterObject, PrintOriginalNumericValues)
 
   {
     // Test +/- 100000000000000000000
-    constexpr auto power_of_ten = 10.0 * static_cast<double>(itk::Math::UnsignedPower(10, 19));
+    constexpr auto power_of_ten = 10.0 * double{ itk::Math::UnsignedPower(10, 19) };
     check(elx::Conversion::ToString(power_of_ten));
     check(elx::Conversion::ToString(-power_of_ten));
   }
   {
     // Test +/- 999999999999999
-    constexpr auto power_of_ten = static_cast<double>(itk::Math::UnsignedPower(10, 15));
+    constexpr double power_of_ten{ itk::Math::UnsignedPower(10, 15) };
     check(elx::Conversion::ToString(power_of_ten - 1.0));
     check(elx::Conversion::ToString(1.0 - power_of_ten));
   }
   {
     // Test +/- 0.000001
-    constexpr auto power_of_ten = 1.0 / static_cast<double>(itk::Math::UnsignedPower(10, 6));
+    constexpr auto power_of_ten = 1.0 / double{ itk::Math::UnsignedPower(10, 6) };
     check(elx::Conversion::ToString(power_of_ten));
     check(elx::Conversion::ToString(-power_of_ten));
   }

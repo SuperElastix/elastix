@@ -47,7 +47,7 @@ main(int argc, char * argv[])
    * Debug and Release mode.
    */
 #ifndef NDEBUG
-  auto N = static_cast<unsigned int>(1);
+  auto N = 1U;
 #else
   unsigned int N = static_cast<unsigned int>(1e5);
 #endif
