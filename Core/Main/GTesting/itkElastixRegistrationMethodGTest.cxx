@@ -1842,7 +1842,9 @@ GTEST_TEST(itkElastixRegistrationMethod, InitialTransformParameterFileLinkToTran
   const auto registration1 = createRegistration("TransformParameters.txt");
 
   for (const auto transformParameterFileName :
-       { "TransformParameters-link-to-ITK-tfm-file.txt",
+       { "ITK-Transform.tfm",
+         "ITK-HDF5-Transform.h5",
+         "TransformParameters-link-to-ITK-tfm-file.txt",
          "TransformParameters-link-to-ITK-HDF5-file.txt",
          "TransformParameters-link-to-file-with-special-chars-in-path-name.txt" })
   {
