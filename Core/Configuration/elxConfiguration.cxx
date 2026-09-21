@@ -284,6 +284,50 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
 
 
 /**
+ * ********************** InitializeWithInitialTransform ****************************
+ */
+
+bool
+Configuration::InitializeWithInitialTransform(const std::string & initialTransformFileName)
+{
+  TransformFactoryRegistration::RegisterTransforms();
+
+  m_ParameterFileName = initialTransformFileName;
+
+  // Store the command line arguments.
+  m_CommandLineArgumentMap = { { "-tp", initialTransformFileName } };
+
+  try
+  {
+    log::info("Reading the initial transform parameters from file ...\n");
+
+    // Read the parameter map from the parameter file and add data from a possible external transform file.
+    m_ParameterMapInterface.SetParameterMap(AddDataFromExternalTransformFile(
+      m_ParameterFileName, itk::ParameterFileParser::ReadParameterMap(m_ParameterFileName)));
+  }
+  catch (const itk::ExceptionObject & excp)
+  {
+    log::error(std::ostringstream{} << "ERROR: when reading the initial transform parameter file:\n" << excp);
+    return 1;
+  }
+
+  m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface.GetParameterMap().size());
+
+  /** Silently check in the parameter file if error messages should be printed. */
+  m_ParameterMapInterface.SetPrintErrorMessages(false);
+  bool printErrorMessages = true;
+  this->ReadParameter(printErrorMessages, "PrintErrorMessages", 0, false);
+  m_ParameterMapInterface.SetPrintErrorMessages(printErrorMessages);
+
+  /** Set the initialized flag. */
+  m_IsInitialized = true;
+
+  return true;
+
+} // end InitializeWithInitialTransform()
+
+
+/**
  * ********************** InitializeWithParameterMap ****************************
  */
 

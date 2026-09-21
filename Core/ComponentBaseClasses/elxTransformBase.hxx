@@ -452,7 +452,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transf
    * the transformParameterFileName. */
   const auto configurationInitialTransform = Configuration::New();
 
-  if (configurationInitialTransform->Initialize({ { "-tp", transformParameterFileName } }) != 0)
+  if (!configurationInitialTransform->InitializeWithInitialTransform(transformParameterFileName))
   {
     itkGenericExceptionMacro("ERROR: Reading initial transform parameters failed: " << transformParameterFileName);
   }
