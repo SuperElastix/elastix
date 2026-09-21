@@ -252,24 +252,19 @@ Configuration::Initialize(const CommandLineArgumentMapType & _arg)
     return 1;
   }
 
-  const auto parameterFileParser = itk::ParameterFileParser::New();
-
-  /** Read the ParameterFile. */
-  parameterFileParser->SetParameterFileName(m_ParameterFileName);
   try
   {
     log::info("Reading the elastix parameters from file ...\n");
-    parameterFileParser->ReadParameterFile();
+
+    // Read the parameter map from the parameter file and add data from a possible external transform file.
+    m_ParameterMapInterface.SetParameterMap(AddDataFromExternalTransformFile(
+      m_ParameterFileName, itk::ParameterFileParser::ReadParameterMap(m_ParameterFileName)));
   }
   catch (const itk::ExceptionObject & excp)
   {
     log::error(std::ostringstream{} << "ERROR: when reading the parameter file:\n" << excp);
     return 1;
   }
-
-  /** Connect the parameter file reader to the interface. */
-  m_ParameterMapInterface.SetParameterMap(
-    AddDataFromExternalTransformFile(m_ParameterFileName, parameterFileParser->GetParameterMap()));
 
   m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface.GetParameterMap().size());
 
