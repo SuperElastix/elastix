@@ -299,16 +299,18 @@ Configuration::InitializeWithInitialTransform(const std::string & initialTransfo
 
   try
   {
-    log::info("Reading the initial transform parameters from file ...\n");
-
+    const auto transform = TransformIO::Read(m_ParameterFileName);
+    m_ParameterMapInterface.SetParameterMap(
+      { { "ITKTransformFixedParameters", elx::Conversion::ToVectorOfStrings(transform->GetFixedParameters()) },
+        { "ITKTransformParameters", elx::Conversion::ToVectorOfStrings(transform->GetParameters()) },
+        { "ITKTransformType", { transform->GetTransformTypeAsString() } },
+        { "Transform", { elx::TransformIO::ConvertITKNameOfClassToElastixClassName(transform->GetNameOfClass()) } } });
+  }
+  catch (const std::exception &)
+  {
     // Read the parameter map from the parameter file and add data from a possible external transform file.
     m_ParameterMapInterface.SetParameterMap(AddDataFromExternalTransformFile(
       m_ParameterFileName, itk::ParameterFileParser::ReadParameterMap(m_ParameterFileName)));
-  }
-  catch (const itk::ExceptionObject & excp)
-  {
-    log::error(std::ostringstream{} << "ERROR: when reading the initial transform parameter file:\n" << excp);
-    return false;
   }
 
   m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface.GetParameterMap().size());
