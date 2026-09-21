@@ -97,6 +97,10 @@ public:
   int
   Initialize(const CommandLineArgumentMapType & _arg);
 
+  /** Initializes the configuration with the content of the specified initial transform file. */
+  bool
+  InitializeWithInitialTransform(const std::string & initialTransformFileName);
+
   void
   InitializeWithParameterMap(const CommandLineArgumentMapType &                 _arg,
                              const itk::ParameterFileParser::ParameterMapType & inputMap);
