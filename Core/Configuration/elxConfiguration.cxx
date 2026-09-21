@@ -308,7 +308,7 @@ Configuration::InitializeWithInitialTransform(const std::string & initialTransfo
   catch (const itk::ExceptionObject & excp)
   {
     log::error(std::ostringstream{} << "ERROR: when reading the initial transform parameter file:\n" << excp);
-    return 1;
+    return false;
   }
 
   m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface.GetParameterMap().size());
