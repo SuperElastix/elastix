@@ -479,6 +479,16 @@ if(ELASTIX_BUILD_EXECUTABLE)
     -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
     -t0 "${TestDataDir}/Transform parameter filename with German äüößÄÖÜ and Chinese 的一了是我 chars👍.txt"
     -out "${SPECIALCHARINITIALTRANSFORM_OUTPUTDIR}")
+
+  set(ELX_INITIAL_ITK_TRANSFORM_OUTPUTDIR "${TestOutputDir}/OutputDirUsingInitialItkTransform")
+  file(MAKE_DIRECTORY "${ELX_INITIAL_ITK_TRANSFORM_OUTPUTDIR}")
+  add_test(NAME InitialItkTransform
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/elastix
+    -f "${TestDataDir}/2D_2x2_square_object_at_(1,3).mhd"
+    -m "${TestDataDir}/2D_2x2_square_object_at_(2,1).mhd"
+    -p "${TestDataDir}/parameters.2D.NC.translation.ASGD.txt"
+    -t0 "${TestDataDir}/Translation(1,-2)/ITK-Transform.itk.txt"
+    -out "${ELX_INITIAL_ITK_TRANSFORM_OUTPUTDIR}")
 endif()
 
 # Add a test for inverting an affine transform
