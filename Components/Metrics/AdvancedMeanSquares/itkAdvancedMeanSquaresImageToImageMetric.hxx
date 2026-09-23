@@ -57,6 +57,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
     Superclass::m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
     Superclass::m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
 
+    if (Superclass::m_FixedImageTrueMin >= Superclass::m_FixedImageTrueMax)
+    {
+      itkExceptionMacro("Cannot process the fixed image. The minimum pixel value ("
+                        << Superclass::m_FixedImageTrueMin << ") should be less than maximum pixel value ("
+                        << Superclass::m_FixedImageTrueMax << ")!");
+    }
+
     Superclass::m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
       Superclass::m_FixedImageTrueMin -
       Superclass::m_FixedLimitRangeRatio * (Superclass::m_FixedImageTrueMax - Superclass::m_FixedImageTrueMin));
@@ -71,6 +78,13 @@ AdvancedMeanSquaresImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 
     Superclass::m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
     Superclass::m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
+
+    if (Superclass::m_MovingImageTrueMin >= Superclass::m_MovingImageTrueMax)
+    {
+      itkExceptionMacro("Cannot process the moving image. The minimum pixel value ("
+                        << Superclass::m_MovingImageTrueMin << ") should be less than maximum pixel value ("
+                        << Superclass::m_MovingImageTrueMax << ")!");
+    }
 
     Superclass::m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
       Superclass::m_MovingImageTrueMin -
