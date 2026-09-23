@@ -159,6 +159,13 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
     m_FixedImageTrueMax = computeFixedImageExtrema->GetMaximum();
     m_FixedImageTrueMin = computeFixedImageExtrema->GetMinimum();
 
+    if (m_FixedImageTrueMin >= m_FixedImageTrueMax)
+    {
+      itkExceptionMacro("Cannot process the fixed image. The minimum pixel value ("
+                        << m_FixedImageTrueMin << ") should be less than maximum pixel value (" << m_FixedImageTrueMax
+                        << ")!");
+    }
+
     m_FixedImageMinLimit = static_cast<FixedImageLimiterOutputType>(
       m_FixedImageTrueMin - m_FixedLimitRangeRatio * (m_FixedImageTrueMax - m_FixedImageTrueMin));
     m_FixedImageMaxLimit = static_cast<FixedImageLimiterOutputType>(
@@ -187,6 +194,13 @@ AdvancedImageToImageMetric<TFixedImage, TMovingImage>::InitializeLimiters()
 
     m_MovingImageTrueMax = computeMovingImageExtrema->GetMaximum();
     m_MovingImageTrueMin = computeMovingImageExtrema->GetMinimum();
+
+    if (m_MovingImageTrueMin >= m_MovingImageTrueMax)
+    {
+      itkExceptionMacro("Cannot process the moving image. The minimum pixel value ("
+                        << m_MovingImageTrueMin << ") should be less than maximum pixel value (" << m_MovingImageTrueMax
+                        << ")!");
+    }
 
     m_MovingImageMinLimit = static_cast<MovingImageLimiterOutputType>(
       m_MovingImageTrueMin - m_MovingLimitRangeRatio * (m_MovingImageTrueMax - m_MovingImageTrueMin));
