@@ -40,30 +40,60 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateOutputInformation()
   {
     this->m_Reader.close();
   }
-  this->m_Reader.open(this->m_FileName);
 
-  /** Read the first entry */
-  std::string indexOrPoint;
-  this->m_Reader >> indexOrPoint;
+  if( this->m_Binary ) {
+    this->m_Reader.open(this->m_FileName, std::ios::binary);
 
-  /** Set the IsIndex bool and the number of points.*/
-  if (indexOrPoint == "point")
-  {
-    /** Input points are specified in world coordinates. */
-    this->m_PointsAreIndices = false;
-    this->m_Reader >> this->m_NumberOfPoints;
+    /** Read index flag */
+    unsigned long isindex;
+    this->m_Reader.read((char*) &isindex, sizeof(isindex));
+
+    if( isindex == 0 )
+    {
+      /** Input points are specified in world coordinates. */
+      this->m_PointsAreIndices = false;
+    }
+    else //if( indexOrPoint == 1 )
+    {
+      /** Input points are specified as image indices. */
+      this->m_PointsAreIndices = true;
+    }
+
+    /** Read number of points */
+    unsigned long nrofpoints;
+    this->m_Reader.read((char*) &nrofpoints, sizeof(nrofpoints));
+    this->m_NumberOfPoints = nrofpoints;
+
+    /** Leave the file open for the generate data method */
+
   }
-  else if (indexOrPoint == "index")
+  else //if( this->m_Binary )
   {
-    /** Input points are specified as image indices. */
-    this->m_PointsAreIndices = true;
-    this->m_Reader >> this->m_NumberOfPoints;
-  }
-  else
-  {
-    /** Input points are assumed to be specified as image indices. */
-    this->m_PointsAreIndices = true;
-    this->m_NumberOfPoints = atoi(indexOrPoint.c_str());
+    this->m_Reader.open(this->m_FileName);
+
+    /** Read the first entry */
+    std::string indexOrPoint;
+    this->m_Reader >> indexOrPoint;
+
+    /** Set the IsIndex bool and the number of points.*/
+    if (indexOrPoint == "point")
+    {
+      /** Input points are specified in world coordinates. */
+      this->m_PointsAreIndices = false;
+      this->m_Reader >> this->m_NumberOfPoints;
+    }
+    else if (indexOrPoint == "index")
+    {
+      /** Input points are specified as image indices. */
+      this->m_PointsAreIndices = true;
+      this->m_Reader >> this->m_NumberOfPoints;
+    }
+    else
+    {
+      /** Input points are assumed to be specified as image indices. */
+      this->m_PointsAreIndices = true;
+      this->m_NumberOfPoints = atoi(indexOrPoint.c_str());
+    }
   }
 
   /** Leave the file open for the generate data method */
@@ -90,6 +120,27 @@ TransformixInputPointFileReader<TOutputMesh>::GenerateData()
   /** Read the file */
   if (this->m_Reader.is_open())
   {
+    if( this->m_Binary ){
+      for( unsigned long i = 0; i < this->m_NumberOfPoints; ++i )
+      {
+        // read point from binary file
+        PointType point;
+
+        if( !this->m_Reader.eof() )
+        {
+          this->m_Reader.read((char*) &point, sizeof(point));
+        } else {
+           std::ostringstream msg;
+           msg << "The file is not large enough. "
+               << std::endl << "Filename: " << this->m_FileName
+               << std::endl;
+           MeshFileReaderException e( __FILE__, __LINE__, msg.str().c_str(), ITK_LOCATION );
+           throw e;
+        }
+        points->push_back( point );
+      }
+    }
+    else //if( this->m_Binary ){
     for (unsigned int i = 0; i < this->m_NumberOfPoints; ++i)
     {
       // read point from textfile
