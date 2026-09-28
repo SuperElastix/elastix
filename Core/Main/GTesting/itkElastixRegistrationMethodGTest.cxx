@@ -3147,3 +3147,42 @@ GTEST_TEST(itkElastixRegistrationMethod, OutputTransformParameterFileFormat)
 
   EXPECT_EQ(parameterMapsFromToml, parameterMapsFromText);
 }
+
+
+// Tests that no is thrown when the fixed or the moving image is uniform (having one and the same value for all its
+// pixels). With previous versions of elastix, the use of uniform images might encounter a runtime crash, as reported by
+// Matthias Schabel, "[bug] AdvancedMattesMutualInformation segfault", 22 Sept 2026,
+// https://github.com/SuperElastix/elastix/issues/1474
+GTEST_TEST(itkElastixRegistrationMethod, SupportUniformFixedOrMovingImage)
+{
+  static constexpr unsigned int Dimension{ 2 };
+  static constexpr auto         imageSize = itk::Size<Dimension>::Filled(8);
+
+  using PixelType = float;
+  using ImageType = itk::Image<PixelType, Dimension>;
+
+  const auto uniformFixedImage = CreateImage<PixelType>(imageSize);
+  uniformFixedImage->FillBuffer(1);
+
+  const auto uniformMovingImage = CreateImage<PixelType>(imageSize);
+  uniformMovingImage->FillBuffer(1);
+
+  const auto nonUniformFixedImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+  const auto nonUniformMovingImage = CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(imageSize);
+
+  const auto parameterObject = elx::ParameterObject::New();
+  parameterObject->AddParameterMap(elx::ParameterObject::GetDefaultParameterMap("translation", 1));
+
+  // When one of the images is uniform, an exception is expected:
+  for (const auto & [fixedImage, movingImage] : { std::pair{ uniformFixedImage, nonUniformMovingImage },
+                                                  std::pair{ nonUniformFixedImage, uniformMovingImage },
+                                                  std::pair{ uniformFixedImage, uniformMovingImage },
+                                                  std::pair{ nonUniformFixedImage, nonUniformMovingImage } })
+  {
+    const auto elastixRegistrationMethod = itk::ElastixRegistrationMethod<ImageType, ImageType>::New();
+    elastixRegistrationMethod->SetFixedImage(fixedImage);
+    elastixRegistrationMethod->SetMovingImage(movingImage);
+    elastixRegistrationMethod->SetParameterObject(parameterObject);
+    EXPECT_NO_THROW(elastixRegistrationMethod->Update());
+  }
+}
