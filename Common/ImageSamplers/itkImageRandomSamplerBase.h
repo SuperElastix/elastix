@@ -131,7 +131,6 @@ protected:
 
 private:
   std::optional<SeedIntegerType> m_OptionalSeed{};
-  SeedIntegerType                m_Seed{ 121212 + 1 };
 
   elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
   Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
