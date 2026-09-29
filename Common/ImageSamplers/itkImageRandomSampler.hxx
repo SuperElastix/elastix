@@ -59,13 +59,13 @@ ImageRandomSampler<TInputImage>::GenerateData()
   /** Reserve memory for the output. */
   samples.resize(this->GetNumberOfSamples());
 
-  /** Setup a random iterator over the input image. */
+  /** Setup a random iterator over the input image. Its own generator is seeded from ITK's global instance, which ITK
+   * seeds from the clock: it is reseeded from the optional seed, or else from m_Seed, so that every update draws other
+   * samples, reproducibly. */
   ImageRandomConstIteratorWithIndex<InputImageType> randIter(&inputImage, this->GetCroppedInputImageRegion());
 
-  if (const auto optionalSeed = Superclass::GetOptionalSeed())
-  {
-    randIter.ReinitializeSeed(*optionalSeed);
-  }
+  const auto optionalSeed = Superclass::GetOptionalSeed();
+  randIter.ReinitializeSeed(static_cast<int>(optionalSeed.value_or(++Superclass::m_Seed)));
   randIter.GoToBegin();
 
   if (mask == nullptr)
