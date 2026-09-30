@@ -1073,6 +1073,16 @@ if(USE_ImpactMetric)
     -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
     -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
     -p ${TestDataDir}/parameters.2D.IMPACT.bspline.ASGD.002.txt)
+
+  # 2D Static through the multi-metric registration, on 4 threads: its combination metric sets the IMPACT metric's
+  # threader after the metric sized its per-thread buffers from -threads. Where the plugin holds its own, static copy
+  # of ITK, only the thread limits elastix hands it keep that threader within those buffers.
+  elx_add_run_test(2DBrain.IMPACT.bspline.ASGD.004
+    ""
+    -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
+    -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
+    -p ${TestDataDir}/parameters.2D.IMPACT.bspline.ASGD.004.txt
+    -threads 4)
 endif()
 
 add_subdirectory(PythonTests)
