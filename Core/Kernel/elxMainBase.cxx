@@ -158,6 +158,7 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
   {
     // Note: this is the symbol name exported by the plugin (extern "C").
     const std::string installSymbol = "ImpactMetricInstallComponent";
+    const std::string setThreadsSymbol = "ImpactMetricSetThreads";
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
     const std::string libFileName = pluginName + ".dll";
@@ -206,6 +207,19 @@ MainBase::TryLoadComponentPlugin(const ComponentDescriptionType & componentName)
       continue;
     }
 #endif
+
+    // A plugin that links its own copy of ITK gets the thread limits -threads set in elastix's copy.
+    using SetThreadsFunc = void (*)(unsigned int, unsigned int);
+#if defined(_WIN32) && !defined(__CYGWIN__)
+    const auto setThreads = reinterpret_cast<SetThreadsFunc>(GetProcAddress(handle, setThreadsSymbol.c_str()));
+#else
+    const auto setThreads = reinterpret_cast<SetThreadsFunc>(dlsym(handle, setThreadsSymbol.c_str()));
+#endif
+    if (setThreads)
+    {
+      setThreads(itk::MultiThreaderBase::GetGlobalMaximumNumberOfThreads(),
+                 itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads());
+    }
 
     const int ret = fn(&GetMutableComponentDatabase());
     if (ret != 0)

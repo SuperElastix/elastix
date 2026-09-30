@@ -18,4 +18,16 @@
 
 #include "elxImpactMetric.h"
 
+#include <itkMultiThreaderBase.h>
+
 elxInstallMacro(ImpactMetric);
+
+/** Loaded as a plugin by an elastix that links ITK statically, this library holds its own copy of ITK, which does not
+ * see the thread limits elastix set from -threads: elastix hands them over here, or the metric's threader would run
+ * more work units than the metric allocated for. */
+extern "C" ELX_PLUGIN_EXPORT void
+ImpactMetricSetThreads(unsigned int maximumNumberOfThreads, unsigned int defaultNumberOfThreads)
+{
+  itk::MultiThreaderBase::SetGlobalMaximumNumberOfThreads(maximumNumberOfThreads);
+  itk::MultiThreaderBase::SetGlobalDefaultNumberOfThreads(defaultNumberOfThreads);
+}
