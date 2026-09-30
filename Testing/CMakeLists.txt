@@ -1067,6 +1067,17 @@ if(USE_ImpactMetric)
     -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
     -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.002.txt)
 
+  # 3D Static through the multi-metric registration, on 4 threads: its combination metric sets the IMPACT metric's
+  # threader after the metric sized its per-thread buffers from -threads. Where the plugin holds its own, static copy
+  # of ITK, only the thread limits elastix hands it keep that threader within those buffers.
+  elx_add_run_test(3DCT_lung.IMPACT.bspline.ASGD.004
+    ""
+    -f ${TestDataDir}/3DCT_lung_baseline.mha
+    -m ${TestDataDir}/3DCT_lung_followup.mha
+    -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+    -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.004.txt
+    -threads 4)
+
   # 2D Static
   elx_add_run_test(2DBrain.IMPACT.bspline.ASGD.002
     "IMAGE" "${TestBaselineDir}/Impact2DStaticBaseline.mhd"
