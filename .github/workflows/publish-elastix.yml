@@ -190,8 +190,11 @@ jobs:
 
       - name: Build elastix with Impact Cuda (Windows)
         if: matrix.os == 'windows-2022'
+        # cmd carries on after a failed command: nvcc did not find cl.exe, no CUDA plugin was built, and the job
+        # passed with the CPU plugin alone. The compiler environment is set here, and every command must succeed.
         shell: cmd
         run: |
+          call "${{ matrix.vcvars64 }}" || exit /b 1
           cd elastix-build
           cmake -DCMAKE_C_COMPILER="${{ matrix.c-compiler }}" ^
               -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" ^
@@ -203,10 +206,10 @@ jobs:
               -DUSE_ALL_COMPONENTS=ON ^
               -DBUILD_TESTING:BOOL=ON ^
               -DELASTIX_USE_GTEST=ON ^
-              -GNinja ../elastix-source
-          cmake --build . --target ImpactMetric
-          mv bin/ImpactMetric.dll bin/ImpactMetricCuda.dll
-          mv bin/ImpactMetricCpu.dll bin/ImpactMetric.dll
+              -GNinja ../elastix-source || exit /b 1
+          cmake --build . --target ImpactMetric || exit /b 1
+          move /Y bin\ImpactMetric.dll bin\ImpactMetricCuda.dll || exit /b 1
+          move /Y bin\ImpactMetricCpu.dll bin\ImpactMetric.dll || exit /b 1
 
 
       - name: Build elastix with Impact Cuda (Linux)
