@@ -27,6 +27,7 @@
 #include "tomlplusplus/toml.hpp"
 
 #include <fstream>
+#include <iterator> // For begin and end.
 
 namespace itk
 {
@@ -267,8 +268,7 @@ BasicFileChecking(const std::string & parameterFileName)
   }
 
   /** Check the extension. */
-  const std::string ext = itksys::SystemTools::GetFilenameLastExtension(parameterFileName);
-  if (ext != ".txt" && ext != ".toml")
+  if (!ParameterFileParser::HasParameterFileNameExtension(parameterFileName))
   {
     itkGenericExceptionMacro("ERROR: the file " << parameterFileName
                                                 << " should be a text file (*.txt) or a TOML file (*.toml).");
@@ -550,5 +550,15 @@ ParameterFileParser::ConvertToParameterMap(const std::string & text) -> Paramete
   return parameterMap;
 }
 
+
+bool
+ParameterFileParser::HasParameterFileNameExtension(const std::string & fileName)
+{
+  static constexpr std::string_view parameterFileNameExtensions[] = { ".txt", ".toml" };
+
+  return std::count(std::begin(parameterFileNameExtensions),
+                    std::end(parameterFileNameExtensions),
+                    itksys::SystemTools::GetFilenameLastExtension(fileName)) > 0;
+}
 
 } // end namespace itk
