@@ -306,11 +306,28 @@ Configuration::InitializeWithInitialTransform(const std::string & initialTransfo
         { "ITKTransformType", { transform->GetTransformTypeAsString() } },
         { "Transform", { elx::TransformIO::ConvertITKNameOfClassToElastixClassName(transform->GetNameOfClass()) } } });
   }
-  catch (const std::exception &)
+  catch (const std::exception & exception1)
   {
-    // Read the parameter map from the parameter file and add data from a possible external transform file.
-    m_ParameterMapInterface.SetParameterMap(AddDataFromExternalTransformFile(
-      m_ParameterFileName, itk::ParameterFileParser::ReadParameterMap(m_ParameterFileName)));
+    if (itk::ParameterFileParser::HasParameterFileNameExtension(m_ParameterFileName))
+    {
+      try
+      {
+        // Read the parameter map from the parameter file and add data from a possible external transform file.
+        m_ParameterMapInterface.SetParameterMap(AddDataFromExternalTransformFile(
+          m_ParameterFileName, itk::ParameterFileParser::ReadParameterMap(m_ParameterFileName)));
+      }
+      catch (const std::exception & exception2)
+      {
+        log::error(std::ostringstream{} << "ERROR: when reading the initial transform parameter file:\n"
+                                        << exception2.what());
+        return false;
+      }
+    }
+    else
+    {
+      log::error(std::ostringstream{} << "ERROR: when reading the initial transform file:\n" << exception1.what());
+      return false;
+    }
   }
 
   m_ParameterAccessFlags = std::make_unique<bool[]>(m_ParameterMapInterface.GetParameterMap().size());
