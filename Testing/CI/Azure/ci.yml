@@ -59,7 +59,7 @@ jobs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: "$(ITK_BINARY_DIR)"
   - script: |
-      git clone --depth 1 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "$(ITKIMPACT_SOURCE_DIR)"
+      git clone --depth 1 --branch v0.1.6 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "$(ITKIMPACT_SOURCE_DIR)"
     displayName: 'Clone ITKIMPACT backend'
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
@@ -131,7 +131,7 @@ jobs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: $(ITK_BINARY_DIR)
   - script: |
-      git clone --depth 1 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "$(ITKIMPACT_SOURCE_DIR)"
+      git clone --depth 1 --branch v0.1.6 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "$(ITKIMPACT_SOURCE_DIR)"
     displayName: 'Clone ITKIMPACT backend'
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
@@ -215,7 +215,7 @@ jobs:
       cmakeArgs: --build . --config Release -j 2
       workingDirectory: $(ITK_BINARY_DIR)
   - script: |
-      git clone --depth 1 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "$(ITKIMPACT_SOURCE_DIR)"
+      git clone --depth 1 --branch v0.1.6 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "$(ITKIMPACT_SOURCE_DIR)"
     displayName: 'Clone ITKIMPACT backend'
   - task: CMake@1
     displayName: 'CMake Generate Elastix'
