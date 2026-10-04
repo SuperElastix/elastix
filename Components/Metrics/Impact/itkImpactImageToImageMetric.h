@@ -683,7 +683,6 @@ private:
    * only the valid fixed points. The valid patch indices are stored in `patchIndex`.
    *
    * \param modelConfig A vector of model configurations, each specifying the properties of the models used.
-   * \param randomGenerator A random number generator used for random sampling in the patch generation process.
    * \param fixedPointsTmp A vector of fixed points to generate patch indices for.
    * \param patchIndex A reference to a 4D vector to store the generated patch indices for each valid fixed point.
    *
@@ -692,7 +691,6 @@ private:
   template <typename ImagePointType>
   std::vector<ImagePointType>
   GeneratePatchIndex(const std::vector<ImpactModelConfiguration> &               modelConfig,
-                     std::mt19937 &                                              randomGenerator,
                      const std::vector<ImagePointType> &                         fixedPointsTmp,
                      std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const;
 
