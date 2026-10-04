@@ -1,0 +1,5 @@
+// The exact answer of elastix_run_2DBrain.IMPACT.translation.ASGD.003, which registers an image to itself from
+// the initial translation in Data/transformparameters.2D.translation.txt: the opposite of that translation.
+(Transform "TranslationTransform")
+(NumberOfParameters 2)
+(TransformParameters -6.0 4.5)

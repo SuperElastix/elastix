@@ -30,6 +30,7 @@
 #include "itkImageToFeaturesMap.h"
 #include "itkImpactOnlineInference.h"
 #include <ImpactLoss.h>
+#include <itkImpactLossNormalization.h>
 
 #include <torch/script.h>
 #include <torch/torch.h>
@@ -251,6 +252,18 @@ public:
   itkSetMacro(FeaturesMapUpdateInterval, int);
   itkGetConstMacro(FeaturesMapUpdateInterval, int);
 
+  /** Divide each layer's loss by its value at the first evaluation after Initialize(), that is at the start of
+   * each resolution, so every layer starts at 1 and LayersWeight weighs comparable quantities
+   * (itk::Impact::LossNormalization). Default on. */
+  itkSetMacro(NormalizeLosses, bool);
+  itkGetConstMacro(NormalizeLosses, bool);
+
+  /** The images IMPACT extracts its features from, in place of the registration's images, which are the level of
+   * the image pyramid the other metrics share: IMPACT resamples them itself to each model's voxel size. Unset, it
+   * reads the registration's images. */
+  itkSetConstObjectMacro(ImpactFixedImage, FixedImageType);
+  itkSetConstObjectMacro(ImpactMovingImage, MovingImageType);
+
 protected:
   ImpactImageToImageMetric();
   ~ImpactImageToImageMetric() override = default;
@@ -321,25 +334,32 @@ protected:
       }
     }
 
+    /** The weighted sum of the layers' losses; with a normalization, each layer is divided by the value it had at
+     * the first evaluation of the resolution, which this call latches. */
     double
-    GetValue()
+    GetValue(itk::Impact::LossNormalization * normalization)
     {
       MeasureType value = MeasureType{};
       for (int l = 0; l < m_LayersWeight.size(); ++l)
       {
-        value += m_LayersWeight[l] * m_Losses[l]->GetValue(static_cast<double>(m_NumberOfPixelsCounted));
+        const double layerValue = m_Losses[l]->GetValue(static_cast<double>(m_NumberOfPixelsCounted));
+        const double factor = normalization ? normalization->Latch(l, layerValue) : 1.0;
+        value += m_LayersWeight[l] * factor * layerValue;
       }
       return value;
     }
 
+    /** The derivative of GetValue(), with the factors GetValue() latched. */
     DerivativeType
-    GetDerivative()
+    GetDerivative(const itk::Impact::LossNormalization * normalization)
     {
       DerivativeType derivative = DerivativeType(m_NumberOfParameters);
       derivative.Fill(DerivativeValueType{});
       for (int l = 0; l < m_LayersWeight.size(); ++l)
       {
-        torch::Tensor d = m_LayersWeight[l] * m_Losses[l]->GetDerivative(static_cast<double>(m_NumberOfPixelsCounted));
+        const double  factor = normalization ? normalization->Factor(l) : 1.0;
+        torch::Tensor d =
+          m_LayersWeight[l] * factor * m_Losses[l]->GetDerivative(static_cast<double>(m_NumberOfPixelsCounted));
         for (int i = 0; i < d.size(0); ++i)
         {
           derivative[i] += d[i].item<float>();
@@ -682,8 +702,11 @@ private:
    * for each point. It filters out points that lie outside the mask or image boundaries, returning
    * only the valid fixed points. The valid patch indices are stored in `patchIndex`.
    *
+   * A 2D model's patch lies on a plane drawn for each point from the metric's seed, the model and the point's index in
+   * the fixed image IMPACT samples its patches in (itk::Impact::GetPatchIndex), the plane itk-impact's ITKv4 metric
+   * and ImpactFineRegistration draw there.
+   *
    * \param modelConfig A vector of model configurations, each specifying the properties of the models used.
-   * \param randomGenerator A random number generator used for random sampling in the patch generation process.
    * \param fixedPointsTmp A vector of fixed points to generate patch indices for.
    * \param patchIndex A reference to a 4D vector to store the generated patch indices for each valid fixed point.
    *
@@ -692,7 +715,6 @@ private:
   template <typename ImagePointType>
   std::vector<ImagePointType>
   GeneratePatchIndex(const std::vector<ImpactModelConfiguration> &               modelConfig,
-                     std::mt19937 &                                              randomGenerator,
                      const std::vector<ImagePointType> &                         fixedPointsTmp,
                      std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const;
 
@@ -700,18 +722,34 @@ private:
   std::vector<ImpactModelConfiguration> m_FixedModelsConfiguration;
   std::vector<ImpactModelConfiguration> m_MovingModelsConfiguration;
 
-  std::vector<unsigned int> m_SubsetFeatures;
-  std::vector<unsigned int> m_PCA;
-  std::vector<float>        m_LayersWeight;
-  std::vector<std::string>  m_Distance;
-  int                       m_FeaturesMapUpdateInterval;
-  std::string               m_Mode;
-  bool                      m_WriteFeatureMaps;
-  std::string               m_FeatureMapsPath;
-  torch::Device             m_Device = torch::Device(torch::kCPU);
-  bool                      m_UseMixedPrecision;
-  unsigned int              m_CurrentLevel;
-  unsigned int              m_Seed;
+  std::vector<unsigned int>              m_SubsetFeatures;
+  std::vector<unsigned int>              m_PCA;
+  std::vector<float>                     m_LayersWeight;
+  std::vector<std::string>               m_Distance;
+  int                                    m_FeaturesMapUpdateInterval;
+  std::string                            m_Mode;
+  bool                                   m_NormalizeLosses{ true };
+  typename FixedImageType::ConstPointer  m_ImpactFixedImage;
+  typename MovingImageType::ConstPointer m_ImpactMovingImage;
+  /** The images IMPACT reads: the ones set above, or the registration's. */
+  const FixedImageType *
+  ImpactFixedImage() const
+  {
+    return m_ImpactFixedImage ? m_ImpactFixedImage.GetPointer() : Superclass::m_FixedImage.GetPointer();
+  }
+  const MovingImageType *
+  ImpactMovingImage() const
+  {
+    return m_ImpactMovingImage ? m_ImpactMovingImage.GetPointer() : Superclass::m_MovingImage.GetPointer();
+  }
+  /** Latched at the first evaluation after Initialize(); mutable because the evaluation is const. */
+  mutable itk::Impact::LossNormalization m_LossNormalization;
+  bool                                   m_WriteFeatureMaps;
+  std::string                            m_FeatureMapsPath;
+  torch::Device                          m_Device = torch::Device(torch::kCPU);
+  bool                                   m_UseMixedPrecision;
+  unsigned int                           m_CurrentLevel;
+  unsigned int                           m_Seed;
 
 
   std::vector<FeaturesMaps>  m_FixedFeaturesMaps;

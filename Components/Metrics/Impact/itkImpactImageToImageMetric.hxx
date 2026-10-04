@@ -63,7 +63,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateFixedFeaturesMaps()
     auto featuresMap = itk::ImageToFeaturesMap<TFixedImage, InterpolatorType>::New();
     featuresMap->SetModelConfiguration(fixedConfigs[i]);
     featuresMap->SetInterpolator(m_FixedInterpolator);
-    featuresMap->AddInput(Superclass::m_FixedImage);
+    featuresMap->AddInput(this->ImpactFixedImage());
     featuresMap->SetPCA(GetPCA()[i]);
     featuresMap->SetDevice(GetDevice().str());
     featuresMap->Update();
@@ -110,8 +110,11 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
 {
   m_MovingFeaturesMaps.clear();
 
-  // Same as the fixed image, but sampled at transformed points (the metric's current
-  // transform) and reusing the PCA basis fitted on the fixed image.
+  // Same as the fixed image, reusing the PCA basis fitted on the fixed image. The map is the
+  // moving image's own, on its own grid and untransformed: ComputeValue*Static look it up at
+  // TransformPoint(x), so sampling it through the transform as well would apply the transform
+  // twice whenever it is not the identity when the map is built -- with an initial transform,
+  // and at every resolution after the first, which then undoes the one before it.
   const auto & movingConfigs = GetMovingModelsConfiguration();
   unsigned int pcaOffset = 0;
   for (unsigned int i = 0; i < movingConfigs.size(); ++i)
@@ -119,9 +122,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::UpdateMovingFeaturesMaps()
     auto featuresMap = itk::ImageToFeaturesMap<TMovingImage, InterpolatorType>::New();
     featuresMap->SetModelConfiguration(movingConfigs[i]);
     featuresMap->SetInterpolator(Superclass::m_Interpolator);
-    featuresMap->SetTransform(
-      [this](const typename TMovingImage::PointType & point) { return this->TransformPoint(point); });
-    featuresMap->AddInput(Superclass::m_MovingImage);
+    featuresMap->AddInput(this->ImpactMovingImage());
     featuresMap->SetPCA(GetPCA()[i]);
     featuresMap->SetDevice(GetDevice().str());
 
@@ -174,17 +175,24 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
 {
   /** Initialize transform, interpolator, etc. */
   Superclass::Initialize();
-  m_FixedInterpolator->SetInputImage(Superclass::m_FixedImage);
+  m_LossNormalization.Reset(); // each resolution starts at 1 again
+  m_FixedInterpolator->SetInputImage(this->ImpactFixedImage());
+  if (m_ImpactMovingImage)
+  {
+    // This metric's own interpolator (each metric of a multi-metric registration has one): it samples IMPACT's
+    // moving image, the other metrics keep theirs on the pyramid level.
+    Superclass::m_Interpolator->SetInputImage(m_ImpactMovingImage);
+  }
   m_FeaturesIndexes.clear();
 
   for (auto & config : m_FixedModelsConfiguration)
   {
-    itk::SetupImageMetadata<TFixedImage>(config, Superclass::m_FixedImage);
+    itk::SetupImageMetadata<TFixedImage>(config, this->ImpactFixedImage());
   }
 
   for (auto & config : m_MovingModelsConfiguration)
   {
-    itk::SetupImageMetadata<TMovingImage>(config, Superclass::m_MovingImage);
+    itk::SetupImageMetadata<TMovingImage>(config, this->ImpactMovingImage());
   }
 
   if (GetMode() == "Static")
@@ -252,6 +260,14 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::Initialize()
       m_FeaturesIndexes.push_back(std::vector<unsigned int>(numComponents));
       std::iota(m_FeaturesIndexes[i].begin(), m_FeaturesIndexes[i].end(), 0);
     }
+  }
+
+  if (m_NormalizeLosses)
+  {
+    // Latch each layer's factor at the transform this resolution starts from (the registration sets it before
+    // initializing the metric). The optimizer's own first evaluations are ASGD's step-size estimation, at randomly
+    // perturbed transforms: latched there, every layer started below 1, the most sensitive ones the lowest.
+    this->GetValue(this->m_Transform->GetParameters());
   }
 } // end Initialize
 
@@ -325,7 +341,6 @@ template <typename ImagePointType>
 std::vector<ImagePointType>
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
   const std::vector<ImpactModelConfiguration> &               modelConfig,
-  std::mt19937 &                                              randomGenerator,
   const std::vector<ImagePointType> &                         fixedPointsTmp,
   std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const
 {
@@ -339,7 +354,11 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
     for (int it = 0; it < fixedPointsTmp.size(); ++it)
     {
       std::vector<std::vector<float>> patch =
-        itk::Impact::GetPatchIndex(modelConfig[i], randomGenerator, FixedImageDimension);
+        itk::Impact::GetPatchIndex(modelConfig[i],
+                                   GetSeed(),
+                                   i,
+                                   this->ImpactFixedImage()->TransformPhysicalPointToIndex(fixedPointsTmp[it]),
+                                   FixedImageDimension);
       if (SampleCheck(fixedPointsTmp[it], patch))
       {
         patchIndex[i].push_back(patch);
@@ -478,8 +497,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
   LossPerThreadStruct &                    loss) const
 {
   std::vector<std::vector<std::vector<std::vector<float>>>> patchIndex(GetFixedModelsConfiguration().size());
-  std::vector<FixedImagePointType>                          fixedPoints = GeneratePatchIndex<FixedImagePointType>(
-    GetFixedModelsConfiguration(), loss.m_RandomGenerator, fixedPointsTmp, patchIndex);
+  std::vector<FixedImagePointType>                          fixedPoints =
+    GeneratePatchIndex<FixedImagePointType>(GetFixedModelsConfiguration(), fixedPointsTmp, patchIndex);
   if (fixedPoints.empty())
   {
     return 0;
@@ -495,7 +514,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
       GetSubsetOfFeatures(m_FeaturesIndexes[i], loss.m_RandomGenerator, GetSubsetFeatures()[i]);
     subsetsOfFeatures[i] =
       torch::from_blob(subsetOfFeatures.data(), { static_cast<long>(subsetOfFeatures.size()) }, torch::kUInt32)
-        .to(torch::kUInt64)
+        .to(torch::kInt64) // an index: torch refuses unsigned ones
         .to(GetDevice())
         .clone();
   }
@@ -589,8 +608,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
 {
 
   std::vector<std::vector<std::vector<std::vector<float>>>> patchIndex(GetFixedModelsConfiguration().size());
-  std::vector<FixedImagePointType>                          fixedPoints = GeneratePatchIndex<FixedImagePointType>(
-    GetFixedModelsConfiguration(), loss.m_RandomGenerator, fixedPointsTmp, patchIndex);
+  std::vector<FixedImagePointType>                          fixedPoints =
+    GeneratePatchIndex<FixedImagePointType>(GetFixedModelsConfiguration(), fixedPointsTmp, patchIndex);
   if (fixedPoints.empty())
   {
     return 0;
@@ -820,7 +839,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GetValueSingleThreaded(cons
   Superclass::m_NumberOfPixelsCounted = (this->*computeValueFunc)(fixedPoints, loss);
   this->CheckNumberOfSamples();
 
-  return loss.GetValue();
+  return loss.GetValue((m_NormalizeLosses ? &m_LossNormalization : nullptr));
 } // end GetValueSingleThreaded
 
 /**
@@ -879,7 +898,7 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedGetValue(Measu
   this->CheckNumberOfSamples();
 
   /** Accumulate values. */
-  value = loss.GetValue();
+  value = loss.GetValue((m_NormalizeLosses ? &m_LossNormalization : nullptr));
 } // end AfterThreadedGetValue
 
 /**
@@ -962,8 +981,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GetValueAndDerivativeSingle
   Superclass::m_NumberOfPixelsCounted = (this->*computeValueAndDerivativeFunc)(fixedPoints, loss);
   this->CheckNumberOfSamples();
 
-  value = loss.GetValue();
-  derivative = loss.GetDerivative();
+  value = loss.GetValue((m_NormalizeLosses ? &m_LossNormalization : nullptr));
+  derivative = loss.GetDerivative((m_NormalizeLosses ? &m_LossNormalization : nullptr));
 } // end GetValueAndDerivativeSingleThreaded
 
 /**
@@ -1029,8 +1048,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::AfterThreadedGetValueAndDer
   this->CheckNumberOfSamples();
 
   /** Accumulate values. */
-  value = loss.GetValue();
-  derivative = loss.GetDerivative();
+  value = loss.GetValue((m_NormalizeLosses ? &m_LossNormalization : nullptr));
+  derivative = loss.GetDerivative((m_NormalizeLosses ? &m_LossNormalization : nullptr));
 } // end AfterThreadedGetValueAndDerivative
 
 } // end namespace itk

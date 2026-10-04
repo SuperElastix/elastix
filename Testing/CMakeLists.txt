@@ -1067,12 +1067,40 @@ if(USE_ImpactMetric)
     -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
     -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.002.txt)
 
+  # 3D Static through the multi-metric registration, on 4 threads: its combination metric sets the IMPACT metric's
+  # threader after the metric sized its per-thread buffers from -threads. Where the plugin holds its own, static copy
+  # of ITK, only the thread limits elastix hands it keep that threader within those buffers.
+  elx_add_run_test(3DCT_lung.IMPACT.bspline.ASGD.004
+    ""
+    -f ${TestDataDir}/3DCT_lung_baseline.mha
+    -m ${TestDataDir}/3DCT_lung_followup.mha
+    -t0 ${TestDataDir}/transformparameters.3DCT_lung.affine.txt
+    -p ${TestDataDir}/parameters.3D.IMPACT.bspline.ASGD.004.txt
+    -threads 4)
+
   # 2D Static
   elx_add_run_test(2DBrain.IMPACT.bspline.ASGD.002
     "IMAGE" "${TestBaselineDir}/Impact2DStaticBaseline.mhd"
     -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
     -m ${ELASTIX_DOX_DIR}/exampleinput/moving.mhd
     -p ${TestDataDir}/parameters.2D.IMPACT.bspline.ASGD.002.txt)
+
+  # 2D Static, translation over two identical resolutions from an initial transform: the image is registered to
+  # itself, so the answer is exactly the opposite of the initial translation. Every resolution starts from a
+  # non-identity transform, which must be applied once, not also baked into the moving feature maps.
+  elx_add_run_test(2DBrain.IMPACT.translation.ASGD.003
+    ""
+    -f ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
+    -m ${ELASTIX_DOX_DIR}/exampleinput/fixed.mhd
+    -t0 ${TestDataDir}/transformparameters.2D.translation.txt
+    -p ${TestDataDir}/parameters.2D.IMPACT.translation.ASGD.003.txt)
+  add_test(NAME elastix_run_2DBrain.IMPACT.translation.ASGD.003_COMPARE_TP
+    COMMAND elxTransformParametersCompare
+    -base ${TestBaselineDir}/TransformParameters_2DBrain.IMPACT.translation.ASGD.003.txt
+    -test ${TestOutputDir}/elastix_run_2DBrain.IMPACT.translation.ASGD.003/TransformParameters.0.txt
+    -a 0.05)
+  set_tests_properties(elastix_run_2DBrain.IMPACT.translation.ASGD.003_COMPARE_TP
+    PROPERTIES DEPENDS elastix_run_2DBrain.IMPACT.translation.ASGD.003_OUTPUT)
 endif()
 
 add_subdirectory(PythonTests)

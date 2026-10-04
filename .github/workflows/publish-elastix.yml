@@ -2,6 +2,10 @@ name: ElastixPublish
 
 on:
   workflow_dispatch:
+    inputs:
+      itkimpact_ref:
+        description: "ITKIMPACT commit, branch or tag the IMPACT metric is built against"
+        default: "cd44ddd18d523b21a937d90ef51bc6ae379d1771"
 
 env:
   DEFAULT_ITK_GIT_TAG: "v5.4.6"
@@ -12,9 +16,12 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [ubuntu-22.04, windows-2022, macos-14]
+        # One artifact per OS and CUDA flavour: cu128 (torch 2.11, the last series shipping it, driver R570)
+        # keeps the widest range of cards; cu130 (torch 2.12, driver R580) matches a CUDA 13 torch.
         include:
           - os: ubuntu-22.04
+            flavor: cu128
+            torch: '2.11'
             cuda_toolkit_version: '12.8.0'
             itk-git-tag: $DEFAULT_ITK_GIT_TAG
             c-compiler: "gcc"
@@ -22,7 +29,19 @@ jobs:
             cmake-build-type: "Release"
             libs:
               - elastix-build/bin/libelx-ANNlib.so
+          - os: ubuntu-22.04
+            flavor: cu130
+            torch: '2.12'
+            cuda_toolkit_version: '13.0.2'
+            itk-git-tag: $DEFAULT_ITK_GIT_TAG
+            c-compiler: "gcc"
+            cxx-compiler: "g++"
+            cmake-build-type: "Release"
+            libs:
+              - elastix-build/bin/libelx-ANNlib.so
           - os: windows-2022
+            flavor: cu128
+            torch: '2.11'
             cuda_toolkit_version: '12.8.0'
             itk-git-tag: $DEFAULT_ITK_GIT_TAG
             c-compiler: "cl.exe"
@@ -31,7 +50,20 @@ jobs:
             libs:
               - elastix-build/bin/elx-ANNlib.dll
             vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          - os: windows-2022
+            flavor: cu130
+            torch: '2.12'
+            cuda_toolkit_version: '13.0.2'
+            itk-git-tag: $DEFAULT_ITK_GIT_TAG
+            c-compiler: "cl.exe"
+            cxx-compiler: "cl.exe"
+            cmake-build-type: "Release"
+            libs:
+              - elastix-build/bin/elx-ANNlib.dll
+            vcvars64: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           - os: macos-14
+            flavor: cpu
+            torch: '2.11'
             c-compiler: "clang"
             cxx-compiler: "clang++"
             itk-git-tag: $DEFAULT_ITK_GIT_TAG
@@ -82,20 +114,22 @@ jobs:
           python-version: "3.11"
 
       - name: Clone ITKIMPACT backend
-        run: git clone --depth 1 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "${{ github.workspace }}/ITKIMPACT"
+        run: |
+          git init "${{ github.workspace }}/ITKIMPACT"
+          cd "${{ github.workspace }}/ITKIMPACT"
+          git fetch --depth 1 https://github.com/InsightSoftwareConsortium/ITKIMPACT.git "${{ inputs.itkimpact_ref || 'main' }}"
+          git checkout FETCH_HEAD
         shell: bash
 
       - name: Install LibTorch (CPU) via pip
         # LibTorch comes from the pip `torch` package (same as the ITKIMPACT backend), instead
-        # of a standalone libtorch download / building PyTorch from source. torch 2.11 is used
-        # (not 2.12) because it is the last series still shipping CUDA cu128 -- the widest GPU
-        # coverage (Blackwell incl. RTX PRO 6000 + driver floor R570, and keeps older cards
-        # unlike cu130). This CPU build produces the default (CPU) ImpactMetric; the CUDA variant
-        # is rebuilt below. Export Torch_DIR for find_package(Torch); build_elastix reads it.
+        # of a standalone libtorch download / building PyTorch from source, at the flavour's torch
+        # series (matrix.torch). This CPU build produces the default (CPU) ImpactMetric; the CUDA
+        # variant is rebuilt below. Export Torch_DIR for find_package(Torch); build_elastix reads it.
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "torch==2.11.*" --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install "torch==${{ matrix.torch }}.*" --index-url https://download.pytorch.org/whl/cpu
           python - <<'PY' >> "$GITHUB_ENV"
           import torch, pathlib
           print("Torch_DIR=" + (pathlib.Path(torch.utils.cmake_prefix_path) / "Torch").as_posix())
@@ -126,7 +160,7 @@ jobs:
 
       - name: Install CUDA Toolkit (Windows)
         if: matrix.os == 'windows-2022'
-        uses: Jimver/cuda-toolkit@v0.2.29
+        uses: Jimver/cuda-toolkit@v0.2.36
         with:
           cuda: ${{ matrix.cuda_toolkit_version }}
           use-github-cache: false
@@ -134,20 +168,20 @@ jobs:
 
       - name: Install CUDA Toolkit (Linux)
         if: matrix.os == 'ubuntu-22.04'
-        uses: Jimver/cuda-toolkit@v0.2.23
+        uses: Jimver/cuda-toolkit@v0.2.36
         with:
           cuda: ${{ matrix.cuda_toolkit_version }}
           sub-packages: '["toolkit"]'
           method: 'network'
 
-      - name: Install LibTorch (CUDA cu128) via pip
-        # Reinstall torch as the cu128 build over the same site-packages path (Torch_DIR is
-        # unchanged); the ImpactMetric target is then rebuilt against CUDA below. cu128 gives
-        # Blackwell support (RTX PRO 6000 / RTX 50xx / B200) while keeping older cards.
+      - name: Install LibTorch (CUDA) via pip
+        # Reinstall torch as the flavour's CUDA build over the same site-packages path (Torch_DIR is
+        # unchanged); the ImpactMetric target is then rebuilt against CUDA below. Both flavours
+        # support Blackwell (RTX PRO 6000 / RTX 50xx / B200).
         if: matrix.os != 'macos-14'
         shell: bash
         run: |
-          python -m pip install "torch==2.11.*" --index-url https://download.pytorch.org/whl/cu128
+          python -m pip install "torch==${{ matrix.torch }}.*" --index-url https://download.pytorch.org/whl/${{ matrix.flavor }}
           python - <<'PY' >> "$GITHUB_ENV"
           import torch, pathlib
           print("Torch_DIR=" + (pathlib.Path(torch.utils.cmake_prefix_path) / "Torch").as_posix())
@@ -156,8 +190,11 @@ jobs:
 
       - name: Build elastix with Impact Cuda (Windows)
         if: matrix.os == 'windows-2022'
+        # cmd carries on after a failed command: nvcc did not find cl.exe, no CUDA plugin was built, and the job
+        # passed with the CPU plugin alone. The compiler environment is set here, and every command must succeed.
         shell: cmd
         run: |
+          call "${{ matrix.vcvars64 }}" || exit /b 1
           cd elastix-build
           cmake -DCMAKE_C_COMPILER="${{ matrix.c-compiler }}" ^
               -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" ^
@@ -169,10 +206,10 @@ jobs:
               -DUSE_ALL_COMPONENTS=ON ^
               -DBUILD_TESTING:BOOL=ON ^
               -DELASTIX_USE_GTEST=ON ^
-              -GNinja ../elastix-source
-          cmake --build . --target ImpactMetric
-          mv bin/ImpactMetric.dll bin/ImpactMetricCuda.dll
-          mv bin/ImpactMetricCpu.dll bin/ImpactMetric.dll
+              -GNinja ../elastix-source || exit /b 1
+          cmake --build . --target ImpactMetric || exit /b 1
+          move /Y bin\ImpactMetric.dll bin\ImpactMetricCuda.dll || exit /b 1
+          move /Y bin\ImpactMetricCpu.dll bin\ImpactMetric.dll || exit /b 1
 
 
       - name: Build elastix with Impact Cuda (Linux)
@@ -199,6 +236,6 @@ jobs:
         uses: ./.github/actions/publish
         with:
           libs: ${{ join(matrix.libs, ' ') }} elastix-build/bin/*ImpactMetric*
-          upload-name: ${{ matrix.os }}-torch-2.11-cu128
+          upload-name: ${{ matrix.os }}-torch-${{ matrix.torch }}-${{ matrix.flavor }}
           docker-username: ${{ secrets.DOCKER_HUB_USERNAME }}
           docker-password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}

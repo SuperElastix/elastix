@@ -208,6 +208,11 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
     GroupByDimensions<unsigned int>(overlapVec, numberOfPatchSizeParameterPerModel);
 
 
+  /** Get how each model's feature vectors are scaled before PCA and the distance: none (default), l2, standardized. */
+  std::vector<std::string> featureNormalizationVec(numberOfModels, "none");
+  configuration.ReadParameter<std::string>(
+    featureNormalizationVec, prefix + "FeatureNormalization" + std::to_string(level), 0, numberOfModels - 1, 1);
+
   // Build the ImpactModelConfiguration object for each model.
   // Each configuration includes model path, input dimension, channel count,
   // patch size, voxel size, and layer mask.
@@ -227,6 +232,11 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
                                        overlapVecByModel[i],
                                        GetBooleanVectorFromString(layersMaskVec[i], false),
                                        useMixedPrecision);
+      modelsConfiguration.back().SetFeatureNormalization(featureNormalizationVec[i]);
+    }
+    catch (const std::invalid_argument & e)
+    {
+      itkExceptionMacro(<< prefix << "FeatureNormalization" << level << ": " << e.what());
     }
     catch (const c10::Error & e)
     {
@@ -256,6 +266,11 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   unsigned int randomSeed = 0;
   configuration.ReadParameter(randomSeed, "RandomSeed", 0, false);
   this->SetSeed(randomSeed);
+
+  // IMPACT resamples the images itself to each model's voxel size: it reads them as given, not the level of the
+  // image pyramid the other metrics share (a multi-metric registration with mutual information keeps its pyramid).
+  this->SetImpactFixedImage(this->GetElastix()->GetFixedImage());
+  this->SetImpactMovingImage(this->GetElastix()->GetMovingImage());
 
   // Choose GPU device if available and requested, fallback to CPU otherwise.
   // Raise explicit errors if user-requested GPU index is invalid.
@@ -497,7 +512,25 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     itkExceptionMacro("Missing required parameter: \"ImpactDistance" + std::to_string(level) + "\".");
   }
+  for (const std::string & distance : distanceVec)
+  {
+    if (distance == "DotProduct")
+    {
+      itkExceptionMacro("ImpactDistance \"DotProduct\" was removed: unbounded, it could not start at 1 like the "
+                        "other distances. Use \"Cosine\" or \"L2\".");
+    }
+    if (distance == "LNCC")
+    {
+      itkExceptionMacro("ImpactDistance \"LNCC\" correlates windows of a dense feature map, which elastix, drawing "
+                        "random points, does not have. Choose L1, L2, Cosine, L1Cosine, Dice or NCC.");
+    }
+  }
   this->SetDistance(distanceVec);
+
+  /** Each layer divided by its value at the start of the resolution (on by default). */
+  bool normalizeLosses = true;
+  configuration.ReadParameter(normalizeLosses, "ImpactNormalizeLosses", this->GetComponentLabel(), level, 0);
+  this->SetNormalizeLosses(normalizeLosses);
 
 } // end BeforeEachResolution()
 
