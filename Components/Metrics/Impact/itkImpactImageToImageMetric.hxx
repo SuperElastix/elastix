@@ -325,7 +325,6 @@ template <typename ImagePointType>
 std::vector<ImagePointType>
 ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
   const std::vector<ImpactModelConfiguration> &               modelConfig,
-  std::mt19937 &                                              randomGenerator,
   const std::vector<ImagePointType> &                         fixedPointsTmp,
   std::vector<std::vector<std::vector<std::vector<float>>>> & patchIndex) const
 {
@@ -339,7 +338,11 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::GeneratePatchIndex(
     for (int it = 0; it < fixedPointsTmp.size(); ++it)
     {
       std::vector<std::vector<float>> patch =
-        itk::Impact::GetPatchIndex(modelConfig[i], randomGenerator, FixedImageDimension);
+        itk::Impact::GetPatchIndex(modelConfig[i],
+                                   GetSeed(),
+                                   i,
+                                   this->GetFixedImage()->TransformPhysicalPointToIndex(fixedPointsTmp[it]),
+                                   FixedImageDimension);
       if (SampleCheck(fixedPointsTmp[it], patch))
       {
         patchIndex[i].push_back(patch);
@@ -478,8 +481,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValue(
   LossPerThreadStruct &                    loss) const
 {
   std::vector<std::vector<std::vector<std::vector<float>>>> patchIndex(GetFixedModelsConfiguration().size());
-  std::vector<FixedImagePointType>                          fixedPoints = GeneratePatchIndex<FixedImagePointType>(
-    GetFixedModelsConfiguration(), loss.m_RandomGenerator, fixedPointsTmp, patchIndex);
+  std::vector<FixedImagePointType>                          fixedPoints =
+    GeneratePatchIndex<FixedImagePointType>(GetFixedModelsConfiguration(), fixedPointsTmp, patchIndex);
   if (fixedPoints.empty())
   {
     return 0;
@@ -589,8 +592,8 @@ ImpactImageToImageMetric<TFixedImage, TMovingImage>::ComputeValueAndDerivativeJa
 {
 
   std::vector<std::vector<std::vector<std::vector<float>>>> patchIndex(GetFixedModelsConfiguration().size());
-  std::vector<FixedImagePointType>                          fixedPoints = GeneratePatchIndex<FixedImagePointType>(
-    GetFixedModelsConfiguration(), loss.m_RandomGenerator, fixedPointsTmp, patchIndex);
+  std::vector<FixedImagePointType>                          fixedPoints =
+    GeneratePatchIndex<FixedImagePointType>(GetFixedModelsConfiguration(), fixedPointsTmp, patchIndex);
   if (fixedPoints.empty())
   {
     return 0;
