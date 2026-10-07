@@ -195,7 +195,7 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::InitializeHi
    */
   m_JointPDF = JointPDFType::New();
   m_JointPDF->SetRegions(JointPDFSizeType{ m_NumberOfMovingHistogramBins, m_NumberOfFixedHistogramBins });
-  m_JointPDF->Allocate();
+  m_JointPDF->AllocateInitialized();
 
   if (this->GetUseDerivative())
   {
@@ -1046,6 +1046,21 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::ThreadedComp
   m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables[threadId].st_NumberOfPixelsCounted =
     numberOfPixelsCounted;
 
+  {
+    const std::lock_guard<std::mutex> lockGuard(m_Mutex);
+
+    /** Accumulate joint histogram. */
+    const ImageBufferRange imageBufferRange(*m_JointPDF);
+
+    auto pdfValueIteratorOfThread = ImageBufferRange(*jointPDF).cbegin();
+
+    for (PDFValueType & pdfValue : imageBufferRange)
+    {
+      pdfValue += *pdfValueIteratorOfThread;
+      ++pdfValueIteratorOfThread;
+    }
+  }
+
 } // end ThreadedComputePDFs()
 
 
@@ -1075,21 +1090,6 @@ ParzenWindowHistogramImageToImageMetric<TFixedImage, TMovingImage>::AfterThreade
   /** Compute alpha. */
   m_Alpha = 1.0 / static_cast<double>(Superclass::m_NumberOfPixelsCounted);
 
-  /** Accumulate joint histogram. */
-  const ImageBufferRange imageBufferRange(*m_JointPDF);
-
-  std::fill(imageBufferRange.begin(), imageBufferRange.end(), PDFValueType{});
-
-  for (const auto & perThreadStruct : m_ParzenWindowHistogramGetValueAndDerivativePerThreadVariables)
-  {
-    auto pdfValueIteratorPerThread = ImageBufferRange(*perThreadStruct.st_JointPDF).cbegin();
-
-    for (PDFValueType & pdfValue : imageBufferRange)
-    {
-      pdfValue += *pdfValueIteratorPerThread;
-      ++pdfValueIteratorPerThread;
-    }
-  }
 } // end AfterThreadedComputePDFs()
 
 

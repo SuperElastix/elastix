@@ -20,6 +20,7 @@
 
 #include "itkAdvancedImageToImageMetric.h"
 #include "itkKernelFunctionBase2.h"
+#include <mutex>
 #include <vector>
 
 
@@ -504,6 +505,8 @@ private:
   bool          m_UseExplicitPDFDerivatives{ true };
   bool          m_UseFiniteDifferenceDerivative{ false };
   double        m_FiniteDifferencePerturbation{ 1.0 };
+
+  std::mutex m_Mutex{};
 };
 
 } // end namespace itk
