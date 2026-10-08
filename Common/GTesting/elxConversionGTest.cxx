@@ -379,7 +379,6 @@ GTEST_TEST(Conversion, ToString)
   static constexpr auto expectedPrecision = 16;
   static_assert(expectedPrecision == std::numeric_limits<double>::digits10 + 1,
                 "The expected precision for double floating point numbers");
-  const auto expectedString = "0." + std::string(expectedPrecision, '3');
 
   EXPECT_EQ(Conversion::ToString(+0.0), "0");
   EXPECT_EQ(Conversion::ToString(-0.0), "0");
