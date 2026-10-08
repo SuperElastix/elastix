@@ -103,7 +103,6 @@ TRANSFORMIX::TransformImage(ImagePointer                          inputImage,
   /** Initialize. */
   int             returndummy = 0;
   ArgumentMapType argMap;
-  bool            outFolderPresent = false;
   std::string     outFolder = "";
   std::string     logFileName = "";
 
@@ -120,8 +119,6 @@ TRANSFORMIX::TransformImage(ImagePointer                          inputImage,
     {
       value.append("/");
     }
-
-    outFolderPresent = true;
   }
   else
   {
