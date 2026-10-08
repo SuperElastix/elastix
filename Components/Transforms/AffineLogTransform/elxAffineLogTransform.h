@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef _ELXAFFINELOGTRANSFORM_H_
-#define _ELXAFFINELOGTRANSFORM_H_
+#ifndef elxAffineLogTransform_h
+#define elxAffineLogTransform_h
 
 #include "itkAdvancedCombinationTransform.h"
 #include "itkAffineLogTransform.h"
@@ -186,7 +186,7 @@ private:
 
 } // end namespace elastix
 
-#endif // ELXAFFINELOGTRANSFORM_H
+#endif // elxAffineLogTransform_h
 
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "elxAffineLogTransform.hxx"
