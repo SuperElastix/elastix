@@ -178,14 +178,14 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
   /** Setup the log system. */
   const std::string     logFileName = performLogging ? (outFolder + "elastix.log") : "";
   const elx::log::guard logGuard{};
-  int                   returndummy = elx::log::setup(logFileName, performLogging, performCout) ? 0 : 1;
-  if ((returndummy != 0) && performCout)
+
+  if (!elx::log::setup(logFileName, performLogging, performCout))
   {
     if (performCout)
     {
       std::cerr << "ERROR while setting up the log system." << std::endl;
     }
-    return returndummy;
+    return 1;
   }
   elx::log::info("");
 
@@ -264,7 +264,7 @@ ELASTIX::RegisterImages(ImagePointer                          fixedImage,
     elx::log::info(std::ostringstream{} << "Current time: " << GetCurrentDateAndTime() << ".");
 
     /** Start registration. */
-    returndummy = elastixMain->RunWithParameterMap(argMap, parameterMaps[i]);
+    const int returndummy = elastixMain->RunWithParameterMap(argMap, parameterMaps[i]);
 
     /** Check for errors. */
     if (returndummy != 0)
