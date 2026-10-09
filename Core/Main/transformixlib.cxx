@@ -159,10 +159,7 @@ TRANSFORMIX::TransformImage(ImagePointer                          inputImage,
     }
     else
     {
-      if (performLogging)
-      {
-        logFileName = outFolder + "transformix.log";
-      }
+      logFileName = outFolder + "transformix.log";
     }
   }
 
