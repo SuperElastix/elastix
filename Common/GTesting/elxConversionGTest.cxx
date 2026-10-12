@@ -174,8 +174,8 @@ Expect_lossless_round_trip_of_signed_integer_parameter_values()
   static_assert(NumericLimits::is_signed && NumericLimits::is_integer,
                 "This function is only meant to test signed integer types!");
 
-  const auto minValue = NumericLimits::min();
-  const auto maxValue = NumericLimits::max();
+  constexpr auto minValue = NumericLimits::min();
+  constexpr auto maxValue = NumericLimits::max();
 
   Expect_lossless_round_trip_of_parameter_values<TSignedInteger>(
     { minValue, minValue + 1, -1, 0, 1, maxValue - 1, maxValue });
@@ -188,8 +188,8 @@ Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer()
 {
   using NumericLimits = std::numeric_limits<TInteger>;
 
-  const auto minValue = NumericLimits::min();
-  const auto maxValue = NumericLimits::max();
+  constexpr auto minValue = NumericLimits::min();
+  constexpr auto maxValue = NumericLimits::max();
 
   for (const TInteger integer : { minValue,
                                   static_cast<TInteger>(minValue + 1),
