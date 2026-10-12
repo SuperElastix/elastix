@@ -157,11 +157,8 @@ Expect_lossless_round_trip_of_unsigned_parameter_values()
   using NumericLimits = std::numeric_limits<TUnsignedInteger>;
   static_assert(!NumericLimits::is_signed, "This function is only meant to test unsigned types!");
 
-  // Note: the static_cast for `NumericLimits::max() - 1` is a workaround for
-  // the following compile error from Visual C++ 2017:
-  // > error C2398: Element '3': conversion from 'int' to 'TUnsignedInteger' requires a narrowing conversion
   Expect_lossless_round_trip_of_parameter_values<TUnsignedInteger>(
-    { 0, 1, static_cast<TUnsignedInteger>(NumericLimits::max() - 1), NumericLimits::max() });
+    { 0, 1, TUnsignedInteger{ NumericLimits::max() - 1 }, NumericLimits::max() });
 }
 
 
@@ -191,12 +188,8 @@ Expect_parameter_with_decimal_point_and_trailing_zeros_can_be_read_as_integer()
   constexpr auto minValue = NumericLimits::min();
   constexpr auto maxValue = NumericLimits::max();
 
-  for (const TInteger integer : { minValue,
-                                  static_cast<TInteger>(minValue + 1),
-                                  TInteger{},
-                                  TInteger{ 1 },
-                                  static_cast<TInteger>(maxValue - 1),
-                                  maxValue })
+  for (const TInteger integer :
+       { minValue, TInteger{ minValue + 1 }, TInteger{}, TInteger{ 1 }, TInteger{ maxValue - 1 }, maxValue })
   {
     for (unsigned numberOfTrailingZeros{}; numberOfTrailingZeros <= 2; ++numberOfTrailingZeros)
     {
