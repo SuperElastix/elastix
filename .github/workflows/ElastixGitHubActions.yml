@@ -17,7 +17,6 @@ jobs:
             c-compiler: "gcc"
             cxx-compiler: "g++"
             cuda-version: "cpu"
-            itk-git-tag: $DEFAULT_ITK_GIT_TAG
             cmake-build-type: "Release"
             libs:
               - elastix-build/bin/libelx-ANNlib.so
@@ -26,7 +25,6 @@ jobs:
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
             cuda-version: "cpu"
-            itk-git-tag: $DEFAULT_ITK_GIT_TAG
             cmake-build-type: "Release"
             libs:
               - elastix-build/bin/elx-ANNlib.dll
@@ -36,7 +34,6 @@ jobs:
             c-compiler: "clang"
             cxx-compiler: "clang++"
             cuda-version: "cpu"
-            itk-git-tag: $DEFAULT_ITK_GIT_TAG
             cmake-build-type: "Release"
             libs:
               - elastix-build/bin/libelx-ANNlib.dylib
@@ -58,7 +55,7 @@ jobs:
       - name: Clone and build ITK
         uses: ./.github/actions/build_itk
         with:
-          itk-git-tag: ${{ matrix.itk-git-tag }}
+          itk-git-tag: ${{ env.DEFAULT_ITK_GIT_TAG }}
           c-compiler: ${{ matrix.c-compiler }}
           cxx-compiler: ${{ matrix.cxx-compiler }}
           cmake-build-type: ${{ matrix.cmake-build-type }}
