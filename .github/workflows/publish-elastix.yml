@@ -28,7 +28,6 @@ jobs:
             flavor: cu130
             torch: '2.12'
             cuda_toolkit_version: '13.0.2'
-            itk-git-tag: $DEFAULT_ITK_GIT_TAG
             c-compiler: "gcc"
             cxx-compiler: "g++"
             cmake-build-type: "Release"
@@ -48,7 +47,6 @@ jobs:
             flavor: cu130
             torch: '2.12'
             cuda_toolkit_version: '13.0.2'
-            itk-git-tag: $DEFAULT_ITK_GIT_TAG
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
             cmake-build-type: "Release"
