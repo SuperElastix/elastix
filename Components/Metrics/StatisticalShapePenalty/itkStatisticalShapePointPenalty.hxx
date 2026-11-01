@@ -19,6 +19,7 @@
 #define itkStatisticalShapePointPenalty_hxx
 
 #include "itkStatisticalShapePointPenalty.h"
+#include <vnl/algo/vnl_svd.h>
 #include <cmath>
 
 namespace itk
