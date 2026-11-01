@@ -22,6 +22,7 @@
 
 #include "itkMersenneTwisterRandomVariateGenerator.h"
 #include <vnl/algo/vnl_matrix_update.h>
+#include <vnl/vnl_diag_matrix.h>
 #include "itkImage.h"
 #include <numeric>
 

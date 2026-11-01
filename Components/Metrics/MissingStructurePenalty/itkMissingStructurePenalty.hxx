@@ -19,6 +19,7 @@
 #define itkMissingStructurePenalty_hxx
 
 #include "itkMissingStructurePenalty.h"
+#include <vnl/algo/vnl_determinant.h>
 #include <cmath>
 
 namespace itk
