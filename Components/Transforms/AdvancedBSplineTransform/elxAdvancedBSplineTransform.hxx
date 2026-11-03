@@ -203,7 +203,7 @@ AdvancedBSplineTransform<TElastix>::PreComputeGridInformation()
   /** Throw an exception if both methods are used. */
   if (count1 > 0 && count2 > 0)
   {
-    itkExceptionMacro("ERROR: You can not specify both \"FinalGridSpacingInVoxels\""
+    itkExceptionMacro("You can not specify both \"FinalGridSpacingInVoxels\""
                       " and \"FinalGridSpacingInPhysicalUnits\" in the parameter file.");
   }
 
@@ -278,7 +278,7 @@ AdvancedBSplineTransform<TElastix>::PreComputeGridInformation()
     log::error(std::ostringstream{}
                << "ERROR: Invalid GridSpacingSchedule! The number of entries behind the GridSpacingSchedule "
                   "option should equal the numberOfResolutions, or the numberOfResolutions * ImageDimension.");
-    itkExceptionMacro("ERROR: Invalid GridSpacingSchedule!");
+    itkExceptionMacro("Invalid GridSpacingSchedule!");
   }
 
   /** Output a warning that the gridspacing may be adapted to fit the Cyclic
@@ -507,7 +507,7 @@ AdvancedBSplineTransform<TElastix>::SetOptimizerScales(const unsigned int edgeWi
       log::error(std::ostringstream{} << "ERROR: you specified a PassiveEdgeWidth of " << edgeWidth
                                       << ", while the total grid size in dimension " << i << " is only " << gridsize[i]
                                       << ".");
-      itkExceptionMacro("ERROR: the PassiveEdgeWidth is too large!");
+      itkExceptionMacro("the PassiveEdgeWidth is too large!");
     }
     insetgridindex[i] = gridindex[i] + edgeWidth;
   }

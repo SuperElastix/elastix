@@ -102,7 +102,7 @@ public:
   void
   SetParameters(const ParametersType &) override
   {
-    itkExceptionMacro("ERROR: SetParameters() is not implemented for DeformationFieldInterpolatingTransform.\n"
+    itkExceptionMacro("SetParameters() is not implemented for DeformationFieldInterpolatingTransform.\n"
                       << "Use SetDeformationField() instead.\n"
                       << "Note that this transform is NOT suited for image registration.\n"
                       << "Just use it as an (initial) fixed transform that is not optimized.");

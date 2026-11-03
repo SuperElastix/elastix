@@ -199,7 +199,7 @@ TransformBase<TElastix>::BeforeRegistrationBase()
       }
       else
       {
-        itkExceptionMacro("ERROR: the file " << fileName << " does not exist!");
+        itkExceptionMacro("the file " << fileName << " does not exist!");
       }
     }
   }
@@ -387,7 +387,7 @@ TransformBase<TElastix>::ReadFromFile()
       if (itksys::SystemTools::CollapseFullPath(fileName) ==
           itksys::SystemTools::CollapseFullPath(configurationParameterFileName))
       {
-        itkExceptionMacro("ERROR: The InitialTransformParameterFileName is identical to the current "
+        itkExceptionMacro("The InitialTransformParameterFileName is identical to the current "
                           "TransformParameters filename! An infinite loop is not allowed.");
       }
 
@@ -454,7 +454,7 @@ TransformBase<TElastix>::ReadInitialTransformFromFile(const std::string & transf
 
   if (!configurationInitialTransform->InitializeWithInitialTransform(transformParameterFileName))
   {
-    itkGenericExceptionMacro("ERROR: Reading initial transform parameters failed: " << transformParameterFileName);
+    itkGenericExceptionMacro("Reading initial transform parameters failed: " << transformParameterFileName);
   }
 
   this->ReadInitialTransformFromConfiguration(configurationInitialTransform);
@@ -669,8 +669,7 @@ TransformBase<TElastix>::TransformPoints() const
   /** For backwards compatibility def = ipp. */
   if (!def.empty() && !ipp.empty())
   {
-    itkExceptionMacro("ERROR: Can not use both \"-def\" and \"-ipp\"!\n"
-                      << "  \"-ipp\" is deprecated, use only \"-def\".\n");
+    itkExceptionMacro("Can not use both \"-def\" and \"-ipp\"!\n" << "  \"-ipp\" is deprecated, use only \"-def\".\n");
   }
   else if (def.empty() && !ipp.empty())
   {

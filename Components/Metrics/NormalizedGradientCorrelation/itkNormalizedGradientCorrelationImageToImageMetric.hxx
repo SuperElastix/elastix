@@ -68,7 +68,7 @@ NormalizedGradientCorrelationImageToImageMetric<TFixedImage, TMovingImage>::Init
   }
   else
   {
-    itkExceptionMacro("ERROR: the NormalizedGradientCorrelationImageToImageMetric is currently only suitable for "
+    itkExceptionMacro("the NormalizedGradientCorrelationImageToImageMetric is currently only suitable for "
                       "2D-3D registration.\n"
                       << "  Therefore it expects an interpolator of type RayCastInterpolator.");
   }

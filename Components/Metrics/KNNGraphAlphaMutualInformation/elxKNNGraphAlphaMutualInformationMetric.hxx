@@ -169,7 +169,7 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
   }
   else
   {
-    itkExceptionMacro("ERROR: there is no tree type \"" << treeType << "\" implemented.");
+    itkExceptionMacro("there is no tree type \"" << treeType << "\" implemented.");
   }
 
   /** Get the parameters for the search tree. */
@@ -215,7 +215,7 @@ KNNGraphAlphaMutualInformationMetric<TElastix>::BeforeEachResolution()
   }
   else
   {
-    itkExceptionMacro("ERROR: there is no tree searcher type \"" << treeSearchType << "\" implemented.");
+    itkExceptionMacro("there is no tree searcher type \"" << treeSearchType << "\" implemented.");
   }
 
 } // end BeforeEachResolution()

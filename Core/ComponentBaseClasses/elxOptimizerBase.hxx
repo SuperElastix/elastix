@@ -42,7 +42,7 @@ OptimizerBase<TElastix>::SetCurrentPositionPublic(const ParametersType & /** par
                 "StandardGradientDescentOptimizer? Don't!");
 
   /** Throw an exception if this function is not overridden. */
-  itkExceptionMacro("ERROR: The SetCurrentPositionPublic method is not implemented in your optimizer");
+  itkExceptionMacro("The SetCurrentPositionPublic method is not implemented in your optimizer");
 
 } // end SetCurrentPositionPublic()
 

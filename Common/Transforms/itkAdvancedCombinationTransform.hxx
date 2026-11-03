@@ -342,7 +342,7 @@ AdvancedCombinationTransform<TScalarType, NDimensions>::GetInverse(Self * invers
      * the initial and the current transforms are defined.
      */
 
-    itkExceptionMacro("ERROR: not implemented");
+    itkExceptionMacro("not implemented");
 
     //     /** Try create the inverse of the initial transform. */
     //     InitialTransformPointer inverseT0 = InitialTransformType::New();
