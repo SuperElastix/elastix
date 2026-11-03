@@ -196,7 +196,7 @@ public:
     /** Check if the cast was successful. */
     if (!castSuccesful)
     {
-      itkGenericExceptionMacro("ERROR: Casting entry number "
+      itkGenericExceptionMacro("Casting entry number "
                                << entry_nr << " for the parameter \"" << parameterName << "\" failed!\n"
                                << "  You tried to cast \"" << vec[entry_nr] << "\" from std::string to "
                                << typeid(parameterValue).name() << '\n');
@@ -360,7 +360,7 @@ public:
       /** Check if the cast was successful. */
       if (!castSuccesful)
       {
-        itkGenericExceptionMacro("ERROR: Casting entry number "
+        itkGenericExceptionMacro("Casting entry number "
                                  << i << " for the parameter \"" << parameterName << "\" failed!\n"
                                  << "  You tried to cast \"" << vec[i] << "\" from std::string to "
                                  << typeid(parameterValues[0]).name() << '\n');

@@ -39,7 +39,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   /** Sanity check. */
   if (mask == nullptr)
   {
-    itkExceptionMacro("ERROR: do not call this function when no mask is supplied. When using the "
+    itkExceptionMacro("do not call this function when no mask is supplied. When using the "
                       "ImageRandomSamplerSparseMask sampler, a mask is required. Otherwise you may consider using a "
                       "sampler that does not require a mask, for example, ImageRandomSampler.");
   }
@@ -66,7 +66,7 @@ ImageRandomSamplerSparseMask<TInputImage>::GenerateData()
   }
   catch (const ExceptionObject & err)
   {
-    itkExceptionMacro("ERROR: This ImageSampler internally uses the ImageFullSampler. Updating of this internal "
+    itkExceptionMacro("This ImageSampler internally uses the ImageFullSampler. Updating of this internal "
                       "sampler raised the exception:\n"
                       << err.GetDescription());
   }

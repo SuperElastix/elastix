@@ -104,7 +104,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   {
     if (nrOfFixedPoints * Self::FixedPointSetDimension != meanVector->size() - Self::FixedPointSetDimension - 1)
     {
-      itkExceptionMacro("ERROR: the number of elements in the meanVector ("
+      itkExceptionMacro("the number of elements in the meanVector ("
                         << meanVector->size() << ") does not match the number of points of the fixed pointset ("
                         << nrOfFixedPoints << ") times the point dimensionality (" << Self::FixedPointSetDimension
                         << ") plus a Centroid of dimension " << Self::FixedPointSetDimension << " plus a size element");
@@ -114,7 +114,7 @@ StatisticalShapePenalty<TElastix>::BeforeRegistration()
   {
     if (nrOfFixedPoints * Self::FixedPointSetDimension != meanVector->size())
     {
-      itkExceptionMacro("ERROR: the number of elements in the meanVector ("
+      itkExceptionMacro("the number of elements in the meanVector ("
                         << meanVector->size() << ") does not match the number of points of the fixed pointset ("
                         << nrOfFixedPoints << ") times the point dimensionality (" << Self::FixedPointSetDimension
                         << ")");

@@ -171,7 +171,7 @@ WeightedCombinationTransformElastix<TElastix>::SetScales()
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro("ERROR: The Scales-option in the parameter-file has not been set properly.");
+      itkExceptionMacro("The Scales-option in the parameter-file has not been set properly.");
     }
 
   } // end else: no automaticScalesEstimation
@@ -196,7 +196,7 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
 
   if (N == 0)
   {
-    itkExceptionMacro("ERROR: At least one SubTransform should be specified.");
+    itkExceptionMacro("At least one SubTransform should be specified.");
   }
   else
   {
@@ -229,7 +229,7 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
     int initfailure = configurationSubTransform->Initialize(argmapSubTransform);
     if (initfailure != 0)
     {
-      itkExceptionMacro("ERROR: Reading SubTransform parameters failed: " << subTransformFileName);
+      itkExceptionMacro("Reading SubTransform parameters failed: " << subTransformFileName);
     }
 
     /** Read the SubTransform name. */
@@ -260,7 +260,7 @@ WeightedCombinationTransformElastix<TElastix>::LoadSubTransforms()
     if (subTransforms[i].IsNull())
     {
       log::error(std::ostringstream{} << "ERROR: Error while trying to load the SubTransform " << subTransformFileName);
-      itkExceptionMacro("ERROR: Loading SubTransforms failed!");
+      itkExceptionMacro("Loading SubTransforms failed!");
     }
 
   } // end for loop over subTransforms

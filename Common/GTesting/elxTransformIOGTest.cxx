@@ -486,7 +486,7 @@ struct WithDimension
     catch (const itk::ExceptionObject & exceptionObject)
     {
       // TODO Avoid this exception!
-      EXPECT_NE(std::strstr(exceptionObject.GetDescription(), "ERROR: Missing -labels argument!"), nullptr);
+      EXPECT_NE(std::strstr(exceptionObject.GetDescription(), "Missing -labels argument!"), nullptr);
     }
 
     WithElastixTransform<RecursiveBSplineTransform>::Test_CreateTransformParameterMap_for_default_transform(

@@ -868,7 +868,7 @@ MultiBSplineDeformableTransformWithNormal<TScalarType, NDimensions, VSplineOrder
   JacobianOfSpatialJacobianType &,
   NonZeroJacobianIndicesType &) const
 {
-  itkExceptionMacro("ERROR: GetJacobianOfSpatialJacobian() not yet implemented in the "
+  itkExceptionMacro("GetJacobianOfSpatialJacobian() not yet implemented in the "
                     "MultiBSplineDeformableTransformWithNormal class.");
 } // end GetJacobianOfSpatialJacobian()
 

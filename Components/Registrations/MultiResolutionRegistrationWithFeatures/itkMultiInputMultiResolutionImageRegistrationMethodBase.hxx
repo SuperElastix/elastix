@@ -230,7 +230,7 @@ MultiInputMultiResolutionImageRegistrationMethodBase<TFixedImage, TMovingImage>:
   }
   else
   {
-    itkExceptionMacro("ERROR: This registration method expects a MultiInputImageToImageMetric");
+    itkExceptionMacro("This registration method expects a MultiInputImageToImageMetric");
   }
 
 } // end SetMetric()

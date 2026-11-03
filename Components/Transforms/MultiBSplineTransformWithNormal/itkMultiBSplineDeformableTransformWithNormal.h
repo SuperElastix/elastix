@@ -389,7 +389,7 @@ public:
                               JacobianOfSpatialHessianType &,
                               NonZeroJacobianIndicesType &) const override
   {
-    itkExceptionMacro("ERROR: GetJacobianOfSpatialHessian() not yet implemented in the "
+    itkExceptionMacro("GetJacobianOfSpatialHessian() not yet implemented in the "
                       "MultiBSplineDeformableTransformWithNormal class.");
   }
 

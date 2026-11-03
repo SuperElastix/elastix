@@ -37,7 +37,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateData()
   /** Check. */
   if (!this->CheckInputImageRegions())
   {
-    itkExceptionMacro("ERROR: at least one of the InputImageRegions is not a subregion of the LargestPossibleRegion");
+    itkExceptionMacro("at least one of the InputImageRegions is not a subregion of the LargestPossibleRegion");
   }
 
   /** Get handles to the input image, output sample container, and mask. */
@@ -141,7 +141,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
   /** Check. */
   if (numberOfRegions != numberOfInputs && numberOfRegions != 1)
   {
-    itkExceptionMacro("ERROR: The number of regions should be 1 or the number of inputs.");
+    itkExceptionMacro("The number of regions should be 1 or the number of inputs.");
   }
 
   using DirectionType = typename InputImageType::DirectionType;
@@ -153,7 +153,7 @@ MultiInputImageRandomCoordinateSampler<TInputImage>::GenerateSampleRegion(
     DirectionType diri = this->GetInput(i)->GetDirection();
     if (diri != dir0)
     {
-      itkExceptionMacro("ERROR: All input images should have the same direction cosines matrix.");
+      itkExceptionMacro("All input images should have the same direction cosines matrix.");
     }
   }
 

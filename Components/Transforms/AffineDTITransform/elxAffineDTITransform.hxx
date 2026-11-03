@@ -294,7 +294,7 @@ AffineDTITransformElastix<TElastix>::SetScales()
      * An error is thrown, because using erroneous scales in the optimizer
      * can give unpredictable results.
      */
-    itkExceptionMacro("ERROR: The Scales-option in the parameter-file has not been set properly.");
+    itkExceptionMacro("The Scales-option in the parameter-file has not been set properly.");
   }
 
   log::info(std::ostringstream{} << "Scales for transform parameters are: " << newscales);

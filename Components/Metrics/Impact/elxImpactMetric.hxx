@@ -230,8 +230,8 @@ ImpactMetric<TElastix>::GenerateModelsConfiguration(unsigned int level,
     }
     catch (const c10::Error & e)
     {
-      itkExceptionMacro("ERROR: the model are not loaded from this file: " << modelsPathVec[i]
-                                                                           << ". Torch error message:" << e.what());
+      itkExceptionMacro("the model are not loaded from this file: " << modelsPathVec[i]
+                                                                    << ". Torch error message:" << e.what());
     }
   }
   return modelsConfiguration;
@@ -364,7 +364,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     if (this->GetFixedModelsConfiguration()[i].GetDimension() > FixedImageDimension)
     {
-      itkExceptionMacro("ERROR: The dimension of the fixed input model image exceeds the allowed image dimensions. "
+      itkExceptionMacro("The dimension of the fixed input model image exceeds the allowed image dimensions. "
                         "Expected a maximum of "
                         << FixedImageDimension << " dimension(s), but received "
                         << this->GetFixedModelsConfiguration()[i].GetDimension() << " dimension(s) for model index "
@@ -378,7 +378,7 @@ ImpactMetric<TElastix>::BeforeEachResolution()
   {
     if (this->GetMovingModelsConfiguration()[i].GetDimension() > FixedImageDimension)
     {
-      itkExceptionMacro("ERROR: The dimension of the moving input model image exceeds the allowed image dimensions. "
+      itkExceptionMacro("The dimension of the moving input model image exceeds the allowed image dimensions. "
                         "Expected a maximum of "
                         << MovingImageDimension << " dimension(s), but received "
                         << this->GetMovingModelsConfiguration()[i].GetDimension() << " dimension(s) for model index "

@@ -60,7 +60,7 @@ ComputePreconditionerUsingDisplacementDistribution<TFixedImage, TTransform>::Com
                                                                                      double &,
                                                                                      std::string)
 {
-  itkExceptionMacro("ERROR: do not call");
+  itkExceptionMacro("do not call");
 } // end Compute()
 
 

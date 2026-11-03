@@ -98,7 +98,7 @@ ParameterMapInterface::ReadParameter(bool &              parameterValue,
   if (!elastix::Conversion::StringToValue(parameterValueString, parameterValue))
   {
     /** Trying to read a string other than "true" or "false" as a boolean. */
-    itkGenericExceptionMacro("ERROR: Entry number "
+    itkGenericExceptionMacro("Entry number "
                              << entry_nr << " for the parameter \"" << parameterName
                              << "\" should be a boolean, i.e. either \"true\" or \"false\", but it reads \""
                              << parameterValueString << "\".");
