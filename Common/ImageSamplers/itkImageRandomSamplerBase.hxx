@@ -45,8 +45,10 @@ template <typename TInputImage>
 void
 ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 {
+  // Seeded from the optional seed, or else from this sampler's generator (elastix's, seeded by RandomSeed), so that
+  // every update draws other numbers, reproducibly.
   elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
-  randomVariateGenerator.SetSeed(m_OptionalSeed.value_or(++m_Seed));
+  randomVariateGenerator.SetSeed(m_OptionalSeed ? *m_OptionalSeed : GetRandomVariateGenerator().GetIntegerVariate());
 
   /** Clear the random number list. */
   this->m_RandomNumberList.clear();
