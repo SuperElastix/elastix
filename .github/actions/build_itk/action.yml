@@ -17,6 +17,13 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # The runner image (macos15, ubuntu22, win22...), not just the OS: an ITK built on another image keeps the
+    # absolute paths of that image's SDK, such as the Xcode SDK's libiconv.
+    - name: Get the runner image
+      id: image
+      shell: bash
+      run: echo "name=${ImageOS:-$RUNNER_OS}" >> "$GITHUB_OUTPUT"
+
     - name: Attempt to restore itk cache
       id: cache_itk
       uses: actions/cache@v3
@@ -24,7 +31,7 @@ runs:
         path: |
           ITK-source
           ITK-build
-        key: ${{ inputs.itk-git-tag }}-${{ runner.os }}-${{ inputs.cmake-build-type }}
+        key: ${{ inputs.itk-git-tag }}-${{ steps.image.outputs.name }}-${{ inputs.cmake-build-type }}
 
     - name: Set cache flag
       shell: bash
