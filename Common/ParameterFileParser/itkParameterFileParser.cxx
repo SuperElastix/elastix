@@ -38,7 +38,7 @@ namespace
 void
 ThrowException(const std::string & line, const std::string & hint)
 {
-  itkGenericExceptionMacro("ERROR: the following line in your parameter file is invalid: \n\""
+  itkGenericExceptionMacro("the following line in your parameter file is invalid: \n\""
                            << line + "\"\n"
                            << hint << "\nPlease correct you parameter file!");
 
@@ -250,28 +250,28 @@ BasicFileChecking(const std::string & parameterFileName)
   /** Check if the file name is given. */
   if (parameterFileName.empty())
   {
-    itkGenericExceptionMacro("ERROR: FileName has not been set.");
+    itkGenericExceptionMacro("FileName has not been set.");
   }
 
   /** Basic error checking: existence. */
   const bool exists = itksys::SystemTools::FileExists(parameterFileName);
   if (!exists)
   {
-    itkGenericExceptionMacro("ERROR: the file " << parameterFileName << " does not exist.");
+    itkGenericExceptionMacro("the file " << parameterFileName << " does not exist.");
   }
 
   /** Basic error checking: file or directory. */
   const bool isDir = itksys::SystemTools::FileIsDirectory(parameterFileName);
   if (isDir)
   {
-    itkGenericExceptionMacro("ERROR: the file " << parameterFileName << " is a directory.");
+    itkGenericExceptionMacro("the file " << parameterFileName << " is a directory.");
   }
 
   /** Check the extension. */
   if (!ParameterFileParser::HasParameterFileNameExtension(parameterFileName))
   {
-    itkGenericExceptionMacro("ERROR: the file " << parameterFileName
-                                                << " should be a text file (*.txt) or a TOML file (*.toml).");
+    itkGenericExceptionMacro("the file " << parameterFileName
+                                         << " should be a text file (*.txt) or a TOML file (*.toml).");
   }
 
 } // end BasicFileChecking()
@@ -476,7 +476,7 @@ ParameterFileParser::ReadParameterFile()
     /** Check if it opened. */
     if (!parameterFile.is_open())
     {
-      itkExceptionMacro("ERROR: could not open " << m_ParameterFileName << " for reading.");
+      itkExceptionMacro("could not open " << m_ParameterFileName << " for reading.");
     }
 
     ReadParameterMapFromInputStream(m_ParameterMap, parameterFile);
@@ -501,7 +501,7 @@ ParameterFileParser::ReturnParameterFileAsString(const std::string & fileName)
   /** Check if it opened. */
   if (!parameterFile.is_open())
   {
-    itkGenericExceptionMacro("ERROR: could not open " << fileName << " for reading.");
+    itkGenericExceptionMacro("could not open " << fileName << " for reading.");
   }
 
   /** Loop over the parameter file, line by line. */

@@ -106,7 +106,7 @@ public:
         return TBSplineDeformableTransform<TScalarType, NDimensions, 3>::New();
       }
     }
-    itkGenericExceptionMacro("ERROR: The provided spline order (" << splineOrder << ") is not supported.");
+    itkGenericExceptionMacro("The provided spline order (" << splineOrder << ") is not supported.");
   }
 
 

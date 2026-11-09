@@ -261,7 +261,7 @@ AdvancedAffineTransformElastix<TElastix>::InitializeTransform()
       if constexpr (SpaceDimension < 3)
       {
         /** Check if dimension is 3D or higher. **/
-        itkExceptionMacro("ERROR: The GeometryTop intialization method does not make sense for 2D images. Use only "
+        itkExceptionMacro("The GeometryTop intialization method does not make sense for 2D images. Use only "
                           "for 3D or higher dimensional images.");
       }
 
@@ -408,7 +408,7 @@ AdvancedAffineTransformElastix<TElastix>::SetScales()
        * An error is thrown, because using erroneous scales in the optimizer
        * can give unpredictable results.
        */
-      itkExceptionMacro("ERROR: The Scales-option in the parameter-file has not been set properly.");
+      itkExceptionMacro("The Scales-option in the parameter-file has not been set properly.");
     }
 
   } // end else: no automaticScalesEstimation

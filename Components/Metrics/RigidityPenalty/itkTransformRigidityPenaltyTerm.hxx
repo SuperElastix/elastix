@@ -137,7 +137,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::Initialize()
   /** Set the B-spline transform to m_RigidityPenaltyTermMetric. */
   if (!transformIsBSpline)
   {
-    itkExceptionMacro("ERROR: this metric expects a B-spline transform.");
+    itkExceptionMacro("this metric expects a B-spline transform.");
   }
 
   /** Allocate the RigidityCoefficientImage, so that it matches the B-spline grid.
@@ -480,7 +480,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValue(const Parameter
   /** Sanity check. */
   if constexpr (ImageDimension != 2 && ImageDimension != 3)
   {
-    itkExceptionMacro("ERROR: This filter is only implemented for dimension 2 and 3.");
+    itkExceptionMacro("This filter is only implemented for dimension 2 and 3.");
   }
 
   /** Get a handle to the B-spline coefficient images. */
@@ -908,7 +908,7 @@ TransformRigidityPenaltyTerm<TFixedImage, TScalarType>::GetValueAndDerivative(co
   /** Sanity check. */
   if constexpr (ImageDimension != 2 && ImageDimension != 3)
   {
-    itkExceptionMacro("ERROR: This filter is only implemented for dimension 2 and 3.");
+    itkExceptionMacro("This filter is only implemented for dimension 2 and 3.");
   }
 
   /** Get a handle to the B-spline coefficient images. */

@@ -282,7 +282,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeWMatrix()
   }
   else
   {
-    itkExceptionMacro("ERROR: invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
+    itkExceptionMacro("invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
   }
 
   /** Reorganize W. */
@@ -318,7 +318,7 @@ KernelTransform2<TScalarType, NDimensions>::ComputeLInverse()
   }
   else
   {
-    itkExceptionMacro("ERROR: invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
+    itkExceptionMacro("invalid matrix inversion method (" << this->m_MatrixInversionMethod << ")");
   }
 
 } // end ComputeLInverse()

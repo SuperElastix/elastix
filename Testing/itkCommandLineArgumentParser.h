@@ -166,9 +166,9 @@ public:
       /** Check if the cast was successful. */
       if (!castSuccesful)
       {
-        itkExceptionMacro("ERROR: Casting entry number " << 0 << " for the parameter \"" << key << "\" failed!\n"
-                                                         << "  You tried to cast \"" << this->m_Argv[keyIndex + 1]
-                                                         << "\" from std::string to " << typeid(arg[0]).name() << '\n');
+        itkExceptionMacro("Casting entry number " << 0 << " for the parameter \"" << key << "\" failed!\n"
+                                                  << "  You tried to cast \"" << this->m_Argv[keyIndex + 1]
+                                                  << "\" from std::string to " << typeid(arg[0]).name() << '\n');
       }
 
       /** Fill the arg vector with the casted value. */
