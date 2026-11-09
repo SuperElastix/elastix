@@ -17,12 +17,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # The runner image (macos15, ubuntu22, win22...), not just the OS: an ITK built on another image keeps the
-    # absolute paths of that image's SDK, such as the Xcode SDK's libiconv.
+    # The runner image (macos15, ubuntu22, win22...), which every GitHub-hosted runner sets, not just the OS: an ITK
+    # built on another image keeps the absolute paths of that image's SDK, such as the Xcode SDK's libiconv.
     - name: Get the runner image
       id: image
       shell: bash
-      run: echo "name=${ImageOS:-$RUNNER_OS}" >> "$GITHUB_OUTPUT"
+      run: echo "name=${ImageOS}" >> "$GITHUB_OUTPUT"
 
     - name: Attempt to restore itk cache
       id: cache_itk
