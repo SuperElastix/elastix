@@ -75,41 +75,6 @@ PCAMetric2<TFixedImage, TMovingImage>::PrintSelf(std::ostream & os, Indent inden
 
 
 /**
- * ******************* SampleRandom *******************
- */
-
-template <typename TFixedImage, typename TMovingImage>
-void
-PCAMetric2<TFixedImage, TMovingImage>::SampleRandom(const int n, const int m, std::vector<int> & numbers) const
-{
-  /** Empty list of last dimension positions. */
-  numbers.clear();
-  numbers.reserve(m_NumAdditionalSamplesFixed + n);
-
-  // Retrieve random number generator.
-  Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator =
-    Deref(Superclass::GetRandomVariateGenerator());
-
-  /** Sample additional at fixed timepoint. */
-  for (unsigned int i = 0; i < m_NumAdditionalSamplesFixed; ++i)
-  {
-    numbers.push_back(m_ReducedDimensionIndex);
-  }
-
-  /** Get n random samples. */
-  for (int i = 0; i < n; ++i)
-  {
-    int randomNum = 0;
-    do
-    {
-      randomNum = static_cast<int>(randomVariateGenerator.GetVariateWithClosedRange(m));
-    } while (find(numbers.begin(), numbers.end(), randomNum) != numbers.end());
-    numbers.push_back(randomNum);
-  }
-} // end SampleRandom()
-
-
-/**
  * *************** EvaluateTransformJacobianInnerProduct ****************
  */
 
