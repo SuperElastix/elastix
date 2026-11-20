@@ -114,16 +114,6 @@ SumOfPairwiseCorrelationCoefficientsMetric<TElastix>::BeforeEachResolution()
     useZeroAverageDisplacementConstraint, "UseZeroAverageDisplacementConstraint", componentLabel, 0, 0);
   this->SetUseZeroAverageDisplacementConstraint(useZeroAverageDisplacementConstraint);
 
-  /** Get and set the number of additional samples sampled at the fixed timepoint.  */
-  unsigned int numAdditionalSamplesFixed = 0;
-  configuration.ReadParameter(numAdditionalSamplesFixed, "NumAdditionalSamplesFixed", componentLabel, level, 0);
-  this->SetNumAdditionalSamplesFixed(numAdditionalSamplesFixed);
-
-  /** Get and set the fixed timepoint number. */
-  unsigned int reducedDimensionIndex = 0;
-  configuration.ReadParameter(reducedDimensionIndex, "ReducedDimensionIndex", componentLabel, 0, 0);
-  this->SetReducedDimensionIndex(reducedDimensionIndex);
-
   /** Set moving image derivative scales. */
   this->SetUseMovingImageDerivativeScales(false);
   MovingImageDerivativeScalesType movingImageDerivativeScales;
