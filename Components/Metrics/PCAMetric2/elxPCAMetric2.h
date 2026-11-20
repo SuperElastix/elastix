@@ -47,8 +47,6 @@ namespace elastix
  *    to compute the variance from. When set to "false", all time points are taken into
  *    account. When set to "true", a random number of time points is selected, which can
  *    be set with parameter NumSamplesLastDimension. \n
- * \parameter NumSamplesLastDimension: the number of random samples to take in the time
- *    time direction of the data when SampleLastDimensionRandomly is set to true.
  * \parameter UseZeroAverageDisplacementConstraint: uses the zero average displacement constraint, as described in
  *    <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a groupwise optimization
  *    approach</em>, Metz et al., Medical Image Analysis, 2011. Subtract the over time computed mean parameter value
