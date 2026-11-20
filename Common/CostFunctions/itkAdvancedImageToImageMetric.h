@@ -615,12 +615,6 @@ protected:
     itkExceptionMacro("Intentionally left unimplemented!");
   }
 
-  Statistics::MersenneTwisterRandomVariateGenerator &
-  GetRandomVariateGenerator()
-  {
-    return *m_RandomVariateGenerator;
-  }
-
   // Note: Bypasses logical const-correctness
   Statistics::MersenneTwisterRandomVariateGenerator &
   GetMutableRandomVariateGenerator() const
