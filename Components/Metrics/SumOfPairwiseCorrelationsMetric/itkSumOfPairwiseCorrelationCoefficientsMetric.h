@@ -50,8 +50,6 @@ public:
   itkOverrideGetNameOfClassMacro(SumOfPairwiseCorrelationCoefficientsMetric);
 
   /** Set functions. */
-  itkSetMacro(NumAdditionalSamplesFixed, unsigned int);
-  itkSetMacro(ReducedDimensionIndex, unsigned int);
   itkSetMacro(UseZeroAverageDisplacementConstraint, bool);
   itkSetMacro(GridSize, FixedImageSizeType);
   itkSetMacro(TransformIsStackTransform, bool);
@@ -151,10 +149,6 @@ protected:
                                         DerivativeType &                  imageJacobian) const override;
 
 private:
-  /** Variables to control random sampling in last dimension. */
-  unsigned int m_NumAdditionalSamplesFixed{};
-  unsigned int m_ReducedDimensionIndex{};
-
   /** Bool to determine if we want to subtract the mean derivate from the derivative elements. */
   bool m_UseZeroAverageDisplacementConstraint{ true };
 
