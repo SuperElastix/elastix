@@ -86,12 +86,6 @@ public:
     return this->m_Elastix.GetPointer();
   }
 
-  itk::Statistics::MersenneTwisterRandomVariateGenerator &
-  GetRandomVariateGenerator()
-  {
-    return itk::Deref(m_Elastix.GetPointer()).GetRandomVariateGenerator();
-  }
-
   void
   RemoveTargetCellFromIterationInfo(const char * const name)
   {
@@ -140,6 +134,12 @@ public:
 protected:
   BaseComponentSE() = default;
   ~BaseComponentSE() override = default;
+
+  itk::Statistics::MersenneTwisterRandomVariateGenerator &
+  GetRandomVariateGenerator()
+  {
+    return itk::Deref(m_Elastix.GetPointer()).GetRandomVariateGenerator();
+  }
 
   itk::WeakPointer<TElastix>  m_Elastix{};
   Configuration::ConstPointer m_Configuration{};
