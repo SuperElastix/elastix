@@ -43,10 +43,6 @@ namespace elastix
  * or by nearest neighbor interpolation of a precomputed central difference image.
  * \li A minimum number of samples that should map within the moving image (mask) can be specified.
  *
- * \parameter SampleLastDimensionRandomly: randomly sample a number of time points to
- *    to compute the variance from. When set to "false", all time points are taken into
- *    account. When set to "true", a random number of time points is selected, which can
- *    be set with parameter NumSamplesLastDimension. \n
  * \parameter NumSamplesLastDimension: the number of random samples to take in the time
  *    time direction of the data when SampleLastDimensionRandomly is set to true.
  * \parameter UseZeroAverageDisplacementConstraint: uses the zero average displacement constraint, as described in
