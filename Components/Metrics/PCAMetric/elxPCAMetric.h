@@ -43,8 +43,6 @@ namespace elastix
  * or by nearest neighbor interpolation of a precomputed central difference image.
  * \li A minimum number of samples that should map within the moving image (mask) can be specified.
  *
- * \parameter NumSamplesLastDimension: the number of random samples to take in the time
- *    time direction of the data when SampleLastDimensionRandomly is set to true.
  * \parameter UseZeroAverageDisplacementConstraint: uses the zero average displacement constraint, as described in
  *    <em>Nonrigid registration of dynamic medical imaging data using nD+t B-splines and a groupwise optimization
  *    approach</em>, Metz et al., Medical Image Analysis, 2011. Subtract the over time computed mean parameter value
