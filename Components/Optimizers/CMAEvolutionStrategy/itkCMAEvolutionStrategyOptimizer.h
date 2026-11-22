@@ -225,12 +225,6 @@ public:
   itkSetMacro(ValueTolerance, double);
   itkGetConstMacro(ValueTolerance, double);
 
-  void
-  SetRandomVariateGenerator(Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator)
-  {
-    m_RandomVariateGenerator = &randomVariateGenerator;
-  }
-
 protected:
   using RecombinationWeightsType = Array<double>;
   using EigenValueMatrixType = vnl_diag_matrix<double>;
@@ -442,7 +436,9 @@ private:
   double        m_ValueTolerance{ 1e-12 };
 
   elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
-  Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
+  Statistics::MersenneTwisterRandomVariateGenerator * const                m_RandomVariateGenerator{
+    &m_DefaultRandomVariateGenerator
+  };
 };
 
 } // end namespace itk
