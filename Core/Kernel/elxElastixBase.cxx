@@ -285,11 +285,9 @@ ElastixBase::BeforeAllBase()
    * the default in the MersenneTwister code.
    * Use silent parameter file readout, to avoid annoying warning when
    * starting elastix */
-  using RandomGeneratorType = itk::Statistics::MersenneTwisterRandomVariateGenerator;
-  using SeedType = RandomGeneratorType::IntegerType;
-  unsigned int randomSeed = 121212;
+  itk::Statistics::MersenneTwisterRandomVariateGenerator::IntegerType randomSeed{ 121212 };
   m_Configuration->ReadParameter(randomSeed, "RandomSeed", 0, false);
-  m_RandomVariateGenerator.SetSeed(static_cast<SeedType>(randomSeed));
+  m_RandomVariateGenerator.SetSeed(randomSeed);
 
   /** Return a value. */
   return returndummy;
