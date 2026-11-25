@@ -679,7 +679,7 @@ AdaGrad<TElastix>::SampleGradients(const ParametersType & mu0, double perturbati
       if (randomSamplerVec[m].IsNotNull())
       {
         /** At least one of the metric has a random sampler. */
-        stochasticgradients |= true;
+        stochasticgradients = true;
 
         /** If the sampler is a randomCoordinateSampler set the UseRandomSampleRegion
          * property to false temporarily. It disturbs the parameter estimation.
