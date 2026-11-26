@@ -116,6 +116,12 @@ protected:
   void
   GenerateRandomNumberList();
 
+  SeedIntegerType
+  GetNextSeed()
+  {
+    return ++m_Seed;
+  }
+
   Statistics::MersenneTwisterRandomVariateGenerator &
   GetRandomVariateGenerator()
   {

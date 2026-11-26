@@ -110,7 +110,7 @@ GTEST_TEST(ImageRandomSampler, HasSameOutputWhenUsingMultiThread)
   const auto generateSamples = [image](const bool useMultiThread) {
     elx::DefaultConstruct<SamplerType> sampler{};
     sampler.SetUseMultiThread(useMultiThread);
-    sampler.SetSeed(1);
+    sampler.SetSeed(121212 + 2);
     sampler.SetInput(image);
     sampler.Update();
     return std::move(Deref(sampler.GetOutput()).CastToSTLContainer());
