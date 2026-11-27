@@ -81,7 +81,7 @@ GTEST_TEST(ImageRandomCoordinateSampler, SetSeedMakesRandomizationDeterministic)
   const auto image =
     CreateImageFilledWithSequenceOfNaturalNumbers<PixelType>(ImageType::SizeType::Filled(minimumImageSizeValue));
 
-  for (const SamplerType::SeedIntegerType seed : { 0, 1 })
+  for (const MersenneTwisterRandomVariateGenerator::IntegerType seed : { 0, 1 })
   {
     const auto generateSamples = [seed, image] {
       elx::DefaultConstruct<MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};

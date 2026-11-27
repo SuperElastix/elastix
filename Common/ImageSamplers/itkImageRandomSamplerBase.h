@@ -66,8 +66,6 @@ public:
   using typename Superclass::ImageSampleContainerPointer;
   using typename Superclass::MaskType;
 
-  using SeedIntegerType = Statistics::MersenneTwisterRandomVariateGenerator::IntegerType;
-
   void
   SetRandomVariateGenerator(Statistics::MersenneTwisterRandomVariateGenerator & randomVariateGenerator)
   {
@@ -85,16 +83,6 @@ protected:
   /** The destructor. */
   ~ImageRandomSamplerBase() override = default;
 
-  /** Generates the list of random numbers. */
-  void
-  GenerateRandomNumberList();
-
-  SeedIntegerType
-  GetNextSeed()
-  {
-    return ++m_Seed;
-  }
-
   Statistics::MersenneTwisterRandomVariateGenerator &
   GetRandomVariateGenerator()
   {
@@ -105,12 +93,7 @@ protected:
   void
   PrintSelf(std::ostream & os, Indent indent) const override;
 
-  /** Member variable used when threading. */
-  std::vector<double> m_RandomNumberList{};
-
 private:
-  SeedIntegerType m_Seed{ 121212 + 1 };
-
   elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> m_DefaultRandomVariateGenerator{};
   Statistics::MersenneTwisterRandomVariateGenerator * m_RandomVariateGenerator{ &m_DefaultRandomVariateGenerator };
 };

@@ -38,31 +38,6 @@ ImageRandomSamplerBase<TInputImage>::ImageRandomSamplerBase()
 
 
 /**
- * ******************* GenerateRandomNumberList *******************
- */
-
-template <typename TInputImage>
-void
-ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
-{
-  elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
-  randomVariateGenerator.SetSeed(GetNextSeed());
-
-  /** Clear the random number list. */
-  this->m_RandomNumberList.clear();
-  this->m_RandomNumberList.reserve(this->m_NumberOfSamples);
-
-  /** Fill the list with random numbers. */
-  const auto numPixels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
-  randomVariateGenerator.GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
-  for (unsigned long i = 0; i < this->m_NumberOfSamples; ++i)
-  {
-    const double randomPosition = randomVariateGenerator.GetVariateWithOpenRange(numPixels - 0.5);
-    this->m_RandomNumberList.push_back(randomPosition);
-  }
-}
-
-/**
  * ******************* PrintSelf *******************
  */
 

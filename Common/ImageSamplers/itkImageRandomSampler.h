@@ -87,6 +87,10 @@ protected:
   GenerateData() override;
 
 private:
+  /** Generates the list of random numbers. */
+  void
+  GenerateRandomNumberList();
+
   struct UserData
   {
     const std::vector<double> &    m_RandomNumberList;
@@ -98,6 +102,11 @@ private:
 
   static ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
   ThreaderCallback(void * arg);
+
+  Statistics::MersenneTwisterRandomVariateGenerator::IntegerType m_Seed{ 121212 + 1 };
+
+  /** Member variable used when threading. */
+  std::vector<double> m_RandomNumberList{};
 };
 
 } // end namespace itk
