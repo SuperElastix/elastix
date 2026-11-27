@@ -46,7 +46,7 @@ void
 ImageRandomSamplerBase<TInputImage>::GenerateRandomNumberList()
 {
   elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
-  randomVariateGenerator.SetSeed(m_OptionalSeed.value_or(GetNextSeed()));
+  randomVariateGenerator.SetSeed(GetNextSeed());
 
   /** Clear the random number list. */
   this->m_RandomNumberList.clear();
