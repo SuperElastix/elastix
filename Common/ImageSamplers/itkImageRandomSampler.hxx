@@ -43,13 +43,12 @@ ImageRandomSampler<TInputImage>::GenerateData()
   const MaskType * const mask = this->Superclass::GetMask();
   if (mask == nullptr && Superclass::m_UseMultiThread)
   {
-    Superclass::GenerateRandomNumberList();
-    const auto & randomNumberList = Superclass::m_RandomNumberList;
-    samples.resize(randomNumberList.size());
+    GenerateRandomNumberList();
+    samples.resize(m_RandomNumberList.size());
 
     const auto & croppedInputImageRegion = this->GetCroppedInputImageRegion();
     UserData     userData{
-      randomNumberList, inputImage, croppedInputImageRegion.GetIndex(), croppedInputImageRegion.GetSize(), samples
+      m_RandomNumberList, inputImage, croppedInputImageRegion.GetIndex(), croppedInputImageRegion.GetSize(), samples
     };
 
     Deref(this->ProcessObject::GetMultiThreader()).SetSingleMethodAndExecute(&Self::ThreaderCallback, &userData);
@@ -61,11 +60,7 @@ ImageRandomSampler<TInputImage>::GenerateData()
 
   /** Setup a random iterator over the input image. */
   ImageRandomConstIteratorWithIndex<InputImageType> randIter(&inputImage, this->GetCroppedInputImageRegion());
-
-  if (const auto optionalSeed = Superclass::GetOptionalSeed())
-  {
-    randIter.ReinitializeSeed(*optionalSeed);
-  }
+  randIter.ReinitializeSeed(++m_Seed);
   randIter.GoToBegin();
 
   if (mask == nullptr)
@@ -132,6 +127,32 @@ ImageRandomSampler<TInputImage>::GenerateData()
   }
 
 } // end GenerateData()
+
+
+/**
+ * ******************* GenerateRandomNumberList *******************
+ */
+
+template <typename TInputImage>
+void
+ImageRandomSampler<TInputImage>::GenerateRandomNumberList()
+{
+  elx::DefaultConstruct<Statistics::MersenneTwisterRandomVariateGenerator> randomVariateGenerator{};
+  randomVariateGenerator.SetSeed(++m_Seed);
+
+  /** Clear the random number list. */
+  m_RandomNumberList.clear();
+  m_RandomNumberList.reserve(Superclass::m_NumberOfSamples);
+
+  /** Fill the list with random numbers. */
+  const auto numPixels = static_cast<double>(this->GetCroppedInputImageRegion().GetNumberOfPixels());
+  randomVariateGenerator.GetVariateWithOpenRange(numPixels - 0.5); // dummy jump
+  for (unsigned long i = 0; i < Superclass::m_NumberOfSamples; ++i)
+  {
+    const double randomPosition = randomVariateGenerator.GetVariateWithOpenRange(numPixels - 0.5);
+    m_RandomNumberList.push_back(randomPosition);
+  }
+}
 
 
 template <typename TInputImage>
