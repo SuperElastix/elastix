@@ -710,9 +710,9 @@ ParzenWindowMutualInformationImageToImageMetric<TFixedImage, TMovingImage>::Upda
 
   /** The lowest bin numbers affected by this pixel: */
   const int fixedParzenWindowIndex =
-    static_cast<int>(std::floor(fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset));
+    std::max(static_cast<int>(std::floor(fixedImageParzenWindowTerm + this->m_FixedParzenTermToIndexOffset)), 0);
   const int movingParzenWindowIndex =
-    static_cast<int>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset));
+    std::max(static_cast<int>(std::floor(movingImageParzenWindowTerm + this->m_MovingParzenTermToIndexOffset)), 0);
 
   const auto numberOfFixedParzenValues = Superclass::GetJointPDFWindowSize()[1];
   const auto numberOfDerivedMovingParzenValues = Superclass::GetJointPDFWindowSize()[0];
