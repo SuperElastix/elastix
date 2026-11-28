@@ -1,0 +1,28 @@
+(Transform "TranslationTransform")
+(NumberOfParameters 2)
+(TransformParameters 6.0 -4.5)
+(InitialTransformParameterFileName "NoInitialTransform")
+(HowToCombineTransforms "Compose")
+
+// Image specific
+(FixedImageDimension 2)
+(MovingImageDimension 2)
+(FixedInternalImagePixelType "float")
+(MovingInternalImagePixelType "float")
+(Size 256 256)
+(Index 0 0)
+(Spacing 1.0 1.0)
+(Origin 0.0 0.0)
+(Direction 1.0 0.0 0.0 1.0)
+(UseDirectionCosines "true")
+
+// ResampleInterpolator specific
+(ResampleInterpolator "FinalBSplineInterpolator")
+(FinalBSplineInterpolationOrder 3)
+
+// Resampler specific
+(Resampler "DefaultResampler")
+(DefaultPixelValue 0.000000)
+(ResultImageFormat "mhd")
+(ResultImagePixelType "short")
+(CompressResultImage "false")

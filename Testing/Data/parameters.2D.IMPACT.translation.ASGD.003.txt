@@ -1,0 +1,98 @@
+// Registers an image to itself from the initial translation (6, -4.5) of -t0:
+// elastix -f fixed.mhd -m fixed.mhd -t0 transformparameters.2D.translation.txt -p <this file>
+// so the exact answer is the opposite translation (-6, 4.5). Static mode, two identical resolutions: each one
+// starts from a non-identity transform, which the metric must apply once, when it looks the moving features up.
+
+
+// ********** Image Types
+
+(FixedInternalImagePixelType "float")
+(FixedImageDimension 2)
+(MovingInternalImagePixelType "float")
+(MovingImageDimension 2)
+
+
+// ********** Components
+(RandomSeed 42)
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedGenericImagePyramid")
+(MovingImagePyramid "MovingGenericImagePyramid")
+(Interpolator "BSplineInterpolator")
+(Metric "Impact")
+(Optimizer "AdaptiveStochasticGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+(Transform "TranslationTransform")
+
+
+// ********** Pyramid
+
+(NumberOfResolutions 2)
+(ImagePyramidRescaleSchedule 1 1 1 1)
+(ImagePyramidSmoothingSchedule 0 0 0 0)
+
+
+// ********** Transform
+
+(HowToCombineTransforms "Compose")
+(AutomaticTransformInitialization "false")
+
+
+// ********** Optimizer
+
+(MaximumNumberOfIterations 100)
+(AutomaticParameterEstimation "true")
+(UseAdaptiveStepSizes "true")
+
+
+// ********** Metric
+
+(ImpactModelsPath0 "./R1D2_2D.pt")
+(ImpactDimension0 2)
+(ImpactNumberOfChannels0 1)
+(ImpactPatchSize0 0 0)
+(ImpactVoxelSize0 2 2)
+(ImpactLayersMask0 "1")
+(ImpactSubsetFeatures0 4)
+(ImpactLayersWeight0 1)
+(ImpactPCA0 0)
+(ImpactDistance0 "L1")
+
+(ImpactModelsPath1 "./R1D2_2D.pt")
+(ImpactDimension1 2)
+(ImpactNumberOfChannels1 1)
+(ImpactPatchSize1 0 0)
+(ImpactVoxelSize1 2 2)
+(ImpactLayersMask1 "1")
+(ImpactSubsetFeatures1 4)
+(ImpactLayersWeight1 1)
+(ImpactPCA1 0)
+(ImpactDistance1 "L1")
+
+(ImpactMode "Static")
+(ImpactGPU -1)
+(ImpactFeaturesMapUpdateInterval -1)
+
+
+// ********** Several
+
+(WriteTransformParametersEachIteration "false")
+(WriteTransformParametersEachResolution "true")
+(WriteResultImage "false")
+(UseDirectionCosines "true")
+
+
+// ********** ImageSampler
+
+(ImageSampler "RandomCoordinate")
+(NumberOfSpatialSamples 1000)
+(NewSamplesEveryIteration "true")
+(UseRandomSampleRegion "false")
+(MaximumNumberOfSamplingAttempts 8)
+
+
+// ********** Interpolator and Resampler
+
+(BSplineInterpolationOrder 1)
+(FinalBSplineInterpolationOrder 3)
+(DefaultPixelValue 0)

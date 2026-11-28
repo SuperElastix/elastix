@@ -99,7 +99,14 @@ namespace elastix
  * \param ImpactPCA Number of principal components to retain for dimensionality reduction. Set to `0` to disable.
  *
  * \param ImpactDistance Specifies the distance metric to compare feature vectors. Supported values: `L1`, `L2`,
- * `Cosine`, `L1Cosine`, `Dice`, `NCC`, `DotProduct`.
+ * `Cosine`, `L1Cosine`, `Dice`, `NCC`, each positive and 0 at a perfect match. (`LNCC` needs a dense feature map,
+ * which randomly drawn points do not give, and is refused; `DotProduct` was removed.)
+ *
+ * \param ImpactNormalizeLosses Divides each layer's loss by its value at the start of the resolution, so every
+ *   layer starts at 1 and ImpactLayersWeight weighs comparable quantities. Default `true`.
+ *
+ * \param ImpactFeatureNormalization How each model's feature vectors are scaled before PCA and the distance, one
+ *   entry per model: `none` (default), `l2` (unit length), `standardized` (zero mean, unit deviation).
  *
  * \param ImpactFeaturesMapUpdateInterval Controls how often feature maps are recomputed in "Static" mode.
  *   - Set to `-1` to compute once per resolution level.
